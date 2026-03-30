@@ -1,26 +1,53 @@
-import { promises as fs } from "fs";
-import path from "path";
 import type { DailyReview, Index } from "./types";
 
-// In production (Netlify), data is copied into the app dir at build time.
-// In local dev, data lives one level up.
-const DATA_DIR = (() => {
-  const local = path.join(process.cwd(), "data");
-  const parent = path.join(process.cwd(), "..", "data");
+const GITHUB_RAW_BASE =
+  "https://raw.githubusercontent.com/ZW471/daily-ai-research-trends/main/data";
+
+const isDev = process.env.NODE_ENV === "development";
+
+async function fetchFromGitHub(urlPath: string): Promise<string | null> {
   try {
-    require("fs").accessSync(local);
-    return local;
+    const res = await fetch(`${GITHUB_RAW_BASE}/${urlPath}`, {
+      next: { revalidate: 0 },
+    });
+    if (!res.ok) return null;
+    return await res.text();
   } catch {
-    return parent;
+    return null;
   }
-})();
+}
+
+async function readLocal(filePath: string): Promise<string | null> {
+  try {
+    const { promises: fs } = await import("fs");
+    const path = await import("path");
+    const dataDir = (() => {
+      const local = path.join(process.cwd(), "data");
+      const parent = path.join(process.cwd(), "..", "data");
+      try {
+        require("fs").accessSync(local);
+        return local;
+      } catch {
+        return parent;
+      }
+    })();
+    return await fs.readFile(path.join(dataDir, filePath), "utf-8");
+  } catch {
+    return null;
+  }
+}
+
+async function loadData(filePath: string): Promise<string | null> {
+  if (isDev) {
+    return await readLocal(filePath);
+  }
+  return await fetchFromGitHub(filePath);
+}
 
 export async function getIndex(): Promise<Index | null> {
+  const content = await loadData("index.json");
+  if (!content) return null;
   try {
-    const content = await fs.readFile(
-      path.join(DATA_DIR, "index.json"),
-      "utf-8"
-    );
     return JSON.parse(content);
   } catch {
     return null;
@@ -30,11 +57,9 @@ export async function getIndex(): Promise<Index | null> {
 export async function getDailyReview(
   date: string
 ): Promise<DailyReview | null> {
+  const content = await loadData(`daily/${date}.json`);
+  if (!content) return null;
   try {
-    const content = await fs.readFile(
-      path.join(DATA_DIR, "daily", `${date}.json`),
-      "utf-8"
-    );
     return JSON.parse(content);
   } catch {
     return null;
@@ -46,15 +71,5 @@ export async function getAllDates(): Promise<string[]> {
   if (index) {
     return index.days.map((d) => d.date).sort().reverse();
   }
-  // Fallback: scan the daily directory
-  try {
-    const files = await fs.readdir(path.join(DATA_DIR, "daily"));
-    return files
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => f.replace(".json", ""))
-      .sort()
-      .reverse();
-  } catch {
-    return [];
-  }
+  return [];
 }
