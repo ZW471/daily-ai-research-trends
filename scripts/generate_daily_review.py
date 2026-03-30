@@ -10,7 +10,7 @@ Usage:
     python generate_daily_review.py [--date YYYY-MM-DD] [--dry-run]
 
 Requires:
-    pip install anthropic httpx
+    uv pip install anthropic httpx
     ANTHROPIC_API_KEY env var
 """
 

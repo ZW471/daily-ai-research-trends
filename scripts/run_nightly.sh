@@ -12,10 +12,10 @@ DATE=$(date -u +%Y-%m-%d)
 
 echo "[$(date)] Starting nightly research generation for $DATE"
 
-# Install dependencies if needed
-pip3 install -q anthropic httpx 2>/dev/null || true
+# Install dependencies if needed (using uv per company policy)
+uv pip install -q anthropic httpx 2>/dev/null || true
 
 # Generate the daily review
-python3 scripts/generate_daily_review.py --date "$DATE"
+uv run python scripts/generate_daily_review.py --date "$DATE"
 
 echo "[$(date)] Nightly research generation complete"
