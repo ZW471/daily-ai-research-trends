@@ -2,7 +2,18 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { DailyReview, Index } from "./types";
 
-const DATA_DIR = path.join(process.cwd(), "..", "data");
+// In production (Netlify), data is copied into the app dir at build time.
+// In local dev, data lives one level up.
+const DATA_DIR = (() => {
+  const local = path.join(process.cwd(), "data");
+  const parent = path.join(process.cwd(), "..", "data");
+  try {
+    require("fs").accessSync(local);
+    return local;
+  } catch {
+    return parent;
+  }
+})();
 
 export async function getIndex(): Promise<Index | null> {
   try {
