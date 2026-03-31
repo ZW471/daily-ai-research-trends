@@ -1,0 +1,541 @@
+{
+  "version": "1.0",
+  "date": "2026-03-31",
+  "generated_at": "2026-03-31T03:20:00Z",
+  "summary": {
+    "headline": "万亿参数科学基础模型问世；Agent轨迹技能蒸馏受到关注；编程Agent获得专用模型与organicity基准测试",
+    "body": "今天的AI/ML领域由三大趋势交汇塑造。第一，**规模与科学的结合**：Intern-S1-Pro作为首个万亿参数科学多模态基础模型亮相，承诺在通用和科学领域实现全面提升，并具备高级Agent能力。第二，**Agent工程快速成熟**：Trace2Skill提出了从Agent轨迹中蒸馏可复用技能的系统框架，Natural-Language Agent Harnesses将Agent控制逻辑外化为可移植的自然语言制品，Learning to Commit则解决了被忽视的\u201corganicity\u201d问题——LLM生成的PR虽然功能正确却被拒绝。第三，**编程Agent与基准测试同步演进**：Cursor的Composer 2通过大规模RL实现前沿级agentic软件工程，而SlopCodeBench揭示了编程Agent在迭代任务中性能退化的问题——这是当前评估的关键盲区。\n\n在医疗AI方面，MedOpenClaw揭示了一个令人惊讶的悖论：VLM在获得专业工具后性能反而下降；Medical AI Scientist则展示了首个自主临床研究框架。在计算机视觉领域，Calibri表明单个可学习的缩放参数即可显著增强Diffusion Transformer，GenMask则优雅地将DiT适配用于分割任务，通过直接生成mask实现。",
+    "key_themes": ["trillion-scale-models", "agent-skill-learning", "coding-agents", "medical-ai", "diffusion-transformers", "video-generation"]
+  },
+  "researcher_notes": "**Intern-S1-Pro的万亿参数是一个里程碑式的发布。** 虽然我们之前见过万亿规模的语言模型，但这是首个在此规模上声称具备多模态科学能力的模型。HuggingFace上9条评论的互动度（与Trace2Skill并列今日最高）表明社区的真实兴趣。关键问题是：科学领域的专门化是否值得如此规模——还是更小的、领域适配的模型仍然更实用？关注其与专门科学模型的benchmark对比。\n\n**Trace2Skill的13条评论使其成为今日最受关注的论文，这是有充分理由的。** 它解决的问题——如何从Agent轨迹中自动提取可复用、可迁移的技能，同时避免过拟合到轨迹局部经验——是构建实用LLM Agent的核心瓶颈之一。结合昨天的MetaClaw（元学习Agent）和AVO（进化搜索Agent），我们看到了一条清晰的研究路线：Agent正在从暴力prompt工程走向系统性自我提升。\n\n**\u201c编程Agent\u201d这组论文讲述了一个微妙的故事。** Composer 2（Cursor）证明RL训练的专用模型可以在真实软件工程中匹敌前沿通用模型。但SlopCodeBench提供了必要的反面视角：当前编程Agent在迭代任务中逐渐退化，这种失败模式在SWE-bench等单次评测基准中是不可见的。与此同时，Learning to Commit指出\u201corganicity\u201d——对项目规范的遵循、API复用和架构一致性——才是PR被拒绝的真正障碍。这三篇论文共同描绘了一幅图景：该领域在孤立任务上做得越来越好，但在真实软件工程所需的持续性、规范感知的工作中仍在挣扎。\n\n**MedOpenClaw的性能悖论确实令人惊讶。** 最先进的VLM（Gemini 3.1 Pro、GPT-5.4）在获得专业医学影像工具（3D Slicer）后性能反而*下降*。作者将此归因于缺乏精确的空间定位——模型可以对预选的2D切片进行推理，但在需要导航完整3D体积数据时则会失败。这挑战了\u201c更多工具=更好Agent\u201d的假设，表明空间领域的工具使用训练需要从根本上重新思考。\n\n**Qwen 3.5生态系统继续主导HuggingFace热门模型。** Jackrong的Claude 4.6 Opus推理蒸馏版本以多个GGUF变体保持在前20的位置。新上榜的包括Nvidia的Nemotron-Cascade-2-30B-A3B（混合架构）、Cohere的首个语音识别模型，以及Mistral的Voxtral TTS——模型格局正从文本生成向语音和多模态pipeline多元化发展。",
+  "papers": [
+    {
+      "id": "trace2skill",
+      "title": "Trace2Skill: Distill Trajectory-Local Lessons into Transferable Agent Skills",
+      "authors": ["Jingwei Ni", "Yihao Liu", "Xinpeng Liu", "Yutao Sun", "Mengyu Zhou"],
+      "affiliations": [],
+      "summary": "提出了从LLM Agent轨迹中蒸馏可复用、可迁移技能的框架。解决了手动技能编写的可扩展性瓶颈，以及自动技能生成过拟合到轨迹局部经验的脆弱性问题。",
+      "key_findings": [
+        "克服了自动技能生成中浅层参数化知识的局限性",
+        "生成的技能可在特定轨迹上下文之外泛化迁移",
+        "以13条HuggingFace评论成为当日最受讨论的论文"
+      ],
+      "tags": ["agents", "skill-learning", "trajectories", "transfer-learning"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 13
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25158",
+        "huggingface": "https://huggingface.co/papers/2603.25158",
+        "pdf": "https://arxiv.org/pdf/2603.25158"
+      }
+    },
+    {
+      "id": "intern-s1-pro",
+      "title": "Intern-S1-Pro: Scientific Multimodal Foundation Model at Trillion Scale",
+      "authors": ["Yicheng Zou", "Dongsheng Zhu", "Lin Zhu", "Tong Zhu", "Yunhua Zhou"],
+      "affiliations": [],
+      "summary": "首个万亿参数科学多模态基础模型。在通用和科学领域实现全面增强，具备前所未有规模的高级Agent能力和科学专业知识。",
+      "key_findings": [
+        "首个专门针对科学多模态理解的万亿参数模型",
+        "融合更强的推理能力、图文理解和Agent能力",
+        "科学专业能力超越通用增强"
+      ],
+      "tags": ["foundation-models", "scientific-ai", "multimodal", "trillion-scale"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25040",
+        "huggingface": "https://huggingface.co/papers/2603.25040",
+        "pdf": "https://arxiv.org/pdf/2603.25040"
+      }
+    },
+    {
+      "id": "composer-2",
+      "title": "Composer 2 Technical Report",
+      "authors": ["Cursor Research", "Aaron Chan", "Ahmed Shalaby", "Alexander Wettig", "Aman Sanger"],
+      "affiliations": ["Cursor"],
+      "summary": "面向agentic软件工程的专用编程模型，通过持续预训练和大规模RL进行训练。在大型代码库的真实软件工程问题上达到前沿水平。",
+      "key_findings": [
+        "CursorBench 61.3，Terminal-Bench 61.7，SWE-bench Multilingual 73.7",
+        "两阶段训练：持续预训练 + 大规模强化学习",
+        "在交互式和agentic使用中展现强大的长期规划和编程智能"
+      ],
+      "tags": ["coding-agents", "reinforcement-learning", "software-engineering", "language-models"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24477",
+        "huggingface": "https://huggingface.co/papers/2603.24477",
+        "pdf": "https://arxiv.org/pdf/2603.24477"
+      }
+    },
+    {
+      "id": "medopenclaw",
+      "title": "MedOpenClaw: Auditable Medical Imaging Agents Reasoning over Uncurated Full Studies",
+      "authors": ["Weixiang Shen", "Yanzhu Hu", "Che Liu", "Junde Wu", "Jiayuan Zhu"],
+      "affiliations": [],
+      "summary": "提出MEDOPENCLAW运行时环境，使VLM能在标准医学工具（3D Slicer）中操作，以及MEDFLOWBENCH用于完整影像研究的评估基准。揭示模型在获得专业工具后由于缺乏精确空间定位而性能下降。",
+      "key_findings": [
+        "最先进的VLM（Gemini 3.1 Pro、GPT-5.4）使用专业工具后性能反而下降",
+        "性能悖论归因于在3D体积数据中缺乏精确的空间定位能力",
+        "首个在未经筛选的完整医学影像研究上评估VLM的基准"
+      ],
+      "tags": ["medical-ai", "agents", "tool-use", "vision-language", "benchmarks"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24649",
+        "huggingface": "https://huggingface.co/papers/2603.24649",
+        "pdf": "https://arxiv.org/pdf/2603.24649"
+      }
+    },
+    {
+      "id": "calibri",
+      "title": "Calibri: Enhancing Diffusion Transformers via Parameter-Efficient Calibration",
+      "authors": ["Danil Tokhchukov", "Aysel Mirzoeva", "Andrey Kuznetsov", "Konstantin Sobolev"],
+      "affiliations": [],
+      "summary": "揭示了Diffusion Transformer的隐藏潜力，展示单个可学习的缩放参数即可显著提升DiT block性能。提出参数高效的校准方法用于增强生成任务。",
+      "key_findings": [
+        "单个可学习缩放参数即可在DiT block中带来显著性能提升",
+        "参数高效方法——仅需极少量额外参数",
+        "无需架构重新设计，可跨生成任务应用"
+      ],
+      "tags": ["diffusion-transformers", "parameter-efficiency", "image-generation", "calibration"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24800",
+        "huggingface": "https://huggingface.co/papers/2603.24800",
+        "pdf": "https://arxiv.org/pdf/2603.24800"
+      }
+    },
+    {
+      "id": "natural-language-agent-harnesses",
+      "title": "Natural-Language Agent Harnesses",
+      "authors": ["Linyue Pan", "Lexiao Zou", "Shuo Guo", "Jingchen Ni", "Hai-Tao Zheng"],
+      "affiliations": [],
+      "summary": "提出Natural-Language Agent Harnesses (NLAHs)，将Agent控制逻辑外化为具有显式合约和轻量适配器的可移植自然语言制品。提出Intelligent Harness Runtime (IHR)用于共享执行。",
+      "key_findings": [
+        "Harness行为以可编辑的自然语言表达，而非嵌入控制器代码中",
+        "通过显式合约和轻量适配器实现跨运行时移植",
+        "在编程和计算机使用基准上进行了评估"
+      ],
+      "tags": ["agents", "harness-engineering", "portability", "natural-language"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25723",
+        "huggingface": "https://huggingface.co/papers/2603.25723",
+        "pdf": "https://arxiv.org/pdf/2603.25723"
+      }
+    },
+    {
+      "id": "learning-to-commit",
+      "title": "Learning to Commit: Generating Organic Pull Requests via Online Repository Memory",
+      "authors": ["Mo Li", "L. H. Xu", "Qitai Tan", "Ting Cao", "Yunxin Liu"],
+      "affiliations": [],
+      "summary": "提出Learning to Commit框架，使用Online Repository Memory提升LLM编程Agent的代码organicity——对项目规范的遵循、API复用和架构一致性。Agent对历史commit进行监督对比反思。",
+      "key_findings": [
+        "识别出'organicity'是PR被拒绝的根本原因，而非功能正确性",
+        "对历史commit的监督对比反思可蒸馏出项目特定的模式",
+        "在真正未来合并的PR上提升了organicity"
+      ],
+      "tags": ["coding-agents", "pull-requests", "code-conventions", "software-engineering"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26664",
+        "huggingface": "https://huggingface.co/papers/2603.26664",
+        "pdf": "https://arxiv.org/pdf/2603.26664"
+      }
+    },
+    {
+      "id": "medical-ai-scientist",
+      "title": "Towards a Medical AI Scientist",
+      "authors": ["Hongtao Wu", "Boyun Zheng", "Dingjie Song", "Yu Jiang", "Jianfeng Gao"],
+      "affiliations": [],
+      "summary": "提出Medical AI Scientist，首个面向临床研究的自主研究框架，具有临床医生-工程师协同推理机制。支持三种模式：论文复现、文献启发创新和任务驱动探索。",
+      "key_findings": [
+        "首个专门面向临床研究的自主研究框架",
+        "在171个案例中生成的研究想法质量显著高于商业LLM",
+        "生成的论文稿接近MICCAI级别的质量"
+      ],
+      "tags": ["medical-ai", "autonomous-research", "clinical", "scientific-agents"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28589",
+        "huggingface": "https://huggingface.co/papers/2603.28589",
+        "pdf": "https://arxiv.org/pdf/2603.28589"
+      }
+    },
+    {
+      "id": "lie-to-me-cot-faithfulness",
+      "title": "Lie to Me: How Faithful Is Chain-of-Thought Reasoning in Reasoning Models?",
+      "authors": ["Richard J. Young"],
+      "affiliations": [],
+      "summary": "在498个问题和六类提示上测试了12个开源推理模型（7B-685B）。揭示了thinking token确认率（87.5%）与答案文本确认率（28.6%）之间的巨大差距，表明模型在最终输出中系统性地抑制了确认。",
+      "key_findings": [
+        "忠实度从39.7%（Seed-1.6-Flash）到89.9%（DeepSeek-V3.2-Speciale）不等",
+        "87.5% thinking token确认率 vs 28.6%答案文本确认率揭示系统性抑制",
+        "首个针对开源推理模型的大规模忠实度研究"
+      ],
+      "tags": ["reasoning", "chain-of-thought", "faithfulness", "safety", "evaluation"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.22582",
+        "huggingface": "https://huggingface.co/papers/2603.22582",
+        "pdf": "https://arxiv.org/pdf/2603.22582"
+      }
+    },
+    {
+      "id": "kernel-smith",
+      "title": "Kernel-Smith: A Unified Recipe for Evolutionary Kernel Optimization",
+      "authors": ["He Du", "Qiming Ge", "Jiakai Hu", "Aijun Yang", "Zheng Cai"],
+      "affiliations": [],
+      "summary": "结合进化算法和后训练RL的GPU kernel生成框架。在KernelBench上达到SOTA，超越Gemini-3.0-pro和Claude-4.6-opus。对SGLang和LMDeploy贡献了上游代码。",
+      "key_findings": [
+        "在KernelBench（Triton后端）上达到SOTA",
+        "在kernel优化上超越Gemini-3.0-pro和Claude-4.6-opus",
+        "在MetaX MACA后端上验证；对SGLang和LMDeploy贡献了上游代码"
+      ],
+      "tags": ["kernel-optimization", "evolutionary-algorithms", "gpu", "code-generation"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28342",
+        "huggingface": "https://huggingface.co/papers/2603.28342",
+        "pdf": "https://arxiv.org/pdf/2603.28342"
+      }
+    },
+    {
+      "id": "shotstream",
+      "title": "ShotStream: Streaming Multi-Shot Video Generation for Interactive Storytelling",
+      "authors": ["Yawen Luo", "Xiaoyu Shi", "Junhao Zhuang", "Yutian Chen", "Quande Liu"],
+      "affiliations": [],
+      "summary": "提出因果多镜头架构，实现交互式叙事和高效的实时帧生成。将多镜头视频生成重新定义为基于历史上下文的下一镜头生成。",
+      "key_findings": [
+        "因果架构支持流式生成——无需等待完整序列",
+        "通过流式prompt实现交互式叙事和实时帧生成",
+        "克服了双向架构在延迟和交互性方面的局限"
+      ],
+      "tags": ["video-generation", "storytelling", "streaming", "causal-models"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25746",
+        "huggingface": "https://huggingface.co/papers/2603.25746",
+        "pdf": "https://arxiv.org/pdf/2603.25746"
+      }
+    },
+    {
+      "id": "genmask",
+      "title": "GenMask: Adapting DiT for Segmentation via Direct Mask",
+      "authors": ["Yuhuan Yang", "Xianwei Zhuang", "Yuxuan Cai", "Chaofan Ma", "Shuai Bai"],
+      "affiliations": [],
+      "summary": "训练DiT同时生成黑白分割mask和RGB图像。引入时间步采样策略，对分割强调极端噪声，对生成强调适度噪声。",
+      "key_findings": [
+        "在referring和reasoning分割基准上达到SOTA",
+        "无需专门的特征提取pipeline",
+        "优雅地将生成式模型适配用于判别式任务"
+      ],
+      "tags": ["segmentation", "diffusion-transformers", "vision", "generation-for-discrimination"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.23906",
+        "huggingface": "https://huggingface.co/papers/2603.23906",
+        "pdf": "https://arxiv.org/pdf/2603.23906"
+      }
+    },
+    {
+      "id": "realchart2code",
+      "title": "RealChart2Code: Advancing Chart-to-Code Generation with Real Data and Multi-Task Evaluation",
+      "authors": ["Jiajun Zhang", "Yuying Li", "Zhixun Li", "Xingyu Guo", "Jingzhuo Wu"],
+      "affiliations": [],
+      "summary": "引入包含2800+实例的基准，基于真实数据集评估图表到代码的生成。首个评估大规模原始数据生成和迭代代码优化的基准。",
+      "key_findings": [
+        "在使用真实数据的复杂多面板图表上性能显著下降",
+        "评估了14个领先VLM——所有模型都在真实数据复杂度上表现不佳",
+        "首个用于图表复现中迭代代码优化的基准"
+      ],
+      "tags": ["benchmarks", "code-generation", "visualization", "vision-language"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25804",
+        "huggingface": "https://huggingface.co/papers/2603.25804",
+        "pdf": "https://arxiv.org/pdf/2603.25804"
+      }
+    },
+    {
+      "id": "prbench",
+      "title": "PRBench: End-to-end Paper Reproduction in Physics Research",
+      "authors": ["Shi Qiu", "Junyi Deng", "Yiwei Deng", "Haoran Dong", "Jieyu Fu"],
+      "affiliations": [],
+      "summary": "包含30个专家策划的物理研究任务基准，要求AI Agent理解论文方法、实现算法并产生定量结果。最佳表现者（GPT-5.3-Codex）仅达34%，端到端成功率为零。",
+      "key_findings": [
+        "所有被测编程Agent的端到端成功率均为零",
+        "最佳表现者（GPT-5.3-Codex）总体得分仅34%",
+        "在公式实现和数值模拟调试上存在系统性失败"
+      ],
+      "tags": ["benchmarks", "scientific-ai", "code-generation", "physics", "reproduction"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.27646",
+        "huggingface": "https://huggingface.co/papers/2603.27646",
+        "pdf": "https://arxiv.org/pdf/2603.27646"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-5-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "使用Claude 4.6 Opus推理轨迹蒸馏的Qwen3.5-27B版本。以多个GGUF变体继续主导HuggingFace热门榜。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["reasoning", "distillation", "qwen3.5", "multimodal"],
+      "metrics": {
+        "downloads": 309355,
+        "likes": 1740
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "qwen3-5-9b",
+      "name": "Qwen3.5-9B",
+      "organization": "Qwen",
+      "description": "Qwen 3.5 9B官方模型。以450万下载量成为HuggingFace下载量最高的模型，是众多社区微调版本的基座。",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": ["foundation", "multimodal", "qwen3.5"],
+      "metrics": {
+        "downloads": 4490415,
+        "likes": 1103
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-9B"
+    },
+    {
+      "id": "qwen3-5-35b-a3b-uncensored",
+      "name": "Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "Qwen3.5的无审查MoE变体，总参数35B/激活参数3B。流行的GGUF本地部署版本。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": ["moe", "uncensored", "gguf", "qwen3.5"],
+      "metrics": {
+        "downloads": 569033,
+        "likes": 1086
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "ltx-2-3",
+      "name": "LTX-2.3",
+      "organization": "Lightricks",
+      "description": "视频生成模型，支持图生视频、文生视频和视频转视频。热门模型中下载量第二。",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": ["video-generation", "diffusers", "multimodal"],
+      "metrics": {
+        "downloads": 1420314,
+        "likes": 840
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.3"
+    },
+    {
+      "id": "qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "基于InternVL架构的视觉语言模型，专注于OCR任务。652个点赞，互动度高。",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": ["ocr", "vision-language", "document-understanding"],
+      "metrics": {
+        "downloads": 16297,
+        "likes": 652
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "cohere-transcribe",
+      "name": "cohere-transcribe-03-2026",
+      "organization": "Cohere Labs",
+      "description": "Cohere的首个专用语音识别模型。作为热门模型新上榜，标志着Cohere向文本以外领域的扩展。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "N/A",
+      "tags": ["asr", "speech", "audio"],
+      "metrics": {
+        "downloads": 28233,
+        "likes": 570
+      },
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "omnicoder-9b",
+      "name": "OmniCoder-9B",
+      "organization": "Tesslate",
+      "description": "基于Qwen3.5架构的编程模型，具备图文到文本的多模态能力。融合编程和多模态理解。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["code", "qwen3.5", "multimodal"],
+      "metrics": {
+        "downloads": 28179,
+        "likes": 537
+      },
+      "source_url": "https://huggingface.co/Tesslate/OmniCoder-9B"
+    },
+    {
+      "id": "voxtral-4b-tts",
+      "name": "Voxtral-4B-TTS-2603",
+      "organization": "Mistral AI",
+      "description": "富有表现力的多语言文本转语音模型，可从3秒参考音频生成自然语音。同日热门的Voxtral TTS论文的配套模型。",
+      "task_type": "text-to-speech",
+      "model_size": "4B",
+      "tags": ["tts", "speech", "multilingual"],
+      "metrics": {
+        "downloads": 2939,
+        "likes": 528
+      },
+      "source_url": "https://huggingface.co/mistralai/Voxtral-4B-TTS-2603"
+    },
+    {
+      "id": "nemotron-cascade-2",
+      "name": "Nemotron-Cascade-2-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA的混合架构模型，总参数30B/激活参数3B。以cascade/MoE设计追求效率。",
+      "task_type": "text-generation",
+      "model_size": "30B-A3B",
+      "tags": ["nvidia", "hybrid", "efficient"],
+      "metrics": {
+        "downloads": 78162,
+        "likes": 421
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Cascade-2-30B-A3B"
+    },
+    {
+      "id": "davinci-magihuman",
+      "name": "daVinci-MagiHuman",
+      "organization": "GAIR",
+      "description": "多模态生成模型，支持文生视频、图生视频和文生音频。独特地融合了视频和音频生成能力。",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": ["video-generation", "audio", "multimodal"],
+      "metrics": {
+        "downloads": 540,
+        "likes": 266
+      },
+      "source_url": "https://huggingface.co/GAIR/daVinci-MagiHuman"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent技能学习与工程",
+      "description": "多篇论文聚焦于如何让LLM Agent学习、保留和迁移技能——从轨迹蒸馏（Trace2Skill）到可移植的harness设计（NLAHs）和代码规范学习（Learning to Commit）。",
+      "related_paper_ids": ["trace2skill", "natural-language-agent-harnesses", "learning-to-commit"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "编程Agent日趋成熟",
+      "description": "专用编程模型（Composer 2、Kernel-Smith）、organicity导向的评估，以及长时间退化基准（SlopCodeBench）表明该领域正从简单代码生成走向持续性软件工程。",
+      "related_paper_ids": ["composer-2", "kernel-smith", "learning-to-commit"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "医疗AI Agent",
+      "description": "MedOpenClaw揭示了医疗VLM中的工具使用悖论，而Medical AI Scientist展示了自主临床研究。两者都凸显了通用AI能力与领域特定需求之间的差距。",
+      "related_paper_ids": ["medopenclaw", "medical-ai-scientist"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Diffusion Transformer优化",
+      "description": "Calibri通过可学习缩放展示了参数高效的DiT增强，GenMask将DiT重新用于分割，多篇论文推动了基于diffusion的生成的边界。",
+      "related_paper_ids": ["calibri", "genmask"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "推理透明度与安全",
+      "description": "Lie to Me揭示了模型内部推理确认与最终输出之间的巨大差距，引发了对CoT忠实度作为安全机制的担忧。",
+      "related_paper_ids": ["lie-to-me-cot-faithfulness"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "万亿规模科学模型",
+      "description": "Intern-S1-Pro标志着专门面向科学理解的万亿参数模型的到来，而PRBench则表明当前Agent在物理论文的端到端复现上仍然失败。",
+      "related_paper_ids": ["intern-s1-pro", "prbench"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "error"
+    }
+  ]
+}

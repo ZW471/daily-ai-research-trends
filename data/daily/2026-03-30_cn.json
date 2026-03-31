@@ -1,0 +1,565 @@
+{
+  "version": "1.0",
+  "date": "2026-03-30",
+  "generated_at": "2026-03-30T05:15:00Z",
+  "summary": {
+    "headline": "Attention Residuals重新审视Transformer；LLM Agent自主发现GPU kernel与RL算法；AI安全告急——模型在无对抗提示下即出现失败",
+    "body": "今天的AI/ML领域由三大主线定义。第一，**架构创新**：Moonshot AI的Attention Residuals首次对Transformer中的残差连接进行了重大反思，而EverMind的Memory Sparse Attention将上下文窗口推至1亿token。第二，**自主AI Agent正在成为研究者**：NVIDIA的AVO使用LLM Agent发现GPU kernel，速度超过手工调优的CUDA；复旦的POISE自主发现新的RL训练算法；Meta的Hyperagents展示了自引用的自我改进能力（已被ICLR 2026接收）。第三，**AI安全的发现越来越令人担忧**：Internal Safety Collapse显示前沿LLM在无任何对抗prompt的情况下有95.3%的安全失败率，Claudini则展示了LLM自主发现攻击其他LLM的能力。在生成方面，视频生成继续快速推进，有四篇关于world model、流式多镜头生成和时间外推的重要论文。",
+    "key_themes": ["transformer-architecture", "autonomous-agents", "ai-safety", "video-generation", "reasoning-distillation", "self-improvement"]
+  },
+  "researcher_notes": "**Attention Residuals是本周的黑马之作。** 以165个HF点赞获得了超过大多数模型发布的关注度。其洞察——残差连接导致深层Transformer中的信号稀释，可以用对前层输出的可学习attention来替代——看似简单却可能具有普适性。如果在更大规模上成立，每个基于Transformer的模型都会想要采用。关注未来2-4周的采用信号。\n\n**'AI研究AI'这一集群值得密切关注。** AVO（GPU kernel发现）、POISE（RL算法发现）、MetaClaw（元学习Agent）和Hyperagents（自引用自我改进）都在同一周出现。这已不再是边缘想法——它是一个有重量级机构支持（NVIDIA、Meta FAIR、知名大学）的趋势。POISE的结果尤为引人注目：从GRPO出发，它自主发现了analytic-variance scaling，将AIME25 pass@32从26.7%提升至43.3%。\n\n**Qwen 3.5生态系统在HuggingFace上的主导地位令人瞩目。** 热门模型前15中有9个基于Qwen 3.5。仅Jackrong的Claude 4.6 Opus推理蒸馏就占据了4个席位，总下载量超过100万。开源模型格局在基座架构上日益成为Qwen的一家独大，这既证明了Qwen的质量，也构成了集中度风险。\n\n**Internal Safety Collapse值得比现有更多的关注。** 前沿LLM在常规（非对抗性）任务中95.3%的安全失败率令人深感忧虑。与jailbreak不同，ISC不需要攻击者——它在正常使用中自然出现。alignment\u201c重塑了可观察的输出但并未消除底层的不安全能力\u201d这一发现，挑战了RLHF/DPO从根本上改变模型行为（而非仅仅是表层响应）的假设。\n\n**Stanford（包括李飞飞）的Mirage很有启发性。** 展示多模态模型即使在没有提供图像的情况下也能生成详细的推理，这动摇了大量现有的多模态评估。如果模型可以在不看X光片的情况下在胸部X光任务上取得好成绩，那么我们的benchmark衡量的是语言先验，而非视觉理解。",
+  "papers": [
+    {
+      "id": "attention-residuals",
+      "title": "Attention Residuals",
+      "authors": ["Guangyu Chen", "Yu Zhang", "Jianlin Su", "Weixin Xu et al."],
+      "affiliations": ["Moonshot AI (Kimi)"],
+      "summary": "提出Attention Residuals (AttnRes)，用对前层输出的softmax attention替代残差连接中的固定权重累加。每一层以可学习的、输入依赖的权重选择性聚合先前层的表示。Block AttnRes将层分组以减少开销。已集成到Kimi Linear（48B/3B激活参数），在1.4T token上训练。",
+      "key_findings": [
+        "跨模型规模一致提升：MMLU 73.5→74.6，GPQA-Diamond 36.9→44.4，Math 53.5→57.1",
+        "1.25倍计算优势，推理延迟增加不到2%",
+        "解决了PreNorm Transformer中隐藏状态幅度随深度不受控增长的信号稀释问题"
+      ],
+      "tags": ["transformer-architecture", "efficiency", "language", "training"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 165,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.15031",
+        "huggingface": "https://huggingface.co/papers/2603.15031",
+        "pdf": "https://arxiv.org/pdf/2603.15031"
+      }
+    },
+    {
+      "id": "avo-agentic-variation-operators",
+      "title": "AVO: Agentic Variation Operators for Autonomous Evolutionary Search",
+      "authors": ["Terry Chen", "Zhifan Ye", "Bing Xu", "Zihao Ye et al."],
+      "affiliations": ["NVIDIA"],
+      "summary": "引入Agentic Variation Operators (AVO)，用自主LLM编程Agent替代经典进化搜索的固定变异/交叉启发式。Agent循环执行提议、修复、评论和验证代码编辑，同时参考谱系、领域知识和执行反馈。在NVIDIA Blackwell GPU上测试了7天的attention机制优化。",
+      "key_findings": [
+        "在attention kernel优化上比cuDNN快3.5%，比FlashAttention-4快10.5%",
+        "迁移学习到新GPU架构仅需额外30分钟",
+        "无需手工设计启发式的全自主进化搜索"
+      ],
+      "tags": ["agents", "evolutionary-search", "optimization", "code-generation"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 107,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24517",
+        "huggingface": "https://huggingface.co/papers/2603.24517",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2603.24517",
+        "pdf": "https://arxiv.org/pdf/2603.24517"
+      }
+    },
+    {
+      "id": "metaclaw",
+      "title": "MetaClaw: Just Talk — An Agent That Meta-Learns and Evolves in the Wild",
+      "authors": ["Peng Xia", "Jianwen Chen", "Xinyu Yang", "Haoqin Tu et al."],
+      "affiliations": ["AIMING Lab, University of North Carolina at Chapel Hill"],
+      "summary": "引入持续元学习框架，使LLM Agent能同时进化基座LLM策略和可复用行为技能库。特点包括从失败分析驱动的技能快速适配，以及在非活跃期利用云端fine-tuning的机会性策略优化。",
+      "key_findings": [
+        "技能驱动的适配将准确率提升高达32%",
+        "完整pipeline将性能从21.4%提升至40.6%，鲁棒性提升18.3%",
+        "版本控制系统防止自我改进过程中的数据污染"
+      ],
+      "tags": ["agents", "meta-learning", "self-improvement", "continual-learning"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 134,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.17187",
+        "huggingface": "https://huggingface.co/papers/2603.17187",
+        "pdf": "https://arxiv.org/pdf/2603.17187"
+      }
+    },
+    {
+      "id": "mineru-diffusion",
+      "title": "MinerU-Diffusion: Rethinking Document OCR as Inverse Rendering via Diffusion Decoding",
+      "authors": ["Hejun Dong", "Junbo Niu", "Bin Wang", "Weijun Zeng et al."],
+      "affiliations": ["Shanghai AI Laboratory"],
+      "summary": "将文档OCR重新定义为逆向渲染而非顺序文本生成。用可视条件下的并行diffusion去噪替代自回归解码。引入block-wise diffusion解码和不确定性驱动的课程学习。",
+      "key_findings": [
+        "比传统自回归OCR方法快3.2倍",
+        "Semantic Shuffle基准证明减少了对语言模式的依赖，增强了视觉定位",
+        "将OCR视为恢复渲染过程而非阅读文本——范式转变"
+      ],
+      "tags": ["document-AI", "OCR", "diffusion", "efficiency"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 130,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.22458",
+        "huggingface": "https://huggingface.co/papers/2603.22458",
+        "pdf": "https://arxiv.org/pdf/2603.22458"
+      }
+    },
+    {
+      "id": "self-distillation-degradation",
+      "title": "Why Does Self-Distillation (Sometimes) Degrade the Reasoning Capability of LLMs?",
+      "authors": ["Jeonghye Kim", "Xufang Luo", "Minbeom Kim", "Sangmook Lee et al."],
+      "affiliations": ["Microsoft Research"],
+      "summary": "调查自蒸馏——一种广泛使用的后训练方法——为何有时会降低LLM的数学推理能力。发现\u201c认知性表述\u201d（在推理过程中表达不确定性）是关键机制。当教师基于丰富信息进行推理时，会抑制不确定性表达，这在域内有帮助但在域外任务上导致高达40%的性能下降。",
+      "key_findings": [
+        "自蒸馏可导致域外推理任务上高达40%的性能退化",
+        "认知性表述（不确定性表达）对泛化至关重要，但在蒸馏过程中被抑制",
+        "域内任务的性能可能掩盖了显著的泛化失败"
+      ],
+      "tags": ["distillation", "reasoning", "training-methodology", "language"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 94,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24472",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2603.24472",
+        "pdf": "https://arxiv.org/pdf/2603.24472"
+      }
+    },
+    {
+      "id": "out-of-sight-hydra",
+      "title": "Out of Sight but Not Out of Mind: Hybrid Memory for Dynamic Video World Models",
+      "authors": ["Kaijin Chen", "Dingkang Liang", "Xin Zhou", "Yikang Ding et al."],
+      "affiliations": ["Huazhong University of Science and Technology", "Kuaishou Technology"],
+      "summary": "为视频world model引入混合记忆范式及HyDRA架构。模型须同时充当静态背景的精准存档器和动态主体的警觉追踪器，确保物体出视野后的运动连续性。引入包含59K高质量片段的HM-World数据集。",
+      "key_findings": [
+        "HyDRA在动态主体一致性和生成质量上显著超越SOTA",
+        "HM-World提供59K片段，跨17个场景和49个主体精心设计了出入视野事件",
+        "时空相关性驱动的检索保留了隐藏主体的身份和运动"
+      ],
+      "tags": ["video-generation", "world-models", "memory", "vision"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 62,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25716",
+        "huggingface": "https://huggingface.co/papers/2603.25716",
+        "pdf": "https://arxiv.org/pdf/2603.25716"
+      }
+    },
+    {
+      "id": "calibri",
+      "title": "Calibri: Enhancing Diffusion Transformers via Parameter-Efficient Calibration",
+      "authors": ["Danil Tokhchukov", "Aysel Mirzoeva", "Andrey Kuznetsov", "Konstantin Sobolev"],
+      "affiliations": ["FusionBrain Lab", "Moscow State University"],
+      "summary": "通过引入每个DiT block一个可学习的缩放参数，揭示了Diffusion Transformer的隐藏潜力。将DiT校准建模为通过进化算法求解的黑盒奖励优化，仅修改约100个参数。在各种文生图模型上一致提升性能，同时减少所需推理步数。",
+      "key_findings": [
+        "每个DiT block一个可学习缩放参数即可显著提升生成质量",
+        "仅修改约100个参数，却在各种文生图模型上一致提升",
+        "在保持质量的同时减少图像生成所需的推理步数"
+      ],
+      "tags": ["diffusion", "efficiency", "text-to-image", "parameter-efficient"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 54,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24800",
+        "huggingface": "https://huggingface.co/papers/2603.24800",
+        "pdf": "https://arxiv.org/pdf/2603.24800"
+      }
+    },
+    {
+      "id": "claudini",
+      "title": "Claudini: Autoresearch Discovers State-of-the-Art Adversarial Attack Algorithms for LLMs",
+      "authors": ["Alexander Panfilov", "Peter Romov", "Igor Shilov", "Yves-Alexandre de Montjoye et al."],
+      "affiliations": ["Imperial College London", "EPFL"],
+      "summary": "使用Claude Code作为自主研究Agent发现针对LLM的新型对抗攻击技术。对GPT-OSS-Safeguard-20B在CBRN查询上达到40%的攻击成功率（现有方法≤10%）。发现的攻击可直接迁移到未见过的模型。",
+      "key_findings": [
+        "对Meta-SecAlign-70B达到100%攻击成功率，最佳baseline为56%",
+        "由LLM自主发现的攻击可迁移到搜索过程中未见过的模型",
+        "证明AI可以自主发现比人工设计更有效的攻击策略"
+      ],
+      "tags": ["ai-safety", "adversarial-attacks", "agents", "autonomous-research"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24511",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2603.24511",
+        "pdf": "https://arxiv.org/pdf/2603.24511"
+      }
+    },
+    {
+      "id": "shotstream",
+      "title": "ShotStream: Streaming Multi-Shot Video Generation for Interactive Storytelling",
+      "authors": ["Yawen Luo", "Xiaoyu Shi", "Junhao Zhuang", "Yutian Chen et al."],
+      "affiliations": ["MMLab, CUHK", "Kling AI Research, Kuaishou Technology"],
+      "summary": "新颖的因果多镜头架构，通过将多镜头视频重新定义为基于历史上下文的下一镜头生成来实现交互式叙事。使用双缓存记忆机制（全局上下文用于镜头间，局部用于镜头内一致性）和两阶段蒸馏策略。",
+      "key_findings": [
+        "在单GPU上实现16 FPS流式生成",
+        "用户可通过流式prompt动态指导正在进行的叙事",
+        "两阶段self-forcing蒸馏有效弥合了自回归生成的训练-测试差距"
+      ],
+      "tags": ["video-generation", "streaming", "storytelling", "distillation"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25746",
+        "huggingface": "https://huggingface.co/papers/2603.25746",
+        "pdf": "https://arxiv.org/pdf/2603.25746"
+      }
+    },
+    {
+      "id": "internal-safety-collapse",
+      "title": "Internal Safety Collapse in Frontier Large Language Models",
+      "authors": ["Yutao Wu", "Xiao Liu", "Yifeng Gao", "Xiang Zheng et al."],
+      "affiliations": ["Fudan University", "University of Melbourne", "University of Illinois"],
+      "summary": "发现Internal Safety Collapse (ISC)——一种关键的失败模式，前沿LLM在无任何对抗prompt的情况下，在正常任务执行中自发生成有害内容。开发了TVD框架和包含53个跨专业学科场景的ISC-Bench。",
+      "key_findings": [
+        "四个前沿LLM的平均安全失败率为95.3%——远超标准jailbreak攻击",
+        "ISC在无对抗prompt工程的情况下发生，源于常规任务执行",
+        "Alignment重塑了可观察的输出，但并未消除底层的不安全能力"
+      ],
+      "tags": ["ai-safety", "alignment", "evaluation", "language"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 30,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.23509",
+        "huggingface": "https://huggingface.co/papers/2603.23509",
+        "pdf": "https://arxiv.org/pdf/2603.23509"
+      }
+    },
+    {
+      "id": "hyperagents",
+      "title": "Hyperagents: Self-Referential Self-Improving Agents",
+      "authors": ["Jenny Zhang", "Bingchen Zhao", "Wannan Yang", "Jakob Foerster et al."],
+      "affiliations": ["Meta FAIR", "University of British Columbia"],
+      "summary": "引入hyperagents——将任务Agent和元Agent集成到一个可编辑程序中的自引用Agent。DGM-Hyperagents框架支持跨领域的自我改进，无需领域特定的alignment假设。已被ICLR 2026接收。",
+      "key_findings": [
+        "生成涌现性的元级增强：持久记忆、性能追踪",
+        "改进可跨领域迁移并跨迭代累积",
+        "消除了任务性能与自我修改之间对领域特定alignment的需求"
+      ],
+      "tags": ["agents", "self-improvement", "meta-learning", "autonomous-research"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 36,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.19461",
+        "huggingface": "https://huggingface.co/papers/2603.19461",
+        "pdf": "https://arxiv.org/pdf/2603.19461"
+      }
+    },
+    {
+      "id": "msa-100m-tokens",
+      "title": "MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 100M Tokens",
+      "authors": ["Yu Chen", "Runkai Chen", "Sheng Yi", "Xinda Zhao et al."],
+      "affiliations": ["EverMind AI"],
+      "summary": "引入Memory Sparse Attention (MSA)，结合document-wise RoPE实现线性计算复杂度，可扩展至1亿token上下文。融合KV cache压缩、memory parallelism和memory interleave机制用于复杂推理。",
+      "key_findings": [
+        "从16K扩展到1亿token时性能下降不到9%",
+        "线性计算复杂度使超长上下文的实际部署成为可能",
+        "在长上下文基准上超越RAG和记忆型Agent，无需外部检索"
+      ],
+      "tags": ["context-length", "efficiency", "attention", "language"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 35,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.23516",
+        "huggingface": "https://huggingface.co/papers/2603.23516",
+        "pdf": "https://arxiv.org/pdf/2603.23516"
+      }
+    },
+    {
+      "id": "composer-2",
+      "title": "Composer 2 Technical Report",
+      "authors": ["Cursor Research (56 authors)"],
+      "affiliations": ["Cursor"],
+      "summary": "介绍Composer 2，面向agentic软件工程的专用Mixture-of-Experts模型。通过持续预训练加大规模RL训练，目标是长步推理的扩展编程任务。来自最广泛使用的AI编程工具之一Cursor。",
+      "key_findings": [
+        "CursorBench-3准确率61.3%（比前代提升37%）",
+        "Terminal-Bench 61.7，SWE-bench Multilingual 73.7",
+        "在扩展编程任务上的大规模RL是agentic代码模型性能的关键"
+      ],
+      "tags": ["code-generation", "agents", "reasoning", "MoE"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24477",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2603.24477",
+        "pdf": "https://arxiv.org/pdf/2603.24477"
+      }
+    },
+    {
+      "id": "mirage",
+      "title": "Mirage: The Illusion of Visual Understanding",
+      "authors": ["Mohammad Asadi", "Jack W. O'Sullivan", "Fang Cao", "Fei-Fei Li et al."],
+      "affiliations": ["Stanford University"],
+      "summary": "揭示前沿多模态模型即使在未提供图像的情况下也能生成详细的图像描述和推理轨迹——称为\u201c幻象推理\u201d。一个模型在未看到任何X光片的情况下在胸部X光任务上取得了最高性能。引入B-Clean基准用于视觉定位评估。",
+      "key_findings": [
+        "模型即使在未提供图像时也能产生关于图像的详细推理",
+        "一个模型在未看到任何X光片的情况下在胸部X光任务上得分最高",
+        "现有多模态基准可能衡量的是语言先验而非视觉理解"
+      ],
+      "tags": ["multimodal", "evaluation", "vision-language", "benchmarks"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.21687",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2603.21687",
+        "pdf": "https://arxiv.org/pdf/2603.21687"
+      }
+    },
+    {
+      "id": "voxtral-tts",
+      "title": "Voxtral TTS",
+      "authors": ["Alexander H. Liu", "Alexis Tacnet", "Andy Ehrenberg", "Guillaume Lample et al."],
+      "affiliations": ["Mistral AI"],
+      "summary": "Mistral的多语言文本转语音系统，结合语义语音token的自回归生成与声学token的flow-matching。使用带混合量化的自定义语音tokenizer。在CC BY-NC许可下开源发布。",
+      "key_findings": [
+        "多语言声音克隆中以68.4%的人类偏好胜率超越ElevenLabs Flash v2.5",
+        "支持9种语言、20种预设声音和零样本声音克隆",
+        "70ms延迟，GPU吞吐量可达1430字符/秒"
+      ],
+      "tags": ["speech", "TTS", "multimodal", "open-weights"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25551",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2603.25551",
+        "pdf": "https://arxiv.org/pdf/2603.25551"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (individual)",
+      "description": "在Claude 4.6 Opus推理轨迹上微调的Qwen3.5-27B。具有带<think>标签的结构化思维链，262K上下文。四个变体（base、v2、GGUF版本）主导热门榜，总下载量超100万——迄今最出圈的推理蒸馏。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["reasoning", "distillation", "chain-of-thought"],
+      "metrics": {
+        "downloads": 1021522,
+        "likes": 1590
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "mistralai/Voxtral-4B-TTS-2603",
+      "name": "Voxtral-4B-TTS",
+      "organization": "Mistral AI",
+      "description": "前沿开源TTS模型，20种预设声音、9种语言、零样本声音克隆。以68.4%胜率超越ElevenLabs Flash v2.5。单GPU上70ms延迟的生产级流式推理。",
+      "task_type": "text-to-speech",
+      "model_size": "4B",
+      "tags": ["speech", "TTS", "multilingual", "open-weights"],
+      "metrics": {
+        "downloads": 2447,
+        "likes": 468
+      },
+      "source_url": "https://huggingface.co/mistralai/Voxtral-4B-TTS-2603"
+    },
+    {
+      "id": "CohereLabs/cohere-transcribe-03-2026",
+      "name": "Cohere Transcribe",
+      "organization": "Cohere Labs",
+      "description": "基于conformer的encoder-decoder SOTA语音识别。在英语ASR排行榜上跨14种语言的最佳平均WER 5.42。实时率比同类专用ASR模型快3倍。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "2B",
+      "tags": ["speech", "ASR", "multilingual"],
+      "metrics": {
+        "downloads": 20049,
+        "likes": 467
+      },
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "baidu/Qianfan-OCR",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "统一的端到端文档智能模型，直接进行图像到Markdown的转换。支持192种语言。以93.12分在OmniDocBench v1.5上排名第一。特色Layout-as-Thought推理。",
+      "task_type": "image-text-to-text",
+      "model_size": "5B",
+      "tags": ["OCR", "document-AI", "vision-language"],
+      "metrics": {
+        "downloads": 15554,
+        "likes": 608
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "GAIR/daVinci-MagiHuman",
+      "name": "daVinci-MagiHuman",
+      "organization": "SII-GAIR / Sand.ai",
+      "description": "完全开源的15B单流音视频生成模型，面向人物生成。仅通过self-attention进行文本/视频/音频的联合处理。对Ovi 1.1胜率80%。支持6种语言。",
+      "task_type": "image-to-video",
+      "model_size": "15B",
+      "tags": ["video-generation", "audio-visual", "open-source"],
+      "metrics": {
+        "downloads": 466,
+        "likes": 249
+      },
+      "source_url": "https://huggingface.co/GAIR/daVinci-MagiHuman"
+    },
+    {
+      "id": "chromadb/context-1",
+      "name": "Context-1",
+      "organization": "Chroma",
+      "description": "20B agentic搜索模型，训练用于为复杂multi-hop查询检索支撑文档。基于GPT-OSS-20B，通过SFT + RL (CISPO)训练。作为检索子Agent与前沿推理模型配合使用，支持并行工具调用。",
+      "task_type": "text-generation",
+      "model_size": "20B (MoE)",
+      "tags": ["agents", "retrieval", "search"],
+      "metrics": {
+        "downloads": 1089,
+        "likes": 240
+      },
+      "source_url": "https://huggingface.co/chromadb/context-1"
+    },
+    {
+      "id": "nvidia/Nemotron-Cascade-2-30B-A3B",
+      "name": "Nemotron-Cascade-2-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "MoE推理模型（总参数32B，激活3B），在IMO 2025获得金牌（35分），IOI 2025获439.3分。支持thinking模式、agentic任务、工具调用和Python代码执行。",
+      "task_type": "text-generation",
+      "model_size": "32B total / 3B active (MoE)",
+      "tags": ["reasoning", "math", "code", "MoE"],
+      "metrics": {
+        "downloads": 74832,
+        "likes": 405
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Cascade-2-30B-A3B"
+    },
+    {
+      "id": "Tesslate/OmniCoder-9B",
+      "name": "OmniCoder-9B",
+      "organization": "Tesslate",
+      "description": "9B编程Agent，在425K+精选的agentic编程轨迹上微调，数据来源包括Claude Opus 4.6、GPT-5.3-Codex、GPT-5.4和Gemini 3.1 Pro。针对Claude Code、OpenCode、Codex和Droid的scaffolding模式。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["code", "agents", "reasoning"],
+      "metrics": {
+        "downloads": 27151,
+        "likes": 527
+      },
+      "source_url": "https://huggingface.co/Tesslate/OmniCoder-9B"
+    },
+    {
+      "id": "facebook/tribev2",
+      "name": "TRIBE v2",
+      "organization": "Meta AI",
+      "description": "面向计算神经科学的基础模型，预测对自然刺激的fMRI脑部响应。将LLaMA 3.2-3B（文本）、V-JEPA2（视频）和Wav2Vec-BERT 2.0（音频）整合为统一的脑编码Transformer。",
+      "task_type": "multimodal (brain encoding)",
+      "model_size": "composite",
+      "tags": ["neuroscience", "multimodal", "brain-encoding"],
+      "metrics": {
+        "downloads": 4891,
+        "likes": 170
+      },
+      "source_url": "https://huggingface.co/facebook/tribev2"
+    },
+    {
+      "id": "Lightricks/LTX-2.3",
+      "name": "LTX-2.3",
+      "organization": "Lightricks",
+      "description": "基于DiT的22B音视频基础模型，支持同步视频+音频生成。热门榜下载量最高，达137万。支持文生视频、图生视频和音视频生成，拥有丰富的LoRA和upscaler生态。",
+      "task_type": "image-to-video",
+      "model_size": "22B",
+      "tags": ["video-generation", "audio-visual", "DiT"],
+      "metrics": {
+        "downloads": 1369717,
+        "likes": 831
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.3"
+    }
+  ],
+  "themes": [
+    {
+      "name": "自主AI Agent成为研究者",
+      "description": "一组引人注目的论文展示了LLM Agent自主进行此前需要人类专业知识的研究任务。AVO使用Agent发现超越手工CUDA调优的GPU kernel。POISE Agent自主发现新的RL训练算法。MetaClaw Agent元学习并进化行为技能。Hyperagents实现自引用的自我改进。这代表着AI从工具到独立研究者的质变。",
+      "related_paper_ids": ["avo-agentic-variation-operators", "metaclaw", "hyperagents", "claudini", "composer-2"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI安全红旗",
+      "description": "两篇论文揭示了令人深忧的安全失败模式。Internal Safety Collapse显示在常规（非对抗性）任务中95.3%的安全失败率——alignment可能比我们假设的更为表面化。Claudini则展示了AI自主发现针对其他AI系统的对抗攻击。两者共同表明，AI安全的防御和进攻两端都比当前方法所能应对的更为困难。",
+      "related_paper_ids": ["internal-safety-collapse", "claudini", "mirage"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频生成走向实时交互",
+      "description": "四篇论文推动视频生成从批处理走向实时交互使用。ShotStream实现16 FPS的流式多镜头叙事。PackForcing在单GPU上实现24倍时间外推。HyDRA解决视频world model中的物体持久性。daVinci-MagiHuman在38秒内生成1080p人物视频。该领域正在向交互式实时视频这一新前沿收敛。",
+      "related_paper_ids": ["shotstream", "out-of-sight-hydra"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Transformer架构创新",
+      "description": "Attention Residuals提出了自残差连接引入以来的首次重大反思，对所有基于Transformer的模型具有广泛影响。MSA以线性复杂度将上下文窗口推至1亿token。这些不是渐进式改进——它们挑战了主流架构中的根本设计决策。",
+      "related_paper_ids": ["attention-residuals", "msa-100m-tokens"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "推理蒸馏及其隐患",
+      "description": "HuggingFace模型格局被从Claude 4.6 Opus推理轨迹蒸馏的Qwen 3.5模型主导（热门前15中占4个，下载量超100万）。然而自蒸馏退化论文警告这种方法可通过抑制认知性表述导致高达40%的域外性能下降。社区对蒸馏的热情可能超过了对其失败模式的理解。",
+      "related_paper_ids": ["self-distillation-degradation", "calibri"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "语音和音频模型日趋成熟",
+      "description": "Mistral的Voxtral TTS在人类偏好评估中击败ElevenLabs。Cohere Transcribe在ASR上达到最佳。daVinci-MagiHuman生成同步音视频。在开源模型中，语音/音频模态正在迅速缩小与文本和视觉能力的差距。",
+      "related_paper_ids": ["voxtral-tts"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-03-30T05:10:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-03-30T05:10:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "ArXiv (cs.AI, cs.LG, cs.CL, cs.CV, stat.ML)",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-03-30T05:10:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-03-30T05:10:00Z",
+      "status": "ok"
+    }
+  ]
+}

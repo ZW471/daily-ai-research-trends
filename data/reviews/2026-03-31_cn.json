@@ -1,0 +1,374 @@
+{
+  "version": "1.0",
+  "date": "2026-03-31",
+  "generated_at": "2026-03-31T04:30:00Z",
+  "type": "literature_review",
+  "volume": 1,
+  "title": "不规则时间序列建模：从Neural ODE到图神经网络与基础模型",
+  "subtitle": "涵盖连续时间动力学、注意力机制、图神经网络、基础模型和传统基线的15个模型对比综述",
+  "summary": {
+    "headline": "不规则时间序列领域从数值ODE求解器（2019）发展到基于attention的插值（2021），再到图结构推理（2022-24）和预训练基础模型（2024-25），每一代在表达力、速度和通用性之间做出不同取舍。",
+    "body": "不规则时间序列——观测值以不均匀间隔到达且变量间存在缺失值——在医疗、气候科学和物联网中是常态。本综述梳理了五个家族中的15个模型，追踪该领域如何逐步攻克三个核心挑战：(1) **表示连续动力学**而不对时间离散化，(2) **扩展到高维多变量数据**以处理复杂的变量间依赖关系，(3) **跨领域迁移知识**而无需针对特定任务重新训练。\n\n故事从**连续时间ODE模型**（2019-2022）开始，它们用微分方程替代了固定步长的RNN，然后转向**attention/Transformer架构**（2021-2023），后者学习了无需序列积分的时间插值。**图神经网络**（2022-2024）在变量之间添加了显式关系结构。最近，**基础模型**（2024-2025）将大规模预训练引入时间序列，承诺zero-shot泛化。贯穿始终，**传统基线**如GRU-D保持着令人惊讶的竞争力，锚定了\u201c足够好\u201d的标准。",
+    "key_themes": ["continuous-time-dynamics", "irregular-sampling", "graph-neural-networks", "foundation-models", "clinical-time-series", "attention-mechanisms"]
+  },
+  "researcher_notes": "**该领域的核心张力在于表达力与计算代价之间的权衡。** Latent ODE（2019）展示了Neural ODE可以通过定义连续隐轨迹优雅地处理不规则采样——但数值ODE求解器很慢。此后的每个模型都可以被理解为在降低计算代价的同时保留连续时间表达力的尝试：GRU-ODE-Bayes保留了ODE但加入了熟悉的GRU门控；CRU使用线性SDE获得闭合解；Neural Flows通过直接参数化解来完全消除求解器。与此同时，mTAN表明你可以跳过ODE，使用学习的attention kernel进行时间插值，速度提升10-100倍。\n\n**图模型代表了一种真正不同的inductive bias，而非仅仅是增量改进。** RAINDROP、T-PatchGNN和GraFITi都认为不规则多变量时间序列具有关系结构，而扁平序列模型会忽略这种结构。当传感器A被观测而传感器B未被观测时，A和B之间的*关系*对于插补和预测至关重要。这在临床场景中尤其有说服力，因为实验室检测和生命体征之间存在已知的生理相关性。\n\n**基础模型是最新的参与者，但在不规则数据方面面临独特挑战。** MOMENT和Chronos是为规则采样时间序列设计的，需要适配才能处理不规则输入。MIRA（Microsoft，2025）是首个直接针对不规则医疗时间序列构建的基础模型，使用基于Neural ODE的外推和连续时间位置编码。领域特定的基础模型（如MIRA）能否超越通用模型（如Chronos）仍是一个开放问题——但架构创新（CT-RoPE、频率特定的MoE）表明不规则时间序列社区十年来在连续时间表示上的工作终于反哺到了基础模型范式。\n\n**GRU-D（2016/2018）仍然是那个拒绝消亡的baseline。** 其可训练的衰减机制简单且可解释，许多论文仍然难以在标准临床基准上令人信服地超越它。这是一个有益的提醒：架构复杂度必须相对于调优良好的简单模型证明自己的价值。",
+  "sections": [
+    {
+      "id": "continuous-time-dynamics",
+      "title": "连续时间动力学：学习在观测之间演化",
+      "body": "不规则时间序列问题有一个自然的数学框架：如果观测在任意时刻到达，为什么不将隐状态建模为连续轨迹？这正是基于Neural ODE的模型所做的。\n\n**Latent ODE**（Rubanova等，NeurIPS 2019）是突破性工作。它将Neural ODE放入变分自编码器内：ODE-RNN encoder在实际时间戳上读取观测以产生隐分布，然后Neural ODE decoder连续地演化隐状态。轨迹由参数化dz/dt的神经网络定义，通过数值求解器（如Runge-Kutta）执行积分。这是首个展示连续隐动力学可以*原生*处理不规则采样的模型，无需插补或离散化。\n\n同期发表的**GRU-ODE-Bayes**（De Brouwer等，NeurIPS 2019）采用了不同的架构路径。它没有使用VAE框架，而是定义了一个连续时间GRU，其中隐状态在观测之间按GRU风格的ODE演化，一个独立的Bayesian更新网络整合每个新观测。这种单次滤波设计对于在线/流式场景（医疗监控、实时追踪）更加自然——你增量地更新信念，而不是先编码整个序列。\n\n两个模型共享一个关键瓶颈：**数值ODE求解器很慢**。每次前向传播需要多个积分步骤，通过求解器的反向传播（via adjoint方法）增加了更多计算代价。两个后续模型直接攻克了这个问题。\n\n**CRU**（Schirmer等，ICML 2022）将隐动力学限制为*线性*随机微分方程，可通过连续-离散Kalman滤波器获得闭合解。回报是精确积分（无需求解器）、有原则的不确定性量化（Kalman滤波器自然传播方差）和更快的训练。权衡是动力学表达力的降低——尽管作者展示这在标准基准上的影响小于预期。\n\n**Neural Flows**（Biloš等，NeurIPS 2021）采取了相反的方法：保持非线性动力学但消除求解器，直接参数化*解映射*z(t)而非导数dz/dt。给定初始条件z(t₀)，网络在单次前向传播中输出z(t)。关键洞察是定义数学约束（在t₀处的identity、可逆性）以保证输出是有效的ODE解。这给出了O(1)的单次评估代价，对比数值积分的O(N)，同时保留了非线性动力学的表达力。",
+      "models": [
+        {
+          "id": "latent-ode",
+          "name": "Latent ODE",
+          "paper_title": "Latent ODEs for Irregularly-Sampled Time Series",
+          "authors": ["Yulia Rubanova", "Ricky T. Q. Chen", "David Duvenaud"],
+          "affiliations": ["University of Toronto"],
+          "venue": "NeurIPS 2019",
+          "core_idea": "将Neural ODE放入VAE内——ODE-RNN encoder读取不规则观测，Neural ODE decoder连续演化隐状态。通过学习的dz/dt定义隐轨迹，数值积分求解。",
+          "key_innovation": "首个展示连续时间隐动力学可以原生处理不规则采样而无需插补的模型",
+          "limitations": ["每次前向传播需要昂贵的数值ODE积分", "Adjoint反向传播增加额外计算开销", "VAE框架需要在解码前编码整个序列"],
+          "tags": ["neural-ode", "vae", "continuous-time", "irregular-sampling"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/1907.03907",
+            "pdf": "https://arxiv.org/pdf/1907.03907",
+            "github": "https://github.com/YuliaRubanova/latent_ode"
+          }
+        },
+        {
+          "id": "gru-ode-bayes",
+          "name": "GRU-ODE-Bayes",
+          "paper_title": "GRU-ODE-Bayes: Continuous Modeling of Sporadically-Observed Time Series",
+          "authors": ["Edward De Brouwer", "Jaak Simm", "Adam Arany", "Yves Moreau"],
+          "affiliations": ["KU Leuven"],
+          "venue": "NeurIPS 2019",
+          "core_idea": "连续时间GRU，隐状态在观测之间按GRU风格的ODE演化，配合Bayesian更新网络整合每个新观测。单次滤波模型——无encoder-decoder分离。",
+          "key_innovation": "在连续时间中保留了熟悉的GRU门控，带有显式Bayesian观测更新，天然适合在线/流式滤波",
+          "limitations": ["观测之间仍需数值ODE求解器", "Bayesian更新网络增加复杂度", "动力学表达力不如完全非线性Neural ODE"],
+          "tags": ["neural-ode", "gru", "bayesian", "filtering", "continuous-time"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/1905.12374",
+            "pdf": "https://arxiv.org/pdf/1905.12374",
+            "github": "https://github.com/edebrouwer/gru_ode_bayes"
+          }
+        },
+        {
+          "id": "cru",
+          "name": "CRU (Continuous Recurrent Units)",
+          "paper_title": "Modeling Irregular Time Series with Continuous Recurrent Units",
+          "authors": ["Mona Schirmer", "Mazin Eltayeb", "Stefan Lessmann", "Maja Rudolph"],
+          "affiliations": ["Humboldt University of Berlin", "Bosch Center for AI"],
+          "venue": "ICML 2022",
+          "core_idea": "将隐动力学建模为线性SDE，通过连续-离散Kalman滤波器获得闭合解。无需数值ODE求解器——状态转移通过解析计算。",
+          "key_innovation": "通过Kalman滤波器的闭合状态转移实现精确积分、有原则的不确定性传播，以及比非线性ODE模型更快的训练",
+          "limitations": ["线性动力学以表达力换取可处理性", "可能对高度非线性系统欠拟合", "Kalman滤波器假设高斯噪声"],
+          "tags": ["linear-sde", "kalman-filter", "continuous-time", "uncertainty"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2111.11344",
+            "pdf": "https://arxiv.org/pdf/2111.11344",
+            "github": "https://github.com/boschresearch/Continuous-Recurrent-Units"
+          }
+        },
+        {
+          "id": "neural-flows",
+          "name": "Neural Flows",
+          "paper_title": "Neural Flows: Efficient Alternative to Neural ODEs",
+          "authors": ["Marin Biloš", "Johanna Sommer", "Syama Sundar Rangapuram", "Tim Januschowski", "Stephan Günnemann"],
+          "affiliations": ["TU Munich", "Amazon Research"],
+          "venue": "NeurIPS 2021",
+          "core_idea": "不再参数化dz/dt并数值求解，而是在单次前向传播中直接参数化解映射z(t)。定义数学约束确保输出是有效的ODE解。",
+          "key_innovation": "完全消除ODE求解器——每次评估O(1)代价 vs 数值积分的O(N)，同时保留非线性表达力",
+          "limitations": ["流上的数学约束限制了架构灵活性", "动力学不太可解释（无显式导数）", "较新，经过的实战检验少于Latent ODE"],
+          "tags": ["neural-flows", "continuous-time", "efficient", "solver-free"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2110.13040",
+            "pdf": "https://arxiv.org/pdf/2110.13040",
+            "github": "https://github.com/mbilos/neural-flows-experiments"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["模型", "年份", "动力学", "积分代价", "观测处理方式"],
+        "rows": [
+          ["Latent ODE", "2019", "非线性Neural ODE", "O(N) 数值求解器", "VAE encoder-decoder"],
+          ["GRU-ODE-Bayes", "2019", "连续时间GRU ODE", "O(N) 数值求解器", "Bayesian更新网络"],
+          ["Neural Flows", "2021", "非线性直接解", "O(1) 单次前向传播", "可插拔（GRU Flow等）"],
+          ["CRU", "2022", "线性SDE", "O(1) Kalman闭合解", "Kalman滤波器更新"]
+        ]
+      }
+    },
+    {
+      "id": "attention-transformer",
+      "title": "Attention与Transformer：不用ODE学习时间核",
+      "body": "一条平行的研究路线提出了这样的问题：我们真的*需要*微分方程来处理不规则时间吗？Attention机制提供了一种替代方案——它们可以自然地根据学习到的相关性对观测进行加权，无论这些观测何时发生。\n\n**mTAN**（Shukla & Marlin，ICLR 2021）是这里的关键模型。它使用参数化函数（可学习频率的正弦/余弦）学习时间戳的连续时间embedding，然后使用multi-head attention，其中query是期望的参考时间点，key是实际观测时间，value是测量值。这将不规则数据平滑插值为固定长度表示，可以输入任何下游模型。关键结果：mTAN比Neural ODE baseline快10-100倍，同时达到可比或更好的性能，因为attention可并行化而ODE求解器本质上是序列化的。\n\n**STraTS**（Tipirneni & Reddy，ACM TKDD 2022）做出了激进的表示选择。STraTS不将多变量时间序列视为矩阵（特征×时间步）——这迫使你处理缺失单元——而是将其表示为*观测三元组集合*（时间、变量ID、值）。每个三元组变成一个token，由标准Transformer encoder处理。这意味着模型永远不会看到\u201c空\u201d单元；稀疏性通过构造来处理。两个技术创新使这成为可能：**Continuous Value Embedding (CVE)**——一个小型神经网络将标量值（时间戳和测量值）映射到稠密向量而无需离散化，以及用于在无标签临床数据上预训练的**自监督预测pretext任务**。\n\n**ContiFormer**（Chen等，NeurIPS 2023）统一了ODE和Transformer两条路线。它在连续时间中定义attention：隐状态在观测之间按ODE演化，attention机制在这些连续轨迹上而非离散token上操作。query和key都是时间的函数，而非固定向量。作者证明了若干现有架构（包括类似mTAN的设计）在特定函数假设下是ContiFormer的特例。一个重参数化技巧使得连续时间attention分数的并行计算成为可能，避免了标准Neural ODE方法中的序列化瓶颈。\n\n这里的演化是清晰的：mTAN展示了attention可以*替代*ODE进行时间建模；STraTS展示了你可以完全消除时间序列矩阵表示；ContiFormer展示了你可以在一个统一的原则性框架中*同时拥有*ODE动力学和attention。",
+      "models": [
+        {
+          "id": "mtan",
+          "name": "mTAN (Multi-Time Attention Network)",
+          "paper_title": "Multi-Time Attention Networks for Irregularly Sampled Time Series",
+          "authors": ["Satya Narayan Shukla", "Benjamin M. Marlin"],
+          "affiliations": ["University of Massachusetts Amherst"],
+          "venue": "ICLR 2021",
+          "core_idea": "学习时间戳的连续时间embedding，使用multi-head attention将不规则观测插值为固定长度表示。Query是参考时间，key是观测时间，value是测量值。",
+          "key_innovation": "用学习的attention kernel替代基于ODE的时间建模——比Neural ODE baseline快10-100倍",
+          "limitations": ["先插值的方法可能丢失细粒度时间模式", "观测之间无显式连续动力学建模", "Attention复杂度与观测数量呈二次方增长"],
+          "tags": ["attention", "continuous-time", "interpolation", "efficient"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2101.10318",
+            "pdf": "https://arxiv.org/pdf/2101.10318",
+            "github": "https://github.com/reml-lab/mTAN"
+          }
+        },
+        {
+          "id": "strats",
+          "name": "STraTS (Self-supervised Transformer for Time-Series)",
+          "paper_title": "Self-Supervised Transformer for Sparse and Irregularly Sampled Multivariate Clinical Time-Series",
+          "authors": ["Sindhu Tipirneni", "Chandan K. Reddy"],
+          "affiliations": ["Virginia Tech"],
+          "venue": "ACM TKDD 2022",
+          "core_idea": "将不规则多变量时间序列表示为（时间、变量ID、值）三元组集合，每个通过Continuous Value Embedding (CVE)嵌入。Transformer encoder直接处理该集合——无需插补或网格对齐。",
+          "key_innovation": "三元组表示通过构造消除空单元；CVE无需离散化即可嵌入连续标量；自监督预训练解决标签稀缺问题",
+          "limitations": ["序列长度随观测数量增长（无patching/压缩）", "为临床数据设计——在其他领域测试较少", "观测之间无连续动力学建模"],
+          "tags": ["transformer", "self-supervised", "triplet-representation", "clinical"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2107.14293",
+            "pdf": "https://arxiv.org/pdf/2107.14293",
+            "github": "https://github.com/sindhura97/STraTS"
+          }
+        },
+        {
+          "id": "contiformer",
+          "name": "ContiFormer",
+          "paper_title": "ContiFormer: Continuous-Time Transformer for Irregular Time Series Modeling",
+          "authors": ["Yuqi Chen", "Kan Ren", "Yansen Wang", "Yuchen Fang", "Weiwei Sun", "Dongsheng Li"],
+          "affiliations": ["Microsoft Research"],
+          "venue": "NeurIPS 2023",
+          "core_idea": "通过在连续时间中定义attention来统一Neural ODE和Transformer。隐状态在观测之间按ODE演化；attention的query和key是时间的连续函数。将若干现有架构归纳为特例。",
+          "key_innovation": "连续时间attention机制配合重参数化技巧实现并行计算——结合ODE的表达力和Transformer的可扩展性",
+          "limitations": ["比纯attention或纯ODE模型更复杂，更难实现和调优", "重参数化近似可能引入误差", "较新的模型，社区采用较少"],
+          "tags": ["transformer", "neural-ode", "continuous-time-attention", "unified"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2402.10635",
+            "pdf": "https://arxiv.org/pdf/2402.10635"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["模型", "年份", "时间处理", "Attention角色", "ODE组件", "预训练"],
+        "rows": [
+          ["mTAN", "2021", "学习的连续时间embedding", "插值到参考网格", "无（兼容下游ODE-RNN）", "无"],
+          ["STraTS", "2022", "时间戳的CVE", "直接处理观测三元组", "无", "自监督预测"],
+          ["ContiFormer", "2023", "ODE控制的连续轨迹", "对ODE状态的连续时间attention", "核心组件", "无"]
+        ]
+      }
+    },
+    {
+      "id": "graph-neural-networks",
+      "title": "图神经网络：为不规则观测添加关系结构",
+      "body": "序列模型（无论是基于ODE还是attention）将不规则时间序列作为扁平的观测序列处理。但多变量时间序列具有*关系结构*：传感器物理连接、实验室检测共享生理通路、物联网设备组成空间网络。图神经网络显式编码这种结构。\n\n**RAINDROP**（Zhang等，ICLR 2022）是不规则多变量时间序列的首个主要GNN方法。它将每个样本表示为单独的*传感器图*，其中节点是变量，边编码学习到的传感器间依赖。关键机制：当一个传感器收到观测（一个\u201c雨滴\u201d），它向相邻传感器发送消息（\u201c产生涟漪\u201d）。这意味着图动态反映了任一给定时刻哪些传感器有观测——稀疏性成为图的*结构属性*而非需要解决的问题。时间self-attention捕获传感器内动态，而GNN消息传递捕获跨传感器依赖。\n\n**GraFITi**（Yalavarthi等，AAAI 2024）做了大胆的重新表述。它不使用通常的\u201c输入→隐状态→预测\u201dpipeline，而是将预测建模为*二部图上的边权重预测*。一组节点表示已观测的时间-变量对；另一组表示目标时间-变量对。一个从Graph Attention Network改编的GNN学习embedding并预测边权重作为预测值。这完全绕过了ODE求解器和插补——稀疏性是图的自然属性——速度比ODE方法快5倍，准确率提升17%。\n\n**T-PatchGNN**（Zhang等，ICML 2024）将patching范式（由PatchTST为规则时间序列普及）与图神经网络桥接。它将每个单变量不规则序列分为\u201c可变换patch\u201d——覆盖统一时间范围但包含可变数量观测的片段。Transformer处理patch内的序列内（时间）建模，而时间自适应GNN通过学习的时变图结构建模序列间（跨变量）相关性。Patching避免了逐个处理每个观测导致的序列长度爆炸。\n\n这三个模型共享一个信念：**不规则多变量时间序列本质上是图结构的**，使这种结构显式化可以提升准确性和可解释性。它们的区别在于图*表示什么*（传感器网络 vs 观测-目标二部图 vs patch级自适应图）以及图*如何构建*（学习的 vs 任务派生的）。",
+      "models": [
+        {
+          "id": "raindrop",
+          "name": "RAINDROP",
+          "paper_title": "Graph-Guided Network for Irregularly Sampled Multivariate Time Series",
+          "authors": ["Xiang Zhang", "Marko Zeman", "Theodoros Tsiligkaridis", "Marinka Zitnik"],
+          "affiliations": ["Harvard University", "MIT Lincoln Lab"],
+          "venue": "ICLR 2022",
+          "core_idea": "将每个样本表示为传感器图，具有学习的传感器间边。当观测到达（'雨滴'），它向相邻传感器发送消息（'涟漪'）。时间self-attention处理传感器内动态。",
+          "key_innovation": "动态图结构根据每个时刻哪些传感器被观测而自适应，使稀疏性成为结构属性而非需要解决的问题",
+          "limitations": ["聚焦分类——在预测任务上测试较少", "大量传感器时图学习增加计算开销", "样本级图不跨数据集共享结构"],
+          "tags": ["graph-neural-network", "message-passing", "irregular-sampling", "clinical"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2110.05357",
+            "pdf": "https://arxiv.org/pdf/2110.05357",
+            "github": "https://github.com/mims-harvard/Raindrop"
+          }
+        },
+        {
+          "id": "t-patchgnn",
+          "name": "T-PatchGNN",
+          "paper_title": "Irregular Multivariate Time Series Forecasting: A Transformable Patching Graph Neural Networks Approach",
+          "authors": ["Weijia Zhang", "Chenlong Yin", "Hao Liu", "Xiaofang Zhou", "Hui Xiong"],
+          "affiliations": ["HKUST", "Rutgers University"],
+          "venue": "ICML 2024",
+          "core_idea": "将不规则序列分为'可变换patch'（统一时间范围，可变观测数量）。Transformer用于序列内时间建模，时间自适应GNN用于序列间跨变量相关性建模。",
+          "key_innovation": "可变换patching在保留不规则结构的同时避免序列长度爆炸；时间自适应图捕获不断变化的变量关系",
+          "limitations": ["Patch边界可能分割有意义的时间模式", "双重架构（Transformer + GNN）增加模型复杂度", "Patch大小是影响性能的超参数"],
+          "tags": ["graph-neural-network", "patching", "transformer", "forecasting"],
+          "sources": {
+            "proceedings": "https://proceedings.mlr.press/v235/zhang24bw.html",
+            "github": "https://github.com/usail-hkust/t-PatchGNN"
+          }
+        },
+        {
+          "id": "grafiti",
+          "name": "GraFITi",
+          "paper_title": "GraFITi: Graphs for Forecasting Irregularly Sampled Time Series",
+          "authors": ["Vijaya Krishna Yalavarthi", "Kiran Madhusudhanan", "Randolf Scholz", "Nourhan Ahmed", "Johannes Burchert", "Shayan Jawed", "Stefan Born", "Lars Schmidt-Thieme"],
+          "affiliations": ["University of Hildesheim"],
+          "venue": "AAAI 2024",
+          "core_idea": "将预测重新表述为二部图上的边权重预测——一侧是已观测的（时间、变量）对，另一侧是目标对。从GAT改编的GNN学习embedding并预测边权重作为预测值。",
+          "key_innovation": "将预测建模为图边权重估计——完全绕过ODE求解器和插补；比ODE方法快5倍",
+          "limitations": ["二部图随观测-目标对数量增长", "边权重预测的表述不常见，可能更难解释", "在分类任务上探索较少"],
+          "tags": ["graph-neural-network", "bipartite-graph", "forecasting", "efficient"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2305.12932",
+            "pdf": "https://arxiv.org/pdf/2305.12932"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["模型", "年份", "图结构", "时间组件", "主要任务", "处理稀疏性的方式"],
+        "rows": [
+          ["RAINDROP", "2022", "传感器级（节点=变量）", "时间self-attention", "分类", "动态图根据被观测传感器自适应"],
+          ["GraFITi", "2024", "二部图（已观测↔目标对）", "GAT消息传递", "预测", "稀疏性是图的自然属性"],
+          ["T-PatchGNN", "2024", "时间自适应序列间图", "Patch上的Transformer", "预测", "可变换patching"]
+        ]
+      }
+    },
+    {
+      "id": "foundation-models",
+      "title": "基础模型：预训练通用模型遇见不规则数据",
+      "body": "基础模型浪潮已到达时间序列领域，承诺跨领域的zero-shot泛化。但不规则采样带来了独特挑战：大多数基础模型假设规则网格。\n\n**MOMENT**（Goswami等，ICML 2024）是一系列开源、预训练的Transformer模型，用于通用时间序列分析。在'Time Series Pile'——一个大规模、多样化的公开时间序列数据集合——上预训练，MOMENT处理五个任务：短/长期预测、分类、异常检测和插补。它通过系统性的设计选择解决时间序列特有的挑战（变长、多通道输入、分布漂移）。然而，它主要为规则采样数据设计，需要适配才能处理不规则输入。\n\n**Chronos**（Ansari等，Amazon，TMLR 2024）做出了挑衅性的选择：将时间序列当作语言处理。它通过缩放和量化将实值观测token化为固定的离散词汇表，然后用标准cross-entropy loss训练T5系列transformer（20M-710M参数）。训练数据用高斯过程合成的时间序列做增强。结果：在42个benchmark上实现强大的zero-shot概率预测。与MOMENT一样，Chronos假设规则采样，但其语言模型方法意味着不规则数据可通过特殊token或位置编码来处理。\n\n**MIRA**（Li等，Microsoft，2025）是首个专门为不规则医疗时间序列构建的基础模型。三个架构创新应对这一挑战：**Continuous-Time Rotary Positional Encoding (CT-RoPE)** 处理可变时间间隔（将LLM中的标准RoPE扩展到连续时间）；**频率特定的mixture-of-experts**层在隐频率域之间路由计算；基于Neural ODE的**连续动力学外推模块**支持在任意时间戳预测。在454亿+医疗时间点上预训练，MIRA实现了7-10%的误差降低。\n\n从MOMENT/Chronos到MIRA的演进映射了更广泛领域的进化：通用架构对规则数据效果良好，但不规则时间序列最终需要专门模型社区自2019年以来一直在发展的连续时间机制。MIRA的CT-RoPE和Neural ODE模块是Latent ODE和mTAN中思想的直接后代。",
+      "models": [
+        {
+          "id": "moment",
+          "name": "MOMENT",
+          "paper_title": "MOMENT: A Family of Open Time-series Foundation Models",
+          "authors": ["Mononito Goswami", "Konrad Szafer", "Arjun Choudhry", "Yifu Cai", "Shuo Li", "Artur Dubrawski"],
+          "affiliations": ["Carnegie Mellon University", "University of Pennsylvania"],
+          "venue": "ICML 2024",
+          "core_idea": "开源预训练Transformer系列，用于通用时间序列。在'Time Series Pile'上跨五个任务预训练：预测、分类、异常检测和插补。",
+          "key_innovation": "多任务、多领域预训练在策划的'Time Series Pile'上——首个开源通用时间序列基础模型",
+          "limitations": ["为规则采样设计——需要适配处理不规则数据", "Transformer架构在超长序列上可能遇困", "预训练数据多样性可能无法覆盖所有领域"],
+          "tags": ["foundation-model", "transformer", "multi-task", "open-source"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2402.03885",
+            "pdf": "https://arxiv.org/pdf/2402.03885",
+            "github": "https://github.com/moment-timeseries-foundation-model/moment"
+          }
+        },
+        {
+          "id": "chronos",
+          "name": "Chronos",
+          "paper_title": "Chronos: Learning the Language of Time Series",
+          "authors": ["Abdul Fatir Ansari", "Lorenzo Stella", "Ali Caner Turkmen", "et al."],
+          "affiliations": ["Amazon"],
+          "venue": "TMLR 2024",
+          "core_idea": "将时间序列值token化为离散词汇表，然后用cross-entropy loss训练T5系列transformer（20M-710M参数）。用高斯过程合成数据增强，实现鲁棒的zero-shot概率预测。",
+          "key_innovation": "时间序列的语言模型范式——token化 + cross-entropy loss使得可以直接复用LLM训练基础设施",
+          "limitations": ["Token化量化连续值——存在信息损失", "假设规则采样", "仅支持预测——不像MOMENT那样多任务"],
+          "tags": ["foundation-model", "language-model", "tokenization", "forecasting"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2403.07815",
+            "pdf": "https://arxiv.org/pdf/2403.07815",
+            "github": "https://github.com/amazon-science/chronos-forecasting"
+          }
+        },
+        {
+          "id": "mira",
+          "name": "MIRA",
+          "paper_title": "MIRA: Medical Time Series Foundation Model for Real-World Health Data",
+          "authors": ["Hao Li", "Bowen Deng", "Chang Xu", "Zhiyuan Feng", "Viktor Schlegel", "et al."],
+          "affiliations": ["Microsoft Research", "University of Manchester", "Peking University", "Tsinghua University"],
+          "venue": "arXiv preprint 2025",
+          "core_idea": "首个面向不规则医疗时间序列的基础模型。使用CT-RoPE处理可变时间间隔，频率特定MoE处理多尺度动力学，基于Neural ODE的外推支持任意时间戳预测。在454B+医疗时间点上预训练。",
+          "key_innovation": "将连续时间表示（CT-RoPE、Neural ODE外推）引入基础模型范式——直接建立在十年的不规则时间序列研究之上",
+          "limitations": ["领域特定（医疗）——向其他领域的迁移未经测试", "大型模型在边缘部署上可能不实际", "预印本状态——尚未在主要venue经过同行评审"],
+          "tags": ["foundation-model", "medical", "irregular-sampling", "neural-ode", "continuous-time"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2506.07584",
+            "pdf": "https://arxiv.org/pdf/2506.07584",
+            "github": "https://github.com/microsoft/MIRA"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["模型", "年份", "预训练规模", "不规则采样支持", "领域", "架构"],
+        "rows": [
+          ["MOMENT", "2024", "Time Series Pile（多样化）", "需要适配", "通用（5个任务）", "Transformer"],
+          ["Chronos", "2024", "公开+合成GP数据", "需要适配", "通用（预测）", "T5 + token化"],
+          ["MIRA", "2025", "454B+医疗时间点", "原生支持（CT-RoPE + Neural ODE）", "医疗", "Transformer + MoE + Neural ODE"]
+        ]
+      }
+    },
+    {
+      "id": "traditional-baselines",
+      "title": "传统基线：不断向上出拳的下限",
+      "body": "每个新模型都必须回答：它是否超越了这些简单方法，超越了多少？\n\n**GRU-D**（Che等，Scientific Reports 2018）通过可训练的衰减机制扩展了标准GRU，同时作用于输入值和隐状态。当一个变量长时间未被观测时，其最后的值以学习到的速率衰减至经验均值，隐状态也类似衰减。二值mask指示器和距上次观测的时间间隔直接输入到递归中。尽管简单，GRU-D仍然是临床时间序列中最具竞争力的baseline之一——许多架构复杂的模型在PhysioNet和MIMIC等标准基准上难以令人信服地超越它。\n\n**TCN**（Bai等，2018）确立了时间卷积可以匹敌或超越循环网络在序列建模中的表现。使用带残差连接的因果膨胀卷积，TCN在完全可并行化（不像RNN）的同时实现指数级大的感受野。然而，TCN无法原生处理缺失数据——它假设完整的、规则采样的输入。当用作不规则时间序列baseline时，观测必须先被放置到规则网格上（例如通过前向填充或均值插补）。\n\n**均值插补+Transformer**是最简单的可能组合：用每特征训练集均值填充缺失值，然后应用标准Transformer encoder。它将插补与建模解耦，并测试一个关键问题：*足够强大的序列模型能否补偿朴素的预处理？*这个baseline隔离了复杂缺失数据处理的贡献——如果一个复杂模型无法超越均值插补+Transformer，那么它的架构创新就没有证明其价值。\n\n这些baseline服务于不同的目的。GRU-D是直接建模缺失性的*强专门化baseline*。TCN是测试是否需要递归或attention的*架构baseline*。均值插补+Transformer是隔离复杂插补价值的*消融baseline*。它们共同建立了任何新模型必须跨越的下限。",
+      "models": [
+        {
+          "id": "gru-d",
+          "name": "GRU-D",
+          "paper_title": "Recurrent Neural Networks for Multivariate Time Series with Missing Values",
+          "authors": ["Zhengping Che", "Sanjay Purushotham", "Kyunghyun Cho", "David Sontag", "Yan Liu"],
+          "affiliations": ["USC", "NYU", "MIT"],
+          "venue": "Scientific Reports 2018",
+          "core_idea": "扩展GRU，加入输入上的可训练衰减（最后观测值衰减至经验均值）和隐状态衰减（观测缺失时记忆衰减）。直接整合二值mask和时间间隔。",
+          "key_innovation": "可训练的衰减机制捕获信息性缺失模式——简单、可解释，且顽强地保持竞争力",
+          "limitations": ["观测之间无连续时间动力学", "衰减至均值是一个较强的假设", "序列处理（不可并行化）"],
+          "tags": ["rnn", "gru", "missing-data", "decay", "baseline"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/1606.01865",
+            "pdf": "https://arxiv.org/pdf/1606.01865"
+          }
+        },
+        {
+          "id": "tcn",
+          "name": "TCN (Temporal Convolutional Network)",
+          "paper_title": "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling",
+          "authors": ["Shaojie Bai", "J. Zico Kolter", "Vladlen Koltun"],
+          "affiliations": ["Carnegie Mellon University", "Intel Labs"],
+          "venue": "arXiv 2018",
+          "core_idea": "带残差连接的因果膨胀卷积实现指数级大的感受野，同时完全可并行化。证明了简单的卷积架构可以在多种序列任务上匹敌RNN。",
+          "key_innovation": "展示简单的卷积架构即可在时间建模上匹敌循环网络——快速、可并行、易训练",
+          "limitations": ["无法原生处理缺失数据", "假设规则采样", "固定感受野由架构深度和膨胀率决定"],
+          "tags": ["cnn", "temporal-convolution", "causal", "baseline"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/1803.01271",
+            "pdf": "https://arxiv.org/pdf/1803.01271",
+            "github": "https://github.com/locuslab/TCN"
+          }
+        },
+        {
+          "id": "mean-impute-transformer",
+          "name": "均值插补 + Transformer",
+          "paper_title": "Composite baseline using 'Attention Is All You Need' (Vaswani et al., NeurIPS 2017)",
+          "authors": ["Ashish Vaswani", "Noam Shazeer", "Niki Parmar", "Jakob Uszkoreit", "Llion Jones", "Aidan N. Gomez", "Lukasz Kaiser", "Illia Polosukhin"],
+          "affiliations": ["Google Brain", "Google Research", "University of Toronto"],
+          "venue": "NeurIPS 2017 (Transformer); composite baseline",
+          "core_idea": "用每特征训练集均值填充缺失值，然后应用标准Transformer encoder。测试强大的序列模型能否补偿朴素插补——隔离复杂缺失数据处理的价值。",
+          "key_innovation": "作为关键消融baseline——如果一个复杂模型无法超越这个，那么其处理缺失性的架构创新就没有正当理由",
+          "limitations": ["均值插补破坏时间相关性信息", "无信息性缺失机制", "Transformer在小型临床数据集上可能过拟合"],
+          "tags": ["transformer", "imputation", "ablation", "baseline"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/1706.03762",
+            "pdf": "https://arxiv.org/pdf/1706.03762"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["模型", "年份", "架构", "处理缺失数据", "可并行化", "作为baseline的角色"],
+        "rows": [
+          ["GRU-D", "2018", "RNN (GRU + 衰减)", "是（可训练衰减）", "否", "缺失性的强专门化baseline"],
+          ["TCN", "2018", "CNN（因果膨胀卷积）", "否（需预插补）", "是", "架构baseline——是否需要RNN/Transformer？"],
+          ["均值插补 + Transformer", "2017+", "Transformer encoder", "朴素（均值填充）", "是", "消融baseline——是否需要复杂插补？"]
+        ]
+      }
+    }
+  ],
+  "cross_cutting_analysis": {
+    "title": "串联主线：这15个模型如何关联",
+    "body": "将这些模型放在一起看，几个贯穿性的主题浮现出来：\n\n**1. 求解器消除弧线。** ODE家族呈现清晰的演进：Latent ODE（2019）需要数值求解器 → GRU-ODE-Bayes（2019）保留求解器但加入GRU门控 → Neural Flows（2021）通过直接解参数化消除求解器 → CRU（2022）使用线性SDE的闭合解。与此同时，mTAN（2021）用基于attention的插值完全绕过了整个ODE范式。这条弧线现在随着MIRA（2025）完成了一个完整循环——它将Neural ODE模块重新引入基础模型，但选择性地与Transformer attention配合使用。\n\n**2. 从扁平序列到结构化表示。** 早期模型（Latent ODE、GRU-D、mTAN）将时间序列作为扁平的观测序列处理。STraTS通过将数据表示为无序三元组集合打破了这一模式。RAINDROP、T-PatchGNN和GraFITi更进一步，施加了图结构——编码变量之间存在*关系*而非仅仅是共现。这种结构归纳偏置对于传感器相关性已知的多变量临床数据尤其有价值。\n\n**3. 预训练问题。** 仅有四个模型纳入了预训练：STraTS（临床数据上的自监督）、MOMENT（多样时间序列上的多任务）、Chronos（语言模型训练）和MIRA（医疗特定预训练）。专门模型（Latent ODE到GraFITi）都是逐任务从头训练。基础模型的预训练能否替代用于处理不规则性的架构创新，是该领域的核心开放问题。\n\n**4. 速度-表达力前沿。** 模型沿一条前沿排列：GRU-D和TCN快但受限；Latent ODE和ContiFormer表达力强但慢；mTAN、Neural Flows和GraFITi在适中代价下实现良好准确率。基础模型（MOMENT、Chronos、MIRA）用训练时间代价换取推理时的泛化能力。从业者应根据自身约束选择：如果有充足的任务特定数据，一个调优良好的专门模型（甚至GRU-D）可能就足够了；如果需要zero-shot迁移，基础模型值得投资。"
+  },
+  "sources_checked": [
+    {"name": "arXiv", "url": "https://arxiv.org", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "NeurIPS Proceedings", "url": "https://proceedings.neurips.cc", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "ICML Proceedings", "url": "https://proceedings.mlr.press", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "ICLR OpenReview", "url": "https://openreview.net", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "AAAI Proceedings", "url": "https://ojs.aaai.org", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "ACM Digital Library", "url": "https://dl.acm.org", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "GitHub (model repos)", "url": "https://github.com", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"},
+    {"name": "Google Scholar", "url": "https://scholar.google.com", "checked_at": "2026-03-31T04:00:00Z", "status": "ok"}
+  ]
+}
