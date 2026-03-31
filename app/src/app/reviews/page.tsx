@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getReviewsIndex } from "@/lib/data";
+import { getReviewsIndex, getLanguageFromCookies } from "@/lib/data";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T12:00:00Z");
@@ -15,7 +15,8 @@ function formatDate(dateStr: string): string {
 export const dynamic = "force-dynamic";
 
 export default async function ReviewsPage() {
-  const index = await getReviewsIndex();
+  const lang = await getLanguageFromCookies();
+  const index = await getReviewsIndex(lang);
   const reviews = index?.reviews ?? [];
 
   if (reviews.length === 0) {

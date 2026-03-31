@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getReview, getReviewsIndex } from "@/lib/data";
+import { getReview, getReviewsIndex, getLanguageFromCookies } from "@/lib/data";
 import type {
   ReviewSection,
   ReviewModel,
@@ -242,13 +242,14 @@ export default async function ReviewDetailPage({
   params: Promise<{ date: string }>;
 }) {
   const { date } = await params;
-  const review = await getReview(date);
+  const lang = await getLanguageFromCookies();
+  const review = await getReview(date, lang);
 
   if (!review) {
     notFound();
   }
 
-  const index = await getReviewsIndex();
+  const index = await getReviewsIndex(lang);
   const allDates = (index?.reviews ?? []).map((r) => r.date).sort().reverse();
   const currentIndex = allDates.indexOf(date);
   const prevDate =

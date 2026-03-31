@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { GitHubStars } from "./github-stars";
+import { LanguageToggle } from "./language-toggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -57,6 +58,7 @@ export default function RootLayout({
               </nav>
             </div>
             <div className="flex items-center gap-3">
+              <LanguageToggle />
               <a
                 href="https://github.com/ZW471/daily-ai-research-trends"
                 target="_blank"

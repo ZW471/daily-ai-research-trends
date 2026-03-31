@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllDates, getDailyReview, getIndex } from "@/lib/data";
+import { getAllDates, getDailyReview, getIndex, getLanguageFromCookies } from "@/lib/data";
 
 const THEME_COLORS: Record<string, string> = {
   agents: "bg-purple-100 text-purple-700",
@@ -33,8 +33,9 @@ function formatDate(dateStr: string): string {
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const dates = await getAllDates();
-  const index = await getIndex();
+  const lang = await getLanguageFromCookies();
+  const dates = await getAllDates(lang);
+  const index = await getIndex(lang);
 
   if (dates.length === 0) {
     return (
@@ -51,7 +52,7 @@ export default async function Home() {
   const reviews = await Promise.all(
     dates.map(async (date) => {
       const indexEntry = index?.days.find((d) => d.date === date);
-      const review = await getDailyReview(date);
+      const review = await getDailyReview(date, lang);
       return { date, indexEntry, review };
     })
   );

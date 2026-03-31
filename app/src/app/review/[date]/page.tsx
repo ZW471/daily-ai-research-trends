@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getDailyReview, getAllDates } from "@/lib/data";
+import { getDailyReview, getAllDates, getLanguageFromCookies } from "@/lib/data";
 import type { Paper, Model, Theme, SourceCheck } from "@/lib/types";
 import ReactMarkdown from "react-markdown";
 
@@ -267,13 +267,14 @@ export default async function ReviewPage({
   params: Promise<{ date: string }>;
 }) {
   const { date } = await params;
-  const review = await getDailyReview(date);
+  const lang = await getLanguageFromCookies();
+  const review = await getDailyReview(date, lang);
 
   if (!review) {
     notFound();
   }
 
-  const allDates = await getAllDates();
+  const allDates = await getAllDates(lang);
   const currentIndex = allDates.indexOf(date);
   const prevDate = currentIndex < allDates.length - 1 ? allDates[currentIndex + 1] : null;
   const nextDate = currentIndex > 0 ? allDates[currentIndex - 1] : null;
