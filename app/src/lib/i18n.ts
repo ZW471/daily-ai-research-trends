@@ -56,6 +56,10 @@ const translations = {
     keyInnovation: "Key Innovation",
     limitations: "Limitations",
     comparison: "Comparison",
+
+    // Article navigation
+    tableOfContents: "Contents",
+    expandNav: "Expand navigation",
   },
   cn: {
     // Layout
@@ -109,6 +113,10 @@ const translations = {
     keyInnovation: "关键创新",
     limitations: "局限性",
     comparison: "对比",
+
+    // Article navigation
+    tableOfContents: "目录",
+    expandNav: "展开导航",
   },
 } as const;
 

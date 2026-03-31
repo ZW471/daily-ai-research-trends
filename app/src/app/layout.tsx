@@ -39,7 +39,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <header className="border-b border-border bg-card sticky top-0 z-10">
-          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-6">
               <Link href="/" className="flex items-center gap-2">
                 <span className="text-xl font-semibold tracking-tight text-foreground">
@@ -89,7 +89,7 @@ export default async function RootLayout({
         </header>
         <main className="flex-1">{children}</main>
         <footer className="border-t border-border py-6 mt-12">
-          <div className="max-w-5xl mx-auto px-6 text-sm text-muted">
+          <div className="max-w-7xl mx-auto px-6 text-sm text-muted">
             {i18n.footerText}
           </div>
         </footer>

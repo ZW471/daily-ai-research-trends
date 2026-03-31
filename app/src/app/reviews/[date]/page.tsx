@@ -12,6 +12,8 @@ import { t, formatDateLocalized, formatTimeLocalized, volLabel } from "@/lib/i18
 import type { Translations } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
 import { DownloadButton } from "../../download-button";
+import { ArticleNav } from "../../article-nav";
+import type { NavItem } from "../../article-nav";
 
 export const dynamic = "force-dynamic";
 
@@ -185,7 +187,9 @@ function ReviewSectionBlock({ section, i18n }: { section: ReviewSection; i18n: T
       {section.models.length > 0 && (
         <div className="space-y-3 mb-6">
           {section.models.map((model) => (
-            <ReviewModelCard key={model.id} model={model} i18n={i18n} />
+            <div key={model.id} id={`model-${model.id}`} className="scroll-mt-20">
+              <ReviewModelCard model={model} i18n={i18n} />
+            </div>
           ))}
         </div>
       )}
@@ -246,8 +250,31 @@ export default async function ReviewDetailPage({
     currentIndex < allDates.length - 1 ? allDates[currentIndex + 1] : null;
   const nextDate = currentIndex > 0 ? allDates[currentIndex - 1] : null;
 
+  // Build navigation items
+  const navItems: NavItem[] = [];
+  navItems.push({ id: "summary", label: i18n.summary });
+  if (review.researcher_notes) {
+    navItems.push({ id: "researcher-notes", label: i18n.researcherNotes });
+  }
+  for (const section of review.sections) {
+    navItems.push({
+      id: `section-${section.id}`,
+      label: section.title,
+      children: section.models.map((model) => ({
+        id: `model-${model.id}`,
+        label: model.name,
+      })),
+    });
+  }
+  if (review.cross_cutting_analysis) {
+    navItems.push({ id: "cross-cutting", label: review.cross_cutting_analysis.title });
+  }
+  if (review.sources_checked.length > 0) {
+    navItems.push({ id: "sources", label: i18n.sourcesChecked });
+  }
+
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
+    <div className="max-w-7xl mx-auto px-6 py-10">
       {/* Navigation */}
       <div className="flex items-center justify-between mb-8">
         <Link
@@ -276,115 +303,127 @@ export default async function ReviewDetailPage({
         </div>
       </div>
 
-      {/* Header */}
-      <div className="mb-10">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold bg-accent/10 text-accent px-3 py-1 rounded-full">
-              {volLabel(review.volume, lang)}
-            </span>
-            <span className="text-sm text-muted">{formatDateLocalized(date, lang)}</span>
+      <div className="flex gap-8">
+        <ArticleNav
+          items={navItems}
+          collapseLabel={i18n.tableOfContents}
+          expandLabel={i18n.expandNav}
+        />
+
+        <div className="min-w-0 flex-1 max-w-5xl">
+          {/* Header */}
+          <div className="mb-10">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-semibold bg-accent/10 text-accent px-3 py-1 rounded-full">
+                  {volLabel(review.volume, lang)}
+                </span>
+                <span className="text-sm text-muted">{formatDateLocalized(date, lang)}</span>
+              </div>
+              <DownloadButton
+                url={getJsonDownloadUrl(`reviews/${date}_${lang}.json`)}
+                label={i18n.download}
+                showLabel
+                className="text-sm"
+              />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight mb-3">
+              {review.title}
+            </h1>
+            <p className="text-lg text-muted">{review.subtitle}</p>
+            <div className="flex flex-wrap gap-1.5 mt-4">
+              {review.summary.key_themes.map((theme) => (
+                <span
+                  key={theme}
+                  className={`text-sm font-medium px-3 py-1 rounded-full ${getThemeColor(theme)}`}
+                >
+                  {theme}
+                </span>
+              ))}
+            </div>
           </div>
-          <DownloadButton
-            url={getJsonDownloadUrl(`reviews/${date}_${lang}.json`)}
-            label={i18n.download}
-            showLabel
-            className="text-sm"
-          />
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight mb-3">
-          {review.title}
-        </h1>
-        <p className="text-lg text-muted">{review.subtitle}</p>
-        <div className="flex flex-wrap gap-1.5 mt-4">
-          {review.summary.key_themes.map((theme) => (
-            <span
-              key={theme}
-              className={`text-sm font-medium px-3 py-1 rounded-full ${getThemeColor(theme)}`}
-            >
-              {theme}
-            </span>
+
+          {/* Summary */}
+          <section id="summary" className="mb-10 scroll-mt-20">
+            <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+              {i18n.summary}
+            </h2>
+            <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
+              <ReactMarkdown>{review.summary.body}</ReactMarkdown>
+            </div>
+          </section>
+
+          {/* Researcher Notes */}
+          {review.researcher_notes && (
+            <section id="researcher-notes" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.researcherNotes}
+              </h2>
+              <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
+                <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
+              </div>
+            </section>
+          )}
+
+          {/* Sections */}
+          {review.sections.map((section) => (
+            <div key={section.id} id={`section-${section.id}`} className="scroll-mt-20">
+              <ReviewSectionBlock section={section} i18n={i18n} />
+            </div>
           ))}
+
+          {/* Cross-cutting Analysis */}
+          {review.cross_cutting_analysis && (
+            <section id="cross-cutting" className="mb-10 scroll-mt-20">
+              <h2 className="text-xl font-bold mb-4">
+                {review.cross_cutting_analysis.title}
+              </h2>
+              <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
+                <ReactMarkdown>
+                  {review.cross_cutting_analysis.body}
+                </ReactMarkdown>
+              </div>
+            </section>
+          )}
+
+          {/* Sources */}
+          {review.sources_checked.length > 0 && (
+            <section id="sources" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.sourcesChecked}
+              </h2>
+              <div className="bg-card border border-border rounded-lg p-4 divide-y divide-border/50">
+                {review.sources_checked.map((source) => (
+                  <SourceRow key={source.name} source={source} lang={lang} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Footer nav */}
+          <div className="flex items-center justify-between pt-6 border-t border-border">
+            {prevDate ? (
+              <Link
+                href={`/reviews/${prevDate}`}
+                className="text-accent hover:underline text-sm"
+              >
+                &larr; {formatDateLocalized(prevDate, lang)}
+              </Link>
+            ) : (
+              <div />
+            )}
+            {nextDate ? (
+              <Link
+                href={`/reviews/${nextDate}`}
+                className="text-accent hover:underline text-sm"
+              >
+                {formatDateLocalized(nextDate, lang)} &rarr;
+              </Link>
+            ) : (
+              <div />
+            )}
+          </div>
         </div>
-      </div>
-
-      {/* Summary */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-          {i18n.summary}
-        </h2>
-        <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
-          <ReactMarkdown>{review.summary.body}</ReactMarkdown>
-        </div>
-      </section>
-
-      {/* Researcher Notes */}
-      {review.researcher_notes && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.researcherNotes}
-          </h2>
-          <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
-            <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
-          </div>
-        </section>
-      )}
-
-      {/* Sections */}
-      {review.sections.map((section) => (
-        <ReviewSectionBlock key={section.id} section={section} i18n={i18n} />
-      ))}
-
-      {/* Cross-cutting Analysis */}
-      {review.cross_cutting_analysis && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">
-            {review.cross_cutting_analysis.title}
-          </h2>
-          <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
-            <ReactMarkdown>
-              {review.cross_cutting_analysis.body}
-            </ReactMarkdown>
-          </div>
-        </section>
-      )}
-
-      {/* Sources */}
-      {review.sources_checked.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.sourcesChecked}
-          </h2>
-          <div className="bg-card border border-border rounded-lg p-4 divide-y divide-border/50">
-            {review.sources_checked.map((source) => (
-              <SourceRow key={source.name} source={source} lang={lang} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Footer nav */}
-      <div className="flex items-center justify-between pt-6 border-t border-border">
-        {prevDate ? (
-          <Link
-            href={`/reviews/${prevDate}`}
-            className="text-accent hover:underline text-sm"
-          >
-            &larr; {formatDateLocalized(prevDate, lang)}
-          </Link>
-        ) : (
-          <div />
-        )}
-        {nextDate ? (
-          <Link
-            href={`/reviews/${nextDate}`}
-            className="text-accent hover:underline text-sm"
-          >
-            {formatDateLocalized(nextDate, lang)} &rarr;
-          </Link>
-        ) : (
-          <div />
-        )}
       </div>
     </div>
   );

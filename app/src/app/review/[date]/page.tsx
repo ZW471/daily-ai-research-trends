@@ -7,6 +7,8 @@ import { t, formatDateLocalized, formatTimeLocalized } from "@/lib/i18n";
 import type { Translations } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
 import { DownloadButton } from "../../download-button";
+import { ArticleNav } from "../../article-nav";
+import type { NavItem } from "../../article-nav";
 
 export const dynamic = "force-dynamic";
 
@@ -365,8 +367,60 @@ export default async function ReviewPage({
   const prevDate = currentIndex < allDates.length - 1 ? allDates[currentIndex + 1] : null;
   const nextDate = currentIndex > 0 ? allDates[currentIndex - 1] : null;
 
+  // Build navigation items
+  const navItems: NavItem[] = [];
+  navItems.push({ id: "executive-summary", label: i18n.executiveSummary });
+  if (review.researcher_notes) {
+    navItems.push({ id: "researcher-notes", label: i18n.researcherNotes });
+  }
+  if (review.themes.length > 0) {
+    navItems.push({
+      id: "themes",
+      label: i18n.themesAndTrends,
+      children: review.themes.map((theme) => ({
+        id: `theme-${theme.name.toLowerCase().replace(/\s+/g, "-")}`,
+        label: theme.name,
+      })),
+    });
+  }
+  if (review.papers.length > 0) {
+    navItems.push({
+      id: "papers",
+      label: `${i18n.trendingPapers} (${review.papers.length})`,
+      children: review.papers.map((paper) => ({
+        id: `paper-${paper.id}`,
+        label: paper.title,
+      })),
+    });
+  }
+  if (review.models.length > 0) {
+    navItems.push({
+      id: "models",
+      label: `${i18n.trendingModels} (${review.models.length})`,
+      children: review.models.map((model) => ({
+        id: `model-${model.id}`,
+        label: model.name,
+      })),
+    });
+  }
+  if (review.trending_repos && review.trending_repos.length > 0) {
+    navItems.push({
+      id: "repos",
+      label: `${i18n.trendingGithubRepos} (${review.trending_repos.length})`,
+      children: [...review.trending_repos]
+        .sort((a, b) => b.stars_today - a.stars_today)
+        .map((repo) => ({
+          id: `repo-${repo.id}`,
+          label: repo.name,
+        })),
+    });
+  }
+  if (review.sources_checked.length > 0) {
+    navItems.push({ id: "sources", label: i18n.sourcesChecked });
+  }
+
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
+    <div className="max-w-7xl mx-auto px-6 py-10">
       {/* Navigation */}
       <div className="flex items-center justify-between mb-8">
         <Link
@@ -389,138 +443,156 @@ export default async function ReviewPage({
         </div>
       </div>
 
-      {/* Header */}
-      <div className="mb-10">
-        <div className="flex items-center justify-between mb-1">
-          <p className="text-sm text-muted">{formatDateLocalized(date, lang)}</p>
-          <DownloadButton
-            url={getJsonDownloadUrl(`daily/${date}_${lang}.json`)}
-            label={i18n.download}
-            showLabel
-            className="text-sm"
-          />
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight mb-4">
-          {review.summary.headline}
-        </h1>
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {review.summary.key_themes.map((theme) => (
-            <span
-              key={theme}
-              className={`text-sm font-medium px-3 py-1 rounded-full ${getThemeColor(theme)}`}
-            >
-              {theme}
-            </span>
-          ))}
-        </div>
-      </div>
+      <div className="flex gap-8">
+        <ArticleNav
+          items={navItems}
+          collapseLabel={i18n.tableOfContents}
+          expandLabel={i18n.expandNav}
+        />
 
-      {/* Executive Summary */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-          {i18n.executiveSummary}
-        </h2>
-        <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
-          <ReactMarkdown>{review.summary.body}</ReactMarkdown>
-        </div>
-      </section>
-
-      {/* Researcher Notes */}
-      {review.researcher_notes && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.researcherNotes}
-          </h2>
-          <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
-            <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
-          </div>
-        </section>
-      )}
-
-      {/* Themes */}
-      {review.themes.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.themesAndTrends}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {review.themes.map((theme) => (
-              <ThemeCard key={theme.name} theme={theme} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Papers */}
-      {review.papers.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.trendingPapers} ({review.papers.length})
-          </h2>
-          <div className="space-y-3">
-            {review.papers.map((paper) => (
-              <PaperCard key={paper.id} paper={paper} i18n={i18n} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Models */}
-      {review.models.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.trendingModels} ({review.models.length})
-          </h2>
-          <div className="space-y-3">
-            {review.models.map((model) => (
-              <ModelCard key={model.id} model={model} i18n={i18n} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Trending Repos */}
-      {review.trending_repos && review.trending_repos.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.trendingGithubRepos} ({review.trending_repos.length})
-          </h2>
-          <div className="space-y-3">
-            {[...review.trending_repos]
-              .sort((a, b) => b.stars_today - a.stars_today)
-              .map((repo) => (
-                <RepoCard key={repo.id} repo={repo} i18n={i18n} />
+        <div className="min-w-0 flex-1 max-w-5xl">
+          {/* Header */}
+          <div className="mb-10">
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-sm text-muted">{formatDateLocalized(date, lang)}</p>
+              <DownloadButton
+                url={getJsonDownloadUrl(`daily/${date}_${lang}.json`)}
+                label={i18n.download}
+                showLabel
+                className="text-sm"
+              />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight mb-4">
+              {review.summary.headline}
+            </h1>
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {review.summary.key_themes.map((theme) => (
+                <span
+                  key={theme}
+                  className={`text-sm font-medium px-3 py-1 rounded-full ${getThemeColor(theme)}`}
+                >
+                  {theme}
+                </span>
               ))}
+            </div>
           </div>
-        </section>
-      )}
 
-      {/* Sources */}
-      {review.sources_checked.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            {i18n.sourcesChecked}
-          </h2>
-          <div className="bg-card border border-border rounded-lg p-4 divide-y divide-border/50">
-            {review.sources_checked.map((source) => (
-              <SourceRow key={source.name} source={source} lang={lang} />
-            ))}
+          {/* Executive Summary */}
+          <section id="executive-summary" className="mb-10 scroll-mt-20">
+            <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+              {i18n.executiveSummary}
+            </h2>
+            <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
+              <ReactMarkdown>{review.summary.body}</ReactMarkdown>
+            </div>
+          </section>
+
+          {/* Researcher Notes */}
+          {review.researcher_notes && (
+            <section id="researcher-notes" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.researcherNotes}
+              </h2>
+              <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
+                <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
+              </div>
+            </section>
+          )}
+
+          {/* Themes */}
+          {review.themes.length > 0 && (
+            <section id="themes" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.themesAndTrends}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {review.themes.map((theme) => (
+                  <div key={theme.name} id={`theme-${theme.name.toLowerCase().replace(/\s+/g, "-")}`} className="scroll-mt-20">
+                    <ThemeCard theme={theme} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Papers */}
+          {review.papers.length > 0 && (
+            <section id="papers" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.trendingPapers} ({review.papers.length})
+              </h2>
+              <div className="space-y-3">
+                {review.papers.map((paper) => (
+                  <div key={paper.id} id={`paper-${paper.id}`} className="scroll-mt-20">
+                    <PaperCard paper={paper} i18n={i18n} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Models */}
+          {review.models.length > 0 && (
+            <section id="models" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.trendingModels} ({review.models.length})
+              </h2>
+              <div className="space-y-3">
+                {review.models.map((model) => (
+                  <div key={model.id} id={`model-${model.id}`} className="scroll-mt-20">
+                    <ModelCard model={model} i18n={i18n} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Trending Repos */}
+          {review.trending_repos && review.trending_repos.length > 0 && (
+            <section id="repos" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.trendingGithubRepos} ({review.trending_repos.length})
+              </h2>
+              <div className="space-y-3">
+                {[...review.trending_repos]
+                  .sort((a, b) => b.stars_today - a.stars_today)
+                  .map((repo) => (
+                    <div key={repo.id} id={`repo-${repo.id}`} className="scroll-mt-20">
+                      <RepoCard repo={repo} i18n={i18n} />
+                    </div>
+                  ))}
+              </div>
+            </section>
+          )}
+
+          {/* Sources */}
+          {review.sources_checked.length > 0 && (
+            <section id="sources" className="mb-10 scroll-mt-20">
+              <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+                {i18n.sourcesChecked}
+              </h2>
+              <div className="bg-card border border-border rounded-lg p-4 divide-y divide-border/50">
+                {review.sources_checked.map((source) => (
+                  <SourceRow key={source.name} source={source} lang={lang} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Footer nav */}
+          <div className="flex items-center justify-between pt-6 border-t border-border">
+            {prevDate ? (
+              <Link href={`/review/${prevDate}`} className="text-accent hover:underline text-sm">
+                &larr; {formatDateLocalized(prevDate, lang)}
+              </Link>
+            ) : <div />}
+            {nextDate ? (
+              <Link href={`/review/${nextDate}`} className="text-accent hover:underline text-sm">
+                {formatDateLocalized(nextDate, lang)} &rarr;
+              </Link>
+            ) : <div />}
           </div>
-        </section>
-      )}
-
-      {/* Footer nav */}
-      <div className="flex items-center justify-between pt-6 border-t border-border">
-        {prevDate ? (
-          <Link href={`/review/${prevDate}`} className="text-accent hover:underline text-sm">
-            &larr; {formatDateLocalized(prevDate, lang)}
-          </Link>
-        ) : <div />}
-        {nextDate ? (
-          <Link href={`/review/${nextDate}`} className="text-accent hover:underline text-sm">
-            {formatDateLocalized(nextDate, lang)} &rarr;
-          </Link>
-        ) : <div />}
+        </div>
       </div>
     </div>
   );
