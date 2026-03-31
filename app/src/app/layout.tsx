@@ -32,14 +32,30 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <header className="border-b border-border bg-card sticky top-0 z-10">
           <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-semibold tracking-tight text-foreground">
-                Research Trends
-              </span>
-              <span className="text-xs font-medium text-muted bg-gray-100 px-2 py-0.5 rounded-full">
-                AI/ML
-              </span>
-            </Link>
+            <div className="flex items-center gap-6">
+              <Link href="/" className="flex items-center gap-2">
+                <span className="text-xl font-semibold tracking-tight text-foreground">
+                  Research Trends
+                </span>
+                <span className="text-xs font-medium text-muted bg-gray-100 px-2 py-0.5 rounded-full">
+                  AI/ML
+                </span>
+              </Link>
+              <nav className="flex items-center gap-1">
+                <Link
+                  href="/"
+                  className="text-sm font-medium text-muted hover:text-foreground px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                  Daily Trends
+                </Link>
+                <Link
+                  href="/reviews"
+                  className="text-sm font-medium text-muted hover:text-foreground px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                  Reviews
+                </Link>
+              </nav>
+            </div>
             <div className="flex items-center gap-3">
               <a
                 href="https://github.com/ZW471/daily-ai-research-trends"

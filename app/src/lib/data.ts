@@ -1,4 +1,4 @@
-import type { DailyReview, Index } from "./types";
+import type { DailyReview, Index, LiteratureReview, ReviewsIndex } from "./types";
 
 const GITHUB_RAW_BASE =
   "https://raw.githubusercontent.com/ZW471/daily-ai-research-trends/main/data";
@@ -72,4 +72,26 @@ export async function getAllDates(): Promise<string[]> {
     return index.days.map((d) => d.date).sort().reverse();
   }
   return [];
+}
+
+export async function getReviewsIndex(): Promise<ReviewsIndex | null> {
+  const content = await loadData("reviews-index.json");
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
+}
+
+export async function getReview(
+  date: string
+): Promise<LiteratureReview | null> {
+  const content = await loadData(`reviews/${date}.json`);
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
 }

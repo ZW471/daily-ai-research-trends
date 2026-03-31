@@ -76,3 +76,69 @@ export interface Index {
   version: string;
   days: IndexEntry[];
 }
+
+// Literature Review types
+
+export interface ReviewModel {
+  id: string;
+  name: string;
+  paper_title: string;
+  authors: string[];
+  affiliations: string[];
+  venue: string;
+  core_idea: string;
+  key_innovation: string;
+  limitations: string[];
+  tags: string[];
+  sources: Record<string, string>;
+}
+
+export interface ComparisonTable {
+  headers: string[];
+  rows: string[][];
+}
+
+export interface ReviewSection {
+  id: string;
+  title: string;
+  body: string;
+  models: ReviewModel[];
+  comparison_table: ComparisonTable;
+}
+
+export interface LiteratureReview {
+  version: string;
+  date: string;
+  generated_at: string;
+  type: string;
+  volume: number;
+  title: string;
+  subtitle: string;
+  summary: {
+    headline: string;
+    body: string;
+    key_themes: string[];
+  };
+  researcher_notes: string;
+  sections: ReviewSection[];
+  cross_cutting_analysis: {
+    title: string;
+    body: string;
+  };
+  sources_checked: SourceCheck[];
+}
+
+export interface ReviewsIndexEntry {
+  date: string;
+  file: string;
+  volume: number;
+  title: string;
+  subtitle: string;
+  model_count: number;
+  section_count: number;
+}
+
+export interface ReviewsIndex {
+  version: string;
+  reviews: ReviewsIndexEntry[];
+}
