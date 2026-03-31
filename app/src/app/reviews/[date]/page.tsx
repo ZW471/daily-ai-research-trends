@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getReview, getReviewsIndex, getLanguageFromCookies } from "@/lib/data";
+import { getReview, getReviewsIndex, getLanguageFromCookies, getJsonDownloadUrl } from "@/lib/data";
 import type { Language } from "@/lib/data";
 import type {
   ReviewSection,
@@ -11,6 +11,7 @@ import type {
 import { t, formatDateLocalized, formatTimeLocalized, volLabel } from "@/lib/i18n";
 import type { Translations } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
+import { DownloadButton } from "../../download-button";
 
 export const dynamic = "force-dynamic";
 
@@ -277,11 +278,19 @@ export default async function ReviewDetailPage({
 
       {/* Header */}
       <div className="mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-sm font-semibold bg-accent/10 text-accent px-3 py-1 rounded-full">
-            {volLabel(review.volume, lang)}
-          </span>
-          <span className="text-sm text-muted">{formatDateLocalized(date, lang)}</span>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold bg-accent/10 text-accent px-3 py-1 rounded-full">
+              {volLabel(review.volume, lang)}
+            </span>
+            <span className="text-sm text-muted">{formatDateLocalized(date, lang)}</span>
+          </div>
+          <DownloadButton
+            url={getJsonDownloadUrl(`reviews/${date}_${lang}.json`)}
+            label={i18n.download}
+            showLabel
+            className="text-sm"
+          />
         </div>
         <h1 className="text-3xl font-bold tracking-tight mb-3">
           {review.title}

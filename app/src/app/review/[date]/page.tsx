@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getDailyReview, getAllDates, getLanguageFromCookies } from "@/lib/data";
+import { getDailyReview, getAllDates, getLanguageFromCookies, getJsonDownloadUrl } from "@/lib/data";
 import type { Language } from "@/lib/data";
 import type { Paper, Model, Theme, SourceCheck, TrendingRepo } from "@/lib/types";
 import { t, formatDateLocalized, formatTimeLocalized } from "@/lib/i18n";
 import type { Translations } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
+import { DownloadButton } from "../../download-button";
 
 export const dynamic = "force-dynamic";
 
@@ -390,7 +391,15 @@ export default async function ReviewPage({
 
       {/* Header */}
       <div className="mb-10">
-        <p className="text-sm text-muted mb-1">{formatDateLocalized(date, lang)}</p>
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-sm text-muted">{formatDateLocalized(date, lang)}</p>
+          <DownloadButton
+            url={getJsonDownloadUrl(`daily/${date}_${lang}.json`)}
+            label={i18n.download}
+            showLabel
+            className="text-sm"
+          />
+        </div>
         <h1 className="text-3xl font-bold tracking-tight mb-4">
           {review.summary.headline}
         </h1>

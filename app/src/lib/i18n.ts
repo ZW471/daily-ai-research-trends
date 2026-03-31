@@ -47,6 +47,10 @@ const translations = {
     likes: "likes",
     today: "today",
 
+    // Download
+    download: "Download",
+    downloadJson: "Download JSON",
+
     // Literature review detail
     summary: "Summary",
     keyInnovation: "Key Innovation",
@@ -95,6 +99,10 @@ const translations = {
     downloads: "下载",
     likes: "喜欢",
     today: "今日",
+
+    // Download
+    download: "下载",
+    downloadJson: "下载 JSON",
 
     // Literature review detail
     summary: "摘要",

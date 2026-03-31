@@ -7,6 +7,10 @@ const GITHUB_RAW_BASE =
 
 const isDev = process.env.NODE_ENV === "development";
 
+export function getJsonDownloadUrl(filePath: string): string {
+  return `${GITHUB_RAW_BASE}/${filePath}`;
+}
+
 async function fetchFromGitHub(urlPath: string): Promise<string | null> {
   try {
     const res = await fetch(`${GITHUB_RAW_BASE}/${urlPath}`, {

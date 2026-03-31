@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { getAllDates, getDailyReview, getIndex, getLanguageFromCookies } from "@/lib/data";
+import { getAllDates, getDailyReview, getIndex, getLanguageFromCookies, getJsonDownloadUrl } from "@/lib/data";
 import { t, formatDateLocalized } from "@/lib/i18n";
+import { DownloadButton } from "./download-button";
 
 const THEME_COLORS: Record<string, string> = {
   agents: "bg-purple-100 text-purple-700",
@@ -65,11 +66,13 @@ export default async function Home() {
             review?.models.length || indexEntry?.model_count || 0;
           const repoCount = review?.trending_repos?.length || 0;
 
+          const downloadUrl = getJsonDownloadUrl(`daily/${date}_${lang}.json`);
+
           return (
             <Link
               key={date}
               href={`/review/${date}`}
-              className="block bg-card border border-border rounded-lg p-6 hover:border-accent/40 hover:shadow-sm transition-all"
+              className="relative block bg-card border border-border rounded-lg p-6 hover:border-accent/40 hover:shadow-sm transition-all"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
@@ -114,6 +117,13 @@ export default async function Home() {
                     </div>
                   )}
                 </div>
+              </div>
+              <div className="absolute bottom-3 right-4">
+                <DownloadButton
+                  url={downloadUrl}
+                  label={i18n.downloadJson}
+                  className="opacity-40 hover:opacity-100"
+                />
               </div>
             </Link>
           );
