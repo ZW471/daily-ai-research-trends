@@ -65,7 +65,7 @@ export function ArticleNav({
 
   if (collapsed) {
     return (
-      <div className="sticky top-20">
+      <div className="sticky top-20 self-start">
         <button
           onClick={() => setCollapsed(false)}
           className="p-2 rounded-lg border border-border bg-card hover:bg-gray-50 transition-colors"
@@ -90,7 +90,7 @@ export function ArticleNav({
   }
 
   return (
-    <nav className="sticky top-20 w-56 shrink-0 hidden lg:block">
+    <nav className="sticky top-20 self-start w-56 shrink-0 hidden lg:block max-h-[calc(100vh-6rem)] overflow-y-auto">
       <div className="border border-border rounded-lg bg-card p-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wide text-muted">
