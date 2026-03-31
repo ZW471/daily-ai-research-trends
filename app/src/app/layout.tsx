@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Special_Elite } from "next/font/google";
 import Link from "next/link";
 import { GitHubStars } from "./github-stars";
 import { LanguageToggle } from "./language-toggle";
@@ -17,9 +17,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const specialElite = Special_Elite({
+  variable: "--font-special-elite",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Research Trends",
-  description: "Daily AI/ML research trending analysis",
+  title: "Wowl",
+  description: "Daily AI/ML research trending analysis — by Zhiyu Wang",
 };
 
 export const dynamic = "force-dynamic";
@@ -35,17 +41,17 @@ export default async function RootLayout({
   return (
     <html
       lang={lang === "cn" ? "zh-CN" : "en"}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${specialElite.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <header className="border-b border-border bg-card sticky top-0 z-10">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <Link href="/" className="flex items-center gap-2">
-                <span className="text-xl font-semibold tracking-tight text-foreground">
+              <Link href="/" className="flex items-center gap-3">
+                <span className="text-2xl tracking-tight text-foreground" style={{ fontFamily: "var(--font-special-elite)" }}>
                   {i18n.siteTitle}
                 </span>
-                <span className="text-xs font-medium text-muted bg-gray-100 px-2 py-0.5 rounded-full">
+                <span className="text-xs text-muted-foreground/60 font-light">
                   {i18n.siteBadge}
                 </span>
               </Link>

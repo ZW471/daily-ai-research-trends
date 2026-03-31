@@ -3,11 +3,11 @@ import type { Language } from "./data";
 const translations = {
   en: {
     // Layout
-    siteTitle: "Research Trends",
-    siteBadge: "AI/ML",
+    siteTitle: "Wowl",
+    siteBadge: "by Zhiyu Wang",
     navDaily: "Daily Trends",
     navReviews: "Reviews",
-    footerText: "AI/ML Research Trends — automated daily analysis",
+    footerText: "Wowl — automated daily AI/ML research analysis",
 
     // Home page
     dailyFeedTitle: "Daily Research Feed",
@@ -63,11 +63,11 @@ const translations = {
   },
   cn: {
     // Layout
-    siteTitle: "研究趋势",
-    siteBadge: "AI/ML",
+    siteTitle: "Wowl",
+    siteBadge: "by Zhiyu Wang",
     navDaily: "每日趋势",
     navReviews: "综述",
-    footerText: "AI/ML 研究趋势 — 每日自动分析",
+    footerText: "Wowl — 每日自动 AI/ML 研究分析",
 
     // Home page
     dailyFeedTitle: "每日研究动态",
