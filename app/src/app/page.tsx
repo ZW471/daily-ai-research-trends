@@ -78,6 +78,7 @@ export default async function Home() {
             review?.papers.length || indexEntry?.paper_count || 0;
           const modelCount =
             review?.models.length || indexEntry?.model_count || 0;
+          const repoCount = review?.trending_repos?.length || 0;
 
           return (
             <Link
@@ -117,6 +118,14 @@ export default async function Home() {
                     </div>
                     <div>models</div>
                   </div>
+                  {repoCount > 0 && (
+                    <div className="text-center">
+                      <div className="text-lg font-semibold text-foreground">
+                        {repoCount}
+                      </div>
+                      <div>repos</div>
+                    </div>
+                  )}
                 </div>
               </div>
             </Link>

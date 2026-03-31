@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDailyReview, getAllDates, getLanguageFromCookies } from "@/lib/data";
-import type { Paper, Model, Theme, SourceCheck } from "@/lib/types";
+import type { Paper, Model, Theme, SourceCheck, TrendingRepo } from "@/lib/types";
 import ReactMarkdown from "react-markdown";
 
 export const dynamic = "force-dynamic";
@@ -210,6 +210,102 @@ function ModelCard({ model }: { model: Model }) {
   );
 }
 
+const LANG_COLORS: Record<string, string> = {
+  Python: "#3572A5",
+  JavaScript: "#f1e05a",
+  TypeScript: "#3178c6",
+  Rust: "#dea584",
+  Go: "#00ADD8",
+  Java: "#b07219",
+  "C++": "#f34b7d",
+  C: "#555555",
+  Swift: "#F05138",
+  Kotlin: "#A97BFF",
+  Ruby: "#701516",
+  Dart: "#00B4AB",
+  Jupyter: "#DA5B0B",
+  Shell: "#89e051",
+  Scala: "#c22d40",
+  R: "#198CE7",
+  Lua: "#000080",
+  Zig: "#ec915c",
+  Cuda: "#3A4E3A",
+};
+
+function RepoCard({ repo }: { repo: TrendingRepo }) {
+  const langColor = LANG_COLORS[repo.language] || "#8b8b8b";
+  return (
+    <div
+      className={`border-l-4 border rounded-lg p-5 ${RELEVANCE_STYLES[repo.relevance] || RELEVANCE_STYLES.medium}`}
+    >
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div>
+          <a
+            href={repo.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-base font-semibold hover:text-accent transition-colors"
+          >
+            {repo.name}
+          </a>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {repo.relevance === "high" && (
+            <span className="text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+              High Relevance
+            </span>
+          )}
+          <a
+            href={repo.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium bg-gray-900 text-white px-3 py-1 rounded-full hover:bg-gray-700 transition-colors"
+          >
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <p className="text-sm leading-relaxed mb-3">{repo.description}</p>
+
+      <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-1.5">
+          {repo.tags.slice(0, 5).map((tag) => (
+            <span
+              key={tag}
+              className={`text-xs px-2 py-0.5 rounded-full ${getThemeColor(tag)}`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className="flex items-center gap-4 text-sm text-muted">
+          <span className="flex items-center gap-1">
+            <span
+              className="inline-block w-3 h-3 rounded-full"
+              style={{ backgroundColor: langColor }}
+            />
+            {repo.language}
+          </span>
+          <span className="flex items-center gap-1">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z" />
+            </svg>
+            {formatNumber(repo.stars)}
+          </span>
+          <span className="text-green-600 font-medium">+{formatNumber(repo.stars_today)} today</span>
+          <span className="flex items-center gap-1">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z" />
+            </svg>
+            {formatNumber(repo.forks)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ThemeCard({ theme }: { theme: Theme }) {
   const trend = TREND_ICONS[theme.trend_signal] || TREND_ICONS.stable;
   return (
@@ -381,6 +477,22 @@ export default async function ReviewPage({
             {review.models.map((model) => (
               <ModelCard key={model.id} model={model} />
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Trending Repos */}
+      {review.trending_repos && review.trending_repos.length > 0 && (
+        <section className="mb-10">
+          <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
+            Trending GitHub Repos ({review.trending_repos.length})
+          </h2>
+          <div className="space-y-3">
+            {[...review.trending_repos]
+              .sort((a, b) => b.stars_today - a.stars_today)
+              .map((repo) => (
+                <RepoCard key={repo.id} repo={repo} />
+              ))}
           </div>
         </section>
       )}

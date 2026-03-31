@@ -1,3 +1,16 @@
+export interface TrendingRepo {
+  id: string;
+  name: string;
+  description: string;
+  language: string;
+  stars: number;
+  stars_today: number;
+  forks: number;
+  url: string;
+  tags: string[];
+  relevance: "high" | "medium" | "low";
+}
+
 export interface DailyReview {
   version: string;
   date: string;
@@ -10,6 +23,7 @@ export interface DailyReview {
   researcher_notes: string;
   papers: Paper[];
   models: Model[];
+  trending_repos?: TrendingRepo[];
   themes: Theme[];
   sources_checked: SourceCheck[];
 }
