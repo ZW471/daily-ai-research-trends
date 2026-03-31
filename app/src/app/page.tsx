@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllDates, getDailyReview, getIndex, getLanguageFromCookies } from "@/lib/data";
+import { t, formatDateLocalized } from "@/lib/i18n";
 
 const THEME_COLORS: Record<string, string> = {
   agents: "bg-purple-100 text-purple-700",
@@ -19,32 +20,19 @@ function getThemeColor(theme: string): string {
   return THEME_COLORS[key] || "bg-gray-100 text-gray-600";
 }
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T12:00:00Z");
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}
-
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const lang = await getLanguageFromCookies();
   const dates = await getAllDates(lang);
   const index = await getIndex(lang);
+  const i18n = t(lang);
 
   if (dates.length === 0) {
     return (
       <div className="max-w-5xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-2xl font-semibold mb-4">No reviews yet</h1>
-        <p className="text-muted">
-          Daily research reviews will appear here once the first analysis is
-          published.
-        </p>
+        <h1 className="text-2xl font-semibold mb-4">{i18n.noReviewsTitle}</h1>
+        <p className="text-muted">{i18n.noReviewsDaily}</p>
       </div>
     );
   }
@@ -61,18 +49,15 @@ export default async function Home() {
     <div className="max-w-5xl mx-auto px-6 py-10">
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight mb-2">
-          Daily Research Feed
+          {i18n.dailyFeedTitle}
         </h1>
-        <p className="text-muted text-lg">
-          Tracking trending AI/ML papers and models across arXiv, HuggingFace,
-          and AlphaXiv.
-        </p>
+        <p className="text-muted text-lg">{i18n.dailyFeedSubtitle}</p>
       </div>
 
       <div className="space-y-4">
         {reviews.map(({ date, indexEntry, review }) => {
           const headline =
-            review?.summary.headline || indexEntry?.headline || "Daily Review";
+            review?.summary.headline || indexEntry?.headline || i18n.dailyReviewFallback;
           const themes = review?.summary.key_themes || [];
           const paperCount =
             review?.papers.length || indexEntry?.paper_count || 0;
@@ -88,7 +73,9 @@ export default async function Home() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-muted mb-1">{formatDate(date)}</p>
+                  <p className="text-sm text-muted mb-1">
+                    {formatDateLocalized(date, lang)}
+                  </p>
                   <h2 className="text-xl font-semibold mb-3 truncate">
                     {headline}
                   </h2>
@@ -110,20 +97,20 @@ export default async function Home() {
                     <div className="text-lg font-semibold text-foreground">
                       {paperCount}
                     </div>
-                    <div>papers</div>
+                    <div>{i18n.papers}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-lg font-semibold text-foreground">
                       {modelCount}
                     </div>
-                    <div>models</div>
+                    <div>{i18n.models}</div>
                   </div>
                   {repoCount > 0 && (
                     <div className="text-center">
                       <div className="text-lg font-semibold text-foreground">
                         {repoCount}
                       </div>
-                      <div>repos</div>
+                      <div>{i18n.repos}</div>
                     </div>
                   )}
                 </div>

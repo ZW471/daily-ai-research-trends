@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDailyReview, getAllDates, getLanguageFromCookies } from "@/lib/data";
+import type { Language } from "@/lib/data";
 import type { Paper, Model, Theme, SourceCheck, TrendingRepo } from "@/lib/types";
+import { t, formatDateLocalized, formatTimeLocalized } from "@/lib/i18n";
+import type { Translations } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
 
 export const dynamic = "force-dynamic";
@@ -35,24 +38,13 @@ const RELEVANCE_STYLES: Record<string, string> = {
   low: "bg-white border-gray-100",
 };
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T12:00:00Z");
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}
-
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return n.toString();
 }
 
-function PaperCard({ paper }: { paper: Paper }) {
+function PaperCard({ paper, i18n }: { paper: Paper; i18n: Translations }) {
   return (
     <div
       className={`border-l-4 border rounded-lg p-5 ${RELEVANCE_STYLES[paper.relevance] || RELEVANCE_STYLES.medium}`}
@@ -61,7 +53,7 @@ function PaperCard({ paper }: { paper: Paper }) {
         <h3 className="text-base font-semibold leading-snug">{paper.title}</h3>
         {paper.relevance === "high" && (
           <span className="shrink-0 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-            High Relevance
+            {i18n.highRelevance}
           </span>
         )}
       </div>
@@ -81,7 +73,7 @@ function PaperCard({ paper }: { paper: Paper }) {
       {paper.key_findings.length > 0 && (
         <div className="mb-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted mb-1">
-            Key Findings
+            {i18n.keyFindings}
           </p>
           <ul className="text-sm space-y-1">
             {paper.key_findings.map((finding, i) => (
@@ -109,7 +101,7 @@ function PaperCard({ paper }: { paper: Paper }) {
         <div className="flex items-center gap-3">
           {paper.engagement && (
             <span className="text-xs text-muted">
-              {paper.engagement.upvotes} upvotes
+              {paper.engagement.upvotes} {i18n.upvotes}
             </span>
           )}
           <div className="flex gap-2">
@@ -160,7 +152,7 @@ function PaperCard({ paper }: { paper: Paper }) {
   );
 }
 
-function ModelCard({ model }: { model: Model }) {
+function ModelCard({ model, i18n }: { model: Model; i18n: Translations }) {
   return (
     <div className="bg-card border border-border rounded-lg p-5">
       <div className="flex items-start justify-between gap-3 mb-2">
@@ -184,7 +176,7 @@ function ModelCard({ model }: { model: Model }) {
           rel="noopener noreferrer"
           className="shrink-0 text-xs font-medium bg-accent/10 text-accent px-3 py-1 rounded-full hover:bg-accent/20 transition-colors"
         >
-          View on HF
+          {i18n.viewOnHF}
         </a>
       </div>
 
@@ -202,8 +194,8 @@ function ModelCard({ model }: { model: Model }) {
           ))}
         </div>
         <div className="flex gap-4 text-sm text-muted">
-          <span>{formatNumber(model.metrics.downloads)} downloads</span>
-          <span>{formatNumber(model.metrics.likes)} likes</span>
+          <span>{formatNumber(model.metrics.downloads)} {i18n.downloads}</span>
+          <span>{formatNumber(model.metrics.likes)} {i18n.likes}</span>
         </div>
       </div>
     </div>
@@ -232,7 +224,7 @@ const LANG_COLORS: Record<string, string> = {
   Cuda: "#3A4E3A",
 };
 
-function RepoCard({ repo }: { repo: TrendingRepo }) {
+function RepoCard({ repo, i18n }: { repo: TrendingRepo; i18n: Translations }) {
   const langColor = LANG_COLORS[repo.language] || "#8b8b8b";
   return (
     <div
@@ -252,7 +244,7 @@ function RepoCard({ repo }: { repo: TrendingRepo }) {
         <div className="flex items-center gap-2 shrink-0">
           {repo.relevance === "high" && (
             <span className="text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-              High Relevance
+              {i18n.highRelevance}
             </span>
           )}
           <a
@@ -293,7 +285,7 @@ function RepoCard({ repo }: { repo: TrendingRepo }) {
             </svg>
             {formatNumber(repo.stars)}
           </span>
-          <span className="text-green-600 font-medium">+{formatNumber(repo.stars_today)} today</span>
+          <span className="text-green-600 font-medium">+{formatNumber(repo.stars_today)} {i18n.today}</span>
           <span className="flex items-center gap-1">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
               <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z" />
@@ -330,7 +322,7 @@ function ThemeCard({ theme }: { theme: Theme }) {
   );
 }
 
-function SourceRow({ source }: { source: SourceCheck }) {
+function SourceRow({ source, lang }: { source: SourceCheck; lang: Language }) {
   return (
     <div className="flex items-center justify-between py-2 text-sm">
       <div className="flex items-center gap-2">
@@ -347,11 +339,7 @@ function SourceRow({ source }: { source: SourceCheck }) {
         </a>
       </div>
       <span className="text-muted text-xs">
-        {new Date(source.checked_at).toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZoneName: "short",
-        })}
+        {formatTimeLocalized(source.checked_at, lang)}
       </span>
     </div>
   );
@@ -370,6 +358,7 @@ export default async function ReviewPage({
     notFound();
   }
 
+  const i18n = t(lang);
   const allDates = await getAllDates(lang);
   const currentIndex = allDates.indexOf(date);
   const prevDate = currentIndex < allDates.length - 1 ? allDates[currentIndex + 1] : null;
@@ -383,7 +372,7 @@ export default async function ReviewPage({
           href="/"
           className="text-sm text-accent hover:underline flex items-center gap-1"
         >
-          &larr; All Reviews
+          &larr; {i18n.allReviews}
         </Link>
         <div className="flex gap-4 text-sm">
           {prevDate && (
@@ -401,7 +390,7 @@ export default async function ReviewPage({
 
       {/* Header */}
       <div className="mb-10">
-        <p className="text-sm text-muted mb-1">{formatDate(date)}</p>
+        <p className="text-sm text-muted mb-1">{formatDateLocalized(date, lang)}</p>
         <h1 className="text-3xl font-bold tracking-tight mb-4">
           {review.summary.headline}
         </h1>
@@ -420,7 +409,7 @@ export default async function ReviewPage({
       {/* Executive Summary */}
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-          Executive Summary
+          {i18n.executiveSummary}
         </h2>
         <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
           <ReactMarkdown>{review.summary.body}</ReactMarkdown>
@@ -431,7 +420,7 @@ export default async function ReviewPage({
       {review.researcher_notes && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Researcher Notes
+            {i18n.researcherNotes}
           </h2>
           <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
             <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
@@ -443,7 +432,7 @@ export default async function ReviewPage({
       {review.themes.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Themes &amp; Trends
+            {i18n.themesAndTrends}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {review.themes.map((theme) => (
@@ -457,11 +446,11 @@ export default async function ReviewPage({
       {review.papers.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Trending Papers ({review.papers.length})
+            {i18n.trendingPapers} ({review.papers.length})
           </h2>
           <div className="space-y-3">
             {review.papers.map((paper) => (
-              <PaperCard key={paper.id} paper={paper} />
+              <PaperCard key={paper.id} paper={paper} i18n={i18n} />
             ))}
           </div>
         </section>
@@ -471,11 +460,11 @@ export default async function ReviewPage({
       {review.models.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Trending Models ({review.models.length})
+            {i18n.trendingModels} ({review.models.length})
           </h2>
           <div className="space-y-3">
             {review.models.map((model) => (
-              <ModelCard key={model.id} model={model} />
+              <ModelCard key={model.id} model={model} i18n={i18n} />
             ))}
           </div>
         </section>
@@ -485,13 +474,13 @@ export default async function ReviewPage({
       {review.trending_repos && review.trending_repos.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Trending GitHub Repos ({review.trending_repos.length})
+            {i18n.trendingGithubRepos} ({review.trending_repos.length})
           </h2>
           <div className="space-y-3">
             {[...review.trending_repos]
               .sort((a, b) => b.stars_today - a.stars_today)
               .map((repo) => (
-                <RepoCard key={repo.id} repo={repo} />
+                <RepoCard key={repo.id} repo={repo} i18n={i18n} />
               ))}
           </div>
         </section>
@@ -501,11 +490,11 @@ export default async function ReviewPage({
       {review.sources_checked.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Sources Checked
+            {i18n.sourcesChecked}
           </h2>
           <div className="bg-card border border-border rounded-lg p-4 divide-y divide-border/50">
             {review.sources_checked.map((source) => (
-              <SourceRow key={source.name} source={source} />
+              <SourceRow key={source.name} source={source} lang={lang} />
             ))}
           </div>
         </section>
@@ -515,12 +504,12 @@ export default async function ReviewPage({
       <div className="flex items-center justify-between pt-6 border-t border-border">
         {prevDate ? (
           <Link href={`/review/${prevDate}`} className="text-accent hover:underline text-sm">
-            &larr; {formatDate(prevDate)}
+            &larr; {formatDateLocalized(prevDate, lang)}
           </Link>
         ) : <div />}
         {nextDate ? (
           <Link href={`/review/${nextDate}`} className="text-accent hover:underline text-sm">
-            {formatDate(nextDate)} &rarr;
+            {formatDateLocalized(nextDate, lang)} &rarr;
           </Link>
         ) : <div />}
       </div>

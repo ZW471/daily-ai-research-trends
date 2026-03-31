@@ -1,16 +1,6 @@
 import Link from "next/link";
 import { getReviewsIndex, getLanguageFromCookies } from "@/lib/data";
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T12:00:00Z");
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}
+import { t, formatDateLocalized, volLabel } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -18,14 +8,13 @@ export default async function ReviewsPage() {
   const lang = await getLanguageFromCookies();
   const index = await getReviewsIndex(lang);
   const reviews = index?.reviews ?? [];
+  const i18n = t(lang);
 
   if (reviews.length === 0) {
     return (
       <div className="max-w-5xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-2xl font-semibold mb-4">No reviews yet</h1>
-        <p className="text-muted">
-          Literature reviews will appear here once the first volume is published.
-        </p>
+        <h1 className="text-2xl font-semibold mb-4">{i18n.noReviewsTitle}</h1>
+        <p className="text-muted">{i18n.noReviewsLit}</p>
       </div>
     );
   }
@@ -34,12 +23,9 @@ export default async function ReviewsPage() {
     <div className="max-w-5xl mx-auto px-6 py-10">
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight mb-2">
-          Literature Reviews
+          {i18n.litReviewsTitle}
         </h1>
-        <p className="text-muted text-lg">
-          In-depth comparative reviews of AI/ML model families and research
-          directions.
-        </p>
+        <p className="text-muted text-lg">{i18n.litReviewsSubtitle}</p>
       </div>
 
       <div className="space-y-4">
@@ -53,10 +39,10 @@ export default async function ReviewsPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-semibold bg-accent/10 text-accent px-2 py-0.5 rounded-full">
-                    Vol. {entry.volume}
+                    {volLabel(entry.volume, lang)}
                   </span>
                   <span className="text-sm text-muted">
-                    {formatDate(entry.date)}
+                    {formatDateLocalized(entry.date, lang)}
                   </span>
                 </div>
                 <h2 className="text-xl font-semibold mb-2">{entry.title}</h2>
@@ -69,13 +55,13 @@ export default async function ReviewsPage() {
                   <div className="text-lg font-semibold text-foreground">
                     {entry.model_count}
                   </div>
-                  <div>models</div>
+                  <div>{i18n.models}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-semibold text-foreground">
                     {entry.section_count}
                   </div>
-                  <div>sections</div>
+                  <div>{i18n.sections}</div>
                 </div>
               </div>
             </div>

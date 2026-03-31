@@ -1,12 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getReview, getReviewsIndex, getLanguageFromCookies } from "@/lib/data";
+import type { Language } from "@/lib/data";
 import type {
   ReviewSection,
   ReviewModel,
   ComparisonTable,
   SourceCheck,
 } from "@/lib/types";
+import { t, formatDateLocalized, formatTimeLocalized, volLabel } from "@/lib/i18n";
+import type { Translations } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
 
 export const dynamic = "force-dynamic";
@@ -44,18 +47,7 @@ function getThemeColor(theme: string): string {
   return THEME_COLORS[theme.toLowerCase()] || "bg-gray-100 text-gray-600";
 }
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T12:00:00Z");
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}
-
-function ReviewModelCard({ model }: { model: ReviewModel }) {
+function ReviewModelCard({ model, i18n }: { model: ReviewModel; i18n: Translations }) {
   return (
     <div className="bg-card border border-border rounded-lg p-5">
       <div className="flex items-start justify-between gap-3 mb-2">
@@ -84,7 +76,7 @@ function ReviewModelCard({ model }: { model: ReviewModel }) {
 
       <div className="mb-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-green-700 mb-1">
-          Key Innovation
+          {i18n.keyInnovation}
         </p>
         <p className="text-sm">{model.key_innovation}</p>
       </div>
@@ -92,7 +84,7 @@ function ReviewModelCard({ model }: { model: ReviewModel }) {
       {model.limitations.length > 0 && (
         <div className="mb-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted mb-1">
-            Limitations
+            {i18n.limitations}
           </p>
           <ul className="text-sm space-y-1">
             {model.limitations.map((lim, i) => (
@@ -180,7 +172,7 @@ function SectionComparisonTable({ table }: { table: ComparisonTable }) {
   );
 }
 
-function ReviewSectionBlock({ section }: { section: ReviewSection }) {
+function ReviewSectionBlock({ section, i18n }: { section: ReviewSection; i18n: Translations }) {
   return (
     <section className="mb-10">
       <h2 className="text-xl font-bold mb-4">{section.title}</h2>
@@ -192,7 +184,7 @@ function ReviewSectionBlock({ section }: { section: ReviewSection }) {
       {section.models.length > 0 && (
         <div className="space-y-3 mb-6">
           {section.models.map((model) => (
-            <ReviewModelCard key={model.id} model={model} />
+            <ReviewModelCard key={model.id} model={model} i18n={i18n} />
           ))}
         </div>
       )}
@@ -200,7 +192,7 @@ function ReviewSectionBlock({ section }: { section: ReviewSection }) {
       {section.comparison_table && (
         <div className="mb-6">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted mb-2">
-            Comparison
+            {i18n.comparison}
           </p>
           <SectionComparisonTable table={section.comparison_table} />
         </div>
@@ -209,7 +201,7 @@ function ReviewSectionBlock({ section }: { section: ReviewSection }) {
   );
 }
 
-function SourceRow({ source }: { source: SourceCheck }) {
+function SourceRow({ source, lang }: { source: SourceCheck; lang: Language }) {
   return (
     <div className="flex items-center justify-between py-2 text-sm">
       <div className="flex items-center gap-2">
@@ -226,11 +218,7 @@ function SourceRow({ source }: { source: SourceCheck }) {
         </a>
       </div>
       <span className="text-muted text-xs">
-        {new Date(source.checked_at).toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZoneName: "short",
-        })}
+        {formatTimeLocalized(source.checked_at, lang)}
       </span>
     </div>
   );
@@ -249,6 +237,7 @@ export default async function ReviewDetailPage({
     notFound();
   }
 
+  const i18n = t(lang);
   const index = await getReviewsIndex(lang);
   const allDates = (index?.reviews ?? []).map((r) => r.date).sort().reverse();
   const currentIndex = allDates.indexOf(date);
@@ -264,7 +253,7 @@ export default async function ReviewDetailPage({
           href="/reviews"
           className="text-sm text-accent hover:underline flex items-center gap-1"
         >
-          &larr; All Reviews
+          &larr; {i18n.allReviews}
         </Link>
         <div className="flex gap-4 text-sm">
           {prevDate && (
@@ -290,9 +279,9 @@ export default async function ReviewDetailPage({
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-sm font-semibold bg-accent/10 text-accent px-3 py-1 rounded-full">
-            Vol. {review.volume}
+            {volLabel(review.volume, lang)}
           </span>
-          <span className="text-sm text-muted">{formatDate(date)}</span>
+          <span className="text-sm text-muted">{formatDateLocalized(date, lang)}</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight mb-3">
           {review.title}
@@ -313,7 +302,7 @@ export default async function ReviewDetailPage({
       {/* Summary */}
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-          Summary
+          {i18n.summary}
         </h2>
         <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
           <ReactMarkdown>{review.summary.body}</ReactMarkdown>
@@ -324,7 +313,7 @@ export default async function ReviewDetailPage({
       {review.researcher_notes && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Researcher Notes
+            {i18n.researcherNotes}
           </h2>
           <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
             <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
@@ -334,7 +323,7 @@ export default async function ReviewDetailPage({
 
       {/* Sections */}
       {review.sections.map((section) => (
-        <ReviewSectionBlock key={section.id} section={section} />
+        <ReviewSectionBlock key={section.id} section={section} i18n={i18n} />
       ))}
 
       {/* Cross-cutting Analysis */}
@@ -355,11 +344,11 @@ export default async function ReviewDetailPage({
       {review.sources_checked.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
-            Sources Checked
+            {i18n.sourcesChecked}
           </h2>
           <div className="bg-card border border-border rounded-lg p-4 divide-y divide-border/50">
             {review.sources_checked.map((source) => (
-              <SourceRow key={source.name} source={source} />
+              <SourceRow key={source.name} source={source} lang={lang} />
             ))}
           </div>
         </section>
@@ -372,7 +361,7 @@ export default async function ReviewDetailPage({
             href={`/reviews/${prevDate}`}
             className="text-accent hover:underline text-sm"
           >
-            &larr; {formatDate(prevDate)}
+            &larr; {formatDateLocalized(prevDate, lang)}
           </Link>
         ) : (
           <div />
@@ -382,7 +371,7 @@ export default async function ReviewDetailPage({
             href={`/reviews/${nextDate}`}
             className="text-accent hover:underline text-sm"
           >
-            {formatDate(nextDate)} &rarr;
+            {formatDateLocalized(nextDate, lang)} &rarr;
           </Link>
         ) : (
           <div />

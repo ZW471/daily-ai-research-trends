@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { GitHubStars } from "./github-stars";
 import { LanguageToggle } from "./language-toggle";
+import { getLanguageFromCookies } from "@/lib/data";
+import { t } from "@/lib/i18n";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,14 +22,19 @@ export const metadata: Metadata = {
   description: "Daily AI/ML research trending analysis",
 };
 
-export default function RootLayout({
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const lang = await getLanguageFromCookies();
+  const i18n = t(lang);
+
   return (
     <html
-      lang="en"
+      lang={lang === "cn" ? "zh-CN" : "en"}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
@@ -36,10 +43,10 @@ export default function RootLayout({
             <div className="flex items-center gap-6">
               <Link href="/" className="flex items-center gap-2">
                 <span className="text-xl font-semibold tracking-tight text-foreground">
-                  Research Trends
+                  {i18n.siteTitle}
                 </span>
                 <span className="text-xs font-medium text-muted bg-gray-100 px-2 py-0.5 rounded-full">
-                  AI/ML
+                  {i18n.siteBadge}
                 </span>
               </Link>
               <nav className="flex items-center gap-1">
@@ -47,13 +54,13 @@ export default function RootLayout({
                   href="/"
                   className="text-sm font-medium text-muted hover:text-foreground px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
                 >
-                  Daily Trends
+                  {i18n.navDaily}
                 </Link>
                 <Link
                   href="/reviews"
                   className="text-sm font-medium text-muted hover:text-foreground px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
                 >
-                  Reviews
+                  {i18n.navReviews}
                 </Link>
               </nav>
             </div>
@@ -83,7 +90,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <footer className="border-t border-border py-6 mt-12">
           <div className="max-w-5xl mx-auto px-6 text-sm text-muted">
-            AI/ML Research Trends &mdash; automated daily analysis
+            {i18n.footerText}
           </div>
         </footer>
       </body>
