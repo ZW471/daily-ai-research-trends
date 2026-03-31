@@ -25,7 +25,7 @@ const specialElite = Special_Elite({
 
 export const metadata: Metadata = {
   title: "Wowl",
-  description: "Daily AI/ML research trending analysis — by Zhiyu Wang",
+  description: "Daily AI/ML research trending analysis",
 };
 
 export const dynamic = "force-dynamic";
@@ -48,11 +48,8 @@ export default async function RootLayout({
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-6">
               <Link href="/" className="flex items-center gap-3">
-                <span className="text-2xl tracking-tight text-foreground" style={{ fontFamily: "var(--font-special-elite)" }}>
+                <span className="text-3xl tracking-tight text-foreground" style={{ fontFamily: "var(--font-special-elite)" }}>
                   {i18n.siteTitle}
-                </span>
-                <span className="text-xs text-muted-foreground/60 font-light">
-                  {i18n.siteBadge}
                 </span>
               </Link>
               <nav className="flex items-center gap-1">

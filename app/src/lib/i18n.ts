@@ -4,7 +4,6 @@ const translations = {
   en: {
     // Layout
     siteTitle: "Wowl",
-    siteBadge: "by Zhiyu Wang",
     navDaily: "Daily Trends",
     navReviews: "Reviews",
     footerText: "Wowl — automated daily AI/ML research analysis",
@@ -64,7 +63,6 @@ const translations = {
   cn: {
     // Layout
     siteTitle: "Wowl",
-    siteBadge: "by Zhiyu Wang",
     navDaily: "每日趋势",
     navReviews: "综述",
     footerText: "Wowl — 每日自动 AI/ML 研究分析",
