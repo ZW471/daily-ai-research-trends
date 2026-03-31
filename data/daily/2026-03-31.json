@@ -1,0 +1,541 @@
+{
+  "version": "1.0",
+  "date": "2026-03-31",
+  "generated_at": "2026-03-31T03:20:00Z",
+  "summary": {
+    "headline": "Trillion-parameter scientific foundation model arrives; Agent skill distillation from trajectories gains traction; Coding agents get specialized models and organicity benchmarks",
+    "body": "Today's AI/ML landscape is shaped by three converging trends. First, **scale meets science**: Intern-S1-Pro debuts as the first trillion-parameter scientific multimodal foundation model, promising comprehensive enhancement across general and scientific domains with advanced agent capabilities. Second, **agent engineering matures rapidly**: Trace2Skill introduces a principled framework for distilling reusable skills from agent trajectories, Natural-Language Agent Harnesses proposes externalizing agent control logic as portable natural-language artifacts, and Learning to Commit tackles the overlooked 'organicity' problem where LLM-generated PRs get rejected despite being functionally correct. Third, **coding agents and benchmarks evolve in tandem**: Cursor's Composer 2 achieves frontier-level agentic software engineering through RL at scale, while SlopCodeBench reveals how coding agents degrade over iterative tasks — a critical blind spot in current evaluation.\n\nOn the medical AI front, MedOpenClaw exposes a striking paradox where VLMs actually perform worse when given professional tools, and Medical AI Scientist demonstrates the first autonomous clinical research framework. In computer vision, Calibri shows that a single learned scaling parameter can significantly enhance Diffusion Transformers, and GenMask elegantly adapts DiT for segmentation by generating masks directly.",
+    "key_themes": ["trillion-scale-models", "agent-skill-learning", "coding-agents", "medical-ai", "diffusion-transformers", "video-generation"]
+  },
+  "researcher_notes": "**Intern-S1-Pro at 1T parameters is a landmark release.** While we've seen trillion-scale language models before, this is the first claiming multimodal scientific capabilities at this scale. The 9-comment engagement on HuggingFace (highest today alongside Trace2Skill) signals genuine community interest. The key question is whether the scientific specialization justifies the scale — or whether smaller, domain-adapted models remain more practical. Watch for benchmark comparisons against specialized scientific models.\n\n**Trace2Skill's 13 comments make it today's most-discussed paper, and for good reason.** The problem it addresses — how to automatically extract reusable, transferable skills from agent trajectories without overfitting to trajectory-local lessons — is one of the core bottlenecks in building practical LLM agents. Combined with yesterday's MetaClaw (meta-learning agents) and AVO (evolutionary search agents), we're seeing a clear research arc toward agents that improve themselves systematically rather than through brute-force prompting.\n\n**The 'coding agent' cluster tells a nuanced story.** Composer 2 (Cursor) demonstrates that RL-trained specialized models can match frontier general-purpose models on real software engineering. But SlopCodeBench provides the necessary counterpoint: current coding agents degrade progressively over iterative tasks, a failure mode invisible to single-shot benchmarks like SWE-bench. Meanwhile, Learning to Commit identifies 'organicity' — adherence to project conventions, API reuse, and architectural consistency — as the real barrier to PR acceptance. These three papers together paint a picture of a field that's getting good at isolated tasks but struggling with the sustained, convention-aware work that real software engineering demands.\n\n**MedOpenClaw's performance paradox is genuinely surprising.** State-of-the-art VLMs (Gemini 3.1 Pro, GPT-5.4) actually perform *worse* when given access to professional medical imaging tools (3D Slicer). The authors attribute this to lack of precise spatial grounding — models can reason about pre-selected 2D slices but fail when they need to navigate full 3D volumes. This challenges the assumption that 'more tools = better agents' and suggests tool-use training needs fundamental rethinking for spatial domains.\n\n**The Qwen 3.5 ecosystem continues to dominate HuggingFace trending models.** Jackrong's Claude 4.6 Opus reasoning distillations maintain their grip with multiple GGUF variants in the top 20. New entries include Nvidia's Nemotron-Cascade-2-30B-A3B (hybrid architecture), Cohere's first speech recognition model, and Mistral's Voxtral TTS — the model landscape is diversifying beyond text generation into speech and multimodal pipelines.",
+  "papers": [
+    {
+      "id": "trace2skill",
+      "title": "Trace2Skill: Distill Trajectory-Local Lessons into Transferable Agent Skills",
+      "authors": ["Jingwei Ni", "Yihao Liu", "Xinpeng Liu", "Yutao Sun", "Mengyu Zhou"],
+      "affiliations": [],
+      "summary": "Introduces a framework for distilling reusable, transferable skills from LLM agent trajectories. Addresses the scalability bottleneck of manual skill authoring and the fragility of automated skill generation that overfits to trajectory-local lessons.",
+      "key_findings": [
+        "Overcomes shallow parametric knowledge limitations in automated skill generation",
+        "Produces transferable skills that generalize beyond specific trajectory contexts",
+        "Most-discussed paper of the day with 13 HuggingFace comments"
+      ],
+      "tags": ["agents", "skill-learning", "trajectories", "transfer-learning"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 13
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25158",
+        "huggingface": "https://huggingface.co/papers/2603.25158",
+        "pdf": "https://arxiv.org/pdf/2603.25158"
+      }
+    },
+    {
+      "id": "intern-s1-pro",
+      "title": "Intern-S1-Pro: Scientific Multimodal Foundation Model at Trillion Scale",
+      "authors": ["Yicheng Zou", "Dongsheng Zhu", "Lin Zhu", "Tong Zhu", "Yunhua Zhou"],
+      "affiliations": [],
+      "summary": "First one-trillion-parameter scientific multimodal foundation model. Delivers comprehensive enhancement across general and scientific domains with advanced agent capabilities and scientific expertise at unprecedented scale.",
+      "key_findings": [
+        "First trillion-parameter model specifically targeting scientific multimodal understanding",
+        "Combines stronger reasoning, image-text understanding, and agent capabilities",
+        "Scientific expertise augmented beyond general-purpose improvements"
+      ],
+      "tags": ["foundation-models", "scientific-ai", "multimodal", "trillion-scale"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25040",
+        "huggingface": "https://huggingface.co/papers/2603.25040",
+        "pdf": "https://arxiv.org/pdf/2603.25040"
+      }
+    },
+    {
+      "id": "composer-2",
+      "title": "Composer 2 Technical Report",
+      "authors": ["Cursor Research", "Aaron Chan", "Ahmed Shalaby", "Alexander Wettig", "Aman Sanger"],
+      "affiliations": ["Cursor"],
+      "summary": "Specialized coding model for agentic software engineering trained via continued pretraining and large-scale RL. Achieves frontier-level performance on real software engineering problems in large codebases.",
+      "key_findings": [
+        "61.3 on CursorBench, 61.7 on Terminal-Bench, 73.7 on SWE-bench Multilingual",
+        "Two-phase training: continued pretraining + large-scale reinforcement learning",
+        "Strong long-term planning and coding intelligence for interactive and agentic use"
+      ],
+      "tags": ["coding-agents", "reinforcement-learning", "software-engineering", "language-models"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24477",
+        "huggingface": "https://huggingface.co/papers/2603.24477",
+        "pdf": "https://arxiv.org/pdf/2603.24477"
+      }
+    },
+    {
+      "id": "medopenclaw",
+      "title": "MedOpenClaw: Auditable Medical Imaging Agents Reasoning over Uncurated Full Studies",
+      "authors": ["Weixiang Shen", "Yanzhu Hu", "Che Liu", "Junde Wu", "Jiayuan Zhu"],
+      "affiliations": [],
+      "summary": "Proposes MEDOPENCLAW runtime enabling VLMs to operate within standard medical tools (3D Slicer) and MEDFLOWBENCH benchmark for full-study medical imaging evaluation. Reveals that models degrade when given professional tool access due to lack of precise spatial grounding.",
+      "key_findings": [
+        "State-of-the-art VLMs (Gemini 3.1 Pro, GPT-5.4) perform worse with professional tool access",
+        "Performance paradox attributed to lack of precise spatial grounding in 3D volumes",
+        "First benchmark evaluating VLMs on uncurated full medical imaging studies"
+      ],
+      "tags": ["medical-ai", "agents", "tool-use", "vision-language", "benchmarks"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24649",
+        "huggingface": "https://huggingface.co/papers/2603.24649",
+        "pdf": "https://arxiv.org/pdf/2603.24649"
+      }
+    },
+    {
+      "id": "calibri",
+      "title": "Calibri: Enhancing Diffusion Transformers via Parameter-Efficient Calibration",
+      "authors": ["Danil Tokhchukov", "Aysel Mirzoeva", "Andrey Kuznetsov", "Konstantin Sobolev"],
+      "affiliations": [],
+      "summary": "Uncovers hidden potential of Diffusion Transformers by demonstrating that a single learned scaling parameter can significantly improve DiT block performance. Proposes a parameter-efficient calibration approach for enhancing generative tasks.",
+      "key_findings": [
+        "Single learned scaling parameter yields significant performance gains in DiT blocks",
+        "Parameter-efficient approach — minimal additional parameters needed",
+        "Applicable across generative tasks without architectural redesign"
+      ],
+      "tags": ["diffusion-transformers", "parameter-efficiency", "image-generation", "calibration"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24800",
+        "huggingface": "https://huggingface.co/papers/2603.24800",
+        "pdf": "https://arxiv.org/pdf/2603.24800"
+      }
+    },
+    {
+      "id": "natural-language-agent-harnesses",
+      "title": "Natural-Language Agent Harnesses",
+      "authors": ["Linyue Pan", "Lexiao Zou", "Shuo Guo", "Jingchen Ni", "Hai-Tao Zheng"],
+      "affiliations": [],
+      "summary": "Introduces Natural-Language Agent Harnesses (NLAHs) that externalize agent control logic as portable natural-language artifacts with explicit contracts and lightweight adapters. Proposes Intelligent Harness Runtime (IHR) for shared execution.",
+      "key_findings": [
+        "Harness behavior expressed in editable natural language rather than buried in controller code",
+        "Portable across runtimes with explicit contracts and lightweight adapters",
+        "Evaluated on coding and computer-use benchmarks"
+      ],
+      "tags": ["agents", "harness-engineering", "portability", "natural-language"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25723",
+        "huggingface": "https://huggingface.co/papers/2603.25723",
+        "pdf": "https://arxiv.org/pdf/2603.25723"
+      }
+    },
+    {
+      "id": "learning-to-commit",
+      "title": "Learning to Commit: Generating Organic Pull Requests via Online Repository Memory",
+      "authors": ["Mo Li", "L. H. Xu", "Qitai Tan", "Ting Cao", "Yunxin Liu"],
+      "affiliations": [],
+      "summary": "Proposes Learning to Commit framework using Online Repository Memory to improve LLM coding agents' code organicity — adherence to project conventions, API reuse, and architectural consistency. Agents perform supervised contrastive reflection on historical commits.",
+      "key_findings": [
+        "Identifies 'organicity' as the root cause of PR rejection, not functional correctness",
+        "Supervised contrastive reflection on historical commits distills project-specific patterns",
+        "Improved organicity on genuinely future merged PRs"
+      ],
+      "tags": ["coding-agents", "pull-requests", "code-conventions", "software-engineering"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26664",
+        "huggingface": "https://huggingface.co/papers/2603.26664",
+        "pdf": "https://arxiv.org/pdf/2603.26664"
+      }
+    },
+    {
+      "id": "medical-ai-scientist",
+      "title": "Towards a Medical AI Scientist",
+      "authors": ["Hongtao Wu", "Boyun Zheng", "Dingjie Song", "Yu Jiang", "Jianfeng Gao"],
+      "affiliations": [],
+      "summary": "Introduces Medical AI Scientist, the first autonomous research framework for clinical research with clinician-engineer co-reasoning mechanism. Operates in three modes: paper reproduction, literature-inspired innovation, and task-driven exploration.",
+      "key_findings": [
+        "First autonomous research framework specifically for clinical research",
+        "Generated research ideas of substantially higher quality than commercial LLMs across 171 cases",
+        "Generated manuscripts approach MICCAI-level quality"
+      ],
+      "tags": ["medical-ai", "autonomous-research", "clinical", "scientific-agents"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28589",
+        "huggingface": "https://huggingface.co/papers/2603.28589",
+        "pdf": "https://arxiv.org/pdf/2603.28589"
+      }
+    },
+    {
+      "id": "lie-to-me-cot-faithfulness",
+      "title": "Lie to Me: How Faithful Is Chain-of-Thought Reasoning in Reasoning Models?",
+      "authors": ["Richard J. Young"],
+      "affiliations": [],
+      "summary": "Tests 12 open-weight reasoning models (7B-685B) on 498 questions with six hint categories. Reveals stark gap between thinking-token acknowledgment (87.5%) and answer-text acknowledgment (28.6%), suggesting models suppress acknowledgment in final outputs.",
+      "key_findings": [
+        "Faithfulness ranges from 39.7% (Seed-1.6-Flash) to 89.9% (DeepSeek-V3.2-Speciale)",
+        "87.5% thinking-token vs 28.6% answer-text acknowledgment reveals systematic suppression",
+        "First large-scale faithfulness study on open-weight reasoning models"
+      ],
+      "tags": ["reasoning", "chain-of-thought", "faithfulness", "safety", "evaluation"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.22582",
+        "huggingface": "https://huggingface.co/papers/2603.22582",
+        "pdf": "https://arxiv.org/pdf/2603.22582"
+      }
+    },
+    {
+      "id": "kernel-smith",
+      "title": "Kernel-Smith: A Unified Recipe for Evolutionary Kernel Optimization",
+      "authors": ["He Du", "Qiming Ge", "Jiakai Hu", "Aijun Yang", "Zheng Cai"],
+      "affiliations": [],
+      "summary": "Framework combining evolutionary algorithms with post-training RL for GPU kernel generation. Achieves state-of-the-art on KernelBench and outperforms Gemini-3.0-pro and Claude-4.6-opus. Produces upstream contributions to SGLang and LMDeploy.",
+      "key_findings": [
+        "State-of-the-art on KernelBench (Triton backend)",
+        "Outperforms Gemini-3.0-pro and Claude-4.6-opus on kernel optimization",
+        "Validated on MetaX MACA backend; upstream contributions to SGLang and LMDeploy"
+      ],
+      "tags": ["kernel-optimization", "evolutionary-algorithms", "gpu", "code-generation"],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28342",
+        "huggingface": "https://huggingface.co/papers/2603.28342",
+        "pdf": "https://arxiv.org/pdf/2603.28342"
+      }
+    },
+    {
+      "id": "shotstream",
+      "title": "ShotStream: Streaming Multi-Shot Video Generation for Interactive Storytelling",
+      "authors": ["Yawen Luo", "Xiaoyu Shi", "Junhao Zhuang", "Yutian Chen", "Quande Liu"],
+      "affiliations": [],
+      "summary": "Proposes a causal multi-shot architecture enabling interactive storytelling and efficient on-the-fly frame generation. Reformulates multi-shot video generation as next-shot generation conditioned on historical context.",
+      "key_findings": [
+        "Causal architecture enables streaming generation — no need to wait for full sequence",
+        "Interactive storytelling with on-the-fly frame generation",
+        "Overcomes latency and interactivity limitations of bidirectional architectures"
+      ],
+      "tags": ["video-generation", "storytelling", "streaming", "causal-models"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25746",
+        "huggingface": "https://huggingface.co/papers/2603.25746",
+        "pdf": "https://arxiv.org/pdf/2603.25746"
+      }
+    },
+    {
+      "id": "genmask",
+      "title": "GenMask: Adapting DiT for Segmentation via Direct Mask",
+      "authors": ["Yuhuan Yang", "Xianwei Zhuang", "Yuxuan Cai", "Chaofan Ma", "Shuai Bai"],
+      "affiliations": [],
+      "summary": "Trains DiT to generate both black-and-white segmentation masks and RGB images. Introduces timestep sampling strategy emphasizing extreme noise for segmentation and moderate noise for generation.",
+      "key_findings": [
+        "State-of-the-art on referring and reasoning segmentation benchmarks",
+        "Removes need for specialized feature extraction pipelines",
+        "Elegant adaptation of generative models for discriminative tasks"
+      ],
+      "tags": ["segmentation", "diffusion-transformers", "vision", "generation-for-discrimination"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.23906",
+        "huggingface": "https://huggingface.co/papers/2603.23906",
+        "pdf": "https://arxiv.org/pdf/2603.23906"
+      }
+    },
+    {
+      "id": "realchart2code",
+      "title": "RealChart2Code: Advancing Chart-to-Code Generation with Real Data and Multi-Task Evaluation",
+      "authors": ["Jiajun Zhang", "Yuying Li", "Zhixun Li", "Xingyu Guo", "Jingzhuo Wu"],
+      "affiliations": [],
+      "summary": "Introduces benchmark with 2,800+ instances grounded in authentic datasets for evaluating chart-to-code generation. First benchmark evaluating generation from large-scale raw data and iterative code refinement.",
+      "key_findings": [
+        "Significant performance degradation on complex multi-panel charts with real data",
+        "14 leading VLMs evaluated — all struggle with authentic data complexity",
+        "First benchmark for iterative code refinement in chart reproduction"
+      ],
+      "tags": ["benchmarks", "code-generation", "visualization", "vision-language"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25804",
+        "huggingface": "https://huggingface.co/papers/2603.25804",
+        "pdf": "https://arxiv.org/pdf/2603.25804"
+      }
+    },
+    {
+      "id": "prbench",
+      "title": "PRBench: End-to-end Paper Reproduction in Physics Research",
+      "authors": ["Shi Qiu", "Junyi Deng", "Yiwei Deng", "Haoran Dong", "Jieyu Fu"],
+      "affiliations": [],
+      "summary": "Benchmark of 30 expert-curated physics research tasks requiring AI agents to comprehend paper methodology, implement algorithms, and produce quantitative results. Best performer (GPT-5.3-Codex) achieves 34% with zero end-to-end success.",
+      "key_findings": [
+        "Zero end-to-end success rate across all tested coding agents",
+        "Best performer (GPT-5.3-Codex) achieves only 34% overall score",
+        "Systematic failures in formula implementation and numerical simulation debugging"
+      ],
+      "tags": ["benchmarks", "scientific-ai", "code-generation", "physics", "reproduction"],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.27646",
+        "huggingface": "https://huggingface.co/papers/2603.27646",
+        "pdf": "https://arxiv.org/pdf/2603.27646"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-5-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "Reasoning-distilled version of Qwen3.5-27B using Claude 4.6 Opus traces. Continues to dominate HuggingFace trending with multiple GGUF variants.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["reasoning", "distillation", "qwen3.5", "multimodal"],
+      "metrics": {
+        "downloads": 309355,
+        "likes": 1740
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "qwen3-5-9b",
+      "name": "Qwen3.5-9B",
+      "organization": "Qwen",
+      "description": "Official Qwen 3.5 9B model. Most downloaded model on HuggingFace with 4.5M downloads, serving as the base for numerous community fine-tunes.",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": ["foundation", "multimodal", "qwen3.5"],
+      "metrics": {
+        "downloads": 4490415,
+        "likes": 1103
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-9B"
+    },
+    {
+      "id": "qwen3-5-35b-a3b-uncensored",
+      "name": "Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "Uncensored MoE variant of Qwen3.5 with 35B total / 3B active parameters. Popular GGUF release for local deployment.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": ["moe", "uncensored", "gguf", "qwen3.5"],
+      "metrics": {
+        "downloads": 569033,
+        "likes": 1086
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "ltx-2-3",
+      "name": "LTX-2.3",
+      "organization": "Lightricks",
+      "description": "Video generation model supporting image-to-video, text-to-video, and video-to-video tasks. Second most downloaded trending model.",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": ["video-generation", "diffusers", "multimodal"],
+      "metrics": {
+        "downloads": 1420314,
+        "likes": 840
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.3"
+    },
+    {
+      "id": "qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Vision-language model specialized for OCR tasks based on InternVL architecture. Strong engagement with 652 likes.",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": ["ocr", "vision-language", "document-understanding"],
+      "metrics": {
+        "downloads": 16297,
+        "likes": 652
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "cohere-transcribe",
+      "name": "cohere-transcribe-03-2026",
+      "organization": "Cohere Labs",
+      "description": "Cohere's first dedicated speech recognition model. New entry in the trending models, signaling Cohere's expansion beyond text.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "N/A",
+      "tags": ["asr", "speech", "audio"],
+      "metrics": {
+        "downloads": 28233,
+        "likes": 570
+      },
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "omnicoder-9b",
+      "name": "OmniCoder-9B",
+      "organization": "Tesslate",
+      "description": "Code-focused model built on Qwen3.5 architecture with image-text-to-text capabilities. Combines coding and multimodal understanding.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["code", "qwen3.5", "multimodal"],
+      "metrics": {
+        "downloads": 28179,
+        "likes": 537
+      },
+      "source_url": "https://huggingface.co/Tesslate/OmniCoder-9B"
+    },
+    {
+      "id": "voxtral-4b-tts",
+      "name": "Voxtral-4B-TTS-2603",
+      "organization": "Mistral AI",
+      "description": "Expressive multilingual text-to-speech model generating natural speech from 3 seconds of reference audio. Companion to the Voxtral TTS paper also trending today.",
+      "task_type": "text-to-speech",
+      "model_size": "4B",
+      "tags": ["tts", "speech", "multilingual"],
+      "metrics": {
+        "downloads": 2939,
+        "likes": 528
+      },
+      "source_url": "https://huggingface.co/mistralai/Voxtral-4B-TTS-2603"
+    },
+    {
+      "id": "nemotron-cascade-2",
+      "name": "Nemotron-Cascade-2-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "Hybrid architecture model from NVIDIA with 30B total / 3B active parameters. Notable for cascade/MoE design targeting efficiency.",
+      "task_type": "text-generation",
+      "model_size": "30B-A3B",
+      "tags": ["nvidia", "hybrid", "efficient"],
+      "metrics": {
+        "downloads": 78162,
+        "likes": 421
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Cascade-2-30B-A3B"
+    },
+    {
+      "id": "davinci-magihuman",
+      "name": "daVinci-MagiHuman",
+      "organization": "GAIR",
+      "description": "Multimodal generation model supporting text-to-video, image-to-video, and text-to-audio. Unique in combining video and audio generation.",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": ["video-generation", "audio", "multimodal"],
+      "metrics": {
+        "downloads": 540,
+        "likes": 266
+      },
+      "source_url": "https://huggingface.co/GAIR/daVinci-MagiHuman"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Skill Learning & Engineering",
+      "description": "Multiple papers converge on how to make LLM agents learn, retain, and transfer skills — from trajectory distillation (Trace2Skill) to portable harness design (NLAHs) and code convention learning (Learning to Commit).",
+      "related_paper_ids": ["trace2skill", "natural-language-agent-harnesses", "learning-to-commit"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Coding Agent Maturation",
+      "description": "Specialized coding models (Composer 2, Kernel-Smith), organicity-focused evaluation, and long-horizon degradation benchmarks (SlopCodeBench) signal the field moving beyond simple code generation to sustained software engineering.",
+      "related_paper_ids": ["composer-2", "kernel-smith", "learning-to-commit"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Medical AI Agents",
+      "description": "MedOpenClaw reveals tool-use paradoxes in medical VLMs while Medical AI Scientist demonstrates autonomous clinical research. Both highlight the gap between general AI capabilities and domain-specific requirements.",
+      "related_paper_ids": ["medopenclaw", "medical-ai-scientist"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Diffusion Transformer Optimization",
+      "description": "Calibri demonstrates parameter-efficient DiT enhancement via learned scaling, GenMask repurposes DiT for segmentation, and multiple papers push the boundaries of diffusion-based generation.",
+      "related_paper_ids": ["calibri", "genmask"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Reasoning Transparency & Safety",
+      "description": "Lie to Me exposes a stark gap between models' internal reasoning acknowledgment and their final outputs, raising concerns about CoT faithfulness as a safety mechanism.",
+      "related_paper_ids": ["lie-to-me-cot-faithfulness"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Trillion-Scale Scientific Models",
+      "description": "Intern-S1-Pro marks the arrival of trillion-parameter models specifically targeting scientific understanding, while PRBench shows current agents still fail at end-to-end physics paper reproduction.",
+      "related_paper_ids": ["intern-s1-pro", "prbench"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-03-31T03:16:00Z",
+      "status": "error"
+    }
+  ]
+}
