@@ -34,6 +34,7 @@ HF_DAILY_PAPERS_URL = "https://huggingface.co/api/daily_papers"
 HF_TRENDING_MODELS_URL = "https://huggingface.co/api/models"
 ARXIV_API_URL = "https://export.arxiv.org/api/query"
 ALPHAXIV_URL = "https://api.alphaxiv.org/v1/papers/trending"
+GITHUB_TRENDING_URL = "https://github.com/trending"
 
 CLAUDE_MODEL = "claude-sonnet-4-6"
 
@@ -107,11 +108,115 @@ def fetch_alphaxiv_trending() -> list[dict]:
         return []
 
 
+def fetch_github_trending() -> list[dict]:
+    """Fetch trending repositories from GitHub (AI/ML relevant)."""
+    repos = []
+    for lang_filter in ["python", ""]:
+        try:
+            url = GITHUB_TRENDING_URL
+            if lang_filter:
+                url += f"/{lang_filter}"
+            resp = httpx.get(
+                url,
+                params={"since": "daily"},
+                timeout=30,
+                headers={"User-Agent": "DailyAIResearchTrends/1.0"},
+            )
+            resp.raise_for_status()
+            html = resp.text
+
+            # Parse repo entries from the HTML
+            import html as html_module
+
+            for article in re.finditer(
+                r'<article class="Box-row">(.*?)</article>', html, re.DOTALL
+            ):
+                block = article.group(1)
+
+                # Extract repo name (owner/name)
+                name_match = re.search(
+                    r'<h2[^>]*>\s*<a[^>]*href="/([^"]+)"', block
+                )
+                if not name_match:
+                    continue
+                full_name = name_match.group(1).strip()
+
+                # Extract description
+                desc_match = re.search(
+                    r'<p class="col-9[^"]*"[^>]*>(.*?)</p>', block, re.DOTALL
+                )
+                description = ""
+                if desc_match:
+                    description = html_module.unescape(
+                        re.sub(r"<[^>]+>", "", desc_match.group(1)).strip()
+                    )
+
+                # Extract language
+                lang_match = re.search(
+                    r'<span itemprop="programmingLanguage">(.*?)</span>', block
+                )
+                language = lang_match.group(1).strip() if lang_match else ""
+
+                # Extract total stars
+                stars_match = re.search(
+                    r'<a[^>]*href="/[^/]+/[^/]+/stargazers"[^>]*>\s*([\d,]+)\s*</a>',
+                    block,
+                )
+                stars = (
+                    int(stars_match.group(1).replace(",", ""))
+                    if stars_match
+                    else 0
+                )
+
+                # Extract stars today
+                stars_today_match = re.search(
+                    r'([\d,]+)\s+stars?\s+today', block
+                )
+                stars_today = (
+                    int(stars_today_match.group(1).replace(",", ""))
+                    if stars_today_match
+                    else 0
+                )
+
+                # Extract forks
+                forks_match = re.search(
+                    r'<a[^>]*href="/[^/]+/[^/]+/forks"[^>]*>\s*([\d,]+)\s*</a>',
+                    block,
+                )
+                forks = (
+                    int(forks_match.group(1).replace(",", ""))
+                    if forks_match
+                    else 0
+                )
+
+                # Avoid duplicates
+                if any(r["full_name"] == full_name for r in repos):
+                    continue
+
+                repos.append(
+                    {
+                        "full_name": full_name,
+                        "description": description,
+                        "language": language,
+                        "stars": stars,
+                        "stars_today": stars_today,
+                        "forks": forks,
+                        "url": f"https://github.com/{full_name}",
+                    }
+                )
+        except Exception as e:
+            print(f"  [GitHub Trending] Error fetching {lang_filter or 'all'}: {e}")
+
+    print(f"  [GitHub Trending] Fetched {len(repos)} repos")
+    return repos[:30]
+
+
 def build_source_context(
     hf_papers: list[dict],
     hf_models: list[dict],
     arxiv_data: list[dict],
     alphaxiv_papers: list[dict],
+    github_repos: list[dict],
 ) -> str:
     """Build a context string from all sources for Claude to synthesize."""
     parts = []
@@ -151,6 +256,15 @@ def build_source_context(
         title = p.get("title", "Unknown")
         arxiv_id = p.get("arxiv_id", p.get("id", ""))
         parts.append(f"- {title} (arxiv: {arxiv_id})\n")
+
+    parts.append("\n## GitHub Trending Repositories\n")
+    for r in github_repos:
+        parts.append(
+            f"- {r['full_name']}: {r['description']}\n"
+            f"  Language: {r['language']}, Stars: {r['stars']}, "
+            f"Stars today: {r['stars_today']}, Forks: {r['forks']}\n"
+            f"  URL: {r['url']}\n"
+        )
 
     return "\n".join(parts)
 
@@ -198,6 +312,20 @@ OUTPUT_SCHEMA = r"""
       "source_url": "HuggingFace URL"
     }
   ],
+  "trending_repos": [
+    {
+      "id": "slug-id",
+      "name": "owner/repo-name",
+      "description": "1-2 sentences about what this repo does and why it's trending",
+      "language": "Python",
+      "stars": N,
+      "stars_today": N,
+      "forks": N,
+      "url": "https://github.com/owner/repo",
+      "tags": ["tag1", "tag2"],
+      "relevance": "high|medium|low"
+    }
+  ],
   "themes": [
     {
       "name": "Theme Name",
@@ -226,11 +354,12 @@ def synthesize_with_claude(source_context: str, date: str) -> dict:
 
     prompt = f"""You are an expert AI/ML researcher producing a daily research trends review for {date}.
 
-Analyze the following data from HuggingFace Daily Papers, HuggingFace Trending Models, arXiv, and AlphaXiv. Produce a comprehensive daily review as a JSON object.
+Analyze the following data from HuggingFace Daily Papers, HuggingFace Trending Models, arXiv, AlphaXiv, and GitHub Trending Repositories. Produce a comprehensive daily review as a JSON object.
 
 Instructions:
 - Select the 10-15 most significant/trending papers. Prioritize by: engagement (upvotes), novelty, institutional backing, and practical impact.
 - Select the 8-12 most notable trending models.
+- Select the 8-15 most AI/ML-relevant trending GitHub repos. Focus on repos related to AI, ML, LLMs, agents, data science, and developer tools for AI. Include the actual stars, stars_today, and forks from the source data.
 - Identify 4-6 key themes across the papers.
 - Write insightful researcher_notes (3-5 paragraphs in markdown) that highlight non-obvious connections, sleeper hits, and trends worth watching.
 - The summary headline should capture the 2-3 biggest stories in a single semicolon-separated sentence.
@@ -356,9 +485,10 @@ def main():
     hf_models = fetch_hf_trending_models()
     arxiv_data = fetch_arxiv_recent()
     alphaxiv_papers = fetch_alphaxiv_trending()
+    github_repos = fetch_github_trending()
 
     # Step 2: Build context
-    context = build_source_context(hf_papers, hf_models, arxiv_data, alphaxiv_papers)
+    context = build_source_context(hf_papers, hf_models, arxiv_data, alphaxiv_papers, github_repos)
 
     if args.dry_run:
         print("\n--- DRY RUN: Source Context ---")
