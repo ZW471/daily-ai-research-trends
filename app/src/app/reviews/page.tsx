@@ -21,9 +21,9 @@ export default async function ReviewsPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
           {i18n.litReviewsTitle}
         </h1>
         <p className="text-muted text-lg">{i18n.litReviewsSubtitle}</p>
@@ -36,9 +36,9 @@ export default async function ReviewsPage() {
             <Link
               key={entry.date}
               href={`/reviews/${entry.date}`}
-              className="relative block bg-card border border-border rounded-lg p-6 hover:border-accent/40 hover:shadow-sm transition-all"
+              className="relative block bg-card border border-border rounded-lg p-4 sm:p-6 hover:border-accent/40 hover:shadow-sm transition-all"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs font-semibold bg-accent/10 text-accent px-2 py-0.5 rounded-full">

@@ -45,37 +45,37 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <header className="border-b border-border bg-card sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3 sm:gap-6">
               <Link href="/" className="flex items-center gap-3">
-                <span className="text-3xl tracking-tight text-foreground" style={{ fontFamily: "var(--font-special-elite)" }}>
+                <span className="text-2xl sm:text-3xl tracking-tight text-foreground" style={{ fontFamily: "var(--font-special-elite)" }}>
                   {i18n.siteTitle}
                 </span>
               </Link>
               <nav className="flex items-center gap-1">
                 <Link
                   href="/"
-                  className="text-sm font-medium text-muted hover:text-foreground px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
+                  className="text-xs sm:text-sm font-medium text-muted hover:text-foreground px-2 sm:px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
                 >
                   {i18n.navDaily}
                 </Link>
                 <Link
                   href="/reviews"
-                  className="text-sm font-medium text-muted hover:text-foreground px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
+                  className="text-xs sm:text-sm font-medium text-muted hover:text-foreground px-2 sm:px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
                 >
                   {i18n.navReviews}
                 </Link>
               </nav>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <LanguageToggle />
               <a
                 href="https://github.com/ZW471/daily-ai-research-trends"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-muted hover:text-foreground transition-colors"
+                className="flex items-center gap-1.5 sm:gap-2 text-muted hover:text-foreground transition-colors"
               >
-                <span className="text-sm font-medium">@ZW471</span>
+                <span className="text-sm font-medium hidden sm:inline">@ZW471</span>
                 <svg
                   viewBox="0 0 16 16"
                   width="18"
@@ -92,7 +92,7 @@ export default async function RootLayout({
         </header>
         <main className="flex-1">{children}</main>
         <footer className="border-t border-border py-6 mt-12">
-          <div className="max-w-7xl mx-auto px-6 text-sm text-muted">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-sm text-muted">
             {i18n.footerText}
           </div>
         </footer>

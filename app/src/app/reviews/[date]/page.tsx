@@ -52,8 +52,8 @@ function getThemeColor(theme: string): string {
 
 function ReviewModelCard({ model, i18n }: { model: ReviewModel; i18n: Translations }) {
   return (
-    <div className="bg-card border border-border rounded-lg p-5">
-      <div className="flex items-start justify-between gap-3 mb-2">
+    <div className="bg-card border border-border rounded-lg p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-2">
         <div>
           <h4 className="text-base font-semibold">{model.name}</h4>
           <p className="text-sm text-muted">
@@ -100,7 +100,7 @@ function ReviewModelCard({ model, i18n }: { model: ReviewModel; i18n: Translatio
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/50">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3 pt-3 border-t border-border/50">
         <div className="flex flex-wrap gap-1.5">
           {model.tags.map((tag) => (
             <span
@@ -180,7 +180,7 @@ function ReviewSectionBlock({ section, i18n }: { section: ReviewSection; i18n: T
     <section className="mb-10">
       <h2 className="text-xl font-bold mb-4">{section.title}</h2>
 
-      <div className="bg-card border border-border rounded-lg p-6 prose text-[15px] mb-6">
+      <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px] mb-6">
         <ReactMarkdown>{section.body}</ReactMarkdown>
       </div>
 
@@ -274,9 +274,9 @@ export default async function ReviewDetailPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       {/* Navigation */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
         <Link
           href="/reviews"
           className="text-sm text-accent hover:underline flex items-center gap-1"
@@ -327,7 +327,7 @@ export default async function ReviewDetailPage({
                 className="text-sm"
               />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight mb-3">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
               {review.title}
             </h1>
             <p className="text-lg text-muted">{review.subtitle}</p>
@@ -348,7 +348,7 @@ export default async function ReviewDetailPage({
             <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
               {i18n.summary}
             </h2>
-            <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
+            <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
               <ReactMarkdown>{review.summary.body}</ReactMarkdown>
             </div>
           </section>
@@ -359,7 +359,7 @@ export default async function ReviewDetailPage({
               <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
                 {i18n.researcherNotes}
               </h2>
-              <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
+              <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
                 <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
               </div>
             </section>
@@ -378,7 +378,7 @@ export default async function ReviewDetailPage({
               <h2 className="text-xl font-bold mb-4">
                 {review.cross_cutting_analysis.title}
               </h2>
-              <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
+              <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
                 <ReactMarkdown>
                   {review.cross_cutting_analysis.body}
                 </ReactMarkdown>

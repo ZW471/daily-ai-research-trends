@@ -50,18 +50,18 @@ function formatNumber(n: number): string {
 function PaperCard({ paper, i18n }: { paper: Paper; i18n: Translations }) {
   return (
     <div
-      className={`border-l-4 border rounded-lg p-5 ${RELEVANCE_STYLES[paper.relevance] || RELEVANCE_STYLES.medium}`}
+      className={`border-l-4 border rounded-lg p-4 sm:p-5 ${RELEVANCE_STYLES[paper.relevance] || RELEVANCE_STYLES.medium}`}
     >
-      <div className="flex items-start justify-between gap-3 mb-2">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3 mb-2">
         <h3 className="text-base font-semibold leading-snug">{paper.title}</h3>
         {paper.relevance === "high" && (
-          <span className="shrink-0 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+          <span className="shrink-0 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full w-fit">
             {i18n.highRelevance}
           </span>
         )}
       </div>
 
-      <p className="text-sm text-muted mb-2">
+      <p className="text-sm text-muted mb-2 break-words">
         {paper.authors.join(", ")}
         {paper.affiliations.length > 0 && (
           <span className="text-muted/70">
@@ -89,7 +89,7 @@ function PaperCard({ paper, i18n }: { paper: Paper; i18n: Translations }) {
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/50">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3 pt-3 border-t border-border/50">
         <div className="flex flex-wrap gap-1.5">
           {paper.tags.map((tag) => (
             <span
@@ -157,8 +157,8 @@ function PaperCard({ paper, i18n }: { paper: Paper; i18n: Translations }) {
 
 function ModelCard({ model, i18n }: { model: Model; i18n: Translations }) {
   return (
-    <div className="bg-card border border-border rounded-lg p-5">
-      <div className="flex items-start justify-between gap-3 mb-2">
+    <div className="bg-card border border-border rounded-lg p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-2">
         <div>
           <a
             href={model.source_url}
@@ -177,7 +177,7 @@ function ModelCard({ model, i18n }: { model: Model; i18n: Translations }) {
           href={model.source_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 text-xs font-medium bg-accent/10 text-accent px-3 py-1 rounded-full hover:bg-accent/20 transition-colors"
+          className="shrink-0 text-xs font-medium bg-accent/10 text-accent px-3 py-1 rounded-full hover:bg-accent/20 transition-colors w-fit"
         >
           {i18n.viewOnHF}
         </a>
@@ -185,7 +185,7 @@ function ModelCard({ model, i18n }: { model: Model; i18n: Translations }) {
 
       <p className="text-sm leading-relaxed mb-3">{model.description}</p>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {model.tags.slice(0, 5).map((tag) => (
             <span
@@ -231,15 +231,15 @@ function RepoCard({ repo, i18n }: { repo: TrendingRepo; i18n: Translations }) {
   const langColor = LANG_COLORS[repo.language] || "#8b8b8b";
   return (
     <div
-      className={`border-l-4 border rounded-lg p-5 ${RELEVANCE_STYLES[repo.relevance] || RELEVANCE_STYLES.medium}`}
+      className={`border-l-4 border rounded-lg p-4 sm:p-5 ${RELEVANCE_STYLES[repo.relevance] || RELEVANCE_STYLES.medium}`}
     >
-      <div className="flex items-start justify-between gap-3 mb-2">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-2">
         <div>
           <a
             href={repo.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-base font-semibold hover:text-accent transition-colors"
+            className="text-base font-semibold hover:text-accent transition-colors break-all"
           >
             {repo.name}
           </a>
@@ -263,7 +263,7 @@ function RepoCard({ repo, i18n }: { repo: TrendingRepo; i18n: Translations }) {
 
       <p className="text-sm leading-relaxed mb-3">{repo.description}</p>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {repo.tags.slice(0, 5).map((tag) => (
             <span
@@ -274,7 +274,7 @@ function RepoCard({ repo, i18n }: { repo: TrendingRepo; i18n: Translations }) {
             </span>
           ))}
         </div>
-        <div className="flex items-center gap-4 text-sm text-muted">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted">
           <span className="flex items-center gap-1">
             <span
               className="inline-block w-3 h-3 rounded-full"
@@ -420,9 +420,9 @@ export default async function ReviewPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       {/* Navigation */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
         <Link
           href="/"
           className="text-sm text-accent hover:underline flex items-center gap-1"
@@ -462,7 +462,7 @@ export default async function ReviewPage({
                 className="text-sm"
               />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
               {review.summary.headline}
             </h1>
             <div className="flex flex-wrap gap-1.5 mb-4">
@@ -482,7 +482,7 @@ export default async function ReviewPage({
             <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
               {i18n.executiveSummary}
             </h2>
-            <div className="bg-card border border-border rounded-lg p-6 prose text-[15px]">
+            <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
               <ReactMarkdown>{review.summary.body}</ReactMarkdown>
             </div>
           </section>
@@ -493,7 +493,7 @@ export default async function ReviewPage({
               <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
                 {i18n.researcherNotes}
               </h2>
-              <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-6 prose text-[15px]">
+              <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
                 <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
               </div>
             </section>

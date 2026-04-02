@@ -47,9 +47,9 @@ export default async function Home() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
           {i18n.dailyFeedTitle}
         </h1>
         <p className="text-muted text-lg">{i18n.dailyFeedSubtitle}</p>
@@ -72,14 +72,14 @@ export default async function Home() {
             <Link
               key={date}
               href={`/review/${date}`}
-              className="relative block bg-card border border-border rounded-lg p-6 hover:border-accent/40 hover:shadow-sm transition-all"
+              className="relative block bg-card border border-border rounded-lg p-4 sm:p-6 hover:border-accent/40 hover:shadow-sm transition-all"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-muted mb-1">
                     {formatDateLocalized(date, lang)}
                   </p>
-                  <h2 className="text-xl font-semibold mb-3 truncate">
+                  <h2 className="text-lg sm:text-xl font-semibold mb-3 line-clamp-2 sm:truncate">
                     {headline}
                   </h2>
                   {themes.length > 0 && (
