@@ -27,7 +27,8 @@ import httpx
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR.parent / "data"
 DAILY_DIR = DATA_DIR / "daily"
-INDEX_FILE = DATA_DIR / "index.json"
+INDEX_EN_FILE = DATA_DIR / "index_en.json"
+INDEX_CN_FILE = DATA_DIR / "index_cn.json"
 
 HF_DAILY_PAPERS_URL = "https://huggingface.co/api/daily_papers"
 HF_TRENDING_MODELS_URL = "https://huggingface.co/api/models"
@@ -261,32 +262,72 @@ Output ONLY valid JSON matching this schema (no markdown fences, no commentary):
     return json.loads(text)
 
 
-def update_index(date: str, review: dict) -> None:
-    """Update the index.json with the new review entry."""
-    if INDEX_FILE.exists():
-        index = json.loads(INDEX_FILE.read_text())
-    else:
-        index = {"version": "1.0", "days": []}
+def update_index(date: str, review_en: dict, review_cn: dict) -> None:
+    """Update both index_en.json and index_cn.json with the new review entry."""
+    for lang, index_file, review in [
+        ("en", INDEX_EN_FILE, review_en),
+        ("cn", INDEX_CN_FILE, review_cn),
+    ]:
+        if index_file.exists():
+            index = json.loads(index_file.read_text())
+        else:
+            index = {"version": "1.0", "days": []}
 
-    # Remove existing entry for this date if any
-    index["days"] = [d for d in index["days"] if d["date"] != date]
+        # Remove existing entry for this date if any
+        index["days"] = [d for d in index["days"] if d["date"] != date]
 
-    # Add new entry
-    index["days"].append(
-        {
-            "date": date,
-            "file": f"daily/{date}.json",
-            "headline": review["summary"]["headline"],
-            "paper_count": len(review.get("papers", [])),
-            "model_count": len(review.get("models", [])),
-        }
+        # Add new entry
+        index["days"].append(
+            {
+                "date": date,
+                "file": f"daily/{date}_{lang}.json",
+                "headline": review["summary"]["headline"],
+                "paper_count": len(review.get("papers", [])),
+                "model_count": len(review.get("models", [])),
+            }
+        )
+
+        # Sort by date descending
+        index["days"].sort(key=lambda d: d["date"], reverse=True)
+
+        index_file.write_text(json.dumps(index, indent=2, ensure_ascii=False) + "\n")
+        print(f"  [Index] Updated {index_file}")
+
+
+def translate_to_chinese(review_en: dict) -> dict:
+    """Use Claude to translate the English review JSON to Chinese."""
+    import anthropic
+
+    client = anthropic.Anthropic()
+
+    prompt = f"""Translate the following AI research daily review JSON from English to Chinese.
+
+Rules:
+- Translate ALL text fields: summary.headline, summary.body, researcher_notes, paper summaries, key_findings, model descriptions, theme names/descriptions.
+- Keep structural fields unchanged: version, date, generated_at, ids, slugs, tags, URLs, author names, model names/IDs, organization names, task_type, metric keys, source keys, relevance, trend_signal, status.
+- key_themes slugs stay in English.
+- Maintain the exact same JSON structure.
+- Use natural, fluent Chinese suitable for a technical audience.
+- Do not translate proper nouns (model names, tool names, project names) but you may add Chinese explanation in parentheses where helpful.
+
+Input JSON:
+{json.dumps(review_en, indent=2, ensure_ascii=False)}
+
+Output ONLY valid JSON (no markdown fences, no commentary):"""
+
+    print("  [Claude] Translating to Chinese...")
+    response = client.messages.create(
+        model=CLAUDE_MODEL,
+        max_tokens=16000,
+        messages=[{"role": "user", "content": prompt}],
     )
 
-    # Sort by date descending
-    index["days"].sort(key=lambda d: d["date"], reverse=True)
+    text = response.content[0].text.strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:json)?\s*\n?", "", text)
+        text = re.sub(r"\n?```\s*$", "", text)
 
-    INDEX_FILE.write_text(json.dumps(index, indent=2) + "\n")
-    print(f"  [Index] Updated {INDEX_FILE}")
+    return json.loads(text)
 
 
 def main():
@@ -325,18 +366,25 @@ def main():
         print(f"\n... ({len(context)} chars total)")
         return
 
-    # Step 3: Synthesize with Claude
-    review = synthesize_with_claude(context, date)
+    # Step 3: Synthesize English review with Claude
+    review_en = synthesize_with_claude(context, date)
 
-    # Step 4: Write daily file
-    output_file = DAILY_DIR / f"{date}.json"
-    output_file.write_text(json.dumps(review, indent=2, ensure_ascii=False) + "\n")
-    print(f"  [Output] Written to {output_file}")
+    # Step 4: Translate to Chinese
+    review_cn = translate_to_chinese(review_en)
 
-    # Step 5: Update index
-    update_index(date, review)
+    # Step 5: Write both language files
+    en_file = DAILY_DIR / f"{date}_en.json"
+    en_file.write_text(json.dumps(review_en, indent=2, ensure_ascii=False) + "\n")
+    print(f"  [Output] Written to {en_file}")
 
-    print(f"Done! Review for {date} generated successfully.")
+    cn_file = DAILY_DIR / f"{date}_cn.json"
+    cn_file.write_text(json.dumps(review_cn, indent=2, ensure_ascii=False) + "\n")
+    print(f"  [Output] Written to {cn_file}")
+
+    # Step 6: Update both index files
+    update_index(date, review_en, review_cn)
+
+    print(f"Done! Review for {date} generated in English and Chinese.")
 
 
 if __name__ == "__main__":
