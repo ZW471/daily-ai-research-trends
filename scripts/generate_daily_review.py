@@ -108,6 +108,30 @@ def fetch_alphaxiv_trending() -> list[dict]:
         return []
 
 
+def _enrich_repos_with_github_api(repos: list[dict]) -> None:
+    """Fill in missing stars/forks using the GitHub REST API."""
+    for repo in repos:
+        if repo.get("stars", 0) > 0 and repo.get("forks", 0) > 0:
+            continue
+        full_name = repo["full_name"]
+        try:
+            api_resp = httpx.get(
+                f"https://api.github.com/repos/{full_name}",
+                timeout=10,
+                headers={"User-Agent": "DailyAIResearchTrends/1.0"},
+            )
+            if api_resp.status_code == 200:
+                data = api_resp.json()
+                if repo.get("stars", 0) == 0:
+                    repo["stars"] = data.get("stargazers_count", 0)
+                if repo.get("forks", 0) == 0:
+                    repo["forks"] = data.get("forks_count", 0)
+                if not repo.get("description") and data.get("description"):
+                    repo["description"] = data["description"]
+        except Exception as e:
+            print(f"  [GitHub API] Warning: could not enrich {full_name}: {e}")
+
+
 def fetch_github_trending() -> list[dict]:
     """Fetch trending repositories from GitHub (AI/ML relevant)."""
     repos = []
@@ -157,16 +181,17 @@ def fetch_github_trending() -> list[dict]:
                 )
                 language = lang_match.group(1).strip() if lang_match else ""
 
-                # Extract total stars
-                stars_match = re.search(
+                # Extract total stars (try multiple HTML patterns)
+                stars = 0
+                for stars_pattern in [
                     r'<a[^>]*href="/[^/]+/[^/]+/stargazers"[^>]*>\s*([\d,]+)\s*</a>',
-                    block,
-                )
-                stars = (
-                    int(stars_match.group(1).replace(",", ""))
-                    if stars_match
-                    else 0
-                )
+                    r'href="/[^/]+/[^/]+/stargazers"[^>]*>.*?(\d[\d,]*)',
+                    r'class="Link[^"]*"[^>]*href="/[^/]+/[^/]+/stargazers"[^>]*>\s*(\d[\d,]*)',
+                ]:
+                    stars_match = re.search(stars_pattern, block, re.DOTALL)
+                    if stars_match:
+                        stars = int(stars_match.group(1).replace(",", ""))
+                        break
 
                 # Extract stars today
                 stars_today_match = re.search(
@@ -178,16 +203,17 @@ def fetch_github_trending() -> list[dict]:
                     else 0
                 )
 
-                # Extract forks
-                forks_match = re.search(
+                # Extract forks (try multiple HTML patterns)
+                forks = 0
+                for forks_pattern in [
                     r'<a[^>]*href="/[^/]+/[^/]+/forks"[^>]*>\s*([\d,]+)\s*</a>',
-                    block,
-                )
-                forks = (
-                    int(forks_match.group(1).replace(",", ""))
-                    if forks_match
-                    else 0
-                )
+                    r'href="/[^/]+/[^/]+/forks"[^>]*>.*?(\d[\d,]*)',
+                    r'class="Link[^"]*"[^>]*href="/[^/]+/[^/]+/forks"[^>]*>\s*(\d[\d,]*)',
+                ]:
+                    forks_match = re.search(forks_pattern, block, re.DOTALL)
+                    if forks_match:
+                        forks = int(forks_match.group(1).replace(",", ""))
+                        break
 
                 # Avoid duplicates
                 if any(r["full_name"] == full_name for r in repos):
@@ -206,6 +232,9 @@ def fetch_github_trending() -> list[dict]:
                 )
         except Exception as e:
             print(f"  [GitHub Trending] Error fetching {lang_filter or 'all'}: {e}")
+
+    # Enrich any repos where HTML scraping missed stars/forks
+    _enrich_repos_with_github_api(repos)
 
     print(f"  [GitHub Trending] Fetched {len(repos)} repos")
     return repos[:30]
@@ -359,7 +388,7 @@ Analyze the following data from HuggingFace Daily Papers, HuggingFace Trending M
 Instructions:
 - Select the 10-15 most significant/trending papers. Prioritize by: engagement (upvotes), novelty, institutional backing, and practical impact.
 - Select the 8-12 most notable trending models.
-- Select the 8-15 most AI/ML-relevant trending GitHub repos. Focus on repos related to AI, ML, LLMs, agents, data science, and developer tools for AI. Include the actual stars, stars_today, and forks from the source data.
+- Select the 8-15 most AI/ML-relevant trending GitHub repos. Focus on repos related to AI, ML, LLMs, agents, data science, and developer tools for AI. Include the actual stars, stars_today, and forks from the source data — NEVER output 0 for stars or forks unless the repo truly has zero.
 - Identify 4-6 key themes across the papers.
 - Write insightful researcher_notes (3-5 paragraphs in markdown) that highlight non-obvious connections, sleeper hits, and trends worth watching.
 - The summary headline should capture the 2-3 biggest stories in a single semicolon-separated sentence.
@@ -367,6 +396,8 @@ Instructions:
 - All URLs must be real (derived from the source data). Do not invent URLs.
 - Relevance scoring: "high" = transformative or highly engaged, "medium" = solid contribution, "low" = incremental.
 - Trend signals: "rising" = growing momentum, "stable" = consistent, "fading" = declining interest.
+
+CRITICAL — Affiliations: For each paper, you MUST provide real institutional affiliations (universities, companies, labs). Determine affiliations from author names, paper content, or your knowledge. Common sources include: the abstract mentioning an institution, well-known author-institution associations, or explicit affiliation markers. NEVER use "Unknown" for affiliations — if you truly cannot determine the affiliation, use the author's most likely institutional association based on their publication history. For trending_repos, use the exact stars and forks values from the source data. If the source shows 0 but the repo clearly has many stars (e.g. stars_today is high), flag this discrepancy rather than blindly outputting 0.
 
 Source data:
 {source_context}
