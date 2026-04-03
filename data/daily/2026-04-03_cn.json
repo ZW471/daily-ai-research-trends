@@ -1,0 +1,1054 @@
+{
+  "version": "1.0",
+  "date": "2026-04-03",
+  "generated_at": "2026-04-03T02:10:00.000000+00:00",
+  "summary": {
+    "headline": "智能体安全与基准测试扩张主导当日议题；上下文压力下LLM推理鲁棒性成为关键隐患；蒸馏与高效扩展技术展现出令人惊喜的效果",
+    "body": "4月3日的研究格局深受**智能体AI安全问题**的影响。ClawKeeper以167票领跑，聚焦于OpenClaw等自主智能体运行时（具备Shell执行、工具集成和文件系统权限的系统）不断扩大的攻击面。该论文属于更大研究集群（AgentWatcher、SKILL0、PARE、GPA）的一部分，这些工作共同表明，学界正在认真审视LLM获得现实世界执行能力后所带来的后果。单日内如此大量的智能体安全与评估论文，本身就是一个值得关注的趋势。\n\n基准测试疲劳确实存在，但今日入选的论文在多个方向上有实质性推进。MiroEval专注于长期以来被忽视的深度研究智能体*过程*质量，而非仅关注最终输出。ViGoR-Bench揭示了AIGC模型中的“逻辑荒漠“——精美的视觉效果背后隐藏着破损的因果推理。Vision2Web和PerceptionComp将端到端网页开发和长时域视频推理纳入评估体系。QuitoBench为时间序列引入了机制均衡的严格标准。综合来看，社区正在构建用于衡量2026年AI系统真正重要之处的测量基础设施。\n\n在效率与扩展方面，有两篇论文值得关注：Universal YOCO实现了无KV缓存膨胀的深度扩展，直接针对测试时计算的成本瓶颈。自蒸馏（SSD）论文提出了一个根本性问题——模型能否仅凭自身原始输出提升代码生成能力，完全不需要验证器？Qwen3-30B在LiveCodeBench v6上提升12.9个百分点的结果表明答案是肯定的。与此同时，Reasoning Shift论文悄然记录了一个结构性漏洞：随着上下文增长，LLM的推理链会悄悄被压缩，这可能动摇所有人寄予厚望的测试时扩展收益。",
+    "key_themes": [
+      "agent-safety-and-security",
+      "benchmark-and-evaluation",
+      "efficient-depth-scaling",
+      "llm-reasoning-robustness",
+      "multimodal-visual-reasoning",
+      "self-improvement-and-distillation"
+    ]
+  },
+  "researcher_notes": "**智能体安全集群是当日最重要的非显性故事。** ClawKeeper、AgentWatcher、SKILL0、PARE以及可中断智能体论文均在同一时间窗口内发布。这并非巧合——它反映了社区的集体认知：智能体运行时的部署已足够广泛，已构成真实的攻击面。ClawKeeper以167票领先尤为引人注目，因为安全类论文在历史上的互动量通常低于能力类论文。这个领域正在觉醒。\n\n**Reasoning Shift论文（22票）是潜在爆款。** 该论文记录了随着上下文增长，LLM会悄然*缩短*推理链——并非因为更快地解决了问题，而是上下文压力改变了其行为模式。这直接挑战了更长上下文窗口必然有助于测试时扩展的假设。结合Brevity Constraints论文（表明较大模型在简洁性约束问题上悖论性地劣于较小模型），一幅清晰的图景正在浮现：**规模不会单调地改善模型对输入/输出格式压力的鲁棒性**。这一点尚未得到充分重视。\n\n**S0 Tuning值得获得远超其1票所体现的关注。** 每个循环层仅调节一个初始状态矩阵、零推理开销、在HumanEval上超越LoRA 10.8个百分点——这是一个卓越的结果。Qwen3.5-4B混合模型（+23.6 pp贪心pass@1）表明循环-注意力混合架构在参数高效微调方面可能存在尚未充分挖掘的优势。这是一个对所有部署小型模型的人都有直接实践意义的结果。\n\n**趋势模型讲述了一个关于蒸馏文化的故事。** 下载量最高的模型是`Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled`，各变体GGUF下载量超过74.5万次，基础版本获得2130个点赞。社区正在积极地将前沿模型的推理能力蒸馏进开放权重——这一实践正在加速。与此同时，Google的Gemma-4系列（31B、26B MoE、4B）全部出现在趋势榜中，Nvidia的Nemotron-Cascade-2-30B-A3B表明混合专家（MoE）效率方面的持续投入。Bonsai-8B 1-bit模型两次出现（GGUF和MLX变体）表明边缘部署极端量化的兴趣日益浓厚。\n\n**GitHub趋势揭示了两大主题**：（1）AI代码智能体工具链正在爆发——oh-my-codex（今日2867颗星）和Skill_Seekers（264颗星）显示开发者正在积极扩展和封装商业代码智能体；（2）system_prompts_leaks仓库（今日306颗星）和free-claude-code反映出持续存在的对AI系统透明度和访问规避的对抗性兴趣。TimesFM仓库单日激增1176颗星，很可能与QuitoBench论文相关——时间序列基础模型正在迎来一个高光时刻。",
+  "papers": [
+    {
+      "id": "clawkeeper-openclaw-agent-safety",
+      "title": "ClawKeeper: Comprehensive Safety Protection for OpenClaw Agents Through Skills, Plugins, and Watchers",
+      "authors": [
+        "Songyang Liu",
+        "Chaozhuo Li",
+        "Chenxu Wang",
+        "Jinyu Hou",
+        "Zejian Chen"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "OpenClaw是一个领先的开源自主智能体运行时，拥有广泛的系统权限，包括Shell执行、文件访问和工具集成。ClawKeeper针对这些权限所带来的关键安全漏洞——敏感数据泄露、权限提升和恶意第三方技能执行——提出了一个全面、无碎片化的保护框架。该研究将自身定位为OpenClaw生态系统的统一安全层。",
+      "key_findings": [
+        "针对开源智能体运行时的现有安全措施碎片化且被动响应",
+        "智能体运行时的广泛操作权限会将模型错误转化为系统级威胁",
+        "ClawKeeper通过技能（skills）、插件（plugins）和监控（watcher）组件引入分层保护"
+      ],
+      "tags": [
+        "agent-safety",
+        "autonomous-agents",
+        "security",
+        "prompt-injection",
+        "tool-use"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 167,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.24414",
+        "huggingface": "https://huggingface.co/papers/2603.24414",
+        "pdf": "https://arxiv.org/pdf/2603.24414"
+      }
+    },
+    {
+      "id": "miroeval-multimodal-deep-research-agents",
+      "title": "MiroEval: Benchmarking Multimodal Deep Research Agents in Process and Outcome",
+      "authors": [
+        "Fangda Ye",
+        "Yuxin Hu",
+        "Pengxiang Zhu",
+        "Yibo Li",
+        "Ziqi Jin"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "MiroEval是一个同时评估深度研究智能体研究过程与最终输出质量的基准测试，填补了现有基准测试仅评估最终报告的关键空白。它提供多模态覆盖、真实世界查询复杂度以及可刷新的知识设计，直接解决了基准性能与用户实际需求之间的脱节问题。",
+      "key_findings": [
+        "现有深度研究基准测试未能评估底层研究过程",
+        "大多数基准测试的多模态覆盖有限，且依赖合成任务",
+        "MiroEval支持知识可刷新性，以避免基准测试随时间推移遭受污染"
+      ],
+      "tags": [
+        "benchmark",
+        "deep-research",
+        "multimodal",
+        "agents",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28407",
+        "huggingface": "https://huggingface.co/papers/2603.28407",
+        "pdf": "https://arxiv.org/pdf/2603.28407"
+      }
+    },
+    {
+      "id": "vigor-bench-visual-generative-reasoning",
+      "title": "ViGoR-Bench: How Far Are Visual Generative Models From Zero-Shot Visual Reasoners?",
+      "authors": [
+        "Haonan Han",
+        "Jiancheng Huang",
+        "Xiaopeng Sun",
+        "Junyan He",
+        "Rui Yang"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "ViGoR-Bench揭示了现代AIGC模型中的“逻辑荒漠“：尽管视觉保真度令人印象深刻，但这些模型在物理推理、因果推理和复杂空间推理方面却表现欠佳。该基准填补了肤浅指标和碎片化评估留下的空白，其研究发现对视觉语言模型和生成式图像模型在真实应用中的可靠性具有直接影响。",
+      "key_findings": [
+        "现代AIGC模型存在“逻辑荒漠“——高视觉保真度掩盖了破损的因果与空间推理能力",
+        "现有评估依赖于肤浅的指标，无法发现推理失败",
+        "ViGoR-Bench在物理、因果和空间维度上提供统一的零样本视觉推理评估"
+      ],
+      "tags": [
+        "benchmark",
+        "visual-reasoning",
+        "AIGC",
+        "multimodal",
+        "spatial-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 36,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25823",
+        "huggingface": "https://huggingface.co/papers/2603.25823",
+        "pdf": "https://arxiv.org/pdf/2603.25823"
+      }
+    },
+    {
+      "id": "vision2web-website-development-benchmark",
+      "title": "Vision2Web: A Hierarchical Benchmark for Visual Website Development with Agent Verification",
+      "authors": [
+        "Zehai He",
+        "Wenyi Hong",
+        "Zhen Yang",
+        "Ziyang Pan",
+        "Mingdao Liu"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Vision2Web是一个层次化基准测试，涵盖UI到代码生成、交互式多页前端复现，以及带智能体验证的长时域全栈网站开发。它填补了对代码智能体端到端网站开发系统性评估的空白，解决了现有代码基准所遗漏的真实世界复杂性。",
+      "key_findings": [
+        "现有代码基准测试无法捕捉复杂的端到端网站开发任务",
+        "Vision2Web涵盖三个层次：静态UI到代码、交互式多页前端及全栈开发",
+        "集成智能体验证以评估超越语法质量的功能正确性"
+      ],
+      "tags": [
+        "benchmark",
+        "code-generation",
+        "web-development",
+        "agents",
+        "UI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26648",
+        "huggingface": "https://huggingface.co/papers/2603.26648",
+        "pdf": "https://arxiv.org/pdf/2603.26648"
+      }
+    },
+    {
+      "id": "reasoning-shift-context-shortens-llm-reasoning",
+      "title": "Reasoning Shift: How Context Silently Shortens LLM Reasoning",
+      "authors": [
+        "Gleb Rodionov"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "本论文记录了随着上下文增长，LLM会悄然生成更短的推理链——这并非源于效率提升，而是一种行为转变。该发现直接挑战了测试时扩展的假设，即更长的上下文被认为能够支持更丰富的推理。文中分析了三种系统性评估场景。",
+      "key_findings": [
+        "上下文以系统性、依赖场景的方式悄然缩短LLM推理链",
+        "测试时扩展推理行为的鲁棒性尚未得到充分探索",
+        "推理链缩短是一种行为转变，而非效率提升的标志"
+      ],
+      "tags": [
+        "LLM-reasoning",
+        "test-time-scaling",
+        "context-length",
+        "robustness",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01161",
+        "huggingface": "https://huggingface.co/papers/2604.01161",
+        "pdf": "https://arxiv.org/pdf/2604.01161"
+      }
+    },
+    {
+      "id": "quitobench-time-series-forecasting",
+      "title": "QuitoBench: A High-Quality Open Time Series Forecasting Benchmark",
+      "authors": [
+        "Siqiao Xue",
+        "Zhaoyang Zhu",
+        "Wei Zhang",
+        "Rongyao Cai",
+        "Rui Wang"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "QuitoBench引入了一个机制均衡的时间序列预测基准，涵盖金融、医疗健康和云计算领域的八种趋势-季节性-可预测性机制。该基准解决了现有时间序列评估中多样性不足的问题，其机制均衡设计确保模型在完整的真实世界时序模式谱系上得到测试。",
+      "key_findings": [
+        "现有时间序列基准测试在趋势、季节性和可预测性组合的机制多样性方面存在不足",
+        "QuitoBench涵盖与金融、医疗健康和云计算相关的八个独特机制",
+        "该基准旨在成为该领域的开放高质量评估标准"
+      ],
+      "tags": [
+        "time-series",
+        "forecasting",
+        "benchmark",
+        "finance",
+        "healthcare"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26017",
+        "huggingface": "https://huggingface.co/papers/2603.26017",
+        "pdf": "https://arxiv.org/pdf/2603.26017"
+      }
+    },
+    {
+      "id": "brevity-constraints-reverse-performance",
+      "title": "Brevity Constraints Reverse Performance Hierarchies in Language Models",
+      "authors": [
+        "MD Azizul Hakim"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "通过对31个模型（参数量0.5B至405B）在1485个问题上的评估，本论文发现大型LLM在7.7%的基准问题上比小型模型表现差28.4个百分点。其机制是自发的规模依赖性冗长——大型模型违反了小型模型遵守的简洁性约束。这挑战了规模扩展的普遍性假设。",
+      "key_findings": [
+        "大型模型在7.7%的基准问题上比小型模型低28.4个百分点",
+        "其机制是自发的规模依赖性冗长，违反了输出约束",
+        "性能层级反转在31个模型和5个数据集上均可复现"
+      ],
+      "tags": [
+        "LLM-scaling",
+        "verbosity",
+        "evaluation",
+        "performance-degradation",
+        "benchmarks"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.00025",
+        "huggingface": "https://huggingface.co/papers/2604.00025",
+        "pdf": "https://arxiv.org/pdf/2604.00025"
+      }
+    },
+    {
+      "id": "ssd-self-distillation-code-generation",
+      "title": "Embarrassingly Simple Self-Distillation Improves Code Generation",
+      "authors": [
+        "Ruixiang Zhang",
+        "Richard He Bai",
+        "Huangjie Zheng",
+        "Navdeep Jaitly",
+        "Ronan Collobert"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "自监督蒸馏（SSD，Self-Supervised Distillation）仅利用模型自身的原始输出提升LLM代码生成能力，无需验证器、教师模型或强化学习。应用于Qwen3-30B-Instruct后，该方法在LiveCodeBench v6上实现了+12.9个百分点的提升（pass@1从42.4%提升至55.3%）。这种方法的简洁性和有效性挑战了复杂反馈流程的必要性。",
+      "key_findings": [
+        "SSD将Qwen3-30B-Instruct在LiveCodeBench v6上的pass@1从42.4%提升至55.3%",
+        "无需验证器、教师模型或强化学习信号——仅需模型原始输出",
+        "该方法被描述为“简单得令人尴尬“，却优于更复杂的方法"
+      ],
+      "tags": [
+        "code-generation",
+        "self-distillation",
+        "LLM",
+        "self-improvement",
+        "training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01193",
+        "huggingface": "https://huggingface.co/papers/2604.01193",
+        "pdf": "https://arxiv.org/pdf/2604.01193"
+      }
+    },
+    {
+      "id": "universal-yoco-efficient-depth-scaling",
+      "title": "Universal YOCO for Efficient Depth Scaling",
+      "authors": [
+        "Yutao Sun",
+        "Li Dong",
+        "Tianzhu Ye",
+        "Shaohan Huang",
+        "Jianyong Wang"
+      ],
+      "affiliations": [
+        "Microsoft"
+      ],
+      "summary": "YOCO-U将YOCO解码器-解码器架构与递归计算相结合，实现高效深度扩展，同时无KV缓存膨胀。这直接针对LLM测试时扩展的内存与计算成本瓶颈。随着领域在推理阶段推向更深层的推理链，该工作具有高度相关性。",
+      "key_findings": [
+        "YOCO-U通过递归计算实现无KV缓存膨胀的深度扩展",
+        "该方法能够以可控的内存成本实现测试时计算扩展",
+        "在YOCO解码器-解码器架构的基础上构建，具有普适性"
+      ],
+      "tags": [
+        "efficient-inference",
+        "depth-scaling",
+        "KV-cache",
+        "architecture",
+        "test-time-compute"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01220",
+        "huggingface": "https://huggingface.co/papers/2604.01220",
+        "pdf": "https://arxiv.org/pdf/2604.01220"
+      }
+    },
+    {
+      "id": "s0-tuning-recurrent-attention-models",
+      "title": "S0 Tuning: Zero-Overhead Adaptation of Hybrid Recurrent-Attention Models",
+      "authors": [
+        "Jack Young"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "S0 Tuning通过对每个循环层仅调节单个初始状态矩阵来适配混合循环-注意力模型，实现零推理开销。它在HumanEval上超越LoRA +10.8个百分点，并将Qwen3.5-4B（GatedDeltaNet混合模型）的贪心pass@1提升+23.6个百分点。该方法对新兴的循环-注意力混合架构的高效微调极具实践价值。",
+      "key_findings": [
+        "S0调节在零推理开销条件下，在HumanEval上超越LoRA +10.8个百分点",
+        "Qwen3.5-4B（GatedDeltaNet混合模型）贪心pass@1提升+23.6个百分点",
+        "每个循环层仅需调节一个初始状态矩阵"
+      ],
+      "tags": [
+        "PEFT",
+        "recurrent-models",
+        "hybrid-architecture",
+        "fine-tuning",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01168",
+        "huggingface": "https://huggingface.co/papers/2604.01168",
+        "pdf": "https://arxiv.org/pdf/2604.01168"
+      }
+    },
+    {
+      "id": "perceptioncomp-video-benchmark",
+      "title": "PerceptionComp: A Video Benchmark for Complex Perception-Centric Reasoning",
+      "authors": [
+        "Shaoxuan Li",
+        "Zhixuan Zhao",
+        "Hanze Deng",
+        "Zirun Ma",
+        "Shulin Tian"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "PerceptionComp是一个人工标注的基准测试，专注于需要多个时间上分散的视觉证据和组合约束的复杂长时域感知中心视频推理。它填补了现有视频理解模型在多步时序推理方面表现不佳的评估空白。人工标注和组合设计使其比自动化基准更能抵抗捷径学习。",
+      "key_findings": [
+        "现有基准测试对需要时间分散证据的长时域视频推理评估不足",
+        "PerceptionComp使用人工标注确保组合推理要求",
+        "该基准揭示了当前视频模型在感知中心推理方面的局限性"
+      ],
+      "tags": [
+        "video-understanding",
+        "benchmark",
+        "temporal-reasoning",
+        "perception",
+        "multimodal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 14,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26653",
+        "huggingface": "https://huggingface.co/papers/2603.26653",
+        "pdf": "https://arxiv.org/pdf/2603.26653"
+      }
+    },
+    {
+      "id": "skill0-agentic-rl-skill-internalization",
+      "title": "SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization",
+      "authors": [
+        "Zhengxi Lu",
+        "Zhiyuan Yao",
+        "Jinyang Wu",
+        "Chengcheng Han",
+        "Qi Gu"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "SKILL0证明了技能可以通过智能体强化学习内化到模型参数中，从而消除推理时技能增强所带来的检索噪声和token开销。这代表着从“技能即上下文“到“技能即权重“的范式转变，同时提升了效率和可靠性。该工作将智能体强化学习、知识蒸馏和工具使用优化相互联系。",
+      "key_findings": [
+        "技能可以通过智能体强化学习内化到模型权重中，而不仅仅是在推理时检索",
+        "内化消除了技能增强中的检索噪声和token开销",
+        "智能体强化学习为从交互中学习可复用技能提供了有效机制"
+      ],
+      "tags": [
+        "agentic-RL",
+        "skill-learning",
+        "knowledge-distillation",
+        "agents",
+        "reinforcement-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02268",
+        "huggingface": "https://huggingface.co/papers/2604.02268",
+        "pdf": "https://arxiv.org/pdf/2604.02268"
+      }
+    },
+    {
+      "id": "pare-proactive-agent-research-environment",
+      "title": "Proactive Agent Research Environment (PARE)",
+      "authors": [
+        "Deepak Nathani",
+        "Cheng Zhang",
+        "Chang Huan",
+        "Jiaming Shan",
+        "Yinfei Yang"
+      ],
+      "affiliations": [
+        "Apple"
+      ],
+      "summary": "PARE是一个用于构建和评估主动式智能体的框架，这些智能体能够预判用户需求并作为数字助手自主执行任务。它填补了被动式智能体（响应明确指令）与真正主动式数字助手之间的差距。Apple的参与表明主要产业力量正在这一方向上大力投入。",
+      "key_findings": [
+        "能预判用户需求的主动式智能体需要超越被动式智能体基准的专用评估框架",
+        "PARE为主动式数字助手提供构建框架和评估套件",
+        "预期式任务执行被识别为当前智能体能力的核心缺口"
+      ],
+      "tags": [
+        "proactive-agents",
+        "digital-assistants",
+        "evaluation",
+        "task-automation",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.00842",
+        "huggingface": "https://huggingface.co/papers/2604.00842",
+        "pdf": "https://arxiv.org/pdf/2604.00842"
+      }
+    },
+    {
+      "id": "agentwatcher-prompt-injection-monitor",
+      "title": "AgentWatcher: A Rule-based Prompt Injection Monitor",
+      "authors": [
+        "Yanting Wang",
+        "Wei Zou",
+        "Runpeng Geng",
+        "Jinyuan Jia"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "AgentWatcher是一个基于规则的提示注入检测系统，使用显式规则定义注入模式，随着上下文长度增加仍能保持检测效果。与学习型分类器不同，基于规则的方法提供可解释性，并在不同上下文长度下保持一致性能。该工作与同日发布的ClawKeeper及相关智能体安全研究形成互补。",
+      "key_findings": [
+        "基于规则的提示注入检测在上下文长度扩展时仍能保持效果",
+        "显式规则提供了学习型分类器所缺乏的可解释性",
+        "该方法针对智能体系统中的关键漏洞"
+      ],
+      "tags": [
+        "prompt-injection",
+        "agent-security",
+        "rule-based",
+        "safety",
+        "LLM-security"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01194",
+        "huggingface": "https://huggingface.co/papers/2604.01194",
+        "pdf": "https://arxiv.org/pdf/2604.01194"
+      }
+    },
+    {
+      "id": "interruptible-agents-web-navigation",
+      "title": "When Users Change Their Mind: Evaluating Interruptible Agents",
+      "authors": [
+        "Henry Peng Zou",
+        "Chunyu Miao",
+        "Wei-Chieh Huang",
+        "Yankai Chen",
+        "Yue Zhou"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "这是首项对长时域网页导航中可中断智能体的系统性研究，涵盖用户在任务执行中途添加需求或修改目标的场景。大多数现有智能体设计用于静态目标完成，无法优雅处理动态用户意图。该工作为实际智能体部署开辟了一个新的评估维度。",
+      "key_findings": [
+        "可中断的长时域网页导航是首项对任务中途目标修订的系统性研究",
+        "当前智能体未被设计为在任务执行期间处理动态用户意图",
+        "提出了评估优雅中断处理能力的新评估方法"
+      ],
+      "tags": [
+        "agents",
+        "web-navigation",
+        "user-intent",
+        "evaluation",
+        "interruptibility"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.00892",
+        "huggingface": "https://huggingface.co/papers/2604.00892",
+        "pdf": "https://arxiv.org/pdf/2604.00892"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "jackrong-qwen35-27b-claude-reasoning-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "一个从Claude 4.6 Opus推理轨迹蒸馏而来的Qwen3.5-27B模型，代表了社区将前沿模型推理能力蒸馏进开放权重这一日益普遍的实践。提供safetensors和GGUF两种变体，下载量极高。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "reasoning",
+        "distillation",
+        "qwen3.5",
+        "unsloth",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 428791,
+        "likes": 2130
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "hauhaucs-qwen35-35b-uncensored",
+      "name": "Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (Community)",
+      "description": "Qwen3.5-35B MoE模型的无审查GGUF变体，面向寻求未过滤输出的用户。下载量超62.1万次，1151个点赞，反映了社区对具备视觉能力的无审查开放权重模型的大量需求。",
+      "task_type": "text-generation",
+      "model_size": "35B (MoE, A3B active)",
+      "tags": [
+        "gguf",
+        "uncensored",
+        "moe",
+        "vision",
+        "qwen3.5"
+      ],
+      "metrics": {
+        "downloads": 621967,
+        "likes": 1151
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "coherelabs-cohere-transcribe-03-2026",
+      "name": "cohere-transcribe-03-2026",
+      "organization": "CohereLabs",
+      "description": "Cohere于2026年3月发布的最新自动语音识别模型，7.1万次下载量和733个点赞表明获得了强劲的行业认可。代表着Cohere向音频模态的扩展。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "Unknown",
+      "tags": [
+        "ASR",
+        "audio",
+        "speech-recognition",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 71028,
+        "likes": 733
+      },
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "mistralai-voxtral-4b-tts",
+      "name": "Voxtral-4B-TTS-2603",
+      "organization": "Mistral AI",
+      "description": "Mistral的4B参数文本转语音模型，支持英语和法语，标志着Mistral在音频合成领域的重大能力拓展。vllm和mistral-common标签表明有优化的推理支持。",
+      "task_type": "text-to-speech",
+      "model_size": "4B",
+      "tags": [
+        "TTS",
+        "audio",
+        "mistral",
+        "multilingual",
+        "vllm"
+      ],
+      "metrics": {
+        "downloads": 4316,
+        "likes": 635
+      },
+      "source_url": "https://huggingface.co/mistralai/Voxtral-4B-TTS-2603"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "百度基于InternVL Chat架构构建的视觉语言OCR模型，1.9万次下载量和811个点赞。作为文档理解的特征提取模型，反映了企业对中文及多语言精准OCR的日益增长的需求。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "OCR",
+        "vision-language",
+        "InternVL",
+        "document-understanding",
+        "Chinese"
+      ],
+      "metrics": {
+        "downloads": 19085,
+        "likes": 811
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "gemma-4-31B-it",
+      "organization": "Google",
+      "description": "Google全新Gemma 4系列的指令微调31B模型。2.9万次下载量和370个点赞，是今日趋势中三个Gemma 4变体中下载量最高的，支持图像-文本到文本任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "gemma4",
+        "multimodal",
+        "instruction-tuned",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 29015,
+        "likes": 370
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "nvidia-nemotron-cascade-2-30b",
+      "name": "Nemotron-Cascade-2-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA Nemotron Cascade 2系列的30B MoE文本生成模型，活跃参数为3B。11.4万次下载量和454个点赞表明在企业推理工作负载上获得强劲应用，采用NemotronH架构。",
+      "task_type": "text-generation",
+      "model_size": "30B (MoE, A3B active)",
+      "tags": [
+        "MoE",
+        "nvidia",
+        "nemotron",
+        "efficient-inference",
+        "enterprise"
+      ],
+      "metrics": {
+        "downloads": 114462,
+        "likes": 454
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Cascade-2-30B-A3B"
+    },
+    {
+      "id": "prism-ml-bonsai-8b-gguf",
+      "name": "Bonsai-8B-gguf",
+      "organization": "Prism ML",
+      "description": "Prism ML推出的GGUF格式1-bit量化8B模型，实现极致压缩以支持边缘部署。同时在GGUF和MLX变体中出现于趋势榜，表明跨硬件平台的1-bit推理兴趣日益浓厚。",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit quantized)",
+      "tags": [
+        "1-bit",
+        "quantization",
+        "edge-inference",
+        "gguf",
+        "efficiency"
+      ],
+      "metrics": {
+        "downloads": 13844,
+        "likes": 319
+      },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "chromadb-context-1",
+      "name": "context-1",
+      "organization": "ChromaDB",
+      "description": "ChromaDB基于GPT OSS架构构建的文本生成模型，代表这家向量数据库公司进军模型开发领域。2820次下载量和357个点赞表明ChromaDB正在构建紧密集成的检索-生成能力。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "text-generation",
+        "RAG",
+        "conversational",
+        "retrieval"
+      ],
+      "metrics": {
+        "downloads": 2820,
+        "likes": 357
+      },
+      "source_url": "https://huggingface.co/chromadb/context-1"
+    },
+    {
+      "id": "microsoft-harrier-oss-v1-0.6b",
+      "name": "harrier-oss-v1-0.6b",
+      "organization": "Microsoft",
+      "description": "微软基于Qwen3的紧凑型0.6B嵌入模型，用于特征提取和MTEB评估，以极小的体积实现了强劲的句子嵌入性能。表明在面向RAG和检索管道的高效嵌入模型方面持续投入。",
+      "task_type": "feature-extraction",
+      "model_size": "0.6B",
+      "tags": [
+        "embeddings",
+        "MTEB",
+        "sentence-transformers",
+        "qwen3",
+        "efficient"
+      ],
+      "metrics": {
+        "downloads": 2814,
+        "likes": 140
+      },
+      "source_url": "https://huggingface.co/microsoft/harrier-oss-v1-0.6b"
+    },
+    {
+      "id": "hcompany-holo3-35b",
+      "name": "Holo3-35B-A3B",
+      "organization": "Hcompany",
+      "description": "Hcompany基于Qwen3.5 MoE架构构建的35B多模态MoE模型，活跃参数3B，专注于图像-文本到文本任务。603次下载量和184个点赞，代表多模态MoE领域的新入局者。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (MoE, A3B active)",
+      "tags": [
+        "multimodal",
+        "MoE",
+        "qwen3.5",
+        "image-text",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 603,
+        "likes": 184
+      },
+      "source_url": "https://huggingface.co/Hcompany/Holo3-35B-A3B"
+    },
+    {
+      "id": "liquidai-lfm25-350m",
+      "name": "LFM2.5-350M",
+      "organization": "Liquid AI",
+      "description": "Liquid AI LFM2.5系列的紧凑型350M参数文本生成模型，代表液态神经网络架构在小规模参数下的应用。7703次下载量和201个点赞表明对Transformer之外替代架构的兴趣日益增长。",
+      "task_type": "text-generation",
+      "model_size": "350M",
+      "tags": [
+        "liquid",
+        "alternative-architecture",
+        "small-model",
+        "efficient"
+      ],
+      "metrics": {
+        "downloads": 7703,
+        "likes": 201
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-350M"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "oh-my-codex",
+      "name": "Yeachan-Heo/oh-my-codex",
+      "description": "OmX通过hooks、智能体团队、HUD和模块化增强扩展了OpenAI Codex的能力。今日获得星标数最多（2867颗）的趋势仓库，反映了开发者在商业代码智能体之上构建工具链的爆炸式增长。",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 2867,
+      "forks": 0,
+      "url": "https://github.com/Yeachan-Heo/oh-my-codex",
+      "tags": [
+        "coding-agents",
+        "codex",
+        "developer-tools",
+        "agent-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openscreen",
+      "name": "siddharthvaddem/openscreen",
+      "description": "Screen Studio的开源替代品，用于创建精美的产品演示和屏幕录制。今日获得2573颗星，可能受到寻求免费商业屏幕录制工具替代品的开发者社区驱动。",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 2573,
+      "forks": 0,
+      "url": "https://github.com/siddharthvaddem/openscreen",
+      "tags": [
+        "developer-tools",
+        "open-source",
+        "screen-recording",
+        "demos"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "timesfm",
+      "name": "google-research/timesfm",
+      "description": "Google Research的时间序列基础模型，今日激增1176颗星——很可能与同日趋势的QuitoBench论文相关。TimesFM代表Google在跨领域时间序列预测方面的基础性方法。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 1176,
+      "forks": 0,
+      "url": "https://github.com/google-research/timesfm",
+      "tags": [
+        "time-series",
+        "forecasting",
+        "foundation-model",
+        "google-research"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "sherlock-project",
+      "name": "sherlock-project/sherlock",
+      "description": "一款通过用户名在社交网络中追踪社交媒体账户的Python工具。今日获得827颗星，这款OSINT（开源情报）工具在安全研究和社交图谱分析领域持续保持高人气。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 827,
+      "forks": 0,
+      "url": "https://github.com/sherlock-project/sherlock",
+      "tags": [
+        "OSINT",
+        "security",
+        "social-media",
+        "identity"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "roboflow-supervision",
+      "name": "roboflow/supervision",
+      "description": "Roboflow的可复用计算机视觉工具包，提供标注工具、可视化工具和模型无关接口。今日获得535颗星，是广泛应用于生产管道的持续趋势计算机视觉实用库。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 535,
+      "forks": 0,
+      "url": "https://github.com/roboflow/supervision",
+      "tags": [
+        "computer-vision",
+        "object-detection",
+        "annotation",
+        "utilities"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "一个收集了从ChatGPT、Claude、Gemini、Grok、Perplexity等AI系统提取出的系统提示词的合集。今日获得306颗星，反映了公众对AI系统透明度以及提示词提取安全含义的持续关注。",
+      "language": "",
+      "stars": 0,
+      "stars_today": 306,
+      "forks": 0,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": [
+        "system-prompts",
+        "AI-transparency",
+        "security",
+        "prompt-extraction"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "skill-seekers",
+      "name": "yusufkaraaslan/Skill_Seekers",
+      "description": "将文档网站、GitHub仓库和PDF转换为Claude AI技能，可直接集成使用。今日获得264颗星，是包装商业AI API以创建领域特定智能体能力的工具生态系统不断壮大的典型体现。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 264,
+      "forks": 0,
+      "url": "https://github.com/yusufkaraaslan/Skill_Seekers",
+      "tags": [
+        "claude",
+        "agent-skills",
+        "documentation",
+        "RAG",
+        "AI-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "glm-ocr",
+      "name": "zai-org/GLM-OCR",
+      "description": "GLM-OCR基于GLM架构提供精准、快速、全面的光学字符识别能力。今日获得237颗星，与百度的Qianfan-OCR共同表明AI驱动的文档理解领域当前势头强劲。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 237,
+      "forks": 0,
+      "url": "https://github.com/zai-org/GLM-OCR",
+      "tags": [
+        "OCR",
+        "document-understanding",
+        "GLM",
+        "vision-language"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "praisonai",
+      "name": "MervinPraison/PraisonAI",
+      "description": "PraisonAI是一个低代码多智能体AI框架，以“全天候AI员工团队“概念自动化复杂工作流。今日获得107颗星，代表着多智能体编排向非专家用户民主化的更广泛趋势。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 107,
+      "forks": 0,
+      "url": "https://github.com/MervinPraison/PraisonAI",
+      "tags": [
+        "multi-agent",
+        "automation",
+        "low-code",
+        "workflow",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "free-claude-code",
+      "name": "Alishahryar1/free-claude-code",
+      "description": "通过路由至替代端点，在终端、VSCode或Discord中提供对Claude Code的免费访问。今日获得57颗星，反映了社区对规避商业AI编程工具访问限制的持续兴趣。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 57,
+      "forks": 0,
+      "url": "https://github.com/Alishahryar1/free-claude-code",
+      "tags": [
+        "claude",
+        "coding-agents",
+        "access",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体安全与防护",
+      "description": "一批协同发布的论文针对自主智能体运行时不断扩大的攻击面，涵盖提示注入监控、全面运行时保护、主动式智能体设计和可中断性等方向。单日内这一主题的论文数量和互动量，表明整个领域已认识到部署风险的严峻性。",
+      "related_paper_ids": [
+        "clawkeeper-openclaw-agent-safety",
+        "agentwatcher-prompt-injection-monitor",
+        "pare-proactive-agent-research-environment",
+        "interruptible-agents-web-navigation",
+        "skill0-agentic-rl-skill-internalization"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "基准测试与评估激增",
+      "description": "单日内出现了六个新基准，分别针对深度研究智能体（MiroEval）、视觉生成推理（ViGoR-Bench）、网页开发（Vision2Web）、视频感知（PerceptionComp）、时间序列（QuitoBench）和AI撰写论文（PRE）。社区正在积极构建2026年AI系统的测量基础设施。",
+      "related_paper_ids": [
+        "miroeval-multimodal-deep-research-agents",
+        "vigor-bench-visual-generative-reasoning",
+        "vision2web-website-development-benchmark",
+        "perceptioncomp-video-benchmark",
+        "quitobench-time-series-forecasting"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM推理鲁棒性",
+      "description": "两篇论文独立记录了大型LLM中不易察觉的失效模式：上下文悄然压缩推理链（Reasoning Shift）以及规模依赖性冗长逆转性能层级（Brevity Constraints）。二者合力表明，规模扩展并不能单调地提升模型对输入/输出格式压力的鲁棒性。",
+      "related_paper_ids": [
+        "reasoning-shift-context-shortens-llm-reasoning",
+        "brevity-constraints-reverse-performance"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效扩展与自我改进",
+      "description": "Universal YOCO攻克了深度扩展中的KV缓存膨胀问题，S0 Tuning为循环-注意力混合架构实现了零开销PEFT，SSD展示了无需验证器的代码生成自我改进。这些成果共同推动着通往更高效模型改进的路径。",
+      "related_paper_ids": [
+        "universal-yoco-efficient-depth-scaling",
+        "s0-tuning-recurrent-attention-models",
+        "ssd-self-distillation-code-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多模态视觉推理缺口",
+      "description": "ViGoR-Bench和PerceptionComp均揭示了最先进视觉模型中的重大推理缺口——前者针对生成式模型（因果/空间推理），后者针对视频模型（时序组合推理）。这一主题与更广泛的问题相连：视觉模型是否真正理解了它所处理的场景。",
+      "related_paper_ids": [
+        "vigor-bench-visual-generative-reasoning",
+        "perceptioncomp-video-benchmark"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "社区蒸馏与模型获取",
+      "description": "趋势模型以前沿模型的社区蒸馏版本（将Claude 4.6 Opus蒸馏至Qwen3.5变体）和无审查模型变体为主，GitHub仓库则展示了积极的工具链以扩展和访问商业代码智能体。这反映了社区将前沿AI能力民主化和个性化的日益壮大的运动。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-03T02:00:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-04-03T02:00:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-03T02:00:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
