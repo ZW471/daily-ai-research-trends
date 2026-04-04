@@ -1,0 +1,625 @@
+{
+  "version": "1.0",
+  "date": "2026-04-04",
+  "generated_at": "2026-04-04T03:00:00.000000+00:00",
+  "summary": {
+    "headline": "可引导视觉表征与LLM预决策偏差挑战核心假设；多智能体进化框架与对抗性3D纹理推进智能体能力与风险边界；Gemma-4与Claude蒸馏版Qwen主导热门模型",
+    "body": "4月4日的研究热点由两项挑战领域基本假设的突破性成果定义。**可引导视觉表征**（30票赞同）来自UTN基础AI实验室，提出了一种无需重训练即可将冻结ViT特征引导至任意视觉概念的机制——直接挑战了预训练特征是固定观察器的假设。与此同时，ServiceNow AI的**\"Therefore I am. I Think\"**（16票赞同）给出了证据表明LLM推理模型在生成思维链token之前就已经编码了决策，暗示思维链可能是事后合理化而非真正的推理过程。这两篇论文共同动摇了当前实践的两个支柱：预训练表征的不可变性和思维链推理的因果角色。\n\n智能体生态系统继续沿能力和安全两个轴线快速扩展。MIT的**CORAL**（14票赞同）提出了首个面向开放式问题的自主多智能体进化框架，用长期运行的反思、协作和共享知识的智能体取代硬编码探索规则。在对抗性研究方面，**Tex3D**展示了通过对抗性3D纹理对视觉-语言-动作模型的物理可实现攻击——比之前的2D贴片攻击更具实际威胁。Netflix的**VOID**（17票赞同）则解决了视频物体移除中更难的问题：被移除物体具有物理交互而非仅视觉存在。\n\n热门模型展现两大趋势：Google的Gemma-4系列（31B、26B-A4B MoE、E4B、E2B）以全尺寸谱系多模态能力同时发布，而社区正积极将前沿推理能力蒸馏到开源权重中——Jackrong的Claude-4.6-Opus蒸馏版Qwen3.5系列合计下载量超70万次。chromadb/context-1（检索原生语言模型）和LiquidAI的350M参数LFM2.5表明架构多样性在规模谱系的两端都在增加。",
+    "key_themes": [
+      "representation-steering-and-control",
+      "llm-reasoning-mechanisms",
+      "multi-agent-evolution",
+      "adversarial-robustness-3d",
+      "video-understanding-and-editing",
+      "open-weight-distillation"
+    ]
+  },
+  "researcher_notes": "**\"Therefore I am. I Think\"是今天最具思想冲击力的成果。** 作者使用线性探针在预生成激活上进行解码，发现推理模型中的工具调用决策在任何推理token产生之前就能被高置信度检测到。这不是边缘效应——在某些情况下，决策在模型隐藏状态中完全编码后，思维链才开始生成。这一发现含义深远：如果思维链主要是对已经做出的决策的事后合理化，那么整个基于CoT的对齐和可解释性范式都需要重新审视。论文标题——笛卡尔名言的倒置——恰如其分。\n\n**可引导视觉表征值得其30票的领先地位。** 在不重训练或提示工程的情况下，将冻结的ViT特征重定向到特定视觉概念（颜色、纹理、形状、物体类别）的能力，为视觉系统开辟了新的设计轴。这对于当前特征过度关注显著性的检索和分类管线尤为重要。与多模态LLM的关联也值得注意：虽然LLM可以通过文本提示引导，但产生的表征会丧失视觉保真度。可引导表征提供了一种纯视觉替代方案，保留了空间信息。\n\n**MIT的CORAL代表了超越当前多智能体框架的质变。** 大多数现有系统使用固定启发式和硬编码探索规则——CORAL用通过反思和基于共享持久记忆的协作自主进化策略的智能体来替代这些。\"开放式发现\"的定位是关键：这不是关于解决固定基准测试，而是关于持续探索和知识积累。结合ASI-Evolve（10票赞同，提出AI驱动AI研究循环），自我改进智能体系统的趋势已经清晰。\n\n**热门模型揭示了一个加速的蒸馏故事。** Jackrong的Claude-4.6-Opus蒸馏版Qwen3.5-27B基础版有487k下载量，GGUF版本227k，加上一个700k下载量的未审查版Qwen3.5-9B。社区不仅在消费前沿模型——而是系统性地将其推理能力转移到可部署的开源权重中。Google同时发布四个Gemma-4变体（31B密集型、26B-A4B MoE、E4B、E2B），全部支持多模态，表明其策略是覆盖每个部署细分市场。Cohere的语音转写模型和Mistral的Voxtral TTS的出现表明音频模态终于获得主要实验室的认真对待。\n\n**GitHub趋势揭示了一个引人入胜的元现象：扩展AI编程智能体的工具现在是获赞最多的类别。** oh-my-codex（今日3,047星，总计14k）为Codex添加钩子、智能体团队和HUD。openscreen（今日2,771星）是免费的Screen Studio替代品——围绕AI工作流的开发者工具爆炸式增长正在创造自己的生态系统。fff.nvim（今日750星）是专为Neovim中的AI智能体优化的Rust文件搜索工具包。趋势很明确：开发者社区不会等待官方工具，而是从头开始构建AI增强的开发栈。",
+  "papers": [
+    {
+      "id": "steerable-visual-representations",
+      "title": "可引导视觉表征",
+      "authors": ["Jona Ruthardt", "Manu Gaur", "Deva Ramanan", "Makarand Tapaswi", "Yuki M. Asano"],
+      "affiliations": ["Fundamental AI Lab at UTN", "Carnegie Mellon University"],
+      "summary": "提出了一种无需重训练即可将冻结的Vision Transformer特征引导至特定视觉概念（颜色、纹理、形状）的机制。解决了通用ViT特征只关注显著线索、无法将注意力重定向到不太显眼的感兴趣概念的局限性，同时保持了文本提示的多模态LLM所丧失的空间保真度。",
+      "key_findings": [
+        "冻结的ViT特征可以被引导至任意视觉概念，无需重训练或微调",
+        "引导后的表征在概念特定任务上优于通用ViT和文本提示的多模态LLM表征",
+        "该方法保留了以语言为中心的多模态表征所丧失的空间视觉信息"
+      ],
+      "tags": ["vision-transformers", "representation-learning", "steering", "DINOv2", "retrieval"],
+      "relevance": "high",
+      "engagement": {"upvotes": 30, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02327",
+        "huggingface": "https://huggingface.co/papers/2604.02327",
+        "pdf": "https://arxiv.org/pdf/2604.02327"
+      }
+    },
+    {
+      "id": "nearid-identity-representation-learning",
+      "title": "NearID: 基于近同一性干扰物的身份表征学习",
+      "authors": ["Aleksandar Cvejic", "Rameen Abdal", "Abdelrahman Eldesokey", "Bernard Ghanem", "Peter Wonka"],
+      "affiliations": ["KAUST Center of Excellence in Generative AI"],
+      "summary": "提出了使用近同一性干扰物评估身份聚焦任务的原则性框架。现有视觉编码器将物体身份与背景上下文纠缠，导致不可靠的度量。NearID将语义相似但不同的实例放置在相同背景上，消除上下文捷径。",
+      "key_findings": [
+        "现有视觉编码器在身份聚焦任务中将身份与背景上下文混淆",
+        "近同一性干扰物消除了上下文捷径，隔离了真正的身份表征",
+        "该框架实现了更可靠的个性化生成和图像编辑评估"
+      ],
+      "tags": ["identity-representation", "personalization", "evaluation", "vision-encoders", "image-editing"],
+      "relevance": "high",
+      "engagement": {"upvotes": 20, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01973",
+        "huggingface": "https://huggingface.co/papers/2604.01973",
+        "pdf": "https://arxiv.org/pdf/2604.01973"
+      }
+    },
+    {
+      "id": "void-video-object-interaction-deletion",
+      "title": "VOID: 视频物体与交互删除",
+      "authors": ["Saman Motamed", "William Harvey", "Benjamin Klein", "Luc Van Gool", "Zhuoning Yuan"],
+      "affiliations": ["Netflix", "ETH Zurich"],
+      "summary": "解决了视频物体移除的根本性局限：现有方法仅修复外观但无法纠正物理交互（碰撞、遮挡）。VOID通过合成交互场景生成训练数据，在被移除物体对其他物体有显著物理影响的情况下生成物理合理的修复结果。",
+      "key_findings": [
+        "当被移除物体具有超出视觉存在的物理交互时，当前视频物体移除方法失效",
+        "使用交互场景的合成训练数据可实现物理合理的修复",
+        "VOID纠正了当前方法忽略的下游物理效应（碰撞、轨迹变化）"
+      ],
+      "tags": ["video-editing", "object-removal", "video-inpainting", "physics-aware", "diffusion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02296",
+        "huggingface": "https://huggingface.co/papers/2604.02296",
+        "pdf": "https://arxiv.org/pdf/2604.02296"
+      }
+    },
+    {
+      "id": "therefore-i-am-i-think",
+      "title": "故我在，我思（Therefore I am. I Think）",
+      "authors": ["Esakkivel Esakkiraja", "Sai Rajeswar", "Denis Akhiyarov", "Rajagopal Venkatesaramani"],
+      "affiliations": ["ServiceNow AI"],
+      "summary": "提出证据表明LLM推理模型在思维链生成开始之前就编码了决策。线性探针成功以高置信度从预生成激活中解码工具调用决策，表明思维链可能作为事后合理化而非真正的推理过程。这一发现挑战了通过思维链实现可解释性的范式。",
+      "key_findings": [
+        "工具调用决策在任何推理token产生之前就可以从预生成隐藏状态中检测到",
+        "早期编码的决策塑造并可能预先决定了思维链输出",
+        "思维链可能作为事后合理化而非因果推理运作"
+      ],
+      "tags": ["LLM-reasoning", "chain-of-thought", "interpretability", "mechanistic", "tool-use"],
+      "relevance": "high",
+      "engagement": {"upvotes": 16, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01202",
+        "huggingface": "https://huggingface.co/papers/2604.01202",
+        "pdf": "https://arxiv.org/pdf/2604.01202"
+      }
+    },
+    {
+      "id": "coral-autonomous-multi-agent-evolution",
+      "title": "CORAL: 面向开放式发现的自主多智能体进化",
+      "authors": ["Ao Qu", "Han Zheng", "Zijian Zhou", "Yihao Yan", "Yihong Tang"],
+      "affiliations": ["Massachusetts Institute of Technology"],
+      "summary": "首个面向开放式问题的自主多智能体进化框架。用长期运行的探索、反思和通过共享持久记忆协作的智能体，取代僵化的硬编码探索规则。智能体自主进化策略而非遵循固定启发式，实现持续搜索和知识积累。",
+      "key_findings": [
+        "现有基于LLM的进化方法依赖固定启发式，限制了智能体自主性",
+        "CORAL智能体通过反思和共享记忆自主进化探索策略",
+        "该框架实现了超越固定基准测试优化的持续开放式发现"
+      ],
+      "tags": ["multi-agent", "evolution", "open-ended", "autonomous-agents", "knowledge-accumulation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 14, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01658",
+        "huggingface": "https://huggingface.co/papers/2604.01658",
+        "pdf": "https://arxiv.org/pdf/2604.01658"
+      }
+    },
+    {
+      "id": "asi-evolve-ai-accelerates-ai",
+      "title": "ASI-Evolve: AI加速AI",
+      "authors": ["Weixian Xu", "Tiantian Mi", "Yixiu Liu", "Yang Nan", "Zhimeng Zhou"],
+      "affiliations": ["SII - GAIR", "上海交通大学"],
+      "summary": "一个面向AI驱动AI研究的智能体框架，闭合了学习-设计-实验-分析循环。通过上下文感知设计机制和经验注册表增强进化智能体，解决驱动真正AI进步的昂贵、长时域、弱监督研究循环。",
+      "key_findings": [
+        "标准进化智能体无法处理AI研究的长时域、弱监督特性",
+        "上下文感知设计和经验注册表组件提高了研究循环效率",
+        "AI驱动的AI研究可以有意义地加速研究周期"
+      ],
+      "tags": ["AI-for-AI", "agentic-research", "evolutionary", "automation", "meta-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 10, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.29640",
+        "huggingface": "https://huggingface.co/papers/2603.29640",
+        "pdf": "https://arxiv.org/pdf/2603.29640"
+      }
+    },
+    {
+      "id": "investigating-autonomous-agent-contributions",
+      "title": "调查野外自主智能体贡献：活动模式和代码变更随时间的演变",
+      "authors": ["Razvan Mihai Popescu", "David Gros", "Andrei Botocan", "Rahul Pandita", "Prem Devanbu"],
+      "affiliations": ["TU Delft AISE Lab", "UC Davis"],
+      "summary": "构建了一个约11万个开源PR的新型数据集，用于调查AI驱动贡献及其对代码质量、团队动态和软件可维护性的影响。首个大规模实证研究自主编程智能体对真实世界开源项目的贡献。",
+      "key_findings": [
+        "自主编程智能体现在在真实项目中积极贡献分支、PR和代码评审",
+        "研究识别了人类和智能体贡献者之间的不同活动模式",
+        "提供了AI智能体对代码质量和团队动态影响的大规模实证证据"
+      ],
+      "tags": ["software-engineering", "autonomous-agents", "empirical-study", "code-quality", "open-source"],
+      "relevance": "high",
+      "engagement": {"upvotes": 10, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.00917",
+        "huggingface": "https://huggingface.co/papers/2604.00917",
+        "pdf": "https://arxiv.org/pdf/2604.00917"
+      }
+    },
+    {
+      "id": "tex3d-adversarial-3d-textures-vla",
+      "title": "Tex3D: 通过对抗性3D纹理将物体作为视觉-语言-动作模型的攻击面",
+      "authors": ["Jiawei Chen", "Simin Huang", "Jiawei Du", "Shuaihang Chen", "Yu Tian"],
+      "affiliations": ["华东师范大学"],
+      "summary": "展示了物理物体上的对抗性3D纹理可以破坏视觉-语言-动作(VLA)机器人操作模型。与先前的2D贴片攻击不同，对抗性3D纹理自然存在于场景中，对已部署的机器人系统构成更具物理可信性和更大破坏性的威胁。",
+      "key_findings": [
+        "对抗性3D纹理是比2D贴片更具物理可信性的机器人系统攻击面",
+        "VLA模型容易受到跨视角传递的基于纹理的攻击",
+        "已部署VLA机器人系统的攻击面比先前认知的更大"
+      ],
+      "tags": ["adversarial-attacks", "robotics", "VLA-models", "3D-textures", "safety"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01618",
+        "huggingface": "https://huggingface.co/papers/2604.01618",
+        "pdf": "https://arxiv.org/pdf/2604.01618"
+      }
+    },
+    {
+      "id": "video-models-reason-early",
+      "title": "视频模型早期推理：利用计划承诺解决迷宫",
+      "authors": ["Kaleb Newman", "Tyler Zhu", "Olga Russakovsky"],
+      "affiliations": ["Princeton University"],
+      "summary": "揭示了视频扩散模型在生成过程的前几个去噪步骤内就承诺了高层次的运动计划。使用2D迷宫求解作为受控测试平台，论文展示了\"早期计划承诺\"——一种结构性属性，粗略轨迹在早期就被确定，后续步骤仅细化细节。",
+      "key_findings": [
+        "视频扩散模型在前几个去噪步骤内就承诺了高层次运动计划",
+        "早期计划承诺是一种基本结构属性，而非训练的产物",
+        "此属性可被利用于更高效的视频生成和规划"
+      ],
+      "tags": ["video-diffusion", "planning", "reasoning", "denoising", "emergent-capabilities"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.30043",
+        "huggingface": "https://huggingface.co/papers/2603.30043",
+        "pdf": "https://arxiv.org/pdf/2603.30043"
+      }
+    },
+    {
+      "id": "aibench-academic-illustration-generation",
+      "title": "AIBench: 评估学术插图生成的视觉-逻辑一致性",
+      "authors": ["Zhaohe Liao", "Kaixun Jiang", "Zhihang Liu", "Yujie Wei", "Junqiu Yu"],
+      "affiliations": ["Wan-AI"],
+      "summary": "首个使用VQA评估AI生成学术插图逻辑正确性的基准。解决了生成科学图形中视觉质量与事实/逻辑准确性之间的差距，将评估分解为可测试的视觉问答对，而非依赖不可靠的VLM整体判断。",
+      "key_findings": [
+        "最先进的图像生成模型产生视觉合理但逻辑不正确的学术插图",
+        "基于VQA的评估将逻辑一致性分解为可验证的子问题",
+        "现有基于VLM的评估对长且复杂的科学插图不可靠"
+      ],
+      "tags": ["benchmark", "academic-illustrations", "image-generation", "VQA", "logical-consistency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28068",
+        "huggingface": "https://huggingface.co/papers/2603.28068",
+        "pdf": "https://arxiv.org/pdf/2603.28068"
+      }
+    },
+    {
+      "id": "automia-agentic-membership-inference",
+      "title": "AutoMIA: 通过智能体自我探索改进成员推理攻击基线",
+      "authors": ["Ruhao Liu", "Weiqi Huang", "Qi Li", "Xinchao Wang"],
+      "affiliations": ["新加坡国立大学", "清华大学"],
+      "summary": "将成员推理攻击重新定义为使用智能体框架的自动化自我探索和策略进化过程。AutoMIA用自适应智能体替代静态手工启发式，发现攻击策略并在不同大模型间实现更好的可迁移性。",
+      "key_findings": [
+        "静态MIA启发式无法在不同大模型间迁移",
+        "智能体自我探索发现更有效、更可迁移的攻击策略",
+        "AutoMIA通过全自动策略发现超越现有MIA基线"
+      ],
+      "tags": ["privacy", "membership-inference", "agentic", "security-auditing", "ML-safety"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01014",
+        "huggingface": "https://huggingface.co/papers/2604.01014",
+        "pdf": "https://arxiv.org/pdf/2604.01014"
+      }
+    },
+    {
+      "id": "forecasting-supply-chain-disruptions",
+      "title": "使用前瞻性学习预测供应链中断",
+      "authors": ["Benjamin Turtel", "Paul Wilczewski", "Kris Skotheim"],
+      "affiliations": ["Lightning Rod Labs"],
+      "summary": "端到端框架，使用已实现的中断结果作为监督信号训练LLM产生校准的概率预测。解决了从嘈杂的非结构化输入中推理罕见高影响事件的挑战——这是通用模型难以处理的场景。",
+      "key_findings": [
+        "LLM可以被训练为稀有供应链事件产生校准的概率预测",
+        "使用已实现结果监督的任务特定适应显著提高预测质量",
+        "该框架处理通用模型无法可靠处理的嘈杂非结构化输入"
+      ],
+      "tags": ["forecasting", "supply-chain", "LLM-applications", "probabilistic", "real-world"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01298",
+        "huggingface": "https://huggingface.co/papers/2604.01298",
+        "pdf": "https://arxiv.org/pdf/2604.01298"
+      }
+    },
+    {
+      "id": "mdpbench-multilingual-document-parsing",
+      "title": "MDPBench: 真实场景中的多语言文档解析基准",
+      "authors": ["Zhang Li", "Zhibo Lin", "Qiang Liu", "Ziyang Zhang", "Shuo Zhang"],
+      "affiliations": ["阿里巴巴集团", "浙江大学"],
+      "summary": "首个多语言数字和拍照文档解析基准，涵盖17种语言和多种文字系统的3,400张文档图像。揭示了文档解析性能在非英语、拍照和低资源语言文档上的关键差距。",
+      "key_findings": [
+        "此前不存在跨多种文字系统的多语言文档解析系统性基准",
+        "当前模型在非英语和拍照文档上性能显著下降",
+        "MDPBench覆盖17种语言，包括此前未测试的低资源文字系统"
+      ],
+      "tags": ["benchmark", "document-parsing", "multilingual", "OCR", "low-resource"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28130",
+        "huggingface": "https://huggingface.co/papers/2603.28130",
+        "pdf": "https://arxiv.org/pdf/2603.28130"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "使用Claude 4.6 Opus蒸馏推理数据微调的Qwen3.5-27B。下载量最高的热门模型，近50万次下载，代表了社区对开源权重中前沿推理能力的渴望。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["reasoning", "distillation", "qwen3.5", "unsloth"],
+      "metrics": {"downloads": 487446, "likes": 2229},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "hauhaucs-qwen35-9b-uncensored",
+      "name": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "GGUF格式的无审查Qwen3.5-9B变体，70万下载量，反映了9B参数规模无限制开源模型的强劲需求。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["uncensored", "qwen3.5", "gguf"],
+      "metrics": {"downloads": 700218, "likes": 950},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "Gemma-4-31B-it",
+      "organization": "Google",
+      "description": "Google Gemma-4系列的旗舰31B密集型指令微调模型，具备多模态图文能力。四款模型同时发布，覆盖全部署规模谱系。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "instruction-tuned"],
+      "metrics": {"downloads": 76200, "likes": 688},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "cohere-transcribe-03-2026",
+      "name": "Cohere Transcribe 03-2026",
+      "organization": "Cohere Labs",
+      "description": "Cohere的自动语音识别模型，标志着该公司从文本扩展到音频模态。764赞和8.4万次下载，表现强劲。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "未知",
+      "tags": ["ASR", "speech", "audio", "transcription"],
+      "metrics": {"downloads": 84600, "likes": 764},
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "百度",
+      "description": "百度基于InternVL架构的视觉-语言OCR模型，862赞表明对中国科技巨头专业OCR能力的强烈兴趣。",
+      "task_type": "feature-extraction",
+      "model_size": "未知",
+      "tags": ["OCR", "vision-language", "internvl", "document-understanding"],
+      "metrics": {"downloads": 26980, "likes": 862},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "mistral-voxtral-4b-tts",
+      "name": "Voxtral-4B-TTS-2603",
+      "organization": "Mistral AI",
+      "description": "Mistral的4B参数文本转语音模型，支持英语和法语。代表Mistral进入音频生成领域，获649赞。",
+      "task_type": "text-to-speech",
+      "model_size": "4B",
+      "tags": ["TTS", "speech-synthesis", "multilingual"],
+      "metrics": {"downloads": 4760, "likes": 649},
+      "source_url": "https://huggingface.co/mistralai/Voxtral-4B-TTS-2603"
+    },
+    {
+      "id": "bonsai-8b-gguf",
+      "name": "Bonsai-8B-gguf",
+      "organization": "Prism ML",
+      "description": "GGUF格式的1-bit量化8B模型，代表边缘部署极端量化的前沿。358赞表明超高效推理的兴趣日增。",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": ["1-bit", "quantization", "edge-deployment", "gguf"],
+      "metrics": {"downloads": 26164, "likes": 358},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "google-gemma-4-26b-a4b-it",
+      "name": "Gemma-4-26B-A4B-it",
+      "organization": "Google",
+      "description": "Google的26B MoE模型，仅4B活跃参数，以极低计算成本提供密集模型品质。Gemma-4多模态家族成员。",
+      "task_type": "image-text-to-text",
+      "model_size": "26B（4B活跃）",
+      "tags": ["gemma4", "MoE", "efficient-inference", "multimodal"],
+      "metrics": {"downloads": 24366, "likes": 295},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "chromadb-context-1",
+      "name": "context-1",
+      "organization": "ChromaDB",
+      "description": "向量数据库公司ChromaDB推出的检索原生对话语言模型，暗示检索基础设施与语言建模的融合趋势。",
+      "task_type": "text-generation",
+      "model_size": "未知",
+      "tags": ["retrieval-native", "conversational", "RAG"],
+      "metrics": {"downloads": 3195, "likes": 363},
+      "source_url": "https://huggingface.co/chromadb/context-1"
+    },
+    {
+      "id": "liquidai-lfm25-350m",
+      "name": "LFM2.5-350M",
+      "organization": "Liquid AI",
+      "description": "Liquid AI的350M参数液态基础模型，展示了小模型端的架构多样性。212赞表明对替代架构的兴趣。",
+      "task_type": "text-generation",
+      "model_size": "350M",
+      "tags": ["liquid-architecture", "small-model", "efficient"],
+      "metrics": {"downloads": 10194, "likes": 212},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-350M"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "void-model",
+      "organization": "Netflix",
+      "description": "Netflix的物理感知视频修复模型，VOID论文的配套模型。基于CogVideoX扩散架构。",
+      "task_type": "video-inpainting",
+      "model_size": "未知",
+      "tags": ["video-inpainting", "object-removal", "diffusion", "CogVideoX"],
+      "metrics": {"downloads": 0, "likes": 207},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "oh-my-codex",
+      "name": "Yeachan-Heo/oh-my-codex",
+      "description": "OpenAI Codex CLI的扩展框架，添加钩子、智能体团队、HUD等功能。每日3,047星的爆炸式增长反映了对AI编程智能体自定义工具的巨大需求。",
+      "language": "TypeScript",
+      "stars": 14194,
+      "stars_today": 3047,
+      "forks": 1305,
+      "url": "https://github.com/Yeachan-Heo/oh-my-codex",
+      "tags": ["AI-coding", "codex", "developer-tools", "extensions"],
+      "relevance": "high"
+    },
+    {
+      "id": "openscreen",
+      "name": "siddharthvaddem/openscreen",
+      "description": "免费开源屏幕录制工作室替代品，无订阅无水印。每日2,771星表明开发者对高质量演示创建工具的强劲需求。",
+      "language": "TypeScript",
+      "stars": 18247,
+      "stars_today": 2771,
+      "forks": 1241,
+      "url": "https://github.com/siddharthvaddem/openscreen",
+      "tags": ["developer-tools", "screen-recording", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "onyx",
+      "name": "onyx-dot-app/onyx",
+      "description": "支持所有LLM的开源AI聊天平台，功能丰富。每日1,852星标志着自托管AI聊天基础设施的兴趣增长。",
+      "language": "Python",
+      "stars": 23336,
+      "stars_today": 1852,
+      "forks": 3137,
+      "url": "https://github.com/onyx-dot-app/onyx",
+      "tags": ["AI-chat", "self-hosted", "LLM-platform", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "sherlock",
+      "name": "sherlock-project/sherlock",
+      "description": "跨社交网络按用户名搜索社交媒体账户的OSINT工具。长期热门仓库，每日1,192星，总计78k星。",
+      "language": "Python",
+      "stars": 78551,
+      "stars_today": 1192,
+      "forks": 9180,
+      "url": "https://github.com/sherlock-project/sherlock",
+      "tags": ["OSINT", "security", "social-media", "username-search"],
+      "relevance": "low"
+    },
+    {
+      "id": "timesfm",
+      "name": "google-research/timesfm",
+      "description": "Google Research的时间序列基础模型。每日916星可能受时间序列AI和供应链预测论文的推动。",
+      "language": "Python",
+      "stars": 14151,
+      "stars_today": 916,
+      "forks": 1219,
+      "url": "https://github.com/google-research/timesfm",
+      "tags": ["time-series", "forecasting", "foundation-model", "google-research"],
+      "relevance": "high"
+    },
+    {
+      "id": "fff-nvim",
+      "name": "dmtrKovalenko/fff.nvim",
+      "description": "专为AI智能体、Neovim、Rust、C和Node.js优化的最快最准确文件搜索工具包。每日750星反映了对AI智能体优化开发工具的需求。",
+      "language": "Rust",
+      "stars": 3277,
+      "stars_today": 750,
+      "forks": 131,
+      "url": "https://github.com/dmtrKovalenko/fff.nvim",
+      "tags": ["neovim", "file-search", "AI-agents", "rust", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "mlx-vlm",
+      "name": "Blaizzy/mlx-vlm",
+      "description": "基于MLX的Apple Silicon Mac视觉语言模型推理和微调包。每日499星显示Apple生态AI工具蓬勃发展。",
+      "language": "Python",
+      "stars": 3242,
+      "stars_today": 499,
+      "forks": 363,
+      "url": "https://github.com/Blaizzy/mlx-vlm",
+      "tags": ["MLX", "VLM", "Apple-Silicon", "fine-tuning", "inference"],
+      "relevance": "high"
+    },
+    {
+      "id": "prompts-chat",
+      "name": "f/prompts.chat",
+      "description": "社区提示词分享平台（原Awesome ChatGPT Prompts），157k星。每日375星显示提示工程资源的持续兴趣。",
+      "language": "HTML",
+      "stars": 157203,
+      "stars_today": 375,
+      "forks": 20607,
+      "url": "https://github.com/f/prompts.chat",
+      "tags": ["prompts", "community", "LLM", "resources"],
+      "relevance": "medium"
+    },
+    {
+      "id": "tradingagents-cn",
+      "name": "hsliuping/TradingAgents-CN",
+      "description": "基于多智能体LLM的中文金融交易框架。每日350星和23k总星数表明中国市场对AI交易工具的强劲需求。",
+      "language": "Python",
+      "stars": 23272,
+      "stars_today": 350,
+      "forks": 4853,
+      "url": "https://github.com/hsliuping/TradingAgents-CN",
+      "tags": ["trading", "multi-agent", "finance", "Chinese"],
+      "relevance": "medium"
+    },
+    {
+      "id": "skill-seekers",
+      "name": "yusufkaraaslan/Skill_Seekers",
+      "description": "将文档网站、GitHub仓库和PDF转换为Claude AI技能并自动检测冲突。扩展AI编程智能体生态系统的一部分。",
+      "language": "Python",
+      "stars": 12271,
+      "stars_today": 158,
+      "forks": 1235,
+      "url": "https://github.com/yusufkaraaslan/Skill_Seekers",
+      "tags": ["claude-code", "skills", "documentation", "AI-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "praisonai",
+      "name": "MervinPraison/PraisonAI",
+      "description": "低代码多智能体AI平台，用于自动化规划、研究、编码并交付到消息平台的任务。每日116星。",
+      "language": "Python",
+      "stars": 6428,
+      "stars_today": 116,
+      "forks": 936,
+      "url": "https://github.com/MervinPraison/PraisonAI",
+      "tags": ["multi-agent", "automation", "low-code", "AI-platform"],
+      "relevance": "medium"
+    },
+    {
+      "id": "hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "从交互中学习的智能体记忆系统。每日114星，总计7.1k，契合智能体需要持久、进化记忆的主题。",
+      "language": "Python",
+      "stars": 7116,
+      "stars_today": 114,
+      "forks": 406,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": ["agent-memory", "learning", "AI-infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-bitnet",
+      "name": "microsoft/BitNet",
+      "description": "微软官方1-bit LLM推理框架。每日86星，与HuggingFace热门的Bonsai-8B 1-bit模型相呼应。",
+      "language": "Python",
+      "stars": 37115,
+      "stars_today": 86,
+      "forks": 3262,
+      "url": "https://github.com/microsoft/BitNet",
+      "tags": ["1-bit", "quantization", "inference", "efficiency"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "预决策编码与表征引导",
+      "description": "两篇论文挑战核心假设：LLM在推理开始前就编码决策，冻结的ViT表征可以不经重训练进行引导。两者都表明当前系统具有比假设中更多的可控内部结构。",
+      "related_paper_ids": ["therefore-i-am-i-think", "steerable-visual-representations"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自主多智能体进化",
+      "description": "CORAL和ASI-Evolve推动超越固定启发式的智能体系统，迈向自我改进、自我进化的多智能体框架。11万PR的实证研究为理解大规模智能体贡献提供了依据。",
+      "related_paper_ids": ["coral-autonomous-multi-agent-evolution", "asi-evolve-ai-accelerates-ai", "investigating-autonomous-agent-contributions"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "基于物理的对抗攻击",
+      "description": "Tex3D和VOID展示了物理真实性的两面：对抗性3D纹理利用物理世界作为攻击面，而VOID建模了从视频中移除交互物体的物理后果。",
+      "related_paper_ids": ["tex3d-adversarial-3d-textures-vla", "void-video-object-interaction-deletion"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频扩散理解与控制",
+      "description": "视频模型揭示了结构性属性（迷宫求解中的早期计划承诺）和新的交互范式（ActionParty的多主体控制、DynaVid的动态运动合成）。领域正从生成转向理解和控制视频生成。",
+      "related_paper_ids": ["video-models-reason-early", "void-video-object-interaction-deletion"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "开源权重蒸馏与模型多样性",
+      "description": "热门模型展现了前沿推理到开源权重的激进蒸馏（Claude蒸馏版Qwen），以及来自ChromaDB的检索原生LM、Liquid AI的替代架构和Google全谱系Gemma-4发布的架构多样性。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-04T03:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-04T03:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-04T03:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-04T03:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-04T03:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
