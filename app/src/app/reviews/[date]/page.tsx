@@ -269,7 +269,7 @@ export default async function ReviewDetailPage({
   if (review.cross_cutting_analysis) {
     navItems.push({ id: "cross-cutting", label: review.cross_cutting_analysis.title });
   }
-  if (review.sources_checked.length > 0) {
+  if (review.sources_checked?.length > 0) {
     navItems.push({ id: "sources", label: i18n.sourcesChecked });
   }
 
@@ -387,7 +387,7 @@ export default async function ReviewDetailPage({
           )}
 
           {/* Sources */}
-          {review.sources_checked.length > 0 && (
+          {(review.sources_checked?.length ?? 0) > 0 && (
             <section id="sources" className="mb-10 scroll-mt-20">
               <h2 className="text-lg font-semibold mb-3 text-muted uppercase tracking-wide text-xs">
                 {i18n.sourcesChecked}

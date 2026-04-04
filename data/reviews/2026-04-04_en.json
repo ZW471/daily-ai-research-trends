@@ -9,7 +9,16 @@
   "summary": {
     "headline": "The agent harness — the orchestration layer that wraps an LLM with tools, memory, sandboxing, and an execution loop — has emerged as the critical engineering artifact separating a chatbot from an autonomous software engineer.",
     "body": "Large language models can generate code, but they cannot *do* software engineering alone. The missing piece is the **agent harness**: the runtime system that gives a model eyes (file reading, code search), hands (file editing, shell execution), and a feedback loop (test results, linter output, error traces). This review maps the landscape of agent harnesses across three production systems and ten academic papers, tracing how the field evolved from the ReAct paper's think-act-observe loop (2022) through purpose-built coding agents like SWE-agent (2024) to today's full-featured harnesses: OpenClaw's persistent daemon architecture, Claude Code's permission-gated tool system with multi-agent teams, and Codex's sandboxed App Server with formal JSON-RPC protocols.\n\nThe central design tension is **autonomy vs. safety**. More capable harnesses give agents broader tool access and longer execution loops, but every additional capability is an additional attack surface. OpenClaw learned this the hard way with 190 security advisories in its first month. Claude Code and Codex take different approaches: Claude Code uses a layered permission model with optional human-in-the-loop confirmation, while Codex enforces OS-level sandboxing (macOS Seatbelt, Linux bubblewrap+seccomp) with a formal approval policy system. The academic literature contributes a parallel insight: SWE-agent showed that *how* the agent interacts with its tools (the Agent-Computer Interface) matters as much as the model itself, while Agentless demonstrated that simpler pipelines can match complex harnesses at a fraction of the cost.\n\nThree architectural patterns dominate: (1) **the ReAct loop** — reason, act, observe, repeat — is universal across all systems; (2) **context engineering** — compaction, caching, hierarchical instruction files — is the primary scaling bottleneck; (3) **multi-agent coordination** — from MetaGPT's SOP-driven assembly lines to Claude Code's agent teams — is the frontier, with no consensus on the right abstraction.",
-    "key_themes": ["agent-harness", "react-loop", "tool-use", "sandboxing", "multi-agent", "context-engineering", "coding-agents", "agent-computer-interface"]
+    "key_themes": [
+      "agent-harness",
+      "react-loop",
+      "tool-use",
+      "sandboxing",
+      "multi-agent",
+      "context-engineering",
+      "coding-agents",
+      "agent-computer-interface"
+    ]
   },
   "researcher_notes": "**The harness is the product, not the model.** This is the single most important takeaway. OpenClaw, Claude Code, and Codex all use frontier LLMs as their reasoning engine, but the engineering that makes them useful — tool execution, permission enforcement, context management, sandbox isolation — lives entirely in the harness. The model proposes; the harness disposes. When OpenAI published 'Unrolling the Codex agent loop,' they explicitly separated 'the model' from 'the harness' as two distinct architectural components. When Anthropic's Claude Code source was leaked in March 2026, the 59.8MB codebase revealed a 46,000-line QueryEngine.ts orchestration layer — the model API call is a single function within it.\n\n**Context engineering is the real bottleneck, not model capability.** Every harness has elaborate machinery for managing the context window: Claude Code has five fallback compaction strategies (time-based clearing, conversation summarization, session memory extraction, full history summarization, oldest-message truncation). Codex uses prompt caching to avoid quadratic data transfer costs and an encrypted compaction endpoint for unlimited conversation length. OpenClaw's 'Guard Context' step dynamically summarizes or truncates. The academic papers largely ignore this problem because they evaluate on single-turn benchmarks, but production harnesses spend more engineering effort on context management than on tool execution.\n\n**The security story is far from settled.** OpenClaw's 190 security advisories in February 2026 were a wake-up call, but the underlying problem is fundamental: an agent harness gives an LLM access to a shell, a filesystem, and network resources. Every tool is a potential attack vector. The response has been layered defense: Codex uses OS-level sandboxing (Seatbelt on macOS, bubblewrap+seccomp on Linux) with a formal approval policy system. Claude Code uses a permission model where a second LLM call evaluates whether the user would approve each action. OpenClaw relies on community-built wrappers (IronClaw for WASM isolation, NemoClaw for kernel sandboxing). None of these are provably secure — the field is in the 'defense in depth' phase.\n\n**Multi-agent is the frontier, but the abstractions are immature.** MetaGPT showed that SOP-driven role assignment works for structured workflows. AutoGen proved that conversational multi-agent systems can solve problems single agents cannot. But production harnesses are still experimenting: Claude Code's agent teams use file-based mailboxes and shared task lists with file locking — fundamentally a distributed systems problem being solved with filesystem primitives. Codex's subagent model is simpler (fan-out/fan-in with depth limits), trading coordination flexibility for reliability. The academic community hasn't converged on a theory of multi-agent coordination for coding tasks.\n\n**Agentless is the important counterpoint.** While the industry races toward more complex harnesses, Xia et al.'s Agentless paper showed that a three-phase pipeline (localize → generate patch → filter with tests) achieves competitive results at $0.70/task with no agent loop at all. This is a healthy reminder that complexity must earn its keep. The best harness for a given task might be no harness at all.",
   "sections": [
@@ -22,13 +31,34 @@
           "id": "react",
           "name": "ReAct",
           "paper_title": "ReAct: Synergizing Reasoning and Acting in Language Models",
-          "authors": ["Shunyu Yao", "Jeffrey Zhao", "Dian Yu", "Nan Du", "Izhak Shafran", "Karthik Narasimhan", "Yuan Cao"],
-          "affiliations": ["Princeton University", "Google Research"],
+          "authors": [
+            "Shunyu Yao",
+            "Jeffrey Zhao",
+            "Dian Yu",
+            "Nan Du",
+            "Izhak Shafran",
+            "Karthik Narasimhan",
+            "Yuan Cao"
+          ],
+          "affiliations": [
+            "Princeton University",
+            "Google Research"
+          ],
           "venue": "ICLR 2023",
           "core_idea": "Interleaves reasoning traces with actions in a single LLM output loop. The model thinks, acts, observes the result, and repeats — grounding generation in external observations to reduce hallucination.",
           "key_innovation": "Formalized the think-act-observe paradigm that now underlies every production agent harness, showing that combining reasoning and acting outperforms either alone",
-          "limitations": ["Original evaluation on relatively simple environments (web search, text games)", "No mechanism for managing long context or multi-file codebases", "Single-agent only — no coordination protocol"],
-          "tags": ["react", "agent-loop", "reasoning", "tool-use", "foundational"],
+          "limitations": [
+            "Original evaluation on relatively simple environments (web search, text games)",
+            "No mechanism for managing long context or multi-file codebases",
+            "Single-agent only — no coordination protocol"
+          ],
+          "tags": [
+            "react",
+            "agent-loop",
+            "reasoning",
+            "tool-use",
+            "foundational"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2210.03629",
             "github": "https://github.com/ysymyth/ReAct"
@@ -38,13 +68,35 @@
           "id": "codeact",
           "name": "CodeAct",
           "paper_title": "Executable Code Actions Elicit Better LLM Agents",
-          "authors": ["Xingyao Wang", "Yangyi Chen", "Lifan Yuan", "Yizhe Zhang", "Yunzhu Li", "Hao Peng", "Heng Ji"],
-          "affiliations": ["University of Illinois Urbana-Champaign", "UC San Diego", "MIT"],
+          "authors": [
+            "Xingyao Wang",
+            "Yangyi Chen",
+            "Lifan Yuan",
+            "Yizhe Zhang",
+            "Yunzhu Li",
+            "Hao Peng",
+            "Heng Ji"
+          ],
+          "affiliations": [
+            "University of Illinois Urbana-Champaign",
+            "UC San Diego",
+            "MIT"
+          ],
           "venue": "ICML 2024",
           "core_idea": "Replaces JSON tool calls with executable Python code as the sole action type. The agent writes Python that runs in a persistent interpreter; stdout/stderr becomes the next observation.",
           "key_innovation": "Code-based actions enable dynamic logic, loops, and self-debugging that JSON schemas cannot express — up to 20% improvement over JSON-based actions on agent benchmarks",
-          "limitations": ["Requires a persistent interpreter with security implications", "Python-centric — less natural for non-Python workflows", "Arbitrary code execution increases attack surface"],
-          "tags": ["code-actions", "agent-loop", "tool-use", "python", "self-debugging"],
+          "limitations": [
+            "Requires a persistent interpreter with security implications",
+            "Python-centric — less natural for non-Python workflows",
+            "Arbitrary code execution increases attack surface"
+          ],
+          "tags": [
+            "code-actions",
+            "agent-loop",
+            "tool-use",
+            "python",
+            "self-debugging"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2402.01030",
             "github": "https://github.com/xingyaoww/code-act"
@@ -52,10 +104,28 @@
         }
       ],
       "comparison_table": {
-        "headers": ["System", "Action Space", "Reasoning", "Environment", "Key Contribution"],
+        "headers": [
+          "System",
+          "Action Space",
+          "Reasoning",
+          "Environment",
+          "Key Contribution"
+        ],
         "rows": [
-          ["ReAct (2023)", "Text-based tool calls", "Interleaved thought traces", "Web search, text games", "Formalized the agent loop paradigm"],
-          ["CodeAct (2024)", "Executable Python code", "Interleaved thought traces", "Persistent Python interpreter", "Showed code > JSON for agent actions"]
+          [
+            "ReAct (2023)",
+            "Text-based tool calls",
+            "Interleaved thought traces",
+            "Web search, text games",
+            "Formalized the agent loop paradigm"
+          ],
+          [
+            "CodeAct (2024)",
+            "Executable Python code",
+            "Interleaved thought traces",
+            "Persistent Python interpreter",
+            "Showed code > JSON for agent actions"
+          ]
         ]
       }
     },
@@ -68,13 +138,32 @@
           "id": "swe-bench",
           "name": "SWE-bench",
           "paper_title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
-          "authors": ["Carlos E. Jimenez", "John Yang", "Alexander Wettig", "Shunyu Yao", "Kexin Pei", "Ofir Press", "Karthik Narasimhan"],
-          "affiliations": ["Princeton University"],
+          "authors": [
+            "Carlos E. Jimenez",
+            "John Yang",
+            "Alexander Wettig",
+            "Shunyu Yao",
+            "Kexin Pei",
+            "Ofir Press",
+            "Karthik Narasimhan"
+          ],
+          "affiliations": [
+            "Princeton University"
+          ],
           "venue": "ICLR 2024",
           "core_idea": "A benchmark of 2,294 real GitHub issues from 12 popular Python repositories. The agent receives a codebase and issue description and must produce a patch passing the repository's test suite.",
           "key_innovation": "Established the gold-standard benchmark for end-to-end coding agent evaluation using real-world issues and tests, revealing that GPT-4 solved fewer than 2% at release",
-          "limitations": ["Python-only (extensions to other languages came later)", "Test suites vary in quality across repositories", "Pass@1 evaluation may undervalue agents that generate correct patches in multiple attempts"],
-          "tags": ["benchmark", "software-engineering", "github-issues", "evaluation"],
+          "limitations": [
+            "Python-only (extensions to other languages came later)",
+            "Test suites vary in quality across repositories",
+            "Pass@1 evaluation may undervalue agents that generate correct patches in multiple attempts"
+          ],
+          "tags": [
+            "benchmark",
+            "software-engineering",
+            "github-issues",
+            "evaluation"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2310.06770",
             "github": "https://github.com/princeton-nlp/SWE-bench"
@@ -84,13 +173,32 @@
           "id": "swe-agent",
           "name": "SWE-agent",
           "paper_title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
-          "authors": ["John Yang", "Carlos E. Jimenez", "Alexander Wettig", "Kilian Lieret", "Shunyu Yao", "Karthik Narasimhan", "Ofir Press"],
-          "affiliations": ["Princeton University"],
+          "authors": [
+            "John Yang",
+            "Carlos E. Jimenez",
+            "Alexander Wettig",
+            "Kilian Lieret",
+            "Shunyu Yao",
+            "Karthik Narasimhan",
+            "Ofir Press"
+          ],
+          "affiliations": [
+            "Princeton University"
+          ],
           "venue": "NeurIPS 2024",
           "core_idea": "Argues that the Agent-Computer Interface (ACI) — the set of tools and interaction patterns — is as important as the model. Designs custom file viewing, searching, and editing commands optimized for LLM consumption.",
           "key_innovation": "Demonstrated that ACI design matters more than model size for coding agent performance; custom tools with structured error feedback dramatically improve agent effectiveness",
-          "limitations": ["Custom ACI requires significant engineering effort per domain", "Evaluation focused on Python repositories", "Single-agent architecture — no built-in multi-file coordination"],
-          "tags": ["agent-computer-interface", "coding-agent", "tool-design", "software-engineering"],
+          "limitations": [
+            "Custom ACI requires significant engineering effort per domain",
+            "Evaluation focused on Python repositories",
+            "Single-agent architecture — no built-in multi-file coordination"
+          ],
+          "tags": [
+            "agent-computer-interface",
+            "coding-agent",
+            "tool-design",
+            "software-engineering"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2405.15793",
             "github": "https://github.com/princeton-nlp/SWE-agent"
@@ -100,13 +208,30 @@
           "id": "agentless",
           "name": "Agentless",
           "paper_title": "Agentless: Demystifying LLM-based Software Engineering Agents",
-          "authors": ["Chunqiu Steven Xia", "Yinlin Deng", "Soren Dunn", "Lingming Zhang"],
-          "affiliations": ["University of Illinois Urbana-Champaign"],
+          "authors": [
+            "Chunqiu Steven Xia",
+            "Yinlin Deng",
+            "Soren Dunn",
+            "Lingming Zhang"
+          ],
+          "affiliations": [
+            "University of Illinois Urbana-Champaign"
+          ],
           "venue": "arXiv 2024",
           "core_idea": "A three-phase pipeline — hierarchical localization, patch generation, test-based filtering — that solves coding tasks without an agent loop. No tool use, no iterative reasoning, no agent state.",
           "key_innovation": "Showed that a non-agentic pipeline achieves 32% on SWE-bench Lite at $0.70/task, competitive with far more complex agent systems — forcing the field to justify harness complexity",
-          "limitations": ["No iterative debugging — if the initial patch is wrong, there is no recovery", "Localization accuracy is a hard ceiling on overall performance", "Cannot handle tasks requiring multi-step environmental interaction"],
-          "tags": ["pipeline", "non-agentic", "cost-efficient", "localization", "counter-narrative"],
+          "limitations": [
+            "No iterative debugging — if the initial patch is wrong, there is no recovery",
+            "Localization accuracy is a hard ceiling on overall performance",
+            "Cannot handle tasks requiring multi-step environmental interaction"
+          ],
+          "tags": [
+            "pipeline",
+            "non-agentic",
+            "cost-efficient",
+            "localization",
+            "counter-narrative"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2407.01489",
             "github": "https://github.com/OpenAutoCoder/Agentless"
@@ -116,13 +241,36 @@
           "id": "openhands",
           "name": "OpenHands",
           "paper_title": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
-          "authors": ["Xingyao Wang", "Boxuan Li", "Yufan Song", "Frank F. Xu", "Xiangru Tang", "Mingchen Zhuge", "Jiayi Pan", "Graham Neubig"],
-          "affiliations": ["University of Illinois Urbana-Champaign", "All Hands AI", "Carnegie Mellon University"],
+          "authors": [
+            "Xingyao Wang",
+            "Boxuan Li",
+            "Yufan Song",
+            "Frank F. Xu",
+            "Xiangru Tang",
+            "Mingchen Zhuge",
+            "Jiayi Pan",
+            "Graham Neubig"
+          ],
+          "affiliations": [
+            "University of Illinois Urbana-Champaign",
+            "All Hands AI",
+            "Carnegie Mellon University"
+          ],
           "venue": "ICLR 2025",
           "core_idea": "A comprehensive open-source platform where agents run inside sandboxed Docker containers with access to shell, file editing, web browsing, and APIs. Uses CodeAct as the action layer and supports 15 benchmarks.",
           "key_innovation": "Unified platform covering the full agent lifecycle — sandboxed execution, event-stream state management, multi-turn interactions, and benchmark evaluation — achieving #1 on SWE-bench Full at publication",
-          "limitations": ["Docker dependency adds setup complexity", "Event-stream architecture can be memory-intensive for long sessions", "Community-driven — API stability varies"],
-          "tags": ["open-source", "coding-agent", "docker-sandbox", "codeact", "platform"],
+          "limitations": [
+            "Docker dependency adds setup complexity",
+            "Event-stream architecture can be memory-intensive for long sessions",
+            "Community-driven — API stability varies"
+          ],
+          "tags": [
+            "open-source",
+            "coding-agent",
+            "docker-sandbox",
+            "codeact",
+            "platform"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2407.16741",
             "github": "https://github.com/All-Hands-AI/OpenHands"
@@ -130,12 +278,42 @@
         }
       ],
       "comparison_table": {
-        "headers": ["System", "Type", "SWE-bench Score", "Key Insight", "Cost/Task"],
+        "headers": [
+          "System",
+          "Type",
+          "SWE-bench Score",
+          "Key Insight",
+          "Cost/Task"
+        ],
         "rows": [
-          ["SWE-bench", "Benchmark", "GPT-4: <2% at release", "Real-world issues are far harder than synthetic benchmarks", "N/A"],
-          ["SWE-agent", "Agent + ACI", "12.5% Full (2024 SOTA)", "Tool design matters more than model size", "~$2-4"],
-          ["Agentless", "Pipeline (no agent loop)", "32% Lite", "Simple pipelines can match complex agents", "$0.70"],
-          ["OpenHands", "Open platform", "29% Full, 53% Verified", "CodeAct + sandbox + good ACI = strong open-source agent", "~$1-3"]
+          [
+            "SWE-bench",
+            "Benchmark",
+            "GPT-4: <2% at release",
+            "Real-world issues are far harder than synthetic benchmarks",
+            "N/A"
+          ],
+          [
+            "SWE-agent",
+            "Agent + ACI",
+            "12.5% Full (2024 SOTA)",
+            "Tool design matters more than model size",
+            "~$2-4"
+          ],
+          [
+            "Agentless",
+            "Pipeline (no agent loop)",
+            "32% Lite",
+            "Simple pipelines can match complex agents",
+            "$0.70"
+          ],
+          [
+            "OpenHands",
+            "Open platform",
+            "29% Full, 53% Verified",
+            "CodeAct + sandbox + good ACI = strong open-source agent",
+            "~$1-3"
+          ]
         ]
       }
     },
@@ -148,13 +326,28 @@
           "id": "openclaw",
           "name": "OpenClaw",
           "paper_title": "N/A — open-source project, no published paper",
-          "authors": ["Peter Steinberger"],
-          "affiliations": ["Independent (now OpenAI)"],
+          "authors": [
+            "Peter Steinberger"
+          ],
+          "affiliations": [
+            "Independent (now OpenAI)"
+          ],
           "venue": "Open-source (MIT license), released November 2025",
           "core_idea": "A persistent daemon agent framework with five components: Gateway (routing), Brain (ReAct loop), Memory (Markdown files), Skills (plugin system), and Heartbeat (autonomous scheduling). Runs as a background process reacting to messages and scheduled triggers.",
           "key_innovation": "First major framework to treat the agent as a persistent OS process with built-in heartbeat scheduling and multi-channel message routing — other frameworks require external infrastructure for scheduling and message delivery",
-          "limitations": ["Flat permission model led to 190 security advisories in one month", "Markdown-based memory lacks retrieval sophistication (no vector search)", "Serial lane queue limits throughput", "Multi-agent coordination requires third-party wrappers"],
-          "tags": ["agent-harness", "persistent-daemon", "heartbeat", "multi-channel", "open-source"],
+          "limitations": [
+            "Flat permission model led to 190 security advisories in one month",
+            "Markdown-based memory lacks retrieval sophistication (no vector search)",
+            "Serial lane queue limits throughput",
+            "Multi-agent coordination requires third-party wrappers"
+          ],
+          "tags": [
+            "agent-harness",
+            "persistent-daemon",
+            "heartbeat",
+            "multi-channel",
+            "open-source"
+          ],
           "sources": {
             "github": "https://github.com/openclaw/openclaw"
           }
@@ -163,24 +356,65 @@
           "id": "ironclaw",
           "name": "IronClaw",
           "paper_title": "N/A — open-source project by NEAR AI",
-          "authors": ["NEAR AI team"],
-          "affiliations": ["NEAR AI"],
+          "authors": [
+            "NEAR AI team"
+          ],
+          "affiliations": [
+            "NEAR AI"
+          ],
           "venue": "Open-source, 2026",
           "core_idea": "OpenClaw-inspired agent framework rewritten in Rust with all tools running in WASM containers using capability-based permissions. Zero telemetry by design.",
           "key_innovation": "WASM-based tool isolation with capability-based permissions — each tool runs in its own sandbox with explicitly granted capabilities, preventing the lateral movement attacks that plagued OpenClaw",
-          "limitations": ["Smaller ecosystem than OpenClaw (fewer skills, less community support)", "WASM sandbox adds overhead for I/O-heavy tools", "Newer and less battle-tested"],
-          "tags": ["rust", "wasm", "capability-based-security", "openclaw-derivative"],
+          "limitations": [
+            "Smaller ecosystem than OpenClaw (fewer skills, less community support)",
+            "WASM sandbox adds overhead for I/O-heavy tools",
+            "Newer and less battle-tested"
+          ],
+          "tags": [
+            "rust",
+            "wasm",
+            "capability-based-security",
+            "openclaw-derivative"
+          ],
           "sources": {
             "github": "https://github.com/nearai/ironclaw"
           }
         }
       ],
       "comparison_table": {
-        "headers": ["System", "Language", "Sandboxing", "Scheduling", "Multi-Agent", "Community Skills"],
+        "headers": [
+          "System",
+          "Language",
+          "Sandboxing",
+          "Scheduling",
+          "Multi-Agent",
+          "Community Skills"
+        ],
         "rows": [
-          ["OpenClaw", "Node.js", "Flat permissions (third-party wrappers available)", "Built-in Heartbeat (30 min default)", "Channel-to-agent bindings; no peer-to-peer", "5,700+"],
-          ["IronClaw", "Rust", "WASM containers with capability-based permissions", "Inherited from OpenClaw pattern", "Similar to OpenClaw", "Growing"],
-          ["NemoClaw", "Python wrapper", "Kernel-level (OS-level, not container)", "Wraps OpenClaw's Heartbeat", "Wraps OpenClaw", "OpenClaw-compatible"]
+          [
+            "OpenClaw",
+            "Node.js",
+            "Flat permissions (third-party wrappers available)",
+            "Built-in Heartbeat (30 min default)",
+            "Channel-to-agent bindings; no peer-to-peer",
+            "5,700+"
+          ],
+          [
+            "IronClaw",
+            "Rust",
+            "WASM containers with capability-based permissions",
+            "Inherited from OpenClaw pattern",
+            "Similar to OpenClaw",
+            "Growing"
+          ],
+          [
+            "NemoClaw",
+            "Python wrapper",
+            "Kernel-level (OS-level, not container)",
+            "Wraps OpenClaw's Heartbeat",
+            "Wraps OpenClaw",
+            "OpenClaw-compatible"
+          ]
         ]
       }
     },
@@ -193,13 +427,27 @@
           "id": "claude-code",
           "name": "Claude Code",
           "paper_title": "N/A — commercial product by Anthropic",
-          "authors": ["Anthropic"],
-          "affiliations": ["Anthropic"],
+          "authors": [
+            "Anthropic"
+          ],
+          "affiliations": [
+            "Anthropic"
+          ],
           "venue": "Commercial product, GA May 2025; open-source CLI (MIT license)",
           "core_idea": "An agentic coding harness with ~40 tools, a four-tier permission model (including a separate LLM call for auto-approval evaluation), layered context compaction, and multi-agent coordination via subagents and agent teams.",
           "key_innovation": "Permission model where a second LLM call evaluates each proposed action independently of the generating model; hooks system enabling deterministic organizational policy enforcement; three subagent execution models (fork, teammate, worktree)",
-          "limitations": ["No formally published wire protocol (unlike Codex's JSON-RPC spec)", "Agent teams are experimental with known limitations (no session resumption, no nested teams)", "Auto mode permission evaluation is non-deterministic"],
-          "tags": ["agent-harness", "permission-model", "multi-agent", "hooks", "context-engineering"],
+          "limitations": [
+            "No formally published wire protocol (unlike Codex's JSON-RPC spec)",
+            "Agent teams are experimental with known limitations (no session resumption, no nested teams)",
+            "Auto mode permission evaluation is non-deterministic"
+          ],
+          "tags": [
+            "agent-harness",
+            "permission-model",
+            "multi-agent",
+            "hooks",
+            "context-engineering"
+          ],
           "sources": {
             "github": "https://github.com/anthropics/claude-code"
           }
@@ -208,25 +456,67 @@
           "id": "claude-cowork",
           "name": "Claude Code Cowork",
           "paper_title": "N/A — commercial product by Anthropic",
-          "authors": ["Anthropic"],
-          "affiliations": ["Anthropic"],
+          "authors": [
+            "Anthropic"
+          ],
+          "affiliations": [
+            "Anthropic"
+          ],
           "venue": "Commercial product, shipped January 2026",
           "core_idea": "Brings the Claude Code harness architecture into Claude Desktop, running inside a sandboxed Linux VM with multi-layer egress control. Extends beyond coding to knowledge work: spreadsheets, presentations, research, reports.",
           "key_innovation": "VM-level isolation with gVisor syscall blocking, per-boot ephemeral CA certificates for HTTPS inspection, and host browser control via native messaging extension — stronger isolation than CLI-based harnesses",
-          "limitations": ["Fixed VM resources (4 CPU cores, 4GB RAM)", "Ephemeral storage — no persistence across sessions", "Host browser control operates outside VM egress controls, creating a split security perimeter"],
-          "tags": ["vm-isolation", "desktop-agent", "knowledge-work", "gvisor", "sandboxing"],
+          "limitations": [
+            "Fixed VM resources (4 CPU cores, 4GB RAM)",
+            "Ephemeral storage — no persistence across sessions",
+            "Host browser control operates outside VM egress controls, creating a split security perimeter"
+          ],
+          "tags": [
+            "vm-isolation",
+            "desktop-agent",
+            "knowledge-work",
+            "gvisor",
+            "sandboxing"
+          ],
           "sources": {}
         }
       ],
       "comparison_table": {
-        "headers": ["Feature", "Claude Code CLI", "Claude Code Cowork"],
+        "headers": [
+          "Feature",
+          "Claude Code CLI",
+          "Claude Code Cowork"
+        ],
         "rows": [
-          ["Execution Environment", "Host OS with permission gates", "Sandboxed Ubuntu 22.04 VM"],
-          ["Isolation", "Per-tool permission model", "VM boundary + gVisor + MITM proxy + domain allowlist"],
-          ["Multi-Agent", "Subagents + Agent Teams", "Parent-child orchestration"],
-          ["Browser Access", "Via MCP tools", "Host Chrome via native messaging extension"],
-          ["Persistence", "Session files on local disk", "Ephemeral (formatted fresh each boot)"],
-          ["Target Use Case", "Software engineering in terminal", "General knowledge work in desktop app"]
+          [
+            "Execution Environment",
+            "Host OS with permission gates",
+            "Sandboxed Ubuntu 22.04 VM"
+          ],
+          [
+            "Isolation",
+            "Per-tool permission model",
+            "VM boundary + gVisor + MITM proxy + domain allowlist"
+          ],
+          [
+            "Multi-Agent",
+            "Subagents + Agent Teams",
+            "Parent-child orchestration"
+          ],
+          [
+            "Browser Access",
+            "Via MCP tools",
+            "Host Chrome via native messaging extension"
+          ],
+          [
+            "Persistence",
+            "Session files on local disk",
+            "Ephemeral (formatted fresh each boot)"
+          ],
+          [
+            "Target Use Case",
+            "Software engineering in terminal",
+            "General knowledge work in desktop app"
+          ]
         ]
       }
     },
@@ -239,27 +529,78 @@
           "id": "codex",
           "name": "Codex (2025)",
           "paper_title": "N/A — commercial product by OpenAI",
-          "authors": ["OpenAI"],
-          "affiliations": ["OpenAI"],
+          "authors": [
+            "OpenAI"
+          ],
+          "affiliations": [
+            "OpenAI"
+          ],
           "venue": "Commercial product, launched May 2025; open-source CLI (MIT license)",
           "core_idea": "A multi-surface coding agent with a formal JSON-RPC App Server protocol, two-layer security (sandbox mode + approval policy with OS-level enforcement), and a clear model/harness architectural separation.",
           "key_innovation": "Formal JSON-RPC protocol with versioned schemas enabling multi-language client implementations; OS-level sandboxing (Seatbelt, bubblewrap+seccomp); encrypted conversation compaction for unlimited session length; composability as both agent and MCP server",
-          "limitations": ["No published training paper for the codex-1 RL process", "Rapid model naming changes (codex-1 → gpt-5.x-codex series)", "Rust rewrite still catching up to TypeScript feature parity", "App Server protocol is not an open standard (versioned per binary release)"],
-          "tags": ["agent-harness", "json-rpc", "sandboxing", "app-server", "rust", "mcp-server"],
+          "limitations": [
+            "No published training paper for the codex-1 RL process",
+            "Rapid model naming changes (codex-1 → gpt-5.x-codex series)",
+            "Rust rewrite still catching up to TypeScript feature parity",
+            "App Server protocol is not an open standard (versioned per binary release)"
+          ],
+          "tags": [
+            "agent-harness",
+            "json-rpc",
+            "sandboxing",
+            "app-server",
+            "rust",
+            "mcp-server"
+          ],
           "sources": {
             "github": "https://github.com/openai/codex"
           }
         }
       ],
       "comparison_table": {
-        "headers": ["Dimension", "Codex", "Claude Code", "OpenClaw"],
+        "headers": [
+          "Dimension",
+          "Codex",
+          "Claude Code",
+          "OpenClaw"
+        ],
         "rows": [
-          ["Wire Protocol", "JSON-RPC 2.0 (JSONL/stdio, WebSocket)", "No published protocol", "Internal (undocumented)"],
-          ["Sandbox Enforcement", "OS-level: Seatbelt (macOS), bubblewrap+seccomp (Linux)", "Permission model + optional Auto mode (2nd LLM call)", "Flat permissions (third-party wrappers)"],
-          ["Context Compaction", "Encrypted compaction endpoint + prompt caching", "5-stage fallback (time clearing → summarization → memory → full summary → truncation)", "Guard Context step (summarize/truncate)"],
-          ["Subagent Model", "Fan-out/fan-in, max 6 threads, depth 1", "Fork/Teammate/Worktree, no recursion", "Channel-to-agent bindings (no native subagents)"],
-          ["Open Source", "MIT (CLI)", "MIT (CLI)", "MIT (full framework)"],
-          ["SWE-bench Verified", "72.1% (pass@1)", "80.9%", "N/A (not a coding-focused agent)"]
+          [
+            "Wire Protocol",
+            "JSON-RPC 2.0 (JSONL/stdio, WebSocket)",
+            "No published protocol",
+            "Internal (undocumented)"
+          ],
+          [
+            "Sandbox Enforcement",
+            "OS-level: Seatbelt (macOS), bubblewrap+seccomp (Linux)",
+            "Permission model + optional Auto mode (2nd LLM call)",
+            "Flat permissions (third-party wrappers)"
+          ],
+          [
+            "Context Compaction",
+            "Encrypted compaction endpoint + prompt caching",
+            "5-stage fallback (time clearing → summarization → memory → full summary → truncation)",
+            "Guard Context step (summarize/truncate)"
+          ],
+          [
+            "Subagent Model",
+            "Fan-out/fan-in, max 6 threads, depth 1",
+            "Fork/Teammate/Worktree, no recursion",
+            "Channel-to-agent bindings (no native subagents)"
+          ],
+          [
+            "Open Source",
+            "MIT (CLI)",
+            "MIT (CLI)",
+            "MIT (full framework)"
+          ],
+          [
+            "SWE-bench Verified",
+            "72.1% (pass@1)",
+            "80.9%",
+            "N/A (not a coding-focused agent)"
+          ]
         ]
       }
     },
@@ -272,13 +613,38 @@
           "id": "metagpt",
           "name": "MetaGPT",
           "paper_title": "MetaGPT: Meta Programming for a Multi-Agent Collaborative Framework",
-          "authors": ["Sirui Hong", "Mingchen Zhuge", "Jiaqi Chen", "Xiawu Zheng", "Yuheng Cheng", "Ceyao Zhang", "Jinlin Wang", "Zhengying Chen", "Steven Zheng", "Juergen Schmidhuber"],
-          "affiliations": ["DeepWisdom", "KAUST", "Xiamen University"],
+          "authors": [
+            "Sirui Hong",
+            "Mingchen Zhuge",
+            "Jiaqi Chen",
+            "Xiawu Zheng",
+            "Yuheng Cheng",
+            "Ceyao Zhang",
+            "Jinlin Wang",
+            "Zhengying Chen",
+            "Steven Zheng",
+            "Juergen Schmidhuber"
+          ],
+          "affiliations": [
+            "DeepWisdom",
+            "KAUST",
+            "Xiamen University"
+          ],
           "venue": "ICLR 2024 (Oral)",
           "core_idea": "Encodes human Standard Operating Procedures into a multi-agent pipeline with distinct roles (PM, Architect, Engineer, QA) passing structured artifacts. An assembly-line model where each agent's output is a typed artifact consumed by the next.",
           "key_innovation": "SOP-driven coordination with structured artifact passing reduces incoherent outputs compared to free-form multi-agent chat; ranked #1 in LLM Agent category at ICLR 2024",
-          "limitations": ["Rigid pipeline — not suitable for tasks requiring dynamic role reassignment", "Each role requires careful prompt engineering", "Artifact schemas must be defined upfront"],
-          "tags": ["multi-agent", "sop-driven", "role-based", "structured-artifacts", "software-engineering"],
+          "limitations": [
+            "Rigid pipeline — not suitable for tasks requiring dynamic role reassignment",
+            "Each role requires careful prompt engineering",
+            "Artifact schemas must be defined upfront"
+          ],
+          "tags": [
+            "multi-agent",
+            "sop-driven",
+            "role-based",
+            "structured-artifacts",
+            "software-engineering"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2308.00352",
             "github": "https://github.com/geekan/MetaGPT"
@@ -288,13 +654,40 @@
           "id": "autogen",
           "name": "AutoGen",
           "paper_title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
-          "authors": ["Qingyun Wu", "Gagan Bansal", "Jieyu Zhang", "Yiran Wu", "Beibin Li", "Erkang Zhu", "Li Jiang", "Xiaoyun Zhang", "Shaokun Zhang", "Jiale Liu", "Ahmed Hassan Awadallah", "Ryen White", "Doug Burger", "Chi Wang"],
-          "affiliations": ["Microsoft Research", "Penn State University"],
+          "authors": [
+            "Qingyun Wu",
+            "Gagan Bansal",
+            "Jieyu Zhang",
+            "Yiran Wu",
+            "Beibin Li",
+            "Erkang Zhu",
+            "Li Jiang",
+            "Xiaoyun Zhang",
+            "Shaokun Zhang",
+            "Jiale Liu",
+            "Ahmed Hassan Awadallah",
+            "Ryen White",
+            "Doug Burger",
+            "Chi Wang"
+          ],
+          "affiliations": [
+            "Microsoft Research",
+            "Penn State University"
+          ],
           "venue": "COLM 2024",
           "core_idea": "A framework where customizable 'conversable agents' pass messages in programmable conversation patterns (sequential, group chat, nested). Each agent can be backed by an LLM, human, tool executor, or combination.",
           "key_innovation": "Decoupled agent role from communication topology — the same framework handles math, coding, QA, and human-in-the-loop workflows via different conversation patterns",
-          "limitations": ["Conversational coordination is less predictable than pipeline-based systems", "Group chat can produce unfocused discussion", "Token costs scale with number of agents and conversation length"],
-          "tags": ["multi-agent", "conversable-agents", "conversation-patterns", "human-in-the-loop"],
+          "limitations": [
+            "Conversational coordination is less predictable than pipeline-based systems",
+            "Group chat can produce unfocused discussion",
+            "Token costs scale with number of agents and conversation length"
+          ],
+          "tags": [
+            "multi-agent",
+            "conversable-agents",
+            "conversation-patterns",
+            "human-in-the-loop"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2308.08155",
             "github": "https://github.com/microsoft/autogen"
@@ -304,13 +697,36 @@
           "id": "toolllm",
           "name": "ToolLLM",
           "paper_title": "ToolLLM: Facilitating Large Language Models to Master 16,000+ Real-World APIs",
-          "authors": ["Yujia Qin", "Shengding Hu", "Yankai Lin", "Weize Chen", "Ning Ding", "Ganqu Cui", "Zheni Zeng", "Zhiyuan Liu", "Maosong Sun"],
-          "affiliations": ["Tsinghua University", "OpenBMB"],
+          "authors": [
+            "Yujia Qin",
+            "Shengding Hu",
+            "Yankai Lin",
+            "Weize Chen",
+            "Ning Ding",
+            "Ganqu Cui",
+            "Zheni Zeng",
+            "Zhiyuan Liu",
+            "Maosong Sun"
+          ],
+          "affiliations": [
+            "Tsinghua University",
+            "OpenBMB"
+          ],
           "venue": "ICLR 2024 (Spotlight)",
           "core_idea": "A complete tool-use framework with ToolBench (16,464 real APIs), ToolLLaMA (fine-tuned model), and a Depth-First Search Decision Tree (DFSDT) planner for multi-step tool planning with backtracking.",
           "key_innovation": "DFSDT planner — first systematic tree-search approach to tool-use that handles API failures via backtracking rather than linear retry; ToolLLaMA matches ChatGPT on tool use while being open-source",
-          "limitations": ["API instability — real-world APIs change and break over time", "DFSDT search can be slow for deeply nested tool sequences", "Evaluation assumes correct API documentation is available"],
-          "tags": ["tool-use", "api-planning", "tree-search", "backtracking", "fine-tuning"],
+          "limitations": [
+            "API instability — real-world APIs change and break over time",
+            "DFSDT search can be slow for deeply nested tool sequences",
+            "Evaluation assumes correct API documentation is available"
+          ],
+          "tags": [
+            "tool-use",
+            "api-planning",
+            "tree-search",
+            "backtracking",
+            "fine-tuning"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2307.16789",
             "github": "https://github.com/OpenBMB/ToolBench"
@@ -320,43 +736,126 @@
           "id": "opendev-harness",
           "name": "OpenDev Harness Paper",
           "paper_title": "Building Effective AI Coding Agents for the Terminal: Scaffolding, Harness, Context Engineering, and Lessons Learned",
-          "authors": ["Nghi D. Q. Bui"],
-          "affiliations": ["OpenDev (independent)"],
+          "authors": [
+            "Nghi D. Q. Bui"
+          ],
+          "affiliations": [
+            "OpenDev (independent)"
+          ],
           "venue": "arXiv, March 2026",
           "core_idea": "Distinguishes scaffolding (static assembly: system prompt, tool schemas, subagent registry) from harness (runtime orchestration: tool dispatch, context compaction, safety enforcement). Describes a six-phase ReAct loop implementation.",
           "key_innovation": "Provides the clearest published taxonomy distinguishing scaffolding from harness — terminology now appearing in follow-on work; documents practical context engineering techniques absent from academic papers",
-          "limitations": ["Practitioner report rather than peer-reviewed paper", "Single-system focus (OpenDev)", "No formal evaluation on standard benchmarks"],
-          "tags": ["taxonomy", "scaffolding", "harness", "context-engineering", "practitioner-report"],
+          "limitations": [
+            "Practitioner report rather than peer-reviewed paper",
+            "Single-system focus (OpenDev)",
+            "No formal evaluation on standard benchmarks"
+          ],
+          "tags": [
+            "taxonomy",
+            "scaffolding",
+            "harness",
+            "context-engineering",
+            "practitioner-report"
+          ],
           "sources": {
             "arxiv": "https://arxiv.org/abs/2603.05344"
           }
         }
       ],
       "comparison_table": {
-        "headers": ["System", "Coordination Model", "Agent Communication", "Best For"],
+        "headers": [
+          "System",
+          "Coordination Model",
+          "Agent Communication",
+          "Best For"
+        ],
         "rows": [
-          ["MetaGPT", "SOP pipeline with typed artifacts", "Structured artifact passing (PRD → design → code → tests)", "Well-defined workflows with clear role boundaries"],
-          ["AutoGen", "Conversable agents with programmable patterns", "Free-form message passing (sequential, group chat, nested)", "Flexible multi-agent tasks requiring dynamic interaction"],
-          ["ToolLLM", "Tree-search planner with backtracking", "Single agent with DFSDT planning over API sequences", "Complex multi-step API orchestration with failure recovery"],
-          ["Claude Code Teams", "Shared task list + file-based mailbox", "File-system primitives with file locking", "Parallel coding tasks with simple coordination"],
-          ["Codex Subagents", "Fan-out/fan-in with depth limits", "Result-only communication (no peer-to-peer)", "Focused subtasks with consolidated results"]
+          [
+            "MetaGPT",
+            "SOP pipeline with typed artifacts",
+            "Structured artifact passing (PRD → design → code → tests)",
+            "Well-defined workflows with clear role boundaries"
+          ],
+          [
+            "AutoGen",
+            "Conversable agents with programmable patterns",
+            "Free-form message passing (sequential, group chat, nested)",
+            "Flexible multi-agent tasks requiring dynamic interaction"
+          ],
+          [
+            "ToolLLM",
+            "Tree-search planner with backtracking",
+            "Single agent with DFSDT planning over API sequences",
+            "Complex multi-step API orchestration with failure recovery"
+          ],
+          [
+            "Claude Code Teams",
+            "Shared task list + file-based mailbox",
+            "File-system primitives with file locking",
+            "Parallel coding tasks with simple coordination"
+          ],
+          [
+            "Codex Subagents",
+            "Fan-out/fan-in with depth limits",
+            "Result-only communication (no peer-to-peer)",
+            "Focused subtasks with consolidated results"
+          ]
         ]
       }
     }
   ],
-  "cross_cutting_comparison": {
-    "headers": ["Dimension", "OpenClaw", "Claude Code", "Codex", "OpenHands", "SWE-agent"],
-    "rows": [
-      ["Primary Use Case", "General-purpose autonomous agent", "Software engineering", "Software engineering", "Software engineering", "Software engineering (research)"],
-      ["Architecture", "Persistent daemon (5 components)", "CLI with ~40 tools + QueryEngine", "Multi-surface App Server (JSON-RPC)", "Docker-sandboxed platform", "Custom ACI + agent loop"],
-      ["Agent Loop", "ReAct via Brain component", "Three-phase (gather → act → verify)", "Model/harness iterative loop", "CodeAct (executable Python)", "Custom ACI-based loop"],
-      ["Sandboxing", "Flat permissions (third-party wrappers)", "Permission model (4 modes) + optional 2nd LLM", "OS-level (Seatbelt, bubblewrap+seccomp)", "Docker containers", "Docker containers"],
-      ["Context Management", "Guard Context (summarize/truncate)", "5-stage fallback compaction", "Prompt caching + encrypted compaction", "Event-stream state", "Windowed file viewer"],
-      ["Multi-Agent", "Channel bindings (no native peer-to-peer)", "Subagents + Agent Teams (experimental)", "Subagents (fan-out/fan-in, max 6)", "Single agent", "Single agent"],
-      ["Open Source", "Yes (MIT, 247K stars)", "Yes (MIT)", "Yes (MIT, CLI)", "Yes (MIT)", "Yes (MIT)"],
-      ["Wire Protocol", "Internal", "None published", "JSON-RPC 2.0 (JSONL)", "Event stream", "Custom"],
-      ["SWE-bench Verified", "N/A", "80.9%", "72.1%", "53%", "12.5% Full (2024 SOTA)"],
-      ["Scheduling", "Built-in Heartbeat", "External", "External (GitHub Action)", "External", "External"]
-    ]
-  }
+  "cross_cutting_analysis": {
+    "title": "Cross-Cutting Comparison: Five Agent Harnesses Head-to-Head",
+    "body": "| Dimension | OpenClaw | Claude Code | Codex | OpenHands | SWE-agent |\n| --- | --- | --- | --- | --- | --- |\n| Primary Use Case | General-purpose autonomous agent | Software engineering | Software engineering | Software engineering | Software engineering (research) |\n| Architecture | Persistent daemon (5 components) | CLI with ~40 tools + QueryEngine | Multi-surface App Server (JSON-RPC) | Docker-sandboxed platform | Custom ACI + agent loop |\n| Agent Loop | ReAct via Brain component | Three-phase (gather → act → verify) | Model/harness iterative loop | CodeAct (executable Python) | Custom ACI-based loop |\n| Sandboxing | Flat permissions (third-party wrappers) | Permission model (4 modes) + optional 2nd LLM | OS-level (Seatbelt, bubblewrap+seccomp) | Docker containers | Docker containers |\n| Context Management | Guard Context (summarize/truncate) | 5-stage fallback compaction | Prompt caching + encrypted compaction | Event-stream state | Windowed file viewer |\n| Multi-Agent | Channel bindings (no native peer-to-peer) | Subagents + Agent Teams (experimental) | Subagents (fan-out/fan-in, max 6) | Single agent | Single agent |\n| Open Source | Yes (MIT, 247K stars) | Yes (MIT) | Yes (MIT, CLI) | Yes (MIT) | Yes (MIT) |\n| Wire Protocol | Internal | None published | JSON-RPC 2.0 (JSONL) | Event stream | Custom |\n| SWE-bench Verified | N/A | 80.9% | 72.1% | 53% | 12.5% Full (2024 SOTA) |\n| Scheduling | Built-in Heartbeat | External | External (GitHub Action) | External | External |"
+  },
+  "sources_checked": [
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "NeurIPS Proceedings",
+      "url": "https://proceedings.neurips.cc",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "ICML Proceedings",
+      "url": "https://proceedings.mlr.press",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "ICLR OpenReview",
+      "url": "https://openreview.net",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "OpenClaw Docs",
+      "url": "https://docs.openclaw.ai",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "Anthropic Docs",
+      "url": "https://docs.anthropic.com",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "OpenAI Developers",
+      "url": "https://developers.openai.com",
+      "checked_at": "2026-04-04T14:00:00Z",
+      "status": "ok"
+    }
+  ]
 }

@@ -96,7 +96,9 @@ export async function getReviewsIndex(lang: Language = "en"): Promise<ReviewsInd
   const content = await loadData(`reviews-index_${lang}.json`);
   if (!content) return null;
   try {
-    return JSON.parse(content);
+    const index: ReviewsIndex = JSON.parse(content);
+    index.reviews.sort((a, b) => b.date.localeCompare(a.date));
+    return index;
   } catch {
     return null;
   }
