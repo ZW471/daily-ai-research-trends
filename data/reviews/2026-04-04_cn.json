@@ -1,0 +1,362 @@
+{
+  "version": "1.0",
+  "date": "2026-04-04",
+  "generated_at": "2026-04-04T14:30:00Z",
+  "type": "literature_review",
+  "volume": 2,
+  "title": "Agent Harness：LLM如何成为自主软件工程师",
+  "subtitle": "深入解析OpenClaw、Claude Code、Codex以及驱动当今编程智能体的学术基础——从ReAct循环到沙箱执行与多智能体协调",
+  "summary": {
+    "headline": "Agent harness——将LLM与工具、记忆、沙箱和执行循环包装在一起的编排层——已成为区分聊天机器人与自主软件工程师的关键工程产物。",
+    "body": "大语言模型可以生成代码，但不能独立进行软件工程。缺失的关键是**agent harness**：为模型提供眼睛（文件读取、代码搜索）、双手（文件编辑、shell执行）和反馈循环（测试结果、linter输出、错误追踪）的运行时系统。本综述横跨三个生产系统和十篇学术论文，梳理了该领域的全景，从ReAct论文的思考-行动-观察循环（2022）到SWE-agent等专用编程智能体（2024），再到今天的完整harness：OpenClaw的持久守护进程架构、Claude Code的权限门控工具系统与多智能体团队、以及Codex的沙箱化App Server与正式JSON-RPC协议。\n\n核心设计张力在于**自主性vs安全性**。更强大的harness赋予智能体更广泛的工具访问和更长的执行循环，但每增加一项能力就多一个攻击面。OpenClaw在第一个月就经历了190个安全公告的惨痛教训。Claude Code和Codex采取不同策略：Claude Code使用分层权限模型并可选人机交互确认，而Codex实施操作系统级沙箱（macOS Seatbelt、Linux bubblewrap+seccomp）配合正式审批策略系统。学术文献提供了平行洞察：SWE-agent表明智能体*如何*与工具交互（Agent-Computer Interface）与模型本身同等重要，而Agentless则证明更简单的管道可以以极低成本匹配复杂harness的性能。\n\n三种架构模式占主导地位：(1) **ReAct循环**——推理、行动、观察、重复——在所有系统中通用；(2) **上下文工程**——压缩、缓存、分层指令文件——是主要的规模化瓶颈；(3) **多智能体协调**——从MetaGPT的SOP驱动流水线到Claude Code的agent teams——是前沿领域，尚无共识的最佳抽象。",
+    "key_themes": ["agent-harness", "react-loop", "tool-use", "sandboxing", "multi-agent", "context-engineering", "coding-agents", "agent-computer-interface"]
+  },
+  "researcher_notes": "**Harness才是产品，而非模型。** 这是最重要的结论。OpenClaw、Claude Code和Codex都使用前沿LLM作为推理引擎，但让它们真正有用的工程——工具执行、权限强制、上下文管理、沙箱隔离——完全存在于harness中。模型提议，harness决定。当OpenAI发布'Unrolling the Codex agent loop'时，他们明确将'模型'和'harness'分为两个独立的架构组件。当Anthropic的Claude Code源码在2026年3月泄露时，59.8MB的代码库揭示了一个46,000行的QueryEngine.ts编排层——模型API调用只是其中的一个函数。\n\n**上下文工程才是真正的瓶颈，而非模型能力。** 每个harness都有精密的上下文窗口管理机制：Claude Code有五级回退压缩策略（基于时间的清理、对话摘要、会话记忆提取、完整历史摘要、最旧消息截断）。Codex使用prompt caching避免二次数据传输成本，并使用加密压缩端点实现无限会话长度。OpenClaw的'Guard Context'步骤动态摘要或截断。学术论文大多忽略这个问题，因为它们在单轮基准上评估，但生产harness在上下文管理上投入的工程量远超工具执行。\n\n**安全问题远未解决。** OpenClaw在2026年2月的190个安全公告是一记警钟，但根本问题是基础性的：agent harness赋予LLM对shell、文件系统和网络资源的访问权限。每个工具都是潜在的攻击向量。各方的应对是纵深防御：Codex使用操作系统级沙箱（macOS的Seatbelt，Linux的bubblewrap+seccomp）配合正式审批策略系统。Claude Code使用权限模型，其中第二个LLM调用评估用户是否会批准每个操作。OpenClaw依赖社区构建的包装器（IronClaw的WASM隔离、NemoClaw的内核沙箱）。这些都不是可证明安全的——该领域正处于\"纵深防御\"阶段。\n\n**多智能体是前沿，但抽象尚不成熟。** MetaGPT展示了SOP驱动的角色分配适用于结构化工作流。AutoGen证明了对话式多智能体系统可以解决单智能体无法解决的问题。但生产harness仍在实验中：Claude Code的agent teams使用基于文件的邮箱和共享任务列表配合文件锁——本质上是用文件系统原语解决分布式系统问题。Codex的子智能体模型更简单（扇出/扇入，有深度限制），以协调灵活性换取可靠性。学术界尚未就编程任务的多智能体协调理论达成共识。\n\n**Agentless是重要的反面论据。** 当业界竞相开发更复杂的harness时，Xia等人的Agentless论文表明，三阶段管道（定位→生成补丁→测试过滤）以每任务$0.70的成本实现了有竞争力的结果，且完全没有agent循环。这是一个健康的提醒：复杂性必须证明自己的价值。对于给定任务，最好的harness可能是根本没有harness。",
+  "sections": [
+    {
+      "id": "foundations",
+      "title": "基础：ReAct循环与Harness存在的原因",
+      "body": "每一个agent harness，从200行的脚本到OpenClaw的五组件守护进程，都实现了同一核心循环的某种变体：模型**推理**下一步行动，**执行**工具调用，**观察**结果，然后重复。这个模式由Yao等人在ReAct中形式化（ICLR 2023），尽管实践者在GPT-3.5获得function calling能力后就已经在构建ad-hoc版本。\n\nReAct的洞察看似简单：交替进行推理与行动优于单独的任何一种。纯推理（chain-of-thought）在缺少外部信息时会产生幻觉。纯行动（无推理的工具调用）产生不连贯的动作序列。ReAct将两者编织在一起：模型写下思考（\"我需要找到auth中间件文件\"），生成动作（搜索代码库），观察结果（文件在src/middleware/auth.ts），推理下一步（\"bug在第47行的token验证逻辑中\"），然后再次行动（编辑文件）。这个思考-行动-观察循环现在是每个生产编程智能体的核心心跳。\n\n但仅有ReAct不足以构建一个有用的智能体。该论文使用了简单的文本环境（网页搜索、交互式小说）。真正的软件工程需要：(1) **工具执行**——安全运行shell命令、编辑文件、调用编译器和测试套件；(2) **上下文管理**——在有限的上下文窗口内追踪相关代码、对话历史和项目结构；(3) **权限强制**——防止智能体删除生产数据库或推送恶意代码；(4) **状态持久化**——跨交互维护记忆。**Agent harness**就是在核心ReAct循环外围提供所有这些功能的工程层。\n\nCodeAct（Wang等，ICML 2024）进一步推动了action空间，用可执行Python代码替代JSON工具调用。模型不再输出由harness路由到预定义工具的结构化函数调用，而是编写在持久解释器中运行的任意Python代码。这支持了JSON模式无法表达的动态逻辑——循环、条件、错误处理、自我调试。CodeAct在agent基准上展示了高达20%的提升，该模式被OpenHands——最知名的开源编程智能体平台之一——所采纳。\n\n从ReAct到CodeAct再到生产harness的演化遵循清晰的轨迹：**赋予模型更具表达力的环境交互方式，同时在这些交互周围构建日益精密的安全护栏。**",
+      "models": [
+        {
+          "id": "react",
+          "name": "ReAct",
+          "paper_title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "authors": ["Shunyu Yao", "Jeffrey Zhao", "Dian Yu", "Nan Du", "Izhak Shafran", "Karthik Narasimhan", "Yuan Cao"],
+          "affiliations": ["Princeton University", "Google Research"],
+          "venue": "ICLR 2023",
+          "core_idea": "在单个LLM输出循环中交替进行推理追踪和行动。模型思考、行动、观察结果并重复——通过外部观察来锚定生成以减少幻觉。",
+          "key_innovation": "形式化了思考-行动-观察范式，现在是每个生产agent harness的基础，证明了结合推理和行动优于单独的任何一种",
+          "limitations": ["原始评估在相对简单的环境上（网页搜索、文本游戏）", "没有管理长上下文或多文件代码库的机制", "仅限单智能体——无协调协议"],
+          "tags": ["react", "agent-loop", "reasoning", "tool-use", "foundational"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2210.03629",
+            "github": "https://github.com/ysymyth/ReAct"
+          }
+        },
+        {
+          "id": "codeact",
+          "name": "CodeAct",
+          "paper_title": "Executable Code Actions Elicit Better LLM Agents",
+          "authors": ["Xingyao Wang", "Yangyi Chen", "Lifan Yuan", "Yizhe Zhang", "Yunzhu Li", "Hao Peng", "Heng Ji"],
+          "affiliations": ["University of Illinois Urbana-Champaign", "UC San Diego", "MIT"],
+          "venue": "ICML 2024",
+          "core_idea": "用可执行Python代码替代JSON工具调用作为唯一动作类型。智能体编写Python代码在持久解释器中运行；stdout/stderr成为下一个观察。",
+          "key_innovation": "基于代码的动作支持JSON模式无法表达的动态逻辑、循环和自我调试——在agent基准上比JSON动作提升高达20%",
+          "limitations": ["需要带有安全隐患的持久解释器", "以Python为中心——对非Python工作流不够自然", "任意代码执行增加攻击面"],
+          "tags": ["code-actions", "agent-loop", "tool-use", "python", "self-debugging"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2402.01030",
+            "github": "https://github.com/xingyaoww/code-act"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["系统", "动作空间", "推理方式", "环境", "核心贡献"],
+        "rows": [
+          ["ReAct (2023)", "文本工具调用", "交替思考追踪", "网页搜索、文本游戏", "形式化了agent循环范式"],
+          ["CodeAct (2024)", "可执行Python代码", "交替思考追踪", "持久Python解释器", "证明代码优于JSON作为agent动作"]
+        ]
+      }
+    },
+    {
+      "id": "benchmarks-and-aci",
+      "title": "衡量智能体：SWE-bench、SWE-agent与Agent-Computer Interface",
+      "body": "在构建好的harness之前，需要先衡量什么是\"好\"。**SWE-bench**（Jimenez等，ICLR 2024）确立了黄金标准：来自12个流行Python仓库的2,294个真实GitHub issue。给定代码库和issue描述，智能体必须产生通过仓库现有测试套件的补丁。没有合成任务——每个issue和测试都是真实的。发布时，GPT-4解决了不到2%的任务；该基准立即揭示了模型距离实际软件工程有多远。\n\nSWE-bench衍生出一个生态系统——SWE-bench Lite（300个任务）、SWE-bench Verified（500个人工验证任务）以及其他语言的扩展——并成为编程智能体评估的通用标尺。本综述中的每个harness都报告了SWE-bench数据：Codex 72.1%（Verified上的pass@1）、Claude Code 80.9%、OpenHands 53%。\n\n**SWE-agent**（Yang等，NeurIPS 2024）做出了关键观察：基准性能不仅取决于模型，还取决于**Agent-Computer Interface (ACI)**——harness提供的工具集和交互模式。作者设计了定制ACI：窗口化文件查看器（一次显示100行并带行号）、返回匹配上下文的搜索工具、以及在应用更改前验证语法的结构化编辑命令。这些工具针对LLM消费做了优化——简洁、无歧义、带结构化错误反馈。\n\n结果令人震撼：ACI设计比模型大小更重要。SWE-agent在SWE-bench Full上达到12.5%（发表时的SOTA），好的ACI与差的ACI之间的差距大于模型代际之间的差距。这对harness工程有深远影响：**你给模型的工具与模型本身同等重要。** 每个生产harness都内化了这一教训——Claude Code约40个带结构化输出格式的工具、Codex带流式输出的沙箱化文件工具、OpenClaw基于skill的工具注入系统。\n\n**Agentless**（Xia等，2024）提供了必要的反面论据。Agentless不构建复杂的agent循环，而是使用简单的三阶段管道：(1) 分层定位（从仓库缩小到文件再到函数），(2) 补丁生成，(3) 通过运行测试过滤候选。没有工具使用，没有迭代循环，没有agent状态。结果：在SWE-bench Lite上32%，每任务仅$0.70——与成本高出数量级的agent系统持平。Agentless迫使该领域证明harness复杂性的每一层合理性：如果没有agent循环的管道就能匹配你的智能体，那你的harness只是在增加成本而没有增加能力。\n\n**OpenHands**（Wang等，ICLR 2025）将这些洞察综合为一个全面的开源平台。智能体运行在沙箱化的Docker容器中，可以访问shell命令、文件编辑、网页浏览和API。平台使用CodeAct作为动作层，支持15个基准评估。OpenHands在发表时在SWE-bench Full上达到#1（29%）、Verified上53%，证明了良好的ACI设计加上稳健的执行沙箱和代码动作范式可以产生高能力的开源编程智能体。",
+      "models": [
+        {
+          "id": "swe-bench",
+          "name": "SWE-bench",
+          "paper_title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+          "authors": ["Carlos E. Jimenez", "John Yang", "Alexander Wettig", "Shunyu Yao", "Kexin Pei", "Ofir Press", "Karthik Narasimhan"],
+          "affiliations": ["Princeton University"],
+          "venue": "ICLR 2024",
+          "core_idea": "来自12个流行Python仓库的2,294个真实GitHub issue基准。智能体接收代码库和issue描述，必须产生通过仓库测试套件的补丁。",
+          "key_innovation": "建立了使用真实issue和测试进行端到端编程智能体评估的黄金标准，揭示了GPT-4发布时解决率不到2%",
+          "limitations": ["仅限Python（其他语言的扩展后来才出现）", "测试套件质量在各仓库间参差不齐", "Pass@1评估可能低估了多次尝试中生成正确补丁的智能体"],
+          "tags": ["benchmark", "software-engineering", "github-issues", "evaluation"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2310.06770",
+            "github": "https://github.com/princeton-nlp/SWE-bench"
+          }
+        },
+        {
+          "id": "swe-agent",
+          "name": "SWE-agent",
+          "paper_title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+          "authors": ["John Yang", "Carlos E. Jimenez", "Alexander Wettig", "Kilian Lieret", "Shunyu Yao", "Karthik Narasimhan", "Ofir Press"],
+          "affiliations": ["Princeton University"],
+          "venue": "NeurIPS 2024",
+          "core_idea": "论证Agent-Computer Interface (ACI)——工具集和交互模式——与模型同等重要。设计了针对LLM消费优化的定制文件查看、搜索和编辑命令。",
+          "key_innovation": "证明了ACI设计比模型大小对编程智能体性能更重要；带结构化错误反馈的定制工具显著提升智能体效果",
+          "limitations": ["每个领域的定制ACI需要大量工程投入", "评估聚焦于Python仓库", "单智能体架构——无内置多文件协调"],
+          "tags": ["agent-computer-interface", "coding-agent", "tool-design", "software-engineering"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2405.15793",
+            "github": "https://github.com/princeton-nlp/SWE-agent"
+          }
+        },
+        {
+          "id": "agentless",
+          "name": "Agentless",
+          "paper_title": "Agentless: Demystifying LLM-based Software Engineering Agents",
+          "authors": ["Chunqiu Steven Xia", "Yinlin Deng", "Soren Dunn", "Lingming Zhang"],
+          "affiliations": ["University of Illinois Urbana-Champaign"],
+          "venue": "arXiv 2024",
+          "core_idea": "三阶段管道——分层定位、补丁生成、基于测试的过滤——无需agent循环即可解决编程任务。没有工具使用，没有迭代推理，没有agent状态。",
+          "key_innovation": "证明了非agentic管道在SWE-bench Lite上达到32%，每任务仅$0.70，与远更复杂的agent系统持平——迫使该领域证明harness复杂性的合理性",
+          "limitations": ["无迭代调试——如果初始补丁错误则无法恢复", "定位精度是整体性能的硬上限", "无法处理需要多步环境交互的任务"],
+          "tags": ["pipeline", "non-agentic", "cost-efficient", "localization", "counter-narrative"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2407.01489",
+            "github": "https://github.com/OpenAutoCoder/Agentless"
+          }
+        },
+        {
+          "id": "openhands",
+          "name": "OpenHands",
+          "paper_title": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
+          "authors": ["Xingyao Wang", "Boxuan Li", "Yufan Song", "Frank F. Xu", "Xiangru Tang", "Mingchen Zhuge", "Jiayi Pan", "Graham Neubig"],
+          "affiliations": ["University of Illinois Urbana-Champaign", "All Hands AI", "Carnegie Mellon University"],
+          "venue": "ICLR 2025",
+          "core_idea": "全面的开源平台，智能体运行在沙箱化Docker容器中，可访问shell、文件编辑、网页浏览和API。使用CodeAct作为动作层，支持15个基准。",
+          "key_innovation": "覆盖完整智能体生命周期的统一平台——沙箱执行、事件流状态管理、多轮交互和基准评估——发表时在SWE-bench Full上达到#1",
+          "limitations": ["Docker依赖增加安装复杂度", "事件流架构对长会话可能消耗大量内存", "社区驱动——API稳定性参差不齐"],
+          "tags": ["open-source", "coding-agent", "docker-sandbox", "codeact", "platform"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2407.16741",
+            "github": "https://github.com/All-Hands-AI/OpenHands"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["系统", "类型", "SWE-bench得分", "核心洞察", "每任务成本"],
+        "rows": [
+          ["SWE-bench", "基准", "GPT-4: 发布时<2%", "真实issue远比合成基准困难", "N/A"],
+          ["SWE-agent", "智能体 + ACI", "12.5% Full (2024 SOTA)", "工具设计比模型大小更重要", "~$2-4"],
+          ["Agentless", "管道（无agent循环）", "32% Lite", "简单管道可以匹配复杂智能体", "$0.70"],
+          ["OpenHands", "开源平台", "29% Full, 53% Verified", "CodeAct + 沙箱 + 好的ACI = 强大的开源智能体", "~$1-3"]
+        ]
+      }
+    },
+    {
+      "id": "openclaw",
+      "title": "OpenClaw：持久守护进程智能体",
+      "body": "OpenClaw（最初名为Clawdbot，后短暂更名为Moltbot）是按GitHub star计算最受欢迎的开源agent harness（截至2026年3月约247K stars）。由奥地利开发者Peter Steinberger创建，它采用了与编程导向智能体根本不同的架构方法：OpenClaw将智能体视为一个**持久操作系统进程**——一个持续运行、响应多渠道消息并按计划自主执行任务的守护进程。\n\n**五组件架构。** OpenClaw的设计有五个清晰界定的组件：\n\n1. **Gateway** — 中央守护进程，会话和路由的唯一事实来源。它将来自多个渠道（Slack、Discord、WhatsApp、Telegram等）的输入归一化为统一的内部消息格式，认证入站消息，并代理发往LLM提供商的出站API调用。\n\n2. **Brain（Agent Runner）** — 实现五步管道的编排层：(a) 为传入会话选择正确的agent，(b) 解析满足上下文需求的最低成本模型（在速率限制时自动切换密钥），(c) 从SOUL.md、skills、memories和工具定义动态构建prompt，(d) 通过摘要或截断保护上下文窗口限制，(e) 执行ReAct循环直到模型产生终止响应。\n\n3. **Memory** — 所有持久上下文存储为本地磁盘上的纯Markdown文件（~/.openclaw/）。没有嵌入式数据库，没有向量存储。目录结构包括preferences.md、contacts.md、projects.md、learnings.md和每个agent的SOUL.md文件。这是一个刻意的权衡：以检索复杂度为代价获得人类可审计性和可移植性。\n\n4. **Skills** — OpenClaw的插件/工具系统。每个skill是带YAML frontmatter的Markdown文件，声明名称、触发模式和可用工具。Skills在agent启动时加载并注入系统提示。社区Skills Registry已增长到5,700+条目。\n\n5. **Heartbeat** — 自主性机制。每30分钟（可配置），Gateway向agent发送计划触发。Agent读取HEARTBEAT.md——待办任务清单——并决定是否需要采取行动。如果无需操作，agent以HEARTBEAT_OK响应，回复被静默丢弃。这种内置调度在agent框架中独一无二——竞争对手需要外部cron或工作流触发器。\n\n**串行Lane Queue。** 会话内的消息通过Lane Queue逐一处理。这防止了工具冲突并保持会话历史一致性，但限制了吞吐量。并行是可选的，且限于明确标记的低风险任务。\n\n**安全问题。** OpenClaw的快速增长暴露了严重的安全问题。在2026年1月31日至2月25日之间，190个安全公告被提交——包括可组合为未认证远程代码执行路径的组合。2026年3月出现了四篇分析漏洞的arXiv论文。扁平的权限模型（agent默认拥有广泛的工具访问权限）在LLM推理连接到宿主执行时创造了巨大的攻击面。生态系统以第三方加固包装器回应：IronClaw（NEAR AI的Rust/WASM隔离）、NemoClaw（NVIDIA的内核级沙箱）和KubeClaw（Kubernetes JIT RBAC）。这些是下游修复，而非上游架构变更。\n\n**通过SOUL.md定义身份。** OpenClaw使用名为SOUL.md的Markdown文件作为注入每个系统提示的身份层。官方文档区分了它与系统提示：\"系统提示告诉模型做什么；soul文件告诉模型它是谁。\"伴随文件处理风格（STYLE.md）、操作模式（SKILL.md）和会话记忆（MEMORY.md）。",
+      "models": [
+        {
+          "id": "openclaw",
+          "name": "OpenClaw",
+          "paper_title": "N/A — 开源项目，无发表论文",
+          "authors": ["Peter Steinberger"],
+          "affiliations": ["独立开发者（现OpenAI）"],
+          "venue": "开源（MIT许可），2025年11月发布",
+          "core_idea": "持久守护进程agent框架，五个组件：Gateway（路由）、Brain（ReAct循环）、Memory（Markdown文件）、Skills（插件系统）和Heartbeat（自主调度）。作为后台进程运行，响应消息和计划触发。",
+          "key_innovation": "首个将agent视为持久OS进程并内置heartbeat调度和多渠道消息路由的主要框架——其他框架需要外部基础设施来调度和消息传递",
+          "limitations": ["扁平权限模型在一个月内导致190个安全公告", "基于Markdown的记忆缺少检索复杂度（无向量搜索）", "串行lane queue限制吞吐量", "多智能体协调需要第三方包装器"],
+          "tags": ["agent-harness", "persistent-daemon", "heartbeat", "multi-channel", "open-source"],
+          "sources": {
+            "github": "https://github.com/openclaw/openclaw"
+          }
+        },
+        {
+          "id": "ironclaw",
+          "name": "IronClaw",
+          "paper_title": "N/A — NEAR AI的开源项目",
+          "authors": ["NEAR AI团队"],
+          "affiliations": ["NEAR AI"],
+          "venue": "开源，2026",
+          "core_idea": "受OpenClaw启发的agent框架，用Rust重写，所有工具运行在WASM容器中，使用基于能力的权限。设计上零遥测。",
+          "key_innovation": "基于WASM的工具隔离配合基于能力的权限——每个工具在自己的沙箱中运行，权限显式授予，防止了困扰OpenClaw的横向移动攻击",
+          "limitations": ["生态系统比OpenClaw小（更少的skills、更少的社区支持）", "WASM沙箱为I/O密集型工具增加开销", "更新且经验更少"],
+          "tags": ["rust", "wasm", "capability-based-security", "openclaw-derivative"],
+          "sources": {
+            "github": "https://github.com/nearai/ironclaw"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["系统", "语言", "沙箱", "调度", "多智能体", "社区Skills"],
+        "rows": [
+          ["OpenClaw", "Node.js", "扁平权限（第三方包装器可用）", "内置Heartbeat（默认30分钟）", "渠道到agent绑定；无点对点", "5,700+"],
+          ["IronClaw", "Rust", "WASM容器配合基于能力的权限", "继承OpenClaw模式", "类似OpenClaw", "增长中"],
+          ["NemoClaw", "Python包装器", "内核级（OS级，非容器级）", "包装OpenClaw的Heartbeat", "包装OpenClaw", "OpenClaw兼容"]
+        ]
+      }
+    },
+    {
+      "id": "claude-code",
+      "title": "Claude Code：权限门控工具编排与Agent Teams",
+      "body": "Claude Code是Anthropic的agentic编程系统——一个将Claude模型与约40个工具、分层权限模型和多智能体协调能力包装在一起的harness。2025年2月作为有限研究预览发布，2025年5月正式发布，到2025年底迅速超过$1B年化收入。\n\n**三阶段循环。** Claude Code的核心执行模型迭代三个阶段：(1) **收集上下文**——读取文件、搜索代码库、检查错误日志；(2) **采取行动**——编辑文件、运行命令、调用外部服务；(3) **验证结果**——运行测试、检查输出、纠正方向。编排器的行为在系统提示中用自然语言定义，而非分支代码逻辑——实现了无需重新部署的行为迭代。\n\n**工具架构。** 约40个工具按类别组织：文件操作（Read、Write、Edit、Glob）、搜索（Grep、基于模式的文件搜索）、执行（Bash）、网络（WebSearch、WebFetch）和编排（Agent用于生成子智能体、AskUserQuestion）。只读操作可并发执行；变更操作串行执行以防止冲突。每个工具独立沙箱化，带可配置的访问控制。外部工具通过Model Context Protocol (MCP)连接，工具定义默认延迟加载以节省上下文空间——只有工具名称被加载，直到工具实际使用时才加载完整定义。\n\n**权限模型。** 这是Claude Code最独特的设计选择。四种权限模式提供渐进式自主：(1) **默认**——Claude在文件编辑和shell命令前请求确认；(2) **自动接受编辑**——文件编辑自动批准，命令仍需确认；(3) **计划模式**——仅限只读工具，生成计划供用户批准；(4) **自动模式**（研究预览）——第二个独立的LLM调用评估每个提议的操作，预测用户是否会批准。这在架构上很重要：安全评估不是生成动作的同一次推理。它是一个专门用于权限预测的单独模型调用。\n\n**上下文工程。** QueryEngine（核心编排引擎，在2026年3月的源码泄露中被发现是约46,000行的TypeScript）管理五级回退上下文压缩策略：基于时间清除过时的工具输出、对话摘要、会话记忆提取、完整历史摘要、最旧消息截断。项目上下文通过CLAUDE.md文件（会话开始时加载的项目特定指令）和自动记忆系统（随工作进展保存学习内容）进入。\n\n**子智能体。** Claude Code可通过Agent工具生成子智能体实例。每个子智能体接收自己的系统提示、受限的工具子集和项目的CLAUDE.md，但*不*接收父级的对话历史或系统提示。只有子智能体的最终消息返回给父级——中间的工具调用保持隔离，防止上下文污染。存在三种执行模型：Fork（字节级相同的父级上下文拷贝）、Teammate（独立终端窗格配合基于文件的邮箱）和Worktree（带隔离分支的git worktree）。子智能体不能生成自己的子智能体，限制了递归深度。\n\n**Agent Teams。** 实验性多智能体功能（通过功能标志启用）在架构上与子智能体截然不同。团队领导生成队友——每个都是完整的Claude Code实例，有自己的上下文窗口——通过共享任务列表（~/.claude/tasks/{team-name}/）和基于文件的邮箱消息系统协调。任务认领使用文件锁防止竞态条件。队友可被要求在实施前先做计划；领导自主审核和批准计划。\n\n**Hooks。** 外部代码可在25+生命周期点拦截agent循环：PreToolUse、PostToolUse、SessionStart、SessionEnd、UserPromptSubmit、SubagentStart等。Hooks可以允许、拒绝或延迟工具调用，注入额外上下文或修改工具输入。当多个hooks冲突时，deny优先于ask，ask优先于allow。\n\n**Cowork。** Claude Code Cowork将相同的harness架构带入Claude Desktop，运行在沙箱化VM中（Ubuntu 22.04，4 CPU核心，4GB RAM），使用Apple的Virtualization框架。多层出口控制（通过gVisor的syscall阻断、每次启动的临时CA证书MITM代理、域名白名单）提供了比CLI更强的隔离。",
+      "models": [
+        {
+          "id": "claude-code",
+          "name": "Claude Code",
+          "paper_title": "N/A — Anthropic商业产品",
+          "authors": ["Anthropic"],
+          "affiliations": ["Anthropic"],
+          "venue": "商业产品，2025年5月正式发布；开源CLI（MIT许可）",
+          "core_idea": "约40个工具的agentic编程harness，四层权限模型（包括用于自动批准评估的独立LLM调用），分层上下文压缩，通过子智能体和agent teams实现多智能体协调。",
+          "key_innovation": "第二个LLM调用独立于生成模型评估每个提议操作的权限模型；支持确定性组织策略强制的hooks系统；三种子智能体执行模型（fork、teammate、worktree）",
+          "limitations": ["没有正式发布的wire协议（不同于Codex的JSON-RPC规范）", "Agent teams是实验性的，有已知限制（无会话恢复、无嵌套teams）", "自动模式权限评估是非确定性的"],
+          "tags": ["agent-harness", "permission-model", "multi-agent", "hooks", "context-engineering"],
+          "sources": {
+            "github": "https://github.com/anthropics/claude-code"
+          }
+        },
+        {
+          "id": "claude-cowork",
+          "name": "Claude Code Cowork",
+          "paper_title": "N/A — Anthropic商业产品",
+          "authors": ["Anthropic"],
+          "affiliations": ["Anthropic"],
+          "venue": "商业产品，2026年1月上线",
+          "core_idea": "将Claude Code harness架构带入Claude Desktop，运行在带多层出口控制的沙箱化Linux VM中。扩展到编程之外的知识工作：电子表格、演示文稿、研究、报告。",
+          "key_innovation": "VM级隔离，带gVisor syscall阻断、每次启动的临时CA证书HTTPS检查、以及通过native messaging扩展控制宿主浏览器——比基于CLI的harness更强的隔离",
+          "limitations": ["固定VM资源（4 CPU核心，4GB RAM）", "临时存储——会话间无持久化", "宿主浏览器控制在VM出口控制之外运行，创造分裂的安全边界"],
+          "tags": ["vm-isolation", "desktop-agent", "knowledge-work", "gvisor", "sandboxing"],
+          "sources": {}
+        }
+      ],
+      "comparison_table": {
+        "headers": ["特性", "Claude Code CLI", "Claude Code Cowork"],
+        "rows": [
+          ["执行环境", "宿主OS带权限门控", "沙箱化Ubuntu 22.04 VM"],
+          ["隔离", "每工具权限模型", "VM边界 + gVisor + MITM代理 + 域名白名单"],
+          ["多智能体", "子智能体 + Agent Teams", "父子编排"],
+          ["浏览器访问", "通过MCP工具", "通过native messaging扩展控制宿主Chrome"],
+          ["持久化", "本地磁盘会话文件", "临时（每次启动格式化）"],
+          ["目标场景", "终端中的软件工程", "桌面应用中的通用知识工作"]
+        ]
+      }
+    },
+    {
+      "id": "codex",
+      "title": "Codex：带正式协议的沙箱化App Server",
+      "body": "OpenAI的Codex（2025年——非2021年的代码补全模型）是由codex-1模型族（通过强化学习在真实编程任务上微调的o3）驱动的多表面编程智能体。它以云产品（在ChatGPT中）、开源CLI（Rust + TypeScript，MIT许可）、IDE扩展、macOS应用和GitHub Action的形式发布。架构核心是**App Server**：为所有客户端表面提供正式JSON-RPC协议的单一稳定二进制文件。\n\n**模型/Harness分离。** OpenAI明确分离两个组件：模型（无状态推理引擎）和harness（执行层）。Harness执行工具调用、收集输出、管理权限、强制沙箱策略并决定agent循环何时终止。模型提议操作；harness处置它们。OpenAI发布了关于这一分离的专门博客文章——'Unrolling the Codex agent loop'和'Unlocking the Codex harness'——将模型/harness区分确立为一级架构概念。\n\n**App Server协议。** App Server使用JSON-RPC 2.0，以换行符分隔的JSON (JSONL)通过stdio流式传输，并有实验性WebSocket传输。三个核心原语结构化所有交互：**Items**（具有started/delta/completed生命周期的原子I/O单元）、**Turns**（来自一个agent工作单元的Items组，支持中途转向和中断）和**Threads**（持久对话容器，支持创建、恢复、分叉、归档、回滚和压缩）。协议是完全双向的：服务器可以发起请求（如批准提示）并暂停agent turn等待客户端响应。\n\n**两层安全。** Codex通过两个独立层强制安全。**第一层（沙箱模式）**控制agent技术上能做什么：只读、工作区写入（在工作区内读/写、运行命令）或完全访问。受保护路径（.git/、.agents/、.codex/）即使在可写模式下也保持只读。**第二层（批准策略）**控制何时需要用户确认：on-request（批准沙箱违规和网络访问）、untrusted（自动运行安全读取，批准状态变更）、never（禁用所有批准）或granular（按类别控制）。OS级强制在Mac上使用Seatbelt配置文件，在Linux上使用bubblewrap+seccomp——真正的内核级沙箱，而非进程级控制。\n\n**Codex Cloud**在隔离容器中运行任务，采用两阶段运行时：安装依赖的网络可用的设置阶段，然后是默认离线的agent阶段。必须显式启用互联网访问。任务异步运行且可并行。\n\n**上下文管理。** Codex通过两种机制解决上下文二次增长问题（n轮需要重新发送所有先前上下文）：prompt caching（新内容追加到相同前缀，实现KV计算复用）和对话压缩（通过/responses/compact端点用加密压缩表示替换完整历史）。压缩输出是不透明的——它保留模型的理解而不暴露原始文本。分层项目指令通过AGENTS.md文件从全局覆盖、全局默认和每目录级别加载。\n\n**子智能体。** Codex可以并行生成专门的子智能体，采用扇出/扇入模式。编排器等待所有结果后返回合并响应。资源控制限制并发线程（默认6）和递归委托深度（默认1）。内置agent类型包括default（通用）、worker（执行导向）和explorer（读取密集分析）。\n\n**Rust重写。** CLI正从TypeScript重写为Rust（codex-rs/），以实现零依赖安装、原生安全绑定和消除GC暂停。TypeScript版本在Rust功能追平之前并行维护。\n\n**Codex作为MCP Server。** Codex可将自身暴露为MCP server（codex mcp-server），使其他智能体能将Codex用作编程工具。暴露两个端点：codex（发起会话）和codex-reply（继续会话）。这种可组合性——Codex既是智能体又是其他智能体可调用的工具——代表了对agent间交互的成熟理解。",
+      "models": [
+        {
+          "id": "codex",
+          "name": "Codex (2025)",
+          "paper_title": "N/A — OpenAI商业产品",
+          "authors": ["OpenAI"],
+          "affiliations": ["OpenAI"],
+          "venue": "商业产品，2025年5月发布；开源CLI（MIT许可）",
+          "core_idea": "多表面编程智能体，带正式JSON-RPC App Server协议、两层安全（沙箱模式+带OS级强制的批准策略）和清晰的模型/harness架构分离。",
+          "key_innovation": "带版本化schema的正式JSON-RPC协议，支持多语言客户端实现；OS级沙箱（Seatbelt、bubblewrap+seccomp）；加密对话压缩实现无限会话长度；既是智能体又是MCP server的可组合性",
+          "limitations": ["codex-1 RL过程没有发表训练论文", "模型命名快速变化（codex-1 → gpt-5.x-codex系列）", "Rust重写仍在追赶TypeScript功能", "App Server协议不是开放标准（按二进制版本进行版本管理）"],
+          "tags": ["agent-harness", "json-rpc", "sandboxing", "app-server", "rust", "mcp-server"],
+          "sources": {
+            "github": "https://github.com/openai/codex"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["维度", "Codex", "Claude Code", "OpenClaw"],
+        "rows": [
+          ["Wire协议", "JSON-RPC 2.0 (JSONL/stdio, WebSocket)", "无已发布协议", "内部（未文档化）"],
+          ["沙箱强制", "OS级: Seatbelt (macOS), bubblewrap+seccomp (Linux)", "权限模型 + 可选自动模式（第二个LLM调用）", "扁平权限（第三方包装器）"],
+          ["上下文压缩", "加密压缩端点 + prompt caching", "5阶段回退（时间清除→摘要→记忆→完整摘要→截断）", "Guard Context步骤（摘要/截断）"],
+          ["子智能体模型", "扇出/扇入，最多6线程，深度1", "Fork/Teammate/Worktree，无递归", "渠道到agent绑定（无原生子智能体）"],
+          ["开源", "MIT (CLI)", "MIT (CLI)", "MIT（完整框架）"],
+          ["SWE-bench Verified", "72.1% (pass@1)", "80.9%", "N/A（非编程导向智能体）"]
+        ]
+      }
+    },
+    {
+      "id": "multi-agent",
+      "title": "多智能体协调：从学术框架到生产Teams",
+      "body": "单智能体harness在任务需要并行工作、角色专门化或跨领域协调时触及实际限制。多智能体范式通过将工作分配给多个通信和协调的agent实例来解决这个问题。学术基础由MetaGPT和AutoGen奠定；生产harness现在正在构建自己的实现。\n\n**MetaGPT**（Hong等，ICLR 2024 Oral）引入了SOP驱动的多智能体协调。MetaGPT不让agent自由聊天，而是将人类标准操作流程编码到管道中：产品经理agent生成PRD，架构师产出设计文档，工程师编写代码，QA运行测试。每个角色向下一个传递结构化产出物。这种流水线模型大幅减少了自由多agent对话中常见的不连贯输出，因为每个agent的输入是类型化的产出物（而非开放式聊天消息），每个agent的角色范围精确。MetaGPT在ICLR 2024的LLM Agent类别中排名第一。\n\n**AutoGen**（Wu等，COLM 2024，来自Microsoft Research）采取了相反的方法：完全对话式多智能体系统。核心抽象是\"可对话agent\"——可由LLM、人类输入、工具执行器或任意组合支撑的实体。Agent在可编程的对话模式中传递消息：顺序（A与B对话）、群聊（多agent讨论）或嵌套（对话中的对话）。力量来自灵活性：同一框架处理数学、编程、运筹学和人机交互工作流。代价是对话式协调不如SOP驱动管道可预测。\n\n**ToolLLM**（Qin等，ICLR 2024 Spotlight）解决了多智能体能力的不同方面：跨大规模API景观的工具发现和规划。框架包括ToolBench（49个类别的16,464个真实API）、ToolLLaMA（为工具使用微调的模型）和深度优先搜索决策树（DFSDT）规划器，可探索多条工具调用路径并在路径失败时回溯。DFSDT是首个用于工具规划的系统性树搜索方法，通过回溯而非线性重试处理API失败。\n\n**生产实现**正在收敛于更简单的模式。Claude Code的agent teams使用基于文件的邮箱和共享任务列表配合文件锁——一种直接的文件系统协调机制。Codex使用扇出/扇入，对并发线程和递归深度有硬限制。OpenClaw依赖渠道到agent绑定配合共享文件系统状态。这些都没有接近MetaGPT的SOP管道或AutoGen的对话拓扑的复杂度，反映了生产工程对简单性和可调试性的偏好，而非协调表达力。\n\nBui的Scaffolding/Harness分类学论文（arXiv，2026年3月）提供了理解这些系统的最清晰发表框架。它区分了**scaffolding**（首次prompt前的静态组装：系统提示、工具schema、子智能体注册表）和**harness**（运行时编排：工具调度、上下文压缩、安全强制、状态管理）。这个术语帮助解释了为什么生产多智能体系统看起来与学术系统如此不同：学术系统关注scaffolding（agent角色、通信拓扑），而生产系统将大部分工程投入harness（上下文管理、权限强制、崩溃恢复）。",
+      "models": [
+        {
+          "id": "metagpt",
+          "name": "MetaGPT",
+          "paper_title": "MetaGPT: Meta Programming for a Multi-Agent Collaborative Framework",
+          "authors": ["Sirui Hong", "Mingchen Zhuge", "Jiaqi Chen", "Xiawu Zheng", "Yuheng Cheng", "Ceyao Zhang", "Jinlin Wang", "Zhengying Chen", "Steven Zheng", "Juergen Schmidhuber"],
+          "affiliations": ["DeepWisdom", "KAUST", "Xiamen University"],
+          "venue": "ICLR 2024 (Oral)",
+          "core_idea": "将人类标准操作流程编码到带有不同角色（PM、架构师、工程师、QA）传递结构化产出物的多智能体管道中。每个agent的输出是由下一个消费的类型化产出物的流水线模型。",
+          "key_innovation": "SOP驱动的协调配合结构化产出物传递减少了与自由多agent聊天相比的不连贯输出；在ICLR 2024 LLM Agent类别中排名#1",
+          "limitations": ["刚性管道——不适合需要动态角色重新分配的任务", "每个角色需要仔细的prompt工程", "产出物schema必须预先定义"],
+          "tags": ["multi-agent", "sop-driven", "role-based", "structured-artifacts", "software-engineering"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2308.00352",
+            "github": "https://github.com/geekan/MetaGPT"
+          }
+        },
+        {
+          "id": "autogen",
+          "name": "AutoGen",
+          "paper_title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+          "authors": ["Qingyun Wu", "Gagan Bansal", "Jieyu Zhang", "Yiran Wu", "Beibin Li", "Erkang Zhu", "Li Jiang", "Xiaoyun Zhang", "Shaokun Zhang", "Jiale Liu", "Ahmed Hassan Awadallah", "Ryen White", "Doug Burger", "Chi Wang"],
+          "affiliations": ["Microsoft Research", "Penn State University"],
+          "venue": "COLM 2024",
+          "core_idea": "可定制的'可对话agent'在可编程对话模式（顺序、群聊、嵌套）中传递消息的框架。每个agent可由LLM、人类、工具执行器或任意组合支撑。",
+          "key_innovation": "将agent角色与通信拓扑解耦——同一框架通过不同对话模式处理数学、编程、QA和人机交互工作流",
+          "limitations": ["对话式协调不如管道系统可预测", "群聊可能产生不聚焦的讨论", "token成本随agent数量和对话长度扩展"],
+          "tags": ["multi-agent", "conversable-agents", "conversation-patterns", "human-in-the-loop"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2308.08155",
+            "github": "https://github.com/microsoft/autogen"
+          }
+        },
+        {
+          "id": "toolllm",
+          "name": "ToolLLM",
+          "paper_title": "ToolLLM: Facilitating Large Language Models to Master 16,000+ Real-World APIs",
+          "authors": ["Yujia Qin", "Shengding Hu", "Yankai Lin", "Weize Chen", "Ning Ding", "Ganqu Cui", "Zheni Zeng", "Zhiyuan Liu", "Maosong Sun"],
+          "affiliations": ["Tsinghua University", "OpenBMB"],
+          "venue": "ICLR 2024 (Spotlight)",
+          "core_idea": "完整的工具使用框架，包含ToolBench（16,464个真实API）、ToolLLaMA（微调模型）和深度优先搜索决策树（DFSDT）规划器，用于带回溯的多步工具规划。",
+          "key_innovation": "DFSDT规划器——首个用于工具使用的系统性树搜索方法，通过回溯而非线性重试处理API失败；ToolLLaMA在工具使用上匹配ChatGPT的同时保持开源",
+          "limitations": ["API不稳定性——真实API随时间变化和中断", "DFSDT搜索对深层嵌套工具序列可能较慢", "评估假设正确的API文档可用"],
+          "tags": ["tool-use", "api-planning", "tree-search", "backtracking", "fine-tuning"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2307.16789",
+            "github": "https://github.com/OpenBMB/ToolBench"
+          }
+        },
+        {
+          "id": "opendev-harness",
+          "name": "OpenDev Harness论文",
+          "paper_title": "Building Effective AI Coding Agents for the Terminal: Scaffolding, Harness, Context Engineering, and Lessons Learned",
+          "authors": ["Nghi D. Q. Bui"],
+          "affiliations": ["OpenDev（独立项目）"],
+          "venue": "arXiv，2026年3月",
+          "core_idea": "区分scaffolding（静态组装：系统提示、工具schema、子智能体注册表）和harness（运行时编排：工具调度、上下文压缩、安全强制）。描述了六阶段ReAct循环实现。",
+          "key_innovation": "提供了区分scaffolding和harness的最清晰发表分类学——该术语现已出现在后续工作中；记录了学术论文中缺失的实用上下文工程技术",
+          "limitations": ["实践者报告而非同行评审论文", "单系统聚焦（OpenDev）", "无标准基准上的正式评估"],
+          "tags": ["taxonomy", "scaffolding", "harness", "context-engineering", "practitioner-report"],
+          "sources": {
+            "arxiv": "https://arxiv.org/abs/2603.05344"
+          }
+        }
+      ],
+      "comparison_table": {
+        "headers": ["系统", "协调模型", "Agent通信", "最适合"],
+        "rows": [
+          ["MetaGPT", "SOP管道配合类型化产出物", "结构化产出物传递（PRD → 设计 → 代码 → 测试）", "角色边界清晰的明确工作流"],
+          ["AutoGen", "可对话agent配合可编程模式", "自由消息传递（顺序、群聊、嵌套）", "需要动态交互的灵活多agent任务"],
+          ["ToolLLM", "带回溯的树搜索规划器", "单agent在API序列上的DFSDT规划", "带失败恢复的复杂多步API编排"],
+          ["Claude Code Teams", "共享任务列表 + 基于文件的邮箱", "文件系统原语配合文件锁", "简单协调的并行编程任务"],
+          ["Codex子智能体", "扇出/扇入配合深度限制", "仅结果通信（无点对点）", "聚焦子任务配合合并结果"]
+        ]
+      }
+    }
+  ],
+  "cross_cutting_comparison": {
+    "headers": ["维度", "OpenClaw", "Claude Code", "Codex", "OpenHands", "SWE-agent"],
+    "rows": [
+      ["主要用途", "通用自主智能体", "软件工程", "软件工程", "软件工程", "软件工程（研究）"],
+      ["架构", "持久守护进程（5组件）", "CLI + ~40工具 + QueryEngine", "多表面App Server (JSON-RPC)", "Docker沙箱化平台", "定制ACI + agent循环"],
+      ["Agent循环", "通过Brain组件的ReAct", "三阶段（收集→行动→验证）", "模型/harness迭代循环", "CodeAct（可执行Python）", "基于定制ACI的循环"],
+      ["沙箱", "扁平权限（第三方包装器）", "权限模型（4模式）+ 可选第二个LLM", "OS级（Seatbelt, bubblewrap+seccomp）", "Docker容器", "Docker容器"],
+      ["上下文管理", "Guard Context（摘要/截断）", "5阶段回退压缩", "Prompt caching + 加密压缩", "事件流状态", "窗口化文件查看器"],
+      ["多智能体", "渠道绑定（无原生点对点）", "子智能体 + Agent Teams（实验性）", "子智能体（扇出/扇入，最多6）", "单智能体", "单智能体"],
+      ["开源", "是（MIT，247K stars）", "是（MIT）", "是（MIT，CLI）", "是（MIT）", "是（MIT）"],
+      ["Wire协议", "内部", "无已发布", "JSON-RPC 2.0 (JSONL)", "事件流", "定制"],
+      ["SWE-bench Verified", "N/A", "80.9%", "72.1%", "53%", "12.5% Full (2024 SOTA)"],
+      ["调度", "内置Heartbeat", "外部", "外部（GitHub Action）", "外部", "外部"]
+    ]
+  }
+}
