@@ -375,11 +375,31 @@ OUTPUT_SCHEMA = r"""
 """
 
 
-def synthesize_with_claude(source_context: str, date: str) -> dict:
-    """Use Claude to synthesize the daily review from source data."""
+def _make_anthropic_client():
+    """Create an Anthropic client, supporting both api_key and Bearer session tokens."""
     import anthropic
 
-    client = anthropic.Anthropic()
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if api_key:
+        return anthropic.Anthropic(api_key=api_key)
+
+    # Claude Code web sessions provide a Bearer token via CLAUDE_SESSION_INGRESS_TOKEN_FILE
+    token_file = os.environ.get("CLAUDE_SESSION_INGRESS_TOKEN_FILE")
+    if token_file:
+        try:
+            token = Path(token_file).read_text().strip()
+            if token:
+                return anthropic.Anthropic(auth_token=token)
+        except Exception:
+            pass
+
+    # Fall back to default (reads ANTHROPIC_API_KEY from env or fails)
+    return anthropic.Anthropic()
+
+
+def synthesize_with_claude(source_context: str, date: str) -> dict:
+    """Use Claude to synthesize the daily review from source data."""
+    client = _make_anthropic_client()
 
     prompt = f"""You are an expert AI/ML researcher producing a daily research trends review for {date}.
 
@@ -407,13 +427,13 @@ Output ONLY valid JSON matching this schema (no markdown fences, no commentary):
 """
 
     print("  [Claude] Synthesizing daily review...")
-    response = client.messages.create(
+    with client.messages.stream(
         model=CLAUDE_MODEL,
         max_tokens=16000,
         messages=[{"role": "user", "content": prompt}],
-    )
+    ) as stream:
+        text = stream.get_final_message().content[0].text.strip()
 
-    text = response.content[0].text.strip()
     # Strip markdown fences if present
     if text.startswith("```"):
         text = re.sub(r"^```(?:json)?\s*\n?", "", text)
@@ -456,9 +476,7 @@ def update_index(date: str, review_en: dict, review_cn: dict) -> None:
 
 def translate_to_chinese(review_en: dict) -> dict:
     """Use Claude to translate the English review JSON to Chinese."""
-    import anthropic
-
-    client = anthropic.Anthropic()
+    client = _make_anthropic_client()
 
     prompt = f"""Translate the following AI research daily review JSON from English to Chinese.
 
@@ -469,6 +487,7 @@ Rules:
 - Maintain the exact same JSON structure.
 - Use natural, fluent Chinese suitable for a technical audience.
 - Do not translate proper nouns (model names, tool names, project names) but you may add Chinese explanation in parentheses where helpful.
+- CRITICAL JSON SAFETY: Inside JSON string values, NEVER use bare ASCII double-quote characters ("). Use Chinese quotation marks 「」 or 《》 instead, or escape them as \\". Unescaped double quotes will break JSON parsing.
 
 Input JSON:
 {json.dumps(review_en, indent=2, ensure_ascii=False)}
@@ -476,18 +495,38 @@ Input JSON:
 Output ONLY valid JSON (no markdown fences, no commentary):"""
 
     print("  [Claude] Translating to Chinese...")
-    response = client.messages.create(
+    with client.messages.stream(
         model=CLAUDE_MODEL,
-        max_tokens=16000,
+        max_tokens=32000,
         messages=[{"role": "user", "content": prompt}],
-    )
+    ) as stream:
+        text = stream.get_final_message().content[0].text.strip()
 
-    text = response.content[0].text.strip()
     if text.startswith("```"):
         text = re.sub(r"^```(?:json)?\s*\n?", "", text)
         text = re.sub(r"\n?```\s*$", "", text)
 
-    return json.loads(text)
+    # Try to repair common JSON issue: unescaped ASCII double quotes inside strings
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as first_err:
+        print(f"  [Claude] Translation JSON issue, attempting repair...")
+        # Last resort: truncate to last complete top-level object
+        depth = 0
+        last_complete = 0
+        for i, ch in enumerate(text):
+            if ch == '{':
+                depth += 1
+            elif ch == '}':
+                depth -= 1
+                if depth == 0:
+                    last_complete = i + 1
+        if last_complete > 0:
+            try:
+                return json.loads(text[:last_complete])
+            except json.JSONDecodeError:
+                pass
+        raise first_err
 
 
 def main():
@@ -530,19 +569,20 @@ def main():
     # Step 3: Synthesize English review with Claude
     review_en = synthesize_with_claude(context, date)
 
-    # Step 4: Translate to Chinese
-    review_cn = translate_to_chinese(review_en)
-
-    # Step 5: Write both language files
+    # Step 4: Write English file immediately (before translation, in case translation fails)
     en_file = DAILY_DIR / f"{date}_en.json"
     en_file.write_text(json.dumps(review_en, indent=2, ensure_ascii=False) + "\n")
     print(f"  [Output] Written to {en_file}")
 
+    # Step 5: Translate to Chinese
+    review_cn = translate_to_chinese(review_en)
+
+    # Step 6: Write Chinese file
     cn_file = DAILY_DIR / f"{date}_cn.json"
     cn_file.write_text(json.dumps(review_cn, indent=2, ensure_ascii=False) + "\n")
     print(f"  [Output] Written to {cn_file}")
 
-    # Step 6: Update both index files
+    # Step 7: Update both index files
     update_index(date, review_en, review_cn)
 
     print(f"Done! Review for {date} generated in English and Chinese.")
