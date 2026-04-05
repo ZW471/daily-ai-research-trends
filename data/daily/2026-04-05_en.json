@@ -1,0 +1,612 @@
+{
+  "version": "1.0",
+  "date": "2026-04-05",
+  "generated_at": "2026-04-05T02:10:00.000000+00:00",
+  "summary": {
+    "headline": "CORAL's multi-agent evolution framework surges to 36 upvotes as autonomous AI-for-AI research gains momentum; Steerable Visual Representations hits 40 upvotes; Claude-distilled Qwen and Gemma-4 continue model chart domination",
+    "body": "April 5th's landscape is defined by surging momentum on papers that emerged earlier this week, plus notable new arrivals. **CORAL** (MIT/NUS, 36 upvotes — up from 14 yesterday) has clearly struck a nerve with its framework for autonomous multi-agent evolution on open-ended problems, replacing fixed heuristics with long-running agents that reflect, collaborate, and maintain shared persistent memory. Its companion paper **ASI-Evolve** (17 upvotes) closes the AI-for-AI research loop with a learn-design-experiment-analyze cycle that outperforms GPT-5 baselines. Together they represent the strongest signal yet that self-improving agent systems are moving from theory to implementation.\n\n**Steerable Visual Representations** (40 upvotes, the day's most-engaged paper) continues its upward trajectory, confirming that the ability to redirect frozen ViT features toward arbitrary visual concepts is a genuinely significant result. **\"Therefore I am. I Think\"** (20 upvotes) remains the most intellectually provocative result on the board, with its evidence that reasoning models encode decisions before generating chain-of-thought tokens. The supply chain disruption forecasting paper introduces foresight learning for calibrated probabilistic forecasts that beat GPT-5, an increasingly rare benchmark claim.\n\nThe model landscape shows continued consolidation: Google's Gemma-4 family now has multiple GGUF quantizations circulating (Unsloth's 26B-A4B GGUF at 301k downloads), Jackrong's Claude-4.6-Opus-distilled Qwen3.5 variants have crossed 524k and 241k downloads respectively, and the uncensored Qwen3.5-9B variant leads all models at 715k downloads. New entrants include Hcompany's Holo3-35B-A3B (a multimodal agent MoE model) and Facebook's TRIBEv2. GitHub trends show oh-my-codex and openscreen maintaining explosive growth, while Block's Goose agent (935 stars/day) emerges as a significant new player in the extensible AI agent space.",
+    "key_themes": [
+      "autonomous-multi-agent-evolution",
+      "representation-steering",
+      "llm-pre-decision-encoding",
+      "open-weight-distillation-scaling",
+      "ai-agent-developer-tooling",
+      "supply-chain-ai-forecasting"
+    ]
+  },
+  "researcher_notes": "**CORAL's surge from 14 to 36 upvotes in 24 hours is the most important signal today.** The framework's key innovation — replacing hard-coded exploration rules with agents that autonomously evolve strategies through reflection and shared persistent memory — directly addresses the brittleness of current agent frameworks. The paper's emphasis on \"open-ended discovery\" rather than benchmark optimization suggests a maturation of the agent research community's ambitions. Combined with ASI-Evolve's AI-for-AI research loops (now at 17 upvotes), there's a clear community consensus forming around self-improving agent systems as the next frontier.\n\n**The \"Therefore I am. I Think\" paper deserves continued attention for its methodological implications.** Linear probes decoding tool-calling decisions from pre-generation activations with high confidence — before a single reasoning token is produced — has profound consequences for CoT-based alignment. If the chain-of-thought is post-hoc rationalization, then monitoring CoT for safety may be fundamentally insufficient. The paper's 20 upvotes (steady from yesterday) suggest the community is still processing these implications.\n\n**Steerable Visual Representations at 40 upvotes is now the highest-engaged paper of the week.** The practical implications are significant: retrieval, classification, and segmentation systems can now be dynamically redirected without retraining. This is especially relevant as multimodal LLMs continue to lose spatial fidelity when processing visual inputs through language. A purely visual steering mechanism that preserves spatial information fills a genuine gap.\n\n**The trending models reveal a maturing distillation ecosystem.** Jackrong's Claude-4.6-Opus distillations have crossed half a million downloads, while the uncensored variant leads at 715k. This isn't a novelty effect — it's a sustained production-grade adoption pattern. Hcompany's Holo3-35B-A3B is interesting as a multimodal agent-focused MoE model, suggesting that the agent paradigm is starting to influence model architecture design, not just prompting strategies. Netflix's VOID model gaining 310 likes without a paper demonstrates that applied video AI from major tech companies generates its own gravity.\n\n**GitHub trends tell a story of AI tooling maturation.** oh-my-codex (15.7k stars, 1,789/day) and Block's Goose (35.7k stars, 935/day) represent two approaches to extensible AI agents: one extends an existing coding agent, the other builds from scratch with multi-LLM support. The continued growth of onyx (24.3k stars, 1,197/day) as an open-source AI chat platform suggests that self-hosted AI infrastructure is becoming a serious category. The emergence of imbue-ai/mngr as a CLI for managing agents is a small but telling signal — agent orchestration is becoming a first-class developer concern.",
+  "papers": [
+    {
+      "id": "steerable-visual-representations",
+      "title": "Steerable Visual Representations",
+      "authors": ["Jona Ruthardt", "Manu Gaur", "Deva Ramanan", "Makarand Tapaswi", "Yuki M. Asano"],
+      "affiliations": ["Fundamental AI Lab at UTN", "Carnegie Mellon University"],
+      "summary": "Introduces a mechanism to steer pretrained frozen Vision Transformer features toward specific visual concepts (color, texture, shape) without retraining, addressing the limitation that generic ViT features focus on salient cues with no user control over representation focus.",
+      "key_findings": [
+        "Frozen ViT features can be steered toward arbitrary visual concepts without retraining or fine-tuning",
+        "Steered representations outperform both generic ViT and text-prompted multimodal LLM representations on concept-specific tasks",
+        "The approach preserves spatial visual information that language-centric multimodal representations lose"
+      ],
+      "tags": ["vision-transformers", "representation-learning", "steering", "DINOv2", "retrieval"],
+      "relevance": "high",
+      "engagement": {"upvotes": 40, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02327",
+        "huggingface": "https://huggingface.co/papers/2604.02327",
+        "pdf": "https://arxiv.org/pdf/2604.02327"
+      }
+    },
+    {
+      "id": "coral-autonomous-multi-agent-evolution",
+      "title": "CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery",
+      "authors": ["Ao Qu", "Han Zheng", "Zijian Zhou", "Yihao Yan", "Paul Pu Liang et al."],
+      "affiliations": ["MIT", "National University of Singapore", "Carnegie Mellon University"],
+      "summary": "First framework for autonomous multi-agent evolution on open-ended problems, replacing rigid control with long-running agents that explore, reflect, and collaborate through shared persistent memory, asynchronous execution, and heartbeat-based interventions.",
+      "key_findings": [
+        "Autonomous agents outperform fixed-heuristic baselines on sustained open-ended exploration tasks",
+        "Shared persistent memory and asynchronous execution enable emergent collaboration without central coordination",
+        "Heartbeat-based interventions provide lightweight oversight without constraining agent autonomy"
+      ],
+      "tags": ["multi-agent", "open-ended-learning", "autonomous-evolution", "persistent-memory", "LLM-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 36, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01658",
+        "huggingface": "https://huggingface.co/papers/2604.01658",
+        "pdf": "https://arxiv.org/pdf/2604.01658"
+      }
+    },
+    {
+      "id": "nearid-identity-representation-learning",
+      "title": "NearID: Identity Representation Learning via Near-identity Distractors",
+      "authors": ["Aleksandar Cvejic", "Rameen Abdal", "Abdelrahman Eldesokey", "Bernard Ghanem", "Peter Wonka"],
+      "affiliations": ["KAUST Center of Excellence in Generative AI"],
+      "summary": "Introduces a principled framework for evaluating identity-focused tasks using Near-identity distractors that place semantically similar but distinct instances on identical backgrounds, eliminating contextual shortcuts and isolating identity as the sole discriminative signal.",
+      "key_findings": [
+        "Existing vision encoders conflate identity with background context in identity-focused tasks",
+        "Near-identity distractors eliminate contextual shortcuts and isolate genuine identity representation",
+        "The framework enables more reliable evaluation of personalized generation and image editing"
+      ],
+      "tags": ["identity-representation", "personalization", "evaluation", "vision-encoders"],
+      "relevance": "high",
+      "engagement": {"upvotes": 26, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01973",
+        "huggingface": "https://huggingface.co/papers/2604.01973",
+        "pdf": "https://arxiv.org/pdf/2604.01973"
+      }
+    },
+    {
+      "id": "therefore-i-am-i-think",
+      "title": "Therefore I am. I Think",
+      "authors": ["Esakkivel Esakkiraja", "Sai Rajeswar", "Denis Akhiyarov", "Rajagopal Venkatesaramani"],
+      "affiliations": ["ServiceNow AI"],
+      "summary": "Presents evidence that reasoning models encode tool-calling decisions in pre-generation activations before chain-of-thought begins. Linear probes decode these decisions with high confidence, suggesting CoT may serve as post-hoc rationalization rather than genuine deliberation.",
+      "key_findings": [
+        "Linear probes decode tool-calling decisions from pre-generation activations with very high confidence",
+        "In some cases decisions are fully encoded before a single reasoning token is produced",
+        "Chain-of-thought may function as post-hoc rationalization rather than causal reasoning"
+      ],
+      "tags": ["reasoning", "chain-of-thought", "interpretability", "mechanistic-analysis", "LLM-internals"],
+      "relevance": "high",
+      "engagement": {"upvotes": 20, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01202",
+        "huggingface": "https://huggingface.co/papers/2604.01202",
+        "pdf": "https://arxiv.org/pdf/2604.01202"
+      }
+    },
+    {
+      "id": "asi-evolve-ai-accelerates-ai",
+      "title": "ASI-Evolve: AI Accelerates AI",
+      "authors": ["Weixian Xu", "Tiantian Mi", "Yixiu Liu", "Yang Nan", "Pengfei Liu et al."],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "An agentic framework for AI-for-AI research that closes the research loop through a learn-design-experiment-analyze cycle, substantially outperforming GPT-5 baselines on accuracy, calibration, and precision for forecasting tasks.",
+      "key_findings": [
+        "End-to-end agentic research cycle automates costly, long-horizon AI research loops",
+        "Task-specific adaptation through learn-design-experiment-analyze outperforms general-purpose models",
+        "Framework substantially outperforms GPT-5 on accuracy, calibration, and precision"
+      ],
+      "tags": ["AI-for-AI", "agentic-research", "self-improving-systems", "automation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.29640",
+        "huggingface": "https://huggingface.co/papers/2603.29640",
+        "pdf": "https://arxiv.org/pdf/2603.29640"
+      }
+    },
+    {
+      "id": "aibench-academic-illustration-evaluation",
+      "title": "AIBench: Evaluating Visual-Logical Consistency in Academic Illustration Generation",
+      "authors": ["Zhaohe Liao", "Kaixun Jiang", "Zhihang Liu", "Yujie Wei", "Xihui Liu et al."],
+      "affiliations": ["University of Hong Kong", "Alibaba Group"],
+      "summary": "First systematic benchmark for evaluating whether state-of-the-art image generation models can produce ready-to-use academic illustrations, addressing the gap between general image quality and the visual-logical consistency required for scientific figures.",
+      "key_findings": [
+        "Current image generation models struggle with visual-logical consistency required for academic illustrations",
+        "VLM-based evaluation is unreliable for complex academic figures with long text descriptions",
+        "A structured evaluation framework reveals systematic failure modes in scientific figure generation"
+      ],
+      "tags": ["benchmark", "academic-illustrations", "image-generation", "evaluation", "scientific-figures"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 9, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28068",
+        "huggingface": "https://huggingface.co/papers/2603.28068",
+        "pdf": "https://arxiv.org/pdf/2603.28068"
+      }
+    },
+    {
+      "id": "video-models-reason-early",
+      "title": "Video Models Reason Early: Exploiting Plan Commitment for Maze Solving",
+      "authors": ["Kaleb Newman", "Tyler Zhu", "Olga Russakovsky"],
+      "affiliations": ["Princeton University"],
+      "summary": "Reveals that video diffusion models commit to a high-level motion plan within the first few denoising steps when solving mazes, after which further denoising alters visual details but not the underlying trajectory — a form of early plan commitment.",
+      "key_findings": [
+        "Video diffusion models commit to a high-level trajectory plan in the earliest denoising steps",
+        "Later denoising steps refine visual appearance without changing the committed plan",
+        "Early plan commitment can be exploited to improve maze-solving performance"
+      ],
+      "tags": ["video-diffusion", "planning", "denoising-dynamics", "maze-solving", "emergent-reasoning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 8, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.30043",
+        "huggingface": "https://huggingface.co/papers/2603.30043",
+        "pdf": "https://arxiv.org/pdf/2603.30043"
+      }
+    },
+    {
+      "id": "tex3d-adversarial-3d-textures-vla",
+      "title": "Tex3D: Objects as Attack Surfaces via Adversarial 3D Textures for Vision-Language-Action Models",
+      "authors": ["Jiawei Chen", "Simin Huang", "Jiawei Du", "Shuaihang Chen", "Zhaoxia Yin et al."],
+      "affiliations": ["Anhui University", "Chinese Academy of Sciences", "National University of Singapore"],
+      "summary": "Demonstrates physically realizable adversarial attacks on vision-language-action models through adversarial 3D textures applied to manipulated objects — a more practical attack surface than prior 2D patch methods for real-world robotic deployments.",
+      "key_findings": [
+        "3D adversarial textures on manipulated objects transfer effectively to physical robotic settings",
+        "VLA models are vulnerable to attacks embedded in the objects they interact with",
+        "The 3D attack surface is more physically realistic than prior 2D patch-based approaches"
+      ],
+      "tags": ["adversarial-attacks", "VLA-models", "robotics", "3D-textures", "safety"],
+      "relevance": "high",
+      "engagement": {"upvotes": 8, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01618",
+        "huggingface": "https://huggingface.co/papers/2604.01618",
+        "pdf": "https://arxiv.org/pdf/2604.01618"
+      }
+    },
+    {
+      "id": "mdpbench-multilingual-document-parsing",
+      "title": "MDPBench: A Benchmark for Multilingual Document Parsing in Real-World Scenarios",
+      "authors": ["Zhang Li", "Zhibo Lin", "Qiang Liu", "Yuliang Liu et al."],
+      "affiliations": ["Huazhong University of Science and Technology"],
+      "summary": "First benchmark for multilingual digital and photographed document parsing, addressing the gap where performant models focus on clean English documents while real-world scenarios involve diverse scripts, low-resource languages, and photographed documents.",
+      "key_findings": [
+        "No systematic benchmark existed for multilingual digital and photographed document parsing",
+        "Models performant on clean English documents degrade significantly on diverse scripts and low-resource languages",
+        "Photographed documents introduce additional challenges beyond digital document parsing"
+      ],
+      "tags": ["document-parsing", "multilingual", "benchmark", "OCR", "low-resource"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 7, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28130",
+        "huggingface": "https://huggingface.co/papers/2603.28130",
+        "pdf": "https://arxiv.org/pdf/2603.28130"
+      }
+    },
+    {
+      "id": "bayesian-optimization-tutorial",
+      "title": "Efficient and Principled Scientific Discovery through Bayesian Optimization: A Tutorial",
+      "authors": ["Zhongwei Yu", "Rasul Tutunov", "Alexandre Max Maraval", "Jun Wang et al."],
+      "affiliations": ["University College London", "Huawei Noah's Ark Lab"],
+      "summary": "Comprehensive tutorial presenting Bayesian Optimization as a principled probability-driven framework that formalizes and automates the scientific hypothesis-experiment-refine cycle, aiming to replace ad-hoc experimental design with efficient, systematic optimization.",
+      "key_findings": [
+        "BO formalizes the traditional scientific cycle into a principled probability-driven framework",
+        "The tutorial bridges the gap between BO theory and practical scientific applications",
+        "Demonstrates resource savings through systematic experimental design versus intuition-driven approaches"
+      ],
+      "tags": ["bayesian-optimization", "scientific-discovery", "tutorial", "experimental-design"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01328",
+        "huggingface": "https://huggingface.co/papers/2604.01328",
+        "pdf": "https://arxiv.org/pdf/2604.01328"
+      }
+    },
+    {
+      "id": "forecasting-supply-chain-disruptions",
+      "title": "Forecasting Supply Chain Disruptions with Foresight Learning",
+      "authors": ["Benjamin Turtel", "Paul Wilczewski", "Kris Skotheim"],
+      "affiliations": ["Resilinc"],
+      "summary": "An end-to-end framework that trains LLMs to produce calibrated probabilistic forecasts of supply chain disruptions using realized disruption outcomes as supervision, substantially outperforming GPT-5 on accuracy, calibration, and precision.",
+      "key_findings": [
+        "Task-specific LLM fine-tuning with disruption supervision outperforms general-purpose models including GPT-5",
+        "Calibrated probabilistic forecasts enable actionable supply chain risk management",
+        "Foresight learning addresses the challenge of reasoning about infrequent, high-impact events from noisy inputs"
+      ],
+      "tags": ["supply-chain", "forecasting", "LLM-finetuning", "probabilistic-prediction", "enterprise-AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01298",
+        "huggingface": "https://huggingface.co/papers/2604.01298",
+        "pdf": "https://arxiv.org/pdf/2604.01298"
+      }
+    },
+    {
+      "id": "signals-trajectory-triage",
+      "title": "Signals: Trajectory Sampling and Triage for Agentic Interactions",
+      "authors": ["Shuguang Chen", "Adil Hafeez", "Salman Paracha"],
+      "affiliations": ["Amazon"],
+      "summary": "Proposes a lightweight, signal-based framework for triaging agentic interaction trajectories at scale, addressing the challenge that agent trajectories are voluminous, non-deterministic, and prohibitively expensive to review individually.",
+      "key_findings": [
+        "Agent trajectory review at scale requires lightweight signal-based triage rather than exhaustive review",
+        "Signal-based framework enables efficient identification of anomalous or interesting trajectories",
+        "The framework is practical for post-deployment improvement of multi-step agentic systems"
+      ],
+      "tags": ["agents", "trajectory-analysis", "monitoring", "triage", "observability"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.00356",
+        "huggingface": "https://huggingface.co/papers/2604.00356",
+        "pdf": "https://arxiv.org/pdf/2604.00356"
+      }
+    },
+    {
+      "id": "ask-or-assume-clarification-coding-agents",
+      "title": "Ask or Assume? Uncertainty-Aware Clarification-Seeking in Coding Agents",
+      "authors": ["Nicholas Edwards", "Sebastian Schuster"],
+      "affiliations": ["Saarland University"],
+      "summary": "Systematically evaluates clarification-seeking abilities of LLM coding agents on underspecified tasks, finding that current agents optimized for autonomous execution rarely ask clarifying questions when human developers naturally would.",
+      "key_findings": [
+        "Current coding agents rarely seek clarification even when instructions are critically underspecified",
+        "Agents optimized for autonomous execution miss crucial context that humans would ask about",
+        "Uncertainty-aware clarification improves task completion on underspecified SWE-bench variants"
+      ],
+      "tags": ["coding-agents", "clarification", "uncertainty", "SWE-bench", "human-AI-interaction"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26233",
+        "huggingface": "https://huggingface.co/papers/2603.26233",
+        "pdf": "https://arxiv.org/pdf/2603.26233"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "jackrong-qwen35-27b-claude-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "Community-distilled 27B model transferring Claude 4.6 Opus reasoning capabilities into Qwen3.5 architecture. Leading downloads at 524k with 2,291 likes, representing the most successful open-weight reasoning distillation to date.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["distillation", "reasoning", "chain-of-thought", "multimodal"],
+      "metrics": {"downloads": 524224, "likes": 2291},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "hauhaucs-qwen35-9b-uncensored",
+      "name": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (Community)",
+      "description": "Uncensored 9B Qwen3.5 variant leading all models with 715k downloads and 968 likes. The aggressive uncensoring approach indicates strong demand for unrestricted open-weight models.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["uncensored", "multilingual", "qwen3.5"],
+      "metrics": {"downloads": 715586, "likes": 968},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's vision-language OCR model based on InternVL architecture for document intelligence. 957 likes and growing downloads indicate strong demand for specialized OCR capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["OCR", "vision-language", "internvl", "document-understanding"],
+      "metrics": {"downloads": 36635, "likes": 957},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "Gemma-4-31B-it",
+      "organization": "Google",
+      "description": "Google's flagship 31B dense instruction-tuned model from the Gemma-4 family with multimodal image-text-to-text capabilities. Downloads climbing to 287k as the ecosystem matures.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "instruction-tuned"],
+      "metrics": {"downloads": 287440, "likes": 853},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "cohere-transcribe-03-2026",
+      "name": "Cohere Transcribe 03-2026",
+      "organization": "Cohere Labs",
+      "description": "Cohere's automatic speech recognition model. 790 likes and 96k downloads signal sustained interest as the audio modality gains attention from major labs.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "unknown",
+      "tags": ["ASR", "speech", "audio", "transcription"],
+      "metrics": {"downloads": 96615, "likes": 790},
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "mistral-voxtral-4b-tts",
+      "name": "Voxtral-4B-TTS-2603",
+      "organization": "Mistral AI",
+      "description": "Mistral's 4B-parameter text-to-speech model. 661 likes on 5k downloads suggests strong community interest outpacing actual deployment, possibly awaiting tooling integration.",
+      "task_type": "text-to-speech",
+      "model_size": "4B",
+      "tags": ["TTS", "speech-synthesis", "multilingual"],
+      "metrics": {"downloads": 5096, "likes": 661},
+      "source_url": "https://huggingface.co/mistralai/Voxtral-4B-TTS-2603"
+    },
+    {
+      "id": "jackrong-qwen35-27b-gguf",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-v2-GGUF",
+      "organization": "Jackrong (Community)",
+      "description": "GGUF quantization of the Claude-distilled Qwen3.5-27B for llama.cpp deployment. 241k downloads and 502 likes demonstrate strong demand for locally-runnable reasoning models.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B (quantized)",
+      "tags": ["gguf", "distillation", "reasoning", "local-inference"],
+      "metrics": {"downloads": 241087, "likes": 502},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-v2-GGUF"
+    },
+    {
+      "id": "bonsai-8b-gguf",
+      "name": "Bonsai-8B-gguf",
+      "organization": "Prism ML",
+      "description": "1-bit quantized 8B model in GGUF format for extreme edge deployment. 384 likes and 32k downloads reflect growing interest in ultra-efficient inference.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": ["1-bit", "quantization", "edge-deployment", "gguf"],
+      "metrics": {"downloads": 32930, "likes": 384},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "google-gemma-4-26b-a4b-it",
+      "name": "Gemma-4-26B-A4B-it",
+      "organization": "Google",
+      "description": "Google's 26B MoE model with only 4B active parameters, offering dense-model quality at a fraction of compute cost. Now at 133k downloads, growing steadily.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": ["gemma4", "MoE", "efficient-inference", "multimodal"],
+      "metrics": {"downloads": 133224, "likes": 355},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "void-model",
+      "organization": "Netflix",
+      "description": "Netflix's video inpainting model for physics-aware object removal, the model behind the VOID paper. 310 likes with 0 downloads suggests gated or upcoming release generating anticipatory engagement.",
+      "task_type": "video-inpainting",
+      "model_size": "unknown",
+      "tags": ["video-inpainting", "object-removal", "diffusion", "CogVideoX"],
+      "metrics": {"downloads": 0, "likes": 310},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "hcompany-holo3-35b-a3b",
+      "name": "Holo3-35B-A3B",
+      "organization": "Hcompany",
+      "description": "New multimodal agent-focused MoE model with 35B parameters and 3B active. Architecture based on Qwen3.5-MoE suggests agent-specific model design is emerging as a distinct category.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": ["MoE", "multimodal", "agent", "qwen3.5-moe"],
+      "metrics": {"downloads": 1302, "likes": 215},
+      "source_url": "https://huggingface.co/Hcompany/Holo3-35B-A3B"
+    },
+    {
+      "id": "facebook-tribev2",
+      "name": "TRIBEv2",
+      "organization": "Meta/Facebook",
+      "description": "Facebook's latest research model release. 293 likes and 39k downloads with limited public documentation — Meta continues to release models with minimal fanfare.",
+      "task_type": "unknown",
+      "model_size": "unknown",
+      "tags": ["meta", "research"],
+      "metrics": {"downloads": 39686, "likes": 293},
+      "source_url": "https://huggingface.co/facebook/tribev2"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "oh-my-codex",
+      "name": "Yeachan-Heo/oh-my-codex",
+      "description": "Extension framework for OpenAI Codex CLI adding hooks, agent teams, HUDs, and more. Sustained explosive growth at 1,789 stars/day (15.7k total) — now the dominant AI coding agent customization platform.",
+      "language": "TypeScript",
+      "stars": 15698,
+      "stars_today": 1789,
+      "forks": 1473,
+      "url": "https://github.com/Yeachan-Heo/oh-my-codex",
+      "tags": ["AI-coding", "codex", "developer-tools", "extensions"],
+      "relevance": "high"
+    },
+    {
+      "id": "openscreen",
+      "name": "siddharthvaddem/openscreen",
+      "description": "Free, open-source screen recording studio with no subscriptions or watermarks. Continued explosive growth at 1,591 stars/day, now 20k total. The developer demo creation category is real.",
+      "language": "TypeScript",
+      "stars": 20066,
+      "stars_today": 1591,
+      "forks": 1367,
+      "url": "https://github.com/siddharthvaddem/openscreen",
+      "tags": ["developer-tools", "screen-recording", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "onyx",
+      "name": "onyx-dot-app/onyx",
+      "description": "Open-source AI chat platform supporting every LLM with advanced features. 1,197 stars/day (24.3k total) confirms self-hosted AI chat infrastructure is becoming a serious category.",
+      "language": "Python",
+      "stars": 24287,
+      "stars_today": 1197,
+      "forks": 3256,
+      "url": "https://github.com/onyx-dot-app/onyx",
+      "tags": ["AI-chat", "self-hosted", "LLM-platform", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "sherlock",
+      "name": "sherlock-project/sherlock",
+      "description": "OSINT tool for hunting social media accounts by username. Perennial trending repo at 994 stars/day and 79k total stars.",
+      "language": "Python",
+      "stars": 79394,
+      "stars_today": 994,
+      "forks": 9252,
+      "url": "https://github.com/sherlock-project/sherlock",
+      "tags": ["OSINT", "security", "social-media"],
+      "relevance": "low"
+    },
+    {
+      "id": "goose",
+      "name": "block/goose",
+      "description": "Open-source extensible AI agent from Block that goes beyond code suggestions with install, execute, edit, and test capabilities across any LLM. 935 stars/day at 35.7k total represents a serious Codex alternative.",
+      "language": "Rust",
+      "stars": 35722,
+      "stars_today": 935,
+      "forks": 3349,
+      "url": "https://github.com/block/goose",
+      "tags": ["AI-agent", "coding", "extensible", "multi-LLM"],
+      "relevance": "high"
+    },
+    {
+      "id": "mlx-vlm",
+      "name": "Blaizzy/mlx-vlm",
+      "description": "MLX-based Vision Language Model inference and fine-tuning for Apple Silicon. 343 stars/day (3.6k total) shows Apple ecosystem AI tooling continues to grow.",
+      "language": "Python",
+      "stars": 3616,
+      "stars_today": 343,
+      "forks": 397,
+      "url": "https://github.com/Blaizzy/mlx-vlm",
+      "tags": ["MLX", "VLM", "Apple-Silicon", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "lightrag",
+      "name": "HKUDS/LightRAG",
+      "description": "Simple and fast retrieval-augmented generation framework (EMNLP2025). 263 stars/day at 32k total, showing sustained production interest in RAG tooling.",
+      "language": "Python",
+      "stars": 32112,
+      "stars_today": 263,
+      "forks": 4593,
+      "url": "https://github.com/HKUDS/LightRAG",
+      "tags": ["RAG", "retrieval", "LLM", "EMNLP"],
+      "relevance": "high"
+    },
+    {
+      "id": "telegram-desktop",
+      "name": "telegramdesktop/tdesktop",
+      "description": "Telegram Desktop messaging app. 249 stars/day at 30.8k total — likely trending due to a major release or policy-related attention.",
+      "language": "C++",
+      "stars": 30844,
+      "stars_today": 249,
+      "forks": 6520,
+      "url": "https://github.com/telegramdesktop/tdesktop",
+      "tags": ["messaging", "desktop-app", "open-source"],
+      "relevance": "low"
+    },
+    {
+      "id": "microsoft-agent-framework",
+      "name": "microsoft/agent-framework",
+      "description": "Microsoft's framework for building, orchestrating and deploying AI agents and multi-agent workflows in Python and .NET. 72 stars/day at 8.7k total.",
+      "language": "Python",
+      "stars": 8716,
+      "stars_today": 72,
+      "forks": 1438,
+      "url": "https://github.com/microsoft/agent-framework",
+      "tags": ["agents", "multi-agent", "microsoft", "orchestration"],
+      "relevance": "high"
+    },
+    {
+      "id": "mlx-lm",
+      "name": "ml-explore/mlx-lm",
+      "description": "Apple's official MLX LLM inference package. 28 stars/day at 4.4k total — steady growth as the Apple Silicon ML ecosystem matures.",
+      "language": "Python",
+      "stars": 4434,
+      "stars_today": 28,
+      "forks": 535,
+      "url": "https://github.com/ml-explore/mlx-lm",
+      "tags": ["MLX", "Apple-Silicon", "LLM", "inference"],
+      "relevance": "high"
+    },
+    {
+      "id": "imbue-mngr",
+      "name": "imbue-ai/mngr",
+      "description": "CLI for managing AI agents from Imbue. Small but telling signal that agent orchestration is becoming a first-class developer concern.",
+      "language": "Python",
+      "stars": 173,
+      "stars_today": 34,
+      "forks": 22,
+      "url": "https://github.com/imbue-ai/mngr",
+      "tags": ["agents", "CLI", "orchestration", "developer-tools"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Autonomous Multi-Agent Evolution and Self-Improving AI",
+      "description": "CORAL and ASI-Evolve together represent the strongest signal yet that self-improving agent systems are moving from theory to implementation. CORAL's surge from 14 to 36 upvotes confirms this resonates deeply with the research community.",
+      "related_paper_ids": ["coral-autonomous-multi-agent-evolution", "asi-evolve-ai-accelerates-ai", "signals-trajectory-triage"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Pre-Decision Encoding and Representation Control",
+      "description": "Evidence that LLMs encode decisions before CoT (Therefore I Am) and that frozen ViTs can be steered without retraining (Steerable Representations) both suggest current systems have more controllable — and more opaque — internal structure than assumed.",
+      "related_paper_ids": ["therefore-i-am-i-think", "steerable-visual-representations"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open-Weight Distillation at Scale",
+      "description": "Claude-distilled Qwen variants crossing 500k+ downloads, uncensored models at 715k, and multiple GGUF quantizations circulating demonstrate that frontier reasoning distillation is now a production-grade phenomenon, not an experiment.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Agent Developer Tooling Ecosystem",
+      "description": "oh-my-codex, Block's Goose, imbue-ai/mngr, and Microsoft's agent-framework collectively show that AI agent tooling is stratifying: extensions for existing agents, new standalone agents, management CLIs, and enterprise orchestration frameworks.",
+      "related_paper_ids": ["ask-or-assume-clarification-coding-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Adversarial Robustness in Physical AI",
+      "description": "Tex3D's 3D adversarial textures for VLA models represent a genuinely new attack surface for embodied AI. As robotics adoption grows, physical adversarial attacks become increasingly practical concerns.",
+      "related_paper_ids": ["tex3d-adversarial-3d-textures-vla"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-05T02:08:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-05T02:08:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-05T02:08:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-05T02:08:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-05T02:08:00Z",
+      "status": "ok"
+    }
+  ]
+}
