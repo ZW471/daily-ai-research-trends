@@ -1,0 +1,587 @@
+{
+  "version": "1.0",
+  "date": "2026-04-06",
+  "generated_at": "2026-04-06T02:10:00.000000+00:00",
+  "summary": {
+    "headline": "Netflix VOID推出物理感知视频对象移除并发布模型；NousResearch hermes-agent单日获星1,251；Gemma-4生态系统五款模型进入热门前20",
+    "body": "4月6日的研究动态以视频世界模型的融合发展、Gemma-4生态系统的持续主导以及GitHub上AI智能体工具的爆发式增长为显著特征。**Netflix的VOID**论文及模型发布展示了物理感知的视频对象移除技术，不仅能修复背景，还能纠正下游的物理交互——代表了视频编辑智能的真正进步。该模型以395的热度分但零下载量暗示着限制访问策略下的强烈社区期待。\n\n**论文方面迎来一批重量级新作**：**Agentic-MME**首次提出评估多模态大模型智能体能力（工具使用+网络搜索）的综合基准，而**AgentHazard**系统性地评估计算机操作智能体的有害行为——两者共同标志着智能体安全评估基础设施正在快速成熟。**InCoder-32B-Thinking**攻克了芯片设计、GPU优化、嵌入式系统等工业代码领域的推理难题，**CoME-VL**则证明了结合对比学习和自监督视觉编码器能产生更丰富的多模态表征。\n\n模型方面，**Google的Gemma-4系列现已占据热门前20中的5个席位**，包括NVIDIA的NVFP4量化版和Unsloth的GGUF版——这种生态系统饱和速度极为罕见。**LiquidAI的LFM2.5-350M**作为面向边缘部署的非Transformer架构模型引人注目，**k2-fsa/OmniVoice**则为开源TTS带来了覆盖650+语言的零样本语音克隆能力。GitHub趋势显示**NousResearch/hermes-agent**以单日1,251星（总计26.4k）成为最大新星，**openscreen**继续飙升至单日2,749星。",
+    "key_themes": [
+      "physics-aware-video-intelligence",
+      "agent-safety-benchmarking",
+      "gemma4-ecosystem-saturation",
+      "edge-model-proliferation",
+      "ai-agent-framework-wars",
+      "industrial-code-reasoning"
+    ]
+  },
+  "researcher_notes": "**Netflix VOID是今日技术上最有趣的模型发布。**视频对象移除技术如果能理解下游物理交互——碰撞、弹跳、支撑关系——那就超越了表面修补，进入了真正的场景理解领域。基于CogVideoX的架构加上395赞但0下载量的组合，暗示Netflix正通过分阶段发布策略来积累社区期待。配套论文（5条评论，新论文中互动最高）证实了热度背后有实质性的技术内容。\n\n**智能体安全评估基础设施正在悄然达到临界规模。**Agentic-MME和AgentHazard同日出现，代表了互补的评估框架：前者测试智能体是否正确高效地使用工具，后者测试智能体是否会被诱导产生有害行为。结合昨天CORAL的自主多智能体进化框架，我们看到研究社区在同步构建更强大的智能体系统和评估它们的安全基础设施。这种并行发展是一个健康的信号。\n\n**Gemma-4的生态系统主导地位现已达到开源模型家族前所未有的程度。**热门前20中的五个变体（31B-it、26B-A4B-it、E4B-it、E2B-it，加上NVIDIA的NVFP4量化版）覆盖了从2B等效到31B密集的完整算力光谱。Unsloth的GGUF量化版达到487k下载量，dealignai的去对齐变体同时出现，表明社区正以前所未有的速度同时部署和定制Gemma-4。这种生态系统速度——从实验室发布到生产量化到去审查变体——从数月压缩到数周，标志着开源部署管线的日趋成熟。\n\n**边缘AI竞赛正以真正差异化的方式加剧。**LiquidAI的LFM2.5-350M采用非Transformer架构（液态基础模型）用于边缘部署，Prism ML的Bonsai-8B推动1比特量化，Google的Gemma-4-E2B提供2B等效的全模态模型，k2-fsa/OmniVoice覆盖650+语言的零样本TTS。共同线索：每个方案都针对不同的模态或硬件约束，而非在文本基准上正面竞争。边缘AI正在向专业化细分市场分层。\n\n**GitHub的AI智能体工具生态正在高效分化。**NousResearch的hermes-agent（单日1,251星）加入Block的Goose（882/天）、badlogic的pi-mono（355/天）和Microsoft的agent-framework（278/天，较昨日72/天大幅飙升）的行列，各自代表了不同的智能体构建方法。hermes-agent「与你一起成长的智能体」的口号及其NousResearch的研究血统暗示了一种模型原生的方法，而pi-mono的全栈工具（CLI + 统一LLM API + TUI + Slack机器人 + vLLM pods）则面向完整的部署生命周期。Google的设备端ML Gallery（389/天，17k总星数）也在趋势榜上，再次确认设备端推理正在成为主流开发者关注点。",
+  "papers": [
+    {
+      "id": "void-video-object-interaction-deletion",
+      "title": "VOID: 视频对象与交互删除",
+      "authors": ["Saman Motamed", "William Harvey", "Benjamin Klein", "Luc Van Gool", "Zhuoning Yuan"],
+      "affiliations": ["Netflix", "ETH Zurich"],
+      "summary": "提出物理感知的视频对象移除方法，不仅修复背景，还能纠正被移除对象所产生的下游物理交互（碰撞、支撑关系），并在HuggingFace上同步发布模型。",
+      "key_findings": [
+        "当被移除对象存在显著物理交互时，现有视频对象移除方法表现不佳",
+        "VOID能纠正碰撞和支撑变化等下游交互伪影，而非仅修复外观",
+        "模型与论文同步发布，获得395赞的社区高度关注"
+      ],
+      "tags": ["video-inpainting", "object-removal", "physics-aware", "diffusion", "CogVideoX"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 5},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02296",
+        "huggingface": "https://huggingface.co/papers/2604.02296",
+        "pdf": "https://arxiv.org/pdf/2604.02296"
+      }
+    },
+    {
+      "id": "agentic-mme-multimodal-intelligence",
+      "title": "Agentic-MME: 智能体能力究竟为多模态智能带来了什么？",
+      "authors": ["Qianshan Wei", "Yishan Yang", "Siyi Wang", "Jinglin Chen", "Binyu Wang"],
+      "affiliations": ["Fudan University", "Shanghai AI Lab"],
+      "summary": "首个全面评估多模态大模型智能体能力的基准，测试视觉扩展（工具调用）和知识扩展（网络搜索），并验证工具是否被实际调用、正确应用和高效使用。",
+      "key_findings": [
+        "现有多模态评估无法验证工具是否被实际调用或正确应用",
+        "智能体能力（工具使用+搜索）在被动观察之外提供了可衡量的智能增益",
+        "基准揭示了工具可用性与有效工具利用之间的显著差距"
+      ],
+      "tags": ["multimodal", "agents", "benchmark", "tool-use", "MLLM"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03016",
+        "huggingface": "https://huggingface.co/papers/2604.03016",
+        "pdf": "https://arxiv.org/pdf/2604.03016"
+      }
+    },
+    {
+      "id": "agenthazard-harmful-behavior-benchmark",
+      "title": "AgentHazard: 计算机操作智能体有害行为评估基准",
+      "authors": ["Yunhao Feng", "Yifan Ding", "Yingshui Tan", "Xingjun Ma", "Yige Li"],
+      "affiliations": ["Fudan University", "University of Melbourne"],
+      "summary": "系统性评估计算机操作智能体有害行为的基准。这类智能体维护持久状态并将输出转化为具体行动，产生了与聊天系统截然不同的安全挑战。",
+      "key_findings": [
+        "计算机操作智能体因其持久状态特性产生了与聊天系统根本不同的安全挑战",
+        "智能体将中间输出转化为现实行动，使有害行为具有直接后果",
+        "现有LLM安全评估不足以覆盖具有工具和环境访问能力的智能体系统"
+      ],
+      "tags": ["agent-safety", "benchmark", "computer-use", "harmful-behavior", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02947",
+        "huggingface": "https://huggingface.co/papers/2604.02947",
+        "pdf": "https://arxiv.org/pdf/2604.02947"
+      }
+    },
+    {
+      "id": "come-vl-multi-encoder-vlm",
+      "title": "CoME-VL: 互补多编码器视觉语言学习的规模化",
+      "authors": ["Ankan Deria", "Komal Kumar", "Xilin He", "Imran Razzak", "Hisham Cholakkal"],
+      "affiliations": ["Mohamed bin Zayed University of AI", "University of New South Wales"],
+      "summary": "证明结合对比学习（CLIP风格）和自监督视觉编码器能为VLM产生比单一编码器更丰富的密集视觉特征，挑战了当前视觉语言模型的单编码器范式。",
+      "key_findings": [
+        "自监督编码器能捕获比单一对比编码器更丰富的密集特征",
+        "互补多编码器架构在各任务上优于单编码器VLM",
+        "该方法有效扩展，表明当前单编码器VLM存在表征能力浪费"
+      ],
+      "tags": ["VLM", "multi-encoder", "vision-language", "CLIP", "self-supervised"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03231",
+        "huggingface": "https://huggingface.co/papers/2604.03231",
+        "pdf": "https://arxiv.org/pdf/2604.03231"
+      }
+    },
+    {
+      "id": "incoder-32b-thinking-industrial-code",
+      "title": "InCoder-32B-Thinking: 面向工业代码的思维世界模型",
+      "authors": ["Jian Yang", "Wei Zhang", "Jiajun Wu", "Junhang Cheng", "Tuney Zheng"],
+      "affiliations": ["Peking University", "ByteDance"],
+      "summary": "针对芯片设计、GPU优化、嵌入式系统等缺乏专家推理轨迹的工业代码领域，利用错误驱动的思维链训练构建硬件约束代码的推理能力。",
+      "key_findings": [
+        "工业软件领域缺乏针对硬件约束推理的专家推理轨迹",
+        "错误驱动的思维链训练能从有限的工业代码数据中引导推理能力",
+        "320亿参数模型在芯片设计和GPU优化任务上达到有竞争力的表现"
+      ],
+      "tags": ["code-generation", "industrial-code", "chip-design", "reasoning", "embedded-systems"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03144",
+        "huggingface": "https://huggingface.co/papers/2604.03144",
+        "pdf": "https://arxiv.org/pdf/2604.03144"
+      }
+    },
+    {
+      "id": "lome-human-object-manipulation",
+      "title": "LOME: 通过动作条件化自我中心世界模型学习人-物操作",
+      "authors": ["Quankai Gao", "Jiawei Yang", "Qiangeng Xu", "Le Chen", "Yue Wang"],
+      "affiliations": ["University of Southern California", "Stanford University"],
+      "summary": "一种自我中心世界模型方法，无需逐对象物理建模即可泛化至多种物体形态的操作任务，用学习的动作条件化生成替代传统基于物理的动画。",
+      "key_findings": [
+        "自我中心世界模型绕过了逐对象物理建模和手动设置的需求",
+        "动作条件化生成实现了跨多种物体形态的操作",
+        "该方法在泛化至新物体方面优于基于物理的方法"
+      ],
+      "tags": ["world-models", "manipulation", "egocentric", "robotics", "video-generation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.27449",
+        "huggingface": "https://huggingface.co/papers/2603.27449",
+        "pdf": "https://arxiv.org/pdf/2603.27449"
+      }
+    },
+    {
+      "id": "multigen-multiplayer-diffusion-worlds",
+      "title": "MultiGen: 扩散游戏引擎中可编辑多人世界的关卡设计",
+      "authors": ["Ryan Po", "David Junhao Zhang", "Amir Hertz", "Gordon Wetzstein", "Neal Wadhwa"],
+      "affiliations": ["Stanford University", "Google DeepMind"],
+      "summary": "解决视频世界模型的两个核心交互性限制：用户对环境的控制以实现可复现、可编辑的体验，以及多玩家共同影响世界状态的共享推理。",
+      "key_findings": [
+        "当前视频世界模型缺乏用户控制以实现可复现、可编辑的体验",
+        "共享推理实现多人交互是扩散世界模型的新能力",
+        "关卡设计工具允许在扩散游戏引擎中进行用户控制的环境创建"
+      ],
+      "tags": ["world-models", "game-engines", "multiplayer", "diffusion", "interactive-simulation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.06679",
+        "huggingface": "https://huggingface.co/papers/2603.06679",
+        "pdf": "https://arxiv.org/pdf/2603.06679"
+      }
+    },
+    {
+      "id": "dynavid-highly-dynamic-videos",
+      "title": "DynaVid: 使用合成运动数据学习生成高动态视频",
+      "authors": ["Wonjoon Jin", "Jiyun Won", "Janghyeok Han", "Qi Dai", "Chong Luo"],
+      "affiliations": ["KAIST", "Microsoft Research Asia"],
+      "summary": "通过引入合成运动数据作为训练增强策略，解决当前视频扩散模型无法生成逼真高动态运动的问题，针对标准数据集中动态示例的稀缺性。",
+      "key_findings": [
+        "视频扩散模型因训练数据稀缺而在高动态运动方面表现不佳",
+        "合成运动数据有效增强了动态视频生成的训练",
+        "该方法实现了当前模型所缺乏的精细运动可控性"
+      ],
+      "tags": ["video-generation", "diffusion", "motion-synthesis", "synthetic-data"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01666",
+        "huggingface": "https://huggingface.co/papers/2604.01666",
+        "pdf": "https://arxiv.org/pdf/2604.01666"
+      }
+    },
+    {
+      "id": "xpertbench-expert-level-tasks",
+      "title": "Xpertbench: 基于评分标准的专家级任务评估",
+      "authors": ["Xue Liu", "Xin Ma", "Yuxin Ma", "Yongchang Peng", "Duo Wang"],
+      "affiliations": ["McGill University", "Mila"],
+      "summary": "针对传统LLM基准日益饱和的问题，引入基于评分标准的评估方法，用于复杂、开放式专家级任务的跨领域评估，超越狭隘的答案匹配评估方式。",
+      "key_findings": [
+        "随着LLM达到天花板表现，传统基准正在饱和",
+        "基于评分标准的评估能更好地捕获细微的专家级推理",
+        "该基准揭示了封闭式评估所遗漏的开放式任务上的显著性能差距"
+      ],
+      "tags": ["benchmark", "evaluation", "expert-level", "rubrics", "LLM-assessment"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02368",
+        "huggingface": "https://huggingface.co/papers/2604.02368",
+        "pdf": "https://arxiv.org/pdf/2604.02368"
+      }
+    },
+    {
+      "id": "omni123-3d-native-foundation",
+      "title": "Omni123: 通过统一文本到2D和3D生成探索有限3D数据下的3D原生基础模型",
+      "authors": ["Chongjie Ye", "Cheng Cao", "Chuanyu Pan", "Yihao Zhi et al."],
+      "affiliations": ["Zhejiang University", "Ant Group"],
+      "summary": "通过在单一基础模型中统一文本到2D和文本到3D生成，利用丰富的2D图像数据来引导3D合成能力，解决3D训练数据稀缺的问题。",
+      "key_findings": [
+        "统一的2D+3D生成在单一模型中弥合了3D数据稀缺的差距",
+        "丰富的2D图像可以有效引导3D合成能力",
+        "原生3D能力可以从多模态预训练中涌现"
+      ],
+      "tags": ["3D-generation", "foundation-models", "text-to-3D", "multimodal"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02289",
+        "huggingface": "https://huggingface.co/papers/2604.02289",
+        "pdf": "https://arxiv.org/pdf/2604.02289"
+      }
+    },
+    {
+      "id": "brainstacks-continual-llm-learning",
+      "title": "Brainstacks: 通过冻结MoE-LoRA堆栈实现LLM持续学习的跨域认知能力",
+      "authors": ["Mohammad R. Abu Ayyash"],
+      "affiliations": ["Independent"],
+      "summary": "一种用于LLM持续多领域微调的模块化架构，将领域专业知识打包为冻结适配器堆栈，在共享冻结基座上加性组合，实现无灾难性遗忘的领域知识获取。",
+      "key_findings": [
+        "冻结MoE-LoRA堆栈实现了无灾难性遗忘的领域知识添加",
+        "在冻结基座上的加性组合允许模块化的领域专业知识管理",
+        "该方法无需完整模型重训练即可实现跨域能力"
+      ],
+      "tags": ["continual-learning", "MoE-LoRA", "modular-architecture", "domain-adaptation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01152",
+        "huggingface": "https://huggingface.co/papers/2604.01152",
+        "pdf": "https://arxiv.org/pdf/2604.01152"
+      }
+    },
+    {
+      "id": "actionparty-multi-subject-video",
+      "title": "ActionParty: 生成式视频游戏中的多主体动作绑定",
+      "authors": ["Alexander Pondaven", "Ziyi Wu", "Igor Gilitschenski", "Philip Torr", "Sergey Tulyakov"],
+      "affiliations": ["University of Oxford", "Snap Research", "University of Toronto"],
+      "summary": "攻克视频扩散世界模型中同时控制多个智能体的核心挑战，超越单智能体设置，实现交互环境中的多主体动作绑定。",
+      "key_findings": [
+        "当前视频世界模型基本限于单智能体控制",
+        "多主体动作绑定实现了生成场景中多个智能体的同时控制",
+        "该方法为扩散世界模型中的多人交互环境开辟了道路"
+      ],
+      "tags": ["video-generation", "world-models", "multi-agent", "action-control", "game-AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02330",
+        "huggingface": "https://huggingface.co/papers/2604.02330",
+        "pdf": "https://arxiv.org/pdf/2604.02330"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "Gemma-4-31B-it",
+      "organization": "Google",
+      "description": "Google旗舰级31B密集指令微调多模态模型，以995的热度分登顶趋势榜，下载量达490k。当前最具影响力的开源多模态模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "instruction-tuned"],
+      "metrics": {"downloads": 490200, "likes": 995},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "jackrong-qwen35-27b-claude-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong（社区）",
+      "description": "将Claude 4.6 Opus推理能力蒸馏至Qwen3.5架构的社区27B模型。现达539k下载量和2,349赞——最成功的开源推理蒸馏项目，持续增长中。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["distillation", "reasoning", "chain-of-thought", "multimodal"],
+      "metrics": {"downloads": 539400, "likes": 2349},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "hauhaucs-qwen35-9b-uncensored",
+      "name": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS（社区）",
+      "description": "去审查的9B Qwen3.5变体，现达725k下载量和995赞，维持下载量最高热门模型的地位。对无限制开源模型的持续需求不减。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["uncensored", "multilingual", "qwen3.5"],
+      "metrics": {"downloads": 725100, "likes": 995},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu（百度）",
+      "description": "百度基于InternVL的OCR模型突破1,000赞大关（1,006），文档智能需求持续上升。下载量增至37.7k。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": ["OCR", "vision-language", "internvl", "document-understanding"],
+      "metrics": {"downloads": 37700, "likes": 1006},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "prism-bonsai-8b-gguf",
+      "name": "Bonsai-8B-gguf",
+      "organization": "Prism ML",
+      "description": "用于极端边缘部署的1比特量化8B模型。430热度分和38.6k下载量，1比特推理正获得真正的市场牵引力。",
+      "task_type": "text-generation",
+      "model_size": "8B（1比特）",
+      "tags": ["1-bit", "quantization", "edge-deployment", "gguf"],
+      "metrics": {"downloads": 38600, "likes": 430},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "void-model",
+      "organization": "Netflix",
+      "description": "Netflix的物理感知视频修复模型，用于对象移除。395赞但0下载量暗示限制或分阶段发布。配合VOID论文展示交互感知视频编辑能力。",
+      "task_type": "视频修复",
+      "model_size": "未知",
+      "tags": ["video-inpainting", "object-removal", "diffusion", "CogVideoX"],
+      "metrics": {"downloads": 0, "likes": 395},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "google-gemma-4-e4b-it",
+      "name": "Gemma-4-E4B-it",
+      "organization": "Google",
+      "description": "Google的4B等效全模态模型，支持图文到文本及更广泛的模态生成。197k下载量和355热度分——全模态能力是其差异化优势。",
+      "task_type": "any-to-any",
+      "model_size": "4B等效",
+      "tags": ["gemma4", "any-to-any", "multimodal", "edge"],
+      "metrics": {"downloads": 197700, "likes": 355},
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "cohere-transcribe-03-2026",
+      "name": "Cohere Transcribe 03-2026",
+      "organization": "Cohere Labs",
+      "description": "Cohere的多语言语音识别模型持续攀升，805赞和121k下载量，巩固其作为领先开源转录模型的地位。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "未知",
+      "tags": ["ASR", "speech", "multilingual", "transcription"],
+      "metrics": {"downloads": 121000, "likes": 805},
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "k2-fsa-omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa（新一代Kaldi）",
+      "description": "覆盖650+语言的零样本多语言语音克隆和TTS。245热度分和39.9k下载量——开源TTS中语言覆盖范围惊人。",
+      "task_type": "text-to-speech",
+      "model_size": "未知",
+      "tags": ["TTS", "voice-cloning", "multilingual", "zero-shot"],
+      "metrics": {"downloads": 39900, "likes": 245},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "liquidai-lfm25-350m",
+      "name": "LFM2.5-350M",
+      "organization": "LiquidAI",
+      "description": "LiquidAI的350M参数非Transformer边缘模型，采用液态基础架构。229热度分和14.9k下载量显示替代架构在边缘部署领域的兴趣日增。",
+      "task_type": "text-generation",
+      "model_size": "350M",
+      "tags": ["liquid-architecture", "edge", "non-transformer", "multilingual"],
+      "metrics": {"downloads": 14900, "likes": 229},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-350M"
+    },
+    {
+      "id": "nvidia-gemma-4-31b-nvfp4",
+      "name": "Gemma-4-31B-IT-NVFP4",
+      "organization": "NVIDIA",
+      "description": "NVIDIA使用Model Optimizer对Gemma-4-31B进行的FP4量化。数天内85.9k下载量展示了Gemma-4生态系统企业级量化部署的惊人速度。",
+      "task_type": "text-generation",
+      "model_size": "31B（FP4量化）",
+      "tags": ["quantization", "NVFP4", "gemma4", "nvidia", "inference-optimization"],
+      "metrics": {"downloads": 85900, "likes": 200},
+      "source_url": "https://huggingface.co/nvidia/Gemma-4-31B-IT-NVFP4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openscreen",
+      "name": "siddharthvaddem/openscreen",
+      "description": "免费开源屏幕录制工具。爆发式增长持续，单日2,749星（总计22.6k，较昨日20k上升），确立为Screen Studio的主导开源替代品。",
+      "language": "TypeScript",
+      "stars": 22612,
+      "stars_today": 2749,
+      "forks": 1509,
+      "url": "https://github.com/siddharthvaddem/openscreen",
+      "tags": ["developer-tools", "screen-recording", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch打造的「与你一起成长」的AI智能体。以单日1,251星和26.4k总星数成为最大新星——NousResearch的模型原生血统为智能体框架领域带来了可信度。",
+      "language": "Python",
+      "stars": 26430,
+      "stars_today": 1251,
+      "forks": 3463,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["AI-agent", "LLM", "NousResearch", "autonomous"],
+      "relevance": "high"
+    },
+    {
+      "id": "onyx",
+      "name": "onyx-dot-app/onyx",
+      "description": "支持所有LLM的开源AI聊天平台。以998星/天（25k总计）维持势头，确认自托管AI基础设施已成为持久品类。",
+      "language": "Python",
+      "stars": 25066,
+      "stars_today": 998,
+      "forks": 3351,
+      "url": "https://github.com/onyx-dot-app/onyx",
+      "tags": ["AI-chat", "self-hosted", "LLM-platform", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "goose",
+      "name": "block/goose",
+      "description": "Block的开源可扩展AI智能体，跨LLM提供安装、执行、编辑和测试能力。以882星/天（37k总计）稳步前行，现为星数最高的专用AI智能体仓库。",
+      "language": "Rust",
+      "stars": 37096,
+      "stars_today": 882,
+      "forks": 3553,
+      "url": "https://github.com/block/goose",
+      "tags": ["AI-agent", "coding", "extensible", "multi-LLM"],
+      "relevance": "high"
+    },
+    {
+      "id": "mlx-vlm",
+      "name": "Blaizzy/mlx-vlm",
+      "description": "基于MLX的Apple Silicon视觉语言模型推理和微调。加速至416星/天（3.9k总计，较昨日343上升），搭乘Gemma-4多模态浪潮。",
+      "language": "Python",
+      "stars": 3946,
+      "stars_today": 416,
+      "forks": 421,
+      "url": "https://github.com/Blaizzy/mlx-vlm",
+      "tags": ["MLX", "VLM", "Apple-Silicon", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Google展示设备端ML/GenAI用例的应用画廊，支持本地模型执行。新星以389星/天（17k总计）入榜——Google正将设备端推理打造为一流开发体验。",
+      "language": "Kotlin",
+      "stars": 17002,
+      "stars_today": 389,
+      "forks": 1560,
+      "url": "https://github.com/google-ai-edge/gallery",
+      "tags": ["on-device-ML", "Google", "mobile", "GenAI"],
+      "relevance": "high"
+    },
+    {
+      "id": "pi-mono",
+      "name": "badlogic/pi-mono",
+      "description": "全栈AI智能体工具包：编程智能体CLI、统一LLM API、TUI和Web UI、Slack机器人、vLLM pods。355星/天（31.9k总计）——全生命周期智能体部署方案。",
+      "language": "TypeScript",
+      "stars": 31938,
+      "stars_today": 355,
+      "forks": 3478,
+      "url": "https://github.com/badlogic/pi-mono",
+      "tags": ["AI-agent", "toolkit", "unified-API", "deployment"],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-agent-framework",
+      "name": "microsoft/agent-framework",
+      "description": "Microsoft的AI智能体和多智能体工作流构建部署框架。飙升至278星/天（8.9k总计，较昨日72/天大增）——Microsoft加速其智能体平台布局。",
+      "language": "Python",
+      "stars": 8904,
+      "stars_today": 278,
+      "forks": 1456,
+      "url": "https://github.com/microsoft/agent-framework",
+      "tags": ["agents", "multi-agent", "microsoft", "orchestration"],
+      "relevance": "high"
+    },
+    {
+      "id": "rag-anything",
+      "name": "HKUDS/RAG-Anything",
+      "description": "HKUDS的全能RAG框架。99星/天和15.2k总计，RAG工具生态持续向综合框架整合。",
+      "language": "Python",
+      "stars": 15225,
+      "stars_today": 99,
+      "forks": 1818,
+      "url": "https://github.com/HKUDS/RAG-Anything",
+      "tags": ["RAG", "retrieval", "LLM", "framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Google用于设备端LLM推理的轻量级运行时。124星/天（1.6k总计）——与Gallery应用配合，显示Google正在构建完整的设备端AI技术栈。",
+      "language": "C++",
+      "stars": 1584,
+      "stars_today": 124,
+      "forks": 186,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": ["on-device", "inference", "Google", "runtime"],
+      "relevance": "high"
+    },
+    {
+      "id": "fff-nvim",
+      "name": "dmtrKovalenko/fff.nvim",
+      "description": "面向AI智能体、Neovim、Rust、C和NodeJS的超快文件搜索工具包。76星/天（3.7k总计）——AI优化的文件搜索正成为基础设施原语。",
+      "language": "Rust",
+      "stars": 3709,
+      "stars_today": 76,
+      "forks": 151,
+      "url": "https://github.com/dmtrKovalenko/fff.nvim",
+      "tags": ["file-search", "AI-agents", "neovim", "developer-tools"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "物理感知视频智能",
+      "description": "Netflix的VOID、DynaVid、MultiGen和ActionParty共同展示了视频扩散模型正从视觉质量迈向物理理解——纠正交互伪影、生成动态运动、实现多智能体控制。",
+      "related_paper_ids": ["void-video-object-interaction-deletion", "dynavid-highly-dynamic-videos", "multigen-multiplayer-diffusion-worlds", "actionparty-multi-subject-video"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体安全与评估基础设施",
+      "description": "Agentic-MME和AgentHazard同日出现，代表了互补的评估框架——能力基准测试和安全基准测试——研究社区正在与能力建设并行构建评估基础设施。",
+      "related_paper_ids": ["agentic-mme-multimodal-intelligence", "agenthazard-harmful-behavior-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Gemma-4生态系统饱和",
+      "description": "热门前20中的五个Gemma-4变体（密集、MoE、全模态、GGUF、NVFP4）覆盖2B到31B参数，代表了开源模型家族前所未有的生态系统速度。社区部署管线已从数月压缩至数周。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI智能体框架竞争",
+      "description": "NousResearch hermes-agent（1,251星/天）、Block Goose（882/天）、pi-mono（355/天）和Microsoft agent-framework（278/天，4倍飙升）代表四种不同的智能体构建方法——模型原生、可扩展、全生命周期和企业级——正在高效分化。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "边缘AI架构多元化",
+      "description": "LiquidAI的非Transformer LFM2.5-350M、Prism ML的1比特Bonsai-8B、Google的全模态Gemma-4-E2B和k2-fsa的650语言OmniVoice各自针对不同边缘场景，标志着边缘AI按模态和硬件约束分层而非趋同。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "设备端ML作为开发者平台",
+      "description": "Google AI Edge Gallery（389星/天）、LiteRT-LM（124/天）和Blaizzy mlx-vlm（416/天）显示设备端推理正成为一流开发者平台关注点，而非仅是研究好奇心。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-06T02:08:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-06T02:08:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-06T02:08:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-06T02:08:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-06T02:08:00Z",
+      "status": "ok"
+    }
+  ]
+}
