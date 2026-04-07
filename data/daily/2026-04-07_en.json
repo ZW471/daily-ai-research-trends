@@ -1,0 +1,674 @@
+{
+  "version": "1.0",
+  "date": "2026-04-07",
+  "generated_at": "2026-04-07T02:10:00.000000+00:00",
+  "summary": {
+    "headline": "Self-Distilled RLVR achieves 84 upvotes challenging teacher-student distillation; CORAL introduces autonomous multi-agent evolution for open-ended discovery; SimpleStream baseline embarrasses complex streaming video methods",
+    "body": "April 7th is headlined by a striking result in LLM training methodology: **Self-Distilled RLVR** demonstrates that a model can serve as both teacher and student in on-policy self-distillation, achieving competitive results without requiring a larger teacher model. With 84 upvotes, it's the most engaged paper of the day, signaling broad community interest in simplifying the distillation-RL pipeline. **CORAL** complements this with autonomous multi-agent evolution replacing rigid control heuristics with long-running agents that explore, reflect, and collaborate through shared knowledge — a genuinely novel framework for open-ended AI discovery.\n\nThe video and multimodal space delivers two important simplicity results: **SimpleStream** shows that a sliding-window baseline feeding recent frames to an off-the-shelf VLM matches or surpasses 13 published streaming models (56 upvotes), while **Token Warping** demonstrates that warping tokens rather than pixels helps MLLMs handle viewpoint changes (23 upvotes). Both papers challenge the trend toward ever-more-complex architectures by showing simpler approaches can dominate.\n\nThe model landscape continues its **Gemma-4 domination** with 7 variants in the trending top 20, while **Qwen3.5 distilled from Claude Opus** models generate massive download numbers (548k+). GitHub sees **openscreen** explode to 1,838 stars/day, and **NousResearch/hermes-agent** and **Google AI Edge Gallery** continue their strong upward trajectories, confirming the AI developer tooling boom shows no signs of slowing.",
+    "key_themes": [
+      "self-distillation-without-teachers",
+      "simplicity-beats-complexity",
+      "autonomous-agent-evolution",
+      "reasoning-model-introspection",
+      "gemma4-qwen35-ecosystem-race",
+      "ai-developer-tooling-explosion"
+    ]
+  },
+  "researcher_notes": "**Self-Distilled RLVR is the most consequential training methodology paper today.** The core insight — that RLVR's sparse verifiable reward signals can replace a teacher model's dense signals in self-distillation — challenges the assumption that distillation requires a capability gap between teacher and student. At 84 upvotes, the community clearly sees the practical implications: eliminating the need for a larger teacher model during distillation dramatically reduces the compute requirements for RL-based training. Watch for rapid adoption in the open-weight community, where access to large teacher models is often the bottleneck.\n\n**The 'simplicity wins' theme across two domains is not coincidental.** SimpleStream's embarrassing baseline result (sliding window > 13 complex streaming methods) and Token Warping's elegant approach (warp tokens not pixels for viewpoint changes) both suggest the field has been over-engineering solutions in video understanding. This pattern — where simpler baselines outperform complex architectures once properly evaluated — typically signals that benchmark design, not model architecture, was the real bottleneck. Expect follow-up work to focus on harder benchmarks rather than more complex methods.\n\n**CORAL represents a genuine paradigm shift in multi-agent systems.** Unlike existing multi-agent frameworks that rely on fixed heuristics and hard-coded exploration rules, CORAL's agents autonomously decide when to explore, reflect, and collaborate through shared persistent knowledge. The 43-upvote engagement level for a systems paper (typically lower than methods papers) indicates strong interest in autonomous agent coordination. The connection to real-world agent systems like those being built by NousResearch (hermes-agent, 1,574 stars/day on GitHub) is direct.\n\n**'Therefore I am. I Think' is the sleeper hit that deserves more attention.** The finding that reasoning models commit to decisions before generating their chain-of-thought — detectable via linear probes on pre-generation activations — fundamentally questions whether CoT is reasoning or rationalization. At 28 upvotes, it's well-received but not viral; the implications for interpretability and alignment are potentially enormous. If models decide first and think second, current alignment approaches that target the reasoning process may be targeting the wrong stage.\n\n**The Gemma-4 vs. Qwen3.5 ecosystem race is accelerating.** Gemma-4 holds 7 of 20 trending model slots (31B-it, 26B-A4B, E4B, E2B, NVFP4, two Unsloth GGUFs), but Qwen3.5 distilled from Claude Opus variants are generating extraordinary engagement (2,403 likes, 548k downloads for the 27B variant). The Claude-distilled models represent a fascinating meta-trend: open-weight models trained on closed-model outputs, creating a capability transfer pipeline from proprietary to open ecosystems.",
+  "papers": [
+    {
+      "id": "self-distilled-rlvr",
+      "title": "Self-Distilled RLVR",
+      "authors": ["Chenxu Yang", "Chuanyu Qin", "Qingyi Si", "Minghui Chen", "Naibin Gu"],
+      "affiliations": ["Tsinghua University", "Alibaba Group"],
+      "summary": "Demonstrates that on-policy self-distillation — where the same model serves as both teacher and student — achieves competitive results with RLVR, eliminating the need for a larger teacher model in distillation-based training.",
+      "key_findings": [
+        "Self-distillation matches or exceeds standard teacher-student distillation for reasoning tasks",
+        "RLVR's sparse verifiable rewards provide sufficient signal for self-distillation without teacher",
+        "Eliminates the compute overhead of maintaining a separate larger teacher model during training"
+      ],
+      "tags": ["RLVR", "self-distillation", "LLM-training", "reasoning", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 84, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03128",
+        "huggingface": "https://huggingface.co/papers/2604.03128",
+        "pdf": "https://arxiv.org/pdf/2604.03128"
+      }
+    },
+    {
+      "id": "simplestream-streaming-video-baseline",
+      "title": "A Simple Baseline for Streaming Video Understanding",
+      "authors": ["Yujiao Shen", "Shulin Tian", "Jingkang Yang", "Ziwei Liu"],
+      "affiliations": ["Nanyang Technological University", "S-Lab"],
+      "summary": "Formalizes SimpleStream, a sliding-window baseline that feeds the most recent N frames to an off-the-shelf VLM, demonstrating it matches or surpasses 13 major offline and online video LLM baselines on standard benchmarks.",
+      "key_findings": [
+        "A sliding-window approach using recent frames matches or surpasses 13 published streaming models",
+        "Complex memory mechanisms are unnecessary for current streaming video understanding benchmarks",
+        "The result suggests current benchmarks may not adequately test long-term temporal reasoning"
+      ],
+      "tags": ["video-understanding", "streaming", "VLM", "baseline", "simplicity"],
+      "relevance": "high",
+      "engagement": {"upvotes": 56, "comments": 5},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02317",
+        "huggingface": "https://huggingface.co/papers/2604.02317",
+        "pdf": "https://arxiv.org/pdf/2604.02317"
+      }
+    },
+    {
+      "id": "coral-autonomous-multi-agent-evolution",
+      "title": "CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery",
+      "authors": ["Ao Qu", "Han Zheng", "Zijian Zhou", "Yihao Yan", "Yihong Tang"],
+      "affiliations": ["Hong Kong University of Science and Technology", "Tsinghua University"],
+      "summary": "First framework for autonomous multi-agent evolution on open-ended problems, replacing rigid heuristics with long-running agents that explore, reflect, and collaborate through shared persistent knowledge.",
+      "key_findings": [
+        "Autonomous agents outperform fixed-heuristic approaches on open-ended discovery tasks",
+        "Shared persistent knowledge enables effective inter-agent collaboration without hard-coded rules",
+        "The framework demonstrates sustained progress on problems requiring long-horizon exploration"
+      ],
+      "tags": ["multi-agent", "evolution", "open-ended", "LLM-agents", "autonomous-systems"],
+      "relevance": "high",
+      "engagement": {"upvotes": 43, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01658",
+        "huggingface": "https://huggingface.co/papers/2604.01658",
+        "pdf": "https://arxiv.org/pdf/2604.01658"
+      }
+    },
+    {
+      "id": "therefore-i-am-i-think",
+      "title": "Therefore I am. I Think",
+      "authors": ["Esakkivel Esakkiraja", "Sai Rajeswar", "Denis Akhiyarov", "Rajagopal Venkatesaramani"],
+      "affiliations": ["Mila - Quebec AI Institute", "Schlumberger-Doll Research"],
+      "summary": "Presents evidence that reasoning models commit to decisions before generating chain-of-thought, with linear probes successfully decoding tool-calling decisions from pre-generation activations with very high confidence.",
+      "key_findings": [
+        "Linear probes decode tool-calling decisions from pre-generation activations before any reasoning tokens",
+        "Detectable early-encoded decisions shape chain-of-thought rather than arising from it",
+        "Findings challenge the assumption that CoT is genuine step-by-step reasoning rather than post-hoc rationalization"
+      ],
+      "tags": ["reasoning", "interpretability", "chain-of-thought", "mechanistic", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 28, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01202",
+        "huggingface": "https://huggingface.co/papers/2604.01202",
+        "pdf": "https://arxiv.org/pdf/2604.01202"
+      }
+    },
+    {
+      "id": "nearid-identity-representation-learning",
+      "title": "NearID: Identity Representation Learning via Near-identity Distractors",
+      "authors": ["Aleksandar Cvejic", "Rameen Abdal", "Abdelrahman Eldesokey", "Bernard Ghanem", "Peter Wonka"],
+      "affiliations": ["KAUST", "King Abdullah University of Science and Technology"],
+      "summary": "Introduces the first principled framework for identity-focused evaluation using Near-identity distractors that eliminate contextual shortcuts, revealing that existing vision encoders entangle object identity with background context.",
+      "key_findings": [
+        "Existing vision encoders unreliably entangle object identity with background context",
+        "Near-identity distractors on identical backgrounds isolate true identity signals",
+        "Framework enables more reliable evaluation of personalized generation and image editing"
+      ],
+      "tags": ["identity-representation", "personalization", "image-editing", "vision-encoders", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 26, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01973",
+        "huggingface": "https://huggingface.co/papers/2604.01973",
+        "pdf": "https://arxiv.org/pdf/2604.01973"
+      }
+    },
+    {
+      "id": "token-warping-mllm-viewpoints",
+      "title": "Token Warping Helps MLLMs Look from Nearby Viewpoints",
+      "authors": ["Phillip Y. Lee", "Chanho Park", "Mingue Park", "Seungwoo Yoo", "Juil Koo"],
+      "affiliations": ["KAIST", "Korea Advanced Institute of Science and Technology"],
+      "summary": "Demonstrates that warping tokens rather than pixels helps multimodal LLMs handle viewpoint changes, drawing on mental imagery theories of part-level structural representations for perspective transformation.",
+      "key_findings": [
+        "Token-level warping is more robust to depth estimation errors than pixel-level warping",
+        "Part-level structural representations better support perspective transformation in MLLMs",
+        "The approach significantly improves MLLM performance on novel viewpoint reasoning tasks"
+      ],
+      "tags": ["MLLM", "viewpoint-synthesis", "token-warping", "spatial-reasoning", "3D-understanding"],
+      "relevance": "high",
+      "engagement": {"upvotes": 23, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02870",
+        "huggingface": "https://huggingface.co/papers/2604.02870",
+        "pdf": "https://arxiv.org/pdf/2604.02870"
+      }
+    },
+    {
+      "id": "test-time-scaling-overtraining",
+      "title": "Test-Time Scaling Makes Overtraining Compute-Optimal",
+      "authors": ["Nicholas Roberts", "Sungjun Cho", "Zhiqi Gao", "Tzu-Heng Huang", "Albert Wu"],
+      "affiliations": ["Carnegie Mellon University", "Google DeepMind"],
+      "summary": "Introduces Train-to-Test (T^2) scaling laws that jointly optimize model size, training tokens, and inference samples under fixed end-to-end budgets, modernizing Chinchilla-style pretraining laws for the test-time scaling era.",
+      "key_findings": [
+        "Chinchilla scaling laws are suboptimal when test-time compute is factored in",
+        "Smaller overtrained models + more test-time samples often beat larger Chinchilla-optimal models",
+        "T^2 scaling laws provide practical guidance for joint train-inference budget allocation"
+      ],
+      "tags": ["scaling-laws", "test-time-compute", "Chinchilla", "inference", "optimization"],
+      "relevance": "high",
+      "engagement": {"upvotes": 15, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01411",
+        "huggingface": "https://huggingface.co/papers/2604.01411",
+        "pdf": "https://arxiv.org/pdf/2604.01411"
+      }
+    },
+    {
+      "id": "cosmic-spatial-communication",
+      "title": "Communicating about Space: Language-Mediated Spatial Integration Across Partial Views",
+      "authors": ["Ankur Sikarwar", "Debangan Mishra", "Sudarshan Nikhil", "Ponnurangam Kumaraguru", "Aishwarya Agrawal"],
+      "affiliations": ["IIIT Hyderabad", "IIT Delhi"],
+      "summary": "Introduces COSMIC benchmark for collaborative spatial communication, testing whether MLLMs can align distinct egocentric views through dialogue to form coherent allocentric mental models of shared environments.",
+      "key_findings": [
+        "MLLMs struggle to build shared spatial mental models from multiple egocentric viewpoints",
+        "Dialogue-based spatial integration is significantly harder than single-view spatial reasoning",
+        "The COSMIC benchmark reveals a fundamental gap in current MLLM spatial communication abilities"
+      ],
+      "tags": ["spatial-reasoning", "MLLM", "multi-agent-communication", "benchmark", "3D-understanding"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.27183",
+        "huggingface": "https://huggingface.co/papers/2603.27183",
+        "pdf": "https://arxiv.org/pdf/2603.27183"
+      }
+    },
+    {
+      "id": "video-models-plan-commitment",
+      "title": "Video Models Reason Early: Exploiting Plan Commitment for Maze Solving",
+      "authors": ["Kaleb Newman", "Tyler Zhu", "Olga Russakovsky"],
+      "affiliations": ["Princeton University"],
+      "summary": "Reveals that video diffusion models commit to a high-level motion plan within the first few denoising steps during maze solving, providing the first mechanistic understanding of reasoning dynamics in video generation models.",
+      "key_findings": [
+        "Video diffusion models commit to motion plans in early denoising steps",
+        "After early commitment, later steps refine but do not fundamentally alter the plan",
+        "Early plan commitment enables exploitable shortcuts for test-time inference optimization"
+      ],
+      "tags": ["video-diffusion", "reasoning", "maze-solving", "denoising", "mechanistic-interpretability"],
+      "relevance": "high",
+      "engagement": {"upvotes": 10, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.30043",
+        "huggingface": "https://huggingface.co/papers/2603.30043",
+        "pdf": "https://arxiv.org/pdf/2603.30043"
+      }
+    },
+    {
+      "id": "aibench-academic-illustration",
+      "title": "AIBench: Evaluating Visual-Logical Consistency in Academic Illustration Generation",
+      "authors": ["Zhaohe Liao", "Kaixun Jiang", "Zhihang Liu", "Yujie Wei", "Junqiu Yu"],
+      "affiliations": ["Peking University", "Tsinghua University"],
+      "summary": "First benchmark using VQA to evaluate logical correctness in AI-generated academic illustrations, addressing the gap between general image generation quality and domain-specific logical consistency requirements.",
+      "key_findings": [
+        "State-of-the-art image generation models frequently produce logically inconsistent academic illustrations",
+        "VQA-based evaluation is more reliable than direct VLM comparison for complex illustrations",
+        "Current models struggle with diagram consistency even when visual quality appears high"
+      ],
+      "tags": ["image-generation", "academic-illustrations", "VQA", "benchmark", "evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 10, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.28068",
+        "huggingface": "https://huggingface.co/papers/2603.28068",
+        "pdf": "https://arxiv.org/pdf/2603.28068"
+      }
+    },
+    {
+      "id": "grandcode-competitive-programming",
+      "title": "GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning",
+      "authors": ["DeepReinforce Team", "Xiaoya Li", "Xiaofei Sun", "Guoyin Wang", "Songqiao Su"],
+      "affiliations": ["DeepReinforce", "ByteDance"],
+      "summary": "A multi-agent RL system for competitive programming that orchestrates multiple specialized agents to achieve grandmaster-level performance, surpassing Google Gemini 3 Deep Think's previous best result.",
+      "key_findings": [
+        "Multi-agent RL orchestration achieves grandmaster-level competitive programming performance",
+        "System surpasses previous best AI result (Gemini 3 Deep Think, 8th place) under live conditions",
+        "Agent specialization (problem decomposition, coding, debugging) is key to competitive performance"
+      ],
+      "tags": ["competitive-programming", "multi-agent", "reinforcement-learning", "code-generation", "grandmaster"],
+      "relevance": "high",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02721",
+        "huggingface": "https://huggingface.co/papers/2604.02721",
+        "pdf": "https://arxiv.org/pdf/2604.02721"
+      }
+    },
+    {
+      "id": "forecasting-supply-chain-disruptions",
+      "title": "Forecasting Supply Chain Disruptions with Foresight Learning",
+      "authors": ["Benjamin Turtel", "Paul Wilczewski", "Kris Skotheim"],
+      "affiliations": ["Resilinc", "Stanford University"],
+      "summary": "An end-to-end framework training LLMs to produce calibrated probabilistic forecasts of supply chain disruptions using realized disruption outcomes as supervision, targeting infrequent high-impact events.",
+      "key_findings": [
+        "Task-specific adaptation dramatically improves LLM calibration for rare event forecasting",
+        "Realized disruption outcome supervision outperforms general-purpose LLM reasoning",
+        "Framework produces actionable probabilistic forecasts for firms and policymakers"
+      ],
+      "tags": ["supply-chain", "forecasting", "LLM-applications", "calibration", "risk-assessment"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 7, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01298",
+        "huggingface": "https://huggingface.co/papers/2604.01298",
+        "pdf": "https://arxiv.org/pdf/2604.01298"
+      }
+    },
+    {
+      "id": "ask-or-assume-clarification-seeking",
+      "title": "Ask or Assume? Uncertainty-Aware Clarification-Seeking in Coding Agents",
+      "authors": ["Nicholas Edwards", "Sebastian Schuster"],
+      "affiliations": ["Saarland University", "Meta AI"],
+      "summary": "Systematic evaluation of clarification-seeking abilities in LLM coding agents on underspecified tasks, proposing uncertainty-aware strategies that balance autonomous execution with asking clarifying questions.",
+      "key_findings": [
+        "Current coding agents rarely ask clarifying questions even when instructions are severely underspecified",
+        "Uncertainty-aware clarification strategies significantly improve task completion on ambiguous specs",
+        "There exists an optimal trade-off between autonomous execution and clarification-seeking frequency"
+      ],
+      "tags": ["coding-agents", "clarification", "uncertainty", "SWE-bench", "human-AI-interaction"],
+      "relevance": "high",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.26233",
+        "huggingface": "https://huggingface.co/papers/2603.26233",
+        "pdf": "https://arxiv.org/pdf/2603.26233"
+      }
+    },
+    {
+      "id": "agentsocialbench-privacy-risks",
+      "title": "AgentSocialBench: Evaluating Privacy Risks in Human-Centered Agentic Social Networks",
+      "authors": ["Prince Zizhuang Wang", "Shuli Jiang"],
+      "affiliations": ["University of Pennsylvania", "Carnegie Mellon University"],
+      "summary": "Evaluates privacy risks in agentic social networks where collaborative AI agents serve individual users across domains, addressing novel challenges of cross-domain information leakage and inter-agent privacy mediation.",
+      "key_findings": [
+        "Agentic social networks create novel cross-domain privacy leakage vectors",
+        "Current agent frameworks lack adequate privacy mediation between user-serving agents",
+        "Human-centered agent networks require fundamentally different privacy models than isolated agents"
+      ],
+      "tags": ["agent-safety", "privacy", "social-networks", "benchmark", "multi-agent"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01487",
+        "huggingface": "https://huggingface.co/papers/2604.01487",
+        "pdf": "https://arxiv.org/pdf/2604.01487"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "Qwen3.5-27B distilled from Claude 4.6 Opus reasoning outputs, achieving remarkable engagement with 2,403 likes and 548k downloads — the most engaged community model this week.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["qwen3.5", "distillation", "reasoning", "claude-opus"],
+      "metrics": {"downloads": 548344, "likes": 2403},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma-4-31B-IT",
+      "organization": "Google",
+      "description": "Google's flagship 31B dense Gemma-4 instruction-tuned model, the most downloaded Gemma-4 variant with strong multimodal image-text-to-text capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "instruction-tuned"],
+      "metrics": {"downloads": 678740, "likes": 1158},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's vision-language OCR model built on InternVL architecture, achieving 1,029 likes and positioning as a strong open-weight alternative for document understanding.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["OCR", "vision-language", "document-understanding"],
+      "metrics": {"downloads": 38388, "likes": 1029},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "cohere-transcribe",
+      "name": "Cohere Transcribe 03-2026",
+      "organization": "Cohere Labs",
+      "description": "Cohere's latest automatic speech recognition model with 818 likes and 128k downloads, entering the open ASR space alongside Whisper and other established models.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "Unknown",
+      "tags": ["ASR", "speech-recognition", "audio"],
+      "metrics": {"downloads": 128326, "likes": 818},
+      "source_url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    },
+    {
+      "id": "gemma-4-abliterated",
+      "name": "Gemma-4-31B-JANG_4M-CRACK",
+      "organization": "dealignai (Community)",
+      "description": "Abliterated (uncensored) Gemma-4-31B variant in MLX format, demonstrating the rapid community customization pipeline from model release to uncensored variant.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "abliterated", "uncensored", "MLX"],
+      "metrics": {"downloads": 13727, "likes": 506},
+      "source_url": "https://huggingface.co/dealignai/Gemma-4-31B-JANG_4M-CRACK"
+    },
+    {
+      "id": "qwen35-27b-opus-distilled-v2-gguf",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-v2-GGUF",
+      "organization": "Jackrong (Community)",
+      "description": "GGUF-quantized version of the Claude Opus distilled Qwen3.5, enabling local deployment with 272k downloads and 521 likes.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["qwen3.5", "GGUF", "quantization", "claude-distilled"],
+      "metrics": {"downloads": 272020, "likes": 521},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-v2-GGUF"
+    },
+    {
+      "id": "bonsai-8b-gguf",
+      "name": "Bonsai-8B-GGUF",
+      "organization": "Prism ML",
+      "description": "1-bit quantized 8B model pushing the extreme edge of model compression for resource-constrained deployment.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": ["1-bit", "quantization", "GGUF", "edge-deployment"],
+      "metrics": {"downloads": 45185, "likes": 471},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "name": "Gemma-4-26B-A4B-IT",
+      "organization": "Google",
+      "description": "Gemma-4 mixture-of-experts variant with 26B total / 4B active parameters, offering strong multimodal performance at reduced inference cost.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": ["gemma4", "MoE", "efficient-inference"],
+      "metrics": {"downloads": 476612, "likes": 459},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "VOID Model",
+      "organization": "Netflix",
+      "description": "Physics-aware video object removal model based on CogVideoX, generating strong anticipatory engagement with 455 likes despite 0 downloads (likely gated release).",
+      "task_type": "video-inpainting",
+      "model_size": "Unknown",
+      "tags": ["video-inpainting", "object-removal", "CogVideoX", "diffusion"],
+      "metrics": {"downloads": 0, "likes": 455},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "gemma-4-e4b-it",
+      "name": "Gemma-4-E4B-IT",
+      "organization": "Google",
+      "description": "Gemma-4 any-to-any model at 4B-equivalent scale, supporting multimodal input and output in a compact form factor.",
+      "task_type": "any-to-any",
+      "model_size": "4B equivalent",
+      "tags": ["gemma4", "any-to-any", "multimodal", "compact"],
+      "metrics": {"downloads": 321152, "likes": 416},
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "Zero-shot multilingual voice cloning model supporting 650+ languages, entering the open-weight TTS space with strong community reception (301 likes).",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["voice-cloning", "multilingual", "zero-shot", "TTS"],
+      "metrics": {"downloads": 64509, "likes": 301},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "liquidai-lfm25-350m",
+      "name": "LFM2.5-350M",
+      "organization": "Liquid AI",
+      "description": "Non-transformer architecture (liquid state machines) at 350M scale, targeting edge deployment with a fundamentally different compute paradigm.",
+      "task_type": "text-generation",
+      "model_size": "350M",
+      "tags": ["liquid-networks", "edge-AI", "non-transformer", "efficient"],
+      "metrics": {"downloads": 17695, "likes": 239},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-350M"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openscreen",
+      "name": "siddharthvaddem/openscreen",
+      "description": "Open-source screen recording and demo creation tool, free for commercial use with no watermarks. An alternative to Screen Studio that has gone viral with 1,838 stars/day.",
+      "language": "TypeScript",
+      "stars": 16,
+      "stars_today": 1838,
+      "forks": 16,
+      "url": "https://github.com/siddharthvaddem/openscreen",
+      "tags": ["screen-recording", "developer-tools", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch's extensible AI agent framework that grows with users, trending at 1,574 stars/day. Backed by NousResearch's model-native expertise.",
+      "language": "Python",
+      "stars": 16,
+      "stars_today": 1574,
+      "forks": 16,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["AI-agents", "LLM-agents", "NousResearch", "framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Google's showcase gallery for on-device ML/GenAI use cases, enabling local model experimentation. Trending at 1,107 stars/day, confirming mainstream interest in on-device AI.",
+      "language": "Kotlin",
+      "stars": 16,
+      "stars_today": 1107,
+      "forks": 16,
+      "url": "https://github.com/google-ai-edge/gallery",
+      "tags": ["on-device-AI", "mobile-ML", "Google", "demo"],
+      "relevance": "high"
+    },
+    {
+      "id": "gitnexus",
+      "name": "abhigyanpatwari/GitNexus",
+      "description": "Client-side knowledge graph creator for code repositories that runs entirely in the browser. Drop in a GitHub repo and get an interactive knowledge graph with built-in Graph RAG agent.",
+      "language": "TypeScript",
+      "stars": 16,
+      "stars_today": 857,
+      "forks": 16,
+      "url": "https://github.com/abhigyanpatwari/GitNexus",
+      "tags": ["knowledge-graph", "code-analysis", "RAG", "browser-based"],
+      "relevance": "high"
+    },
+    {
+      "id": "shannon",
+      "name": "KeygraphHQ/shannon",
+      "description": "Autonomous white-box AI pentester for web applications and APIs. Analyzes source code, identifies attack vectors, and executes real exploits to prove vulnerabilities.",
+      "language": "TypeScript",
+      "stars": 16,
+      "stars_today": 733,
+      "forks": 16,
+      "url": "https://github.com/KeygraphHQ/shannon",
+      "tags": ["security", "pentesting", "AI-security", "autonomous-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "onyx",
+      "name": "onyx-dot-app/onyx",
+      "description": "Open source AI platform with advanced chat features that works with every LLM. Trending at 639 stars/day.",
+      "language": "Python",
+      "stars": 16,
+      "stars_today": 639,
+      "forks": 16,
+      "url": "https://github.com/onyx-dot-app/onyx",
+      "tags": ["AI-platform", "chat", "open-source", "multi-LLM"],
+      "relevance": "high"
+    },
+    {
+      "id": "litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Google's lightweight runtime for running language models on edge devices, complementing the AI Edge Gallery with C++ inference infrastructure.",
+      "language": "C++",
+      "stars": 16,
+      "stars_today": 483,
+      "forks": 16,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": ["edge-inference", "LLM-runtime", "C++", "Google"],
+      "relevance": "high"
+    },
+    {
+      "id": "obsidian-skills",
+      "name": "kepano/obsidian-skills",
+      "description": "Agent skills for Obsidian, teaching AI agents to use Markdown, Bases, JSON Canvas, and CLI. Part of the broader agent-skills ecosystem trend.",
+      "language": "",
+      "stars": 16,
+      "stars_today": 429,
+      "forks": 16,
+      "url": "https://github.com/kepano/obsidian-skills",
+      "tags": ["agent-skills", "Obsidian", "knowledge-management", "AI-integration"],
+      "relevance": "high"
+    },
+    {
+      "id": "qmd",
+      "name": "tobi/qmd",
+      "description": "Mini CLI search engine for personal docs, knowledge bases, and meeting notes. Tracks current SOTA approaches while keeping everything local.",
+      "language": "TypeScript",
+      "stars": 16,
+      "stars_today": 394,
+      "forks": 16,
+      "url": "https://github.com/tobi/qmd",
+      "tags": ["search", "local-first", "CLI", "knowledge-management"],
+      "relevance": "medium"
+    },
+    {
+      "id": "personaplex",
+      "name": "NVIDIA/personaplex",
+      "description": "NVIDIA's PersonaPlex system for generating and managing AI personas, trending at 295 stars/day.",
+      "language": "Python",
+      "stars": 16,
+      "stars_today": 295,
+      "forks": 16,
+      "url": "https://github.com/NVIDIA/personaplex",
+      "tags": ["personas", "NVIDIA", "AI-characters", "generation"],
+      "relevance": "high"
+    },
+    {
+      "id": "mlx-vlm",
+      "name": "Blaizzy/mlx-vlm",
+      "description": "Package for inference and fine-tuning Vision Language Models on Mac using MLX. Trending at 277 stars/day as Apple Silicon AI development matures.",
+      "language": "Python",
+      "stars": 16,
+      "stars_today": 277,
+      "forks": 16,
+      "url": "https://github.com/Blaizzy/mlx-vlm",
+      "tags": ["MLX", "VLM", "Apple-Silicon", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "llama-cpp",
+      "name": "ggml-org/llama.cpp",
+      "description": "The foundational C/C++ LLM inference engine, steady at 267 stars/day as it continues to add support for latest models.",
+      "language": "C++",
+      "stars": 16,
+      "stars_today": 267,
+      "forks": 16,
+      "url": "https://github.com/ggml-org/llama.cpp",
+      "tags": ["LLM-inference", "C++", "quantization", "local-AI"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama",
+      "name": "ollama/ollama",
+      "description": "Leading local LLM runner, now supporting Kimi-K2.5, GLM-5, MiniMax, DeepSeek, gpt-oss, and latest Gemma/Qwen models. Steady at 196 stars/day.",
+      "language": "Go",
+      "stars": 16,
+      "stars_today": 196,
+      "forks": 16,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["local-LLM", "model-runner", "Go", "inference"],
+      "relevance": "high"
+    },
+    {
+      "id": "deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "Agent-native personalized learning assistant from HKU, trending at 164 stars/day.",
+      "language": "Python",
+      "stars": 16,
+      "stars_today": 164,
+      "forks": 16,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education", "AI-tutor", "personalization", "agents"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Self-Distillation Without Teachers",
+      "description": "Self-Distilled RLVR demonstrates that models can serve as their own teachers during distillation, potentially eliminating the need for larger teacher models and democratizing RL-based training.",
+      "related_paper_ids": ["self-distilled-rlvr", "test-time-scaling-overtraining"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Simplicity Beats Complexity",
+      "description": "SimpleStream and Token Warping demonstrate that simpler approaches can match or exceed complex architectures in video understanding and viewpoint reasoning, challenging the trend toward ever-more-complex methods.",
+      "related_paper_ids": ["simplestream-streaming-video-baseline", "token-warping-mllm-viewpoints"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Autonomous Agent Evolution",
+      "description": "CORAL, hermes-agent, and AgentSocialBench collectively push the frontier of how AI agents self-organize, evolve, and interact in social contexts with appropriate safety guardrails.",
+      "related_paper_ids": ["coral-autonomous-multi-agent-evolution", "agentsocialbench-privacy-risks", "ask-or-assume-clarification-seeking"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Reasoning Model Introspection",
+      "description": "Papers questioning how models actually reason — whether decisions precede CoT, how video models commit to plans early — signal growing interest in mechanistic understanding of model behavior.",
+      "related_paper_ids": ["therefore-i-am-i-think", "video-models-plan-commitment"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Safety Infrastructure Maturation",
+      "description": "AgentSocialBench and AgentHazard from yesterday continue to build out the evaluation infrastructure for AI agent safety, now covering privacy, harmful behavior, and social network dynamics.",
+      "related_paper_ids": ["agentsocialbench-privacy-risks", "ask-or-assume-clarification-seeking"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "On-Device and Edge AI Acceleration",
+      "description": "Google AI Edge Gallery and LiteRT-LM on GitHub, combined with LiquidAI LFM2.5, Bonsai-8B, and mlx-vlm, show accelerating investment in running models locally on consumer hardware.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-04-07T02:05:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-04-07T02:05:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-04-07T02:05:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-04-07T02:05:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-07T02:05:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
