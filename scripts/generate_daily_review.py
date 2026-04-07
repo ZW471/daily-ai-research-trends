@@ -460,7 +460,7 @@ def update_index(date: str, review_en: dict, review_cn: dict) -> None:
         index["days"].append(
             {
                 "date": date,
-                "file": f"daily/{date}_{lang}.json",
+                "file": f"daily/{date}/{lang}.json",
                 "headline": review["summary"]["headline"],
                 "paper_count": len(review.get("papers", [])),
                 "model_count": len(review.get("models", [])),
@@ -547,7 +547,9 @@ def main():
     print(f"Generating daily review for {date}")
 
     # Ensure directories exist
-    DAILY_DIR.mkdir(parents=True, exist_ok=True)
+    date_dir = DAILY_DIR / date
+    date_dir.mkdir(parents=True, exist_ok=True)
+    (date_dir / "assets").mkdir(exist_ok=True)
 
     # Step 1: Fetch from all sources
     print("Fetching sources...")
@@ -570,7 +572,7 @@ def main():
     review_en = synthesize_with_claude(context, date)
 
     # Step 4: Write English file immediately (before translation, in case translation fails)
-    en_file = DAILY_DIR / f"{date}_en.json"
+    en_file = DAILY_DIR / date / "en.json"
     en_file.write_text(json.dumps(review_en, indent=2, ensure_ascii=False) + "\n")
     print(f"  [Output] Written to {en_file}")
 
@@ -578,7 +580,7 @@ def main():
     review_cn = translate_to_chinese(review_en)
 
     # Step 6: Write Chinese file
-    cn_file = DAILY_DIR / f"{date}_cn.json"
+    cn_file = DAILY_DIR / date / "cn.json"
     cn_file.write_text(json.dumps(review_cn, indent=2, ensure_ascii=False) + "\n")
     print(f"  [Output] Written to {cn_file}")
 

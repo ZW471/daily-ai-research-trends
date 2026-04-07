@@ -5,7 +5,7 @@ import type { Language } from "@/lib/data";
 import type { Paper, Model, Theme, SourceCheck, TrendingRepo } from "@/lib/types";
 import { t, formatDateLocalized, formatTimeLocalized } from "@/lib/i18n";
 import type { Translations } from "@/lib/i18n";
-import ReactMarkdown from "react-markdown";
+import { Markdown } from "../../markdown";
 import { DownloadButton } from "../../download-button";
 import { ArticleNav } from "../../article-nav";
 import type { NavItem } from "../../article-nav";
@@ -456,7 +456,7 @@ export default async function ReviewPage({
             <div className="flex items-center justify-between mb-1">
               <p className="text-sm text-muted">{formatDateLocalized(date, lang)}</p>
               <DownloadButton
-                url={getJsonDownloadUrl(`daily/${date}_${lang}.json`)}
+                url={getJsonDownloadUrl(`daily/${date}/${lang}.json`)}
                 label={i18n.download}
                 showLabel
                 className="text-sm"
@@ -483,7 +483,7 @@ export default async function ReviewPage({
               {i18n.executiveSummary}
             </h2>
             <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
-              <ReactMarkdown>{review.summary.body}</ReactMarkdown>
+              <Markdown>{review.summary.body}</Markdown>
             </div>
           </section>
 
@@ -494,7 +494,7 @@ export default async function ReviewPage({
                 {i18n.researcherNotes}
               </h2>
               <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
-                <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
+                <Markdown>{review.researcher_notes}</Markdown>
               </div>
             </section>
           )}

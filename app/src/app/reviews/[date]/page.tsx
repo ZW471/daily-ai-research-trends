@@ -10,7 +10,7 @@ import type {
 } from "@/lib/types";
 import { t, formatDateLocalized, formatTimeLocalized, volLabel } from "@/lib/i18n";
 import type { Translations } from "@/lib/i18n";
-import ReactMarkdown from "react-markdown";
+import { Markdown } from "../../markdown";
 import { DownloadButton } from "../../download-button";
 import { ArticleNav } from "../../article-nav";
 import type { NavItem } from "../../article-nav";
@@ -181,7 +181,7 @@ function ReviewSectionBlock({ section, i18n }: { section: ReviewSection; i18n: T
       <h2 className="text-xl font-bold mb-4">{section.title}</h2>
 
       <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px] mb-6">
-        <ReactMarkdown>{section.body}</ReactMarkdown>
+        <Markdown>{section.body}</Markdown>
       </div>
 
       {section.models.length > 0 && (
@@ -321,7 +321,7 @@ export default async function ReviewDetailPage({
                 <span className="text-sm text-muted">{formatDateLocalized(date, lang)}</span>
               </div>
               <DownloadButton
-                url={getJsonDownloadUrl(`reviews/${date}_${lang}.json`)}
+                url={getJsonDownloadUrl(`reviews/${date}/${lang}.json`)}
                 label={i18n.download}
                 showLabel
                 className="text-sm"
@@ -349,7 +349,7 @@ export default async function ReviewDetailPage({
               {i18n.summary}
             </h2>
             <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
-              <ReactMarkdown>{review.summary.body}</ReactMarkdown>
+              <Markdown>{review.summary.body}</Markdown>
             </div>
           </section>
 
@@ -360,7 +360,7 @@ export default async function ReviewDetailPage({
                 {i18n.researcherNotes}
               </h2>
               <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
-                <ReactMarkdown>{review.researcher_notes}</ReactMarkdown>
+                <Markdown>{review.researcher_notes}</Markdown>
               </div>
             </section>
           )}
@@ -379,9 +379,9 @@ export default async function ReviewDetailPage({
                 {review.cross_cutting_analysis.title}
               </h2>
               <div className="bg-card border border-border rounded-lg p-4 sm:p-6 prose text-sm sm:text-[15px]">
-                <ReactMarkdown>
+                <Markdown>
                   {review.cross_cutting_analysis.body}
-                </ReactMarkdown>
+                </Markdown>
               </div>
             </section>
           )}

@@ -75,7 +75,7 @@ export async function getDailyReview(
   date: string,
   lang: Language = "en"
 ): Promise<DailyReview | null> {
-  const content = await loadData(`daily/${date}_${lang}.json`);
+  const content = await loadData(`daily/${date}/${lang}.json`);
   if (!content) return null;
   try {
     return JSON.parse(content);
@@ -108,7 +108,7 @@ export async function getReview(
   date: string,
   lang: Language = "en"
 ): Promise<LiteratureReview | null> {
-  const content = await loadData(`reviews/${date}_${lang}.json`);
+  const content = await loadData(`reviews/${date}/${lang}.json`);
   if (!content) return null;
   try {
     return JSON.parse(content);
