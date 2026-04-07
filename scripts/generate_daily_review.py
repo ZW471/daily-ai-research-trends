@@ -539,6 +539,11 @@ def main():
         action="store_true",
         help="Fetch data and print context without calling Claude",
     )
+    parser.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="Allow generation even when HF papers and models are both empty",
+    )
     args = parser.parse_args()
 
     date = args.date
@@ -556,6 +561,15 @@ def main():
     arxiv_data = fetch_arxiv_recent()
     alphaxiv_papers = fetch_alphaxiv_trending()
     github_repos = fetch_github_trending()
+
+    # Guard: abort if both HF papers and models are empty (likely an API issue)
+    if not hf_papers and not hf_models and not args.allow_empty:
+        print(
+            "ERROR: HuggingFace returned 0 papers and 0 models. "
+            "This is likely a transient API issue. "
+            "Re-run later, or use --allow-empty to proceed anyway."
+        )
+        sys.exit(1)
 
     # Step 2: Build context
     context = build_source_context(hf_papers, hf_models, arxiv_data, alphaxiv_papers, github_repos)
