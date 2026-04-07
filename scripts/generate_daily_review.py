@@ -184,9 +184,8 @@ def fetch_github_trending() -> list[dict]:
                 # Extract total stars (try multiple HTML patterns)
                 stars = 0
                 for stars_pattern in [
+                    r'href="/[^/]+/[^/]+/stargazers"[^>]*>.*?</svg>\s*([\d,]+)\s*</a>',
                     r'<a[^>]*href="/[^/]+/[^/]+/stargazers"[^>]*>\s*([\d,]+)\s*</a>',
-                    r'href="/[^/]+/[^/]+/stargazers"[^>]*>.*?(\d[\d,]*)',
-                    r'class="Link[^"]*"[^>]*href="/[^/]+/[^/]+/stargazers"[^>]*>\s*(\d[\d,]*)',
                 ]:
                     stars_match = re.search(stars_pattern, block, re.DOTALL)
                     if stars_match:
@@ -206,9 +205,8 @@ def fetch_github_trending() -> list[dict]:
                 # Extract forks (try multiple HTML patterns)
                 forks = 0
                 for forks_pattern in [
+                    r'href="/[^/]+/[^/]+/forks"[^>]*>.*?</svg>\s*([\d,]+)\s*</a>',
                     r'<a[^>]*href="/[^/]+/[^/]+/forks"[^>]*>\s*([\d,]+)\s*</a>',
-                    r'href="/[^/]+/[^/]+/forks"[^>]*>.*?(\d[\d,]*)',
-                    r'class="Link[^"]*"[^>]*href="/[^/]+/[^/]+/forks"[^>]*>\s*(\d[\d,]*)',
                 ]:
                     forks_match = re.search(forks_pattern, block, re.DOTALL)
                     if forks_match:
