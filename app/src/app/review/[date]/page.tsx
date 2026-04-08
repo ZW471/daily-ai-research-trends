@@ -71,7 +71,7 @@ function PaperCard({ paper, i18n }: { paper: Paper; i18n: Translations }) {
         )}
       </p>
 
-      <p className="text-sm leading-relaxed mb-3">{paper.summary}</p>
+      <div className="text-sm leading-relaxed mb-3"><Markdown>{paper.summary}</Markdown></div>
 
       {paper.key_findings.length > 0 && (
         <div className="mb-3">
@@ -82,7 +82,7 @@ function PaperCard({ paper, i18n }: { paper: Paper; i18n: Translations }) {
             {paper.key_findings.map((finding, i) => (
               <li key={i} className="flex gap-2">
                 <span className="text-muted shrink-0">&bull;</span>
-                <span>{finding}</span>
+                <span><Markdown>{finding}</Markdown></span>
               </li>
             ))}
           </ul>
@@ -183,7 +183,7 @@ function ModelCard({ model, i18n }: { model: Model; i18n: Translations }) {
         </a>
       </div>
 
-      <p className="text-sm leading-relaxed mb-3">{model.description}</p>
+      <div className="text-sm leading-relaxed mb-3"><Markdown>{model.description}</Markdown></div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
@@ -261,7 +261,7 @@ function RepoCard({ repo, i18n }: { repo: TrendingRepo; i18n: Translations }) {
         </div>
       </div>
 
-      <p className="text-sm leading-relaxed mb-3">{repo.description}</p>
+      <div className="text-sm leading-relaxed mb-3"><Markdown>{repo.description}</Markdown></div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
@@ -320,7 +320,7 @@ function ThemeCard({ theme }: { theme: Theme }) {
           {theme.trend_signal}
         </span>
       </div>
-      <p className="text-sm text-muted leading-relaxed">{theme.description}</p>
+      <div className="text-sm text-muted leading-relaxed"><Markdown>{theme.description}</Markdown></div>
     </div>
   );
 }

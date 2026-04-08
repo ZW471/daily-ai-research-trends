@@ -73,15 +73,15 @@ function ReviewModelCard({ model, i18n }: { model: ReviewModel; i18n: Translatio
         {model.paper_title}
       </p>
 
-      <p className="text-sm leading-relaxed mb-3 text-muted">
-        {model.core_idea}
-      </p>
+      <div className="text-sm leading-relaxed mb-3 text-muted">
+        <Markdown>{model.core_idea}</Markdown>
+      </div>
 
       <div className="mb-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-green-700 mb-1">
           {i18n.keyInnovation}
         </p>
-        <p className="text-sm">{model.key_innovation}</p>
+        <div className="text-sm"><Markdown>{model.key_innovation}</Markdown></div>
       </div>
 
       {model.limitations.length > 0 && (
@@ -93,7 +93,7 @@ function ReviewModelCard({ model, i18n }: { model: ReviewModel; i18n: Translatio
             {model.limitations.map((lim, i) => (
               <li key={i} className="flex gap-2">
                 <span className="text-muted shrink-0">&bull;</span>
-                <span className="text-muted">{lim}</span>
+                <span className="text-muted"><Markdown>{lim}</Markdown></span>
               </li>
             ))}
           </ul>
@@ -164,7 +164,7 @@ function SectionComparisonTable({ table }: { table: ComparisonTable }) {
                   key={j}
                   className={`px-4 py-2.5 ${j === 0 ? "font-medium" : "text-muted"}`}
                 >
-                  {cell}
+                  <Markdown>{cell}</Markdown>
                 </td>
               ))}
             </tr>
