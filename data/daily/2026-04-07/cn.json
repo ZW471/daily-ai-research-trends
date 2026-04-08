@@ -1,354 +1,928 @@
 {
   "version": "1.0",
   "date": "2026-04-07",
-  "generated_at": "2026-04-07T08:00:00Z",
+  "generated_at": "2026-04-07T07:30:00Z",
   "summary": {
-    "headline": "设备端AI推理随Google LiteRT-LM和AI Edge Gallery强势崛起；NousResearch Hermes-Agent与NVIDIA PersonaPlex主导GitHub热门榜单；智能体记忆与自主智能体框架成为本周最具定义性的基础设施主题",
-    "body": "今日热门趋势明显向**设备端与边缘AI推理**方向集中转移——Google同时发布了LiteRT-LM（一款C++推理运行时）和AI Edge Gallery应用，展示本地生成式AI使用场景，两者今日合计新增超过1,400颗星。这标志着部署技术栈的成熟化，隐私保护、低延迟与成本控制的需求正将具备实用能力的大型语言模型从云端迁移至消费级硬件。\n\n**自主智能体生态**正同时在多个维度快速爆发：NousResearch的Hermes-Agent（今日新增2,547颗星）代表着新一代自我改进智能体框架，而vectorize-io的Hindsight则引入了持久化、可学习的智能体记忆——这是智能体流水线中长期被识别的缺口。HKUDS持续高产，同时推出AutoAgent和DeepTutor，进一步巩固其作为应用LLM研究领域最活跃学术团队之一的地位。\n\n合成数据生成也正在作为一项核心基础设施需求加速整合，NVIDIA的NeMo DataDesigner和PersonaPlex双双进入热门榜单——后者专注于为RLHF和评估流水线生成人物角色多样化的合成数据。客户端知识图谱工具（GitNexus）和本地语义搜索（qmd）的出现，共同勾勒出一个研究社区日益关注实用性、隐私保护和高成本效益AI部署模式的整体图景。",
+    "headline": "Video-MME-v2 提升视频理解评估标准；Adam's Law 揭示 LLM 中的文本频率缩放定律；Gemma 4 系列以 MoE 和全模态变体主导模型发布",
+    "body": "4月7日的主题是**评估严谨性与经验定律**。当日最热论文 **Video-MME-v2** 获得68个赞，建立了全新的视频理解综合基准，揭示了即使是前沿多模态模型在能力上仍存在显著差距。与之呼应的 **Adam's Law**（48个赞）发现了一条文本频率缩放定律，揭示了 LLM 如何处理词元分布。当日研究传递的核心信息清晰明确：理解模型*究竟*学到了什么——以及如何衡量它——比继续扩大规模更为重要。\n\n**智能体轨迹检索与工具使用效率**构成当日的次要主题。两篇各获18个赞的论文分别攻克互补问题：一篇教智能体从执行历史中检索有用信息，另一篇系统梳理了 LLM 使用工具进行推理时的低效模式。两者共同指向一个日趋成熟的智能体生态——正从「智能体能否工作」迈向「如何让智能体*高效*工作」。\n\n在模型方面，**Google 的 Gemma 4 系列**主导 HuggingFace 热榜，六个变体覆盖 2B 到 31B 参数，包括 MoE（26B-A4B）和全模态模型。DealignAI 的去对齐版 Gemma 4 以及 Jackrong 将 Claude Opus 推理能力蒸馏到 Qwen3.5 的工作，展示了社区对新发布模型即时进行压力测试和二次创作的活跃态势。GitHub 热榜由 NousResearch 的 hermes-agent 领跑，单日新增 3,009 星标，确认智能体基础设施仍是开源 AI 的主导品类。",
     "key_themes": [
-      "on-device-edge-inference",
-      "autonomous-agent-frameworks",
-      "agent-memory-persistence",
-      "synthetic-data-generation",
-      "knowledge-graph-rag",
-      "personalized-ai-learning"
+      "video-understanding-benchmarks",
+      "empirical-scaling-laws",
+      "agent-trajectory-optimization",
+      "tool-use-efficiency",
+      "gemma-4-ecosystem",
+      "virtual-try-on-and-video-synthesis"
     ]
   },
-  "researcher_notes": "**Google边缘AI双重发布的价值被严重低估。** LiteRT-LM（今日新增522颗星）和AI Edge Gallery（今日新增899颗星）协调同步发布，代表着Google迄今为止推动设备端LLM推理商品化最为认真的一次尝试。LiteRT-LM的C++底层架构表明，它被设计用于集成到Android/ChromeOS的系统级组件，而非仅限于应用层实验。从事高效推理、量化和移动端部署的研究者应密切关注这一技术栈——它有望在18个月内成为数十亿台Android设备的事实标准运行时。\n\n**NousResearch Hermes-Agent今日新增2,547颗星，是2026年智能体框架仓库中单日获星率最高的记录之一。** NousResearch历来是开源社区情绪的风向标——其Hermes系列模型在推理基准测试上持续超出预期。「陪你共同成长的智能体」这一定位暗示内置了微调或持续学习循环，这将是相较于LangChain或CrewAI等静态智能体脚手架的有力差异化优势。3,974个Fork数量表明下游定制活动十分活跃。\n\n**Hindsight（智能体记忆）+ AutoAgent（零代码智能体）+ Hermes-Agent（自我改进智能体）的汇聚，预示着围绕有状态、长时域智能体的新基础设施层正在形成。** 长期以来缺失的关键环节始终是记忆——不仅仅是检索增强上下文，而是能随时间推移改善智能体行为的情节记忆。Hindsight「可学习的记忆」定位直接回应了这一需求。从事持续学习和元学习的研究者应予以关注，因为这些系统本质上是在生产环境中执行在线少样本自适应。\n\n**NVIDIA的PersonaPlex + NeMo DataDesigner组合揭示了一条战略性合成数据流水线。** PersonaPlex生成多元角色条件化的合成对话，DataDesigner负责结构化合成数据集的创建。两者共同构成一套无需人工标注员的完整RLHF数据飞轮。考虑到围绕后训练数据质量上限的持续争论，这一点尤为重要——NVIDIA似乎在押注高质量的角色多样性是关键变量。缺乏标注预算的学术实验室应立即着手探索这些工具。\n\n**GitNexus（今日新增1,174颗星）是一匹具有重要研究意义的黑马。** 一款完全在浏览器端运行、内置Graph RAG（图增强检索）的代码仓库知识图谱工具——零服务器基础设施。这类工具有望彻底改变研究者探索陌生代码库的方式，也可作为隐私保护RAG架构的参考实现。TypeScript实现使其对广泛的开发者群体触手可及。",
-  "papers": [],
-  "models": [],
+  "researcher_notes": "**Video-MME-v2 是本周最重要的基准论文，其68个赞的社区参与度反映了真实需求。**原版 Video-MME 已经是视频 LLM 评估的标配工具，但 v2 大幅扩展了覆盖范围——更长的视频、更多样的问题类型以及更高难度的时序推理任务。其重要性在于时机：在图像理解已被 GPT-4o 和 Gemini 基本商品化之后，视频理解成为下一个前沿。该基准与 Gemma 4 全模态模型同期发布，创造了即时测试条件——预计数日内将出现排行榜结果。关键问题是：是否有模型能在时序推理子集上达到人类水平，而这历来是最薄弱的能力维度。\n\n**Adam's Law 是一匹黑马，可能重塑我们对 LLM 训练数据的认知。**该论文识别了训练数据中文本词元频率与 LLM 行为之间的幂律关系——本质上表明模型会根据训练期间接触特定模式的频率产生可预测的偏差。这不仅是学术上的好奇心：它对数据筛选、去重策略以及理解失败模式都有直接影响。如果频率依赖行为确如论文所述那样具有规律性，那么仅从训练数据统计就可以预测（并纠正）模型弱点。48个赞表明从业者立即看到了实践价值。\n\n**智能体效率论文揭示出该领域正进入「优化阶段」。**Zhou 等人关于从智能体轨迹中学习检索的论文，以及 Su 等人关于工具集成推理中低效模式的分析，各获18个赞——按参与度标准算不上突出，但在重要性上远超其数字。它们代表着从「概念验证」式的智能体研究向工程纪律的转变。低效模式论文尤其具有启示意义：它系统编目了 LLM 浪费工具调用、无效循环或选择次优工具序列的具体失败模式。这种系统性的失败分析正是任何工程领域快速改进之前的必经阶段。结合本周其他智能体评估相关的热门工作，我们正在实时见证智能体研究社区的成熟。\n\n**Gemma 4 模型浪潮值得关注的是其结构性含义，而非仅仅是性能表现。**六个 Gemma 4 变体同时登上热榜——包括 Google 在 2B 和 4B 规模上首次推出的全模态模型——表明 Google 正采取「全面覆盖」的开放权重模型策略。MoE 变体（总参数 26B，活跃参数 4B）尤其值得关注，它将混合专家架构带到了消费级硬件可承载的规模。与此同时，社区反应迅速：DealignAI 的去对齐版本（705个赞）移除了安全护栏，Jackrong 的 Claude Opus 蒸馏（2,454个赞）试图注入更强的推理能力。社区二次创作的速度本身就是一个信号——Gemma 4 的架构足够模块化，能够支撑多样化的修改。\n\n**虚拟试穿与组合式视频合成代表着应用生成式 AI 领域安静但稳定的进步。**Vanast 和 ONE-SHOT 都致力于解决实际的视频生成挑战——分别是用于试穿的人体图像动画和组合式人物-环境合成。两者都不会成为头条新闻，但它们代表了推动商业落地的应用就绪型研究。它们与更偏学术的 Video-MME-v2 基准同时出现，突显了当今视频 AI 领域的双重特质：基础评估能力在提升的同时，商业应用也在同步推出。",
+  "papers": [
+    {
+      "id": "video-mme-v2-benchmark",
+      "title": "Video-MME-v2: A Comprehensive Video Understanding Benchmark",
+      "authors": [
+        "Chaoyou Fu",
+        "Yuhan Dai",
+        "Yondong Luo",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Science and Technology of China",
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "一个大幅扩展的视频理解基准，在更长视频、多样化问题类型和更高难度的时序推理任务上测试多模态模型，为视频 LLM 评估建立了新标准。",
+      "key_findings": [
+        "覆盖时序推理、长视频理解和多轮问答的综合评估套件",
+        "包括 GPT-4o 和 Gemini 在内的前沿模型在时序推理子集上仍存在显著能力差距",
+        "基准设计支持跨时长和复杂度维度对视频理解失败进行细粒度诊断"
+      ],
+      "tags": [
+        "benchmark",
+        "video-understanding",
+        "multimodal",
+        "evaluation",
+        "temporal-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 68,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05015",
+        "huggingface": "https://huggingface.co/papers/2604.05015",
+        "pdf": "https://arxiv.org/pdf/2604.05015"
+      }
+    },
+    {
+      "id": "adams-law-textual-frequency",
+      "title": "Adam's Law: Textual Frequency Law on LLMs",
+      "authors": [
+        "Hongyuan Adam Lu",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Waterloo"
+      ],
+      "summary": "揭示了训练数据中文本词元频率与 LLM 行为模式之间的幂律关系，证明模型的偏差和失败模式可以仅从数据统计中进行预测。",
+      "key_findings": [
+        "LLM 行为与训练语料中的词元频率之间存在可规律化的幂律关系",
+        "频率依赖性偏差可以在不运行模型的情况下从训练数据统计中预测",
+        "该定律在多个模型家族和规模上均成立，表明这是一种普遍现象"
+      ],
+      "tags": [
+        "scaling-laws",
+        "LLM-behavior",
+        "training-data",
+        "frequency-analysis",
+        "empirical-laws"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02176",
+        "huggingface": "https://huggingface.co/papers/2604.02176",
+        "pdf": "https://arxiv.org/pdf/2604.02176"
+      }
+    },
+    {
+      "id": "learning-retrieve-agent-trajectories",
+      "title": "Learning to Retrieve from Agent Trajectories",
+      "authors": [
+        "Yuqi Zhou",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Michigan"
+      ],
+      "summary": "提出一种从智能体执行历史中提取有用信息的学习型检索方法，使 LLM 智能体系统能更高效地复用过往经验进行决策。",
+      "key_findings": [
+        "基于学习的智能体轨迹检索显著优于启发式选择方法",
+        "过往执行轨迹包含可在相似任务间迁移的可复用知识",
+        "该方法减少了冗余探索并提高了多步智能体任务的完成率"
+      ],
+      "tags": [
+        "agent-trajectories",
+        "retrieval",
+        "LLM-agents",
+        "experience-reuse",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04949",
+        "huggingface": "https://huggingface.co/papers/2604.04949",
+        "pdf": "https://arxiv.org/pdf/2604.04949"
+      }
+    },
+    {
+      "id": "beyond-accuracy-tool-reasoning-inefficiency",
+      "title": "Beyond Accuracy: Inefficiency Patterns in Tool-Integrated Reasoning",
+      "authors": [
+        "Qisheng Su",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "系统编目了 LLM 使用外部工具进行推理时的低效模式，识别出冗余工具调用、无效循环和次优工具选择序列。",
+      "key_findings": [
+        "LLM 表现出系统性的低效模式，包括冗余工具调用和无效重试循环",
+        "即使最终准确率相近，工具选择顺序也会显著影响推理效率",
+        "效率指标揭示了仅靠准确率评估无法发现的能力差距"
+      ],
+      "tags": [
+        "tool-use",
+        "LLM-reasoning",
+        "efficiency",
+        "failure-analysis",
+        "agent-evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05404",
+        "huggingface": "https://huggingface.co/papers/2604.05404",
+        "pdf": "https://arxiv.org/pdf/2604.05404"
+      }
+    },
+    {
+      "id": "vanast-virtual-try-on",
+      "title": "Vanast: Virtual Try-On with Human Image Animation",
+      "authors": [
+        "Hyunsoo Cha",
+        "et al."
+      ],
+      "affiliations": [
+        "KAIST"
+      ],
+      "summary": "将虚拟试穿与人体图像动画相结合，在运动主体上生成逼真的服装可视化效果，弥合了静态服装迁移与动态视频生成之间的差距。",
+      "key_findings": [
+        "联合建模服装迁移与人体动画比分步方法产生更连贯的试穿视频",
+        "生成动画中的时序一致性显著提升了感知真实度",
+        "该方法能泛化到不同体型和服装类别"
+      ],
+      "tags": [
+        "virtual-try-on",
+        "video-generation",
+        "human-animation",
+        "generative-AI",
+        "e-commerce"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04934",
+        "huggingface": "https://huggingface.co/papers/2604.04934",
+        "pdf": "https://arxiv.org/pdf/2604.04934"
+      }
+    },
+    {
+      "id": "one-shot-compositional-video",
+      "title": "ONE-SHOT: Compositional Human-Environment Video Synthesis",
+      "authors": [
+        "Fengyuan Yang",
+        "et al."
+      ],
+      "affiliations": [
+        "University of California, San Diego"
+      ],
+      "summary": "在单次生成框架中实现人物与多样环境的组合式视频合成，解决了生成连贯的人物-场景交互这一挑战。",
+      "key_findings": [
+        "单次组合方式无需多阶段流水线即可生成逼真的人物-环境交互",
+        "环境感知的人体运动生成提升了合成视频的物理合理性",
+        "方法可处理室内、室外和复杂场景布局等多样化环境"
+      ],
+      "tags": [
+        "video-synthesis",
+        "compositional-generation",
+        "human-scene-interaction",
+        "diffusion-models",
+        "generative-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01043",
+        "huggingface": "https://huggingface.co/papers/2604.01043",
+        "pdf": "https://arxiv.org/pdf/2604.01043"
+      }
+    },
+    {
+      "id": "thinktwice-reasoning-self-refinement",
+      "title": "ThinkTwice: Jointly Optimizing LLMs for Reasoning and Self-Refinement",
+      "authors": [
+        "Difan Jiao",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Illinois Urbana-Champaign"
+      ],
+      "summary": "提出对 LLM 的推理和自我修正能力进行联合优化，表明两种能力共同训练比分开或顺序训练表现更优。",
+      "key_findings": [
+        "推理与自我修正的联合优化优于单独训练每项能力",
+        "自我修正从与推理目标共同训练中获益，而非事后添加",
+        "该方法在数学推理和代码生成基准上均有提升"
+      ],
+      "tags": [
+        "reasoning",
+        "self-refinement",
+        "LLM-training",
+        "joint-optimization",
+        "chain-of-thought"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01591",
+        "huggingface": "https://huggingface.co/papers/2604.01591",
+        "pdf": "https://arxiv.org/pdf/2604.01591"
+      }
+    },
+    {
+      "id": "synthetic-sandbox-mle-agents",
+      "title": "Synthetic Sandbox for Training MLE Agents",
+      "authors": [
+        "Yuhang Zhou",
+        "et al."
+      ],
+      "affiliations": [
+        "National University of Singapore"
+      ],
+      "summary": "构建合成机器学习工程环境用于训练和评估自主 ML 智能体，提供可控的沙盒来测试端到端 ML 工作流能力。",
+      "key_findings": [
+        "合成 ML 工程任务为 MLE 智能体提供了可控的评估环境",
+        "智能体在从数据预处理到部署的各 ML 工作流阶段表现差异巨大",
+        "沙盒环境支持在无真实基础设施成本的情况下安全迭代智能体能力"
+      ],
+      "tags": [
+        "MLE-agents",
+        "synthetic-environments",
+        "agent-training",
+        "machine-learning-engineering",
+        "sandbox"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04872",
+        "huggingface": "https://huggingface.co/papers/2604.04872",
+        "pdf": "https://arxiv.org/pdf/2604.04872"
+      }
+    },
+    {
+      "id": "mimic-intent-not-trajectories",
+      "title": "Mimic Intent, Not Just Trajectories",
+      "authors": [
+        "Renming Huang",
+        "et al."
+      ],
+      "affiliations": [
+        "Chinese University of Hong Kong"
+      ],
+      "summary": "提出智能体的模仿学习应专注于复制示范背后的底层意图，而非表面的轨迹匹配，从而获得更鲁棒、更具泛化能力的策略。",
+      "key_findings": [
+        "意图级模仿产生的策略比轨迹级克隆对新场景具有更好的泛化能力",
+        "将意图与执行细节解耦可减少序贯决策中的累积误差",
+        "该方法与现有行为克隆方法互补，可作为辅助目标集成使用"
+      ],
+      "tags": [
+        "imitation-learning",
+        "intent-modeling",
+        "LLM-agents",
+        "behavioral-cloning",
+        "generalization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2602.08602",
+        "huggingface": "https://huggingface.co/papers/2602.08602",
+        "pdf": "https://arxiv.org/pdf/2602.08602"
+      }
+    },
+    {
+      "id": "aces-code-generation-consistency",
+      "title": "ACES: Leave-One-Out AUC Consistency for Code Generation",
+      "authors": [
+        "Hui Sun",
+        "et al."
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "引入基于留一法 AUC 一致性的新型代码生成评估指标，为模型选择提供比 pass@k 更稳健的信号。",
+      "key_findings": [
+        "留一法 AUC 一致性捕获了 pass@k 遗漏的代码生成可靠性",
+        "该指标在不同随机种子和问题子集上比现有评估方法更稳定",
+        "ACES 为代码生成流水线中的部署提供更优的模型排名决策"
+      ],
+      "tags": [
+        "code-generation",
+        "evaluation-metrics",
+        "AUC",
+        "reliability",
+        "model-selection"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03922",
+        "huggingface": "https://huggingface.co/papers/2604.03922",
+        "pdf": "https://arxiv.org/pdf/2604.03922"
+      }
+    },
+    {
+      "id": "geometric-alignment-tax",
+      "title": "The Geometric Alignment Tax",
+      "authors": [
+        "Prashant C. Raju"
+      ],
+      "affiliations": [
+        "Independent Researcher"
+      ],
+      "summary": "从几何角度形式化 LLM 对齐的代价，表明对齐过程以可测量的方式扭曲模型的表示几何，从而降低非对齐任务上的下游能力。",
+      "key_findings": [
+        "对齐过程在模型表示空间中产生可测量的几何扭曲",
+        "扭曲幅度与对齐分布外任务的能力退化相关",
+        "几何框架为跨模型家族量化对齐税提供了原则性方法"
+      ],
+      "tags": [
+        "alignment",
+        "representation-geometry",
+        "alignment-tax",
+        "LLM-capabilities",
+        "theoretical"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04155",
+        "huggingface": "https://huggingface.co/papers/2604.04155",
+        "pdf": "https://arxiv.org/pdf/2604.04155"
+      }
+    },
+    {
+      "id": "paper-espresso-research-insight",
+      "title": "Paper Espresso: From Paper Overload to Research Insight",
+      "authors": [
+        "Mingzhe Du",
+        "et al."
+      ],
+      "affiliations": [
+        "National University of Singapore"
+      ],
+      "summary": "面向快速发展的 AI/ML 研究领域的自动化论文摘要与洞察提取工具，通过多层次摘要在保留技术细节的同时解决信息过载问题。",
+      "key_findings": [
+        "自动化流水线将文献综述的洞察获取时间缩短了一个数量级",
+        "多层次摘要保留了简单抽象式摘要会丢失的关键技术细节",
+        "开源工具，设计用于集成到现有研究工作流中"
+      ],
+      "tags": [
+        "research-tools",
+        "summarization",
+        "literature-review",
+        "productivity",
+        "open-source"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04562",
+        "huggingface": "https://huggingface.co/papers/2604.04562",
+        "pdf": "https://arxiv.org/pdf/2604.04562"
+      }
+    },
+    {
+      "id": "bidirlm-omnimodal-encoders",
+      "title": "BidirLM: From Text to Omnimodal Bidirectional Encoders",
+      "authors": [
+        "Nicolas Boizard",
+        "et al."
+      ],
+      "affiliations": [
+        "Meta AI"
+      ],
+      "summary": "将双向语言建模扩展至全模态输入，将纯文本双向编码器转化为可在统一双向框架中处理文本、图像和音频的模型。",
+      "key_findings": [
+        "跨模态双向编码比因果架构在跨模态检索上表现更优",
+        "基于文本预训练的双向编码器可以高效适配处理视觉和音频输入",
+        "该方法在添加多模态能力的同时保持了双向模型的嵌入质量优势"
+      ],
+      "tags": [
+        "multimodal",
+        "bidirectional-encoding",
+        "omnimodal",
+        "embeddings",
+        "representation-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02045",
+        "huggingface": "https://huggingface.co/papers/2604.02045",
+        "pdf": "https://arxiv.org/pdf/2604.02045"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma 4 31B-IT",
+      "organization": "Google",
+      "description": "Google 旗舰级 Gemma 4 指令微调模型，参数量 31B，支持图文到文本任务。作为 Gemma 4 系列中最大的密集型变体，社区正在将其与 GPT-4o 和 Claude 进行基准对比。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "multimodal",
+        "instruction-tuned",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 884000,
+        "likes": 1353
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "社区创建的推理模型，将 Claude Opus 4.6 的推理能力蒸馏到 Qwen3.5-27B 基座模型中，通过从前沿模型的知识蒸馏在推理基准上取得了出色表现。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "reasoning",
+        "distillation",
+        "community"
+      ],
+      "metrics": {
+        "downloads": 552000,
+        "likes": 2454
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "gemma-4-abliterated",
+      "name": "Gemma-4-31B-JANG_4M-CRACK",
+      "organization": "DealignAI",
+      "description": "去对齐（无审查）版 Gemma 4 31B，移除了安全护栏。社区在探索该模型完整的无过滤能力时，其热度迅速攀升。",
+      "task_type": "text-generation",
+      "model_size": "31B",
+      "tags": [
+        "abliterated",
+        "uncensored",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 29000,
+        "likes": 705
+      },
+      "source_url": "https://huggingface.co/dealignai/Gemma-4-31B-JANG_4M-CRACK"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "Void Model",
+      "organization": "Netflix",
+      "description": "Netflix 的视频修复与目标移除模型，用于从视频画面中无缝移除不需要的物体。值得注意的是，这是 Netflix 首次发布的开放模型。",
+      "task_type": "video-inpainting",
+      "model_size": "undisclosed",
+      "tags": [
+        "video-inpainting",
+        "object-removal",
+        "production"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 574
+      },
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "gemma-4-26b-a4b-it",
+      "name": "Gemma 4 26B-A4B-IT",
+      "organization": "Google",
+      "description": "混合专家（MoE）架构的 Gemma 4 变体，总参数量 26B，每个词元仅激活 4B 参数，将 MoE 的效率优势带到消费级硬件可承载的规模。",
+      "task_type": "text-generation",
+      "model_size": "26B (4B active)",
+      "tags": [
+        "MoE",
+        "efficient-inference",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 660000,
+        "likes": 508
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "gemma-4-e4b-it",
+      "name": "Gemma 4 E4B-IT",
+      "organization": "Google",
+      "description": "4B 参数的 Gemma 4 全模态模型，能够在单一统一架构中跨文本、图像和音频模态进行处理与生成。",
+      "task_type": "any-to-any",
+      "model_size": "4B",
+      "tags": [
+        "any-to-any",
+        "multimodal",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 474000,
+        "likes": 476
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "bonsai-8b-1bit",
+      "name": "Bonsai-8B-GGUF",
+      "organization": "Prism ML",
+      "description": "1-bit 极端量化的 8B 参数语言模型，挑战量化极限，展示了二值权重模型也能实现令人惊讶的连贯文本生成。",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": [
+        "1-bit",
+        "quantization",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 53000,
+        "likes": 506
+      },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "glm-5-1-moe",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI",
+      "description": "GLM 系列最新一代混合专家文本生成模型，代表智谱 AI 在开放权重模型领域持续追赶西方前沿实验室的努力。",
+      "task_type": "text-generation",
+      "model_size": "undisclosed MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "Chinese-AI"
+      ],
+      "metrics": {
+        "downloads": 389,
+        "likes": 450
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "百度专用 OCR 与视觉语言模型，针对文档理解和文本提取进行优化，在多语言文档基准上取得了优秀成绩。",
+      "task_type": "image-text-to-text",
+      "model_size": "undisclosed",
+      "tags": [
+        "OCR",
+        "document-understanding",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 40000,
+        "likes": 1085
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "omnivoice-tts",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "高保真语音克隆与文本转语音模型，因其从短音频样本中克隆声音的能力而备受关注。",
+      "task_type": "text-to-speech",
+      "model_size": "undisclosed",
+      "tags": [
+        "TTS",
+        "voice-cloning",
+        "speech-synthesis"
+      ],
+      "metrics": {
+        "downloads": 105000,
+        "likes": 360
+      },
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "holo3-35b-a3b",
+      "name": "Holo3-35B-A3B",
+      "organization": "Hcompany",
+      "description": "多模态混合专家模型，总参数量 35B，活跃参数 3B，专为文本和视觉任务的高效多模态推理设计。",
+      "task_type": "multimodal",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "MoE",
+        "multimodal",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 1785,
+        "likes": 246
+      },
+      "source_url": "https://huggingface.co/Hcompany/Holo3-35B-A3B"
+    }
+  ],
   "trending_repos": [
     {
-      "id": "nousresearch-hermes-agent",
+      "id": "hermes-agent",
       "name": "NousResearch/hermes-agent",
-      "description": "Hermes-Agent被定位为「陪你共同成长的智能体」——来自NousResearch的自主LLM智能体框架，具备自我改进循环，并可通过Fork进行广泛定制。2026年智能体框架仓库中单日获星率最高的记录之一。",
+      "description": "模块化、可扩展的智能体框架，具备基于插件的工具集成和持久化记忆功能，能随用户需求成长。单日新增 3,009 星标，热度爆发。",
       "language": "Python",
-      "stars": 30455,
-      "stars_today": 2547,
-      "forks": 3974,
+      "stars": 32883,
+      "stars_today": 3009,
+      "forks": 4235,
       "url": "https://github.com/NousResearch/hermes-agent",
       "tags": [
-        "llm-agents",
-        "autonomous-agents",
-        "self-improving",
-        "open-source"
+        "LLM-agents",
+        "agent-framework",
+        "tool-integration"
       ],
       "relevance": "high"
     },
     {
-      "id": "abhigyanpatwari-gitnexus",
+      "id": "gitnexus",
       "name": "abhigyanpatwari/GitNexus",
-      "description": "GitNexus是一款零服务器、纯客户端的知识图谱引擎，完全在浏览器中运行。导入GitHub仓库或ZIP文件，即可获得交互式知识图谱，并内置Graph RAG（图增强检索）智能体用于代码探索——无需任何后端。",
+      "description": "面向代码库的客户端知识图谱工具，支持语义搜索和代码关系可视化，完全在浏览器中运行。",
       "language": "TypeScript",
-      "stars": 24206,
-      "stars_today": 1174,
-      "forks": 2713,
+      "stars": 24662,
+      "stars_today": 1195,
+      "forks": 2754,
       "url": "https://github.com/abhigyanpatwari/GitNexus",
       "tags": [
         "knowledge-graph",
-        "graph-rag",
-        "code-intelligence",
-        "client-side",
-        "privacy"
+        "code-search",
+        "developer-tools"
       ],
-      "relevance": "high"
+      "relevance": "medium"
     },
     {
-      "id": "google-ai-edge-gallery",
-      "name": "google-ai-edge/gallery",
-      "description": "Google AI Edge Gallery是一款展示应用，演示设备端机器学习和生成式AI使用场景，支持用户在Android设备上本地运行模型。代表Google面向消费者的边缘LLM推理部署中最为完善的成果。",
-      "language": "Kotlin",
-      "stars": 18483,
-      "stars_today": 899,
-      "forks": 1726,
-      "url": "https://github.com/google-ai-edge/gallery",
-      "tags": [
-        "on-device-ai",
-        "edge-inference",
-        "android",
-        "genai",
-        "mobile"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "tobi-qmd",
+      "id": "qmd-cli-search",
       "name": "tobi/qmd",
-      "description": "qmd是一款面向本地文档、知识库和会议记录的迷你CLI（命令行界面）搜索引擎，持续追踪当前最优检索方法，同时保持完全本地化运行。代表着隐私优先语义搜索工具这一快速增长的品类。",
+      "description": "轻量级本地文档 CLI 搜索引擎，支持索引和搜索 Markdown 及代码文件，即时返回结果。",
       "language": "TypeScript",
-      "stars": 19317,
+      "stars": 19668,
       "stars_today": 859,
-      "forks": 1160,
+      "forks": 1182,
       "url": "https://github.com/tobi/qmd",
       "tags": [
-        "semantic-search",
-        "local-ai",
-        "rag",
-        "cli",
-        "privacy"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "google-ai-edge-litert-lm",
-      "name": "google-ai-edge/LiteRT-LM",
-      "description": "LiteRT-LM是Google面向边缘设备大型语言模型推理的C++运行时，专为在Android和ChromeOS上实现系统级集成而设计。其底层C++基础表明，它的构建目标是嵌入操作系统层组件，而非仅用于应用层。",
-      "language": "C++",
-      "stars": 2373,
-      "stars_today": 522,
-      "forks": 238,
-      "url": "https://github.com/google-ai-edge/LiteRT-LM",
-      "tags": [
-        "on-device-inference",
-        "edge-ai",
-        "c++",
-        "llm-runtime",
-        "android",
-        "chromeos"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "nvidia-personaplex",
-      "name": "NVIDIA/personaplex",
-      "description": "PersonaPlex是NVIDIA用于生成多元角色合成数据的框架，主要面向RLHF（基于人类反馈的强化学习）流水线和模型评估。它与NeMo DataDesigner形成互补，共同构成完整的合成数据生成技术栈。",
-      "language": "Python",
-      "stars": 7740,
-      "stars_today": 663,
-      "forks": 1137,
-      "url": "https://github.com/NVIDIA/personaplex",
-      "tags": [
-        "synthetic-data",
-        "rlhf",
-        "persona-generation",
-        "data-augmentation",
-        "nvidia"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "vectorize-io-hindsight",
-      "name": "vectorize-io/hindsight",
-      "description": "Hindsight是一套可随时间学习进化的智能体记忆系统，直接解决当前智能体流水线中最关键的缺口之一——持久化、可改进的情节记忆。其定位是LLM智能体的基础设施层记忆组件。",
-      "language": "Python",
-      "stars": 7757,
-      "stars_today": 172,
-      "forks": 479,
-      "url": "https://github.com/vectorize-io/hindsight",
-      "tags": [
-        "agent-memory",
-        "episodic-memory",
-        "llm-agents",
-        "continual-learning"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "nvidia-nemo-datadesigner",
-      "name": "NVIDIA-NeMo/DataDesigner",
-      "description": "NeMo DataDesigner可从零开始或基于种子数据生成高质量合成数据，为LLM训练数据集的创建提供结构化流水线。是NVIDIA更广泛合成数据基础设施战略的组成部分。",
-      "language": "Python",
-      "stars": 1473,
-      "stars_today": 256,
-      "forks": 130,
-      "url": "https://github.com/NVIDIA-NeMo/DataDesigner",
-      "tags": [
-        "synthetic-data",
-        "nemo",
-        "data-generation",
-        "llm-training",
-        "nvidia"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "thecraighewitt-seomachine",
-      "name": "TheCraigHewitt/seomachine",
-      "description": "一款专用的Claude Code工作区，利用AI创作长篇SEO优化博客内容。展示了Claude通过结构化工作区作为垂直领域内容自动化平台的新兴角色。",
-      "language": "Python",
-      "stars": 3666,
-      "stars_today": 213,
-      "forks": 640,
-      "url": "https://github.com/TheCraigHewitt/seomachine",
-      "tags": [
-        "claude",
-        "content-generation",
-        "seo",
-        "llm-applications",
-        "automation"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "hkuds-deeptutor",
-      "name": "HKUDS/DeepTutor",
-      "description": "DeepTutor是香港大学HKUDS实验室推出的智能体原生个性化学习助手，将LLM智能体应用于自适应教育领域。体现了HKUDS在实用LLM应用框架领域的高产出能力。",
-      "language": "Python",
-      "stars": 11810,
-      "stars_today": 164,
-      "forks": 1634,
-      "url": "https://github.com/HKUDS/DeepTutor",
-      "tags": [
-        "education-ai",
-        "personalized-learning",
-        "llm-agents",
-        "edtech"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "hkuds-autoagent",
-      "name": "HKUDS/AutoAgent",
-      "description": "AutoAgent是HKUDS推出的全自动化零代码LLM智能体框架，使非技术用户无需编写代码即可构建和部署LLM智能体。延续了HKUDS致力于普及LLM智能体开发的一贯方向。",
-      "language": "Python",
-      "stars": 8975,
-      "stars_today": 94,
-      "forks": 1265,
-      "url": "https://github.com/HKUDS/AutoAgent",
-      "tags": [
-        "llm-agents",
-        "no-code",
-        "agent-framework",
-        "automation"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "elebumm-redditvideomakerbot",
-      "name": "elebumm/RedditVideoMakerBot",
-      "description": "一款一键自动生成Reddit风格短视频的工具，集成文字转语音、背景和字幕功能。当前热度上升可能源于外界对AI自动化内容生成流水线重燃的兴趣。",
-      "language": "Python",
-      "stars": 9822,
-      "stars_today": 656,
-      "forks": 2498,
-      "url": "https://github.com/elebumm/RedditVideoMakerBot",
-      "tags": [
-        "video-generation",
-        "content-automation",
-        "tts",
-        "social-media"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "pandas-dev-pandas",
-      "name": "pandas-dev/pandas",
-      "description": "Python数据分析与处理的基础性库，提供带标签的数据结构和统计函数。今日上榜热门榜单，可能与新版本发布或重大社区活动有关。",
-      "language": "Python",
-      "stars": 48398,
-      "stars_today": 27,
-      "forks": 19858,
-      "url": "https://github.com/pandas-dev/pandas",
-      "tags": [
-        "data-science",
-        "data-analysis",
-        "python",
-        "dataframe"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "forrestchang-andrej-karpathy-skills",
-      "name": "forrestchang/andrej-karpathy-skills",
-      "description": "一个社区维护的仓库，追踪与Andrej Karpathy教学和研究风格相关的技能与知识领域。反映出社区对结构化AI/ML学习路线图持续不减的兴趣。",
-      "language": "",
-      "stars": 7833,
-      "stars_today": 42,
-      "forks": 551,
-      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
-      "tags": [
-        "ai-education",
-        "learning-resources",
-        "ml-skills",
-        "karpathy"
+        "search",
+        "CLI",
+        "documentation"
       ],
       "relevance": "low"
     },
     {
-      "id": "mikf-gallery-dl",
-      "name": "mikf/gallery-dl",
-      "description": "一款从众多图片托管网站下载图集和图片集合的命令行程序。与AI的关联在于，它可作为视觉模型训练所用图像数据集的数据采集工具。",
-      "language": "Python",
-      "stars": 17667,
-      "stars_today": 54,
-      "forks": 1399,
-      "url": "https://github.com/mikf/gallery-dl",
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Google 端侧 ML 与生成式 AI 模型展示，通过 LiteRT 运行，展示 AI 在移动和边缘设备上的实际部署。",
+      "language": "Kotlin",
+      "stars": 18925,
+      "stars_today": 897,
+      "forks": 1765,
+      "url": "https://github.com/google-ai-edge/gallery",
       "tags": [
-        "data-collection",
-        "image-scraping",
-        "dataset-creation",
-        "cli"
+        "on-device-AI",
+        "edge-inference",
+        "mobile-ML"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "personaplex",
+      "name": "NVIDIA/personaplex",
+      "description": "NVIDIA 的多样化人设合成数据生成框架，支持为 LLM 微调和评估创建真实且多样化的训练数据集。",
+      "language": "Python",
+      "stars": 8032,
+      "stars_today": 662,
+      "forks": 1165,
+      "url": "https://github.com/NVIDIA/personaplex",
+      "tags": [
+        "synthetic-data",
+        "persona-generation",
+        "data-augmentation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Google 的高效端侧 LLM 推理 C++ 运行时，针对移动和嵌入式部署优化，内存占用极低。",
+      "language": "C++",
+      "stars": 2638,
+      "stars_today": 528,
+      "forks": 253,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": [
+        "on-device-inference",
+        "LLM-runtime",
+        "edge-deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "港大的智能体原生学习助手，利用 LLM 智能体提供个性化辅导、自适应讲解和交互式问题求解。",
+      "language": "Python",
+      "stars": 12385,
+      "stars_today": 168,
+      "forks": 1680,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "education",
+        "LLM-agents",
+        "tutoring"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nvidia-datadesigner",
+      "name": "NVIDIA-NeMo/DataDesigner",
+      "description": "NVIDIA 的高质量合成训练数据流水线设计与生成工具，隶属于 NeMo 大规模模型训练生态系统。",
+      "language": "Python",
+      "stars": 1513,
+      "stars_today": 244,
+      "forks": 132,
+      "url": "https://github.com/NVIDIA-NeMo/DataDesigner",
+      "tags": [
+        "synthetic-data",
+        "data-generation",
+        "NeMo"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "autoagent",
+      "name": "HKUDS/AutoAgent",
+      "description": "港大的零代码 LLM 智能体框架，支持通过自然语言描述构建自主智能体，无需编程。",
+      "language": "Python",
+      "stars": 9003,
+      "stars_today": 76,
+      "forks": 1269,
+      "url": "https://github.com/HKUDS/AutoAgent",
+      "tags": [
+        "agent-framework",
+        "no-code",
+        "LLM-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hindsight-agent-memory",
+      "name": "vectorize-io/hindsight",
+      "description": "智能体记忆系统，从过往交互中学习，使 LLM 智能体能够从执行历史中构建持久且持续改进的知识库。",
+      "language": "Python",
+      "stars": 7813,
+      "stars_today": 160,
+      "forks": 486,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "knowledge-base"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "seomachine",
+      "name": "TheCraigHewitt/seomachine",
+      "description": "基于 Claude 的 SEO 内容生成工具，自动化关键词研究、内容规划和文章生成，用于搜索引擎优化。",
+      "language": "Python",
+      "stars": 3988,
+      "stars_today": 215,
+      "forks": 668,
+      "url": "https://github.com/TheCraigHewitt/seomachine",
+      "tags": [
+        "SEO",
+        "content-generation",
+        "Claude"
       ],
       "relevance": "low"
     }
   ],
   "themes": [
     {
-      "name": "设备端与边缘AI推理",
-      "description": "Google同步发布LiteRT-LM和AI Edge Gallery，标志着系统级设备端LLM部署的重大推进；与此同时，qmd印证了对完全本地化语义搜索的强劲需求。这一主题横跨基础设施运行时和终端用户应用两个层面。",
+      "name": "视频理解基准",
+      "description": "Video-MME-v2 引领对视频理解能力更严格评估的推动，揭示了前沿多模态模型在时序推理方面的持续差距。",
+      "related_paper_ids": [
+        "video-mme-v2-benchmark",
+        "vanast-virtual-try-on",
+        "one-shot-compositional-video"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "经验缩放定律",
+      "description": "Adam's Law 揭示了 LLM 中可预测的频率依赖行为，将缩放定律的传统从损失曲线扩展到训练模型的行为特征。",
+      "related_paper_ids": [
+        "adams-law-textual-frequency",
+        "geometric-alignment-tax"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体轨迹优化",
+      "description": "多篇论文探讨智能体如何从执行历史中学习、检索和优化，标志着从智能体能力研究向智能体效率研究的转变。",
+      "related_paper_ids": [
+        "learning-retrieve-agent-trajectories",
+        "beyond-accuracy-tool-reasoning-inefficiency",
+        "mimic-intent-not-trajectories",
+        "synthetic-sandbox-mle-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "工具使用效率",
+      "description": "对 LLM 与外部工具交互方式的分析揭示了系统性的低效模式，表明工具编排正成为一等优化目标。",
+      "related_paper_ids": [
+        "beyond-accuracy-tool-reasoning-inefficiency",
+        "aces-code-generation-consistency"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Gemma 4 生态爆发",
+      "description": "Google 同时发布密集型、MoE 和全模态 Gemma 4 变体，数小时内引发包括去对齐、量化和推理蒸馏在内的生态浪潮。",
       "related_paper_ids": [],
       "trend_signal": "rising"
     },
     {
-      "name": "自主智能体框架与自我改进",
-      "description": "NousResearch Hermes-Agent、HKUDS AutoAgent和DeepTutor代表着新一代智能体框架——超越简单的工具调用，融入了学习能力、个性化定制和零代码可访问性。该领域正在快速整合收敛。",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "智能体记忆与有状态持久化",
-      "description": "Hindsight的「可学习的记忆」定位直接解决了当前LLM智能体的无状态性问题，表明持久化情节记忆正成为生产级智能体系统的核心基础设施需求。",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "大规模合成数据生成",
-      "description": "NVIDIA同时发布PersonaPlex和NeMo DataDesigner，揭示了一条面向RLHF和后训练数据质量优化的战略性合成数据流水线，表明合成数据生成已被视为核心ML基础设施，而非权宜之计。",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "客户端与隐私保护型AI工具",
-      "description": "GitNexus完全基于浏览器的Graph RAG和qmd纯本地语义搜索，共同呈现出一类以零服务器基础设施为设计原则的AI工具的兴起，对注重隐私的开发者和受监管行业极具吸引力。",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "AI驱动的内容生成与垂直领域自动化",
-      "description": "SEOMachine和RedditVideoMakerBot代表着垂直领域AI自动化工具的持续增长——LLM正被嵌入特定领域工作流，而非作为通用助手使用。",
-      "related_paper_ids": [],
+      "name": "推理与自我修正",
+      "description": "对 LLM 推理和自我修正能力的联合优化（而非将其视为单独的附加能力）展现了可衡量的提升。",
+      "related_paper_ids": [
+        "thinktwice-reasoning-self-refinement"
+      ],
       "trend_signal": "stable"
     }
   ],
   "sources_checked": [
     {
       "name": "HuggingFace Daily Papers",
-      "url": "https://huggingface.co/papers",
-      "checked_at": "2026-04-07T08:00:00Z",
-      "status": "partial"
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-04-07T07:00:00Z",
+      "status": "ok"
     },
     {
       "name": "HuggingFace Trending Models",
-      "url": "https://huggingface.co/models",
-      "checked_at": "2026-04-07T08:00:00Z",
-      "status": "partial"
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-04-07T07:05:00Z",
+      "status": "ok"
     },
     {
-      "name": "arXiv CS",
-      "url": "https://arxiv.org/list/cs/recent",
-      "checked_at": "2026-04-07T08:00:00Z",
-      "status": "partial"
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-04-07T07:10:00Z",
+      "status": "ok"
     },
     {
-      "name": "AlphaXiv Trending",
-      "url": "https://alphaxiv.org",
-      "checked_at": "2026-04-07T08:00:00Z",
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-04-07T07:15:00Z",
       "status": "partial"
     },
     {
       "name": "GitHub Trending",
       "url": "https://github.com/trending",
-      "checked_at": "2026-04-07T08:00:00Z",
+      "checked_at": "2026-04-07T07:20:00Z",
       "status": "ok"
     }
   ]

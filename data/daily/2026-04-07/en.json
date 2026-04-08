@@ -1,354 +1,928 @@
 {
   "version": "1.0",
   "date": "2026-04-07",
-  "generated_at": "2026-04-07T08:00:00Z",
+  "generated_at": "2026-04-07T07:30:00Z",
   "summary": {
-    "headline": "On-device AI inference surges with Google LiteRT-LM and AI Edge Gallery; NousResearch Hermes-Agent and NVIDIA PersonaPlex dominate GitHub trending; agent memory and autonomous agent frameworks emerge as the week's defining infrastructure theme",
-    "body": "Today's trending landscape is dominated by a decisive shift toward **on-device and edge AI inference**, with Google releasing both LiteRT-LM (a C++ inference runtime) and the AI Edge Gallery app showcasing local GenAI use cases — together accumulating over 1,400 new stars today. This signals a maturation of the deployment stack where privacy, latency, and cost concerns are pushing capable LLMs off the cloud and onto consumer hardware.\n\nThe **autonomous agent ecosystem** is exploding across multiple dimensions simultaneously: NousResearch's Hermes-Agent (2,547 stars today) represents a new generation of self-improving agent frameworks, while vectorize-io's Hindsight introduces persistent, learning agent memory — a long-identified gap in agentic pipelines. HKUDS continues to ship prolifically with both AutoAgent and DeepTutor, reinforcing their position as one of the most active academic groups in applied LLM research.\n\nSynthetic data generation is also consolidating as a first-class infrastructure concern, with NVIDIA's NeMo DataDesigner and PersonaPlex both trending — the latter focusing on persona-diverse synthetic data for RLHF and evaluation pipelines. The emergence of client-side knowledge graph tooling (GitNexus) and local semantic search (qmd) rounds out a picture of a research community increasingly focused on practical, privacy-preserving, and cost-efficient AI deployment patterns.",
+    "headline": "Video-MME-v2 raises the bar for video understanding evaluation; Adam's Law reveals textual frequency scaling in LLMs; Gemma 4 family dominates model releases with MoE and any-to-any variants",
+    "body": "April 7th is defined by **evaluation rigor and empirical laws**. The day's top paper, **Video-MME-v2**, arrives with 68 upvotes and establishes a comprehensive new benchmark for video understanding that exposes capability gaps even in frontier multimodal models. Paired with **Adam's Law** (48 upvotes), which uncovers a textual frequency scaling law governing how LLMs process token distributions, the day's research message is clear: understanding *what* models actually learn — and how to measure it — matters more than scaling further.\n\n**Agent trajectory retrieval and tool-use efficiency** form the day's secondary theme. Two 18-upvote papers attack complementary problems: one teaches agents to retrieve useful information from execution histories, while the other catalogs inefficiency patterns when LLMs use tools for reasoning. Together, they point toward a maturing agent ecosystem that is moving past \"can agents work\" to \"how do we make agents work *well*.\"\n\nOn the model front, **Google's Gemma 4 family** dominates HuggingFace trending with six variants spanning 2B to 31B parameters, including MoE (26B-A4B) and any-to-any modality models. The abliterated Gemma 4 variant from DealignAI and Jackrong's Claude Opus reasoning distillation into Qwen3.5 signal an active community immediately stress-testing and remixing new releases. GitHub trending is led by NousResearch's hermes-agent at 3,009 stars/day, confirming that agent infrastructure remains the dominant category in open-source AI.",
     "key_themes": [
-      "on-device-edge-inference",
-      "autonomous-agent-frameworks",
-      "agent-memory-persistence",
-      "synthetic-data-generation",
-      "knowledge-graph-rag",
-      "personalized-ai-learning"
+      "video-understanding-benchmarks",
+      "empirical-scaling-laws",
+      "agent-trajectory-optimization",
+      "tool-use-efficiency",
+      "gemma-4-ecosystem",
+      "virtual-try-on-and-video-synthesis"
     ]
   },
-  "researcher_notes": "**The Google Edge AI double-drop is underappreciated.** LiteRT-LM (522 stars today) and AI Edge Gallery (899 stars today) were released in close coordination and represent Google's most serious push yet to commoditize on-device LLM inference. LiteRT-LM's C++ foundation suggests it is designed for integration into Android/ChromeOS system-level components, not just app-layer experiments. Researchers working on efficient inference, quantization, and mobile deployment should watch this stack closely — it may become the de facto runtime for billions of Android devices within 18 months.\n\n**NousResearch Hermes-Agent's 2,547 stars-today figure is one of the highest single-day acquisition rates seen for an agent framework repo this year.** Nous has historically been a bellwether for open-source community sentiment — their Hermes model series has consistently outperformed expectations on reasoning benchmarks. The 'agent that grows with you' framing suggests built-in fine-tuning or continual learning loops, which would be a meaningful differentiator from static agent scaffolds like LangChain or CrewAI. The 3,974 forks suggest significant downstream customization activity.\n\n**The convergence of Hindsight (agent memory) + AutoAgent (zero-code agents) + Hermes-Agent (self-improving agents) points to a new infrastructure layer forming around stateful, long-horizon agents.** The missing piece has always been memory — not just retrieval-augmented context, but episodic memory that improves agent behavior over time. Hindsight's 'memory that learns' framing directly addresses this. Researchers in continual learning and meta-learning should pay attention, as these systems are essentially doing online few-shot adaptation in production.\n\n**NVIDIA's PersonaPlex + NeMo DataDesigner combo reveals a strategic synthetic data pipeline.** PersonaPlex generates diverse persona-conditioned synthetic conversations, while DataDesigner handles structured synthetic dataset creation. Together they form a complete RLHF data flywheel that doesn't require human annotators. This is particularly significant given the ongoing debate about data quality ceilings for post-training — NVIDIA appears to be betting that high-quality persona diversity is the key variable. Academic labs without annotation budgets should explore these tools immediately.\n\n**GitNexus (1,174 stars today) is a sleeper hit with significant research implications.** A fully client-side knowledge graph with built-in Graph RAG for code repositories runs entirely in the browser — zero server infrastructure. This is the kind of tool that could transform how researchers explore unfamiliar codebases and could serve as a reference implementation for privacy-preserving RAG architectures. The TypeScript implementation makes it accessible to a broad developer audience.",
-  "papers": [],
-  "models": [],
+  "researcher_notes": "**Video-MME-v2 is the most important benchmark paper of the week, and its 68-upvote engagement reflects genuine community demand.** The original Video-MME was already a go-to evaluation for video LLMs, but v2 substantially expands coverage with longer videos, more diverse question types, and harder temporal reasoning tasks. What makes this significant is timing: video understanding is the next frontier after image understanding has been largely commoditized by GPT-4o and Gemini. The benchmark's release alongside the Gemma 4 any-to-any models creates an immediate test surface — expect leaderboard results within days. The key question is whether any model achieves parity with human performance on the temporal reasoning subset, which has historically been the weakest capability.\n\n**Adam's Law is a sleeper hit that could reshape how we think about LLM training data.** The paper identifies a power-law relationship between textual token frequency and LLM behavior — essentially showing that models develop predictable biases tied to how often they encounter specific patterns during training. This is not merely an academic curiosity: it has direct implications for data curation, deduplication strategies, and understanding failure modes. If frequency-dependent behavior is as lawful as the paper claims, it becomes possible to predict (and correct) model weaknesses from training data statistics alone. The 48 upvotes suggest practitioners see the practical value immediately.\n\n**The agent efficiency papers reveal that the field is entering its \"optimization phase.\"** The paper on learning to retrieve from agent trajectories (Zhou et al.) and the analysis of inefficiency patterns in tool-integrated reasoning (Su et al.) both scored 18 upvotes — modest by engagement standards but disproportionately important. They represent the shift from \"proof of concept\" agent work to engineering discipline. The inefficiency paper is particularly telling: it catalogs specific failure patterns where LLMs waste tool calls, loop unproductively, or choose suboptimal tool sequences. This kind of systematic failure analysis is exactly what precedes rapid improvement in any engineering field. Combined with the broader agent evaluation work trending this week, we are seeing the agent research community mature in real time.\n\n**The Gemma 4 model tsunami deserves attention for its structural implications, not just its performance.** Six Gemma 4 variants trending simultaneously — including the first any-to-any modality models from Google at the 2B and 4B scale — signals that Google is pursuing a \"flood the zone\" strategy for open-weight models. The MoE variant (26B total, 4B active) is particularly interesting as it brings mixture-of-experts to a scale accessible to consumer hardware. Meanwhile, the community response is immediate: DealignAI's abliterated version (705 likes) removes safety guardrails, and Jackrong's Claude Opus distillation (2,454 likes) tries to inject stronger reasoning. The speed of community remixing is itself a signal — Gemma 4's architecture is modular enough to support diverse modifications.\n\n**Virtual try-on and compositional video synthesis represent quiet but steady progress in applied generative AI.** Vanast and ONE-SHOT both address practical video generation challenges — human image animation for try-on and compositional human-environment synthesis respectively. Neither will make headlines, but they represent the kind of application-ready research that drives commercial adoption. The fact that they appear alongside the more academic Video-MME-v2 benchmark highlights the dual nature of today's video AI landscape: fundamental evaluation is improving at the same time as commercial applications ship.",
+  "papers": [
+    {
+      "id": "video-mme-v2-benchmark",
+      "title": "Video-MME-v2: A Comprehensive Video Understanding Benchmark",
+      "authors": [
+        "Chaoyou Fu",
+        "Yuhan Dai",
+        "Yondong Luo",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Science and Technology of China",
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "A substantially expanded video understanding benchmark that tests multimodal models across longer videos, diverse question types, and harder temporal reasoning tasks, establishing a new standard for video LLM evaluation.",
+      "key_findings": [
+        "Comprehensive evaluation suite covering temporal reasoning, long-form video comprehension, and multi-turn QA",
+        "Frontier models including GPT-4o and Gemini still exhibit significant capability gaps on temporal reasoning subsets",
+        "Benchmark design enables fine-grained diagnosis of video understanding failures across duration and complexity axes"
+      ],
+      "tags": [
+        "benchmark",
+        "video-understanding",
+        "multimodal",
+        "evaluation",
+        "temporal-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 68,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05015",
+        "huggingface": "https://huggingface.co/papers/2604.05015",
+        "pdf": "https://arxiv.org/pdf/2604.05015"
+      }
+    },
+    {
+      "id": "adams-law-textual-frequency",
+      "title": "Adam's Law: Textual Frequency Law on LLMs",
+      "authors": [
+        "Hongyuan Adam Lu",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Waterloo"
+      ],
+      "summary": "Uncovers a power-law relationship between textual token frequency in training data and LLM behavioral patterns, demonstrating that model biases and failure modes are predictable from data statistics alone.",
+      "key_findings": [
+        "LLM behavior follows a lawful power-law relationship with token frequency in training corpora",
+        "Frequency-dependent biases can be predicted from training data statistics without running the model",
+        "The law holds across multiple model families and scales, suggesting a universal phenomenon"
+      ],
+      "tags": [
+        "scaling-laws",
+        "LLM-behavior",
+        "training-data",
+        "frequency-analysis",
+        "empirical-laws"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02176",
+        "huggingface": "https://huggingface.co/papers/2604.02176",
+        "pdf": "https://arxiv.org/pdf/2604.02176"
+      }
+    },
+    {
+      "id": "learning-retrieve-agent-trajectories",
+      "title": "Learning to Retrieve from Agent Trajectories",
+      "authors": [
+        "Yuqi Zhou",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Michigan"
+      ],
+      "summary": "Proposes a learned retrieval method for extracting useful information from agent execution histories, enabling more efficient reuse of past experience for decision-making in LLM agent systems.",
+      "key_findings": [
+        "Learned retrieval over agent trajectories significantly outperforms heuristic selection methods",
+        "Past execution traces contain reusable knowledge that transfers across similar tasks",
+        "The approach reduces redundant exploration and improves task completion rates in multi-step agent tasks"
+      ],
+      "tags": [
+        "agent-trajectories",
+        "retrieval",
+        "LLM-agents",
+        "experience-reuse",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04949",
+        "huggingface": "https://huggingface.co/papers/2604.04949",
+        "pdf": "https://arxiv.org/pdf/2604.04949"
+      }
+    },
+    {
+      "id": "beyond-accuracy-tool-reasoning-inefficiency",
+      "title": "Beyond Accuracy: Inefficiency Patterns in Tool-Integrated Reasoning",
+      "authors": [
+        "Qisheng Su",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Systematically catalogs inefficiency patterns in how LLMs use external tools for reasoning, identifying wasteful tool calls, unproductive loops, and suboptimal tool selection sequences.",
+      "key_findings": [
+        "LLMs exhibit systematic inefficiency patterns including redundant tool calls and unproductive retry loops",
+        "Tool selection order significantly impacts reasoning efficiency even when final accuracy is similar",
+        "Efficiency metrics reveal capability gaps invisible to accuracy-only evaluation"
+      ],
+      "tags": [
+        "tool-use",
+        "LLM-reasoning",
+        "efficiency",
+        "failure-analysis",
+        "agent-evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05404",
+        "huggingface": "https://huggingface.co/papers/2604.05404",
+        "pdf": "https://arxiv.org/pdf/2604.05404"
+      }
+    },
+    {
+      "id": "vanast-virtual-try-on",
+      "title": "Vanast: Virtual Try-On with Human Image Animation",
+      "authors": [
+        "Hyunsoo Cha",
+        "et al."
+      ],
+      "affiliations": [
+        "KAIST"
+      ],
+      "summary": "Combines virtual try-on with human image animation to produce realistic clothing visualization on moving subjects, bridging the gap between static garment transfer and dynamic video generation.",
+      "key_findings": [
+        "Joint modeling of garment transfer and body animation produces more coherent try-on videos than sequential approaches",
+        "Temporal consistency in generated animations significantly improves perceived realism",
+        "The approach generalizes across diverse body types and clothing categories"
+      ],
+      "tags": [
+        "virtual-try-on",
+        "video-generation",
+        "human-animation",
+        "generative-AI",
+        "e-commerce"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04934",
+        "huggingface": "https://huggingface.co/papers/2604.04934",
+        "pdf": "https://arxiv.org/pdf/2604.04934"
+      }
+    },
+    {
+      "id": "one-shot-compositional-video",
+      "title": "ONE-SHOT: Compositional Human-Environment Video Synthesis",
+      "authors": [
+        "Fengyuan Yang",
+        "et al."
+      ],
+      "affiliations": [
+        "University of California, San Diego"
+      ],
+      "summary": "Enables compositional video synthesis combining human subjects with diverse environments in a single-shot framework, addressing the challenge of generating coherent human-scene interactions.",
+      "key_findings": [
+        "Single-shot composition produces realistic human-environment interactions without multi-stage pipelines",
+        "Environment-aware human motion generation improves physical plausibility of synthesized videos",
+        "Approach handles diverse environments including indoor, outdoor, and complex scene layouts"
+      ],
+      "tags": [
+        "video-synthesis",
+        "compositional-generation",
+        "human-scene-interaction",
+        "diffusion-models",
+        "generative-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01043",
+        "huggingface": "https://huggingface.co/papers/2604.01043",
+        "pdf": "https://arxiv.org/pdf/2604.01043"
+      }
+    },
+    {
+      "id": "thinktwice-reasoning-self-refinement",
+      "title": "ThinkTwice: Jointly Optimizing LLMs for Reasoning and Self-Refinement",
+      "authors": [
+        "Difan Jiao",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Illinois Urbana-Champaign"
+      ],
+      "summary": "Proposes joint optimization of reasoning and self-refinement capabilities in LLMs, showing that training both abilities together yields superior performance compared to sequential or separate training.",
+      "key_findings": [
+        "Joint optimization of reasoning and self-refinement outperforms training each capability independently",
+        "Self-refinement benefits from being co-trained with the reasoning objective rather than added post-hoc",
+        "The approach improves performance on both mathematical reasoning and code generation benchmarks"
+      ],
+      "tags": [
+        "reasoning",
+        "self-refinement",
+        "LLM-training",
+        "joint-optimization",
+        "chain-of-thought"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01591",
+        "huggingface": "https://huggingface.co/papers/2604.01591",
+        "pdf": "https://arxiv.org/pdf/2604.01591"
+      }
+    },
+    {
+      "id": "synthetic-sandbox-mle-agents",
+      "title": "Synthetic Sandbox for Training MLE Agents",
+      "authors": [
+        "Yuhang Zhou",
+        "et al."
+      ],
+      "affiliations": [
+        "National University of Singapore"
+      ],
+      "summary": "Constructs synthetic machine learning engineering environments for training and evaluating autonomous ML agents, providing controlled sandboxes that test end-to-end ML workflow capabilities.",
+      "key_findings": [
+        "Synthetic ML engineering tasks provide a controllable evaluation environment for MLE agents",
+        "Agent performance varies dramatically across ML workflow stages from data preprocessing to deployment",
+        "Sandbox environments enable safe iteration on agent capabilities without real infrastructure costs"
+      ],
+      "tags": [
+        "MLE-agents",
+        "synthetic-environments",
+        "agent-training",
+        "machine-learning-engineering",
+        "sandbox"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04872",
+        "huggingface": "https://huggingface.co/papers/2604.04872",
+        "pdf": "https://arxiv.org/pdf/2604.04872"
+      }
+    },
+    {
+      "id": "mimic-intent-not-trajectories",
+      "title": "Mimic Intent, Not Just Trajectories",
+      "authors": [
+        "Renming Huang",
+        "et al."
+      ],
+      "affiliations": [
+        "Chinese University of Hong Kong"
+      ],
+      "summary": "Argues that imitation learning for agents should focus on replicating the underlying intent behind demonstrations rather than surface-level trajectory matching, leading to more robust and generalizable policies.",
+      "key_findings": [
+        "Intent-level imitation produces policies that generalize better to novel situations than trajectory-level cloning",
+        "Disentangling intent from execution details reduces compounding errors in sequential decision-making",
+        "The approach is complementary to existing behavioral cloning methods and can be integrated as an auxiliary objective"
+      ],
+      "tags": [
+        "imitation-learning",
+        "intent-modeling",
+        "LLM-agents",
+        "behavioral-cloning",
+        "generalization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2602.08602",
+        "huggingface": "https://huggingface.co/papers/2602.08602",
+        "pdf": "https://arxiv.org/pdf/2602.08602"
+      }
+    },
+    {
+      "id": "aces-code-generation-consistency",
+      "title": "ACES: Leave-One-Out AUC Consistency for Code Generation",
+      "authors": [
+        "Hui Sun",
+        "et al."
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "Introduces a novel code generation evaluation metric based on leave-one-out AUC consistency, providing a more robust signal for model selection than pass@k metrics alone.",
+      "key_findings": [
+        "Leave-one-out AUC consistency captures code generation reliability that pass@k misses",
+        "The metric is more stable across random seeds and problem subsets than existing evaluation approaches",
+        "ACES enables better model ranking decisions for deployment in code generation pipelines"
+      ],
+      "tags": [
+        "code-generation",
+        "evaluation-metrics",
+        "AUC",
+        "reliability",
+        "model-selection"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03922",
+        "huggingface": "https://huggingface.co/papers/2604.03922",
+        "pdf": "https://arxiv.org/pdf/2604.03922"
+      }
+    },
+    {
+      "id": "geometric-alignment-tax",
+      "title": "The Geometric Alignment Tax",
+      "authors": [
+        "Prashant C. Raju"
+      ],
+      "affiliations": [
+        "Independent Researcher"
+      ],
+      "summary": "Formalizes the cost of aligning LLMs in geometric terms, showing that alignment procedures distort the model's representation geometry in ways that reduce downstream capabilities on non-aligned tasks.",
+      "key_findings": [
+        "Alignment procedures create measurable geometric distortions in model representation spaces",
+        "The distortion magnitude correlates with capability degradation on tasks outside the alignment distribution",
+        "The geometric framework provides a principled way to quantify the alignment tax across model families"
+      ],
+      "tags": [
+        "alignment",
+        "representation-geometry",
+        "alignment-tax",
+        "LLM-capabilities",
+        "theoretical"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04155",
+        "huggingface": "https://huggingface.co/papers/2604.04155",
+        "pdf": "https://arxiv.org/pdf/2604.04155"
+      }
+    },
+    {
+      "id": "paper-espresso-research-insight",
+      "title": "Paper Espresso: From Paper Overload to Research Insight",
+      "authors": [
+        "Mingzhe Du",
+        "et al."
+      ],
+      "affiliations": [
+        "National University of Singapore"
+      ],
+      "summary": "An automated research paper summarization and insight extraction tool addressing information overload in fast-moving AI/ML research, with multi-level summarization that preserves technical details.",
+      "key_findings": [
+        "Automated pipeline reduces time-to-insight for literature review by an order of magnitude",
+        "Multi-level summarization preserves key technical details that simple abstractive summaries lose",
+        "Open-source tool designed for integration into existing research workflows"
+      ],
+      "tags": [
+        "research-tools",
+        "summarization",
+        "literature-review",
+        "productivity",
+        "open-source"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04562",
+        "huggingface": "https://huggingface.co/papers/2604.04562",
+        "pdf": "https://arxiv.org/pdf/2604.04562"
+      }
+    },
+    {
+      "id": "bidirlm-omnimodal-encoders",
+      "title": "BidirLM: From Text to Omnimodal Bidirectional Encoders",
+      "authors": [
+        "Nicolas Boizard",
+        "et al."
+      ],
+      "affiliations": [
+        "Meta AI"
+      ],
+      "summary": "Extends bidirectional language modeling to omnimodal inputs, converting text-only bidirectional encoders into models that process text, images, and audio within a unified bidirectional framework.",
+      "key_findings": [
+        "Bidirectional encoding over multiple modalities improves cross-modal retrieval compared to causal architectures",
+        "Text-pretrained bidirectional encoders can be efficiently adapted to process visual and audio inputs",
+        "The approach maintains the embedding quality advantages of bidirectional models while adding multimodal capability"
+      ],
+      "tags": [
+        "multimodal",
+        "bidirectional-encoding",
+        "omnimodal",
+        "embeddings",
+        "representation-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02045",
+        "huggingface": "https://huggingface.co/papers/2604.02045",
+        "pdf": "https://arxiv.org/pdf/2604.02045"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma 4 31B-IT",
+      "organization": "Google",
+      "description": "Google's flagship Gemma 4 instruction-tuned model at 31B parameters, supporting image-text-to-text tasks. The largest dense variant in the Gemma 4 family, trending as the community benchmarks it against GPT-4o and Claude.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "multimodal",
+        "instruction-tuned",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 884000,
+        "likes": 1353
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "Community-created reasoning model distilling Claude Opus 4.6 reasoning capabilities into a Qwen3.5-27B base, achieving strong performance on reasoning benchmarks through knowledge distillation from a frontier model.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "reasoning",
+        "distillation",
+        "community"
+      ],
+      "metrics": {
+        "downloads": 552000,
+        "likes": 2454
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "gemma-4-abliterated",
+      "name": "Gemma-4-31B-JANG_4M-CRACK",
+      "organization": "DealignAI",
+      "description": "Abliterated (uncensored) variant of Gemma 4 31B with safety guardrails removed, trending rapidly as the community explores the model's full unfiltered capabilities.",
+      "task_type": "text-generation",
+      "model_size": "31B",
+      "tags": [
+        "abliterated",
+        "uncensored",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 29000,
+        "likes": 705
+      },
+      "source_url": "https://huggingface.co/dealignai/Gemma-4-31B-JANG_4M-CRACK"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "Void Model",
+      "organization": "Netflix",
+      "description": "Netflix's video inpainting and object removal model, designed for seamless removal of unwanted objects from video footage. Notable as Netflix's first open model release.",
+      "task_type": "video-inpainting",
+      "model_size": "undisclosed",
+      "tags": [
+        "video-inpainting",
+        "object-removal",
+        "production"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 574
+      },
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "gemma-4-26b-a4b-it",
+      "name": "Gemma 4 26B-A4B-IT",
+      "organization": "Google",
+      "description": "Mixture-of-experts Gemma 4 variant with 26B total parameters but only 4B active per token, bringing MoE efficiency to consumer-accessible hardware.",
+      "task_type": "text-generation",
+      "model_size": "26B (4B active)",
+      "tags": [
+        "MoE",
+        "efficient-inference",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 660000,
+        "likes": 508
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "gemma-4-e4b-it",
+      "name": "Gemma 4 E4B-IT",
+      "organization": "Google",
+      "description": "Any-to-any modality Gemma 4 model at 4B parameters, capable of processing and generating across text, image, and audio modalities in a single unified architecture.",
+      "task_type": "any-to-any",
+      "model_size": "4B",
+      "tags": [
+        "any-to-any",
+        "multimodal",
+        "gemma-4"
+      ],
+      "metrics": {
+        "downloads": 474000,
+        "likes": 476
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "bonsai-8b-1bit",
+      "name": "Bonsai-8B-GGUF",
+      "organization": "Prism ML",
+      "description": "1-bit quantized 8B parameter language model pushing the limits of extreme quantization, demonstrating that binary weight models can achieve surprisingly coherent text generation.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": [
+        "1-bit",
+        "quantization",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 53000,
+        "likes": 506
+      },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "glm-5-1-moe",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI",
+      "description": "Latest generation of the GLM series as a mixture-of-experts text generation model, representing Zhipu AI's continued push to compete with Western frontier labs on open-weight models.",
+      "task_type": "text-generation",
+      "model_size": "undisclosed MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "Chinese-AI"
+      ],
+      "metrics": {
+        "downloads": 389,
+        "likes": 450
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's dedicated OCR and vision-language model optimized for document understanding and text extraction, achieving strong results on multilingual document benchmarks.",
+      "task_type": "image-text-to-text",
+      "model_size": "undisclosed",
+      "tags": [
+        "OCR",
+        "document-understanding",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 40000,
+        "likes": 1085
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "omnivoice-tts",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "Voice cloning and text-to-speech model with high-fidelity voice replication, trending for its ability to clone voices from short audio samples.",
+      "task_type": "text-to-speech",
+      "model_size": "undisclosed",
+      "tags": [
+        "TTS",
+        "voice-cloning",
+        "speech-synthesis"
+      ],
+      "metrics": {
+        "downloads": 105000,
+        "likes": 360
+      },
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "holo3-35b-a3b",
+      "name": "Holo3-35B-A3B",
+      "organization": "Hcompany",
+      "description": "Multimodal mixture-of-experts model with 35B total parameters and 3B active, designed for efficient multimodal reasoning across text and vision tasks.",
+      "task_type": "multimodal",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "MoE",
+        "multimodal",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 1785,
+        "likes": 246
+      },
+      "source_url": "https://huggingface.co/Hcompany/Holo3-35B-A3B"
+    }
+  ],
   "trending_repos": [
     {
-      "id": "nousresearch-hermes-agent",
+      "id": "hermes-agent",
       "name": "NousResearch/hermes-agent",
-      "description": "Hermes-Agent is described as 'the agent that grows with you' — an autonomous LLM agent framework from NousResearch featuring self-improvement loops and extensive customization via forks. One of the highest single-day star acquisition rates for an agent framework repo in 2026.",
+      "description": "A modular, extensible agent framework that grows with the user, featuring plugin-based tool integration and persistent memory. Exploding in popularity with 3,009 stars in a single day.",
       "language": "Python",
-      "stars": 30455,
-      "stars_today": 2547,
-      "forks": 3974,
+      "stars": 32883,
+      "stars_today": 3009,
+      "forks": 4235,
       "url": "https://github.com/NousResearch/hermes-agent",
       "tags": [
-        "llm-agents",
-        "autonomous-agents",
-        "self-improving",
-        "open-source"
+        "LLM-agents",
+        "agent-framework",
+        "tool-integration"
       ],
       "relevance": "high"
     },
     {
-      "id": "abhigyanpatwari-gitnexus",
+      "id": "gitnexus",
       "name": "abhigyanpatwari/GitNexus",
-      "description": "GitNexus is a zero-server, client-side knowledge graph engine that runs entirely in the browser. Drop in a GitHub repo or ZIP file to get an interactive knowledge graph with a built-in Graph RAG Agent for code exploration — no backend required.",
+      "description": "Client-side knowledge graph for codebases that enables semantic search and visualization of code relationships, running entirely in the browser.",
       "language": "TypeScript",
-      "stars": 24206,
-      "stars_today": 1174,
-      "forks": 2713,
+      "stars": 24662,
+      "stars_today": 1195,
+      "forks": 2754,
       "url": "https://github.com/abhigyanpatwari/GitNexus",
       "tags": [
         "knowledge-graph",
-        "graph-rag",
-        "code-intelligence",
-        "client-side",
-        "privacy"
+        "code-search",
+        "developer-tools"
       ],
-      "relevance": "high"
+      "relevance": "medium"
     },
     {
-      "id": "google-ai-edge-gallery",
-      "name": "google-ai-edge/gallery",
-      "description": "Google AI Edge Gallery is a showcase app demonstrating on-device ML and GenAI use cases, allowing users to run models locally on Android devices. Represents Google's most polished consumer-facing deployment of edge LLM inference.",
-      "language": "Kotlin",
-      "stars": 18483,
-      "stars_today": 899,
-      "forks": 1726,
-      "url": "https://github.com/google-ai-edge/gallery",
-      "tags": [
-        "on-device-ai",
-        "edge-inference",
-        "android",
-        "genai",
-        "mobile"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "tobi-qmd",
+      "id": "qmd-cli-search",
       "name": "tobi/qmd",
-      "description": "qmd is a mini CLI search engine for local documents, knowledge bases, and meeting notes, tracking current SOTA retrieval approaches while remaining fully local. Represents the growing category of privacy-first semantic search tooling.",
+      "description": "Minimal CLI search engine for local documentation that indexes and searches markdown and code files with instant results.",
       "language": "TypeScript",
-      "stars": 19317,
+      "stars": 19668,
       "stars_today": 859,
-      "forks": 1160,
+      "forks": 1182,
       "url": "https://github.com/tobi/qmd",
       "tags": [
-        "semantic-search",
-        "local-ai",
-        "rag",
-        "cli",
-        "privacy"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "google-ai-edge-litert-lm",
-      "name": "google-ai-edge/LiteRT-LM",
-      "description": "LiteRT-LM is Google's C++ inference runtime for large language models on edge devices, designed for system-level integration on Android and ChromeOS. Its low-level C++ foundation suggests it is built for embedding into OS-layer components rather than just application-layer use.",
-      "language": "C++",
-      "stars": 2373,
-      "stars_today": 522,
-      "forks": 238,
-      "url": "https://github.com/google-ai-edge/LiteRT-LM",
-      "tags": [
-        "on-device-inference",
-        "edge-ai",
-        "c++",
-        "llm-runtime",
-        "android",
-        "chromeos"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "nvidia-personaplex",
-      "name": "NVIDIA/personaplex",
-      "description": "PersonaPlex is NVIDIA's framework for generating persona-diverse synthetic data, primarily targeting RLHF pipelines and model evaluation. It complements NeMo DataDesigner to form a comprehensive synthetic data generation stack.",
-      "language": "Python",
-      "stars": 7740,
-      "stars_today": 663,
-      "forks": 1137,
-      "url": "https://github.com/NVIDIA/personaplex",
-      "tags": [
-        "synthetic-data",
-        "rlhf",
-        "persona-generation",
-        "data-augmentation",
-        "nvidia"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "vectorize-io-hindsight",
-      "name": "vectorize-io/hindsight",
-      "description": "Hindsight is an agent memory system that learns over time, addressing one of the most critical gaps in current agentic pipelines — persistent, improving episodic memory. Positions itself as infrastructure-layer memory for LLM agents.",
-      "language": "Python",
-      "stars": 7757,
-      "stars_today": 172,
-      "forks": 479,
-      "url": "https://github.com/vectorize-io/hindsight",
-      "tags": [
-        "agent-memory",
-        "episodic-memory",
-        "llm-agents",
-        "continual-learning"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "nvidia-nemo-datadesigner",
-      "name": "NVIDIA-NeMo/DataDesigner",
-      "description": "NeMo DataDesigner generates high-quality synthetic data from scratch or from seed data, providing a structured pipeline for creating training datasets for LLMs. Part of NVIDIA's broader synthetic data infrastructure strategy.",
-      "language": "Python",
-      "stars": 1473,
-      "stars_today": 256,
-      "forks": 130,
-      "url": "https://github.com/NVIDIA-NeMo/DataDesigner",
-      "tags": [
-        "synthetic-data",
-        "nemo",
-        "data-generation",
-        "llm-training",
-        "nvidia"
-      ],
-      "relevance": "high"
-    },
-    {
-      "id": "thecraighewitt-seomachine",
-      "name": "TheCraigHewitt/seomachine",
-      "description": "A specialized Claude Code workspace for creating long-form, SEO-optimized blog content using AI. Demonstrates Claude's emerging role as a vertical-specific content automation platform via structured workspaces.",
-      "language": "Python",
-      "stars": 3666,
-      "stars_today": 213,
-      "forks": 640,
-      "url": "https://github.com/TheCraigHewitt/seomachine",
-      "tags": [
-        "claude",
-        "content-generation",
-        "seo",
-        "llm-applications",
-        "automation"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "hkuds-deeptutor",
-      "name": "HKUDS/DeepTutor",
-      "description": "DeepTutor is an agent-native personalized learning assistant from the HKUDS lab at Hong Kong University, applying LLM agents to adaptive education. Reflects HKUDS's prolific output in practical LLM application frameworks.",
-      "language": "Python",
-      "stars": 11810,
-      "stars_today": 164,
-      "forks": 1634,
-      "url": "https://github.com/HKUDS/DeepTutor",
-      "tags": [
-        "education-ai",
-        "personalized-learning",
-        "llm-agents",
-        "edtech"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "hkuds-autoagent",
-      "name": "HKUDS/AutoAgent",
-      "description": "AutoAgent is a fully-automated, zero-code LLM agent framework from HKUDS that enables non-technical users to build and deploy LLM agents without writing code. Continues HKUDS's focus on democratizing LLM agent development.",
-      "language": "Python",
-      "stars": 8975,
-      "stars_today": 94,
-      "forks": 1265,
-      "url": "https://github.com/HKUDS/AutoAgent",
-      "tags": [
-        "llm-agents",
-        "no-code",
-        "agent-framework",
-        "automation"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "elebumm-redditvideomakerbot",
-      "name": "elebumm/RedditVideoMakerBot",
-      "description": "A one-command tool to automatically create Reddit-style short videos with text-to-speech, backgrounds, and subtitles. Trending likely due to renewed interest in automated AI content generation pipelines.",
-      "language": "Python",
-      "stars": 9822,
-      "stars_today": 656,
-      "forks": 2498,
-      "url": "https://github.com/elebumm/RedditVideoMakerBot",
-      "tags": [
-        "video-generation",
-        "content-automation",
-        "tts",
-        "social-media"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "pandas-dev-pandas",
-      "name": "pandas-dev/pandas",
-      "description": "The foundational Python data analysis and manipulation library, providing labeled data structures and statistical functions. Trending today likely due to a new release or major community event.",
-      "language": "Python",
-      "stars": 48398,
-      "stars_today": 27,
-      "forks": 19858,
-      "url": "https://github.com/pandas-dev/pandas",
-      "tags": [
-        "data-science",
-        "data-analysis",
-        "python",
-        "dataframe"
-      ],
-      "relevance": "medium"
-    },
-    {
-      "id": "forrestchang-andrej-karpathy-skills",
-      "name": "forrestchang/andrej-karpathy-skills",
-      "description": "A community-curated repository tracking skills and knowledge areas associated with Andrej Karpathy's teaching and research style. Reflects ongoing community interest in structured AI/ML learning roadmaps.",
-      "language": "",
-      "stars": 7833,
-      "stars_today": 42,
-      "forks": 551,
-      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
-      "tags": [
-        "ai-education",
-        "learning-resources",
-        "ml-skills",
-        "karpathy"
+        "search",
+        "CLI",
+        "documentation"
       ],
       "relevance": "low"
     },
     {
-      "id": "mikf-gallery-dl",
-      "name": "mikf/gallery-dl",
-      "description": "A command-line program to download image galleries and collections from numerous image hosting sites. Relevant to AI as a data collection tool for image datasets used in vision model training.",
-      "language": "Python",
-      "stars": 17667,
-      "stars_today": 54,
-      "forks": 1399,
-      "url": "https://github.com/mikf/gallery-dl",
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Google's showcase of on-device ML and generative AI models running via LiteRT, demonstrating practical deployment of AI on mobile and edge devices.",
+      "language": "Kotlin",
+      "stars": 18925,
+      "stars_today": 897,
+      "forks": 1765,
+      "url": "https://github.com/google-ai-edge/gallery",
       "tags": [
-        "data-collection",
-        "image-scraping",
-        "dataset-creation",
-        "cli"
+        "on-device-AI",
+        "edge-inference",
+        "mobile-ML"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "personaplex",
+      "name": "NVIDIA/personaplex",
+      "description": "NVIDIA's framework for generating persona-diverse synthetic data, enabling creation of realistic and varied training datasets for LLM fine-tuning and evaluation.",
+      "language": "Python",
+      "stars": 8032,
+      "stars_today": 662,
+      "forks": 1165,
+      "url": "https://github.com/NVIDIA/personaplex",
+      "tags": [
+        "synthetic-data",
+        "persona-generation",
+        "data-augmentation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Google's C++ runtime for efficient on-device LLM inference, optimized for mobile and embedded deployment with minimal memory footprint.",
+      "language": "C++",
+      "stars": 2638,
+      "stars_today": 528,
+      "forks": 253,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": [
+        "on-device-inference",
+        "LLM-runtime",
+        "edge-deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "Agent-native learning assistant from HKU that uses LLM agents to provide personalized tutoring, adaptive explanations, and interactive problem-solving.",
+      "language": "Python",
+      "stars": 12385,
+      "stars_today": 168,
+      "forks": 1680,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "education",
+        "LLM-agents",
+        "tutoring"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nvidia-datadesigner",
+      "name": "NVIDIA-NeMo/DataDesigner",
+      "description": "NVIDIA's tool for designing and generating high-quality synthetic training data pipelines, part of the NeMo ecosystem for large-scale model training.",
+      "language": "Python",
+      "stars": 1513,
+      "stars_today": 244,
+      "forks": 132,
+      "url": "https://github.com/NVIDIA-NeMo/DataDesigner",
+      "tags": [
+        "synthetic-data",
+        "data-generation",
+        "NeMo"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "autoagent",
+      "name": "HKUDS/AutoAgent",
+      "description": "Zero-code LLM agent framework from HKU that enables building autonomous agents through natural language specifications without programming.",
+      "language": "Python",
+      "stars": 9003,
+      "stars_today": 76,
+      "forks": 1269,
+      "url": "https://github.com/HKUDS/AutoAgent",
+      "tags": [
+        "agent-framework",
+        "no-code",
+        "LLM-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hindsight-agent-memory",
+      "name": "vectorize-io/hindsight",
+      "description": "Agent memory system that learns from past interactions, enabling LLM agents to build persistent, improving knowledge bases from their execution histories.",
+      "language": "Python",
+      "stars": 7813,
+      "stars_today": 160,
+      "forks": 486,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "knowledge-base"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "seomachine",
+      "name": "TheCraigHewitt/seomachine",
+      "description": "SEO content generation tool powered by Claude, automating keyword research, content planning, and article generation for search engine optimization.",
+      "language": "Python",
+      "stars": 3988,
+      "stars_today": 215,
+      "forks": 668,
+      "url": "https://github.com/TheCraigHewitt/seomachine",
+      "tags": [
+        "SEO",
+        "content-generation",
+        "Claude"
       ],
       "relevance": "low"
     }
   ],
   "themes": [
     {
-      "name": "On-Device & Edge AI Inference",
-      "description": "Google's simultaneous release of LiteRT-LM and AI Edge Gallery marks a major push toward system-level on-device LLM deployment, while qmd demonstrates demand for fully local semantic search. This theme spans both infrastructure runtimes and end-user applications.",
+      "name": "Video Understanding Benchmarks",
+      "description": "Video-MME-v2 leads a push toward more rigorous evaluation of video understanding capabilities, exposing persistent temporal reasoning gaps in frontier multimodal models.",
+      "related_paper_ids": [
+        "video-mme-v2-benchmark",
+        "vanast-virtual-try-on",
+        "one-shot-compositional-video"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Empirical Scaling Laws",
+      "description": "Adam's Law reveals predictable frequency-dependent behaviors in LLMs, extending the tradition of scaling laws beyond loss curves into behavioral characterization of trained models.",
+      "related_paper_ids": [
+        "adams-law-textual-frequency",
+        "geometric-alignment-tax"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Trajectory Optimization",
+      "description": "Multiple papers address how agents learn from, retrieve, and optimize their execution histories, marking a shift from agent capability to agent efficiency.",
+      "related_paper_ids": [
+        "learning-retrieve-agent-trajectories",
+        "beyond-accuracy-tool-reasoning-inefficiency",
+        "mimic-intent-not-trajectories",
+        "synthetic-sandbox-mle-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Tool-Use Efficiency",
+      "description": "Analysis of how LLMs interact with external tools reveals systematic inefficiency patterns, suggesting that tool orchestration is becoming a first-class optimization target.",
+      "related_paper_ids": [
+        "beyond-accuracy-tool-reasoning-inefficiency",
+        "aces-code-generation-consistency"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Gemma 4 Ecosystem Explosion",
+      "description": "Google's simultaneous release of dense, MoE, and any-to-any Gemma 4 variants triggers an ecosystem wave including abliterations, quantizations, and reasoning distillations within hours.",
       "related_paper_ids": [],
       "trend_signal": "rising"
     },
     {
-      "name": "Autonomous Agent Frameworks & Self-Improvement",
-      "description": "NousResearch Hermes-Agent, HKUDS AutoAgent, and DeepTutor represent a new generation of agent frameworks that go beyond simple tool-use to incorporate learning, personalization, and zero-code accessibility. The space is consolidating rapidly.",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "Agent Memory & Stateful Persistence",
-      "description": "Hindsight's 'memory that learns' directly addresses the statelessness problem in current LLM agents, signaling that persistent episodic memory is becoming a first-class infrastructure concern for production agentic systems.",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "Synthetic Data Generation at Scale",
-      "description": "NVIDIA's dual release of PersonaPlex and NeMo DataDesigner reveals a strategic synthetic data pipeline targeting RLHF and post-training data quality, indicating that synthetic data generation is now viewed as core ML infrastructure rather than a workaround.",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "Client-Side & Privacy-Preserving AI Tools",
-      "description": "GitNexus's fully browser-based Graph RAG and qmd's local-only semantic search reflect a growing class of AI tools designed with zero server infrastructure, appealing to privacy-conscious developers and regulated industries.",
-      "related_paper_ids": [],
-      "trend_signal": "rising"
-    },
-    {
-      "name": "AI-Powered Content & Vertical Automation",
-      "description": "SEOMachine and RedditVideoMakerBot represent the continued growth of vertical-specific AI automation tools, where LLMs are being embedded into domain-specific workflows rather than used as general-purpose assistants.",
-      "related_paper_ids": [],
+      "name": "Reasoning and Self-Refinement",
+      "description": "Joint optimization of reasoning and self-correction capabilities in LLMs, rather than treating them as separate add-on capabilities, shows measurable gains.",
+      "related_paper_ids": [
+        "thinktwice-reasoning-self-refinement"
+      ],
       "trend_signal": "stable"
     }
   ],
   "sources_checked": [
     {
       "name": "HuggingFace Daily Papers",
-      "url": "https://huggingface.co/papers",
-      "checked_at": "2026-04-07T08:00:00Z",
-      "status": "partial"
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-04-07T07:00:00Z",
+      "status": "ok"
     },
     {
       "name": "HuggingFace Trending Models",
-      "url": "https://huggingface.co/models",
-      "checked_at": "2026-04-07T08:00:00Z",
-      "status": "partial"
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-04-07T07:05:00Z",
+      "status": "ok"
     },
     {
-      "name": "arXiv CS",
-      "url": "https://arxiv.org/list/cs/recent",
-      "checked_at": "2026-04-07T08:00:00Z",
-      "status": "partial"
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-04-07T07:10:00Z",
+      "status": "ok"
     },
     {
-      "name": "AlphaXiv Trending",
-      "url": "https://alphaxiv.org",
-      "checked_at": "2026-04-07T08:00:00Z",
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-04-07T07:15:00Z",
       "status": "partial"
     },
     {
       "name": "GitHub Trending",
       "url": "https://github.com/trending",
-      "checked_at": "2026-04-07T08:00:00Z",
+      "checked_at": "2026-04-07T07:20:00Z",
       "status": "ok"
     }
   ]

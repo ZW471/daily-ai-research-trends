@@ -527,6 +527,76 @@ Output ONLY valid JSON (no markdown fences, no commentary):"""
         raise first_err
 
 
+def validate_review(review: dict, label: str = "review") -> list[str]:
+    """Validate a generated review against the expected schema.
+
+    Returns a list of error strings. Empty list means the review is valid.
+    """
+    errors = []
+
+    # Top-level required fields
+    for field in ["version", "date", "generated_at", "summary", "researcher_notes",
+                  "papers", "models", "trending_repos", "themes", "sources_checked"]:
+        if field not in review:
+            errors.append(f"[{label}] Missing top-level field: {field}")
+
+    # Summary structure
+    summary = review.get("summary", {})
+    for field in ["headline", "body", "key_themes"]:
+        if field not in summary:
+            errors.append(f"[{label}] Missing summary.{field}")
+
+    # Minimum content thresholds
+    papers = review.get("papers", [])
+    models = review.get("models", [])
+    repos = review.get("trending_repos", [])
+    themes = review.get("themes", [])
+
+    if len(papers) < 5:
+        errors.append(f"[{label}] Only {len(papers)} papers (minimum 5 expected)")
+    if len(models) < 3:
+        errors.append(f"[{label}] Only {len(models)} models (minimum 3 expected)")
+    if len(repos) < 3:
+        errors.append(f"[{label}] Only {len(repos)} trending repos (minimum 3 expected)")
+    if len(themes) < 2:
+        errors.append(f"[{label}] Only {len(themes)} themes (minimum 2 expected)")
+
+    # Validate paper entries
+    for i, paper in enumerate(papers):
+        for field in ["id", "title", "authors", "affiliations", "summary",
+                      "key_findings", "tags", "relevance", "sources"]:
+            if field not in paper:
+                errors.append(f"[{label}] Paper #{i} missing field: {field}")
+        if paper.get("relevance") not in ("high", "medium", "low"):
+            errors.append(f"[{label}] Paper #{i} invalid relevance: {paper.get('relevance')}")
+        affs = paper.get("affiliations", [])
+        if not affs or any(a.lower() == "unknown" for a in affs):
+            errors.append(f"[{label}] Paper #{i} has missing or 'Unknown' affiliations")
+
+    # Validate model entries
+    for i, model in enumerate(models):
+        for field in ["id", "name", "organization", "description", "task_type",
+                      "tags", "metrics", "source_url"]:
+            if field not in model:
+                errors.append(f"[{label}] Model #{i} missing field: {field}")
+
+    # Validate repo entries
+    for i, repo in enumerate(repos):
+        for field in ["id", "name", "description", "stars", "url", "tags", "relevance"]:
+            if field not in repo:
+                errors.append(f"[{label}] Repo #{i} missing field: {field}")
+
+    # Validate theme entries
+    for i, theme in enumerate(themes):
+        for field in ["name", "description", "related_paper_ids", "trend_signal"]:
+            if field not in theme:
+                errors.append(f"[{label}] Theme #{i} missing field: {field}")
+        if theme.get("trend_signal") not in ("rising", "stable", "fading"):
+            errors.append(f"[{label}] Theme #{i} invalid trend_signal: {theme.get('trend_signal')}")
+
+    return errors
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate daily AI research review")
     parser.add_argument(
@@ -543,6 +613,11 @@ def main():
         "--allow-empty",
         action="store_true",
         help="Allow generation even when HF papers and models are both empty",
+    )
+    parser.add_argument(
+        "--skip-validation",
+        action="store_true",
+        help="Skip schema validation (not recommended)",
     )
     args = parser.parse_args()
 
@@ -583,20 +658,47 @@ def main():
     # Step 3: Synthesize English review with Claude
     review_en = synthesize_with_claude(context, date)
 
-    # Step 4: Write English file immediately (before translation, in case translation fails)
+    # Step 4: Validate English review before writing
+    if not args.skip_validation:
+        print("  [Validation] Checking English review...")
+        errors = validate_review(review_en, "EN")
+        if errors:
+            print(f"  [Validation] FAILED with {len(errors)} error(s):")
+            for err in errors:
+                print(f"    - {err}")
+            print(
+                "  [Validation] Aborting — review does not meet quality standards. "
+                "Use --skip-validation to bypass (not recommended)."
+            )
+            sys.exit(1)
+        print("  [Validation] English review passed all checks.")
+
+    # Step 5: Write English file immediately (before translation, in case translation fails)
     en_file = DAILY_DIR / date / "en.json"
     en_file.write_text(json.dumps(review_en, indent=2, ensure_ascii=False) + "\n")
     print(f"  [Output] Written to {en_file}")
 
-    # Step 5: Translate to Chinese
+    # Step 6: Translate to Chinese
     review_cn = translate_to_chinese(review_en)
 
-    # Step 6: Write Chinese file
+    # Step 7: Validate Chinese review
+    if not args.skip_validation:
+        print("  [Validation] Checking Chinese review...")
+        errors = validate_review(review_cn, "CN")
+        if errors:
+            print(f"  [Validation] WARNING — Chinese review has {len(errors)} issue(s):")
+            for err in errors:
+                print(f"    - {err}")
+            print("  [Validation] Proceeding anyway (translation issues are non-fatal).")
+        else:
+            print("  [Validation] Chinese review passed all checks.")
+
+    # Step 8: Write Chinese file
     cn_file = DAILY_DIR / date / "cn.json"
     cn_file.write_text(json.dumps(review_cn, indent=2, ensure_ascii=False) + "\n")
     print(f"  [Output] Written to {cn_file}")
 
-    # Step 7: Update both index files
+    # Step 9: Update both index files
     update_index(date, review_en, review_cn)
 
     print(f"Done! Review for {date} generated in English and Chinese.")
