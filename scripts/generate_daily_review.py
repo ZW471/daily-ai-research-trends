@@ -562,9 +562,10 @@ def validate_review(review: dict, label: str = "review") -> list[str]:
         errors.append(f"[{label}] Only {len(themes)} themes (minimum 2 expected)")
 
     # Validate paper entries
+    all_zero_engagement = True
     for i, paper in enumerate(papers):
         for field in ["id", "title", "authors", "affiliations", "summary",
-                      "key_findings", "tags", "relevance", "sources"]:
+                      "key_findings", "tags", "relevance", "engagement", "sources"]:
             if field not in paper:
                 errors.append(f"[{label}] Paper #{i} missing field: {field}")
         if paper.get("relevance") not in ("high", "medium", "low"):
@@ -572,13 +573,24 @@ def validate_review(review: dict, label: str = "review") -> list[str]:
         affs = paper.get("affiliations", [])
         if not affs or any(a.lower() == "unknown" for a in affs):
             errors.append(f"[{label}] Paper #{i} has missing or 'Unknown' affiliations")
+        eng = paper.get("engagement", {})
+        if eng.get("upvotes", 0) > 0 or eng.get("comments", 0) > 0:
+            all_zero_engagement = False
+    if papers and all_zero_engagement:
+        errors.append(f"[{label}] ALL {len(papers)} papers have 0 upvotes and 0 comments — engagement data likely lost")
 
     # Validate model entries
+    all_zero_metrics = True
     for i, model in enumerate(models):
         for field in ["id", "name", "organization", "description", "task_type",
                       "tags", "metrics", "source_url"]:
             if field not in model:
                 errors.append(f"[{label}] Model #{i} missing field: {field}")
+        metrics = model.get("metrics", {})
+        if metrics.get("downloads", 0) > 0 or metrics.get("likes", 0) > 0:
+            all_zero_metrics = False
+    if models and all_zero_metrics:
+        errors.append(f"[{label}] ALL {len(models)} models have 0 downloads and 0 likes — metrics data likely lost")
 
     # Validate repo entries
     for i, repo in enumerate(repos):
