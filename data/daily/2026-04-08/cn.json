@@ -1,0 +1,1018 @@
+{
+  "version": "1.0",
+  "date": "2026-04-08",
+  "generated_at": "2026-04-08T06:45:00.000000+00:00",
+  "summary": {
+    "headline": "原位测试时训练（In-Place Test-Time Training）使大语言模型能够在推理阶段自适应更新；Polynomial Mixer 以线性时间复杂度替代注意力机制；Gym-Anything 将任意软件转化为智能体训练环境",
+    "body": "4月8日在**自适应推理**与**高效架构**两大领域成果亮眼。头条论文**原位测试时训练**打破了「训练后静态部署」的传统范式，使大语言模型能够在推理阶段直接更新自身参数，从根本上应对固定权重模型在长上下文场景中的性能天花板。这一工作与昨日的测试时扩展研究共同形成清晰的跨日趋势：领域正逐步将推理阶段确立为头等优化目标，而非单纯的成本中心。\n\n**Polynomial Mixer（PoM）**提供了一种数学上严格的线性时间注意力替代方案，可证明地保留了 Transformer 的通用近似性质。与此前牺牲表达能力的线性注意力近似方案不同，PoM 满足上下文映射性质（contextual mapping property）——这一理论保证或许最终能使次二次复杂度的 Transformer 在生产环境中真正可行。与此同时，**Gym-Anything** 将计算机操作智能体（computer-use agent）的环境创建自动化，跨职业领域生成逾万条长时域任务，是智能体生态走向成熟过程中不可或缺的基础设施贡献。\n\n在模型动态方面，**NousResearch/hermes-agent** 以每日 3,009 颗 GitHub Star 的增速强势爆发，远超其他所有仓库。NVIDIA 携 **PersonaPlex** 与 **DataDesigner** 进军智能体领域，Vectorize 推出具备学习能力的智能体记忆系统 **Hindsight**——这些信号均表明，智能体基础设施正在成为开源 AI 工具链中的主导类别。",
+    "key_themes": [
+      "test-time-adaptation",
+      "linear-attention-replacements",
+      "agent-environment-infrastructure",
+      "hallucination-detection",
+      "autonomous-agent-evaluation",
+      "agent-tooling-dominance"
+    ]
+  },
+  "researcher_notes": "**原位测试时训练是今日架构野心最大的论文。**其核心思想——允许大语言模型在推理时修改自身参数——直接触及模型训练结束后即被冻结这一根本性局限。测试时计算扩展（推理阶段使用更多 token）一直是主流范式，而测试时「训练」（推理阶段更新权重）则代表一种本质上不同的能力。这与昨日的 T² 扩展律论文直接呼应：若推理已成为优化目标，训练与推理之间的边界便正在消融。预计将有大量后续工作结合这两种方法。\n\n**Polynomial Mixer 所获得的关注很可能远低于其应有水平。**PoM 在保持线性复杂度的同时满足上下文映射性质，是近期高效注意力替代方案中理论上最强的成果。此前的线性注意力方案（如 Mamba、RWKV 等）以牺牲理论保证换取实证性能；PoM 则两者兼顾。该论文来自 David Picard 团队，该团队在视觉架构领域拥有扎实的研究积累。当下最关键的问题是：这一理论保证能否转化为规模扩展后的实际收益，还是会因常数因子惩罚而在与 FlashAttention 的竞争中落败？\n\n**智能体评测危机正日益尖锐。**今日三篇论文——Claw-Eval、ACE-Bench 与 Gym-Anything——从不同角度切入同一问题：我们目前无法对自主智能体进行可靠评测。Claw-Eval 记录完整执行轨迹，ACE-Bench 提供可控的难度梯度，Gym-Anything 则自动生成评测环境。三个独立团队同时构建评测基础设施，充分表明社区已认识到智能体基准测试是一个关键瓶颈。与昨日 SimpleStream 的结果（简单基线胜过 13 种复杂方法）相比照，现有智能体基准或许也面临同样的清算时刻。\n\n**HaloProbe 对幻觉检测的贝叶斯方法是今日最被低估的亮点。**它并非将幻觉视为分类问题，而是将描述统计量分解为因子化概率——这从根本上更为严谨。论文的直接目标是视觉语言模型，但其统计框架有潜力推广至纯文本幻觉检测。在各家视觉语言模型供应商竞相宣称低幻觉率的当下，不依赖模型自身置信度的原则性检测方法愈发弥足珍贵。\n\n**GitHub 趋势数据传递出一个清晰信号：智能体基础设施正在吞噬世界。**NousResearch/hermes-agent 单日 3,009 颗 Star，是本项目有史以来追踪到的最高单日涨幅。Vectorize 的 Hindsight（可学习的智能体记忆）、NVIDIA 的 DataDesigner（面向智能体的合成数据生成）以及 HKUDS 的 AutoAgent（零代码智能体框架）均强化了同一趋势。值得关注的是智能体工具链的「多样性」：记忆、评测、人格管理、数据生成和框架构建正在同步趋热。这是基础设施的系统性建设，而非炒作热潮——这些正是构建者实际需要的工具。",
+  "papers": [
+    {
+      "id": "in-place-test-time-training",
+      "title": "In-Place Test-Time Training（原位测试时训练）",
+      "authors": [
+        "Guhao Feng",
+        "Shengjie Luo",
+        "Kai Hua",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Microsoft Research"
+      ],
+      "summary": "打破静态「训练后部署」的传统范式，使大语言模型能够在推理阶段直接更新参数，无需重新训练即可针对长上下文场景和分布偏移显著提升性能。",
+      "key_findings": [
+        "大语言模型可在推理阶段原位更新参数，实现动态自适应",
+        "相比固定权重模型，在长上下文任务上性能显著提升",
+        "该框架无需访问原始训练数据即可应对分布偏移问题"
+      ],
+      "tags": [
+        "test-time-training",
+        "adaptive-inference",
+        "long-context",
+        "LLM-training",
+        "dynamic-adaptation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06169",
+        "huggingface": "https://huggingface.co/papers/2604.06169",
+        "pdf": "https://arxiv.org/pdf/2604.06169"
+      }
+    },
+    {
+      "id": "polynomial-mixer-linear-attention",
+      "title": "PoM: A Linear-Time Replacement for Attention with the Polynomial Mixer（PoM：以多项式混合器实现线性时间注意力替代）",
+      "authors": [
+        "David Picard",
+        "Nicolas Dufour",
+        "Lucas Degeorge",
+        "et al."
+      ],
+      "affiliations": [
+        "ENPC",
+        "Valeo.ai"
+      ],
+      "summary": "提出 Polynomial Mixer（多项式混合器），一种线性复杂度的新型 token 混合机制，可证明地满足上下文映射性质，在消除二次方注意力开销的同时维持 Transformer 的通用近似能力。",
+      "key_findings": [
+        "PoM 满足上下文映射性质——迄今首个具备此理论保证的线性时间方法",
+        "保持完整注意力 Transformer 的通用近似能力",
+        "在显著降低计算开销的同时达到有竞争力的性能"
+      ],
+      "tags": [
+        "efficient-attention",
+        "linear-complexity",
+        "token-mixing",
+        "transformers",
+        "theoretical-guarantees"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06129",
+        "huggingface": "https://huggingface.co/papers/2604.06129",
+        "pdf": "https://arxiv.org/pdf/2604.06129"
+      }
+    },
+    {
+      "id": "gym-anything-agent-environments",
+      "title": "Gym-Anything: Turn any Software into an Agent Environment（Gym-Anything：将任意软件转化为智能体训练环境）",
+      "authors": [
+        "Pranjal Aggarwal",
+        "Graham Neubig",
+        "Sean Welleck"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "将计算机操作智能体的环境创建建模为多智能体任务，从任意软件中自动生成逾万条跨多元职业领域的长时域任务。",
+      "key_findings": [
+        "自动化环境创建可从任意软件中生成 10,000 条以上长时域任务",
+        "多智能体任务框架支持可扩展的环境生成，无需人工标注",
+        "任务横跨多元职业领域，为计算机操作智能体提供贴近现实的评测场景"
+      ],
+      "tags": [
+        "agent-environments",
+        "computer-use",
+        "benchmark-generation",
+        "automation",
+        "LLM-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06126",
+        "huggingface": "https://huggingface.co/papers/2604.06126",
+        "pdf": "https://arxiv.org/pdf/2604.06126"
+      }
+    },
+    {
+      "id": "haloprobe-bayesian-hallucination",
+      "title": "HaloProbe: Bayesian Detection and Mitigation of Object Hallucinations in Vision-Language Models（HaloProbe：视觉语言模型中目标幻觉的贝叶斯检测与缓解）",
+      "authors": [
+        "Reihaneh Zohrabi",
+        "Hosein Hasani",
+        "Akshita Gupta",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Alberta",
+        "Amii"
+      ],
+      "summary": "提出一种贝叶斯框架，通过对描述统计量进行因子化分解来检测并缓解视觉语言模型中的目标幻觉，为基于分类的方法提供了一种更具原则性的替代方案。",
+      "key_findings": [
+        "因子化贝叶斯统计量可在不依赖模型自身置信度的情况下检测幻觉概率",
+        "框架同时支持视觉语言模型中目标幻觉的检测与缓解",
+        "在多种视觉语言模型架构上的幻觉检测性能超越现有方法"
+      ],
+      "tags": [
+        "hallucination-detection",
+        "VLM",
+        "Bayesian",
+        "vision-language",
+        "reliability"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06165",
+        "huggingface": "https://huggingface.co/papers/2604.06165",
+        "pdf": "https://arxiv.org/pdf/2604.06165"
+      }
+    },
+    {
+      "id": "claw-eval-autonomous-agents",
+      "title": "Claw-Eval: Toward Trustworthy Evaluation of Autonomous Agents（Claw-Eval：迈向可信赖的自主智能体评测）",
+      "authors": [
+        "Bowen Ye",
+        "Rang Li",
+        "Qibin Yang",
+        "et al."
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "Alibaba Group"
+      ],
+      "summary": "提出包含 300 项任务的综合评测套件，完整记录执行轨迹——包括审计日志与环境快照——以对自主大语言模型智能体进行可信赖的评估。",
+      "key_findings": [
+        "300 项任务均记录执行轨迹、审计日志与环境快照等完整过程信息",
+        "揭示当前智能体在任务完成率与执行质量之间存在显著差距",
+        "轨迹级评测可捕捉仅凭结果指标无法发现的失败模式"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "benchmark",
+        "autonomous-agents",
+        "trustworthy-AI",
+        "trajectory-analysis"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06132",
+        "huggingface": "https://huggingface.co/papers/2604.06132",
+        "pdf": "https://arxiv.org/pdf/2604.06132"
+      }
+    },
+    {
+      "id": "action-images-robot-policy",
+      "title": "Action Images: End-to-End Policy Learning via Multiview Video Generation（动作图像：通过多视角视频生成实现端到端策略学习）",
+      "authors": [
+        "Haoyu Zhen",
+        "Zixian Gao",
+        "Qiao Sun",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "通过多视角视频生成与像素级动作表征，将机器人策略学习形式化，实现感知与控制之间的端到端策略学习。",
+      "key_findings": [
+        "像素级动作表征支持直接从生成视频中提取策略",
+        "多视角生成提供真实机器人部署所需的空间一致性",
+        "端到端方案消除了对独立感知与规划流水线的依赖"
+      ],
+      "tags": [
+        "robotics",
+        "policy-learning",
+        "video-generation",
+        "multiview",
+        "world-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06168",
+        "huggingface": "https://huggingface.co/papers/2604.06168",
+        "pdf": "https://arxiv.org/pdf/2604.06168"
+      }
+    },
+    {
+      "id": "paper-circle-multi-agent-research",
+      "title": "Paper Circle: An Open-source Multi-agent Research Discovery and Analysis Framework（Paper Circle：开源多智能体学术文献发现与分析框架）",
+      "authors": [
+        "Komal Kumar",
+        "Aman Chadha",
+        "Salman Khan",
+        "et al."
+      ],
+      "affiliations": [
+        "MBZUAI",
+        "Stanford University",
+        "Amazon"
+      ],
+      "summary": "提出一种开源多智能体系统，包含面向学术文献的发现与分析双流水线，旨在应对大规模高效研究综合这一挑战。",
+      "key_findings": [
+        "多智能体架构将发现与分析分离，打造高效研究工作流",
+        "开源框架支持可复现、可扩展的研究自动化",
+        "在文献综述质量指标上优于单智能体方案"
+      ],
+      "tags": [
+        "research-automation",
+        "multi-agent",
+        "literature-review",
+        "open-source",
+        "scientific-discovery"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06170",
+        "huggingface": "https://huggingface.co/papers/2604.06170",
+        "pdf": "https://arxiv.org/pdf/2604.06170"
+      }
+    },
+    {
+      "id": "consistent-world-models-multi-token",
+      "title": "Toward Consistent World Models with Multi-Token Prediction and Latent Semantic Enhancement（迈向一致性世界模型：多 token 预测与潜在语义增强）",
+      "authors": [
+        "Qimin Zhong",
+        "Hao Liao",
+        "Haiming Qin",
+        "et al."
+      ],
+      "affiliations": [
+        "Peking University",
+        "ByteDance"
+      ],
+      "summary": "分析世界模型中多 token 预测的梯度偏差问题，提出将预测锚定至真实轨迹以提升一致性，为「大语言模型是否建立了连贯内部世界模型」这一争论提供新的实证依据。",
+      "key_findings": [
+        "多 token 预测会引入梯度偏差，导致世界模型一致性下降",
+        "将预测锚定至真实轨迹可纠正序列预测中的累积漂移",
+        "潜在语义增强提升了习得内部表征的连贯性"
+      ],
+      "tags": [
+        "world-models",
+        "multi-token-prediction",
+        "LLM-internals",
+        "consistency",
+        "representation-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06155",
+        "huggingface": "https://huggingface.co/papers/2604.06155",
+        "pdf": "https://arxiv.org/pdf/2604.06155"
+      }
+    },
+    {
+      "id": "exclusive-unlearning",
+      "title": "Exclusive Unlearning（排他性遗忘学习）",
+      "authors": [
+        "Mutsumi Sasaki",
+        "Kouta Nakayama",
+        "Yusuke Miyao",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Tokyo",
+        "RIKEN"
+      ],
+      "summary": "提出一种新型机器遗忘（machine unlearning）方法，通过「仅保留期望知识领域、遗忘其余一切」来消除广泛类别的有害内容，颠覆传统的定向删除范式。",
+      "key_findings": [
+        "排他性遗忘（仅保留式）在安全性方面优于包含性遗忘（定向删除式）",
+        "相比基于枚举的方法，该方案对未知有害内容类别的覆盖扩展性更好",
+        "在广泛消除有害能力的同时，保持模型在保留知识领域的可用性"
+      ],
+      "tags": [
+        "machine-unlearning",
+        "LLM-safety",
+        "harmful-content",
+        "alignment",
+        "knowledge-management"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06154",
+        "huggingface": "https://huggingface.co/papers/2604.06154",
+        "pdf": "https://arxiv.org/pdf/2604.06154"
+      }
+    },
+    {
+      "id": "target-policy-optimization",
+      "title": "Target Policy Optimization（目标策略优化）",
+      "authors": [
+        "Jean Kaddour"
+      ],
+      "affiliations": [
+        "Google DeepMind"
+      ],
+      "summary": "在面向语言模型的强化学习中，将目标分布构建与参数更新解耦，通过分离这两个传统上相互耦合的组件，在稀疏奖励任务上取得了更优性能。",
+      "key_findings": [
+        "将目标分布与参数更新解耦可改善稀疏奖励优化效果",
+        "相比 PPO/DPO，在 RLHF 中「优化目标」与「优化方式」的分离带来更清晰的理论框架",
+        "以更简洁的训练动态在稀疏奖励基准上达到最优性能"
+      ],
+      "tags": [
+        "RLHF",
+        "policy-optimization",
+        "sparse-rewards",
+        "LLM-training",
+        "reinforcement-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06159",
+        "huggingface": "https://huggingface.co/papers/2604.06159",
+        "pdf": "https://arxiv.org/pdf/2604.06159"
+      }
+    },
+    {
+      "id": "ai-structure-mathematics",
+      "title": "Artificial Intelligence and the Structure of Mathematics（人工智能与数学结构）",
+      "authors": [
+        "Maissam Barkeshli",
+        "Michael R. Douglas",
+        "Michael H. Freedman"
+      ],
+      "affiliations": [
+        "University of Maryland",
+        "Harvard University",
+        "Microsoft Research"
+      ],
+      "summary": "探讨人工智能如何揭示形式化证明的全局结构并推动数学发现，作者阵容包括菲尔兹奖得主级别的数学家 Michael Freedman。",
+      "key_findings": [
+        "人工智能有望揭示形式化数学证明空间中隐藏的结构性规律",
+        "自动化证明系统或能发现遥远数学领域之间的内在关联",
+        "论文为 AI 辅助数学研究（超越定理证明本身）勾勒出具体可行的路径"
+      ],
+      "tags": [
+        "AI-for-math",
+        "formal-proofs",
+        "mathematical-discovery",
+        "automated-reasoning",
+        "foundations"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06107",
+        "huggingface": "https://huggingface.co/papers/2604.06107",
+        "pdf": "https://arxiv.org/pdf/2604.06107"
+      }
+    },
+    {
+      "id": "constrained-decoding-snowballing",
+      "title": "From Hallucination to Structure Snowballing: The Alignment Tax of Constrained Decoding in LLM Reflection（从幻觉到结构雪球效应：受限解码在大语言模型自我反思中的对齐代价）",
+      "authors": [
+        "Hongxu Zhou"
+      ],
+      "affiliations": [
+        "Independent Researcher"
+      ],
+      "summary": "揭示大语言模型自我修正中的受限解码（constrained decoding）会触发「结构雪球效应」而非改善反思质量，暴露了结构化输出生成中隐藏的对齐代价。",
+      "key_findings": [
+        "受限解码会触发结构雪球效应，导致错误累积而非修正",
+        "受限输出格式下，自我修正机制因级联的结构性承诺而失效",
+        "揭示了结构化输出要求与模型真实自我反思能力之间的根本性张力"
+      ],
+      "tags": [
+        "constrained-decoding",
+        "self-correction",
+        "alignment",
+        "structured-output",
+        "LLM-limitations"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06066",
+        "huggingface": "https://huggingface.co/papers/2604.06066",
+        "pdf": "https://arxiv.org/pdf/2604.06066"
+      }
+    },
+    {
+      "id": "ace-bench-agent-evaluation",
+      "title": "ACE-Bench: Agent Configurable Evaluation with Scalable Horizons and Controllable Difficulty（ACE-Bench：可配置难度与可扩展时域的智能体评测基准）",
+      "authors": [
+        "Wang Yang",
+        "Chaoda Song",
+        "Xinpeng Li",
+        "et al."
+      ],
+      "affiliations": [
+        "Chinese Academy of Sciences",
+        "University of Chinese Academy of Sciences"
+      ],
+      "summary": "提出基于统一网格规划框架的智能体评测方案，对任务时域和难度进行精细控制，解决现有智能体基准高开销、低可配置性的问题。",
+      "key_findings": [
+        "基于网格的规划任务支持智能体评测中连续的难度梯度调节",
+        "可控时域长度将规划能力与任务特定知识解耦",
+        "轻量化环境大幅降低大规模智能体基准测试的成本"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "benchmark",
+        "configurable-difficulty",
+        "planning",
+        "autonomous-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06111",
+        "huggingface": "https://huggingface.co/papers/2604.06111",
+        "pdf": "https://arxiv.org/pdf/2604.06111"
+      }
+    },
+    {
+      "id": "social-dynamics-llm-collectives",
+      "title": "Social Dynamics as Critical Vulnerabilities that Undermine Objective Decision-Making in LLM Collectives（社会动态作为关键漏洞：大语言模型集体决策中的客观性威胁）",
+      "authors": [
+        "Changgeon Ko",
+        "Jisu Shin",
+        "Hoyun Song",
+        "et al."
+      ],
+      "affiliations": [
+        "Seoul National University",
+        "KAIST"
+      ],
+      "summary": "证明在多智能体环境中充当人类代理的大语言模型智能体，其决策准确性会因社会压力和修辞操纵而显著下降，暴露了集体 AI 决策中的关键脆弱性。",
+      "key_findings": [
+        "代理型大语言模型智能体的决策准确性在社会压力下显著降低",
+        "修辞操纵对大语言模型智能体的干扰效果优于逻辑论证",
+        "多智能体集体决策会继承并放大个体智能体的脆弱性"
+      ],
+      "tags": [
+        "multi-agent",
+        "social-manipulation",
+        "decision-making",
+        "LLM-vulnerabilities",
+        "collective-intelligence"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06091",
+        "huggingface": "https://huggingface.co/papers/2604.06091",
+        "pdf": "https://arxiv.org/pdf/2604.06091"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hermes-agent-model",
+      "name": "NousResearch Hermes Agent",
+      "organization": "NousResearch",
+      "description": "NousResearch 出品的可随用户需求成长的智能体框架，在 GitHub 上以每日 3,009 颗 Star 的增速强势爆发，创下本项目历史追踪记录中单日最高涨幅。基于 NousResearch 深厚的开放权重模型积累，以模型原生方式设计智能体。",
+      "task_type": "agent-framework",
+      "model_size": "Various",
+      "tags": [
+        "AI-agents",
+        "framework",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/NousResearch/hermes-agent"
+    },
+    {
+      "id": "qwen36-plus",
+      "name": "Qwen 3.6 Plus",
+      "organization": "Alibaba",
+      "description": "阿里巴巴最新发布的模型，具备 100 万 token 上下文窗口、65K 输出 token 上限以及默认开启的思维链推理。在 Terminal-Bench 2.0 上超越 Claude Opus（61.6 对 59.3），并通过 OpenRouter 提供免费预览。",
+      "task_type": "text-generation",
+      "model_size": "MoE + linear attention",
+      "tags": [
+        "qwen",
+        "long-context",
+        "reasoning",
+        "MoE"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/Qwen"
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma-4-31B-IT",
+      "organization": "Google",
+      "description": "Google 旗舰级 310 亿参数 Gemma-4 指令微调（instruction-tuned）密集模型持续强势，678K 下载量、1,158 个点赞。Apache 2.0 许可证使其成为首款采用完全开放企业级许可的 Google 模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "gemma4",
+        "multimodal",
+        "instruction-tuned",
+        "apache-2.0"
+      ],
+      "metrics": {
+        "downloads": 678740,
+        "likes": 1158
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "社区基于 Claude Opus 推理输出蒸馏而成的 Qwen3.5-27B 模型，持续获得巨大关注，累计 2,403 个点赞与 548K 下载量，代表了闭源到开源能力迁移的巅峰之作。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "qwen3.5",
+        "distillation",
+        "reasoning",
+        "claude-opus"
+      ],
+      "metrics": {
+        "downloads": 548344,
+        "likes": 2403
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "nvidia-data-designer",
+      "name": "NeMo Data Designer",
+      "organization": "NVIDIA",
+      "description": "NVIDIA 的合成数据生成工具，可从零或种子数据创建高质量训练数据，以每日 244 颗 Star 的速度上升趋势，契合企业对以数据为中心的 AI 方法的需求。",
+      "task_type": "data-generation",
+      "model_size": "N/A",
+      "tags": [
+        "synthetic-data",
+        "NVIDIA",
+        "data-centric",
+        "NeMo"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/NVIDIA-NeMo/DataDesigner"
+    },
+    {
+      "id": "glm-5",
+      "name": "GLM-5",
+      "organization": "Zhipu AI",
+      "description": "智谱 AI 的前沿推理模型，总参数 744B、激活参数 40B，基于华为芯片训练，采用 MIT 许可证。在 Humanity's Last Exam 上达到 50.4%，展示了非 NVIDIA 训练基础设施的竞争力。",
+      "task_type": "text-generation",
+      "model_size": "744B (40B active)",
+      "tags": [
+        "frontier-model",
+        "MoE",
+        "MIT-license",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/THUDM/glm-5"
+    },
+    {
+      "id": "hindsight-agent-memory",
+      "name": "Hindsight: Agent Memory That Learns（Hindsight：可学习的智能体记忆系统）",
+      "organization": "Vectorize",
+      "description": "可随时间学习并持续优化的智能体记忆系统，以每日 160 颗 Star 的速度趋热。填补了智能体技术栈中的关键空白：超越简单 RAG 检索的持久化、可学习记忆。",
+      "task_type": "agent-memory",
+      "model_size": "N/A",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "RAG-alternative",
+        "infrastructure"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/vectorize-io/hindsight"
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "name": "Gemma-4-26B-A4B-IT",
+      "organization": "Google",
+      "description": "Gemma-4 混合专家（MoE）变体，总参数 26B、激活参数 4B，以密集模型推理成本的一小部分提供强劲的多模态性能。476K 下载量显示出强劲的企业采用势头。",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": [
+        "gemma4",
+        "MoE",
+        "efficient-inference",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 476612,
+        "likes": 459
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "nvidia-personaplex",
+      "name": "PersonaPlex",
+      "organization": "NVIDIA",
+      "description": "NVIDIA 用于生成和管理 AI 人格（persona）的系统，以每日 662 颗 Star 的速度快速上升，标志着 NVIDIA 在硬件之外向智能体人格与角色管理领域扩张。",
+      "task_type": "persona-generation",
+      "model_size": "N/A",
+      "tags": [
+        "personas",
+        "NVIDIA",
+        "AI-characters",
+        "agent-infrastructure"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/NVIDIA/personaplex"
+    },
+    {
+      "id": "gpt-oss-120b",
+      "name": "GPT-OSS-120B",
+      "organization": "OpenAI",
+      "description": "OpenAI 首款 Apache 2.0 开放权重模型，总参数 117B、激活参数 5.1B，支持 MXFP4 量化与 128K 上下文窗口。标志着 OpenAI 开源战略的里程碑式转变。",
+      "task_type": "text-generation",
+      "model_size": "117B (5.1B active)",
+      "tags": [
+        "OpenAI",
+        "open-weight",
+        "MoE",
+        "apache-2.0"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch 出品的可扩展 AI 智能体框架，可随用户需求成长。Star 数从 28,900 飙升至 32,700，创下本项目历史最高单日涨幅。",
+      "language": "Python",
+      "stars": 32734,
+      "stars_today": 3009,
+      "forks": 4221,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "AI-agents",
+        "LLM-agents",
+        "NousResearch",
+        "framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "gitnexus",
+      "name": "abhigyanpatwari/GitNexus",
+      "description": "完全在浏览器端运行的知识图谱创建工具。支持导入 GitHub 仓库或 ZIP 文件，生成可交互的知识图谱，内置 Graph RAG Agent 能力。",
+      "language": "TypeScript",
+      "stars": 24641,
+      "stars_today": 1195,
+      "forks": 2752,
+      "url": "https://github.com/abhigyanpatwari/GitNexus",
+      "tags": [
+        "knowledge-graph",
+        "code-analysis",
+        "RAG",
+        "browser-based"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Google 设备端 ML/生成式 AI 用例展示画廊，持续稳步增长至 18,900 颗 Star，支持在移动设备上进行本地模型实验。",
+      "language": "Kotlin",
+      "stars": 18907,
+      "stars_today": 897,
+      "forks": 1763,
+      "url": "https://github.com/google-ai-edge/gallery",
+      "tags": [
+        "on-device-AI",
+        "mobile-ML",
+        "Google",
+        "demo"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "qmd",
+      "name": "tobi/qmd",
+      "description": "面向文档、知识库与会议记录的迷你 CLI 搜索引擎，采用本地前沿方案。持续稳定增长至 19,700 颗 Star。",
+      "language": "TypeScript",
+      "stars": 19658,
+      "stars_today": 859,
+      "forks": 1182,
+      "url": "https://github.com/tobi/qmd",
+      "tags": [
+        "search",
+        "local-first",
+        "CLI",
+        "knowledge-management"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "personaplex",
+      "name": "NVIDIA/personaplex",
+      "description": "NVIDIA 的 PersonaPlex 系统，用于生成和管理 AI 人格。Star 数从 7,500 飙升至 8,000，NVIDIA 正大步迈入智能体人格基础设施领域。",
+      "language": "Python",
+      "stars": 8018,
+      "stars_today": 662,
+      "forks": 1164,
+      "url": "https://github.com/NVIDIA/personaplex",
+      "tags": [
+        "personas",
+        "NVIDIA",
+        "AI-characters",
+        "generation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "redditvideomakebot",
+      "name": "elebumm/RedditVideoMakerBot",
+      "description": "只需一条命令即可创建 Reddit 视频。以每日 636 颗 Star 的速度重焕人气，或与内容创作者对自动化视频流水线的需求激增有关。",
+      "language": "Python",
+      "stars": 10099,
+      "stars_today": 636,
+      "forks": 2533,
+      "url": "https://github.com/elebumm/RedditVideoMakerBot",
+      "tags": [
+        "video-generation",
+        "Reddit",
+        "content-creation",
+        "automation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Google 用于在边缘设备上运行语言模型的轻量级运行时，以每日 528 颗 Star 的速度增长，与 AI Edge Gallery 形成互补，提供 C++ 推理基础设施。",
+      "language": "C++",
+      "stars": 2626,
+      "stars_today": 528,
+      "forks": 253,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": [
+        "edge-inference",
+        "LLM-runtime",
+        "C++",
+        "Google"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nemo-data-designer",
+      "name": "NVIDIA-NeMo/DataDesigner",
+      "description": "NeMo Data Designer：从零或种子数据生成高质量合成数据。NVIDIA 以数据为中心的 AI 方法以每日 244 颗 Star 的速度获得认可。",
+      "language": "Python",
+      "stars": 1513,
+      "stars_today": 244,
+      "forks": 132,
+      "url": "https://github.com/NVIDIA-NeMo/DataDesigner",
+      "tags": [
+        "synthetic-data",
+        "NVIDIA",
+        "data-generation",
+        "NeMo"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "seomachine",
+      "name": "TheCraigHewitt/seomachine",
+      "description": "专为创作长篇 SEO 优化博客内容打造的 Claude 工作空间，集研究、写作、分析与优化功能于一体，以每日 215 颗 Star 的速度增长。",
+      "language": "Python",
+      "stars": 3974,
+      "stars_today": 215,
+      "forks": 665,
+      "url": "https://github.com/TheCraigHewitt/seomachine",
+      "tags": [
+        "SEO",
+        "content-generation",
+        "Claude",
+        "writing"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "来自香港大学的原生智能体个性化学习助手，以每日 168 颗 Star 的速度稳定增长，教育类 AI 工具正获得越来越多的关注。",
+      "language": "Python",
+      "stars": 12360,
+      "stars_today": 168,
+      "forks": 1678,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "education",
+        "AI-tutor",
+        "personalization",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "Hindsight：可学习的智能体记忆系统。一种随时间持续优化的新型智能体记忆方案，填补了简单上下文窗口与完整持久化记忆之间的关键空白。",
+      "language": "Python",
+      "stars": 7812,
+      "stars_today": 160,
+      "forks": 486,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "RAG-alternative",
+        "infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "autoagent",
+      "name": "HKUDS/AutoAgent",
+      "description": "来自香港大学的全自动零代码大语言模型智能体框架，无需编程即可构建智能体，以每日 76 颗 Star 的速度稳步增长。",
+      "language": "Python",
+      "stars": 9001,
+      "stars_today": 76,
+      "forks": 1269,
+      "url": "https://github.com/HKUDS/AutoAgent",
+      "tags": [
+        "agent-framework",
+        "zero-code",
+        "automation",
+        "LLM-agents"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "测试时自适应",
+      "description": "训练与推理之间的边界正在消融：原位测试时训练与目标策略优化等论文表明，推理阶段正在成为头等优化目标。",
+      "related_paper_ids": [
+        "in-place-test-time-training",
+        "target-policy-optimization"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效架构替代方案",
+      "description": "Polynomial Mixer 为线性时间注意力替代提供了迄今最强的理论保证，加入了使次二次复杂度 Transformer 达到生产就绪状态的持续竞争。",
+      "related_paper_ids": [
+        "polynomial-mixer-linear-attention",
+        "consistent-world-models-multi-token"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体评测危机",
+      "description": "三篇独立论文从不同角度——轨迹记录、可配置难度、自动化环境生成——共同应对智能体评测难题，表明社区已认识到这是一个关键瓶颈。",
+      "related_paper_ids": [
+        "claw-eval-autonomous-agents",
+        "ace-bench-agent-evaluation",
+        "gym-anything-agent-environments"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "大语言模型安全与对齐",
+      "description": "排他性遗忘颠覆了安全范式（仅保留式 vs. 定向删除式），而受限解码的结构雪球效应则揭示了结构化输出生成中隐藏的对齐代价。",
+      "related_paper_ids": [
+        "exclusive-unlearning",
+        "constrained-decoding-snowballing",
+        "social-dynamics-llm-collectives"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "智能体基础设施全面建设",
+      "description": "GitHub 趋势被智能体工具链主导：框架（hermes-agent）、记忆（hindsight）、人格（personaplex）、数据（DataDesigner）与评测——完整的智能体技术栈正在同步构建。",
+      "related_paper_ids": [
+        "paper-circle-multi-agent-research"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending (Python)",
+      "url": "https://github.com/trending/python",
+      "checked_at": "2026-04-08T06:31:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "Web Search (Supplementary)",
+      "url": "https://www.google.com",
+      "checked_at": "2026-04-08T06:32:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "error"
+    }
+  ]
+}

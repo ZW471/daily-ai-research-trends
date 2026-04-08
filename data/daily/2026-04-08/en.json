@@ -1,0 +1,1018 @@
+{
+  "version": "1.0",
+  "date": "2026-04-08",
+  "generated_at": "2026-04-08T06:45:00.000000+00:00",
+  "summary": {
+    "headline": "In-Place Test-Time Training enables LLMs to adapt during inference; Polynomial Mixer achieves linear-time attention replacement; Gym-Anything turns any software into an agent environment",
+    "body": "April 8th delivers a strong showing in **adaptive inference** and **efficient architectures**. The headline paper, **In-Place Test-Time Training**, breaks the static train-then-deploy paradigm by enabling LLMs to update their parameters during inference, directly addressing the long-context performance ceiling that plagues fixed-weight models. This joins yesterday's test-time scaling work to form a clear two-day trend: the field is converging on inference as a first-class optimization target, not just a cost center.\n\n**The Polynomial Mixer (PoM)** offers a mathematically rigorous linear-time replacement for attention that provably preserves the universal approximation properties of transformers. Unlike previous linear attention approximations that sacrifice expressivity, PoM satisfies the contextual mapping property — a theoretical guarantee that could finally make sub-quadratic transformers viable for production workloads. Meanwhile, **Gym-Anything** automates environment creation for computer-use agents, producing 10K+ long-horizon tasks across occupational domains — a critical infrastructure contribution as the agent ecosystem matures.\n\nThe model landscape sees **NousResearch/hermes-agent** explode to 3,009 stars/day on GitHub, dwarfing all other repos. NVIDIA enters the agent space with **PersonaPlex** and **DataDesigner**, while **Hindsight** from Vectorize introduces learning agent memory — signals that agent infrastructure is becoming the dominant category in open-source AI tooling.",
+    "key_themes": [
+      "test-time-adaptation",
+      "linear-attention-replacements",
+      "agent-environment-infrastructure",
+      "hallucination-detection",
+      "autonomous-agent-evaluation",
+      "agent-tooling-dominance"
+    ]
+  },
+  "researcher_notes": "**In-Place Test-Time Training is the most architecturally ambitious paper today.** The core idea — allowing LLMs to modify their own parameters at inference time — directly addresses the fundamental limitation that models are frozen after training. While test-time compute scaling (more tokens at inference) has been the dominant paradigm, test-time *training* (weight updates at inference) is a qualitatively different capability. The connection to yesterday's T^2 scaling laws paper is direct: if inference is now an optimization target, then the boundary between training and inference is dissolving. Watch for rapid follow-up work combining both approaches.\n\n**The Polynomial Mixer deserves more attention than it will probably get.** PoM's proof that it satisfies the contextual mapping property while maintaining linear complexity is the strongest theoretical result for efficient attention alternatives in recent memory. Previous linear attention schemes (Mamba, RWKV, etc.) traded theoretical guarantees for empirical performance; PoM keeps both. The paper comes from David Picard's group, which has a strong track record in vision architectures. The immediate question: does the theoretical guarantee translate to practical gains at scale, or is there a constant-factor penalty that makes it uncompetitive with FlashAttention?\n\n**The agent evaluation crisis is becoming acute.** Three papers today — Claw-Eval, ACE-Bench, and Gym-Anything — all address the same problem from different angles: we cannot reliably evaluate autonomous agents. Claw-Eval records full execution trajectories, ACE-Bench provides controllable difficulty scaling, and Gym-Anything generates environments automatically. The fact that three independent teams are building evaluation infrastructure simultaneously signals that the community recognizes agent benchmarking as a critical bottleneck. The contrast with yesterday's SimpleStream result (simple baseline beats 13 complex methods) suggests current agent benchmarks may face the same reckoning.\n\n**HaloProbe's Bayesian approach to hallucination detection is the sleeper hit.** Rather than treating hallucinations as classification problems, it decomposes description statistics into factorized probabilities — a fundamentally more principled approach. The paper targets vision-language models specifically, but the statistical framework could generalize to text-only hallucination detection. At a time when every VLM vendor claims low hallucination rates, principled detection methods that don't rely on the model's own confidence are increasingly valuable.\n\n**The GitHub trending data tells a clear story: agent infrastructure is eating the world.** NousResearch/hermes-agent at 3,009 stars/day is the highest single-day gain we've tracked. Vectorize's Hindsight (agent memory that learns), NVIDIA's DataDesigner (synthetic data for agents), and HKUDS's AutoAgent (zero-code agent framework) all reinforce the same trend. The interesting signal is the *diversity* of agent tooling: memory, evaluation, persona management, data generation, and framework construction are all simultaneously trending. This is infrastructure build-out, not hype — these are the tools builders actually need.",
+  "papers": [
+    {
+      "id": "in-place-test-time-training",
+      "title": "In-Place Test-Time Training",
+      "authors": [
+        "Guhao Feng",
+        "Shengjie Luo",
+        "Kai Hua",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Microsoft Research"
+      ],
+      "summary": "Breaks the static train-then-deploy paradigm by enabling LLMs to update their parameters during inference, directly targeting improved performance on long contexts and distribution shifts without retraining.",
+      "key_findings": [
+        "LLMs can update parameters in-place during inference for dynamic adaptation",
+        "Significant performance improvements on long-context tasks compared to frozen-weight models",
+        "Framework addresses distribution shift without requiring access to original training data"
+      ],
+      "tags": [
+        "test-time-training",
+        "adaptive-inference",
+        "long-context",
+        "LLM-training",
+        "dynamic-adaptation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06169",
+        "huggingface": "https://huggingface.co/papers/2604.06169",
+        "pdf": "https://arxiv.org/pdf/2604.06169"
+      }
+    },
+    {
+      "id": "polynomial-mixer-linear-attention",
+      "title": "PoM: A Linear-Time Replacement for Attention with the Polynomial Mixer",
+      "authors": [
+        "David Picard",
+        "Nicolas Dufour",
+        "Lucas Degeorge",
+        "et al."
+      ],
+      "affiliations": [
+        "ENPC",
+        "Valeo.ai"
+      ],
+      "summary": "Introduces the Polynomial Mixer, a novel token mixing mechanism with linear complexity that provably satisfies the contextual mapping property, maintaining transformer universality while eliminating quadratic attention cost.",
+      "key_findings": [
+        "PoM satisfies the contextual mapping property — the first linear-time method with this guarantee",
+        "Maintains universal approximation capabilities of full attention transformers",
+        "Achieves competitive performance with significantly reduced computational cost"
+      ],
+      "tags": [
+        "efficient-attention",
+        "linear-complexity",
+        "token-mixing",
+        "transformers",
+        "theoretical-guarantees"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06129",
+        "huggingface": "https://huggingface.co/papers/2604.06129",
+        "pdf": "https://arxiv.org/pdf/2604.06129"
+      }
+    },
+    {
+      "id": "gym-anything-agent-environments",
+      "title": "Gym-Anything: Turn any Software into an Agent Environment",
+      "authors": [
+        "Pranjal Aggarwal",
+        "Graham Neubig",
+        "Sean Welleck"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "Frames environment creation for computer-use agents as a multi-agent task, automatically producing 10K+ long-horizon tasks across diverse occupational domains from arbitrary software.",
+      "key_findings": [
+        "Automated environment creation produces 10K+ long-horizon tasks from arbitrary software",
+        "Multi-agent task framing enables scalable environment generation without manual annotation",
+        "Tasks span diverse occupational domains, providing realistic evaluation for computer-use agents"
+      ],
+      "tags": [
+        "agent-environments",
+        "computer-use",
+        "benchmark-generation",
+        "automation",
+        "LLM-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06126",
+        "huggingface": "https://huggingface.co/papers/2604.06126",
+        "pdf": "https://arxiv.org/pdf/2604.06126"
+      }
+    },
+    {
+      "id": "haloprobe-bayesian-hallucination",
+      "title": "HaloProbe: Bayesian Detection and Mitigation of Object Hallucinations in Vision-Language Models",
+      "authors": [
+        "Reihaneh Zohrabi",
+        "Hosein Hasani",
+        "Akshita Gupta",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Alberta",
+        "Amii"
+      ],
+      "summary": "Presents a Bayesian framework that factorizes description statistics to detect and mitigate object hallucinations in vision-language models, offering a principled alternative to classification-based approaches.",
+      "key_findings": [
+        "Factorized Bayesian statistics detect hallucination probabilities without relying on model confidence",
+        "Framework enables both detection and mitigation of object hallucinations in VLMs",
+        "Outperforms existing hallucination detection methods across multiple VLM architectures"
+      ],
+      "tags": [
+        "hallucination-detection",
+        "VLM",
+        "Bayesian",
+        "vision-language",
+        "reliability"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06165",
+        "huggingface": "https://huggingface.co/papers/2604.06165",
+        "pdf": "https://arxiv.org/pdf/2604.06165"
+      }
+    },
+    {
+      "id": "claw-eval-autonomous-agents",
+      "title": "Claw-Eval: Toward Trustworthy Evaluation of Autonomous Agents",
+      "authors": [
+        "Bowen Ye",
+        "Rang Li",
+        "Qibin Yang",
+        "et al."
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "Alibaba Group"
+      ],
+      "summary": "Introduces a comprehensive evaluation suite with 300 tasks recording full execution trajectories — including audit logs and environment snapshots — for trustworthy assessment of autonomous LLM agents.",
+      "key_findings": [
+        "300 tasks with full trajectory recording across execution traces, audit logs, and snapshots",
+        "Reveals significant gaps between task completion rates and execution quality in current agents",
+        "Trajectory-level evaluation catches failure modes invisible to outcome-only metrics"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "benchmark",
+        "autonomous-agents",
+        "trustworthy-AI",
+        "trajectory-analysis"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06132",
+        "huggingface": "https://huggingface.co/papers/2604.06132",
+        "pdf": "https://arxiv.org/pdf/2604.06132"
+      }
+    },
+    {
+      "id": "action-images-robot-policy",
+      "title": "Action Images: End-to-End Policy Learning via Multiview Video Generation",
+      "authors": [
+        "Haoyu Zhen",
+        "Zixian Gao",
+        "Qiao Sun",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "Formulates robot policy learning through multiview video generation with pixel-grounded action representations, enabling end-to-end policy learning that bridges perception and control.",
+      "key_findings": [
+        "Pixel-grounded action representations enable direct policy extraction from generated videos",
+        "Multiview generation provides spatial consistency critical for real-world robot deployment",
+        "End-to-end approach eliminates the need for separate perception and planning pipelines"
+      ],
+      "tags": [
+        "robotics",
+        "policy-learning",
+        "video-generation",
+        "multiview",
+        "world-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06168",
+        "huggingface": "https://huggingface.co/papers/2604.06168",
+        "pdf": "https://arxiv.org/pdf/2604.06168"
+      }
+    },
+    {
+      "id": "paper-circle-multi-agent-research",
+      "title": "Paper Circle: An Open-source Multi-agent Research Discovery and Analysis Framework",
+      "authors": [
+        "Komal Kumar",
+        "Aman Chadha",
+        "Salman Khan",
+        "et al."
+      ],
+      "affiliations": [
+        "MBZUAI",
+        "Stanford University",
+        "Amazon"
+      ],
+      "summary": "Introduces an open-source multi-agent system with discovery and analysis pipelines for academic literature, addressing the challenge of efficient research synthesis at scale.",
+      "key_findings": [
+        "Multi-agent architecture separates discovery from analysis for efficient research workflows",
+        "Open-source framework enables reproducible and extensible research automation",
+        "Outperforms single-agent approaches on literature review quality metrics"
+      ],
+      "tags": [
+        "research-automation",
+        "multi-agent",
+        "literature-review",
+        "open-source",
+        "scientific-discovery"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06170",
+        "huggingface": "https://huggingface.co/papers/2604.06170",
+        "pdf": "https://arxiv.org/pdf/2604.06170"
+      }
+    },
+    {
+      "id": "consistent-world-models-multi-token",
+      "title": "Toward Consistent World Models with Multi-Token Prediction and Latent Semantic Enhancement",
+      "authors": [
+        "Qimin Zhong",
+        "Hao Liao",
+        "Haiming Qin",
+        "et al."
+      ],
+      "affiliations": [
+        "Peking University",
+        "ByteDance"
+      ],
+      "summary": "Analyzes multi-token prediction gradient bias in world models and proposes anchoring predictions to ground-truth trajectories for improved consistency, contributing to the debate on whether LLMs develop coherent internal world models.",
+      "key_findings": [
+        "Multi-token prediction introduces gradient bias that degrades world model consistency",
+        "Anchoring to ground-truth trajectories corrects drift in sequential predictions",
+        "Latent semantic enhancement improves the coherence of learned internal representations"
+      ],
+      "tags": [
+        "world-models",
+        "multi-token-prediction",
+        "LLM-internals",
+        "consistency",
+        "representation-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06155",
+        "huggingface": "https://huggingface.co/papers/2604.06155",
+        "pdf": "https://arxiv.org/pdf/2604.06155"
+      }
+    },
+    {
+      "id": "exclusive-unlearning",
+      "title": "Exclusive Unlearning",
+      "authors": [
+        "Mutsumi Sasaki",
+        "Kouta Nakayama",
+        "Yusuke Miyao",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Tokyo",
+        "RIKEN"
+      ],
+      "summary": "Proposes a novel machine unlearning approach that removes broad categories of harmful content by forgetting everything except desired knowledge domains, inverting the typical targeted-deletion paradigm.",
+      "key_findings": [
+        "Exclusive unlearning (keep-only) is more effective than inclusive unlearning (delete-specific) for safety",
+        "Approach scales better to unknown harmful content categories than enumeration-based methods",
+        "Maintains model utility on retained knowledge domains while broadly removing harmful capabilities"
+      ],
+      "tags": [
+        "machine-unlearning",
+        "LLM-safety",
+        "harmful-content",
+        "alignment",
+        "knowledge-management"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06154",
+        "huggingface": "https://huggingface.co/papers/2604.06154",
+        "pdf": "https://arxiv.org/pdf/2604.06154"
+      }
+    },
+    {
+      "id": "target-policy-optimization",
+      "title": "Target Policy Optimization",
+      "authors": [
+        "Jean Kaddour"
+      ],
+      "affiliations": [
+        "Google DeepMind"
+      ],
+      "summary": "Separates target distribution construction from parameter updates in RL for language models, demonstrating improved performance on sparse reward tasks by decoupling these traditionally entangled components.",
+      "key_findings": [
+        "Decoupling target distribution from parameter updates improves sparse reward optimization",
+        "Cleaner theoretical framework than PPO/DPO for RLHF by separating what-to-optimize from how-to-optimize",
+        "Achieves state-of-the-art on sparse reward benchmarks with simpler training dynamics"
+      ],
+      "tags": [
+        "RLHF",
+        "policy-optimization",
+        "sparse-rewards",
+        "LLM-training",
+        "reinforcement-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06159",
+        "huggingface": "https://huggingface.co/papers/2604.06159",
+        "pdf": "https://arxiv.org/pdf/2604.06159"
+      }
+    },
+    {
+      "id": "ai-structure-mathematics",
+      "title": "Artificial Intelligence and the Structure of Mathematics",
+      "authors": [
+        "Maissam Barkeshli",
+        "Michael R. Douglas",
+        "Michael H. Freedman"
+      ],
+      "affiliations": [
+        "University of Maryland",
+        "Harvard University",
+        "Microsoft Research"
+      ],
+      "summary": "Discusses how AI may reveal the global structure of formal proofs and enable mathematical discovery, authored by Fields Medal-level mathematicians including Michael Freedman.",
+      "key_findings": [
+        "AI could reveal hidden structural patterns in the space of formal mathematical proofs",
+        "Automated proof systems may enable discovery of connections between distant mathematical domains",
+        "The paper outlines concrete paths for AI-assisted mathematical research beyond theorem proving"
+      ],
+      "tags": [
+        "AI-for-math",
+        "formal-proofs",
+        "mathematical-discovery",
+        "automated-reasoning",
+        "foundations"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06107",
+        "huggingface": "https://huggingface.co/papers/2604.06107",
+        "pdf": "https://arxiv.org/pdf/2604.06107"
+      }
+    },
+    {
+      "id": "constrained-decoding-snowballing",
+      "title": "From Hallucination to Structure Snowballing: The Alignment Tax of Constrained Decoding in LLM Reflection",
+      "authors": [
+        "Hongxu Zhou"
+      ],
+      "affiliations": [
+        "Independent Researcher"
+      ],
+      "summary": "Reveals that constrained decoding in LLM self-correction triggers 'structure snowballing' rather than improving reflection, exposing a hidden alignment tax in structured output generation.",
+      "key_findings": [
+        "Constrained decoding triggers structure snowballing that compounds errors rather than correcting them",
+        "Self-correction mechanisms fail under constrained output formats due to cascading structural commitments",
+        "Identifies a fundamental tension between structured output requirements and genuine model reflection"
+      ],
+      "tags": [
+        "constrained-decoding",
+        "self-correction",
+        "alignment",
+        "structured-output",
+        "LLM-limitations"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06066",
+        "huggingface": "https://huggingface.co/papers/2604.06066",
+        "pdf": "https://arxiv.org/pdf/2604.06066"
+      }
+    },
+    {
+      "id": "ace-bench-agent-evaluation",
+      "title": "ACE-Bench: Agent Configurable Evaluation with Scalable Horizons and Controllable Difficulty",
+      "authors": [
+        "Wang Yang",
+        "Chaoda Song",
+        "Xinpeng Li",
+        "et al."
+      ],
+      "affiliations": [
+        "Chinese Academy of Sciences",
+        "University of Chinese Academy of Sciences"
+      ],
+      "summary": "Proposes a unified grid-based planning framework for agent evaluation with fine-grained control over task horizon and difficulty, addressing the high overhead and limited configurability of existing agent benchmarks.",
+      "key_findings": [
+        "Grid-based planning tasks enable continuous difficulty scaling for agent evaluation",
+        "Controllable horizon length isolates planning capability from task-specific knowledge",
+        "Lightweight environments dramatically reduce the cost of large-scale agent benchmarking"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "benchmark",
+        "configurable-difficulty",
+        "planning",
+        "autonomous-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06111",
+        "huggingface": "https://huggingface.co/papers/2604.06111",
+        "pdf": "https://arxiv.org/pdf/2604.06111"
+      }
+    },
+    {
+      "id": "social-dynamics-llm-collectives",
+      "title": "Social Dynamics as Critical Vulnerabilities that Undermine Objective Decision-Making in LLM Collectives",
+      "authors": [
+        "Changgeon Ko",
+        "Jisu Shin",
+        "Hoyun Song",
+        "et al."
+      ],
+      "affiliations": [
+        "Seoul National University",
+        "KAIST"
+      ],
+      "summary": "Demonstrates that LLM agents serving as human delegates in multi-agent environments have their accuracy significantly degraded by social pressure and rhetorical manipulation, exposing a critical vulnerability in collective AI decision-making.",
+      "key_findings": [
+        "Representative LLM agents' decision accuracy declines significantly under social pressure",
+        "Rhetorical manipulation is more effective against LLM agents than logical argumentation",
+        "Multi-agent collective decision-making inherits and amplifies individual agent vulnerabilities"
+      ],
+      "tags": [
+        "multi-agent",
+        "social-manipulation",
+        "decision-making",
+        "LLM-vulnerabilities",
+        "collective-intelligence"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06091",
+        "huggingface": "https://huggingface.co/papers/2604.06091",
+        "pdf": "https://arxiv.org/pdf/2604.06091"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hermes-agent-model",
+      "name": "NousResearch Hermes Agent",
+      "organization": "NousResearch",
+      "description": "NousResearch's agent framework that grows with users has exploded to 3,009 stars/day on GitHub, representing the fastest-growing AI agent project tracked. Model-native agent design from NousResearch's deep open-weight expertise.",
+      "task_type": "agent-framework",
+      "model_size": "Various",
+      "tags": [
+        "AI-agents",
+        "framework",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/NousResearch/hermes-agent"
+    },
+    {
+      "id": "qwen36-plus",
+      "name": "Qwen 3.6 Plus",
+      "organization": "Alibaba",
+      "description": "Alibaba's latest release featuring 1M context window, 65K output tokens, and always-on chain-of-thought reasoning. Beats Claude Opus on Terminal-Bench 2.0 (61.6 vs 59.3) and available as free preview on OpenRouter.",
+      "task_type": "text-generation",
+      "model_size": "MoE + linear attention",
+      "tags": [
+        "qwen",
+        "long-context",
+        "reasoning",
+        "MoE"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/Qwen"
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma-4-31B-IT",
+      "organization": "Google",
+      "description": "Google's flagship 31B dense Gemma-4 instruction-tuned model continues strong trending with 678k downloads and 1,158 likes. Apache 2.0 license makes it the first Google model with fully permissive enterprise licensing.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "gemma4",
+        "multimodal",
+        "instruction-tuned",
+        "apache-2.0"
+      ],
+      "metrics": {
+        "downloads": 678740,
+        "likes": 1158
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "Community-built Qwen3.5-27B distilled from Claude Opus reasoning outputs continues massive traction with 2,403 likes and 548k downloads, representing the pinnacle of closed-to-open capability transfer.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "qwen3.5",
+        "distillation",
+        "reasoning",
+        "claude-opus"
+      ],
+      "metrics": {
+        "downloads": 548344,
+        "likes": 2403
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "nvidia-data-designer",
+      "name": "NeMo Data Designer",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's synthetic data generation tool for creating high-quality training data from scratch or seed data, trending at 244 stars/day as enterprises seek data-centric AI approaches.",
+      "task_type": "data-generation",
+      "model_size": "N/A",
+      "tags": [
+        "synthetic-data",
+        "NVIDIA",
+        "data-centric",
+        "NeMo"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/NVIDIA-NeMo/DataDesigner"
+    },
+    {
+      "id": "glm-5",
+      "name": "GLM-5",
+      "organization": "Zhipu AI",
+      "description": "Zhipu AI's frontier reasoning model with 744B total / 40B active parameters, trained on Huawei silicon under MIT license. Achieves 50.4% on Humanity's Last Exam, demonstrating competitive non-NVIDIA training infrastructure.",
+      "task_type": "text-generation",
+      "model_size": "744B (40B active)",
+      "tags": [
+        "frontier-model",
+        "MoE",
+        "MIT-license",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/THUDM/glm-5"
+    },
+    {
+      "id": "hindsight-agent-memory",
+      "name": "Hindsight: Agent Memory That Learns",
+      "organization": "Vectorize",
+      "description": "Agent memory system that learns and improves over time, trending at 160 stars/day. Addresses a critical gap in the agent stack: persistent, learning memory beyond simple RAG retrieval.",
+      "task_type": "agent-memory",
+      "model_size": "N/A",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "RAG-alternative",
+        "infrastructure"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/vectorize-io/hindsight"
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "name": "Gemma-4-26B-A4B-IT",
+      "organization": "Google",
+      "description": "Gemma-4 MoE variant with 26B total / 4B active parameters, offering strong multimodal performance at fraction of dense model inference cost. 476k downloads show strong enterprise adoption.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": [
+        "gemma4",
+        "MoE",
+        "efficient-inference",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 476612,
+        "likes": 459
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "nvidia-personaplex",
+      "name": "PersonaPlex",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's system for generating and managing AI personas, trending at 662 stars/day. Signals NVIDIA's expanding role beyond hardware into agent personality and character management.",
+      "task_type": "persona-generation",
+      "model_size": "N/A",
+      "tags": [
+        "personas",
+        "NVIDIA",
+        "AI-characters",
+        "agent-infrastructure"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://github.com/NVIDIA/personaplex"
+    },
+    {
+      "id": "gpt-oss-120b",
+      "name": "GPT-OSS-120B",
+      "organization": "OpenAI",
+      "description": "OpenAI's first Apache 2.0 open-weight model at 117B total / 5.1B active parameters with MXFP4 quantization and 128K context. A landmark shift in OpenAI's open-source strategy.",
+      "task_type": "text-generation",
+      "model_size": "117B (5.1B active)",
+      "tags": [
+        "OpenAI",
+        "open-weight",
+        "MoE",
+        "apache-2.0"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch's extensible AI agent framework that grows with users. Explosive growth from 28.9k to 32.7k stars, the highest daily gain tracked in this project's history.",
+      "language": "Python",
+      "stars": 32734,
+      "stars_today": 3009,
+      "forks": 4221,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "AI-agents",
+        "LLM-agents",
+        "NousResearch",
+        "framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "gitnexus",
+      "name": "abhigyanpatwari/GitNexus",
+      "description": "Client-side knowledge graph creator running entirely in-browser. Drop in GitHub repos or ZIP files for interactive knowledge graphs with built-in Graph RAG Agent capabilities.",
+      "language": "TypeScript",
+      "stars": 24641,
+      "stars_today": 1195,
+      "forks": 2752,
+      "url": "https://github.com/abhigyanpatwari/GitNexus",
+      "tags": [
+        "knowledge-graph",
+        "code-analysis",
+        "RAG",
+        "browser-based"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Google's showcase gallery for on-device ML/GenAI use cases. Continued strong growth to 18.9k stars, enabling local model experimentation on mobile devices.",
+      "language": "Kotlin",
+      "stars": 18907,
+      "stars_today": 897,
+      "forks": 1763,
+      "url": "https://github.com/google-ai-edge/gallery",
+      "tags": [
+        "on-device-AI",
+        "mobile-ML",
+        "Google",
+        "demo"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "qmd",
+      "name": "tobi/qmd",
+      "description": "Mini CLI search engine for docs, knowledge bases, and meeting notes using local state-of-the-art approaches. Continued strong growth to 19.7k stars.",
+      "language": "TypeScript",
+      "stars": 19658,
+      "stars_today": 859,
+      "forks": 1182,
+      "url": "https://github.com/tobi/qmd",
+      "tags": [
+        "search",
+        "local-first",
+        "CLI",
+        "knowledge-management"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "personaplex",
+      "name": "NVIDIA/personaplex",
+      "description": "NVIDIA's PersonaPlex system for generating and managing AI personas. Surging from 7.5k to 8k stars as NVIDIA expands into agent personality infrastructure.",
+      "language": "Python",
+      "stars": 8018,
+      "stars_today": 662,
+      "forks": 1164,
+      "url": "https://github.com/NVIDIA/personaplex",
+      "tags": [
+        "personas",
+        "NVIDIA",
+        "AI-characters",
+        "generation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "redditvideomakebot",
+      "name": "elebumm/RedditVideoMakerBot",
+      "description": "Create Reddit Videos with just one command. Resurgent popularity at 636 stars/day, likely driven by content creator demand for automated video pipelines.",
+      "language": "Python",
+      "stars": 10099,
+      "stars_today": 636,
+      "forks": 2533,
+      "url": "https://github.com/elebumm/RedditVideoMakerBot",
+      "tags": [
+        "video-generation",
+        "Reddit",
+        "content-creation",
+        "automation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Google's lightweight runtime for running language models on edge devices. Complementing AI Edge Gallery with C++ inference infrastructure at 528 stars/day.",
+      "language": "C++",
+      "stars": 2626,
+      "stars_today": 528,
+      "forks": 253,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": [
+        "edge-inference",
+        "LLM-runtime",
+        "C++",
+        "Google"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nemo-data-designer",
+      "name": "NVIDIA-NeMo/DataDesigner",
+      "description": "NeMo Data Designer: Generate high-quality synthetic data from scratch or seed data. NVIDIA's data-centric AI approach gaining traction at 244 stars/day.",
+      "language": "Python",
+      "stars": 1513,
+      "stars_today": 244,
+      "forks": 132,
+      "url": "https://github.com/NVIDIA-NeMo/DataDesigner",
+      "tags": [
+        "synthetic-data",
+        "NVIDIA",
+        "data-generation",
+        "NeMo"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "seomachine",
+      "name": "TheCraigHewitt/seomachine",
+      "description": "Specialized Claude workspace for creating long-form, SEO-optimized blog content with research, writing, analysis, and optimization features. 215 stars/day.",
+      "language": "Python",
+      "stars": 3974,
+      "stars_today": 215,
+      "forks": 665,
+      "url": "https://github.com/TheCraigHewitt/seomachine",
+      "tags": [
+        "SEO",
+        "content-generation",
+        "Claude",
+        "writing"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "Agent-native personalized learning assistant from HKU. Steady growth at 168 stars/day as education-focused AI tools gain traction.",
+      "language": "Python",
+      "stars": 12360,
+      "stars_today": 168,
+      "forks": 1678,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "education",
+        "AI-tutor",
+        "personalization",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "Hindsight: Agent Memory That Learns. A novel agent memory system that improves over time, addressing the critical gap between simple context windows and full persistent memory.",
+      "language": "Python",
+      "stars": 7812,
+      "stars_today": 160,
+      "forks": 486,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "RAG-alternative",
+        "infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "autoagent",
+      "name": "HKUDS/AutoAgent",
+      "description": "Fully-automated and zero-code LLM agent framework from HKU. Enables building agents without programming, at 76 stars/day.",
+      "language": "Python",
+      "stars": 9001,
+      "stars_today": 76,
+      "forks": 1269,
+      "url": "https://github.com/HKUDS/AutoAgent",
+      "tags": [
+        "agent-framework",
+        "zero-code",
+        "automation",
+        "LLM-agents"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Test-Time Adaptation",
+      "description": "The boundary between training and inference is dissolving, with papers on in-place test-time training and target policy optimization showing that inference is becoming a first-class optimization target.",
+      "related_paper_ids": [
+        "in-place-test-time-training",
+        "target-policy-optimization"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Architecture Alternatives",
+      "description": "The Polynomial Mixer provides the strongest theoretical guarantee yet for linear-time attention replacement, joining the ongoing race to make sub-quadratic transformers production-ready.",
+      "related_paper_ids": [
+        "polynomial-mixer-linear-attention",
+        "consistent-world-models-multi-token"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Evaluation Crisis",
+      "description": "Three independent papers tackle agent evaluation from different angles — trajectory recording, configurable difficulty, and automated environment generation — signaling community recognition of a critical bottleneck.",
+      "related_paper_ids": [
+        "claw-eval-autonomous-agents",
+        "ace-bench-agent-evaluation",
+        "gym-anything-agent-environments"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Safety and Alignment",
+      "description": "Exclusive unlearning inverts the safety paradigm (keep-only vs delete-specific), while constrained decoding snowballing reveals hidden alignment taxes in structured output generation.",
+      "related_paper_ids": [
+        "exclusive-unlearning",
+        "constrained-decoding-snowballing",
+        "social-dynamics-llm-collectives"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Agent Infrastructure Build-Out",
+      "description": "GitHub trending is dominated by agent tooling: frameworks (hermes-agent), memory (hindsight), personas (personaplex), data (DataDesigner), and evaluation — the full agent stack is being built simultaneously.",
+      "related_paper_ids": [
+        "paper-circle-multi-agent-research"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending (Python)",
+      "url": "https://github.com/trending/python",
+      "checked_at": "2026-04-08T06:31:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "Web Search (Supplementary)",
+      "url": "https://www.google.com",
+      "checked_at": "2026-04-08T06:32:00+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-04-08T06:30:00+00:00",
+      "status": "error"
+    }
+  ]
+}
