@@ -1,0 +1,625 @@
+{
+  "version": "1.0",
+  "date": "2026-04-09",
+  "generated_at": "2026-04-09T02:15:00.000000+00:00",
+  "summary": {
+    "headline": "GBQA benchmark reveals frontier LLMs catch under half of game bugs autonomously; ThinkTwice unifies reasoning and self-refinement via GRPO; Gemma 4 family dominates HuggingFace trending with six model variants",
+    "body": "April 9th is defined by a sharp focus on **agent evaluation** and **LLM self-improvement**. The top-engaged paper, **GBQA**, constructs a rigorous game-based benchmark for autonomous bug discovery and finds that even Claude-4.6-Opus in thinking mode catches only 48% of verified bugs — a sobering result that underscores how far we are from reliable autonomous QA. Meanwhile, **ThinkTwice** demonstrates that jointly optimizing reasoning and self-refinement with a single binary reward signal yields consistent gains across five math benchmarks, establishing a clean two-phase GRPO framework that requires no additional annotations.\n\n**Efficiency and scale** remain central themes. **MegaTrain** achieves the remarkable feat of training 100B+ parameter models at full precision on a single GPU by treating host memory as the primary store and GPUs as transient compute engines. **REAM** shows that merging MoE experts outperforms pruning them, offering a gentler compression strategy for deployment-constrained settings. On the diffusion LLM front, **DARE** provides the first unified post-training framework, consolidating the fragmented dLLM ecosystem.\n\nThe model landscape is dominated by **Google's Gemma 4 family**, which occupies six of the top twenty trending slots on HuggingFace, with the 31B instruction-tuned variant surpassing 1.1M downloads. **Jackrong's Qwen3.5-27B Claude-4.6-Opus distillation** leads in likes at 2,508, signaling strong community appetite for reasoning-optimized open models. On GitHub, **NousResearch/hermes-agent** continues its extraordinary run with 5,794 stars today, while **obra/superpowers** and **HKUDS/DeepTutor** each crossed 1,000+ daily stars — reinforcing that agent frameworks and AI-powered education are the dominant open-source growth categories.",
+    "key_themes": [
+      "agent-evaluation-benchmarks",
+      "reasoning-self-refinement",
+      "efficient-large-model-training",
+      "diffusion-language-models",
+      "gemma4-ecosystem",
+      "agent-framework-explosion"
+    ]
+  },
+  "researcher_notes": "**GBQA is the most important evaluation paper today, and arguably the most honest.** By testing LLMs on interactive bug discovery in games — a task requiring environmental exploration, state tracking, and causal reasoning — it exposes a fundamental gap: frontier models cannot reliably find bugs even when given full interactive access. The 48% ceiling for Claude-4.6-Opus in thinking mode is notable because it suggests that chain-of-thought reasoning alone doesn't close the gap; the bottleneck is in long-horizon exploration and state management. This connects directly to yesterday's Gym-Anything and Claw-Eval papers: the community is converging on the realization that agent evaluation must involve dynamic, stateful environments, not static question-answering.\n\n**ThinkTwice's simplicity is its strength.** The two-phase GRPO approach — first optimize for solving, then optimize for refining — requires zero extra annotations, zero architectural changes, and still delivers consistent improvements across five benchmarks. The key insight is that the model learns to critique *its own* solutions using only binary correctness feedback, which means the self-refinement capability emerges from the training procedure rather than being injected through external critique models. Watch for this pattern to be adopted quickly: it's trivially implementable on top of any existing GRPO pipeline.\n\n**MegaTrain challenges the assumption that distributed training is the only path to 100B+ models.** By treating GPUs as transient compute engines and keeping all state in host memory, it inverts the usual architecture. The two key optimizations — micro-pipeline scheduling and adaptive memory management — are engineering contributions rather than algorithmic ones, but the practical impact is significant: researchers with a single high-end GPU can now train models that previously required multi-node clusters. The question is whether the throughput penalty makes this viable for production training or only for experimentation.\n\n**The Gemma 4 model ecosystem is the trending story on HuggingFace.** Six variants in the top 20 — from 2B to 31B, dense and MoE — plus quantized versions from Unsloth and NVIDIA, suggest that Gemma 4 is becoming the community's default open-weight model family. The 26B-A4B MoE variant (26B total, 4B active) is particularly interesting: it hits a sweet spot for local deployment. But the real signal is **Jackrong's Qwen3.5-27B Claude-4.6-Opus reasoning distillation** at 2,508 likes and 560K downloads — the community is aggressively distilling proprietary model reasoning into open weights.\n\n**GitHub trending reveals two clear lanes: agent infrastructure and AI-for-X verticals.** NousResearch/hermes-agent (5,794 stars/day) and obra/superpowers (2,028 stars/day) represent the agent framework lane. HKUDS/DeepTutor (1,306 stars/day) and HKUDS/AI-Trader (294 stars/day) represent domain-specific AI applications — education and finance respectively. The emergence of GitNexus (980 stars/day) for code knowledge graphs and Google AI Edge's Gallery and LiteRT-LM for on-device inference point to a maturing ecosystem where the infrastructure layer is diversifying rapidly beyond chat-style agents.",
+  "papers": [
+    {
+      "id": "gbqa-game-benchmark-qa",
+      "title": "GBQA: A Game Benchmark for Evaluating LLMs as Quality Assurance Engineers",
+      "authors": ["Shufan Jiang", "Chios Chen", "Zhiyang Chen"],
+      "affiliations": ["EPFL", "Tencent AI Lab"],
+      "summary": "Introduces a game-based benchmark with 30 games and 124 human-verified bugs across three difficulty levels to evaluate whether LLMs can autonomously detect software bugs through interactive exploration.",
+      "key_findings": [
+        "Best-performing model (Claude-4.6-Opus thinking mode) detects only 48.39% of verified bugs",
+        "Multi-agent bug injection system enables scalable benchmark construction with human verification",
+        "Long-horizon interactive exploration remains a fundamental bottleneck for autonomous QA"
+      ],
+      "tags": ["benchmark", "bug-detection", "autonomous-qa", "game-testing", "LLM-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 37, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.02648",
+        "huggingface": "https://huggingface.co/papers/2604.02648",
+        "pdf": "https://arxiv.org/pdf/2604.02648"
+      }
+    },
+    {
+      "id": "thinktwice-reasoning-refinement",
+      "title": "ThinkTwice: Jointly Optimizing Large Language Models for Reasoning and Self-Refinement",
+      "authors": ["Difan Jiao", "Qianfeng Wen", "Blair Yang", "Zhenwei Tang", "Ashton Anderson"],
+      "affiliations": ["University of Toronto", "Vector Institute"],
+      "summary": "A two-phase GRPO framework that jointly optimizes LLMs for solving reasoning problems and refining their own answers, using only binary correctness rewards without external critique annotations.",
+      "key_findings": [
+        "Two-phase training (solve then refine) yields consistent gains across five math benchmarks",
+        "Self-refinement emerges from binary reward signal alone — no critique annotations needed",
+        "Framework requires no architectural modifications, layering directly on standard GRPO"
+      ],
+      "tags": ["reasoning", "self-refinement", "GRPO", "reinforcement-learning", "mathematical-reasoning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 32, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.01591",
+        "huggingface": "https://huggingface.co/papers/2604.01591",
+        "pdf": "https://arxiv.org/pdf/2604.01591"
+      }
+    },
+    {
+      "id": "vanast-virtual-tryon-animation",
+      "title": "Vanast: Virtual Try-On with Human Image Animation via Synthetic Triplet Supervision",
+      "authors": ["Hyunsoo Cha", "Wonjung Woo", "Byungjun Kim", "Hanbyul Joo"],
+      "affiliations": ["Seoul National University", "NAVER"],
+      "summary": "A unified framework that generates garment-transferred human animation videos from a single image, garment images, and pose guidance, eliminating the identity drift and garment distortion of two-stage pipelines.",
+      "key_findings": [
+        "Single-stage unified approach eliminates cascading errors from separate try-on and animation stages",
+        "Synthetic triplet supervision enables training without paired ground-truth animation data",
+        "Achieves coherent front-back consistency and identity preservation across frames"
+      ],
+      "tags": ["virtual-try-on", "video-generation", "human-animation", "fashion-tech", "computer-vision"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 31, "comments": 5},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04934",
+        "huggingface": "https://huggingface.co/papers/2604.04934",
+        "pdf": "https://arxiv.org/pdf/2604.04934"
+      }
+    },
+    {
+      "id": "watch-before-you-answer-vlm",
+      "title": "Watch Before You Answer: Learning from Visually Grounded Post-Training",
+      "authors": ["Yuxuan Zhang", "EunJeong Hwang", "Huaisong Zhang", "Penghui Du", "Yiming Jia"],
+      "affiliations": ["Meta AI", "University of Illinois Urbana-Champaign"],
+      "summary": "Reveals that 40-60% of long video understanding benchmark questions can be answered with text cues alone, and proposes visually grounded post-training to force genuine visual reasoning in VLMs.",
+      "key_findings": [
+        "40-60% of long video benchmark questions are solvable from text cues without watching any video",
+        "Current VLM evaluation conflates language reasoning with visual understanding",
+        "Visually grounded post-training significantly improves genuine visual reasoning fidelity"
+      ],
+      "tags": ["video-understanding", "VLM", "benchmark-critique", "visual-grounding", "post-training"],
+      "relevance": "high",
+      "engagement": {"upvotes": 26, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05117",
+        "huggingface": "https://huggingface.co/papers/2604.05117",
+        "pdf": "https://arxiv.org/pdf/2604.05117"
+      }
+    },
+    {
+      "id": "megatrain-single-gpu-100b",
+      "title": "MegaTrain: Full Precision Training of 100B+ Parameter Large Language Models on a Single GPU",
+      "authors": ["Zhengqing Yuan", "Hanchi Sun", "Lichao Sun", "Yanfang Ye"],
+      "affiliations": ["University of Notre Dame", "Lehigh University"],
+      "summary": "A memory-centric system that trains 100B+ parameter LLMs at full precision on a single GPU by storing parameters and optimizer states in host memory and treating GPUs as transient compute engines.",
+      "key_findings": [
+        "Enables full-precision 100B+ training on a single GPU via CPU-GPU memory orchestration",
+        "Micro-pipeline scheduling and adaptive memory management overcome bandwidth bottleneck",
+        "Democratizes large-scale training for researchers without multi-node clusters"
+      ],
+      "tags": ["efficient-training", "single-gpu", "memory-optimization", "large-scale", "systems"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05091",
+        "huggingface": "https://huggingface.co/papers/2604.05091",
+        "pdf": "https://arxiv.org/pdf/2604.05091"
+      }
+    },
+    {
+      "id": "agentic-skills-wild-benchmark",
+      "title": "How Well Do Agentic Skills Work in the Wild: Benchmarking LLM Skill Usage in Realistic Settings",
+      "authors": ["Yujian Liu", "Jiabao Ji", "Li An", "Tommi Jaakkola", "Yang Zhang"],
+      "affiliations": ["MIT CSAIL", "MIT"],
+      "summary": "Formally benchmarks LLM agent skill usage under realistic conditions where agents must search, select, and compose skills from large pools rather than being handed task-specific tools.",
+      "key_findings": [
+        "Performance degrades significantly when agents must self-select skills from large pools",
+        "Current agents struggle with skill composition and multi-step skill chains",
+        "Gap between idealized skill-provided benchmarks and realistic self-serve settings is substantial"
+      ],
+      "tags": ["agent-skills", "benchmark", "tool-use", "LLM-agents", "realistic-evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04323",
+        "huggingface": "https://huggingface.co/papers/2604.04323",
+        "pdf": "https://arxiv.org/pdf/2604.04323"
+      }
+    },
+    {
+      "id": "disco-multimodal-protein-design",
+      "title": "General Multimodal Protein Design Enables DNA-Encoding of Chemistry",
+      "authors": ["Jarrid Rector-Brooks", "Théophile Lambert", "Marta Skreta", "Daniel Roth", "Yueming Long"],
+      "affiliations": ["Mila", "Université de Montréal", "University of Toronto"],
+      "summary": "DISCO co-designs protein sequence and 3D structure around arbitrary biomolecules using diffusion, creating enzymes without pre-specifying catalytic residues — a first for generative protein design.",
+      "key_findings": [
+        "First generative model to design enzymes without pre-specified catalytic residues",
+        "Co-designs protein sequence and 3D structure simultaneously around arbitrary ligands",
+        "Inference-time scaling methods optimize designs for stability and binding affinity"
+      ],
+      "tags": ["protein-design", "enzyme-engineering", "diffusion-models", "structural-biology", "drug-discovery"],
+      "relevance": "high",
+      "engagement": {"upvotes": 21, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05181",
+        "huggingface": "https://huggingface.co/papers/2604.05181",
+        "pdf": "https://arxiv.org/pdf/2604.05181"
+      }
+    },
+    {
+      "id": "paper-circle-research-discovery",
+      "title": "Paper Circle: An Open-source Multi-agent Research Discovery and Analysis Framework",
+      "authors": ["Komal Kumar", "Aman Chadha", "Salman Khan", "Fahad Shahbaz Khan", "Hisham Cholakkal"],
+      "affiliations": ["Mohamed bin Zayed University of AI", "Stanford University", "Amazon"],
+      "summary": "A multi-agent LLM system for automated research discovery and analysis that reduces the effort to find, assess, organize, and synthesize relevant scientific papers.",
+      "key_findings": [
+        "Multi-agent architecture distributes search, evaluation, and synthesis across specialized LLM agents",
+        "Open-source framework enables customizable research workflows",
+        "Demonstrates significant reduction in manual literature review effort"
+      ],
+      "tags": ["research-automation", "multi-agent", "literature-review", "scientific-discovery", "open-source"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 20, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06170",
+        "huggingface": "https://huggingface.co/papers/2604.06170",
+        "pdf": "https://arxiv.org/pdf/2604.06170"
+      }
+    },
+    {
+      "id": "dare-diffusion-llm-alignment",
+      "title": "DARE: Diffusion Large Language Models Alignment and Reinforcement Executor",
+      "authors": ["Jingyi Yang", "Yuxian Jiang", "Xuhao Hu", "Shuang Cheng", "Biqing Qi"],
+      "affiliations": ["Tsinghua University", "Harbin Institute of Technology"],
+      "summary": "The first unified post-training framework for diffusion language models, consolidating RL objectives, rollout implementations, and evaluation across the fragmented dLLM ecosystem.",
+      "key_findings": [
+        "Unifies reinforcement learning objectives for diffusion language models under one framework",
+        "Standardizes rollout and evaluation pipelines across previously incompatible dLLM codebases",
+        "Enables systematic comparison of alignment approaches for non-autoregressive generation"
+      ],
+      "tags": ["diffusion-LLM", "alignment", "reinforcement-learning", "post-training", "framework"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04215",
+        "huggingface": "https://huggingface.co/papers/2604.04215",
+        "pdf": "https://arxiv.org/pdf/2604.04215"
+      }
+    },
+    {
+      "id": "clawsbench-llm-productivity-agents",
+      "title": "ClawsBench: Evaluating Capability and Safety of LLM Productivity Agents in Simulated Workspaces",
+      "authors": ["Xiangyi Li", "Kyoung Whan Choe", "Yimin Liu", "Xiaokun Chen", "Chujun Tao"],
+      "affiliations": ["Microsoft Research", "University of Washington"],
+      "summary": "A benchmark for evaluating LLM agents in realistic productivity settings with five high-fidelity mock services covering email, scheduling, and document management workflows.",
+      "key_findings": [
+        "Existing benchmarks fail to capture stateful, multi-service productivity workflows",
+        "Five mock services simulate realistic email, calendar, and document interactions",
+        "Reveals significant capability and safety gaps in current LLM productivity agents"
+      ],
+      "tags": ["benchmark", "productivity-agents", "safety", "multi-service", "workspace-simulation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 16, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05172",
+        "huggingface": "https://huggingface.co/papers/2604.05172",
+        "pdf": "https://arxiv.org/pdf/2604.05172"
+      }
+    },
+    {
+      "id": "in-place-test-time-training",
+      "title": "In-Place Test-Time Training",
+      "authors": ["Guhao Feng", "Shengjie Luo", "Kai Hua", "Ge Zhang", "Di He"],
+      "affiliations": ["Tsinghua University", "Microsoft Research"],
+      "summary": "Enables LLMs to dynamically update their parameters during inference, breaking the static train-then-deploy paradigm to handle continuous streams of new information and distribution shifts.",
+      "key_findings": [
+        "LLMs can update parameters in-place during inference for dynamic adaptation",
+        "Addresses architectural incompatibility and computational inefficiency of prior TTT methods",
+        "Significant improvements on long-context and distribution-shift tasks"
+      ],
+      "tags": ["test-time-training", "adaptive-inference", "long-context", "dynamic-adaptation", "LLM"],
+      "relevance": "high",
+      "engagement": {"upvotes": 14, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06169",
+        "huggingface": "https://huggingface.co/papers/2604.06169",
+        "pdf": "https://arxiv.org/pdf/2604.06169"
+      }
+    },
+    {
+      "id": "medgemma-1-5-technical-report",
+      "title": "MedGemma 1.5 Technical Report",
+      "authors": ["Andrew Sellergren", "Chufan Gao", "Fereshteh Mahvar", "Timo Kohlberger", "Fayaz Jamil"],
+      "affiliations": ["Google Health", "Google DeepMind"],
+      "summary": "Expands MedGemma with support for CT/MRI volumes, histopathology whole slide images, anatomical localization via bounding boxes, multi-timepoint chest X-ray analysis, and improved medical document understanding.",
+      "key_findings": [
+        "Single 4B architecture handles diverse high-dimensional medical imaging modalities",
+        "Adds bounding-box anatomical localization and multi-timepoint X-ray analysis",
+        "Improved medical document understanding for lab reports and electronic health records"
+      ],
+      "tags": ["medical-AI", "multimodal", "radiology", "pathology", "clinical-NLP"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 9, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05081",
+        "huggingface": "https://huggingface.co/papers/2604.05081",
+        "pdf": "https://arxiv.org/pdf/2604.05081"
+      }
+    },
+    {
+      "id": "squeez-tool-output-pruning",
+      "title": "Squeez: Task-Conditioned Tool-Output Pruning for Coding Agents",
+      "authors": ["Ádám Kovács"],
+      "affiliations": ["ETH Zurich"],
+      "summary": "Addresses the problem of coding agents consuming excessively long tool observations by introducing task-conditioned pruning that returns only the smallest relevant evidence block.",
+      "key_findings": [
+        "Fine-tuned Qwen 3B achieves strong pruning accuracy on 11,477 SWE-bench-derived examples",
+        "Reduces agent context consumption by extracting minimal verbatim evidence blocks",
+        "Manually curated 618-example test set validates real-world pruning quality"
+      ],
+      "tags": ["coding-agents", "context-efficiency", "tool-use", "SWE-bench", "pruning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04979",
+        "huggingface": "https://huggingface.co/papers/2604.04979",
+        "pdf": "https://arxiv.org/pdf/2604.04979"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "A 27B Qwen3.5 model distilled from Claude 4.6 Opus reasoning traces, optimized for chain-of-thought and logical inference tasks.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["reasoning-distillation", "qwen3.5", "open-weights"],
+      "metrics": {"downloads": 560798, "likes": 2508},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma 4 31B Instruct",
+      "organization": "Google",
+      "description": "Google's flagship 31B instruction-tuned Gemma 4 model with multimodal image-text-to-text capabilities and conversational fine-tuning.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "instruction-tuned"],
+      "metrics": {"downloads": 1106883, "likes": 1468},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Vision-language model specialized for OCR and document understanding, built on InternVL architecture with strong feature extraction for text-heavy images.",
+      "task_type": "feature-extraction",
+      "model_size": "undisclosed",
+      "tags": ["OCR", "vision-language", "document-understanding"],
+      "metrics": {"downloads": 41667, "likes": 1127},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "gemma-4-26b-a4b-it",
+      "name": "Gemma 4 26B-A4B Instruct",
+      "organization": "Google",
+      "description": "Mixture-of-experts Gemma 4 variant with 26B total parameters but only 4B active, hitting a sweet spot for efficient local deployment with multimodal capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": ["gemma4", "MoE", "efficient-deployment"],
+      "metrics": {"downloads": 835825, "likes": 541},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "dealignai-gemma4-abliterated",
+      "name": "Gemma-4-31B-JANG_4M-CRACK",
+      "organization": "DealignAI",
+      "description": "Abliterated (uncensored) version of Gemma 4 31B in MLX format, targeting local deployment without safety restrictions.",
+      "task_type": "text-generation",
+      "model_size": "31B",
+      "tags": ["abliterated", "uncensored", "MLX"],
+      "metrics": {"downloads": 44246, "likes": 792},
+      "source_url": "https://huggingface.co/dealignai/Gemma-4-31B-JANG_4M-CRACK"
+    },
+    {
+      "id": "zai-org-glm-5-1",
+      "name": "GLM-5.1",
+      "organization": "ZAI (Zhipu AI)",
+      "description": "Latest GLM series model with MoE architecture, continuing Zhipu AI's competitive Chinese-English bilingual LLM line.",
+      "task_type": "text-generation",
+      "model_size": "undisclosed",
+      "tags": ["GLM", "MoE", "bilingual"],
+      "metrics": {"downloads": 1300, "likes": 745},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "Void Model",
+      "organization": "Netflix",
+      "description": "Video inpainting and object removal model based on CogVideoX diffusion architecture, enabling seamless video editing workflows.",
+      "task_type": "video-inpainting",
+      "model_size": "undisclosed",
+      "tags": ["video-editing", "inpainting", "object-removal"],
+      "metrics": {"downloads": 0, "likes": 647},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "prism-ml-bonsai-8b-gguf",
+      "name": "Bonsai-8B-gguf",
+      "organization": "Prism ML",
+      "description": "1-bit quantized 8B model in GGUF format optimized for llama.cpp and CUDA, pushing extreme compression for on-device deployment.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": ["1-bit", "GGUF", "extreme-quantization"],
+      "metrics": {"downloads": 59633, "likes": 521},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "gemma-4-e4b-it",
+      "name": "Gemma 4 E4B Instruct",
+      "organization": "Google",
+      "description": "Compact 4B Gemma 4 variant with any-to-any multimodal capabilities, optimized for edge and mobile deployment.",
+      "task_type": "any-to-any",
+      "model_size": "4B",
+      "tags": ["gemma4", "edge-deployment", "any-to-any"],
+      "metrics": {"downloads": 622963, "likes": 509},
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "openbmb-voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB",
+      "description": "Multilingual text-to-speech model with zero-shot voice cloning capabilities, part of the CPM model family from Tsinghua University's OpenBMB lab.",
+      "task_type": "text-to-speech",
+      "model_size": "undisclosed",
+      "tags": ["TTS", "multilingual", "voice-cloning"],
+      "metrics": {"downloads": 605, "likes": 463},
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "k2-fsa-omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa (Next-gen Kaldi)",
+      "description": "Zero-shot multilingual voice cloning model from the Kaldi successor project, enabling high-quality speech synthesis across languages with minimal reference audio.",
+      "task_type": "text-to-speech",
+      "model_size": "undisclosed",
+      "tags": ["voice-cloning", "multilingual", "zero-shot"],
+      "metrics": {"downloads": 144864, "likes": 398},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Full-featured agentic framework built on the Hermes model family, providing extensible agent capabilities that grow with user needs. Continues explosive growth from prior days.",
+      "language": "Python",
+      "stars": 38047,
+      "stars_today": 5794,
+      "forks": 4850,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent-framework", "hermes", "extensible-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology providing reusable skill components for AI-assisted coding workflows.",
+      "language": "Shell",
+      "stars": 141656,
+      "stars_today": 2028,
+      "forks": 12081,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agentic-skills", "dev-methodology", "coding-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "Agent-native personalized learning assistant that adapts to individual student needs through multi-agent architecture and intelligent tutoring strategies.",
+      "language": "Python",
+      "stars": 13658,
+      "stars_today": 1306,
+      "forks": 1852,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education-AI", "personalized-learning", "tutoring-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "abhigyanpatwari-gitnexus",
+      "name": "abhigyanpatwari/GitNexus",
+      "description": "Client-side knowledge graph engine that runs in-browser, converting GitHub repos or ZIP files into interactive knowledge graphs with built-in Graph RAG agent for code exploration.",
+      "language": "TypeScript",
+      "stars": 25346,
+      "stars_today": 980,
+      "forks": 2818,
+      "url": "https://github.com/abhigyanpatwari/GitNexus",
+      "tags": ["knowledge-graph", "code-exploration", "graph-RAG"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ai-edge-gallery",
+      "name": "google-ai-edge/gallery",
+      "description": "Showcase gallery for on-device ML and GenAI use cases, allowing users to try and run models locally on mobile and edge devices.",
+      "language": "Kotlin",
+      "stars": 19541,
+      "stars_today": 853,
+      "forks": 1821,
+      "url": "https://github.com/google-ai-edge/gallery",
+      "tags": ["on-device-ML", "edge-inference", "mobile-AI"],
+      "relevance": "high"
+    },
+    {
+      "id": "forrestchang-andrej-karpathy-skills",
+      "name": "forrestchang/andrej-karpathy-skills",
+      "description": "Collection of AI/ML skills and knowledge distilled from Andrej Karpathy's teachings, packaged for use in agentic coding workflows.",
+      "language": "",
+      "stars": 9073,
+      "stars_today": 702,
+      "forks": 629,
+      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
+      "tags": ["skills-collection", "karpathy", "education"],
+      "relevance": "medium"
+    },
+    {
+      "id": "thecraighewitt-seomachine",
+      "name": "TheCraigHewitt/seomachine",
+      "description": "Specialized Claude Code workspace for creating long-form SEO-optimized blog content, integrating research, writing, analysis, and optimization in a single agent pipeline.",
+      "language": "Python",
+      "stars": 4626,
+      "stars_today": 649,
+      "forks": 714,
+      "url": "https://github.com/TheCraigHewitt/seomachine",
+      "tags": ["SEO", "content-generation", "claude-code"],
+      "relevance": "medium"
+    },
+    {
+      "id": "nvidia-personaplex",
+      "name": "NVIDIA/personaplex",
+      "description": "NVIDIA's persona management and multi-agent system for creating and orchestrating diverse AI personas across workflows.",
+      "language": "Python",
+      "stars": 8451,
+      "stars_today": 586,
+      "forks": 1209,
+      "url": "https://github.com/NVIDIA/personaplex",
+      "tags": ["persona-management", "multi-agent", "NVIDIA"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ai-edge-litert-lm",
+      "name": "google-ai-edge/LiteRT-LM",
+      "description": "Lightweight runtime for running language models on edge devices, part of Google's on-device AI infrastructure push.",
+      "language": "C++",
+      "stars": 3011,
+      "stars_today": 501,
+      "forks": 283,
+      "url": "https://github.com/google-ai-edge/LiteRT-LM",
+      "tags": ["edge-inference", "lightweight-runtime", "on-device-LLM"],
+      "relevance": "high"
+    },
+    {
+      "id": "atilaahmettaner-tradingview-mcp",
+      "name": "atilaahmettaner/tradingview-mcp",
+      "description": "MCP server for AI-powered market analysis with TradingView integration, supporting real-time crypto and stock screening, technical indicators, and candlestick pattern detection.",
+      "language": "Python",
+      "stars": 1332,
+      "stars_today": 447,
+      "forks": 302,
+      "url": "https://github.com/atilaahmettaner/tradingview-mcp",
+      "tags": ["MCP", "trading", "market-analysis"],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-bitnet",
+      "name": "microsoft/BitNet",
+      "description": "Official inference framework for 1-bit LLMs from Microsoft Research, enabling extreme model compression while maintaining generation quality.",
+      "language": "Python",
+      "stars": 37909,
+      "stars_today": 388,
+      "forks": 3371,
+      "url": "https://github.com/microsoft/BitNet",
+      "tags": ["1-bit-LLM", "inference", "compression"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-ai-trader",
+      "name": "HKUDS/AI-Trader",
+      "description": "Fully automated agent-native trading system from HKU Data Science lab, providing autonomous trading strategy execution across markets.",
+      "language": "Python",
+      "stars": 12686,
+      "stars_today": 294,
+      "forks": 2132,
+      "url": "https://github.com/HKUDS/AI-Trader",
+      "tags": ["automated-trading", "agent-native", "finance-AI"],
+      "relevance": "medium"
+    },
+    {
+      "id": "unslothai-unsloth",
+      "name": "unslothai/unsloth",
+      "description": "Web UI platform for training and running open models including Qwen3.5, Gemma 4, and DeepSeek locally with optimized memory efficiency.",
+      "language": "Python",
+      "stars": 60345,
+      "stars_today": 267,
+      "forks": 5174,
+      "url": "https://github.com/unslothai/unsloth",
+      "tags": ["fine-tuning", "local-inference", "training-tools"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Evaluation Crisis",
+      "description": "Multiple papers (GBQA, ClawsBench, Agentic Skills in the Wild) reveal that current LLM agents fail dramatically in realistic evaluation settings, with frontier models catching under half of bugs and degrading significantly when self-selecting skills.",
+      "related_paper_ids": ["gbqa-game-benchmark-qa", "clawsbench-llm-productivity-agents", "agentic-skills-wild-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Self-Improvement via RL",
+      "description": "ThinkTwice and DARE both push the frontier on using reinforcement learning to improve LLM capabilities post-training — for reasoning self-refinement and diffusion model alignment respectively.",
+      "related_paper_ids": ["thinktwice-reasoning-refinement", "dare-diffusion-llm-alignment"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Training at Scale",
+      "description": "MegaTrain's single-GPU 100B+ training and REAM's expert merging for MoE compression address the same problem from opposite ends: democratizing access to large model training and making large models deployable.",
+      "related_paper_ids": ["megatrain-single-gpu-100b"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Video and Vision Grounding",
+      "description": "Watch Before You Answer exposes that VLM benchmarks are solvable from text alone (40-60%), while Vanast unifies virtual try-on with animation — both pushing for genuine visual understanding rather than language shortcutting.",
+      "related_paper_ids": ["watch-before-you-answer-vlm", "vanast-virtual-tryon-animation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Framework Open-Source Explosion",
+      "description": "GitHub trending is dominated by agent frameworks (hermes-agent, superpowers, DeepTutor) with combined daily stars exceeding 9,000 — indicating the agent infrastructure layer is maturing rapidly across development, education, and finance domains.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-09T02:10:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-09T02:10:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-09T02:10:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-09T02:10:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-09T02:10:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
