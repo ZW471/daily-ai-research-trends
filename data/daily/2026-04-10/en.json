@@ -1,0 +1,675 @@
+{
+  "version": "1.0",
+  "date": "2026-04-10",
+  "generated_at": "2026-04-10T02:10:00.000000+00:00",
+  "summary": {
+    "headline": "Process-driven image generation dominates with 48 upvotes; agent skill evolution becomes a unifying research theme across four papers; Gemma 4 ecosystem continues HuggingFace dominance with Qwen3.5-Claude distillation topping 2,500 likes",
+    "body": "April 10th is defined by a surge in **agent skill and memory infrastructure** research. Four highly-engaged papers — Externalization (10 upvotes), Graph of Skills (7), Combee (22), and SEVerA (22) — collectively argue that the next frontier in LLM agents lies not in better base models but in better runtime scaffolding: externalizing skills into dependency graphs, scaling prompt learning across parallel agent traces, and providing formal safety guarantees for self-evolving agent programs. This convergence is remarkable because these papers arrive independently yet share a common thesis: agent capabilities should be modular, evolvable, and verifiable.\n\n**Visual generation and reasoning** claim the day's highest engagement. **Think in Strokes, Not Pixels** (48 upvotes) introduces process-driven image generation that decomposes synthesis into interleaved reasoning trajectories — effectively teaching multimodal models to paint like humans, step by step. **FlowInOne** (6 upvotes) complements this by unifying all multimodal generation into a single image-in, image-out flow matching pipeline, removing text as the mandatory intermediary.\n\nThe **model ecosystem** remains Gemma 4-dominated on HuggingFace, with Google's 31B instruct variant at 1.3M downloads and the 26B-A4B MoE variant crossing 1M. The standout community signal is **Jackrong's Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled** at 2,544 likes and 564K downloads — distilling proprietary reasoning into open weights remains the hottest community activity. On GitHub, **obra/superpowers** leads with 2,299 stars today, followed by **NousResearch/hermes-agent** (6,485 stars today) and a new entrant **forrestchang/andrej-karpathy-skills** (1,364 stars today), showing the Claude Code ecosystem is rapidly spawning community-driven enhancement projects.",
+    "key_themes": [
+      "agent-skill-evolution",
+      "process-driven-visual-generation",
+      "reasoning-efficiency-pruning",
+      "latent-planning-limits",
+      "gemma4-ecosystem-dominance",
+      "claude-code-tooling-explosion"
+    ]
+  },
+  "researcher_notes": "**The agent skill infrastructure convergence is the most significant intellectual signal today.** Four independent papers — Externalization, Graph of Skills, Combee, and SkillClaw — all converge on the same thesis: the path to better LLM agents runs through better runtime infrastructure, not better base models. Externalization frames this through cognitive artifacts theory, arguing that memory stores, reusable skills, and interaction protocols *transform* hard cognitive problems into manageable ones. Graph of Skills operationalizes this with dependency-aware retrieval over skill graphs, showing that structured skill retrieval drastically reduces hallucination and token costs. Combee scales prompt learning across parallel agent traces — a critical capability as agent deployments grow. And SEVerA adds the missing safety layer, providing formal verification guarantees for self-evolving agent programs. Together, these papers sketch a maturing architecture for production-grade agent systems.\n\n**Think in Strokes, Not Pixels is today's sleeper hit with serious implications.** At 48 upvotes, it's the most engaged paper of the day, and for good reason: it introduces process-driven image generation that mimics how humans actually create images — plan, sketch, inspect, refine, with each step grounded in evolving visual states. This is fundamentally different from the one-shot generation paradigm that dominates current diffusion models. The interleaved reasoning trajectory approach could become a new paradigm for controllable generation, especially when combined with reasoning-capable multimodal models. Watch for this to influence video generation pipelines as well.\n\n**Graph-Based CoT Pruning tackles the overthinking problem head-on.** With 7 upvotes, this paper identifies two specific patterns of wasteful reasoning — Indiscriminate Reflection and Repetitive Reflection — and uses graph-based analysis to prune them. This is practically important because reasoning token costs are becoming a real bottleneck in production deployments. The key insight is that not all intermediate reasoning steps contribute to the final answer; many are redundant self-checks that a well-calibrated model shouldn't need.\n\n**The Depth Ceiling paper raises uncomfortable questions about CoT monitoring.** By showing that tiny transformers trained from scratch can discover multi-step planning strategies and execute them latently in a single forward pass — but only up to a sharp depth ceiling — it challenges the assumption that chain-of-thought monitoring can reliably detect model reasoning. If models can plan latently up to some depth, then CoT faithfulness is not guaranteed, and safety monitoring strategies that rely on inspecting intermediate reasoning may have blind spots.\n\n**HuggingFace model trends continue to be dominated by Gemma 4 and reasoning distillations.** The Qwen3.5-27B-Claude-4.6-Opus distillation at 2,544 likes represents a fascinating community dynamic: open-source practitioners are systematically extracting reasoning capabilities from proprietary models and packaging them into deployable weights. The emergence of GLM-5.1 (852 likes) and VoxCPM2 (595 likes) signals that Chinese labs are increasingly competitive in the trending model space. On GitHub, the explosion of Claude Code-adjacent tooling — superpowers (2,299 stars/day), andrej-karpathy-skills (1,364 stars/day), Archon (185 stars/day), claudian (200 stars/day) — suggests the coding agent ecosystem is rapidly diversifying beyond the core product.",
+  "papers": [
+    {
+      "id": "think-in-strokes-process-driven",
+      "title": "Think in Strokes, Not Pixels: Process-Driven Image Generation via Interleaved Reasoning",
+      "authors": ["Lei Zhang", "Junjiao Tian", "Zhipeng Fan", "Kunpeng Li", "Jialiang Wang"],
+      "affiliations": ["Apple"],
+      "summary": "Introduces process-driven image generation that decomposes synthesis into interleaved reasoning trajectories of thoughts and actions, mimicking how humans paint incrementally by planning layout, sketching, inspecting, and refining.",
+      "key_findings": [
+        "Multi-step generation paradigm decomposes image synthesis into an interleaved chain of thought-action pairs grounded in evolving visual states",
+        "Process-driven approach enables more controllable and interpretable image generation compared to one-shot methods",
+        "Unified multimodal models can learn to imagine chains of intermediate visual states when trained on text-image interleaved data"
+      ],
+      "tags": ["image-generation", "multimodal-reasoning", "interleaved-generation", "process-driven", "diffusion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 48, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04746",
+        "huggingface": "https://huggingface.co/papers/2604.04746",
+        "pdf": "https://arxiv.org/pdf/2604.04746"
+      }
+    },
+    {
+      "id": "combee-scaling-prompt-learning",
+      "title": "Combee: Scaling Prompt Learning for Self-Improving Language Model Agents",
+      "authors": ["Hanchen Li", "Runyuan He", "Qizheng Zhang", "Changxiu Ji", "Qiuyang Mang"],
+      "affiliations": ["University of Toronto", "Tsinghua University"],
+      "summary": "Scales prompt learning for LLM agents beyond single-agent settings, enabling efficient parallel prompt optimization from large sets of agentic traces to improve agent accuracy without parameter changes.",
+      "key_findings": [
+        "Parallel prompt learning from many agentic traces dramatically improves agent self-improvement efficiency",
+        "Scales beyond single-agent settings to accommodate growing agent deployment parallelism",
+        "Achieves significant accuracy gains through inference-time prompt optimization alone, without weight updates"
+      ],
+      "tags": ["prompt-learning", "agent-self-improvement", "scaling", "inference-time", "LLM-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 22, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04247",
+        "huggingface": "https://huggingface.co/papers/2604.04247",
+        "pdf": "https://arxiv.org/pdf/2604.04247"
+      }
+    },
+    {
+      "id": "severa-verified-self-evolving-agents",
+      "title": "SEVerA: Verified Synthesis of Self-Evolving Agents",
+      "authors": ["Debangshu Banerjee", "Changming Xu", "Gagandeep Singh"],
+      "affiliations": ["University of Illinois Urbana-Champaign"],
+      "summary": "Provides the first formal verification framework for self-evolving LLM agents, formulating agentic code generation as constrained learning to guarantee safety and correctness of autonomously synthesized agent programs.",
+      "key_findings": [
+        "First framework providing formal safety and correctness guarantees for self-evolving agent programs",
+        "Formulates agentic code generation as constrained learning with verifiable properties",
+        "Addresses critical reliability gaps in autonomous agent program synthesis and execution"
+      ],
+      "tags": ["formal-verification", "self-evolving-agents", "safety", "agent-synthesis", "constrained-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 22, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.25111",
+        "huggingface": "https://huggingface.co/papers/2603.25111",
+        "pdf": "https://arxiv.org/pdf/2603.25111"
+      }
+    },
+    {
+      "id": "externalization-llm-agents-review",
+      "title": "Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering",
+      "authors": ["Chenyu Zhou", "Huacan Chai", "Wenteng Chen", "Zihan Guo", "Rong Shan"],
+      "affiliations": ["Peking University", "Tsinghua University"],
+      "summary": "A comprehensive survey arguing that LLM agent capabilities are increasingly externalized into memory stores, reusable skills, interaction protocols, and harness engineering rather than embedded in model weights.",
+      "key_findings": [
+        "Agent capabilities shift from internal model weights to external runtime infrastructure (memory, skills, protocols)",
+        "Cognitive artifacts framework explains why externalization transforms hard cognitive problems into manageable ones",
+        "Harness engineering — the reliability layer around external modules — is an underappreciated but critical component"
+      ],
+      "tags": ["survey", "LLM-agents", "externalization", "memory", "skills", "cognitive-artifacts"],
+      "relevance": "high",
+      "engagement": {"upvotes": 10, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08224",
+        "huggingface": "https://huggingface.co/papers/2604.08224",
+        "pdf": "https://arxiv.org/pdf/2604.08224"
+      }
+    },
+    {
+      "id": "graph-of-skills-retrieval",
+      "title": "Graph of Skills: Dependency-Aware Structural Retrieval for Massive Agent Skills",
+      "authors": ["Dawei Li", "Zongxia Li", "Hongyang Du", "Xiyang Wu", "Shihang Gui"],
+      "affiliations": ["University of Maryland", "University of Virginia"],
+      "summary": "Introduces dependency-aware graph-based retrieval for massive skill libraries in agent systems, reducing context window saturation, hallucination, and latency when scaling to thousands of reusable skills.",
+      "key_findings": [
+        "Structural skill retrieval via dependency graphs outperforms flat retrieval at scale",
+        "Reduces token costs and hallucination by loading only relevant skills and their dependencies",
+        "Addresses a critical scaling bottleneck as production agent skill libraries grow to thousands of entries"
+      ],
+      "tags": ["skill-retrieval", "dependency-graphs", "agent-systems", "scaling", "context-efficiency"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05333",
+        "huggingface": "https://huggingface.co/papers/2604.05333",
+        "pdf": "https://arxiv.org/pdf/2604.05333"
+      }
+    },
+    {
+      "id": "graph-cot-pruning-overthinking",
+      "title": "Graph-Based Chain-of-Thought Pruning for Reducing Redundant Reflections in Reasoning LLMs",
+      "authors": ["Hongyuan Yuan", "Xinran He", "Run Shao", "Bolei He", "Xianwei Xue"],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "Identifies two problematic reasoning patterns (Indiscriminate Reflection and Repetitive Reflection) in CoT-trained LLMs and uses graph-based analysis to prune redundant intermediate reasoning, reducing token costs while maintaining quality.",
+      "key_findings": [
+        "Identifies Indiscriminate Reflection (broad low-impact checks) and Repetitive Reflection (redundant re-verification) as major sources of reasoning waste",
+        "Graph-based pruning removes redundant reasoning steps while preserving answer quality",
+        "Addresses a practical bottleneck: reasoning token costs in production deployments"
+      ],
+      "tags": ["reasoning-efficiency", "CoT-pruning", "overthinking", "graph-analysis", "LLM-optimization"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.05643",
+        "huggingface": "https://huggingface.co/papers/2604.05643",
+        "pdf": "https://arxiv.org/pdf/2604.05643"
+      }
+    },
+    {
+      "id": "flowinone-multimodal-flow-matching",
+      "title": "FlowInOne: Unifying Multimodal Generation as Image-in, Image-out Flow Matching",
+      "authors": ["Junchao Yi", "Rui Zhao", "Jiahao Tang", "Weixian Lei", "Linjie Li"],
+      "affiliations": ["Microsoft Research Asia", "University of Science and Technology of China"],
+      "summary": "Reformulates multimodal generation as a purely visual flow, converting all inputs (text, spatial layouts, editing instructions) into visual prompts for a single image-in, image-out flow matching model.",
+      "key_findings": [
+        "All modalities unified into visual prompts enabling a single flow matching model for diverse generation tasks",
+        "Removes text as mandatory intermediary in multimodal generation pipelines",
+        "Vision-centric formulation naturally supports editing, layout-to-image, and text-to-image in one architecture"
+      ],
+      "tags": ["multimodal-generation", "flow-matching", "unified-architecture", "image-generation", "visual-prompts"],
+      "relevance": "high",
+      "engagement": {"upvotes": 6, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06757",
+        "huggingface": "https://huggingface.co/papers/2604.06757",
+        "pdf": "https://arxiv.org/pdf/2604.06757"
+      }
+    },
+    {
+      "id": "depth-ceiling-latent-planning",
+      "title": "The Depth Ceiling: On the Limits of Large Language Models in Discovering Latent Planning",
+      "authors": ["Yi Xu", "Philipp Jettkant", "Laura Ruis"],
+      "affiliations": ["University College London"],
+      "summary": "Investigates whether LLMs can discover multi-step planning strategies and execute them latently within a single forward pass, revealing a sharp depth ceiling that massive scaling cannot overcome.",
+      "key_findings": [
+        "Tiny transformers can discover latent multi-step planning from scratch, but only up to a sharp depth limit",
+        "The depth ceiling persists regardless of model scale — massive scaling does not resolve it",
+        "Raises concerns about CoT monitoring reliability since models can reason latently within their depth ceiling"
+      ],
+      "tags": ["latent-reasoning", "planning", "CoT-monitoring", "safety", "transformer-limits"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06427",
+        "huggingface": "https://huggingface.co/papers/2604.06427",
+        "pdf": "https://arxiv.org/pdf/2604.06427"
+      }
+    },
+    {
+      "id": "fast-spatial-memory-elastic-ttt",
+      "title": "Fast Spatial Memory with Elastic Test-Time Training",
+      "authors": ["Ziqiao Ma", "Xueyang Yu", "Haoyu Zhen", "Yuncong Yang", "Joyce Chai"],
+      "affiliations": ["University of Michigan"],
+      "summary": "Proposes Elastic Test-Time Training that stabilizes inference-time weight updates using Fisher-weighted elastic priors, enabling long-context 3D reconstruction from arbitrarily long sequences without catastrophic forgetting.",
+      "key_findings": [
+        "Fisher-weighted elastic prior prevents catastrophic forgetting during test-time weight updates",
+        "Enables processing of arbitrarily long 3D reconstruction sequences in a single pass",
+        "Addresses key limitations of Large Chunk Test-Time Training that restricted input to single large chunks"
+      ],
+      "tags": ["test-time-training", "3D-reconstruction", "catastrophic-forgetting", "long-context", "spatial-memory"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07350",
+        "huggingface": "https://huggingface.co/papers/2604.07350",
+        "pdf": "https://arxiv.org/pdf/2604.07350"
+      }
+    },
+    {
+      "id": "beyond-hard-negatives-kd-retrieval",
+      "title": "Beyond Hard Negatives: The Importance of Score Distribution in Knowledge Distillation for Dense Retrieval",
+      "authors": ["Youngjoon Jang", "Seongtae Hong", "Hyeonseok Moon", "Heuiseok Lim"],
+      "affiliations": ["Korea University"],
+      "summary": "Demonstrates that focusing solely on hard negatives in knowledge distillation for retrieval prevents students from learning the full preference structure of the teacher, and shows that balanced score distribution improves generalization.",
+      "key_findings": [
+        "Hard-negative-only training prevents student models from learning the teacher's comprehensive preference structure",
+        "Balanced teacher score distribution across difficulty levels significantly improves retrieval generalization",
+        "Systematic data composition matters more than individual negative mining strategies"
+      ],
+      "tags": ["knowledge-distillation", "dense-retrieval", "hard-negatives", "score-distribution", "information-retrieval"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.04734",
+        "huggingface": "https://huggingface.co/papers/2604.04734",
+        "pdf": "https://arxiv.org/pdf/2604.04734"
+      }
+    },
+    {
+      "id": "dmax-parallel-decoding-dllm",
+      "title": "DMax: Aggressive Parallel Decoding for dLLMs",
+      "authors": ["Zigeng Chen", "Gongfan Fang", "Xinyin Ma", "Ruonan Yu", "Xinchao Wang"],
+      "affiliations": ["National University of Singapore"],
+      "summary": "Introduces a new paradigm for diffusion language models that reformulates decoding as progressive self-refinement from mask to token embeddings, enabling aggressive parallel decoding while mitigating error accumulation.",
+      "key_findings": [
+        "Progressive self-refinement decoding replaces binary mask-to-token transition in diffusion LLMs",
+        "On-Policy Uniform Training unifies masked and uniform dLLM training strategies",
+        "Achieves aggressive decoding parallelism while preserving generation quality"
+      ],
+      "tags": ["diffusion-LLM", "parallel-decoding", "inference-efficiency", "self-refinement", "language-generation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 3, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08302",
+        "huggingface": "https://huggingface.co/papers/2604.08302",
+        "pdf": "https://arxiv.org/pdf/2604.08302"
+      }
+    },
+    {
+      "id": "learning-to-hint-grpo",
+      "title": "Learning to Hint for Reinforcement Learning",
+      "authors": ["Yu Xia", "Canwen Xu", "Zhewei Yao", "Julian McAuley", "Yuxiong He"],
+      "affiliations": ["UC San Diego", "Microsoft Research"],
+      "summary": "Addresses the advantage collapse problem in GRPO by learning to generate optimal hints for hard questions, ensuring mixed rollout outcomes and non-zero learning signals instead of relying on static hint strategies.",
+      "key_findings": [
+        "Identifies and addresses advantage collapse in GRPO where all rollouts receive identical rewards on hard questions",
+        "Learned hint generation outperforms static or manually designed hint strategies",
+        "Recovers learning signal on previously unlearnable hard examples"
+      ],
+      "tags": ["GRPO", "reinforcement-learning", "hint-learning", "advantage-collapse", "reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 3, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.00698",
+        "huggingface": "https://huggingface.co/papers/2604.00698",
+        "pdf": "https://arxiv.org/pdf/2604.00698"
+      }
+    },
+    {
+      "id": "molmoweb-open-visual-web-agent",
+      "title": "MolmoWeb: Open Visual Web Agent and Open Data for the Open Web",
+      "authors": ["Tanmay Gupta", "Piper Wolters", "Zixian Ma", "Peter Sushko", "Rock Yuren Pang"],
+      "affiliations": ["Allen Institute for AI"],
+      "summary": "Introduces an open-source visual web agent with open training data and recipes, challenging the proprietary-model dominance in web automation and enabling reproducible community-driven progress.",
+      "key_findings": [
+        "Fully open-source web agent with released training data, recipes, and model weights",
+        "MolmoWebMix provides a large and diverse training mixture for web agent development",
+        "Demonstrates that open models can approach proprietary web agent performance with proper data and training"
+      ],
+      "tags": ["web-agents", "open-source", "visual-agents", "web-automation", "reproducibility"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08516",
+        "huggingface": "https://huggingface.co/papers/2604.08516",
+        "pdf": "https://arxiv.org/pdf/2604.08516"
+      }
+    },
+    {
+      "id": "openvlthinkerv2-multimodal-reasoning",
+      "title": "OpenVLThinkerV2: A Generalist Multimodal Reasoning Model for Multi-domain Visual Tasks",
+      "authors": ["Wenbo Hu", "Xin Chen", "Yan Gao-Tian", "Yihe Deng", "Nanyun Peng"],
+      "affiliations": ["UCLA", "Microsoft Research"],
+      "summary": "Addresses two challenges in extending GRPO to open-source multimodal generalist models: extreme variance in reward topologies across diverse visual tasks, and balancing fine-grained perception with multi-step reasoning.",
+      "key_findings": [
+        "Tackles reward topology variance across diverse visual task domains in GRPO training",
+        "Balances fine-grained visual perception with multi-step reasoning in a single generalist model",
+        "Extends GRPO success from text-only to open-source multimodal generalist models"
+      ],
+      "tags": ["multimodal-reasoning", "GRPO", "visual-tasks", "generalist-model", "reinforcement-learning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08539",
+        "huggingface": "https://huggingface.co/papers/2604.08539",
+        "pdf": "https://arxiv.org/pdf/2604.08539"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong",
+      "description": "A 27B parameter Qwen3.5 model distilled from Claude 4.6 Opus reasoning traces, combining open-weight accessibility with proprietary-model reasoning quality.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["reasoning-distillation", "qwen3.5", "claude-distilled", "unsloth"],
+      "metrics": {"downloads": 564664, "likes": 2544},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "google-gemma4-31b-it",
+      "name": "Gemma 4 31B Instruct",
+      "organization": "Google",
+      "description": "Google's flagship 31B instruction-tuned Gemma 4 model, supporting image-text-to-text generation with strong conversational capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "conversational", "google"],
+      "metrics": {"downloads": 1333678, "likes": 1569},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "hauhaucs-qwen35-9b-uncensored",
+      "name": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "An uncensored/abliterated variant of Qwen3.5-9B with aggressive safety filter removal, distributed in GGUF format for local deployment.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["uncensored", "qwen3.5", "abliterated", "gguf"],
+      "metrics": {"downloads": 821239, "likes": 1077},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's vision-language OCR model built on InternVL architecture for document understanding and text extraction tasks.",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": ["OCR", "vision-language", "document-understanding", "internvl"],
+      "metrics": {"downloads": 42622, "likes": 1130},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "zai-glm-51",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI",
+      "description": "Zhipu AI's GLM-5.1 model using mixture-of-experts with dynamic sparse attention, a next-generation Chinese-English language model.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["MoE", "dynamic-sparse-attention", "conversational", "Chinese-English"],
+      "metrics": {"downloads": 8465, "likes": 852},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "dealignai-gemma4-31b-crack",
+      "name": "Gemma-4-31B-JANG_4M-CRACK",
+      "organization": "dealignai",
+      "description": "An abliterated/uncensored variant of Gemma 4 31B distributed in MLX format for Apple Silicon deployment.",
+      "task_type": "text-generation",
+      "model_size": "31B",
+      "tags": ["abliterated", "uncensored", "gemma4", "mlx"],
+      "metrics": {"downloads": 59852, "likes": 855},
+      "source_url": "https://huggingface.co/dealignai/Gemma-4-31B-JANG_4M-CRACK"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "Void Model",
+      "organization": "Netflix",
+      "description": "Netflix's video inpainting and object removal model built on CogVideoX diffusion architecture for professional video editing workflows.",
+      "task_type": "video-inpainting",
+      "model_size": "unknown",
+      "tags": ["video-inpainting", "video-editing", "object-removal", "diffusion"],
+      "metrics": {"downloads": 0, "likes": 702},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "openbmb-voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB",
+      "description": "A tokenizer-free text-to-speech model supporting multilingual speech generation, creative voice design, and high-fidelity voice cloning.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["TTS", "tokenizer-free", "multilingual", "voice-cloning"],
+      "metrics": {"downloads": 1815, "likes": 595},
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "google-gemma4-26b-a4b-it",
+      "name": "Gemma 4 26B-A4B Instruct",
+      "organization": "Google",
+      "description": "Google's MoE variant with 26B total parameters but only 4B active, hitting a sweet spot for local deployment with strong multimodal capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": ["gemma4", "MoE", "efficient", "multimodal"],
+      "metrics": {"downloads": 1046548, "likes": 570},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "prism-bonsai-8b",
+      "name": "Bonsai-8B",
+      "organization": "Prism ML",
+      "description": "A 1-bit quantized 8B parameter model in GGUF format optimized for llama.cpp and CUDA inference, pushing the frontier of extreme quantization.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": ["1-bit", "gguf", "llama-cpp", "extreme-quantization"],
+      "metrics": {"downloads": 64863, "likes": 539},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "k2fsa-omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "A zero-shot multilingual voice cloning model supporting diverse languages with high-fidelity speech synthesis.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["zero-shot", "multilingual", "voice-cloning", "TTS"],
+      "metrics": {"downloads": 200591, "likes": 441},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "An extensible agent framework from NousResearch that grows with user needs, continuing its extraordinary GitHub trending run with sustained multi-thousand daily stars.",
+      "language": "Python",
+      "stars": 44991,
+      "stars_today": 6485,
+      "forks": 5800,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent-framework", "LLM-agents", "extensible"],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology that emphasizes deterministic, repeatable agent workflows. Leading today's GitHub trending.",
+      "language": "Shell",
+      "stars": 143841,
+      "stars_today": 2299,
+      "forks": 12294,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "development-methodology", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "forrestchang-karpathy-skills",
+      "name": "forrestchang/andrej-karpathy-skills",
+      "description": "A CLAUDE.md file derived from Andrej Karpathy's observations on LLM coding pitfalls, designed to improve Claude Code behavior through structured skill definitions.",
+      "language": "",
+      "stars": 10541,
+      "stars_today": 1364,
+      "forks": 708,
+      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
+      "tags": ["claude-code", "coding-skills", "best-practices"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "An agent-native personalized learning assistant that uses AI to provide adaptive tutoring experiences, continuing strong growth in the AI education vertical.",
+      "language": "Python",
+      "stars": 14955,
+      "stars_today": 1310,
+      "forks": 1994,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education", "AI-tutoring", "personalized-learning", "agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "opendataloader-pdf",
+      "name": "opendataloader-project/opendataloader-pdf",
+      "description": "Open-source PDF parser for AI-ready data extraction, automating PDF accessibility for downstream ML pipelines.",
+      "language": "Java",
+      "stars": 13868,
+      "stars_today": 1124,
+      "forks": 1159,
+      "url": "https://github.com/opendataloader-project/opendataloader-pdf",
+      "tags": ["PDF-parsing", "data-extraction", "document-AI", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "thecraighewitt-seomachine",
+      "name": "TheCraigHewitt/seomachine",
+      "description": "A specialized Claude Code workspace for creating long-form SEO-optimized blog content, combining AI writing with SEO analysis and optimization.",
+      "language": "Python",
+      "stars": 5229,
+      "stars_today": 725,
+      "forks": 760,
+      "url": "https://github.com/TheCraigHewitt/seomachine",
+      "tags": ["SEO", "content-generation", "claude-code", "marketing"],
+      "relevance": "medium"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "VoxCPM2: Tokenizer-free TTS for multilingual speech generation, creative voice design, and voice cloning with high fidelity.",
+      "language": "Python",
+      "stars": 7721,
+      "stars_today": 496,
+      "forks": 917,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": ["TTS", "voice-cloning", "multilingual", "speech-synthesis"],
+      "relevance": "high"
+    },
+    {
+      "id": "virattt-ai-hedge-fund",
+      "name": "virattt/ai-hedge-fund",
+      "description": "An AI-powered hedge fund team simulation using multiple LLM agents for financial analysis, trading strategy, and portfolio management.",
+      "language": "Python",
+      "stars": 50960,
+      "stars_today": 428,
+      "forks": 8831,
+      "url": "https://github.com/virattt/ai-hedge-fund",
+      "tags": ["finance", "trading", "multi-agent", "hedge-fund"],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for the language of financial markets, trained on market data to understand and predict financial patterns.",
+      "language": "Python",
+      "stars": 12219,
+      "stars_today": 245,
+      "forks": 2509,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "market-prediction", "time-series"],
+      "relevance": "high"
+    },
+    {
+      "id": "521xueweihan-hellogithub",
+      "name": "521xueweihan/HelloGitHub",
+      "description": "A curated collection of interesting and beginner-friendly open-source projects on GitHub, serving as a discovery platform for developers.",
+      "language": "Python",
+      "stars": 149885,
+      "stars_today": 267,
+      "forks": 11386,
+      "url": "https://github.com/521xueweihan/HelloGitHub",
+      "tags": ["open-source-discovery", "curated-list", "beginner-friendly"],
+      "relevance": "low"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "User-friendly AI interface supporting Ollama, OpenAI API, and other backends with a polished web UI for local LLM deployment.",
+      "language": "Python",
+      "stars": 130975,
+      "stars_today": 220,
+      "forks": 18566,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": ["LLM-interface", "local-deployment", "ollama", "web-ui"],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-bitnet",
+      "name": "microsoft/BitNet",
+      "description": "Microsoft's official inference framework for 1-bit LLMs, enabling extreme model compression with maintained generation quality.",
+      "language": "Python",
+      "stars": 38045,
+      "stars_today": 214,
+      "forks": 3399,
+      "url": "https://github.com/microsoft/BitNet",
+      "tags": ["1-bit-LLM", "model-compression", "efficient-inference", "microsoft"],
+      "relevance": "high"
+    },
+    {
+      "id": "yishentu-claudian",
+      "name": "YishenTu/claudian",
+      "description": "An Obsidian plugin that embeds Claude Code as an AI collaborator directly in your knowledge vault, bridging note-taking and AI coding.",
+      "language": "TypeScript",
+      "stars": 6863,
+      "stars_today": 200,
+      "forks": 401,
+      "url": "https://github.com/YishenTu/claudian",
+      "tags": ["obsidian-plugin", "claude-code", "knowledge-management", "IDE-integration"],
+      "relevance": "medium"
+    },
+    {
+      "id": "atilaahmettaner-tradingview-mcp",
+      "name": "atilaahmettaner/tradingview-mcp",
+      "description": "Real-time crypto and stock screening with advanced technical indicators and native Claude Desktop integration via MCP protocol.",
+      "language": "Python",
+      "stars": 1475,
+      "stars_today": 201,
+      "forks": 330,
+      "url": "https://github.com/atilaahmettaner/tradingview-mcp",
+      "tags": ["MCP", "trading", "technical-analysis", "claude-integration"],
+      "relevance": "medium"
+    },
+    {
+      "id": "coleam00-archon",
+      "name": "coleam00/Archon",
+      "description": "The first open-source harness builder for AI coding, making AI coding deterministic and repeatable through structured workflows.",
+      "language": "TypeScript",
+      "stars": 14453,
+      "stars_today": 185,
+      "forks": 2466,
+      "url": "https://github.com/coleam00/Archon",
+      "tags": ["AI-coding", "harness-builder", "deterministic", "open-source"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Skill Evolution and Infrastructure",
+      "description": "Four independent papers converge on the thesis that agent capabilities should be externalized into modular, evolvable, and verifiable runtime infrastructure rather than embedded in model weights.",
+      "related_paper_ids": ["externalization-llm-agents-review", "graph-of-skills-retrieval", "combee-scaling-prompt-learning", "severa-verified-self-evolving-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Process-Driven Visual Generation",
+      "description": "A shift from one-shot image synthesis to multi-step, reasoning-grounded generation processes that decompose creation into interleaved thought-action trajectories.",
+      "related_paper_ids": ["think-in-strokes-process-driven", "flowinone-multimodal-flow-matching"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Reasoning Efficiency and Overthinking Reduction",
+      "description": "Growing focus on pruning redundant reasoning steps, addressing advantage collapse in GRPO, and understanding the limits of latent vs. explicit reasoning in LLMs.",
+      "related_paper_ids": ["graph-cot-pruning-overthinking", "learning-to-hint-grpo", "depth-ceiling-latent-planning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Latent Planning Limits and Safety Implications",
+      "description": "Research revealing sharp depth ceilings on latent planning in transformers raises questions about the reliability of chain-of-thought monitoring for AI safety.",
+      "related_paper_ids": ["depth-ceiling-latent-planning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Gemma 4 Ecosystem Dominance",
+      "description": "Google's Gemma 4 family continues to dominate HuggingFace trending with multiple size variants, quantized versions, and community abliterations driving massive adoption.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code Tooling Ecosystem Explosion",
+      "description": "GitHub trending shows rapid diversification of Claude Code-adjacent projects including skills, harness builders, IDE plugins, and domain-specific workspaces.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-10T02:06:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-10T02:06:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-10T02:06:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-10T02:06:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-10T02:06:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
