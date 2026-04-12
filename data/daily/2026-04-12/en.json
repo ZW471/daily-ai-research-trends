@@ -1,0 +1,654 @@
+{
+  "version": "1.0",
+  "date": "2026-04-12",
+  "generated_at": "2026-04-12T03:00:00.000000+00:00",
+  "summary": {
+    "headline": "SFT generalization rethink surges to 190 upvotes reshaping post-training orthodoxy; ClawBench leaps to 122 testing agents on real-world tasks; GLM-5.1 MoE and Netflix void-model debut on HuggingFace; hermes-agent dominates GitHub at 6,438 stars/day",
+    "body": "April 12th sees **continued momentum on yesterday's breakout papers** with significant upvote growth, while the **model ecosystem diversifies** beyond Gemma 4. *Rethinking Generalization in Reasoning SFT* climbs to 190 upvotes (from 155 yesterday), cementing its status as the most impactful post-training paper this week. *ClawBench* surges from 83 to 122 upvotes as the agent evaluation community rallies around real-world task benchmarks. *NUMINA* holds strong at 107, and *MegaStyle* reaches 85 with growing community engagement (8 comments).\n\nThe **model landscape shifts** with two notable new arrivals: ZhipuAI's **GLM-5.1** debuts as a MoE architecture with 989 likes, and **Netflix's void-model** for video inpainting and object removal collects 760 likes before any downloads are recorded — signaling intense anticipation. Baidu's **Qianfan-OCR** at 1,136 likes represents a major push into vision-language OCR. The Gemma 4 ecosystem remains dominant with combined downloads exceeding 8M across all variants, while **Qwen3.5-27B-Claude-Opus-Reasoning-Distilled** continues its remarkable run at 2,582 likes.\n\nGitHub trends reveal an **agentic infrastructure buildout** accelerating further. NousResearch's *hermes-agent* leads at 6,438 stars/day (59K total), while **multica** (1,948 stars/day) and **Archon** (1,346 stars/day) represent competing visions for open-source agent orchestration. Microsoft's *markitdown* at 3,086 stars/day and *awesome-design-systems* at 2,050 stars/day show strong momentum in developer tooling beyond pure AI.",
+    "key_themes": [
+      "sft-generalization-momentum",
+      "agent-evaluation-maturation",
+      "moe-architecture-diversification",
+      "video-generation-control",
+      "agentic-infrastructure-buildout",
+      "vision-language-ocr-push"
+    ]
+  },
+  "researcher_notes": "**The SFT generalization paper's continued climb is the story of the week.** At 190 upvotes (up 35 from yesterday), *Rethinking Generalization in Reasoning SFT* is not just trending — it's forcing a genuine paradigm reassessment. The paper's core finding that cross-domain generalization in reasoning SFT is conditional rather than absent challenges the binary SFT-memorizes/RL-generalizes framing that has dominated post-training discourse for over a year. The practical implication is immediate: teams running reasoning SFT pipelines should extend training schedules and monitor for the U-shaped generalization curve the authors identify, where cross-domain performance dips before recovering. This paper alone may redirect significant compute allocation across the industry.\n\n**ClawBench's 47% upvote surge (83 to 122) signals growing frustration with synthetic agent benchmarks.** The agent evaluation community is clearly hungry for real-world grounding. Testing on 153 tasks across 144 live platforms — from booking appointments to submitting job applications — exposes a gap between synthetic benchmark performance and actual deployment readiness that the community has long suspected but lacked systematic evidence for. Combined with *Act Wisely* (31 upvotes), which tackles the meta-cognitive deficit where agents reflexively invoke tools when visual context suffices, and *Structured Distillation of Web Agent Capabilities* (15 upvotes), we're seeing agent research mature from capability demonstration to systematic engineering of reliability.\n\n**The model ecosystem is diversifying in important ways.** ZhipuAI's GLM-5.1 introduces a MoE architecture (989 likes) that breaks the Gemma 4 near-monopoly on trending, while Netflix's void-model (760 likes, 0 downloads) is a fascinating case study in brand-driven anticipation — the Netflix name alone generating significant pre-release interest for video inpainting. Baidu's Qianfan-OCR (1,136 likes) represents a serious enterprise-grade OCR push using InternVL architecture, targeting document understanding workflows. Meanwhile, the Bonsai-8B 1-bit model (561 likes) from Prism ML pushes the extreme quantization frontier, suggesting continued demand for models that can run on consumer hardware.\n\n**Video generation research is converging on controllability as the next frontier.** *LiVER* (5 upvotes) introduces renderer-based agent reasoning for lighting-grounded video generation, *Phantom* (2 upvotes) infuses physics priors into video dynamics, and *NUMINA* (107 upvotes) solves numerical alignment. These three papers collectively address the transition from \"can we generate video\" to \"can we generate *controllable, physically consistent* video\" — the gap that separates research demos from production tools in filmmaking and virtual production.\n\n**GitHub's agentic infrastructure explosion is entering a consolidation phase.** With hermes-agent (6,438 stars/day), multica (1,948 stars/day), Archon (1,346 stars/day), and superpowers (1,591 stars/day) all trending simultaneously, the market is clearly searching for the standard open-source agent orchestration layer. The Claude Code ecosystem continues generating satellite projects — *claude-code-best-practice* (1,475 stars/day) and *andrej-karpathy-skills* (1,066 stars/day) — while *reverse-SynthID* (552 stars/day) represents a provocative counter-movement: reverse-engineering Gemini's watermarking detection.",
+  "papers": [
+    {
+      "id": "rethinking-generalization-reasoning-sft",
+      "title": "Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability",
+      "authors": ["Qihan Ren", "Peng Wang", "Ruikun Cai", "Shuai Shao", "Dadi Guo"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "Challenges the prevailing narrative that SFT memorizes while RL generalizes for reasoning tasks, demonstrating that cross-domain generalization is conditional on optimization dynamics, training data composition, and base-model capability, with some reported failures being under-optimization artifacts.",
+      "key_findings": [
+        "Cross-domain generalization in reasoning SFT is conditional rather than absent, jointly shaped by optimization dynamics, data, and base-model capability",
+        "Previously reported SFT failures are under-optimization artifacts where cross-domain performance follows a U-shaped curve, dipping before recovering",
+        "Long CoT supervision with extended training schedules enables genuine cross-domain generalization comparable to RL approaches"
+      ],
+      "tags": ["SFT", "reinforcement-learning", "reasoning", "generalization", "chain-of-thought", "post-training"],
+      "relevance": "high",
+      "engagement": {"upvotes": 190, "comments": 6},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06628",
+        "huggingface": "https://huggingface.co/papers/2604.06628",
+        "pdf": "https://arxiv.org/pdf/2604.06628"
+      }
+    },
+    {
+      "id": "clawbench-everyday-online-tasks",
+      "title": "ClawBench: Can AI Agents Complete Everyday Online Tasks?",
+      "authors": ["Yuxuan Zhang", "Yubo Wang", "Yipeng Zhu", "Penghui Du", "Junwen Miao"],
+      "affiliations": ["Tsinghua University", "Carnegie Mellon University"],
+      "summary": "Introduces an evaluation framework of 153 real-world online tasks across 144 live platforms spanning 15 categories, providing the most realistic testbed to date for AI agent evaluation on everyday tasks like purchases, appointments, and job applications.",
+      "key_findings": [
+        "153 real-world tasks across 144 live platforms expose a significant gap between synthetic benchmark performance and real-world agent capability",
+        "Tasks span 15 real-life domains including shopping, booking, and professional applications",
+        "Current frontier agents struggle significantly with the variability and complexity of live web platforms"
+      ],
+      "tags": ["agent-evaluation", "web-agents", "benchmark", "real-world-tasks", "AI-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 122, "comments": 5},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08523",
+        "huggingface": "https://huggingface.co/papers/2604.08523",
+        "pdf": "https://arxiv.org/pdf/2604.08523"
+      }
+    },
+    {
+      "id": "numina-numerical-alignment-video",
+      "title": "When Numbers Speak: Aligning Textual Numerals and Visual Instances in Text-to-Video Diffusion Models",
+      "authors": ["Zhengyang Sun", "Yu Chen", "Xin Zhou", "Xiaofan Li", "Xiwu Chen"],
+      "affiliations": ["Peking University", "Tencent"],
+      "summary": "Introduces NUMINA, a training-free identify-then-guide framework that solves numerical alignment in text-to-video diffusion models by selecting discriminative attention heads to derive countable latent layouts and modulating cross-attention for accurate object counts.",
+      "key_findings": [
+        "Training-free framework achieves significant improvement in generating correct object counts in video diffusion",
+        "Identifies discriminative self- and cross-attention heads that can derive countable latent layouts",
+        "Conservative layout refinement and cross-attention modulation guide generation without retraining"
+      ],
+      "tags": ["text-to-video", "diffusion-models", "numerical-alignment", "attention-mechanism", "training-free"],
+      "relevance": "high",
+      "engagement": {"upvotes": 107, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08546",
+        "huggingface": "https://huggingface.co/papers/2604.08546",
+        "pdf": "https://arxiv.org/pdf/2604.08546"
+      }
+    },
+    {
+      "id": "megastyle-diverse-scalable-style",
+      "title": "MegaStyle: Constructing Diverse and Scalable Style Dataset via Consistent Text-to-Image Style Mapping",
+      "authors": ["Junyao Gao", "Sibo Liu", "Jiaxing Li", "Yanan Sun", "Yuanpeng Tu"],
+      "affiliations": ["Tencent", "University of Science and Technology of China"],
+      "summary": "Introduces a scalable data curation pipeline that constructs an intra-style consistent, inter-style diverse dataset with 170K style prompts and 400K content prompts by leveraging consistent text-to-image style mapping capabilities of large generative models.",
+      "key_findings": [
+        "Leverages consistent text-to-image style mapping to bootstrap massive, diverse style datasets without manual curation",
+        "Curates 170K style prompts and 400K content prompts with intra-style consistency and inter-style diversity",
+        "Enables significant improvements in style transfer quality and generalization across diverse artistic styles"
+      ],
+      "tags": ["style-transfer", "text-to-image", "dataset-curation", "generative-models", "data-pipeline"],
+      "relevance": "high",
+      "engagement": {"upvotes": 85, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08364",
+        "huggingface": "https://huggingface.co/papers/2604.08364",
+        "pdf": "https://arxiv.org/pdf/2604.08364"
+      }
+    },
+    {
+      "id": "lpm-video-character-performance",
+      "title": "LPM 1.0: Video-based Character Performance Model",
+      "authors": ["Ailing Zeng", "Casper Yang", "Chauncey Ge", "Eddie Zhang", "Garvey Xu"],
+      "affiliations": ["Tencent", "Shanghai AI Laboratory"],
+      "summary": "Addresses the performance trilemma of high expressiveness, real-time inference, and long-horizon identity stability in video-based character performance modeling, with a focus on conversational scenarios where characters must simultaneously speak, gesture, and emote.",
+      "key_findings": [
+        "Identifies and addresses the performance trilemma: expressiveness, real-time inference, and identity stability",
+        "Focuses on conversation as the most comprehensive performance scenario requiring simultaneous speech, gesture, and emotion",
+        "Achieves video-based character performance learning as a viable alternative to traditional 3D pipelines"
+      ],
+      "tags": ["character-animation", "video-generation", "performance-capture", "real-time", "identity-preservation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 38, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07823",
+        "huggingface": "https://huggingface.co/papers/2604.07823",
+        "pdf": "https://arxiv.org/pdf/2604.07823"
+      }
+    },
+    {
+      "id": "act-wisely-meta-cognitive-tool-use",
+      "title": "Act Wisely: Cultivating Meta-Cognitive Tool Use in Agentic Multimodal Models",
+      "authors": ["Shilin Yan", "Jintao Tong", "Hongwei Xue", "Xiaojun Tang", "Yangyang Wang"],
+      "affiliations": ["ByteDance", "Peking University"],
+      "summary": "Addresses the meta-cognitive deficit in agentic multimodal models where agents reflexively invoke tools even when queries are resolvable from raw visual context, causing severe latency and cascading errors.",
+      "key_findings": [
+        "Current agents suffer from blind tool invocation, reflexively using tools even when visual context suffices",
+        "Meta-cognitive training improves the arbitration between internal knowledge and external tool queries",
+        "Reducing unnecessary tool invocations significantly decreases latency and cascading error rates"
+      ],
+      "tags": ["multimodal-agents", "meta-cognition", "tool-use", "efficiency", "visual-reasoning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 31, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08545",
+        "huggingface": "https://huggingface.co/papers/2604.08545",
+        "pdf": "https://arxiv.org/pdf/2604.08545"
+      }
+    },
+    {
+      "id": "openspatial-data-engine",
+      "title": "OpenSpatial: A Principled Data Engine for Empowering Spatial Intelligence",
+      "authors": ["Jianhui Liu", "Haoze Sun", "Wenbo Li", "Yanbing Zhang", "Rui Yang"],
+      "affiliations": ["Baidu", "Chinese Academy of Sciences"],
+      "summary": "Introduces an open-source data engine for generating high-quality spatial data, addressing the absence of principled open-source systems for spatial understanding — a fundamental cornerstone of human-level intelligence.",
+      "key_findings": [
+        "Elucidates design principles for robust spatial data generation systems",
+        "Provides an open-source engine for high-quality, extensive-scale spatial data production",
+        "Bridges the gap between domain-specific spatial data work and principled, generalizable spatial intelligence"
+      ],
+      "tags": ["spatial-intelligence", "data-engine", "open-source", "3D-understanding", "spatial-reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 28, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07296",
+        "huggingface": "https://huggingface.co/papers/2604.07296",
+        "pdf": "https://arxiv.org/pdf/2604.07296"
+      }
+    },
+    {
+      "id": "fit-virtual-try-on",
+      "title": "FIT: A Large-Scale Dataset for Fit-Aware Virtual Try-On",
+      "authors": ["Johanna Karras", "Yuanhao Wang", "Yingwei Li", "Ira Kemelmacher-Shlizerman"],
+      "affiliations": ["University of Washington", "Google Research"],
+      "summary": "Addresses a critical gap in virtual try-on research: the accuracy of garment fit, providing the first dataset with precise garment and body size annotations to enable realistic depiction of how different sizes look on different body types.",
+      "key_findings": [
+        "First dataset providing precise garment and body size annotations for fit-aware virtual try-on",
+        "Demonstrates that existing VTO methods largely overlook garment fit accuracy despite strong appearance visualization",
+        "Enables realistic depiction of size interactions (e.g., extra-large shirt on extra-small person)"
+      ],
+      "tags": ["virtual-try-on", "fashion-AI", "dataset", "garment-fit", "body-estimation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 16, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08526",
+        "huggingface": "https://huggingface.co/papers/2604.08526",
+        "pdf": "https://arxiv.org/pdf/2604.08526"
+      }
+    },
+    {
+      "id": "structured-distillation-web-agents",
+      "title": "Structured Distillation of Web Agent Capabilities Enables Generalization",
+      "authors": ["Xing Han Lu", "Siva Reddy"],
+      "affiliations": ["McGill University", "Mila - Quebec AI Institute"],
+      "summary": "Introduces Agent-as-Annotators, a framework that structures synthetic trajectory generation for web agents by analogy to human annotation roles, using Gemini 3 Pro as teacher to generate 3,000 trajectories and fine-tune a 9B-parameter student with pure supervised learning.",
+      "key_findings": [
+        "Agent-as-Annotators framework replaces Task Designer, Annotator, and Supervisor with modular LLM components",
+        "3,000 structured trajectories across six web environments enable effective fine-tuning of a 9B student model",
+        "Structured distillation enables generalization beyond the training environments, unlike unstructured approaches"
+      ],
+      "tags": ["web-agents", "knowledge-distillation", "synthetic-data", "agent-training", "LLM-as-teacher"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 15, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07776",
+        "huggingface": "https://huggingface.co/papers/2604.07776",
+        "pdf": "https://arxiv.org/pdf/2604.07776"
+      }
+    },
+    {
+      "id": "tempo-small-vlm-video-compression",
+      "title": "Small Vision-Language Models are Smart Compressors for Long Video Understanding",
+      "authors": ["Junjie Fei", "Jun Chen", "Zechun Liu", "Yunyang Xiong", "Chong Zhou"],
+      "affiliations": ["Meta AI", "University of Texas at Austin"],
+      "summary": "Proposes Tempo, an efficient query-aware framework that leverages small VLMs to compress long videos for downstream understanding, addressing the context limit bottleneck that prevents hour-long video processing in multimodal LLMs.",
+      "key_findings": [
+        "Small VLMs serve as effective query-aware compressors that preserve decisive moments while discarding irrelevant content",
+        "Addresses the lost-in-the-middle phenomenon that plagues dense visual streams in hour-long videos",
+        "Outperforms heuristic approaches like sparse sampling and uniform pooling that blindly sacrifice fidelity"
+      ],
+      "tags": ["long-video", "video-understanding", "VLM", "compression", "multimodal"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08120",
+        "huggingface": "https://huggingface.co/papers/2604.08120",
+        "pdf": "https://arxiv.org/pdf/2604.08120"
+      }
+    },
+    {
+      "id": "viva-video-generative-value-model",
+      "title": "ViVa: A Video-Generative Value Model for Robot Reinforcement Learning",
+      "authors": ["Jindi Lv", "Hao Li", "Jie Li", "Yifei Nie", "Fankun Kong"],
+      "affiliations": ["Peking University", "Beijing Institute of Technology"],
+      "summary": "Builds value functions on top of video generation models rather than VLMs for robot RL, addressing the inability of VLM-based value models to capture temporal dynamics needed for reliable value estimation in long-horizon manipulation tasks.",
+      "key_findings": [
+        "Video generation models capture temporal dynamics better than VLMs for value estimation in robot tasks",
+        "Video-generative value models enable more reliable assessment of task progress in long-horizon manipulation",
+        "Addresses partial observability and delayed feedback challenges in real-world robot deployment"
+      ],
+      "tags": ["robot-learning", "reinforcement-learning", "video-generation", "value-function", "manipulation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08168",
+        "huggingface": "https://huggingface.co/papers/2604.08168",
+        "pdf": "https://arxiv.org/pdf/2604.08168"
+      }
+    },
+    {
+      "id": "automating-database-native-functions",
+      "title": "Automating Database-Native Function Code Synthesis with LLMs",
+      "authors": ["Wei Zhou", "Xuanhe Zhou", "Qikang He", "Guoliang Li", "Bingsheng He"],
+      "affiliations": ["Tsinghua University", "National University of Singapore"],
+      "summary": "Addresses the growing demand for automatic database native function synthesis, showing that generic LLM code generation tools are too imprecise for database-specific development where context-sensitive kernel integration is critical.",
+      "key_findings": [
+        "Generic LLM code generation tools hallucinate and overlook critical context in database function synthesis",
+        "Database native functions require specialized approaches that understand kernel-level integration patterns",
+        "Proposes a domain-adapted framework that significantly outperforms generic code generation for database functions"
+      ],
+      "tags": ["databases", "code-generation", "LLM", "systems", "function-synthesis"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06231",
+        "huggingface": "https://huggingface.co/papers/2604.06231",
+        "pdf": "https://arxiv.org/pdf/2604.06231"
+      }
+    },
+    {
+      "id": "sim1-physics-aligned-simulator",
+      "title": "SIM1: Physics-Aligned Simulator as Zero-Shot Data Scaler in Deformable Worlds",
+      "authors": ["Yunsong Zhou", "Hangxu Liu", "Xuekun Jiang", "Xing Shen", "Yuanzhen Zhou"],
+      "affiliations": ["Shanghai AI Laboratory", "Fudan University"],
+      "summary": "Posits that simulation fails for deformable object manipulation because of rigid-body abstractions and introduces a physics-aligned simulator that produces realistic cloth interaction data for zero-shot sim-to-real transfer.",
+      "key_findings": [
+        "Prevailing sim-to-real pipelines fail for deformable objects due to rigid-body abstraction roots",
+        "Physics-aligned simulation of cloth and deformable dynamics enables zero-shot real-world transfer",
+        "Addresses the data-intensive regime of deformable object manipulation in embodied learning"
+      ],
+      "tags": ["simulation", "deformable-objects", "sim-to-real", "robot-manipulation", "physics"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 10, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08544",
+        "huggingface": "https://huggingface.co/papers/2604.08544",
+        "pdf": "https://arxiv.org/pdf/2604.08544"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "Community-distilled 27B model transferring Claude 4.6 Opus reasoning capabilities into Qwen3.5 architecture using Unsloth, representing the most popular reasoning distillation on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["reasoning-distillation", "qwen3.5", "claude-opus", "unsloth"],
+      "metrics": {"downloads": 566643, "likes": 2582},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "Gemma 4 31B IT",
+      "organization": "Google",
+      "description": "Google's flagship 31B instruction-tuned Gemma 4 model supporting image-text-to-text tasks, leading the Gemma 4 family with over 2M downloads and strong multimodal conversational capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["gemma4", "multimodal", "conversational", "google"],
+      "metrics": {"downloads": 2026015, "likes": 1731},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Enterprise-grade OCR model built on InternVL architecture for vision-language feature extraction, representing Baidu's push into document understanding and optical character recognition.",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": ["OCR", "vision-language", "InternVL", "document-understanding"],
+      "metrics": {"downloads": 44379, "likes": 1136},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "qwen35-9b-uncensored",
+      "name": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (Community)",
+      "description": "Abliterated 9B Qwen3.5 model with safety filters removed, leading the uncensored model category with nearly 900K downloads and strong community adoption.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["uncensored", "abliterated", "qwen3.5", "GGUF"],
+      "metrics": {"downloads": 868534, "likes": 1098},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "zai-glm-51",
+      "name": "GLM-5.1",
+      "organization": "ZhipuAI",
+      "description": "New Mixture-of-Experts language model from ZhipuAI using a novel GLM MoE DSA architecture, debuting with strong community interest at 989 likes and positioning as a competitor to Gemma and Qwen families.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["MoE", "GLM", "conversational", "ZhipuAI"],
+      "metrics": {"downloads": 23998, "likes": 989},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "dealignai-gemma-4-31b-crack",
+      "name": "Gemma-4-31B-JANG_4M-CRACK",
+      "organization": "DealignAI (Community)",
+      "description": "Abliterated Gemma 4 31B variant optimized for MLX, removing alignment restrictions while preserving the base model's capabilities.",
+      "task_type": "text-generation",
+      "model_size": "31B",
+      "tags": ["abliterated", "gemma4", "MLX", "uncensored"],
+      "metrics": {"downloads": 89753, "likes": 931},
+      "source_url": "https://huggingface.co/dealignai/Gemma-4-31B-JANG_4M-CRACK"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "void-model",
+      "organization": "Netflix",
+      "description": "Netflix's video inpainting model for object removal and video editing, built on CogVideoX diffusion architecture, generating intense anticipation with 760 likes before recording any downloads.",
+      "task_type": "video-inpainting",
+      "model_size": "unknown",
+      "tags": ["video-inpainting", "object-removal", "CogVideoX", "diffusion"],
+      "metrics": {"downloads": 0, "likes": 760},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "openbmb-voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB",
+      "description": "Tokenizer-free text-to-speech model for multilingual speech generation, creative voice design, and true-to-life voice cloning, representing a novel approach to TTS without traditional tokenization.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["TTS", "multilingual", "voice-cloning", "tokenizer-free"],
+      "metrics": {"downloads": 5722, "likes": 699},
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "google-gemma-4-26b-a4b-it",
+      "name": "Gemma 4 26B-A4B IT",
+      "organization": "Google",
+      "description": "Google's efficient MoE variant of Gemma 4 with 26B total parameters and 4B active parameters, offering strong performance-per-compute ratio with over 1.5M downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B-A4B",
+      "tags": ["gemma4", "MoE", "efficient", "multimodal"],
+      "metrics": {"downloads": 1523413, "likes": 609},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "prism-bonsai-8b",
+      "name": "Bonsai-8B-gguf",
+      "organization": "Prism ML",
+      "description": "1-bit quantized 8B model pushing extreme quantization boundaries for consumer hardware deployment, available in GGUF format for llama.cpp compatibility.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": ["1-bit", "extreme-quantization", "GGUF", "llama-cpp"],
+      "metrics": {"downloads": 71661, "likes": 561},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "k2fsa-omnivoice",
+      "name": "OmniVoice",
+      "organization": "K2-FSA",
+      "description": "Zero-shot multilingual voice cloning model with 340K+ downloads, supporting diverse voice synthesis scenarios across multiple languages.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["zero-shot", "voice-cloning", "multilingual", "TTS"],
+      "metrics": {"downloads": 340361, "likes": 501},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "tencent-hy-omniweaving",
+      "name": "HY-OmniWeaving",
+      "organization": "Tencent",
+      "description": "Tencent's Hunyuan OmniWeaving diffusion model for generative tasks, newly released with 248 likes and zero downloads indicating a fresh launch.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["Hunyuan", "diffusion", "generative"],
+      "metrics": {"downloads": 0, "likes": 248},
+      "source_url": "https://huggingface.co/tencent/HY-OmniWeaving"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Open-source agent platform from NousResearch that 'grows with you', leading GitHub trending with explosive growth of 6,438 stars/day, signaling massive demand for open agent orchestration.",
+      "language": "Python",
+      "stars": 59290,
+      "stars_today": 6438,
+      "forks": 7880,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "open-source", "LLM-agents", "orchestration"],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "Microsoft's Python tool for converting files and office documents to Markdown, sustaining strong momentum at 3,086 stars/day as document-to-markdown conversion becomes essential for AI pipelines.",
+      "language": "Python",
+      "stars": 102329,
+      "stars_today": 3086,
+      "forks": 6330,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "Microsoft", "data-pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "alexpate-awesome-design-systems",
+      "name": "alexpate/awesome-design-systems",
+      "description": "Curated collection of design systems seeing a surge of 2,050 stars/day, reflecting growing intersection of design systems with AI-assisted UI generation workflows.",
+      "language": "",
+      "stars": 22455,
+      "stars_today": 2050,
+      "forks": 1391,
+      "url": "https://github.com/alexpate/awesome-design-systems",
+      "tags": ["design-systems", "UI", "awesome-list", "frontend"],
+      "relevance": "medium"
+    },
+    {
+      "id": "multica-ai-multica",
+      "name": "multica-ai/multica",
+      "description": "Open-source managed agents platform that turns coding agents into real teammates with task assignment, progress tracking, and skill compounding — a direct competitor in the agent orchestration space.",
+      "language": "TypeScript",
+      "stars": 7994,
+      "stars_today": 1948,
+      "forks": 1015,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["agent-platform", "managed-agents", "task-management", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "Agentic skills framework and software development methodology, maintaining strong momentum at 1,591 stars/day with 147K total stars as the dominant Claude Code skills ecosystem project.",
+      "language": "Shell",
+      "stars": 147214,
+      "stars_today": 1591,
+      "forks": 12643,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agentic-skills", "development-methodology", "Claude-Code", "framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "shanraisshan-claude-code-best-practice",
+      "name": "shanraisshan/claude-code-best-practice",
+      "description": "Community-driven best practices for Claude Code, continuing to attract 1,475 stars/day as developers optimize their AI coding workflows.",
+      "language": "HTML",
+      "stars": 37129,
+      "stars_today": 1475,
+      "forks": 3475,
+      "url": "https://github.com/shanraisshan/claude-code-best-practice",
+      "tags": ["Claude-Code", "best-practices", "AI-coding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "coleam00-archon",
+      "name": "coleam00/Archon",
+      "description": "First open-source harness builder for AI coding, making AI coding deterministic and repeatable, gaining 1,346 stars/day as the tooling layer matures.",
+      "language": "TypeScript",
+      "stars": 16493,
+      "stars_today": 1346,
+      "forks": 2642,
+      "url": "https://github.com/coleam00/Archon",
+      "tags": ["AI-coding", "harness-builder", "deterministic", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "VoxCPM2 tokenizer-free TTS system for multilingual speech generation and true-to-life voice cloning, trending alongside the HuggingFace model release at 1,084 stars/day.",
+      "language": "Python",
+      "stars": 9940,
+      "stars_today": 1084,
+      "forks": 1163,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": ["TTS", "voice-cloning", "multilingual", "tokenizer-free"],
+      "relevance": "high"
+    },
+    {
+      "id": "forrestchang-karpathy-skills",
+      "name": "forrestchang/andrej-karpathy-skills",
+      "description": "A CLAUDE.md file derived from Andrej Karpathy's observations on LLM coding pitfalls, gaining 1,066 stars/day as the community codifies expert knowledge into agent configuration.",
+      "language": "",
+      "stars": 13695,
+      "stars_today": 1066,
+      "forks": 937,
+      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
+      "tags": ["Claude-Code", "CLAUDE.md", "LLM-coding", "best-practices"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "Agent-native personalized learning assistant from HKU, gaining 837 stars/day as AI tutoring applications mature from demos to deployable systems.",
+      "language": "Python",
+      "stars": 16808,
+      "stars_today": 837,
+      "forks": 2207,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education", "AI-tutor", "personalized-learning", "agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "opendataloader-pdf",
+      "name": "opendataloader-project/opendataloader-pdf",
+      "description": "Open-source PDF parser for AI-ready data that automates PDF accessibility, gaining 775 stars/day as document parsing infrastructure grows alongside RAG adoption.",
+      "language": "Java",
+      "stars": 15639,
+      "stars_today": 775,
+      "forks": 1327,
+      "url": "https://github.com/opendataloader-project/opendataloader-pdf",
+      "tags": ["PDF-parsing", "document-AI", "open-source", "RAG"],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "Foundation model for the language of financial markets, gaining 595 stars/day as domain-specific foundation models expand beyond general NLP into specialized verticals.",
+      "language": "Python",
+      "stars": 14332,
+      "stars_today": 595,
+      "forks": 2824,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "domain-specific", "markets"],
+      "relevance": "high"
+    },
+    {
+      "id": "aloshdenny-reverse-synthid",
+      "name": "aloshdenny/reverse-SynthID",
+      "description": "Reverse engineering Gemini's SynthID watermark detection, a provocative project gaining 552 stars/day that probes the robustness of AI content authentication systems.",
+      "language": "Python",
+      "stars": 2143,
+      "stars_today": 552,
+      "forks": 192,
+      "url": "https://github.com/aloshdenny/reverse-SynthID",
+      "tags": ["watermarking", "SynthID", "security-research", "reverse-engineering"],
+      "relevance": "medium"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "Adaptive web scraping framework handling everything from single requests to full-scale crawls, trending at 417 stars/day as AI data pipelines drive demand for robust web scraping.",
+      "language": "Python",
+      "stars": 36222,
+      "stars_today": 417,
+      "forks": 3092,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": ["web-scraping", "data-pipeline", "crawling", "automation"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Post-Training Orthodoxy Under Siege",
+      "description": "The SFT generalization paper's surge to 190 upvotes is forcing a fundamental reassessment of the SFT-memorizes/RL-generalizes binary, with implications for compute allocation and training pipeline design across the industry.",
+      "related_paper_ids": ["rethinking-generalization-reasoning-sft"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Real-World Agent Evaluation Maturation",
+      "description": "ClawBench, Act Wisely, and Structured Distillation collectively push agent research from capability demos to systematic engineering, with live-platform testing exposing the gap between synthetic benchmarks and deployment readiness.",
+      "related_paper_ids": ["clawbench-everyday-online-tasks", "act-wisely-meta-cognitive-tool-use", "structured-distillation-web-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Controllable Video Generation",
+      "description": "NUMINA, LPM 1.0, and physics-infused approaches converge on making video generation controllable and physically consistent — the bridge from research demos to production tools in filmmaking and virtual production.",
+      "related_paper_ids": ["numina-numerical-alignment-video", "lpm-video-character-performance", "sim1-physics-aligned-simulator"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Model Ecosystem Diversification",
+      "description": "GLM-5.1's MoE debut, Netflix's void-model anticipation, and Baidu's OCR push break the Gemma 4 near-monopoly on trending, while extreme quantization (Bonsai 1-bit) expands consumer hardware accessibility.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Infrastructure Consolidation",
+      "description": "With hermes-agent, multica, Archon, and superpowers all trending simultaneously, the open-source agent orchestration space is entering a competitive consolidation phase seeking the standard platform layer.",
+      "related_paper_ids": ["clawbench-everyday-online-tasks", "act-wisely-meta-cognitive-tool-use"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Data Engine and Spatial Intelligence",
+      "description": "OpenSpatial, MegaStyle, and FIT each tackle the data bottleneck from different angles — spatial understanding, style diversity, and garment fit — reflecting a maturation from model architecture innovation to training data engineering.",
+      "related_paper_ids": ["openspatial-data-engine", "megastyle-diverse-scalable-style", "fit-virtual-try-on"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-04-12T03:00:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d",
+      "checked_at": "2026-04-12T03:00:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-04-12T03:00:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-04-12T03:00:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-12T03:00:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
