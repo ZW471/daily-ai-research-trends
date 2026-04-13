@@ -1,0 +1,682 @@
+{
+  "version": "1.0",
+  "date": "2026-04-13",
+  "generated_at": "2026-04-13T02:15:00.000000+00:00",
+  "summary": {
+    "headline": "SFT泛化能力获条件性验证引爆294赞；ClawBench以153项真实任务检验AI智能体；MegaStyle将风格数据集扩展至17万提示词；GitHub上智能体工具生态集中爆发",
+    "body": "4月13日的研究版图被一项颠覆性成果主导。**《重新审视推理SFT中的泛化》**（294赞）证明，监督微调的跨领域泛化能力并非缺失，而是受优化动态、训练数据和基座模型能力的条件性影响——此前报告的部分失败实际上是训练不充分的假象。这是近几周最高互动量的论文，可能重塑社区对推理模型训练方法的认知。\n\n**ClawBench**（243赞）推出了迄今最全面的真实世界智能体评测：153项日常在线任务覆盖144个真实平台，涵盖购物、预约、求职申请等15个类别。结果表明，即使是最先进的模型在人类轻松完成的日常任务上仍然表现不佳，为智能体能力提供了清醒的现实检验。同时，**MegaStyle**（92赞）利用一致的文本到图像风格映射构建包含17万风格提示词的数据集，**LPM 1.0**（55赞）则攻克视频角色生成中的性能三难困境。\n\n热门模型榜单被Gemma-4全面占据：Google家族涵盖31B稠密、26B-A4B混合专家、E4B和E2B多模态版本，总下载量超670万。Claude蒸馏版Qwen3.5-27B继续称霸，以57.8万下载和2599赞领跑社区。新入场者GLM-5.1（1071赞）和MiniMax-M2.7持续加剧中国大模型竞争。在GitHub上，AI智能体工具生态出现超级增长：NousResearch的hermes-agent单日获得7454星，Claude Code最佳实践、记忆插件和智能体平台集体霸榜。",
+    "key_themes": [
+      "sft-vs-rl-generalization",
+      "real-world-agent-evaluation",
+      "style-and-visual-generation",
+      "video-understanding-and-generation",
+      "agent-tooling-ecosystem",
+      "open-weight-model-competition"
+    ]
+  },
+  "researcher_notes": "**《重新审视泛化》论文是对一个广泛误解的里程碑式纠正。** 业界流行的观点——SFT只能记忆而RL才能泛化——已经深刻影响了训练流程，推动团队即使在SFT可能足够的情况下也转向昂贵的RL阶段。这篇论文揭示了远比预期更为细腻的图景：SFT过程中的跨领域性能呈非单调轨迹（先下降后回升），一些被报告的SFT失败实际上只是训练不充分。实际意义重大：团队可能因过早放弃SFT转向RL而浪费了本可获得的性能。294赞和7条评论反映了这一发现的深远共鸣。\n\n**ClawBench正是智能体社区所需的基准测试。** 不同于合成环境或精选的网页任务，这153项任务在144个*真实*平台上测试用户真正关心的事务：完成购物、预约、提交申请。该框架通过自动评判器衡量真实完成率，结果令人警醒——表明智能体的能力远比演示驱动的叙事所暗示的更加脆弱。这与结构化蒸馏论文（17赞）形成互补，后者展示了Agent-as-Annotators可以生成合成轨迹来训练更小的网页智能体，但通往真实世界可靠性的差距依然巨大。\n\n**视频和角色生成领域正在加速升温。** LPM 1.0（55赞）攻克了「性能三难困境」——在视频角色中同时实现高表达力、实时推理和长期身份稳定性。Matrix-Game 3.0将交互式世界模型推至720p实时长视频生成。加上ViVa（通过视频生成价值模型进行机器人强化学习）和Tempo（小型VLM作为长视频压缩器），视频作为创意AI和具身智能共同媒介的趋势日益明确。\n\n**GitHub趋势揭示了AI编程智能体生态的结晶化。** NousResearch的hermes-agent爆发至6.7万星（今日新增7454），标志着开源智能体框架的突破。配套生态同样亮眼：claude-code-best-practice（3.9万星，今日1548）、claude-mem（5万星，今日753）、andrej-karpathy-skills（1.7万星，今日2369）、Archon（1.7万星，今日612）、multica（9500星，今日1609）。这已不再是零散的实验——而是一个完整的智能体开发平台在开源社区中被同步组装，记忆管理、技能配置、工具链构建和团队协作全部同时上榜。\n\n**值得关注的潜力股：Master Key假说。** 仅获5赞，但这篇论文提出后训练模型的能力对应于低维潜在子空间中的方向，可通过线性对齐在模型间无需训练地转移。如果在大规模上得到验证，UNLOCK框架可能从根本上改变我们对模型家族间能力迁移的认知。在当前生态中蒸馏趋势盛行的背景下，无需训练、无需标签的设定格外引人关注。",
+  "papers": [
+    {
+      "id": "rethinking-generalization-reasoning-sft",
+      "title": "重新审视推理SFT中的泛化：基于优化、数据和模型能力的条件分析",
+      "authors": ["Qihan Ren", "Peng Wang", "Ruikun Cai", "Shuai Shao", "Dadi Guo"],
+      "affiliations": ["Tsinghua University", "Zhipu AI"],
+      "summary": "重新审视「SFT只能记忆而RL才能泛化」的论断。证明推理SFT的跨领域泛化并非缺失，而是受优化动态、训练数据和基座模型能力的条件性影响，部分报告的失败实为训练不充分的假象。",
+      "key_findings": [
+        "推理SFT的跨领域性能呈非单调轨迹，先下降后回升",
+        "部分被报告的SFT泛化失败实际上是训练不充分的假象，而非根本性限制",
+        "泛化能力由优化动态、训练数据组成和基座模型能力三者共同决定"
+      ],
+      "tags": ["reasoning", "sft", "reinforcement-learning", "generalization", "chain-of-thought"],
+      "relevance": "high",
+      "engagement": {"upvotes": 294, "comments": 7},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06628",
+        "huggingface": "https://huggingface.co/papers/2604.06628",
+        "pdf": "https://arxiv.org/pdf/2604.06628"
+      }
+    },
+    {
+      "id": "clawbench-ai-agents-everyday-tasks",
+      "title": "ClawBench：AI智能体能否完成日常在线任务？",
+      "authors": ["Yuxuan Zhang", "Yubo Wang", "Yipeng Zhu", "Penghui Du", "Junwen Miao"],
+      "affiliations": ["University of California, Santa Barbara", "Tsinghua University"],
+      "summary": "推出包含153项真实世界在线任务的评测框架，覆盖144个真实平台的15个类别，从购物、预约到求职申请。揭示即使是最先进的AI智能体在人类日常轻松完成的任务上仍然表现不佳。",
+      "key_findings": [
+        "153项任务横跨144个真实平台，提供迄今最全面的真实世界智能体评测",
+        "最先进的模型在购物和预约等日常在线任务上仍然表现挣扎",
+        "自动评判框架实现无需人工介入的可扩展评测"
+      ],
+      "tags": ["agents", "web-agents", "benchmarks", "real-world-evaluation", "task-completion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 243, "comments": 5},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08523",
+        "huggingface": "https://huggingface.co/papers/2604.08523",
+        "pdf": "https://arxiv.org/pdf/2604.08523"
+      }
+    },
+    {
+      "id": "megastyle-scalable-style-dataset",
+      "title": "MegaStyle：通过一致的文本到图像风格映射构建多样且可扩展的风格数据集",
+      "authors": ["Junyao Gao", "Sibo Liu", "Jiaxing Li", "Yanan Sun", "Yuanpeng Tu"],
+      "affiliations": ["Tencent", "Zhejiang University"],
+      "summary": "提出可扩展的数据整理流程，利用文本到图像风格映射构建风格一致且多样的数据集。整理了17万风格提示词和40万内容提示词，构建用于训练和评测的综合风格数据集。",
+      "key_findings": [
+        "一致的文本到图像风格映射实现风格内一致数据集的自动构建",
+        "17万风格提示词和40万内容提示词创造了风格训练数据的空前规模",
+        "流程在保持风格内一致性的同时实现风格间多样性"
+      ],
+      "tags": ["style-transfer", "text-to-image", "data-curation", "generative-models", "dataset"],
+      "relevance": "high",
+      "engagement": {"upvotes": 92, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08364",
+        "huggingface": "https://huggingface.co/papers/2604.08364",
+        "pdf": "https://arxiv.org/pdf/2604.08364"
+      }
+    },
+    {
+      "id": "lpm-1-video-character-performance",
+      "title": "LPM 1.0：基于视频的角色表演模型",
+      "authors": ["Ailing Zeng", "Casper Yang", "Chauncey Ge", "Eddie Zhang", "Garvey Xu"],
+      "affiliations": ["International Digital Economy Academy (IDEA)", "Tsinghua University"],
+      "summary": "攻克视频角色生成中的性能三难困境：同时实现高表达力、实时推理和长期身份稳定性。以对话场景作为最全面的角色表演测试。",
+      "key_findings": [
+        "识别并形式化视频角色生成中的「性能三难困境」",
+        "同时实现表达力、实时推理和身份稳定性",
+        "对话场景作为角色表演的综合测试基准"
+      ],
+      "tags": ["video-generation", "character-animation", "digital-humans", "real-time", "performance"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07823",
+        "huggingface": "https://huggingface.co/papers/2604.07823",
+        "pdf": "https://arxiv.org/pdf/2604.07823"
+      }
+    },
+    {
+      "id": "openspatial-data-engine-spatial-intelligence",
+      "title": "OpenSpatial：赋能空间智能的原则性数据引擎",
+      "authors": ["Jianhui Liu", "Haoze Sun", "Wenbo Li", "Yanbing Zhang", "Rui Yang"],
+      "affiliations": ["Beijing Academy of Artificial Intelligence (BAAI)", "Peking University"],
+      "summary": "推出面向高质量、大规模空间数据生成的开源数据引擎。填补了用于释放AI系统空间理解能力的原则性工具的空白。",
+      "key_findings": [
+        "首个用于系统化空间数据生成的原则性开源引擎",
+        "阐明健壮空间数据生成系统的设计原则",
+        "支持大规模高质量空间理解训练"
+      ],
+      "tags": ["spatial-understanding", "data-engine", "3d-perception", "open-source", "spatial-intelligence"],
+      "relevance": "high",
+      "engagement": {"upvotes": 33, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07296",
+        "huggingface": "https://huggingface.co/papers/2604.07296",
+        "pdf": "https://arxiv.org/pdf/2604.07296"
+      }
+    },
+    {
+      "id": "structured-distillation-web-agents",
+      "title": "网页智能体能力的结构化蒸馏实现泛化",
+      "authors": ["Xing Han L\u00f9", "Siva Reddy"],
+      "affiliations": ["McGill University", "Mila - Quebec AI Institute"],
+      "summary": "提出Agent-as-Annotators框架，通过类比人类标注角色来结构化网页智能体的合成轨迹生成。使用Gemini 3 Pro作为教师生成3000条轨迹，以纯监督方式微调9B参数的学生模型。",
+      "key_findings": [
+        "Agent-as-Annotators用模块化LLM组件替代任务设计者、标注者和审核者",
+        "来自Gemini 3 Pro的3000条合成轨迹使9B学生模型实现跨环境泛化",
+        "结构化角色分解产出比非结构化生成更高质量的轨迹"
+      ],
+      "tags": ["web-agents", "distillation", "synthetic-data", "trajectory-generation", "fine-tuning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07776",
+        "huggingface": "https://huggingface.co/papers/2604.07776",
+        "pdf": "https://arxiv.org/pdf/2604.07776"
+      }
+    },
+    {
+      "id": "tempo-small-vlms-long-video",
+      "title": "小型视觉语言模型是长视频理解的智能压缩器",
+      "authors": ["Junjie Fei", "Jun Chen", "Zechun Liu", "Yunyang Xiong", "Chong Zhou"],
+      "affiliations": ["Meta AI", "University of Texas at Austin"],
+      "summary": "提出Tempo，一种查询感知框架，使用小型VLM压缩长视频以供下游理解。通过智能的查询感知压缩取代启发式采样，解决小时级视频适配的上下文限制瓶颈。",
+      "key_findings": [
+        "小型VLM可作为长视频内容的有效查询感知压缩器",
+        "查询感知压缩优于稀疏采样和均匀池化等启发式方法",
+        "解决密集视觉流中的「中间遗忘」现象"
+      ],
+      "tags": ["video-understanding", "long-video", "compression", "vision-language-models", "efficiency"],
+      "relevance": "high",
+      "engagement": {"upvotes": 14, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08120",
+        "huggingface": "https://huggingface.co/papers/2604.08120",
+        "pdf": "https://arxiv.org/pdf/2604.08120"
+      }
+    },
+    {
+      "id": "viva-video-generative-value-model",
+      "title": "ViVa：用于机器人强化学习的视频生成价值模型",
+      "authors": ["Jindi Lv", "Hao Li", "Jie Li", "Yifei Nie", "Fankun Kong"],
+      "affiliations": ["Shanghai Jiao Tong University", "Shanghai AI Laboratory"],
+      "summary": "提出使用视频生成模型作为机器人强化学习的价值函数。解决现有基于VLM的价值模型无法捕获时序动态、影响长期操作任务中价值估计可靠性的问题。",
+      "key_findings": [
+        "视频生成模型能捕获基于VLM的价值模型遗漏的时序动态",
+        "基于视频的价值估计在长期任务中实现更可靠的进度评估",
+        "连接视频生成和强化学习，服务具身AI"
+      ],
+      "tags": ["robotics", "reinforcement-learning", "video-generation", "value-functions", "embodied-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08168",
+        "huggingface": "https://huggingface.co/papers/2604.08168",
+        "pdf": "https://arxiv.org/pdf/2604.08168"
+      }
+    },
+    {
+      "id": "sim1-physics-aligned-simulator",
+      "title": "SIM1：物理对齐模拟器作为可变形世界中的零样本数据缩放器",
+      "authors": ["Yunsong Zhou", "Hangxu Liu", "Xuekun Jiang", "Xing Shen", "Yuanzhen Zhou"],
+      "affiliations": ["Tsinghua University", "Shanghai Qi Zhi Institute"],
+      "summary": "推出面向可变形物体操作的物理对齐模拟器，用忠实的软体动力学取代刚体抽象。支持布料和可变形物体交互的零样本仿真到现实迁移。",
+      "key_findings": [
+        "模拟中的物理对齐对可变形物体操作迁移至关重要",
+        "用忠实的软体动力学替代刚体抽象以实现布料交互",
+        "从模拟中零样本数据缩放减少对昂贵真实世界数据的需求"
+      ],
+      "tags": ["simulation", "deformable-objects", "sim-to-real", "robotics", "physics-aligned"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08544",
+        "huggingface": "https://huggingface.co/papers/2604.08544",
+        "pdf": "https://arxiv.org/pdf/2604.08544"
+      }
+    },
+    {
+      "id": "automating-database-native-function-synthesis",
+      "title": "使用LLM自动化数据库原生函数代码合成",
+      "authors": ["Wei Zhou", "Xuanhe Zhou", "Qikang He", "Guoliang Li", "Bingsheng He"],
+      "affiliations": ["Tsinghua University", "National University of Singapore"],
+      "summary": "解决使用LLM合成数据库原生函数的挑战。现有LLM代码生成对数据库特定开发过于通用，经常产生幻觉或忽略数据库内核函数特有的关键上下文。",
+      "key_findings": [
+        "通用LLM代码生成在数据库特定内核函数合成中失败",
+        "数据库感知的上下文和约束对正确的函数生成至关重要",
+        "专门化方法减少数据库特定代码合成中的幻觉"
+      ],
+      "tags": ["databases", "code-generation", "llm-applications", "function-synthesis", "systems"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06231",
+        "huggingface": "https://huggingface.co/papers/2604.06231",
+        "pdf": "https://arxiv.org/pdf/2604.06231"
+      }
+    },
+    {
+      "id": "training-student-expert-sskd",
+      "title": "通过半监督基础模型蒸馏训练学生专家",
+      "authors": ["Pardis Taghavi", "Tian Liu", "Renjie Li", "Reza Langari", "Zhengzhong Tu"],
+      "affiliations": ["Texas A&M University"],
+      "summary": "提出半监督知识蒸馏框架，使用有限标注数据和大量无标注数据将视觉基础模型压缩为紧凑专家，并以实例分割为应用实例。",
+      "key_findings": [
+        "三阶段框架：领域适配、伪标签生成和学生训练",
+        "使用最少标注数据将VFM压缩为紧凑专家",
+        "半监督方法弥合基础模型能力与部署约束之间的差距"
+      ],
+      "tags": ["distillation", "semi-supervised", "foundation-models", "instance-segmentation", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03841",
+        "huggingface": "https://huggingface.co/papers/2604.03841",
+        "pdf": "https://arxiv.org/pdf/2604.03841"
+      }
+    },
+    {
+      "id": "liver-lighting-grounded-video",
+      "title": "基于渲染器智能体推理的光照引导视频生成",
+      "authors": ["Ziqi Cai", "Taoyu Yang", "Zheng Chang", "Si Li", "Han Jiang"],
+      "affiliations": ["Beijing Institute of Technology", "Kuaishou Technology"],
+      "summary": "提出LiVER，一种基于扩散的场景可控视频生成框架，支持显式的光照、布局和镜头控制。引入基于渲染器的智能体推理来解耦纠缠的场景因素。",
+      "key_findings": [
+        "基于渲染器的智能体推理实现对光照、布局和镜头的显式控制",
+        "解耦限制当前视频生成可控性的纠缠场景因素",
+        "框架适用于电影制作和虚拟制作工作流"
+      ],
+      "tags": ["video-generation", "lighting", "scene-control", "diffusion", "virtual-production"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 7, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07966",
+        "huggingface": "https://huggingface.co/papers/2604.07966",
+        "pdf": "https://arxiv.org/pdf/2604.07966"
+      }
+    },
+    {
+      "id": "faithful-grpo-spatial-reasoning",
+      "title": "Faithful GRPO：通过约束策略优化改进多模态语言模型的视觉空间推理",
+      "authors": ["Sai Srinivas Kancheti", "Aditya Kanade", "Rohit Sinha", "Vineeth N Balasubramanian", "Tanuja Ganu"],
+      "affiliations": ["IIT Hyderabad", "Microsoft Research India"],
+      "summary": "解决RLVR训练的多模态推理模型在准确率提升的同时推理质量下降的问题，CoT轨迹经常与最终答案不一致且缺乏视觉证据支撑。",
+      "key_findings": [
+        "RLVR带来的准确率提升往往以推理忠实性为代价",
+        "训练模型中的CoT轨迹经常与视觉证据和最终答案不一致",
+        "约束策略优化在保持准确率的同时改善推理质量"
+      ],
+      "tags": ["multimodal-reasoning", "spatial-reasoning", "rlvr", "chain-of-thought", "faithfulness"],
+      "relevance": "high",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08476",
+        "huggingface": "https://huggingface.co/papers/2604.08476",
+        "pdf": "https://arxiv.org/pdf/2604.08476"
+      }
+    },
+    {
+      "id": "master-key-hypothesis-capability-transfer",
+      "title": "Master Key假说：通过线性子空间对齐解锁跨模型能力迁移",
+      "authors": ["Rishab Balasubramanian", "Pin-Jie Lin", "Rituraj Sharma", "Anjie Fang", "Fardin Abdi"],
+      "affiliations": ["University of Michigan", "Bosch Research"],
+      "summary": "提出后训练模型的能力对应于低维潜在子空间中的方向，可通过线性对齐在模型间迁移。推出UNLOCK，一种无需训练和标签的跨模型能力迁移框架。",
+      "key_findings": [
+        "模型能力映射到低维潜在子空间中的方向",
+        "这些能力方向可通过线性对齐在模型间迁移",
+        "UNLOCK实现跨模型规模的无训练、无标签能力迁移"
+      ],
+      "tags": ["capability-transfer", "model-alignment", "latent-subspaces", "training-free", "interpretability"],
+      "relevance": "high",
+      "engagement": {"upvotes": 5, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06377",
+        "huggingface": "https://huggingface.co/papers/2604.06377",
+        "pdf": "https://arxiv.org/pdf/2604.06377"
+      }
+    },
+    {
+      "id": "implicitmembench-implicit-memory-llms",
+      "title": "ImplicitMemBench：测量大语言模型中的无意识行为适应",
+      "authors": ["Chonghan Qin", "Xiachong Feng", "Weitao Ma", "Xiaocheng Feng", "Lingpeng Kong"],
+      "affiliations": ["Harbin Institute of Technology", "University of Hong Kong"],
+      "summary": "推出首个通过三种认知科学构念系统评估LLM智能体隐式记忆的基准测试。现有记忆基准仅评估显式召回，忽略了隐式行为适应。",
+      "key_findings": [
+        "首个针对LLM智能体隐式（无意识）记忆的基准测试",
+        "三种基于认知科学的评估构念",
+        "揭示显式召回能力与隐式行为适应之间的差距"
+      ],
+      "tags": ["memory", "llm-agents", "cognitive-science", "benchmarks", "behavioral-adaptation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08064",
+        "huggingface": "https://huggingface.co/papers/2604.08064",
+        "pdf": "https://arxiv.org/pdf/2604.08064"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-5-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong（社区）",
+      "description": "将Claude 4.6 Opus的推理能力蒸馏到Qwen3.5-27B架构中。以前沿推理能力在开源权重规模上主导社区下载量。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["reasoning", "distillation", "qwen", "open-weight"],
+      "metrics": {"downloads": 578295, "likes": 2599},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "Gemma-4-31B-it",
+      "organization": "Google",
+      "description": "Gemma 4家族的旗舰稠密模型，具备多模态图文理解能力和对话调优。下载量领先，超过220万次。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["multimodal", "gemma4", "conversational"],
+      "metrics": {"downloads": 2242541, "likes": 1776},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "google-gemma-4-26b-a4b-it",
+      "name": "Gemma-4-26B-A4B-it",
+      "organization": "Google",
+      "description": "Gemma 4家族的混合专家变体，总参数26B，活跃参数4B。高效的多模态模型，实现出色的质量与计算比。",
+      "task_type": "image-text-to-text",
+      "model_size": "26B（4B活跃）",
+      "tags": ["moe", "multimodal", "gemma4", "efficient"],
+      "metrics": {"downloads": 1734340, "likes": 624},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "google-gemma-4-e4b-it",
+      "name": "Gemma-4-E4B-it",
+      "organization": "Google",
+      "description": "Gemma 4家族的紧凑型4B多模态模型，具备任意模态转换能力。专为边缘部署和资源受限场景设计。",
+      "task_type": "image-text-to-text",
+      "model_size": "4B",
+      "tags": ["multimodal", "gemma4", "edge", "any-to-any"],
+      "metrics": {"downloads": 1269309, "likes": 608},
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "zai-glm-5-1",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI",
+      "description": "最新GLM模型，采用MoE与深度稀疏注意力架构。智谱AI研究院的新作，社区关注度快速攀升。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "chinese-llm"],
+      "metrics": {"downloads": 28826, "likes": 1071},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "针对OCR和文档理解任务优化的视觉语言模型。基于InternVL架构构建，具备强大的多语言文本识别能力。",
+      "task_type": "feature-extraction",
+      "model_size": "未知",
+      "tags": ["ocr", "vision-language", "document-understanding"],
+      "metrics": {"downloads": 44802, "likes": 1139},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "VOID Model",
+      "organization": "Netflix",
+      "description": "能处理物体间物理交互的视频物体移除模型。基于CogVideoX架构用于视频修复和编辑。",
+      "task_type": "video-inpainting",
+      "model_size": "未知",
+      "tags": ["video-editing", "object-removal", "diffusion"],
+      "metrics": {"downloads": 0, "likes": 775},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "openbmb-voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB",
+      "description": "无分词器的文本转语音系统，支持多语言语音生成、创意语音设计和逼真的语音克隆。",
+      "task_type": "text-to-speech",
+      "model_size": "未知",
+      "tags": ["tts", "multilingual", "voice-cloning"],
+      "metrics": {"downloads": 7452, "likes": 750},
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "prism-bonsai-8b",
+      "name": "Bonsai-8B",
+      "organization": "Prism ML",
+      "description": "极致1-bit量化的8B模型GGUF格式。在保持可用推理质量的同时挑战激进量化的极限。",
+      "task_type": "text-generation",
+      "model_size": "8B（1-bit）",
+      "tags": ["quantization", "1-bit", "gguf", "efficient"],
+      "metrics": {"downloads": 74389, "likes": 567},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "k2-fsa-omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "零样本多语言语音克隆模型，下载量达39.4万。支持以最少参考音频进行跨语言语音迁移。",
+      "task_type": "text-to-speech",
+      "model_size": "未知",
+      "tags": ["voice-cloning", "zero-shot", "multilingual"],
+      "metrics": {"downloads": 393991, "likes": 523},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "minimax-m2-7",
+      "name": "MiniMax-M2.7",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax推出的新一代对话模型。这家资金充裕的中国AI初创公司的早期发布版本正在获得社区关注。",
+      "task_type": "text-generation",
+      "model_size": "未知",
+      "tags": ["conversational", "chinese-llm"],
+      "metrics": {"downloads": 873, "likes": 477},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.7"
+    },
+    {
+      "id": "lgai-exaone-4-5-33b",
+      "name": "EXAONE-4.5-33B",
+      "organization": "LG AI Research",
+      "description": "LG AI Research的首个开放权重视觉语言模型。将视觉编码器集成到EXAONE 4.0中，重点面向文档中心应用。",
+      "task_type": "text-generation",
+      "model_size": "33B",
+      "tags": ["vision-language", "open-weight", "document-centric"],
+      "metrics": {"downloads": 3660, "likes": 119},
+      "source_url": "https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch推出的开源自主智能体框架，与用户共同成长。单日爆涨7454星，标志着开源智能体基础设施的突破。",
+      "language": "Python",
+      "stars": 67570,
+      "stars_today": 7454,
+      "forks": 9027,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "autonomous", "open-source", "nous-research"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Claude Code插件，自动捕获会话活动并用AI压缩，将相关上下文注入未来会话。为AI编程智能体提供会话持久化记忆。",
+      "language": "TypeScript",
+      "stars": 50231,
+      "stars_today": 753,
+      "forks": 3969,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["claude-code", "memory", "plugin", "agent-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-best-practice",
+      "name": "shanraisshan/claude-code-best-practice",
+      "description": "社区策展的Claude Code使用最佳实践，今日新增1548星获得巨大关注。反映了对结构化AI编程工作流的持续增长需求。",
+      "language": "HTML",
+      "stars": 39181,
+      "stars_today": 1548,
+      "forks": 3693,
+      "url": "https://github.com/shanraisshan/claude-code-best-practice",
+      "tags": ["claude-code", "best-practices", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "微软出品的Python文件和办公文档转Markdown工具。文档处理流水线和LLM数据摄取工作流的必备工具。",
+      "language": "Python",
+      "stars": 104937,
+      "stars_today": 2513,
+      "forks": 6558,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "llm-tools", "microsoft"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "forrestchang/andrej-karpathy-skills",
+      "description": "基于Andrej Karpathy对LLM编程陷阱观察的单一CLAUDE.md文件，用于改善Claude Code行为。今日新增2369星。",
+      "language": "",
+      "stars": 17099,
+      "stars_today": 2369,
+      "forks": 1268,
+      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
+      "tags": ["claude-code", "skills", "best-practices", "karpathy"],
+      "relevance": "high"
+    },
+    {
+      "id": "archon-harness-builder",
+      "name": "coleam00/Archon",
+      "description": "首个开源AI编程工具链构建器。通过结构化配置使AI编程变得确定性和可重复。",
+      "language": "TypeScript",
+      "stars": 17102,
+      "stars_today": 612,
+      "forks": 2711,
+      "url": "https://github.com/coleam00/Archon",
+      "tags": ["ai-coding", "harness", "deterministic", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "kronos-financial-foundation",
+      "name": "shiyu-coder/Kronos",
+      "description": "金融市场语言基础模型。在金融数据上训练的专业语言模型，用于市场分析和预测任务。",
+      "language": "Python",
+      "stars": 15867,
+      "stars_today": 1985,
+      "forks": 3026,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "financial-markets", "llm"],
+      "relevance": "high"
+    },
+    {
+      "id": "multica-agents-platform",
+      "name": "multica-ai/multica",
+      "description": "开源托管智能体平台，将编程智能体转变为真正的团队成员，支持任务分配、进度跟踪和技能组合。",
+      "language": "TypeScript",
+      "stars": 9508,
+      "stars_today": 1609,
+      "forks": 1214,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["agents", "platform", "team-management", "coding-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "VoxCPM2：无分词器TTS，支持多语言语音生成、创意语音设计和逼真克隆。热门HuggingFace模型的配套代码库。",
+      "language": "Python",
+      "stars": 11385,
+      "stars_today": 1278,
+      "forks": 1316,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": ["tts", "voice-cloning", "multilingual", "speech"],
+      "relevance": "high"
+    },
+    {
+      "id": "ralph-autonomous-agent",
+      "name": "snarktank/ralph",
+      "description": "自主AI智能体循环，持续运行直到所有PRD项目完成。任务驱动的智能体执行框架。",
+      "language": "TypeScript",
+      "stars": 15986,
+      "stars_today": 463,
+      "forks": 1592,
+      "url": "https://github.com/snarktank/ralph",
+      "tags": ["agents", "autonomous", "prd", "task-completion"],
+      "relevance": "high"
+    },
+    {
+      "id": "deeptutor-personalized-learning",
+      "name": "HKUDS/DeepTutor",
+      "description": "香港大学推出的智能体原生个性化学习助手。将AI智能体范式应用于自适应教育。",
+      "language": "Python",
+      "stars": 17279,
+      "stars_today": 670,
+      "forks": 2269,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education", "agents", "personalized-learning", "tutoring"],
+      "relevance": "medium"
+    },
+    {
+      "id": "reverse-synthid",
+      "name": "aloshdenny/reverse-SynthID",
+      "description": "逆向工程Gemini的SynthID检测机制。探索AI生成内容水印鲁棒性的安全研究。",
+      "language": "Python",
+      "stars": 2281,
+      "stars_today": 192,
+      "forks": 211,
+      "url": "https://github.com/aloshdenny/reverse-SynthID",
+      "tags": ["watermarking", "synthid", "security-research", "ai-detection"],
+      "relevance": "medium"
+    },
+    {
+      "id": "rustfs-object-storage",
+      "name": "rustfs/rustfs",
+      "description": "基于Rust的S3兼容高性能对象存储，声称4KB负载比MinIO快2.3倍。支持从其他S3兼容平台迁移。",
+      "language": "Rust",
+      "stars": 25264,
+      "stars_today": 182,
+      "forks": 1076,
+      "url": "https://github.com/rustfs/rustfs",
+      "tags": ["object-storage", "s3-compatible", "rust", "performance"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "SFT与RL泛化之辩",
+      "description": "最受关注的论文挑战了「SFT只能记忆」的流行叙事。结合Faithful GRPO揭示RLVR推理质量权衡的工作，训练范式权衡的更细腻图景正在浮现。",
+      "related_paper_ids": ["rethinking-generalization-reasoning-sft", "faithful-grpo-spatial-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "真实世界智能体评测与蒸馏",
+      "description": "ClawBench的153项真实任务和Agent-as-Annotators的结构化蒸馏代表智能体能力硬币的两面：衡量真实世界差距并系统性地通过合成训练缩小差距。",
+      "related_paper_ids": ["clawbench-ai-agents-everyday-tasks", "structured-distillation-web-agents", "implicitmembench-implicit-memory-llms"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频：创意AI和具身AI的共同媒介",
+      "description": "LPM 1.0的角色表演、Tempo的长视频压缩、ViVa的视频生成价值模型和LiVER的光照引导生成汇聚于视频作为创意应用和机器人学习的统一模态。",
+      "related_paper_ids": ["lpm-1-video-character-performance", "tempo-small-vlms-long-video", "viva-video-generative-value-model", "liver-lighting-grounded-video"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "数据引擎与空间智能",
+      "description": "OpenSpatial和MegaStyle分别从空间理解和视觉风格两个角度解决数据瓶颈，反映出从模型架构创新向原则性数据生成的成熟转向。",
+      "related_paper_ids": ["openspatial-data-engine-spatial-intelligence", "megastyle-scalable-style-dataset"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "跨模型能力迁移",
+      "description": "Master Key假说提出通过线性子空间对齐实现无需训练的能力迁移，SSKD将基础模型压缩为紧凑专家。两者都挑战了能力需要模型特定训练的假设。",
+      "related_paper_ids": ["master-key-hypothesis-capability-transfer", "training-student-expert-sskd"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI智能体工具生态结晶化",
+      "description": "GitHub趋势显示智能体框架（hermes-agent、ralph、multica）、智能体记忆（claude-mem）、智能体配置（karpathy-skills、Archon）和最佳实践同时获得动力，形成连贯的开源智能体开发栈。",
+      "related_paper_ids": ["clawbench-ai-agents-everyday-tasks"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}

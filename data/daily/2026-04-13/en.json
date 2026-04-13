@@ -1,0 +1,682 @@
+{
+  "version": "1.0",
+  "date": "2026-04-13",
+  "generated_at": "2026-04-13T02:15:00.000000+00:00",
+  "summary": {
+    "headline": "SFT generalization vindicated with conditional analysis reaching 294 upvotes; ClawBench tests AI agents on 153 real-world online tasks; MegaStyle scales style datasets to 170K prompts; agent tooling ecosystem explodes on GitHub",
+    "body": "April 13th's research landscape is dominated by a blockbuster result that challenges the prevailing \"SFT memorizes, RL generalizes\" narrative. **Rethinking Generalization in Reasoning SFT** (294 upvotes) demonstrates that cross-domain generalization from supervised fine-tuning is not absent but conditional on optimization dynamics, training data, and base-model capability \u2014 some apparent failures are simply under-optimization artifacts. This is the highest-engagement paper in weeks and could reshape how the community approaches reasoning model training.\n\n**ClawBench** (243 upvotes) introduces the most comprehensive real-world agent evaluation to date: 153 everyday online tasks across 144 live platforms spanning purchases, bookings, and job applications. The results reveal that even frontier models struggle with routine tasks humans accomplish daily, providing a sobering reality check for agent capabilities. Meanwhile, **MegaStyle** (92 upvotes) tackles the style data bottleneck by leveraging consistent text-to-image style mapping to build datasets with 170K style prompts, and **LPM 1.0** (55 upvotes) addresses the performance trilemma in video-based character generation.\n\nThe trending model landscape is Gemma-4 wall-to-wall: Google's family spans 31B dense, 26B-A4B MoE, E4B, and E2B with multimodal support, collectively pulling 6.7M+ downloads. Meanwhile, the Claude-distilled Qwen3.5-27B maintains its dominance at 578K downloads and 2,599 likes. New entrants GLM-5.1 (1,071 likes) and MiniMax-M2.7 signal continued competition in the Chinese LLM space. On GitHub, the AI agent tooling ecosystem is in hypergrowth: NousResearch's hermes-agent gained 7,454 stars in a single day, while Claude Code best practices, memory plugins, and agent platforms collectively dominate trending.",
+    "key_themes": [
+      "sft-vs-rl-generalization",
+      "real-world-agent-evaluation",
+      "style-and-visual-generation",
+      "video-understanding-and-generation",
+      "agent-tooling-ecosystem",
+      "open-weight-model-competition"
+    ]
+  },
+  "researcher_notes": "**The Rethinking Generalization paper is a landmark correction to a widespread misconception.** The prevailing belief \u2014 that SFT only memorizes while RL generalizes \u2014 has shaped training pipelines across the industry, pushing teams toward expensive RL stages even when SFT might suffice. This paper shows the picture is far more nuanced: cross-domain performance during SFT exhibits a non-monotonic trajectory (dipping before recovering), and some reported SFT failures are simply under-optimization. The practical implication is significant: teams may be leaving performance on the table by abandoning SFT too early in favor of RL. The 294 upvotes and 7 comments reflect how deeply this resonates.\n\n**ClawBench is exactly the benchmark the agent community needed.** Unlike synthetic environments or curated web tasks, these 153 tasks on 144 *live* platforms test what users actually care about: completing purchases, booking appointments, submitting applications. The framework measures real-world completion rates with an auto-grader, and the results are humbling \u2014 suggesting that agent capabilities are far more brittle than demo-driven narratives suggest. This pairs well with the Structured Distillation paper (17 upvotes), which shows that Agent-as-Annotators can generate synthetic trajectories to train smaller web agents, but the gap to real-world reliability remains wide.\n\n**The video and character generation space is heating up with two complementary advances.** LPM 1.0 (55 upvotes) from what appears to be a well-resourced team tackles the \"performance trilemma\" \u2014 jointly achieving expressiveness, real-time inference, and long-horizon identity stability in video characters. Matrix-Game 3.0 pushes interactive world models to 720p real-time with memory-augmented long-form generation. Together with ViVa (robot reinforcement learning via video-generative value models) and Tempo (small VLMs as long-video compressors), there's a clear convergence on video as the medium for both creative AI and embodied intelligence.\n\n**The GitHub trends tell a story of ecosystem crystallization around AI coding agents.** NousResearch's hermes-agent exploding to 67K stars with 7,454 gained today suggests a breakout open-source agent framework. The supporting ecosystem is equally remarkable: claude-code-best-practice (39K stars, 1,548 today), claude-mem (50K stars, 753 today), andrej-karpathy-skills (17K stars, 2,369 today), Archon (17K stars, 612 today), and multica (9.5K stars, 1,609 today). This is no longer a scattered collection of experiments \u2014 it's a full-stack agent development platform being assembled in the open, with memory management, skill configuration, harness building, and team coordination all trending simultaneously.\n\n**A sleeper worth watching: the Master Key Hypothesis.** With only 5 upvotes, this paper proposes that post-trained model capabilities correspond to directions in low-dimensional latent subspaces that are transferable across models through linear alignment \u2014 *without retraining*. If validated at scale, UNLOCK (the proposed framework) could fundamentally change how we think about capability transfer between model families. The training-free, label-free framing is especially intriguing given the distillation-heavy trends we're seeing in the model ecosystem.",
+  "papers": [
+    {
+      "id": "rethinking-generalization-reasoning-sft",
+      "title": "Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability",
+      "authors": ["Qihan Ren", "Peng Wang", "Ruikun Cai", "Shuai Shao", "Dadi Guo"],
+      "affiliations": ["Tsinghua University", "Zhipu AI"],
+      "summary": "Revisits the claim that SFT memorizes while RL generalizes for reasoning tasks. Demonstrates that cross-domain generalization from reasoning SFT is not absent but conditional on optimization dynamics, training data, and base-model capability, with some reported failures being under-optimization artifacts.",
+      "key_findings": [
+        "Cross-domain performance during reasoning SFT follows a non-monotonic trajectory, first degrading then recovering",
+        "Some reported SFT generalization failures are under-optimization artifacts, not fundamental limitations",
+        "Generalization is jointly shaped by optimization dynamics, training data composition, and base-model capability"
+      ],
+      "tags": ["reasoning", "sft", "reinforcement-learning", "generalization", "chain-of-thought"],
+      "relevance": "high",
+      "engagement": {"upvotes": 294, "comments": 7},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06628",
+        "huggingface": "https://huggingface.co/papers/2604.06628",
+        "pdf": "https://arxiv.org/pdf/2604.06628"
+      }
+    },
+    {
+      "id": "clawbench-ai-agents-everyday-tasks",
+      "title": "ClawBench: Can AI Agents Complete Everyday Online Tasks?",
+      "authors": ["Yuxuan Zhang", "Yubo Wang", "Yipeng Zhu", "Penghui Du", "Junwen Miao"],
+      "affiliations": ["University of California, Santa Barbara", "Tsinghua University"],
+      "summary": "Introduces an evaluation framework of 153 real-world online tasks across 144 live platforms spanning 15 categories from purchases to job applications. Reveals that even frontier AI agents struggle with routine tasks humans accomplish daily.",
+      "key_findings": [
+        "153 tasks across 144 live platforms provide the most comprehensive real-world agent evaluation to date",
+        "Frontier models still struggle with routine online tasks like purchases and bookings",
+        "Auto-grader framework enables scalable evaluation without human-in-the-loop verification"
+      ],
+      "tags": ["agents", "web-agents", "benchmarks", "real-world-evaluation", "task-completion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 243, "comments": 5},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08523",
+        "huggingface": "https://huggingface.co/papers/2604.08523",
+        "pdf": "https://arxiv.org/pdf/2604.08523"
+      }
+    },
+    {
+      "id": "megastyle-scalable-style-dataset",
+      "title": "MegaStyle: Constructing Diverse and Scalable Style Dataset via Consistent Text-to-Image Style Mapping",
+      "authors": ["Junyao Gao", "Sibo Liu", "Jiaxing Li", "Yanan Sun", "Yuanpeng Tu"],
+      "affiliations": ["Tencent", "Zhejiang University"],
+      "summary": "Introduces a scalable data curation pipeline that constructs style-consistent, diverse datasets by leveraging text-to-image style mapping. Curates 170K style prompts and 400K content prompts to build a comprehensive style dataset for training and evaluation.",
+      "key_findings": [
+        "Consistent text-to-image style mapping enables automated construction of intra-style consistent datasets",
+        "170K style prompts and 400K content prompts create unprecedented scale for style-focused training data",
+        "Pipeline produces inter-style diversity while maintaining intra-style consistency"
+      ],
+      "tags": ["style-transfer", "text-to-image", "data-curation", "generative-models", "dataset"],
+      "relevance": "high",
+      "engagement": {"upvotes": 92, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08364",
+        "huggingface": "https://huggingface.co/papers/2604.08364",
+        "pdf": "https://arxiv.org/pdf/2604.08364"
+      }
+    },
+    {
+      "id": "lpm-1-video-character-performance",
+      "title": "LPM 1.0: Video-based Character Performance Model",
+      "authors": ["Ailing Zeng", "Casper Yang", "Chauncey Ge", "Eddie Zhang", "Garvey Xu"],
+      "affiliations": ["International Digital Economy Academy (IDEA)", "Tsinghua University"],
+      "summary": "Addresses the performance trilemma in video-based character generation: jointly achieving high expressiveness, real-time inference, and long-horizon identity stability. Focuses on conversational scenarios as the most comprehensive performance test.",
+      "key_findings": [
+        "Identifies and formalizes the 'performance trilemma' in video character generation",
+        "Achieves simultaneous expressiveness, real-time inference, and identity stability",
+        "Conversation scenarios serve as comprehensive test for character performance"
+      ],
+      "tags": ["video-generation", "character-animation", "digital-humans", "real-time", "performance"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07823",
+        "huggingface": "https://huggingface.co/papers/2604.07823",
+        "pdf": "https://arxiv.org/pdf/2604.07823"
+      }
+    },
+    {
+      "id": "openspatial-data-engine-spatial-intelligence",
+      "title": "OpenSpatial: A Principled Data Engine for Empowering Spatial Intelligence",
+      "authors": ["Jianhui Liu", "Haoze Sun", "Wenbo Li", "Yanbing Zhang", "Rui Yang"],
+      "affiliations": ["Beijing Academy of Artificial Intelligence (BAAI)", "Peking University"],
+      "summary": "Introduces an open-source data engine designed for high-quality, extensive-scale spatial data generation. Addresses the absence of principled tools for unleashing spatial understanding capabilities in AI systems.",
+      "key_findings": [
+        "First principled open-source engine for systematic spatial data generation",
+        "Elucidates design principles for robust spatial data generation systems",
+        "Enables high-quality spatial understanding training at scale"
+      ],
+      "tags": ["spatial-understanding", "data-engine", "3d-perception", "open-source", "spatial-intelligence"],
+      "relevance": "high",
+      "engagement": {"upvotes": 33, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07296",
+        "huggingface": "https://huggingface.co/papers/2604.07296",
+        "pdf": "https://arxiv.org/pdf/2604.07296"
+      }
+    },
+    {
+      "id": "structured-distillation-web-agents",
+      "title": "Structured Distillation of Web Agent Capabilities Enables Generalization",
+      "authors": ["Xing Han L\u00f9", "Siva Reddy"],
+      "affiliations": ["McGill University", "Mila - Quebec AI Institute"],
+      "summary": "Introduces Agent-as-Annotators framework that structures synthetic trajectory generation for web agents by analogy to human annotation roles. Uses Gemini 3 Pro as teacher to generate 3,000 trajectories and fine-tunes a 9B student with pure supervision.",
+      "key_findings": [
+        "Agent-as-Annotators replaces Task Designer, Annotator, and Supervisor with modular LLM components",
+        "3,000 synthetic trajectories from Gemini 3 Pro enable cross-environment generalization in a 9B student",
+        "Structured role decomposition produces higher-quality trajectories than unstructured generation"
+      ],
+      "tags": ["web-agents", "distillation", "synthetic-data", "trajectory-generation", "fine-tuning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07776",
+        "huggingface": "https://huggingface.co/papers/2604.07776",
+        "pdf": "https://arxiv.org/pdf/2604.07776"
+      }
+    },
+    {
+      "id": "tempo-small-vlms-long-video",
+      "title": "Small Vision-Language Models are Smart Compressors for Long Video Understanding",
+      "authors": ["Junjie Fei", "Jun Chen", "Zechun Liu", "Yunyang Xiong", "Chong Zhou"],
+      "affiliations": ["Meta AI", "University of Texas at Austin"],
+      "summary": "Proposes Tempo, a query-aware framework that uses small VLMs to compress long videos for downstream understanding. Addresses the context limit bottleneck in hour-long video adaptation by replacing heuristic sampling with intelligent, query-aware compression.",
+      "key_findings": [
+        "Small VLMs can serve as effective query-aware compressors for long video content",
+        "Query-aware compression outperforms sparse sampling and uniform pooling heuristics",
+        "Addresses lost-in-the-middle phenomenon in dense visual streams"
+      ],
+      "tags": ["video-understanding", "long-video", "compression", "vision-language-models", "efficiency"],
+      "relevance": "high",
+      "engagement": {"upvotes": 14, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08120",
+        "huggingface": "https://huggingface.co/papers/2604.08120",
+        "pdf": "https://arxiv.org/pdf/2604.08120"
+      }
+    },
+    {
+      "id": "viva-video-generative-value-model",
+      "title": "ViVa: A Video-Generative Value Model for Robot Reinforcement Learning",
+      "authors": ["Jindi Lv", "Hao Li", "Jie Li", "Yifei Nie", "Fankun Kong"],
+      "affiliations": ["Shanghai Jiao Tong University", "Shanghai AI Laboratory"],
+      "summary": "Proposes using video generation models as value functions for robot reinforcement learning. Addresses the failure of existing VLM-based value models to capture temporal dynamics needed for reliable value estimation in long-horizon manipulation tasks.",
+      "key_findings": [
+        "Video-generative models capture temporal dynamics that VLM-based value models miss",
+        "Video-based value estimation enables more reliable progress assessment in long-horizon tasks",
+        "Bridges video generation and reinforcement learning for embodied AI"
+      ],
+      "tags": ["robotics", "reinforcement-learning", "video-generation", "value-functions", "embodied-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08168",
+        "huggingface": "https://huggingface.co/papers/2604.08168",
+        "pdf": "https://arxiv.org/pdf/2604.08168"
+      }
+    },
+    {
+      "id": "sim1-physics-aligned-simulator",
+      "title": "SIM1: Physics-Aligned Simulator as Zero-Shot Data Scaler in Deformable Worlds",
+      "authors": ["Yunsong Zhou", "Hangxu Liu", "Xuekun Jiang", "Xing Shen", "Yuanzhen Zhou"],
+      "affiliations": ["Tsinghua University", "Shanghai Qi Zhi Institute"],
+      "summary": "Introduces a physics-aligned simulator for deformable object manipulation that replaces rigid-body abstractions with faithful soft dynamics. Enables zero-shot sim-to-real transfer for cloth and deformable object interaction.",
+      "key_findings": [
+        "Physics alignment in simulation is critical for deformable object manipulation transfer",
+        "Replaces rigid-body abstractions with faithful soft dynamics for cloth interaction",
+        "Zero-shot data scaling from simulation reduces need for expensive real-world data"
+      ],
+      "tags": ["simulation", "deformable-objects", "sim-to-real", "robotics", "physics-aligned"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08544",
+        "huggingface": "https://huggingface.co/papers/2604.08544",
+        "pdf": "https://arxiv.org/pdf/2604.08544"
+      }
+    },
+    {
+      "id": "automating-database-native-function-synthesis",
+      "title": "Automating Database-Native Function Code Synthesis with LLMs",
+      "authors": ["Wei Zhou", "Xuanhe Zhou", "Qikang He", "Guoliang Li", "Bingsheng He"],
+      "affiliations": ["Tsinghua University", "National University of Singapore"],
+      "summary": "Addresses the challenge of synthesizing database-native functions using LLMs. Existing LLM-based code generation is too generic for database-specific development, often hallucinating or overlooking critical context specific to database kernel functions.",
+      "key_findings": [
+        "Generic LLM code generation fails for database-specific kernel function synthesis",
+        "Database-aware context and constraints are essential for correct function generation",
+        "Specialized approach reduces hallucination in database-specific code synthesis"
+      ],
+      "tags": ["databases", "code-generation", "llm-applications", "function-synthesis", "systems"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06231",
+        "huggingface": "https://huggingface.co/papers/2604.06231",
+        "pdf": "https://arxiv.org/pdf/2604.06231"
+      }
+    },
+    {
+      "id": "training-student-expert-sskd",
+      "title": "Training a Student Expert via Semi-Supervised Foundation Model Distillation",
+      "authors": ["Pardis Taghavi", "Tian Liu", "Renjie Li", "Reza Langari", "Zhengzhong Tu"],
+      "affiliations": ["Texas A&M University"],
+      "summary": "Introduces a semi-supervised knowledge distillation framework that compresses vision foundation models into compact experts using limited labeled and abundant unlabeled data, with instantiation for instance segmentation.",
+      "key_findings": [
+        "Three-stage framework: domain adaptation, pseudo-label generation, and student training",
+        "Compresses VFMs into compact experts using minimal labeled data",
+        "Semi-supervised approach bridges the gap between foundation model capability and deployment constraints"
+      ],
+      "tags": ["distillation", "semi-supervised", "foundation-models", "instance-segmentation", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.03841",
+        "huggingface": "https://huggingface.co/papers/2604.03841",
+        "pdf": "https://arxiv.org/pdf/2604.03841"
+      }
+    },
+    {
+      "id": "liver-lighting-grounded-video",
+      "title": "Lighting-grounded Video Generation with Renderer-based Agent Reasoning",
+      "authors": ["Ziqi Cai", "Taoyu Yang", "Zheng Chang", "Si Li", "Han Jiang"],
+      "affiliations": ["Beijing Institute of Technology", "Kuaishou Technology"],
+      "summary": "Presents LiVER, a diffusion-based framework for scene-controllable video generation with explicit lighting, layout, and camera control. Introduces renderer-based agent reasoning to decouple entangled scene factors.",
+      "key_findings": [
+        "Renderer-based agent reasoning enables explicit control of lighting, layout, and camera",
+        "Decouples entangled scene factors that limit current video generation controllability",
+        "Framework applicable to filmmaking and virtual production workflows"
+      ],
+      "tags": ["video-generation", "lighting", "scene-control", "diffusion", "virtual-production"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 7, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07966",
+        "huggingface": "https://huggingface.co/papers/2604.07966",
+        "pdf": "https://arxiv.org/pdf/2604.07966"
+      }
+    },
+    {
+      "id": "faithful-grpo-spatial-reasoning",
+      "title": "Faithful GRPO: Improving Visual Spatial Reasoning in Multimodal Language Models via Constrained Policy Optimization",
+      "authors": ["Sai Srinivas Kancheti", "Aditya Kanade", "Rohit Sinha", "Vineeth N Balasubramanian", "Tanuja Ganu"],
+      "affiliations": ["IIT Hyderabad", "Microsoft Research India"],
+      "summary": "Addresses the problem that RLVR-trained multimodal reasoning models gain accuracy at the cost of reasoning quality, with CoT traces frequently inconsistent with final answers and poorly grounded in visual evidence.",
+      "key_findings": [
+        "Accuracy gains from RLVR often come at the cost of reasoning faithfulness",
+        "CoT traces in trained models are frequently inconsistent with visual evidence and final answers",
+        "Constrained policy optimization maintains accuracy while improving reasoning quality"
+      ],
+      "tags": ["multimodal-reasoning", "spatial-reasoning", "rlvr", "chain-of-thought", "faithfulness"],
+      "relevance": "high",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08476",
+        "huggingface": "https://huggingface.co/papers/2604.08476",
+        "pdf": "https://arxiv.org/pdf/2604.08476"
+      }
+    },
+    {
+      "id": "master-key-hypothesis-capability-transfer",
+      "title": "The Master Key Hypothesis: Unlocking Cross-Model Capability Transfer via Linear Subspace Alignment",
+      "authors": ["Rishab Balasubramanian", "Pin-Jie Lin", "Rituraj Sharma", "Anjie Fang", "Fardin Abdi"],
+      "affiliations": ["University of Michigan", "Bosch Research"],
+      "summary": "Proposes that post-trained model capabilities correspond to directions in low-dimensional latent subspaces that are transferable across models through linear alignment. Introduces UNLOCK, a training-free and label-free framework for cross-model capability transfer.",
+      "key_findings": [
+        "Model capabilities map to directions in low-dimensional latent subspaces",
+        "These capability directions are transferable across models via linear alignment",
+        "UNLOCK enables training-free, label-free capability transfer across model scales"
+      ],
+      "tags": ["capability-transfer", "model-alignment", "latent-subspaces", "training-free", "interpretability"],
+      "relevance": "high",
+      "engagement": {"upvotes": 5, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06377",
+        "huggingface": "https://huggingface.co/papers/2604.06377",
+        "pdf": "https://arxiv.org/pdf/2604.06377"
+      }
+    },
+    {
+      "id": "implicitmembench-implicit-memory-llms",
+      "title": "ImplicitMemBench: Measuring Unconscious Behavioral Adaptation in Large Language Models",
+      "authors": ["Chonghan Qin", "Xiachong Feng", "Weitao Ma", "Xiaocheng Feng", "Lingpeng Kong"],
+      "affiliations": ["Harbin Institute of Technology", "University of Hong Kong"],
+      "summary": "Introduces the first systematic benchmark evaluating implicit memory in LLM agents through three cognitively grounded constructs. Existing memory benchmarks only evaluate explicit recall while overlooking implicit behavioral adaptation.",
+      "key_findings": [
+        "First benchmark for implicit (unconscious) memory in LLM agents",
+        "Three cognitively grounded constructs drawn from cognitive science",
+        "Reveals gap between explicit recall capability and implicit behavioral adaptation"
+      ],
+      "tags": ["memory", "llm-agents", "cognitive-science", "benchmarks", "behavioral-adaptation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08064",
+        "huggingface": "https://huggingface.co/papers/2604.08064",
+        "pdf": "https://arxiv.org/pdf/2604.08064"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-5-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "Claude 4.6 Opus reasoning capabilities distilled into Qwen3.5-27B architecture. Dominates community downloads with frontier reasoning at open-weight scale.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["reasoning", "distillation", "qwen", "open-weight"],
+      "metrics": {"downloads": 578295, "likes": 2599},
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "google-gemma-4-31b-it",
+      "name": "Gemma-4-31B-it",
+      "organization": "Google",
+      "description": "Flagship dense model in the Gemma 4 family with multimodal image-text-to-text capabilities and conversational tuning. Leading the download charts at 2.2M+.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": ["multimodal", "gemma4", "conversational"],
+      "metrics": {"downloads": 2242541, "likes": 1776},
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "google-gemma-4-26b-a4b-it",
+      "name": "Gemma-4-26B-A4B-it",
+      "organization": "Google",
+      "description": "Mixture-of-experts variant in the Gemma 4 family with 26B total parameters and 4B active. Efficient multimodal model achieving strong quality-to-compute ratio.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B (4B active)",
+      "tags": ["moe", "multimodal", "gemma4", "efficient"],
+      "metrics": {"downloads": 1734340, "likes": 624},
+      "source_url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
+    },
+    {
+      "id": "google-gemma-4-e4b-it",
+      "name": "Gemma-4-E4B-it",
+      "organization": "Google",
+      "description": "Compact 4B multimodal model in the Gemma 4 family with any-to-any capabilities. Designed for edge deployment and resource-constrained scenarios.",
+      "task_type": "image-text-to-text",
+      "model_size": "4B",
+      "tags": ["multimodal", "gemma4", "edge", "any-to-any"],
+      "metrics": {"downloads": 1269309, "likes": 608},
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "zai-glm-5-1",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI",
+      "description": "Latest GLM model using MoE with deep-sparse attention architecture. New entrant from Zhipu AI's research lab gaining rapid community traction.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "chinese-llm"],
+      "metrics": {"downloads": 28826, "likes": 1071},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "baidu-qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Vision-language model optimized for OCR and document understanding tasks. Built on InternVL architecture with strong multilingual text recognition capabilities.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["ocr", "vision-language", "document-understanding"],
+      "metrics": {"downloads": 44802, "likes": 1139},
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "VOID Model",
+      "organization": "Netflix",
+      "description": "Video object removal model that handles physical interactions between objects. Based on CogVideoX architecture for video inpainting and editing.",
+      "task_type": "video-inpainting",
+      "model_size": "Unknown",
+      "tags": ["video-editing", "object-removal", "diffusion"],
+      "metrics": {"downloads": 0, "likes": 775},
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "openbmb-voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB",
+      "description": "Tokenizer-free text-to-speech system supporting multilingual speech generation, creative voice design, and true-to-life voice cloning.",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["tts", "multilingual", "voice-cloning"],
+      "metrics": {"downloads": 7452, "likes": 750},
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "prism-bonsai-8b",
+      "name": "Bonsai-8B",
+      "organization": "Prism ML",
+      "description": "Extreme 1-bit quantized 8B model in GGUF format. Pushes the boundary of aggressive quantization while maintaining usable inference quality.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": ["quantization", "1-bit", "gguf", "efficient"],
+      "metrics": {"downloads": 74389, "likes": 567},
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "k2-fsa-omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "Zero-shot multilingual voice cloning model with 394K downloads. Supports cross-lingual voice transfer with minimal reference audio.",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["voice-cloning", "zero-shot", "multilingual"],
+      "metrics": {"downloads": 393991, "likes": 523},
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "minimax-m2-7",
+      "name": "MiniMax-M2.7",
+      "organization": "MiniMaxAI",
+      "description": "New conversational model from MiniMax, a well-funded Chinese AI startup. Early-stage release gaining community attention.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["conversational", "chinese-llm"],
+      "metrics": {"downloads": 873, "likes": 477},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.7"
+    },
+    {
+      "id": "lgai-exaone-4-5-33b",
+      "name": "EXAONE-4.5-33B",
+      "organization": "LG AI Research",
+      "description": "First open-weight vision language model from LG AI Research. Integrates visual encoder into EXAONE 4.0 with emphasis on document-centric applications.",
+      "task_type": "text-generation",
+      "model_size": "33B",
+      "tags": ["vision-language", "open-weight", "document-centric"],
+      "metrics": {"downloads": 3660, "likes": 119},
+      "source_url": "https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Open-source autonomous agent framework from NousResearch that grows with the user. Exploding with 7,454 stars in a single day, signaling a breakout in open-source agent infrastructure.",
+      "language": "Python",
+      "stars": 67570,
+      "stars_today": 7454,
+      "forks": 9027,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "autonomous", "open-source", "nous-research"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Claude Code plugin that captures session activity, compresses it with AI, and injects relevant context into future sessions. Session-persistent memory for AI coding agents.",
+      "language": "TypeScript",
+      "stars": 50231,
+      "stars_today": 753,
+      "forks": 3969,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["claude-code", "memory", "plugin", "agent-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-best-practice",
+      "name": "shanraisshan/claude-code-best-practice",
+      "description": "Community-curated best practices for Claude Code usage, gaining massive traction with 1,548 stars today. Reflects the growing demand for structured AI coding workflows.",
+      "language": "HTML",
+      "stars": 39181,
+      "stars_today": 1548,
+      "forks": 3693,
+      "url": "https://github.com/shanraisshan/claude-code-best-practice",
+      "tags": ["claude-code", "best-practices", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "Python tool for converting files and office documents to Markdown. Essential utility for document processing pipelines and LLM ingestion workflows.",
+      "language": "Python",
+      "stars": 104937,
+      "stars_today": 2513,
+      "forks": 6558,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "llm-tools", "microsoft"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "forrestchang/andrej-karpathy-skills",
+      "description": "Single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's observations on LLM coding pitfalls. Gained 2,369 stars today.",
+      "language": "",
+      "stars": 17099,
+      "stars_today": 2369,
+      "forks": 1268,
+      "url": "https://github.com/forrestchang/andrej-karpathy-skills",
+      "tags": ["claude-code", "skills", "best-practices", "karpathy"],
+      "relevance": "high"
+    },
+    {
+      "id": "archon-harness-builder",
+      "name": "coleam00/Archon",
+      "description": "First open-source harness builder for AI coding. Makes AI coding deterministic and repeatable with structured harness configuration.",
+      "language": "TypeScript",
+      "stars": 17102,
+      "stars_today": 612,
+      "forks": 2711,
+      "url": "https://github.com/coleam00/Archon",
+      "tags": ["ai-coding", "harness", "deterministic", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "kronos-financial-foundation",
+      "name": "shiyu-coder/Kronos",
+      "description": "Foundation model for the language of financial markets. Specialized language model trained on financial data for market analysis and prediction tasks.",
+      "language": "Python",
+      "stars": 15867,
+      "stars_today": 1985,
+      "forks": 3026,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "financial-markets", "llm"],
+      "relevance": "high"
+    },
+    {
+      "id": "multica-agents-platform",
+      "name": "multica-ai/multica",
+      "description": "Open-source managed agents platform that turns coding agents into real teammates with task assignment, progress tracking, and compound skills.",
+      "language": "TypeScript",
+      "stars": 9508,
+      "stars_today": 1609,
+      "forks": 1214,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["agents", "platform", "team-management", "coding-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "VoxCPM2: Tokenizer-free TTS for multilingual speech generation, creative voice design, and true-to-life cloning. Companion repo to the trending HuggingFace model.",
+      "language": "Python",
+      "stars": 11385,
+      "stars_today": 1278,
+      "forks": 1316,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": ["tts", "voice-cloning", "multilingual", "speech"],
+      "relevance": "high"
+    },
+    {
+      "id": "ralph-autonomous-agent",
+      "name": "snarktank/ralph",
+      "description": "Autonomous AI agent loop that runs repeatedly until all PRD items are complete. Task-driven agent execution framework.",
+      "language": "TypeScript",
+      "stars": 15986,
+      "stars_today": 463,
+      "forks": 1592,
+      "url": "https://github.com/snarktank/ralph",
+      "tags": ["agents", "autonomous", "prd", "task-completion"],
+      "relevance": "high"
+    },
+    {
+      "id": "deeptutor-personalized-learning",
+      "name": "HKUDS/DeepTutor",
+      "description": "Agent-native personalized learning assistant from HKU. Applies AI agent paradigm to adaptive education.",
+      "language": "Python",
+      "stars": 17279,
+      "stars_today": 670,
+      "forks": 2269,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education", "agents", "personalized-learning", "tutoring"],
+      "relevance": "medium"
+    },
+    {
+      "id": "reverse-synthid",
+      "name": "aloshdenny/reverse-SynthID",
+      "description": "Reverse engineering Gemini's SynthID detection mechanism. Security research exploring watermark robustness in AI-generated content.",
+      "language": "Python",
+      "stars": 2281,
+      "stars_today": 192,
+      "forks": 211,
+      "url": "https://github.com/aloshdenny/reverse-SynthID",
+      "tags": ["watermarking", "synthid", "security-research", "ai-detection"],
+      "relevance": "medium"
+    },
+    {
+      "id": "rustfs-object-storage",
+      "name": "rustfs/rustfs",
+      "description": "S3-compatible high-performance object storage in Rust, claiming 2.3x faster than MinIO for 4KB payloads. Supports migration from other S3-compatible platforms.",
+      "language": "Rust",
+      "stars": 25264,
+      "stars_today": 182,
+      "forks": 1076,
+      "url": "https://github.com/rustfs/rustfs",
+      "tags": ["object-storage", "s3-compatible", "rust", "performance"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "SFT vs RL Generalization Debate",
+      "description": "The dominant paper challenges the prevailing narrative that SFT only memorizes. Combined with the Faithful GRPO work showing RLVR's reasoning quality trade-offs, a more nuanced picture of training paradigm trade-offs is emerging.",
+      "related_paper_ids": ["rethinking-generalization-reasoning-sft", "faithful-grpo-spatial-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Real-World Agent Evaluation and Distillation",
+      "description": "ClawBench's 153 real-world tasks and Agent-as-Annotators' structured distillation represent two sides of the agent capability coin: measuring real-world gaps and systematically closing them via synthetic training.",
+      "related_paper_ids": ["clawbench-ai-agents-everyday-tasks", "structured-distillation-web-agents", "implicitmembench-implicit-memory-llms"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video as the Medium for Creative and Embodied AI",
+      "description": "LPM 1.0's character performance, Tempo's long-video compression, ViVa's video-generative value models, and LiVER's lighting-grounded generation converge on video as a unifying modality for both creative applications and robot learning.",
+      "related_paper_ids": ["lpm-1-video-character-performance", "tempo-small-vlms-long-video", "viva-video-generative-value-model", "liver-lighting-grounded-video"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Data Engines and Spatial Intelligence",
+      "description": "OpenSpatial and MegaStyle tackle the data bottleneck from different angles \u2014 spatial understanding and visual style respectively \u2014 reflecting a maturing focus on principled data generation over model architecture innovation.",
+      "related_paper_ids": ["openspatial-data-engine-spatial-intelligence", "megastyle-scalable-style-dataset"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Cross-Model Capability Transfer",
+      "description": "The Master Key Hypothesis proposes training-free capability transfer via linear subspace alignment, while SSKD compresses foundation models into compact experts. Both challenge the assumption that capabilities require model-specific training.",
+      "related_paper_ids": ["master-key-hypothesis-capability-transfer", "training-student-expert-sskd"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Agent Tooling Ecosystem Crystallization",
+      "description": "GitHub trends show simultaneous momentum in agent frameworks (hermes-agent, ralph, multica), agent memory (claude-mem), agent configuration (karpathy-skills, Archon), and best practices \u2014 forming a coherent open-source agent development stack.",
+      "related_paper_ids": ["clawbench-ai-agents-everyday-tasks"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-04-13T02:10:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
