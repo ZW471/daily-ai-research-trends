@@ -39,34 +39,78 @@ GITHUB_TRENDING_URL = "https://github.com/trending"
 CLAUDE_MODEL = "claude-sonnet-4-6"
 
 
-def fetch_hf_daily_papers() -> list[dict]:
-    """Fetch today's trending papers from HuggingFace Daily Papers API."""
-    try:
-        resp = httpx.get(HF_DAILY_PAPERS_URL, timeout=30)
-        resp.raise_for_status()
-        papers = resp.json()
-        print(f"  [HF Papers] Fetched {len(papers)} papers")
-        return papers[:30]
-    except Exception as e:
-        print(f"  [HF Papers] Error: {e}")
+def _fetch_with_retry(url: str, params: dict | None = None, retries: int = 3,
+                      delay: float = 10.0, timeout: int = 30) -> httpx.Response | None:
+    """Fetch a URL with retry logic for transient failures."""
+    import time
+    for attempt in range(retries):
+        try:
+            resp = httpx.get(url, params=params, timeout=timeout)
+            resp.raise_for_status()
+            return resp
+        except Exception as e:
+            if attempt < retries - 1:
+                print(f"    Attempt {attempt + 1} failed: {e}. Retrying in {delay}s...")
+                time.sleep(delay)
+            else:
+                print(f"    All {retries} attempts failed: {e}")
+                return None
+
+
+def fetch_hf_daily_papers(date: str | None = None) -> list[dict]:
+    """Fetch trending papers from HuggingFace Daily Papers API.
+
+    Args:
+        date: Optional date string (YYYY-MM-DD) to fetch papers for a specific date.
+              If None, fetches today's papers.
+    """
+    params = {}
+    if date:
+        params["date"] = date
+    resp = _fetch_with_retry(HF_DAILY_PAPERS_URL, params=params)
+    if resp is None:
         return []
+    papers = resp.json()
+    label = f" for {date}" if date else ""
+    print(f"  [HF Papers] Fetched {len(papers)} papers{label}")
+    return papers[:30]
+
+
+def fetch_hf_daily_papers_with_fallback(date: str) -> list[dict]:
+    """Fetch daily papers with fallback to previous days if the target date is empty.
+
+    This handles weekends, holidays, and transient API gaps by trying up to 2 prior days.
+    """
+    papers = fetch_hf_daily_papers(date)
+    if papers:
+        return papers
+
+    # Fallback: try previous 2 days (covers weekends)
+    from datetime import timedelta
+    dt = datetime.strptime(date, "%Y-%m-%d")
+    for days_back in range(1, 3):
+        prev = (dt - timedelta(days=days_back)).strftime("%Y-%m-%d")
+        print(f"  [HF Papers] No papers for {date}, trying {prev}...")
+        papers = fetch_hf_daily_papers(prev)
+        if papers:
+            print(f"  [HF Papers] Using {len(papers)} papers from {prev} as fallback")
+            return papers
+
+    print(f"  [HF Papers] WARNING: No papers found for {date} or 2 prior days")
+    return []
 
 
 def fetch_hf_trending_models() -> list[dict]:
     """Fetch trending models from HuggingFace."""
-    try:
-        resp = httpx.get(
-            HF_TRENDING_MODELS_URL,
-            params={"sort": "likes7d", "direction": "-1", "limit": "20"},
-            timeout=30,
-        )
-        resp.raise_for_status()
-        models = resp.json()
-        print(f"  [HF Models] Fetched {len(models)} trending models")
-        return models[:20]
-    except Exception as e:
-        print(f"  [HF Models] Error: {e}")
+    resp = _fetch_with_retry(
+        HF_TRENDING_MODELS_URL,
+        params={"sort": "likes7d", "direction": "-1", "limit": "20"},
+    )
+    if resp is None:
         return []
+    models = resp.json()
+    print(f"  [HF Models] Fetched {len(models)} trending models")
+    return models[:20]
 
 
 def fetch_arxiv_recent(categories: list[str] | None = None) -> list[dict]:
@@ -643,20 +687,31 @@ def main():
 
     # Step 1: Fetch from all sources
     print("Fetching sources...")
-    hf_papers = fetch_hf_daily_papers()
+    hf_papers = fetch_hf_daily_papers_with_fallback(date)
     hf_models = fetch_hf_trending_models()
     arxiv_data = fetch_arxiv_recent()
     alphaxiv_papers = fetch_alphaxiv_trending()
     github_repos = fetch_github_trending()
 
-    # Guard: abort if both HF papers and models are empty (likely an API issue)
-    if not hf_papers and not hf_models and not args.allow_empty:
-        print(
-            "ERROR: HuggingFace returned 0 papers and 0 models. "
-            "This is likely a transient API issue. "
-            "Re-run later, or use --allow-empty to proceed anyway."
-        )
-        sys.exit(1)
+    # Guard: abort if papers OR models are empty (either is a likely API issue)
+    if not args.allow_empty:
+        if not hf_papers and not hf_models:
+            print(
+                "ERROR: HuggingFace returned 0 papers and 0 models. "
+                "This is likely a transient API issue. "
+                "Re-run later, or use --allow-empty to proceed anyway."
+            )
+            sys.exit(1)
+        if not hf_papers:
+            print(
+                "WARNING: HuggingFace returned 0 papers (even after fallback). "
+                "Models are available. Proceeding, but the review may lack papers."
+            )
+        if not hf_models:
+            print(
+                "WARNING: HuggingFace returned 0 trending models. "
+                "Papers are available. Proceeding, but the review may lack models."
+            )
 
     # Step 2: Build context
     context = build_source_context(hf_papers, hf_models, arxiv_data, alphaxiv_papers, github_repos)

@@ -15,8 +15,586 @@
     ]
   },
   "researcher_notes": "**The agent infrastructure stack is crystallizing in real time.** The simultaneous trending of hermes-agent, Archon, multica, agentscope, and K-Dense-AI/scientific-agent-skills reveals that the community has moved past proof-of-concept agents and is now building for production: observable state, task assignment, skill composition, and deterministic repeatability are the new table stakes. This is architecturally analogous to the containerization moment in DevOps—the underlying model capability (like compute) is commoditized, and the value is shifting to orchestration and observability layers.\n\n**The reverse-SynthID repo is a sleeper hit worth watching closely.** With 682 stars today and growing, `aloshdenny/reverse-SynthID` represents a direct adversarial challenge to Google's AI watermarking scheme for Gemini outputs. If this reverse-engineering approach proves robust, it has significant implications for content provenance, AI safety policy, and the entire watermarking research agenda. Researchers in the alignment and safety space should monitor whether this triggers a response from Google DeepMind or a broader academic discussion on watermark robustness.\n\n**Kronos as a financial foundation model signals the next wave of vertical LLMs.** The financial markets domain has unique requirements—tick-level time series, earnings transcripts, regulatory filings, and regime-dependent dynamics—that general-purpose LLMs handle poorly. Kronos's 607 stars today suggests real practitioner appetite. Combined with the scientific-agent-skills repo from K-Dense-AI, there's a pattern of domain experts building bespoke model+skill stacks rather than waiting for OpenAI or Anthropic to solve their vertical. Watch for similar repos in biomedical, legal, and materials science domains over the next 30-60 days.\n\n**VoxCPM2's tokenizer-free TTS approach is architecturally interesting beyond just audio.** The tokenizer-free paradigm—avoiding discrete audio token bottlenecks—may generalize lessons back into language modeling research. If continuous-space generation proves more expressive for speech, it raises questions about whether token-based generation is an unnecessary constraint in other modalities. The OpenBMB provenance (Tsinghua/Renmin University lineage) gives this work credibility and suggests it will influence the next generation of multimodal foundation models.\n\n**The CLAUDE.md / Claude Code best-practices meta-layer is an underappreciated research signal.** The fact that `andrej-karpathy-skills` and `claude-code-best-practice` are both trending strongly—framed explicitly around behavioral correction of LLM coding agents—suggests that prompt-level behavioral engineering is becoming a first-class engineering discipline. This is worth studying empirically: do these CLAUDE.md files actually reduce error rates, and if so, by how much? A rigorous ablation study here could be a high-impact, low-cost paper.",
-  "papers": [],
-  "models": [],
+  "papers": [
+    {
+      "id": "rethinking-generalization-reasoning-sft",
+      "title": "Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability",
+      "authors": [
+        "Qihan Ren",
+        "Peng Wang",
+        "Ruikun Cai",
+        "Shuai Shao",
+        "Dadi Guo"
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "ByteDance"
+      ],
+      "summary": "Challenges the prevailing narrative that SFT memorizes while RL generalizes, demonstrating cross-domain generalization is conditional on optimization dynamics, data quality, and base-model capability — with some reported failures being under-optimization artifacts.",
+      "key_findings": [
+        "Cross-domain generalization in reasoning SFT follows a dip-and-recovery pattern often mistaken for failure",
+        "Data quality and verified long-CoT traces yield consistent cross-domain gains",
+        "Generalization is asymmetric: reasoning improves while safety degrades under extended SFT"
+      ],
+      "tags": [
+        "SFT",
+        "reinforcement-learning",
+        "reasoning",
+        "generalization",
+        "chain-of-thought"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 297,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06628",
+        "huggingface": "https://huggingface.co/papers/2604.06628",
+        "pdf": "https://arxiv.org/pdf/2604.06628"
+      }
+    },
+    {
+      "id": "skillclaw-skills-evolve-collectively",
+      "title": "SkillClaw: Let Skills Evolve Collectively with Agentic Evolver",
+      "authors": [
+        "Ziyu Ma",
+        "Shidong Yang",
+        "Yuxiang Ji",
+        "Xucong Wang",
+        "Yong Wang"
+      ],
+      "affiliations": [
+        "Peking University",
+        "Microsoft Research"
+      ],
+      "summary": "Proposes an agentic evolver that enables LLM agent skills to evolve collectively after deployment, preventing redundant rediscovery of workflows and failure patterns.",
+      "key_findings": [
+        "Agent skills remain static post-deployment, causing waste across users",
+        "Collective evolution via agentic evolver continuously improves shared skill libraries",
+        "Strong gains on multi-step complex task benchmarks"
+      ],
+      "tags": [
+        "agents",
+        "skills",
+        "evolution",
+        "LLM",
+        "collective-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 263,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08377",
+        "huggingface": "https://huggingface.co/papers/2604.08377",
+        "pdf": "https://arxiv.org/pdf/2604.08377"
+      }
+    },
+    {
+      "id": "clawbench-ai-agents-everyday-tasks",
+      "title": "ClawBench: Can AI Agents Complete Everyday Online Tasks?",
+      "authors": [
+        "Yuxuan Zhang",
+        "Yubo Wang",
+        "Yipeng Zhu",
+        "Penghui Du",
+        "Junwen Miao"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Evaluation framework of 153 everyday online tasks revealing that AI agents struggle with routine digital life automation despite excelling at specialized coding and research tasks.",
+      "key_findings": [
+        "153-task benchmark covering booking, shopping, form-filling, and other routine web interactions",
+        "Significant performance gap between specialized tasks and everyday digital automation",
+        "Current frontier models achieve <40% success rate on many everyday tasks"
+      ],
+      "tags": [
+        "benchmark",
+        "agents",
+        "web-agents",
+        "evaluation",
+        "everyday-tasks"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 244,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08523",
+        "huggingface": "https://huggingface.co/papers/2604.08523",
+        "pdf": "https://arxiv.org/pdf/2604.08523"
+      }
+    },
+    {
+      "id": "hy-embodied-foundation-models",
+      "title": "HY-Embodied-0.5: Embodied Foundation Models for Real-World Agents",
+      "authors": [
+        "Tencent Robotics X",
+        "HY Vision Team",
+        "Xumin Yu",
+        "Zuyan Liu",
+        "Ziyi Wang"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "Foundation models for real-world embodied agents bridging general VLMs with embodied intelligence requirements for robot manipulation and navigation.",
+      "key_findings": [
+        "Bridges gap between general VLMs and embodied agent demands",
+        "MoT architecture optimized for embodied reasoning tasks",
+        "Strong transfer from vision-language pretraining to physical-world interaction"
+      ],
+      "tags": [
+        "embodied-AI",
+        "robotics",
+        "VLM",
+        "foundation-model",
+        "Tencent"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 156,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07430",
+        "huggingface": "https://huggingface.co/papers/2604.07430",
+        "pdf": "https://arxiv.org/pdf/2604.07430"
+      }
+    },
+    {
+      "id": "numina-textual-numerals-video",
+      "title": "When Numbers Speak: Aligning Textual Numerals and Visual Instances in Text-to-Video Diffusion Models",
+      "authors": [
+        "Zhengyang Sun",
+        "Yu Chen",
+        "Xin Zhou",
+        "Xiaofan Li",
+        "Xiwu Chen"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "Training-free NUMINA framework fixes numerical misalignment in text-to-video diffusion by identifying prompt-layout inconsistencies and guiding the denoising process.",
+      "key_findings": [
+        "Identify-then-guide approach for correct object count generation",
+        "Training-free — works with existing diffusion models without fine-tuning",
+        "Significant count accuracy improvement without quality degradation"
+      ],
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "numerical-alignment",
+        "text-to-video"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 109,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08546",
+        "huggingface": "https://huggingface.co/papers/2604.08546",
+        "pdf": "https://arxiv.org/pdf/2604.08546"
+      }
+    },
+    {
+      "id": "megastyle-diverse-style-dataset",
+      "title": "MegaStyle: Constructing Diverse and Scalable Style Dataset via Consistent Text-to-Image Style Mapping",
+      "authors": [
+        "Junyao Gao",
+        "Sibo Liu",
+        "Jiaxing Li",
+        "Yanan Sun",
+        "Yuanpeng Tu"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "Scalable data curation pipeline for constructing intra-style consistent, inter-style diverse style datasets using text-to-image generative model consistency.",
+      "key_findings": [
+        "Automated pipeline produces large-scale style-consistent datasets",
+        "Leverages T2I model style mapping for consistency guarantees",
+        "Enables downstream style transfer and artistic generation improvements"
+      ],
+      "tags": [
+        "style-transfer",
+        "dataset",
+        "text-to-image",
+        "data-curation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 92,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08364",
+        "huggingface": "https://huggingface.co/papers/2604.08364",
+        "pdf": "https://arxiv.org/pdf/2604.08364"
+      }
+    },
+    {
+      "id": "openvlthinkerv2-multimodal-reasoning",
+      "title": "OpenVLThinkerV2: A Generalist Multimodal Reasoning Model for Multi-domain Visual Tasks",
+      "authors": [
+        "Wenbo Hu",
+        "Xin Chen",
+        "Yan Gao-Tian",
+        "Yihe Deng",
+        "Nanyun Peng"
+      ],
+      "affiliations": [
+        "UCLA NLP"
+      ],
+      "summary": "Extends GRPO reinforcement learning to open-source multimodal generalist models, enabling multi-domain visual reasoning with improved data diversity strategies.",
+      "key_findings": [
+        "Successfully applies GRPO to open-source multimodal models",
+        "Multi-domain coverage overcomes prior domain-limited RL approaches",
+        "Competitive with proprietary systems on visual reasoning benchmarks"
+      ],
+      "tags": [
+        "multimodal",
+        "reasoning",
+        "GRPO",
+        "reinforcement-learning",
+        "visual-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08539",
+        "huggingface": "https://huggingface.co/papers/2604.08539",
+        "pdf": "https://arxiv.org/pdf/2604.08539"
+      }
+    },
+    {
+      "id": "dmax-aggressive-parallel-decoding",
+      "title": "DMax: Aggressive Parallel Decoding for dLLMs",
+      "authors": [
+        "Zigeng Chen",
+        "Gongfan Fang",
+        "Xinyin Ma",
+        "Ruonan Yu",
+        "Xinchao Wang"
+      ],
+      "affiliations": [
+        "National University of Singapore"
+      ],
+      "summary": "New paradigm for efficient diffusion language models enabling aggressive parallelism via soft-transition decoding that mitigates error accumulation.",
+      "key_findings": [
+        "Soft-transition decoding avoids error accumulation in parallel dLLM inference",
+        "Enables 3-5x speedup over sequential decoding without quality loss",
+        "Generalizable approach applicable to various diffusion LLM architectures"
+      ],
+      "tags": [
+        "diffusion-LLM",
+        "parallel-decoding",
+        "inference-efficiency",
+        "dLLM"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08302",
+        "huggingface": "https://huggingface.co/papers/2604.08302",
+        "pdf": "https://arxiv.org/pdf/2604.08302"
+      }
+    },
+    {
+      "id": "externalization-llm-agents-review",
+      "title": "Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering",
+      "authors": [
+        "Chenyu Zhou",
+        "Huacan Chai",
+        "Wenteng Chen",
+        "Zihan Guo",
+        "Rong Shan"
+      ],
+      "affiliations": [
+        "Fudan University"
+      ],
+      "summary": "Unified review of how LLM agent capabilities are externalized into runtime components — memory, skills, protocols, and harness infrastructure — rather than embedded in weights.",
+      "key_findings": [
+        "Agent capability externalization is the dominant architectural trend",
+        "Unified taxonomy spanning memory, skills, protocols, and harness engineering",
+        "Runtime-centric design enables composability and production observability"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "skills",
+        "protocols",
+        "survey"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08224",
+        "huggingface": "https://huggingface.co/papers/2604.08224",
+        "pdf": "https://arxiv.org/pdf/2604.08224"
+      }
+    },
+    {
+      "id": "molmoweb-open-visual-web-agent",
+      "title": "MolmoWeb: Open Visual Web Agent and Open Data for the Open Web",
+      "authors": [
+        "Tanmay Gupta",
+        "Piper Wolters",
+        "Zixian Ma",
+        "Peter Sushko",
+        "Rock Yuren Pang"
+      ],
+      "affiliations": [
+        "Allen Institute for AI (AI2)"
+      ],
+      "summary": "Open-source visual web agent with released training data and recipes, demonstrating that open models can match proprietary systems on web navigation tasks.",
+      "key_findings": [
+        "Open-source web agent competitive with proprietary systems",
+        "Full release of training data, weights, and recipes for reproducibility",
+        "Demonstrates viability of open alternatives for autonomous web automation"
+      ],
+      "tags": [
+        "web-agents",
+        "open-source",
+        "visual-agent",
+        "AI2"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 35,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08516",
+        "huggingface": "https://huggingface.co/papers/2604.08516",
+        "pdf": "https://arxiv.org/pdf/2604.08516"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-1",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "Zhipu AI's latest MoE text generation model with strong multilingual capabilities in English and Chinese, released as open-weight under MIT license.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "multilingual",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 28800,
+        "likes": 1084
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma 4 31B IT",
+      "organization": "Google",
+      "description": "Google's 31B parameter instruction-tuned Gemma 4 model with image-text-to-text capabilities and strong benchmark performance across reasoning and multimodal tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "multimodal",
+        "instruction-tuned",
+        "Google",
+        "Gemma"
+      ],
+      "metrics": {
+        "downloads": 2200000,
+        "likes": 1784
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB (Tsinghua University)",
+      "description": "Tokenizer-free multilingual TTS system supporting 30+ languages with voice cloning and voice design capabilities, challenging the dominant codec-based speech synthesis paradigm.",
+      "task_type": "text-to-speech",
+      "model_size": "N/A",
+      "tags": [
+        "TTS",
+        "multilingual",
+        "voice-cloning",
+        "tokenizer-free"
+      ],
+      "metrics": {
+        "downloads": 7500,
+        "likes": 760
+      },
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "minimax-m2-7",
+      "name": "MiniMax-M2.7",
+      "organization": "MiniMax AI",
+      "description": "MiniMax's latest large language model with custom architecture, demonstrating strong text generation capabilities with efficient inference.",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "text-generation",
+        "custom-architecture",
+        "MiniMax"
+      ],
+      "metrics": {
+        "downloads": 873,
+        "likes": 535
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.7"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "VOID Model",
+      "organization": "Netflix",
+      "description": "Netflix's video inpainting and object removal model built on CogVideoX diffusion architecture, enabling seamless video editing and content removal.",
+      "task_type": "video-to-video",
+      "model_size": "N/A",
+      "tags": [
+        "video-inpainting",
+        "object-removal",
+        "diffusion",
+        "Netflix"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 775
+      },
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "Zero-shot multilingual voice cloning and text-to-speech model supporting hundreds of languages with voice design capabilities.",
+      "task_type": "text-to-speech",
+      "model_size": "N/A",
+      "tags": [
+        "TTS",
+        "zero-shot",
+        "multilingual",
+        "voice-cloning"
+      ],
+      "metrics": {
+        "downloads": 394000,
+        "likes": 527
+      },
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "Community-distilled 27B model transferring Claude 4.6 Opus reasoning capabilities into Qwen3.5 architecture using Unsloth, among the most popular reasoning distillations on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "reasoning-distillation",
+        "qwen3.5",
+        "claude-opus",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 578300,
+        "likes": 2602
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "gemma-4-e4b-it",
+      "name": "Gemma 4 E4B IT",
+      "organization": "Google",
+      "description": "Google's efficient 4B parameter Gemma 4 model with any-to-any modality capabilities, designed for edge deployment and resource-constrained environments.",
+      "task_type": "any-to-any",
+      "model_size": "4B",
+      "tags": [
+        "multimodal",
+        "efficient",
+        "edge",
+        "Google"
+      ],
+      "metrics": {
+        "downloads": 1300000,
+        "likes": 612
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "hy-embodied-0-5",
+      "name": "HY-Embodied-0.5",
+      "organization": "Tencent",
+      "description": "Tencent's embodied foundation model for real-world robotics agents, combining vision-language understanding with MoT architecture for embodied intelligence tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "2B",
+      "tags": [
+        "embodied-AI",
+        "robotics",
+        "VLM",
+        "Tencent"
+      ],
+      "metrics": {
+        "downloads": 582,
+        "likes": 136
+      },
+      "source_url": "https://huggingface.co/tencent/HY-Embodied-0.5"
+    },
+    {
+      "id": "bonsai-8b-gguf",
+      "name": "Bonsai-8B",
+      "organization": "Prism ML",
+      "description": "1-bit quantized 8B parameter model optimized for on-device inference via llama.cpp, demonstrating that extreme quantization can preserve usable text generation quality.",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": [
+        "1-bit",
+        "quantization",
+        "on-device",
+        "llama.cpp"
+      ],
+      "metrics": {
+        "downloads": 74400,
+        "likes": 567
+      },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's specialized OCR and document intelligence model built on InternVL architecture, optimized for multilingual document understanding and extraction.",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": [
+        "OCR",
+        "document-intelligence",
+        "multilingual",
+        "Baidu"
+      ],
+      "metrics": {
+        "downloads": 44800,
+        "likes": 1139
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    }
+  ],
   "trending_repos": [
     {
       "id": "nousresearch-hermes-agent",

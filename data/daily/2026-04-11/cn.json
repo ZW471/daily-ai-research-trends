@@ -15,8 +15,586 @@
     ]
   },
   "researcher_notes": "**智能体基础设施技术栈正在实时结晶成型。** hermes-agent、Archon、multica、agentscope与K-Dense-AI/scientific-agent-skills的同步走热表明，社区已超越概念验证阶段，正着力面向生产环境构建：可观测状态、任务分配、技能组合与确定性可重复性已成为新的基本门槛。从架构层面看，这与DevOps领域的容器化时刻高度类比——底层模型能力（如同算力）日趋商品化，价值正向编排与可观测层转移。\n\n**reverse-SynthID仓库是一匹值得密切关注的黑马。** 该仓库今日新增682颗星且仍在增长，`aloshdenny/reverse-SynthID`对Google针对Gemini输出的SynthID AI水印方案发起了直接的对抗性挑战。若这一逆向工程方法被证明具有鲁棒性，将对内容溯源、AI安全政策以及整个水印研究议程产生深远影响。对齐与安全领域的研究者应关注此事是否会引发Google DeepMind的回应，或引发学术界围绕水印鲁棒性的更广泛讨论。\n\n**Kronos作为金融基础模型，标志着垂直LLM下一波浪潮的到来。** 金融市场领域有其独特需求——逐笔时间序列、财报文本、监管文件以及制度依赖的动态特性——这些都是通用LLM难以胜任的。Kronos今日607颗新星表明实践者群体存在真实需求。结合K-Dense-AI的scientific-agent-skills仓库来看，领域专家正在构建专属的模型加技能组合栈，而非坐等OpenAI或Anthropic解决其垂直场景问题。预计未来30至60天内，生物医学、法律和材料科学等领域将涌现类似仓库。\n\n**VoxCPM2的无分词器TTS方案在架构层面的意义远超音频领域本身。** 无分词器范式——绕过离散音频token瓶颈——或许能将其经验反哺至语言建模研究。若连续空间生成对语音而言被证明更具表达力，则会引发一个深层问题：基于token的生成是否在其他模态中构成不必要的约束？OpenBMB（清华大学/中国人民大学血统）的出身赋予这项工作充分的学术信誉，表明它将影响下一代多模态基础模型的走向。\n\n**CLAUDE.md与Claude Code最佳实践元层是一个被低估的研究信号。** `andrej-karpathy-skills`与`claude-code-best-practice`同步强势走热，且都明确以纠正LLM编码智能体的行为偏差为出发点，这说明提示级行为工程正在成为一门一流工程学科。这一现象值得实证研究：这些CLAUDE.md文件是否真的能降低错误率？若能，降幅几何？针对此问题进行严格的消融实验，有望以较低成本产出高影响力论文。",
-  "papers": [],
-  "models": [],
+  "papers": [
+    {
+      "id": "rethinking-generalization-reasoning-sft",
+      "title": "Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability",
+      "authors": [
+        "Qihan Ren",
+        "Peng Wang",
+        "Ruikun Cai",
+        "Shuai Shao",
+        "Dadi Guo"
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "ByteDance"
+      ],
+      "summary": "挑战了SFT记忆而RL泛化的主流观点，证明跨域泛化取决于优化动态、数据质量和基础模型能力——部分已报告的失败实际上是优化不足的假象。",
+      "key_findings": [
+        "推理SFT的跨域泛化呈现先降后升的U型曲线，常被误判为泛化失败",
+        "经验证的长链思维(CoT)训练数据能带来持续的跨域增益",
+        "泛化是不对称的：推理能力提升的同时安全性会下降"
+      ],
+      "tags": [
+        "SFT",
+        "reinforcement-learning",
+        "reasoning",
+        "generalization",
+        "chain-of-thought"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 297,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.06628",
+        "huggingface": "https://huggingface.co/papers/2604.06628",
+        "pdf": "https://arxiv.org/pdf/2604.06628"
+      }
+    },
+    {
+      "id": "skillclaw-skills-evolve-collectively",
+      "title": "SkillClaw: Let Skills Evolve Collectively with Agentic Evolver",
+      "authors": [
+        "Ziyu Ma",
+        "Shidong Yang",
+        "Yuxiang Ji",
+        "Xucong Wang",
+        "Yong Wang"
+      ],
+      "affiliations": [
+        "Peking University",
+        "Microsoft Research"
+      ],
+      "summary": "提出智能体进化器，使LLM智能体技能在部署后能集体演化，避免用户间重复发现相同工作流和失败模式。",
+      "key_findings": [
+        "智能体技能在部署后保持静态，导致跨用户的重复劳动",
+        "智能体进化器通过集体演化持续改进共享技能库",
+        "在多步骤复杂任务基准测试中表现出显著提升"
+      ],
+      "tags": [
+        "agents",
+        "skills",
+        "evolution",
+        "LLM",
+        "collective-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 263,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08377",
+        "huggingface": "https://huggingface.co/papers/2604.08377",
+        "pdf": "https://arxiv.org/pdf/2604.08377"
+      }
+    },
+    {
+      "id": "clawbench-ai-agents-everyday-tasks",
+      "title": "ClawBench: Can AI Agents Complete Everyday Online Tasks?",
+      "authors": [
+        "Yuxuan Zhang",
+        "Yubo Wang",
+        "Yipeng Zhu",
+        "Penghui Du",
+        "Junwen Miao"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "包含153个日常在线任务的评估框架，揭示AI智能体在日常数字生活自动化方面的不足，尽管它们在专业编码和研究任务上表现出色。",
+      "key_findings": [
+        "153个任务基准覆盖预订、购物、填表等日常网络交互",
+        "专业任务与日常数字自动化之间存在显著性能差距",
+        "当前前沿模型在许多日常任务上成功率低于40%"
+      ],
+      "tags": [
+        "benchmark",
+        "agents",
+        "web-agents",
+        "evaluation",
+        "everyday-tasks"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 244,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08523",
+        "huggingface": "https://huggingface.co/papers/2604.08523",
+        "pdf": "https://arxiv.org/pdf/2604.08523"
+      }
+    },
+    {
+      "id": "hy-embodied-foundation-models",
+      "title": "HY-Embodied-0.5: Embodied Foundation Models for Real-World Agents",
+      "authors": [
+        "Tencent Robotics X",
+        "HY Vision Team",
+        "Xumin Yu",
+        "Zuyan Liu",
+        "Ziyi Wang"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "面向真实世界具身智能体的基础模型，弥合通用视觉语言模型与具身智能需求之间的差距。",
+      "key_findings": [
+        "弥合通用VLM与具身智能体需求之间的差距",
+        "MoT架构针对具身推理任务优化",
+        "从视觉语言预训练到物理世界交互的强迁移能力"
+      ],
+      "tags": [
+        "embodied-AI",
+        "robotics",
+        "VLM",
+        "foundation-model",
+        "Tencent"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 156,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.07430",
+        "huggingface": "https://huggingface.co/papers/2604.07430",
+        "pdf": "https://arxiv.org/pdf/2604.07430"
+      }
+    },
+    {
+      "id": "numina-textual-numerals-video",
+      "title": "When Numbers Speak: Aligning Textual Numerals and Visual Instances in Text-to-Video Diffusion Models",
+      "authors": [
+        "Zhengyang Sun",
+        "Yu Chen",
+        "Xin Zhou",
+        "Xiaofan Li",
+        "Xiwu Chen"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "无需训练的NUMINA框架通过识别提示-布局不一致性并引导去噪过程，修复文本到视频扩散中的数字不对齐问题。",
+      "key_findings": [
+        "识别-引导方法确保正确生成物体数量",
+        "无需训练——可直接用于现有扩散模型",
+        "在不降低质量的情况下显著提高计数准确性"
+      ],
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "numerical-alignment",
+        "text-to-video"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 109,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08546",
+        "huggingface": "https://huggingface.co/papers/2604.08546",
+        "pdf": "https://arxiv.org/pdf/2604.08546"
+      }
+    },
+    {
+      "id": "megastyle-diverse-style-dataset",
+      "title": "MegaStyle: Constructing Diverse and Scalable Style Dataset via Consistent Text-to-Image Style Mapping",
+      "authors": [
+        "Junyao Gao",
+        "Sibo Liu",
+        "Jiaxing Li",
+        "Yanan Sun",
+        "Yuanpeng Tu"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "可扩展的数据策划流水线，利用文本到图像生成模型的一致性构建风格内一致、风格间多样的高质量风格数据集。",
+      "key_findings": [
+        "自动化流水线生成大规模风格一致的数据集",
+        "利用T2I模型风格映射保证一致性",
+        "支持下游风格迁移和艺术生成改进"
+      ],
+      "tags": [
+        "style-transfer",
+        "dataset",
+        "text-to-image",
+        "data-curation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 92,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08364",
+        "huggingface": "https://huggingface.co/papers/2604.08364",
+        "pdf": "https://arxiv.org/pdf/2604.08364"
+      }
+    },
+    {
+      "id": "openvlthinkerv2-multimodal-reasoning",
+      "title": "OpenVLThinkerV2: A Generalist Multimodal Reasoning Model for Multi-domain Visual Tasks",
+      "authors": [
+        "Wenbo Hu",
+        "Xin Chen",
+        "Yan Gao-Tian",
+        "Yihe Deng",
+        "Nanyun Peng"
+      ],
+      "affiliations": [
+        "UCLA NLP"
+      ],
+      "summary": "将GRPO强化学习扩展到开源多模态通用模型，通过改进的数据多样性策略实现多领域视觉推理。",
+      "key_findings": [
+        "成功将GRPO应用于开源多模态模型",
+        "多领域覆盖克服了先前受限于单一领域的RL方法",
+        "在视觉推理基准上与专有系统竞争"
+      ],
+      "tags": [
+        "multimodal",
+        "reasoning",
+        "GRPO",
+        "reinforcement-learning",
+        "visual-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08539",
+        "huggingface": "https://huggingface.co/papers/2604.08539",
+        "pdf": "https://arxiv.org/pdf/2604.08539"
+      }
+    },
+    {
+      "id": "dmax-aggressive-parallel-decoding",
+      "title": "DMax: Aggressive Parallel Decoding for dLLMs",
+      "authors": [
+        "Zigeng Chen",
+        "Gongfan Fang",
+        "Xinyin Ma",
+        "Ruonan Yu",
+        "Xinchao Wang"
+      ],
+      "affiliations": [
+        "National University of Singapore"
+      ],
+      "summary": "扩散语言模型的新范式，通过软过渡解码缓解误差累积，实现激进的并行解码。",
+      "key_findings": [
+        "软过渡解码避免了并行dLLM推理中的误差累积",
+        "在不损失质量的情况下实现3-5倍加速",
+        "可推广到各种扩散LLM架构"
+      ],
+      "tags": [
+        "diffusion-LLM",
+        "parallel-decoding",
+        "inference-efficiency",
+        "dLLM"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08302",
+        "huggingface": "https://huggingface.co/papers/2604.08302",
+        "pdf": "https://arxiv.org/pdf/2604.08302"
+      }
+    },
+    {
+      "id": "externalization-llm-agents-review",
+      "title": "Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering",
+      "authors": [
+        "Chenyu Zhou",
+        "Huacan Chai",
+        "Wenteng Chen",
+        "Zihan Guo",
+        "Rong Shan"
+      ],
+      "affiliations": [
+        "Fudan University"
+      ],
+      "summary": "统一综述LLM智能体能力如何从模型权重外化到运行时组件——记忆、技能、协议和工具链基础设施。",
+      "key_findings": [
+        "智能体能力外化是当前主导的架构趋势",
+        "统一分类法涵盖记忆、技能、协议和工具链工程",
+        "以运行时为中心的设计实现可组合性和生产可观察性"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "skills",
+        "protocols",
+        "survey"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08224",
+        "huggingface": "https://huggingface.co/papers/2604.08224",
+        "pdf": "https://arxiv.org/pdf/2604.08224"
+      }
+    },
+    {
+      "id": "molmoweb-open-visual-web-agent",
+      "title": "MolmoWeb: Open Visual Web Agent and Open Data for the Open Web",
+      "authors": [
+        "Tanmay Gupta",
+        "Piper Wolters",
+        "Zixian Ma",
+        "Peter Sushko",
+        "Rock Yuren Pang"
+      ],
+      "affiliations": [
+        "Allen Institute for AI (AI2)"
+      ],
+      "summary": "开源视觉网页智能体，发布训练数据和方案，证明开源模型可在网页导航任务上匹配专有系统。",
+      "key_findings": [
+        "开源网页智能体与专有系统性能相当",
+        "完整发布训练数据、权重和方案以确保可复现性",
+        "证明自主网页自动化开源替代方案的可行性"
+      ],
+      "tags": [
+        "web-agents",
+        "open-source",
+        "visual-agent",
+        "AI2"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 35,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2604.08516",
+        "huggingface": "https://huggingface.co/papers/2604.08516",
+        "pdf": "https://arxiv.org/pdf/2604.08516"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-1",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "智谱AI最新的MoE文本生成模型，具备强大的中英双语能力，以MIT许可证开源发布。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "multilingual",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 28800,
+        "likes": 1084
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.1"
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma 4 31B IT",
+      "organization": "Google",
+      "description": "Google的310亿参数指令微调Gemma 4模型，支持图像-文本到文本的多模态能力，在推理和多模态任务基准上表现优异。",
+      "task_type": "image-text-to-text",
+      "model_size": "31B",
+      "tags": [
+        "multimodal",
+        "instruction-tuned",
+        "Google",
+        "Gemma"
+      ],
+      "metrics": {
+        "downloads": 2200000,
+        "likes": 1784
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-31B-it"
+    },
+    {
+      "id": "voxcpm2",
+      "name": "VoxCPM2",
+      "organization": "OpenBMB (Tsinghua University)",
+      "description": "无分词器的多语言TTS系统，支持30多种语言的语音克隆和语音设计，挑战了主流的编解码器语音合成范式。",
+      "task_type": "text-to-speech",
+      "model_size": "N/A",
+      "tags": [
+        "TTS",
+        "multilingual",
+        "voice-cloning",
+        "tokenizer-free"
+      ],
+      "metrics": {
+        "downloads": 7500,
+        "likes": 760
+      },
+      "source_url": "https://huggingface.co/openbmb/VoxCPM2"
+    },
+    {
+      "id": "minimax-m2-7",
+      "name": "MiniMax-M2.7",
+      "organization": "MiniMax AI",
+      "description": "MiniMax最新大语言模型，采用自定义架构，展现出强大的文本生成能力和高效推理性能。",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "text-generation",
+        "custom-architecture",
+        "MiniMax"
+      ],
+      "metrics": {
+        "downloads": 873,
+        "likes": 535
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.7"
+    },
+    {
+      "id": "netflix-void-model",
+      "name": "VOID Model",
+      "organization": "Netflix",
+      "description": "Netflix的视频修复和物体移除模型，基于CogVideoX扩散架构，实现无缝视频编辑和内容移除。",
+      "task_type": "video-to-video",
+      "model_size": "N/A",
+      "tags": [
+        "video-inpainting",
+        "object-removal",
+        "diffusion",
+        "Netflix"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 775
+      },
+      "source_url": "https://huggingface.co/netflix/void-model"
+    },
+    {
+      "id": "omnivoice",
+      "name": "OmniVoice",
+      "organization": "k2-fsa",
+      "description": "零样本多语言语音克隆和文本转语音模型，支持数百种语言的语音设计功能。",
+      "task_type": "text-to-speech",
+      "model_size": "N/A",
+      "tags": [
+        "TTS",
+        "zero-shot",
+        "multilingual",
+        "voice-cloning"
+      ],
+      "metrics": {
+        "downloads": 394000,
+        "likes": 527
+      },
+      "source_url": "https://huggingface.co/k2-fsa/OmniVoice"
+    },
+    {
+      "id": "qwen35-27b-claude-opus-distilled",
+      "name": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled",
+      "organization": "Jackrong (Community)",
+      "description": "社区蒸馏的270亿参数模型，使用Unsloth将Claude 4.6 Opus推理能力迁移到Qwen3.5架构，是HuggingFace上最受欢迎的推理蒸馏之一。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "reasoning-distillation",
+        "qwen3.5",
+        "claude-opus",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 578300,
+        "likes": 2602
+      },
+      "source_url": "https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled"
+    },
+    {
+      "id": "gemma-4-e4b-it",
+      "name": "Gemma 4 E4B IT",
+      "organization": "Google",
+      "description": "Google高效的40亿参数Gemma 4模型，具备任意模态转换能力，专为边缘部署和资源受限环境设计。",
+      "task_type": "any-to-any",
+      "model_size": "4B",
+      "tags": [
+        "multimodal",
+        "efficient",
+        "edge",
+        "Google"
+      ],
+      "metrics": {
+        "downloads": 1300000,
+        "likes": 612
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-E4B-it"
+    },
+    {
+      "id": "hy-embodied-0-5",
+      "name": "HY-Embodied-0.5",
+      "organization": "Tencent",
+      "description": "腾讯面向真实世界机器人智能体的具身基础模型，结合视觉语言理解与MoT架构。",
+      "task_type": "image-text-to-text",
+      "model_size": "2B",
+      "tags": [
+        "embodied-AI",
+        "robotics",
+        "VLM",
+        "Tencent"
+      ],
+      "metrics": {
+        "downloads": 582,
+        "likes": 136
+      },
+      "source_url": "https://huggingface.co/tencent/HY-Embodied-0.5"
+    },
+    {
+      "id": "bonsai-8b-gguf",
+      "name": "Bonsai-8B",
+      "organization": "Prism ML",
+      "description": "1位量化80亿参数模型，通过llama.cpp优化设备端推理，证明极端量化可保持可用的文本生成质量。",
+      "task_type": "text-generation",
+      "model_size": "8B (1-bit)",
+      "tags": [
+        "1-bit",
+        "quantization",
+        "on-device",
+        "llama.cpp"
+      ],
+      "metrics": {
+        "downloads": 74400,
+        "likes": 567
+      },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-8B-gguf"
+    },
+    {
+      "id": "qianfan-ocr",
+      "name": "Qianfan-OCR",
+      "organization": "Baidu",
+      "description": "百度基于InternVL架构的专用OCR和文档智能模型，针对多语言文档理解和提取优化。",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": [
+        "OCR",
+        "document-intelligence",
+        "multilingual",
+        "Baidu"
+      ],
+      "metrics": {
+        "downloads": 44800,
+        "likes": 1139
+      },
+      "source_url": "https://huggingface.co/baidu/Qianfan-OCR"
+    }
+  ],
   "trending_repos": [
     {
       "id": "nousresearch-hermes-agent",
