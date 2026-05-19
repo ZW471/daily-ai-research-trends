@@ -1,0 +1,706 @@
+{
+  "version": "1.0",
+  "date": "2026-05-19",
+  "generated_at": "2026-05-19T15:00:00Z",
+  "summary": {
+    "headline": "AI auto-research integrity crisis mapped end-to-end; ODE-native video alignment via KVPO breaks new ground; open-source personal AI and agent-native CLI tooling dominate GitHub",
+    "body": "Today's research landscape surfaces a pivotal tension: **AI systems can now autonomously generate full research papers for $15**, yet the integrity scaffolding around them remains dangerously thin. The comprehensive roadmap from Kong et al. (21 upvotes) catalogs the full pipeline from idea generation to peer review simulation, exposing how even frontier LLMs fabricate results under scientific pressure. This meta-level work may prove more consequential than any individual technical paper today.\n\nOn the technical frontier, **video generation infrastructure** is the clear theme. KVPO introduces ODE-native reinforcement learning for autoregressive video alignment, solving the fundamental mismatch between noise-based exploration and deterministic ODE dynamics in distilled models. LongLive-2.0 tackles the complementary problem of scaling long video generation via NVFP4 parallel infrastructure with sequence-parallel training. Meanwhile, diffusion-language model hybridization gets a geometry-guided approach with DiHAL, which identifies optimal layers for diffusion injection.\n\nGitHub trending tells the agent story: **OpenHuman** (3,941 stars today) leads a wave of personal AI systems built in Rust, while CLI-Anything (1,049 stars today) and agent skill registries signal that the industry is converging on agent-native interfaces. The simultaneous rise of academic research skills for coding agents and privacy-first analytics tools reflects a maturing ecosystem that increasingly values both capability and autonomy.",
+    "key_themes": [
+      "ai-research-automation-integrity",
+      "video-generation-infrastructure",
+      "diffusion-language-model-hybrids",
+      "personal-ai-and-agent-tooling",
+      "llm-inference-optimization",
+      "agent-native-interfaces"
+    ]
+  },
+  "researcher_notes": "**The auto-research integrity gap is the real story.** While Kong et al.'s roadmap reads as a survey, it is functionally an early warning system. The paper documents that fully automated $15 research generation is here, but that LLMs still fabricate results, miss hidden errors, and cannot reliably judge novelty. The community's 21 upvotes (highest today) suggest researchers recognize the urgency. Watch for this to catalyze new verification-focused work: automated reproducibility checkers, novelty detection systems, and integrity-aware research agents.\n\n**Video generation is hitting an infrastructure wall, and two papers attack it from orthogonal angles.** KVPO solves the *alignment* problem (matching video output to human preferences) by respecting the ODE dynamics that distilled AR models actually use, rather than forcing SDE-based surrogate policies. LongLive-2.0 solves the *scaling* problem with NVFP4 quantization and sequence-parallel training. Together, they suggest that video generation in 2026 is following the same trajectory language models took in 2023-2024: the core generation capability exists, and the field is now engineering the infrastructure to make it practical.\n\n**Sleeper hit: DiHAL's geometry-guided diffusion insertion.** The idea that diffusion should not replace an entire language model but should enter at a specific, geometrically-optimal layer is elegant and underexplored. With only 11 upvotes, this paper may be overlooked, but the principle — using geometric proxies to identify where in a transformer's representation hierarchy a different computational paradigm becomes beneficial — could generalize far beyond diffusion.\n\n**GitHub signals: the Rust personal AI wave.** OpenHuman's 3,941 stars in a single day, written in Rust, is a notable data point. Combined with RuView (Rust, 700 stars today) and the broader trend toward local-first AI (DreamServer, LEANN), there is a clear constituency for AI systems that are private, fast, and self-hosted. The choice of Rust over Python for these projects suggests performance and reliability concerns that Python-based AI stacks cannot address.\n\n**The MoE efficiency frontier advances quietly.** The paper on post-trained MoE skipping half of experts via self-distillation deserves attention despite low engagement (1 upvote). Converting fully trained dense-routing MoE models to dynamic expert selection without retraining from scratch is a practical win for deployment cost reduction. This is the kind of incremental-but-deployable work that often has outsized industry impact.",
+  "papers": [
+    {
+      "id": "ai-auto-research-roadmap",
+      "title": "AI for Auto-Research: Roadmap & User Guide",
+      "authors": ["Lingdong Kong", "Xian Sun", "Wei Chow", "Linfeng Li", "Kevin Qinghong Lin"],
+      "affiliations": ["National University of Singapore", "Chinese Academy of Sciences"],
+      "summary": "Comprehensive roadmap documenting the state of fully automated AI research systems as of April 2026, covering the entire pipeline from idea generation to manuscript drafting and peer review simulation. Exposes critical integrity gaps where even frontier LLMs fabricate results and fail to judge novelty.",
+      "key_findings": [
+        "Fully automated research paper generation now costs as little as $15",
+        "Even frontier LLMs still fabricate results under scientific pressure and miss hidden errors",
+        "Long-horizon research agents can execute experiments, draft manuscripts, and simulate peer critique with minimal human input"
+      ],
+      "tags": ["auto-research", "research-integrity", "llm-agents", "survey"],
+      "relevance": "high",
+      "engagement": {"upvotes": 21, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18661",
+        "huggingface": "https://huggingface.co/papers/2605.18661",
+        "pdf": "https://arxiv.org/pdf/2605.18661"
+      }
+    },
+    {
+      "id": "kvpo-video-alignment",
+      "title": "KVPO: ODE-Native GRPO for Autoregressive Video Alignment via KV Semantic Exploration",
+      "authors": ["Ruicheng Zhang", "Kaixi Cong", "Jun Zhou", "Zhizhou Zhong", "Zunnan Xu"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "Introduces KVPO, an ODE-native online Group Relative Policy Optimization method for aligning streaming autoregressive video generators with human preferences, addressing the fundamental mismatch between SDE-based exploration and deterministic ODE dynamics in distilled AR models.",
+      "key_findings": [
+        "Existing RL methods use SDE-based surrogate policies mismatched to ODE dynamics of distilled AR models",
+        "KV semantic exploration perturbs high-level semantic storyline rather than low-level appearance",
+        "Achieves superior long-horizon coherence in autoregressive video generation"
+      ],
+      "tags": ["video-generation", "reinforcement-learning", "alignment", "ode", "autoregressive"],
+      "relevance": "high",
+      "engagement": {"upvotes": 20, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14278",
+        "huggingface": "https://huggingface.co/papers/2605.14278",
+        "pdf": "https://arxiv.org/pdf/2605.14278"
+      }
+    },
+    {
+      "id": "longlive-2-nvfp4",
+      "title": "LongLive-2.0: An NVFP4 Parallel Infrastructure for Long Video Generation",
+      "authors": ["Yukang Chen", "Luozhou Wang", "Wei Huang", "Shuai Yang", "Bohan Zhang"],
+      "affiliations": ["CUHK", "NVIDIA"],
+      "summary": "Presents an NVFP4-based parallel infrastructure for long video generation training and inference, introducing sequence-parallel autoregressive training (Balanced SP) that co-designs teacher-forcing layout with sequence parallelism execution.",
+      "key_findings": [
+        "Balanced SP pairs clean-history and noisy-target temporal chunks across ranks for efficient teacher-forcing with SP",
+        "NVFP4 quantization throughout the full training and inference workflow addresses speed and memory bottlenecks",
+        "SP-aware chunked VAE encoding enables practical long video generation at scale"
+      ],
+      "tags": ["video-generation", "parallel-computing", "quantization", "infrastructure"],
+      "relevance": "high",
+      "engagement": {"upvotes": 19, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18739",
+        "huggingface": "https://huggingface.co/papers/2605.18739",
+        "pdf": "https://arxiv.org/pdf/2605.18739"
+      }
+    },
+    {
+      "id": "dihal-diffusion-geometry",
+      "title": "Where Should Diffusion Enter a Language Model? Geometry-Guided Hidden-State Replacement",
+      "authors": ["Injin Kong", "Hyoungjoon Lee", "Yohan Jo"],
+      "affiliations": ["Seoul National University"],
+      "summary": "Proposes DiHAL, a geometry-guided diffusion-transformer hybrid that identifies optimal layers for diffusion injection in pretrained transformers using geometric proxies, replacing the lower transformer prefix with a diffusion bridge while retaining upper layers.",
+      "key_findings": [
+        "Continuous diffusion language models lag behind AR transformers partly due to diffusion being applied in unsuitable spaces",
+        "Geometry-based proxy scoring identifies diffusion-friendly hidden-state interfaces across transformer layers",
+        "Selective replacement of lower transformer layers with diffusion bridges preserves upper-layer language capabilities"
+      ],
+      "tags": ["diffusion", "language-models", "hybrid-architecture", "geometry"],
+      "relevance": "high",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14368",
+        "huggingface": "https://huggingface.co/papers/2605.14368",
+        "pdf": "https://arxiv.org/pdf/2605.14368"
+      }
+    },
+    {
+      "id": "model-adaptive-tool-necessity",
+      "title": "Model-Adaptive Tool Necessity Reveals the Knowing-Doing Gap in LLM Tool Use",
+      "authors": ["Yize Cheng", "Chenrui Fan", "Mahdi JafariRaviz", "Keivan Rezaei", "Soheil Feiz"],
+      "affiliations": ["University of Maryland"],
+      "summary": "Reveals that tool necessity is model-dependent rather than model-agnostic, exposing a knowing-doing gap where LLMs' capability boundaries diverge across models in deciding when to invoke external tools versus answering directly.",
+      "key_findings": [
+        "Tool necessity is nuanced and model-dependent, not a fixed property of the query",
+        "Prior work incorrectly treated tool necessity as model-agnostic, annotated by human judges",
+        "The divergence of capability boundaries across models creates a knowing-doing gap in tool use"
+      ],
+      "tags": ["tool-use", "llm-agents", "evaluation", "capability-boundaries"],
+      "relevance": "high",
+      "engagement": {"upvotes": 8, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14038",
+        "huggingface": "https://huggingface.co/papers/2605.14038",
+        "pdf": "https://arxiv.org/pdf/2605.14038"
+      }
+    },
+    {
+      "id": "semantic-early-exit-reasoning",
+      "title": "Stop When Reasoning Converges: Semantic-Preserving Early Exit for Reasoning Models",
+      "authors": ["Dehai Min", "Giovanni Vaccarino", "Huiyi Chen", "Yongliang Wu", "Gal Yona"],
+      "affiliations": ["Google DeepMind", "Politecnico di Torino"],
+      "summary": "Addresses overthinking in Large Reasoning Models by proposing semantic-preserving early exit methods that detect reasoning convergence rather than relying on answer-level confidence signals, saving tokens and reducing latency.",
+      "key_findings": [
+        "LRMs often continue reasoning after solutions have stabilized, wasting tokens and increasing latency",
+        "Answer-level signals like confidence reflect answer readiness rather than true reasoning convergence",
+        "Semantic-level convergence detection provides more reliable early exit signals"
+      ],
+      "tags": ["reasoning", "efficiency", "early-exit", "chain-of-thought", "inference-optimization"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17672",
+        "huggingface": "https://huggingface.co/papers/2605.17672",
+        "pdf": "https://arxiv.org/pdf/2605.17672"
+      }
+    },
+    {
+      "id": "lance-unified-multimodal",
+      "title": "Lance: Unified Multimodal Modeling by Multi-Task Synergy",
+      "authors": ["Fengyi Fu", "Mengqi Huang", "Shaojin Wu", "Yunsheng Jiang", "Yufei Huo"],
+      "affiliations": ["Tencent"],
+      "summary": "Presents Lance, a lightweight native unified model supporting multimodal understanding, generation, and editing for both images and videos through collaborative multi-task training with dual-stream architecture.",
+      "key_findings": [
+        "Explores unified multimodal modeling via multi-task synergy rather than model capacity scaling",
+        "Built on unified context modeling and decoupled capability pathways",
+        "Trained from scratch with dual-stream mixture architecture for images and video"
+      ],
+      "tags": ["multimodal", "unified-model", "multi-task", "image-video"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18678",
+        "huggingface": "https://huggingface.co/papers/2605.18678",
+        "pdf": "https://arxiv.org/pdf/2605.18678"
+      }
+    },
+    {
+      "id": "liteframe-video-llm",
+      "title": "LiteFrame: Efficient Vision Encoders Unlock Frame Scaling in Video LLMs",
+      "authors": ["Jihwan Kim", "Nikhil Parthasarathy", "Danfeng Qin", "Junhwa Hur", "Deqing Sun"],
+      "affiliations": ["Google Research"],
+      "summary": "Identifies that the primary latency bottleneck in Video LLMs shifts from the LLM to expensive per-frame vision encoder processing after post-hoc token reduction, and proposes efficient vision encoders to unlock frame scaling.",
+      "key_findings": [
+        "Post-hoc token reduction methods shift the latency bottleneck from LLM to the vision encoder",
+        "Lightweight vision encoders enable processing more frames within the same compute budget",
+        "Frame scaling with efficient encoders outperforms token reduction approaches for long-form video"
+      ],
+      "tags": ["video-llm", "efficiency", "vision-encoder", "frame-scaling"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17260",
+        "huggingface": "https://huggingface.co/papers/2605.17260",
+        "pdf": "https://arxiv.org/pdf/2605.17260"
+      }
+    },
+    {
+      "id": "max-activations-llm",
+      "title": "Measuring Maximum Activations in Open Large Language Models",
+      "authors": ["Luxuan Chen", "Han Tian", "Xinran Chen", "Rui Kong", "Fang Wang"],
+      "affiliations": ["Hong Kong University of Science and Technology"],
+      "summary": "Revisits the characterization of activation dynamic range in modern open LLMs beyond pre-2024 LLaMA-style models, providing deployment-oriented analysis of how maximum activation magnitudes vary across model families.",
+      "key_findings": [
+        "Prior outlier/massive activation characterizations were based on pre-2024 LLaMA-style models",
+        "Modern open LLMs show different activation magnitude patterns across families",
+        "Dynamic range analysis is a first-order constraint for low-bit quantization and stable inference"
+      ],
+      "tags": ["quantization", "activation-analysis", "inference", "deployment"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.15572",
+        "huggingface": "https://huggingface.co/papers/2605.15572",
+        "pdf": "https://arxiv.org/pdf/2605.15572"
+      }
+    },
+    {
+      "id": "endprompt-long-context",
+      "title": "EndPrompt: Efficient Long-Context Extension via Terminal Anchoring",
+      "authors": ["Han Tian", "Luxuan Chen", "Xinran Chen", "Rui Kong", "Fang Wang"],
+      "affiliations": ["Hong Kong University of Science and Technology"],
+      "summary": "Achieves effective context window extension using only short training sequences by exposing models to long-range relative positional distances without constructing full-length inputs, through terminal anchoring.",
+      "key_findings": [
+        "Long-range positional distance exposure does not require full-length training sequences",
+        "Terminal anchoring preserves short-sequence training efficiency while extending context",
+        "Achieves effective context extension at quadratically lower training cost"
+      ],
+      "tags": ["long-context", "efficiency", "positional-encoding", "context-extension"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14589",
+        "huggingface": "https://huggingface.co/papers/2605.14589",
+        "pdf": "https://arxiv.org/pdf/2605.14589"
+      }
+    },
+    {
+      "id": "contrastive-neuron-attribution",
+      "title": "Targeted Neuron Modulation via Contrastive Pair Search",
+      "authors": ["Sam Herring", "Jake Naviasky", "Karan Malhotra"],
+      "affiliations": ["Anthropic"],
+      "summary": "Introduces contrastive neuron attribution (CNA) which identifies the 0.1% of MLP neurons whose activations most distinguish harmful from benign prompts, enabling targeted modulation without the coherence degradation of residual stream methods.",
+      "key_findings": [
+        "Only 0.1% of MLP neurons distinguish harmful from benign prompts",
+        "CNA requires only forward passes with no gradients or auxiliary models",
+        "Targeted neuron modulation avoids the coherence degradation seen in residual stream steering methods"
+      ],
+      "tags": ["safety", "interpretability", "neuron-modulation", "steering"],
+      "relevance": "high",
+      "engagement": {"upvotes": 3, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.12290",
+        "huggingface": "https://huggingface.co/papers/2605.12290",
+        "pdf": "https://arxiv.org/pdf/2605.12290"
+      }
+    },
+    {
+      "id": "oprover-theorem-proving",
+      "title": "OProver: A Unified Framework for Agentic Formal Theorem Proving",
+      "authors": ["David Ma", "Kaijing Ma", "Shawn Guo", "Yunfeng Shi", "Enduo Zhao"],
+      "affiliations": ["Princeton University"],
+      "summary": "Presents OProver, a unified framework for agentic formal theorem proving in Lean 4 where failed proof attempts are iteratively revised using retrieved compiler-verified proofs and Lean compiler feedback.",
+      "key_findings": [
+        "Integrates agentic proving into prover training rather than only at inference time",
+        "Uses iterative revision with retrieved compiler-verified proofs and compiler feedback",
+        "Trained through continued pretraining followed by iterative post-training"
+      ],
+      "tags": ["theorem-proving", "formal-verification", "lean4", "agentic"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17283",
+        "huggingface": "https://huggingface.co/papers/2605.17283",
+        "pdf": "https://arxiv.org/pdf/2605.17283"
+      }
+    },
+    {
+      "id": "agent-bazaar-economic-alignment",
+      "title": "Agent Bazaar: Enabling Economic Alignment in Multi-Agent Marketplaces",
+      "authors": ["Seth Karten", "Cameron Crow", "Chi Jin"],
+      "affiliations": ["Princeton University"],
+      "summary": "Introduces a multi-agent simulation framework for evaluating Economic Alignment — the capacity of agentic LLM systems to preserve market stability and integrity when deployed as autonomous economic agents.",
+      "key_findings": [
+        "LLM agents in marketplaces can amplify volatility and mask deception at scale",
+        "Identifies two failure modes in agent-based economic systems",
+        "Proposes Economic Alignment as a new evaluation dimension for autonomous agents"
+      ],
+      "tags": ["multi-agent", "economics", "alignment", "simulation", "markets"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17698",
+        "huggingface": "https://huggingface.co/papers/2605.17698",
+        "pdf": "https://arxiv.org/pdf/2605.17698"
+      }
+    },
+    {
+      "id": "moe-expert-skipping",
+      "title": "Post-Trained MoE Can Skip Half Experts via Self-Distillation",
+      "authors": ["Xingtai Lv", "Li Sheng", "Kaiyan Zhang", "Yichen You", "Siyan Gao"],
+      "affiliations": ["Renmin University of China"],
+      "summary": "Demonstrates that fully trained Mixture-of-Experts models can be converted to dynamic expert selection via self-distillation, allowing easy tokens to bypass unnecessary expert computation and reducing inference costs.",
+      "key_findings": [
+        "Post-trained MoE models can skip up to half of expert computations via self-distillation",
+        "Dynamic expert selection is input-dependent, letting easy tokens use fewer experts",
+        "Conversion works on already-trained MoE without retraining from scratch"
+      ],
+      "tags": ["moe", "efficiency", "self-distillation", "inference-optimization"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18643",
+        "huggingface": "https://huggingface.co/papers/2605.18643",
+        "pdf": "https://arxiv.org/pdf/2605.18643"
+      }
+    },
+    {
+      "id": "snlp-layer-parallel",
+      "title": "SNLP: Layer-Parallel Inference via Structured Newton Corrections",
+      "authors": ["Ligong Han", "Kai Xu", "Hao Wang", "Akash Srivastava"],
+      "affiliations": ["MIT", "MIT-IBM Watson AI Lab"],
+      "summary": "Studies relaxing layerwise sequential dependency in transformers by treating the hidden-state trace as a nonlinear residual equation and solving it with parallel Newton-style updates for layer-parallel inference.",
+      "key_findings": [
+        "Layerwise dependency in transformers can be reformulated as a nonlinear residual equation",
+        "Structured Newton corrections enable parallel layer execution without exact Jacobian computation",
+        "Addresses latency bottleneck not removed by conventional tensor or pipeline parallelism"
+      ],
+      "tags": ["inference", "parallelism", "newton-methods", "transformer-optimization"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17842",
+        "huggingface": "https://huggingface.co/papers/2605.17842",
+        "pdf": "https://arxiv.org/pdf/2605.17842"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek's flagship V4-Pro model, a large-scale conversational text generation model with massive community adoption and 4,042 likes, representing the latest iteration of DeepSeek's open model family.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "deepseek"],
+      "metrics": {"downloads": 3435748, "likes": 4042},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek",
+      "description": "Lightweight variant of DeepSeek V4 optimized for fast inference, achieving nearly 2M downloads with strong community engagement, targeting latency-sensitive applications.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "fast-inference"],
+      "metrics": {"downloads": 1904105, "likes": 1146},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "qwen3-6-35b-a3b",
+      "name": "Qwen3.6-35B-A3B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Qwen's 35B parameter MoE model with 3B active parameters, supporting multimodal image-text tasks. Leads in downloads at 5.6M, indicating massive adoption in the open-source community.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": ["moe", "multimodal", "qwen"],
+      "metrics": {"downloads": 5613637, "likes": 1817},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "A diffusion-based image generation model with 1,412 likes and strong community interest, distributed as a single-file model compatible with ComfyUI workflows.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusion", "image-generation", "comfyui"],
+      "metrics": {"downloads": 545205, "likes": 1412},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "Text-to-video generation model with over 1M downloads and GGUF support, representing the growing wave of accessible video generation models in the open-source ecosystem.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": {"downloads": 1049229, "likes": 1128},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "Latest iteration of the MiniCPM-V multimodal model series for image-text-to-text tasks, trending strongly with 776 likes, known for efficient multimodal understanding.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "efficient", "vision-language"],
+      "metrics": {"downloads": 80586, "likes": 776},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "supergemma4-26b-uncensored",
+      "name": "supergemma4-26b-uncensored",
+      "organization": "Jiunsong",
+      "description": "Community-created uncensored GGUF variant of Gemma4-26B optimized for llama.cpp, with 626 likes reflecting strong demand for unrestricted open models.",
+      "task_type": "text-generation",
+      "model_size": "26B",
+      "tags": ["gguf", "uncensored", "gemma4", "llama-cpp"],
+      "metrics": {"downloads": 267449, "likes": 626},
+      "source_url": "https://huggingface.co/Jiunsong/supergemma4-26b-uncensored-gguf-v2"
+    },
+    {
+      "id": "microsoft-fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "Microsoft's 7B multimodal model built on Qwen2.5-VL architecture for image-text understanding tasks, with 578 likes signaling interest in efficient multimodal models from major labs.",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "microsoft", "vision-language"],
+      "metrics": {"downloads": 16011, "likes": 578},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "zyphra-zaya1-8b",
+      "name": "ZAYA1-8B",
+      "organization": "Zyphra",
+      "description": "Zyphra's 8B reasoning model fine-tuned from ZAYA1-reasoning-base, with 532 likes indicating interest in specialized reasoning capabilities from smaller independent labs.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": ["reasoning", "zyphra", "fine-tuned"],
+      "metrics": {"downloads": 145609, "likes": 532},
+      "source_url": "https://huggingface.co/Zyphra/ZAYA1-8B"
+    },
+    {
+      "id": "supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "Lightning-fast multilingual text-to-speech model running natively via ONNX, with 425 likes and growing momentum in the on-device TTS space.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "onnx", "multilingual", "on-device"],
+      "metrics": {"downloads": 24031, "likes": 425},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "z-anime",
+      "name": "Z-Anime",
+      "organization": "SeeSee21",
+      "description": "Anime-focused text-to-image diffusion model with GGUF support, reflecting the continued demand for specialized aesthetic image generation models.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["anime", "text-to-image", "diffusers", "gguf"],
+      "metrics": {"downloads": 15495, "likes": 410},
+      "source_url": "https://huggingface.co/SeeSee21/Z-Anime"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "Multimodal model supporting both image understanding and image generation based on Qwen3-VL architecture, combining image-text-to-text and image-text-to-image capabilities.",
+      "task_type": "image-text-to-image",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "image-understanding"],
+      "metrics": {"downloads": 15024, "likes": 393},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openhuman",
+      "name": "tinyhumansai/openhuman",
+      "description": "Open-source personal AI assistant written in Rust promising privacy-first, local-first intelligence. Leading today's GitHub trends with 3,941 stars gained in a single day, reflecting strong demand for self-hosted AI alternatives.",
+      "language": "Rust",
+      "stars": 17925,
+      "stars_today": 3941,
+      "forks": 1563,
+      "url": "https://github.com/tinyhumansai/openhuman",
+      "tags": ["personal-ai", "rust", "privacy", "local-first"],
+      "relevance": "high"
+    },
+    {
+      "id": "academic-research-skills",
+      "name": "Imbad0202/academic-research-skills",
+      "description": "Academic research skills for Claude Code automating the full research-to-finalize pipeline: research, write, review, revise, finalize. Trending at 1,439 stars today.",
+      "language": "Python",
+      "stars": 12285,
+      "stars_today": 1439,
+      "forks": 1233,
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "tags": ["claude-code", "research-automation", "academic", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "cloakbrowser",
+      "name": "CloakHQ/CloakBrowser",
+      "description": "Stealth Chromium browser that passes all bot detection tests as a drop-in Playwright replacement with source-level fingerprint patches. 30/30 tests passed.",
+      "language": "Python",
+      "stars": 15456,
+      "stars_today": 1420,
+      "forks": 1205,
+      "url": "https://github.com/CloakHQ/CloakBrowser",
+      "tags": ["browser-automation", "stealth", "web-scraping", "playwright"],
+      "relevance": "medium"
+    },
+    {
+      "id": "agent-skills-registry",
+      "name": "tech-leads-club/agent-skills",
+      "description": "A secure, validated skill registry for professional AI coding agents supporting Antigravity, Claude Code, Cursor, Copilot and more. 1,244 stars today signals convergence on agent skill standards.",
+      "language": "TypeScript",
+      "stars": 4119,
+      "stars_today": 1244,
+      "forks": 357,
+      "url": "https://github.com/tech-leads-club/agent-skills",
+      "tags": ["agent-skills", "registry", "coding-agents", "standards"],
+      "relevance": "high"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "Making all software agent-native by providing CLI interfaces. Includes CLI-Hub for discovering and sharing CLI wrappers. 1,049 stars today with 36,842 total.",
+      "language": "Python",
+      "stars": 36842,
+      "stars_today": 1049,
+      "forks": 3565,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["cli", "agent-native", "software-tools", "automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-agents-for-beginners",
+      "name": "microsoft/ai-agents-for-beginners",
+      "description": "Microsoft's 12-lesson curriculum for building AI agents, gaining 1,012 stars today with 63,591 total. The go-to educational resource for agent development.",
+      "language": "Jupyter Notebook",
+      "stars": 63591,
+      "stars_today": 1012,
+      "forks": 21192,
+      "url": "https://github.com/microsoft/ai-agents-for-beginners",
+      "tags": ["education", "agents", "microsoft", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "shadowbroker",
+      "name": "BigBodyCobain/Shadowbroker",
+      "description": "Open-source intelligence platform for tracking jets, satellites, and seismic events in a unified interface with AI agent integration for finding unseen correlations.",
+      "language": "Python",
+      "stars": 7825,
+      "stars_today": 767,
+      "forks": 1200,
+      "url": "https://github.com/BigBodyCobain/Shadowbroker",
+      "tags": ["osint", "intelligence", "data-aggregation", "ai-agents"],
+      "relevance": "medium"
+    },
+    {
+      "id": "supertonic",
+      "name": "supertone-inc/supertonic",
+      "description": "Lightning-fast on-device multilingual TTS running natively via ONNX. Companion to the HuggingFace model, with 715 stars today as on-device voice synthesis gains momentum.",
+      "language": "Swift",
+      "stars": 8436,
+      "stars_today": 715,
+      "forks": 858,
+      "url": "https://github.com/supertone-inc/supertonic",
+      "tags": ["tts", "on-device", "onnx", "swift", "voice"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruview",
+      "name": "ruvnet/RuView",
+      "description": "Turns commodity WiFi signals into real-time spatial intelligence, vital sign monitoring, and presence detection without video cameras. Remarkably high star count (60,027) with 700 daily stars.",
+      "language": "Rust",
+      "stars": 60027,
+      "stars_today": 700,
+      "forks": 7820,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["wifi-sensing", "spatial-intelligence", "privacy", "rust", "health-monitoring"],
+      "relevance": "high"
+    },
+    {
+      "id": "plausible-analytics",
+      "name": "plausible/analytics",
+      "description": "Privacy-first, cookie-free web analytics as an open-source Google Analytics alternative. Trending with 638 stars today reflecting growing privacy consciousness.",
+      "language": "Elixir",
+      "stars": 26035,
+      "stars_today": 638,
+      "forks": 1497,
+      "url": "https://github.com/plausible/analytics",
+      "tags": ["analytics", "privacy", "self-hosted", "google-analytics-alternative"],
+      "relevance": "medium"
+    },
+    {
+      "id": "scientific-agent-skills",
+      "name": "K-Dense-AI/scientific-agent-skills",
+      "description": "Ready-to-use agent skills for research, science, engineering, analysis, finance, and writing. 609 stars today with 24,500 total, part of the broader agent skills ecosystem.",
+      "language": "Python",
+      "stars": 24500,
+      "stars_today": 609,
+      "forks": 2583,
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "tags": ["agent-skills", "research", "science", "engineering"],
+      "relevance": "high"
+    },
+    {
+      "id": "dograh",
+      "name": "dograh-hq/dograh",
+      "description": "Open source voice agent platform gaining 616 stars today, enabling voice-based AI agent interactions.",
+      "language": "Python",
+      "stars": 2196,
+      "stars_today": 616,
+      "forks": 448,
+      "url": "https://github.com/dograh-hq/dograh",
+      "tags": ["voice-agents", "platform", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "dreamserver",
+      "name": "Light-Heart-Labs/DreamServer",
+      "description": "Local AI stack providing LLM inference, chat UI, voice, agents, workflows, RAG, and image generation without cloud dependencies or subscriptions.",
+      "language": "Shell",
+      "stars": 1490,
+      "stars_today": 458,
+      "forks": 224,
+      "url": "https://github.com/Light-Heart-Labs/DreamServer",
+      "tags": ["local-ai", "self-hosted", "inference", "all-in-one"],
+      "relevance": "high"
+    },
+    {
+      "id": "12-factor-agents",
+      "name": "humanlayer/12-factor-agents",
+      "description": "Principles for building production-quality LLM-powered software, inspired by the 12-factor app methodology. 399 stars today with 20,731 total.",
+      "language": "TypeScript",
+      "stars": 20731,
+      "stars_today": 399,
+      "forks": 1570,
+      "url": "https://github.com/humanlayer/12-factor-agents",
+      "tags": ["best-practices", "agents", "production", "architecture"],
+      "relevance": "high"
+    },
+    {
+      "id": "sana-image-synthesis",
+      "name": "NVlabs/Sana",
+      "description": "NVIDIA's efficient high-resolution image synthesis with linear diffusion transformer, gaining 387 stars today. Represents NVIDIA's push into efficient generative image models.",
+      "language": "Python",
+      "stars": 6606,
+      "stars_today": 387,
+      "forks": 469,
+      "url": "https://github.com/NVlabs/Sana",
+      "tags": ["image-synthesis", "diffusion", "nvidia", "efficient"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Video Generation Infrastructure Matures",
+      "description": "Multiple papers address complementary bottlenecks in video generation: KVPO solves preference alignment for AR video models, LongLive-2.0 tackles training/inference parallelism with NVFP4, and LiteFrame addresses vision encoder scaling. The field is transitioning from capability demonstration to practical deployment infrastructure.",
+      "related_paper_ids": ["kvpo-video-alignment", "longlive-2-nvfp4", "liteframe-video-llm"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Research Automation and Integrity",
+      "description": "The highest-engagement paper today maps the full auto-research pipeline while exposing critical integrity gaps. Combined with GitHub's trending academic research skills repos, this signals both accelerating automation of scientific work and growing awareness of its risks.",
+      "related_paper_ids": ["ai-auto-research-roadmap"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Inference Optimization",
+      "description": "A cluster of papers targets inference efficiency from multiple angles: semantic-preserving early exit for reasoning models, MoE expert skipping via self-distillation, layer-parallel Newton corrections, and activation range characterization for quantization. The field is systematically attacking every source of wasted computation.",
+      "related_paper_ids": ["semantic-early-exit-reasoning", "moe-expert-skipping", "snlp-layer-parallel", "max-activations-llm", "endprompt-long-context"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Diffusion-Language Model Hybridization",
+      "description": "DiHAL's geometry-guided approach to determining where diffusion should enter a transformer represents a new paradigm in hybrid architectures, moving beyond simple concatenation or replacement to principled, layer-specific integration of different computational paradigms.",
+      "related_paper_ids": ["dihal-diffusion-geometry"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent-Native Software Ecosystem",
+      "description": "GitHub trends show explosive growth in agent skill registries, CLI wrappers for agent accessibility, and production-grade agent architecture frameworks. The industry is converging on standards and tooling that make all software agent-accessible rather than building agents as standalone applications.",
+      "related_paper_ids": ["model-adaptive-tool-necessity", "agent-bazaar-economic-alignment"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Safety Mechanistic Understanding",
+      "description": "Contrastive neuron attribution's finding that only 0.1% of MLP neurons distinguish harmful from benign prompts provides a new, efficient path to understanding and modulating model safety behaviors, complementing broader alignment work like Agent Bazaar's economic alignment framework.",
+      "related_paper_ids": ["contrastive-neuron-attribution", "agent-bazaar-economic-alignment"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

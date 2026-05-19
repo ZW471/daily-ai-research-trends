@@ -1,0 +1,706 @@
+{
+  "version": "1.0",
+  "date": "2026-05-19",
+  "generated_at": "2026-05-19T15:00:00Z",
+  "summary": {
+    "headline": "AI自动化科研诚信危机全面梳理；ODE原生视频对齐方法KVPO开辟新路径；开源个人AI与Agent原生CLI工具主导GitHub趋势",
+    "body": "今日研究动态揭示了一个关键矛盾：**AI系统现已能以15美元自动生成完整研究论文**，然而围绕这些系统的诚信保障机制依然薄弱。Kong等人的综合路线图（21票赞）系统梳理了从创意生成到同行评审模拟的完整流程，揭示了即便是前沿LLM在科研压力下仍会捏造结果的问题。这项元层面的工作可能比今日任何单篇技术论文更具深远影响。\n\n在技术前沿，**视频生成基础设施**是明确的主题。KVPO为自回归视频对齐引入了ODE原生强化学习方法，解决了蒸馏模型中基于噪声的探索与确定性ODE动力学之间的根本不匹配问题。LongLive-2.0则从互补角度出发，通过NVFP4并行基础设施和序列并行训练来解决长视频生成的扩展问题。与此同时，DiHAL为扩散-语言模型混合架构提供了几何引导方案，确定了扩散注入的最优层位置。\n\nGitHub趋势讲述了Agent故事：**OpenHuman**（今日3,941星）领衔了一波用Rust构建的个人AI系统浪潮，CLI-Anything（今日1,049星）和Agent技能注册表则标志着行业正在向Agent原生接口融合。学术研究技能工具和隐私优先分析工具的同时崛起，反映出一个日益成熟的生态系统，更加重视能力与自主性的平衡。",
+    "key_themes": [
+      "ai-research-automation-integrity",
+      "video-generation-infrastructure",
+      "diffusion-language-model-hybrids",
+      "personal-ai-and-agent-tooling",
+      "llm-inference-optimization",
+      "agent-native-interfaces"
+    ]
+  },
+  "researcher_notes": "**自动化科研诚信缺口才是今天真正的焦点。** Kong等人的路线图表面上是一篇综述，但实质上是一个早期预警系统。该论文记录了15美元全自动研究论文生成已成现实，但LLM仍会捏造结果、遗漏隐藏错误、无法可靠判断新颖性。社区的21票赞（今日最高）表明研究者们已意识到问题的紧迫性。预计这将催生新的验证导向工作：自动化可重复性检查器、新颖性检测系统、以及具备诚信意识的研究Agent。\n\n**视频生成正面临基础设施瓶颈，两篇论文从正交角度发起攻击。** KVPO通过尊重蒸馏AR模型实际使用的ODE动力学来解决*对齐*问题，而非强行使用基于SDE的代理策略。LongLive-2.0则通过NVFP4量化和序列并行训练解决*扩展*问题。两者结合表明，2026年的视频生成正沿着语言模型在2023-2024年的轨迹前进：核心生成能力已经具备，领域正在构建使其实用化的基础设施。\n\n**潜力之星：DiHAL的几何引导扩散注入。** 扩散不应替代整个语言模型，而应在特定的、几何最优层进入——这一想法优雅且尚未被充分探索。仅有11票赞，这篇论文可能被忽视，但其原理——利用几何代理指标来识别Transformer表示层级中哪个位置适合引入不同计算范式——可以远超扩散领域而具有广泛适用性。\n\n**GitHub信号：Rust个人AI浪潮。** OpenHuman一天内获得3,941星，使用Rust编写，这是一个值得注意的数据点。结合RuView（Rust，今日700星）以及更广泛的本地优先AI趋势（DreamServer、LEANN），显然存在一个对私密、快速、自托管AI系统的明确需求群体。这些项目选择Rust而非Python，暗示了Python AI技术栈无法满足的性能和可靠性需求。\n\n**MoE效率前沿悄然推进。** 关于通过自蒸馏使后训练MoE跳过一半专家的论文值得关注，尽管互动量较低（1票赞）。将已训练的密集路由MoE模型转换为动态专家选择而无需从头重训，是部署成本降低的实用收益。这类渐进但可部署的工作往往对产业界产生超预期的影响。",
+  "papers": [
+    {
+      "id": "ai-auto-research-roadmap",
+      "title": "AI自动化科研：路线图与用户指南",
+      "authors": ["Lingdong Kong", "Xian Sun", "Wei Chow", "Linfeng Li", "Kevin Qinghong Lin"],
+      "affiliations": ["National University of Singapore", "Chinese Academy of Sciences"],
+      "summary": "全面梳理截至2026年4月全自动AI科研系统的现状，涵盖从创意生成到手稿撰写和同行评审模拟的完整流程。揭示了即便前沿LLM仍存在捏造结果和无法可靠判断新颖性的关键诚信缺口。",
+      "key_findings": [
+        "全自动研究论文生成的成本现已低至15美元",
+        "即便是前沿LLM在科研压力下仍会捏造结果并遗漏隐藏错误",
+        "长周期研究Agent已能以最少人工干预执行实验、撰写手稿和模拟同行评审"
+      ],
+      "tags": ["auto-research", "research-integrity", "llm-agents", "survey"],
+      "relevance": "high",
+      "engagement": {"upvotes": 21, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18661",
+        "huggingface": "https://huggingface.co/papers/2605.18661",
+        "pdf": "https://arxiv.org/pdf/2605.18661"
+      }
+    },
+    {
+      "id": "kvpo-video-alignment",
+      "title": "KVPO：基于KV语义探索的ODE原生自回归视频对齐GRPO方法",
+      "authors": ["Ruicheng Zhang", "Kaixi Cong", "Jun Zhou", "Zhizhou Zhong", "Zunnan Xu"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "提出KVPO，一种ODE原生的在线组相对策略优化方法，用于将流式自回归视频生成器与人类偏好对齐，解决了蒸馏AR模型中SDE探索与确定性ODE动力学之间的根本不匹配问题。",
+      "key_findings": [
+        "现有RL方法使用的SDE代理策略与蒸馏AR模型的ODE动力学不匹配",
+        "KV语义探索扰动高层语义故事线而非低层外观",
+        "在自回归视频生成中实现了更优的长周期连贯性"
+      ],
+      "tags": ["video-generation", "reinforcement-learning", "alignment", "ode", "autoregressive"],
+      "relevance": "high",
+      "engagement": {"upvotes": 20, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14278",
+        "huggingface": "https://huggingface.co/papers/2605.14278",
+        "pdf": "https://arxiv.org/pdf/2605.14278"
+      }
+    },
+    {
+      "id": "longlive-2-nvfp4",
+      "title": "LongLive-2.0：基于NVFP4的长视频生成并行基础设施",
+      "authors": ["Yukang Chen", "Luozhou Wang", "Wei Huang", "Shuai Yang", "Bohan Zhang"],
+      "affiliations": ["CUHK", "NVIDIA"],
+      "summary": "提出基于NVFP4的长视频生成训练与推理并行基础设施，引入序列并行自回归训练（Balanced SP），协同设计教师强制布局与序列并行执行。",
+      "key_findings": [
+        "Balanced SP在各rank间配对干净历史与噪声目标时间块，实现高效的SP教师强制训练",
+        "全训练和推理工作流中的NVFP4量化解决了速度和内存瓶颈",
+        "SP感知的分块VAE编码使大规模长视频生成成为可能"
+      ],
+      "tags": ["video-generation", "parallel-computing", "quantization", "infrastructure"],
+      "relevance": "high",
+      "engagement": {"upvotes": 19, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18739",
+        "huggingface": "https://huggingface.co/papers/2605.18739",
+        "pdf": "https://arxiv.org/pdf/2605.18739"
+      }
+    },
+    {
+      "id": "dihal-diffusion-geometry",
+      "title": "扩散应在语言模型何处介入？几何引导的隐状态替换",
+      "authors": ["Injin Kong", "Hyoungjoon Lee", "Yohan Jo"],
+      "affiliations": ["Seoul National University"],
+      "summary": "提出DiHAL，一种几何引导的扩散-Transformer混合方法，利用几何代理指标在预训练Transformer中识别扩散注入的最优层，用扩散桥替换下层Transformer前缀，同时保留上层。",
+      "key_findings": [
+        "连续扩散语言模型落后于AR Transformer，部分原因在于扩散被应用在不适合的空间",
+        "基于几何的代理评分能识别Transformer各层中适合扩散的隐状态接口",
+        "选择性地用扩散桥替换下层Transformer保留了上层的语言能力"
+      ],
+      "tags": ["diffusion", "language-models", "hybrid-architecture", "geometry"],
+      "relevance": "high",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14368",
+        "huggingface": "https://huggingface.co/papers/2605.14368",
+        "pdf": "https://arxiv.org/pdf/2605.14368"
+      }
+    },
+    {
+      "id": "model-adaptive-tool-necessity",
+      "title": "模型自适应工具必要性揭示LLM工具使用中的知行差距",
+      "authors": ["Yize Cheng", "Chenrui Fan", "Mahdi JafariRaviz", "Keivan Rezaei", "Soheil Feiz"],
+      "affiliations": ["University of Maryland"],
+      "summary": "揭示工具必要性是模型相关而非模型无关的，暴露了LLM在决定何时调用外部工具与何时直接回答时，各模型间能力边界分歧所导致的知行差距。",
+      "key_findings": [
+        "工具必要性是细微且模型相关的，而非查询的固定属性",
+        "先前工作错误地将工具必要性视为模型无关的",
+        "各模型间能力边界的分歧造成了工具使用中的知行差距"
+      ],
+      "tags": ["tool-use", "llm-agents", "evaluation", "capability-boundaries"],
+      "relevance": "high",
+      "engagement": {"upvotes": 8, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14038",
+        "huggingface": "https://huggingface.co/papers/2605.14038",
+        "pdf": "https://arxiv.org/pdf/2605.14038"
+      }
+    },
+    {
+      "id": "semantic-early-exit-reasoning",
+      "title": "推理收敛即停止：推理模型的语义保持型早期退出",
+      "authors": ["Dehai Min", "Giovanni Vaccarino", "Huiyi Chen", "Yongliang Wu", "Gal Yona"],
+      "affiliations": ["Google DeepMind", "Politecnico di Torino"],
+      "summary": "针对大型推理模型的过度思考问题，提出语义保持型早期退出方法，检测推理收敛而非依赖答案级置信信号，节省token并降低延迟。",
+      "key_findings": [
+        "LRM在解决方案已稳定后仍继续推理，浪费token并增加延迟",
+        "答案级信号（如置信度）反映的是答案就绪度而非真正的推理收敛",
+        "语义级收敛检测提供更可靠的早期退出信号"
+      ],
+      "tags": ["reasoning", "efficiency", "early-exit", "chain-of-thought", "inference-optimization"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17672",
+        "huggingface": "https://huggingface.co/papers/2605.17672",
+        "pdf": "https://arxiv.org/pdf/2605.17672"
+      }
+    },
+    {
+      "id": "lance-unified-multimodal",
+      "title": "Lance：通过多任务协同的统一多模态建模",
+      "authors": ["Fengyi Fu", "Mengqi Huang", "Shaojin Wu", "Yunsheng Jiang", "Yufei Huo"],
+      "affiliations": ["Tencent"],
+      "summary": "提出Lance，一种轻量级原生统一模型，通过协作多任务训练和双流架构支持图像和视频的多模态理解、生成与编辑。",
+      "key_findings": [
+        "通过多任务协同而非模型容量扩展探索统一多模态建模",
+        "基于统一上下文建模和解耦能力路径构建",
+        "从头训练，采用双流混合架构处理图像和视频"
+      ],
+      "tags": ["multimodal", "unified-model", "multi-task", "image-video"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18678",
+        "huggingface": "https://huggingface.co/papers/2605.18678",
+        "pdf": "https://arxiv.org/pdf/2605.18678"
+      }
+    },
+    {
+      "id": "liteframe-video-llm",
+      "title": "LiteFrame：高效视觉编码器解锁视频LLM中的帧扩展",
+      "authors": ["Jihwan Kim", "Nikhil Parthasarathy", "Danfeng Qin", "Junhwa Hur", "Deqing Sun"],
+      "affiliations": ["Google Research"],
+      "summary": "发现后处理token缩减方法使视频LLM的延迟瓶颈从LLM转移到昂贵的逐帧视觉编码器处理，提出高效视觉编码器来解锁帧扩展。",
+      "key_findings": [
+        "后处理token缩减方法将延迟瓶颈从LLM转移到视觉编码器",
+        "轻量级视觉编码器能在相同计算预算内处理更多帧",
+        "基于高效编码器的帧扩展优于长视频的token缩减方法"
+      ],
+      "tags": ["video-llm", "efficiency", "vision-encoder", "frame-scaling"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17260",
+        "huggingface": "https://huggingface.co/papers/2605.17260",
+        "pdf": "https://arxiv.org/pdf/2605.17260"
+      }
+    },
+    {
+      "id": "max-activations-llm",
+      "title": "测量开放大语言模型中的最大激活值",
+      "authors": ["Luxuan Chen", "Han Tian", "Xinran Chen", "Rui Kong", "Fang Wang"],
+      "affiliations": ["Hong Kong University of Science and Technology"],
+      "summary": "重新审视2024年前LLaMA系列之后的现代开放LLM的激活动态范围特征，提供面向部署的最大激活幅度跨模型族分析。",
+      "key_findings": [
+        "先前的异常值/巨大激活特征描述基于2024年前的LLaMA系列模型",
+        "现代开放LLM在不同模型族间呈现不同的激活幅度模式",
+        "动态范围分析是低比特量化和稳定推理的一阶约束条件"
+      ],
+      "tags": ["quantization", "activation-analysis", "inference", "deployment"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.15572",
+        "huggingface": "https://huggingface.co/papers/2605.15572",
+        "pdf": "https://arxiv.org/pdf/2605.15572"
+      }
+    },
+    {
+      "id": "endprompt-long-context",
+      "title": "EndPrompt：基于终端锚定的高效长上下文扩展",
+      "authors": ["Han Tian", "Luxuan Chen", "Xinran Chen", "Rui Kong", "Fang Wang"],
+      "affiliations": ["Hong Kong University of Science and Technology"],
+      "summary": "仅使用短训练序列即可实现有效的上下文窗口扩展，通过终端锚定使模型接触长程相对位置距离而无需构建全长输入。",
+      "key_findings": [
+        "长程位置距离暴露不需要全长训练序列",
+        "终端锚定在保持短序列训练效率的同时扩展了上下文",
+        "以二次方更低的训练成本实现有效的上下文扩展"
+      ],
+      "tags": ["long-context", "efficiency", "positional-encoding", "context-extension"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14589",
+        "huggingface": "https://huggingface.co/papers/2605.14589",
+        "pdf": "https://arxiv.org/pdf/2605.14589"
+      }
+    },
+    {
+      "id": "contrastive-neuron-attribution",
+      "title": "通过对比配对搜索的定向神经元调控",
+      "authors": ["Sam Herring", "Jake Naviasky", "Karan Malhotra"],
+      "affiliations": ["Anthropic"],
+      "summary": "引入对比神经元归因（CNA），识别出0.1%的MLP神经元能最大程度区分有害与良性提示，实现定向调控而避免残差流方法导致的连贯性退化。",
+      "key_findings": [
+        "仅0.1%的MLP神经元能区分有害与良性提示",
+        "CNA只需前向传播，无需梯度或辅助模型",
+        "定向神经元调控避免了残差流转向方法中的连贯性退化问题"
+      ],
+      "tags": ["safety", "interpretability", "neuron-modulation", "steering"],
+      "relevance": "high",
+      "engagement": {"upvotes": 3, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.12290",
+        "huggingface": "https://huggingface.co/papers/2605.12290",
+        "pdf": "https://arxiv.org/pdf/2605.12290"
+      }
+    },
+    {
+      "id": "oprover-theorem-proving",
+      "title": "OProver：Agent式形式化定理证明的统一框架",
+      "authors": ["David Ma", "Kaijing Ma", "Shawn Guo", "Yunfeng Shi", "Enduo Zhao"],
+      "affiliations": ["Princeton University"],
+      "summary": "提出OProver，一个在Lean 4中进行Agent式形式化定理证明的统一框架，利用检索的编译器验证证明和Lean编译器反馈迭代修正失败的证明尝试。",
+      "key_findings": [
+        "将Agent式证明集成到证明器训练中，而非仅在推理时使用",
+        "利用检索的编译器验证证明和编译器反馈进行迭代修正",
+        "通过持续预训练和迭代后训练进行训练"
+      ],
+      "tags": ["theorem-proving", "formal-verification", "lean4", "agentic"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17283",
+        "huggingface": "https://huggingface.co/papers/2605.17283",
+        "pdf": "https://arxiv.org/pdf/2605.17283"
+      }
+    },
+    {
+      "id": "agent-bazaar-economic-alignment",
+      "title": "Agent Bazaar：多Agent市场中的经济对齐",
+      "authors": ["Seth Karten", "Cameron Crow", "Chi Jin"],
+      "affiliations": ["Princeton University"],
+      "summary": "引入多Agent模拟框架，评估经济对齐能力——当LLM Agent作为自主经济参与者部署时，Agent系统维护市场稳定性和完整性的能力。",
+      "key_findings": [
+        "市场中的LLM Agent可能放大波动性并大规模掩盖欺诈行为",
+        "识别了基于Agent的经济系统中的两种失败模式",
+        "提出经济对齐作为自主Agent的新评估维度"
+      ],
+      "tags": ["multi-agent", "economics", "alignment", "simulation", "markets"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17698",
+        "huggingface": "https://huggingface.co/papers/2605.17698",
+        "pdf": "https://arxiv.org/pdf/2605.17698"
+      }
+    },
+    {
+      "id": "moe-expert-skipping",
+      "title": "后训练MoE可通过自蒸馏跳过一半专家",
+      "authors": ["Xingtai Lv", "Li Sheng", "Kaiyan Zhang", "Yichen You", "Siyan Gao"],
+      "affiliations": ["Renmin University of China"],
+      "summary": "证明完全训练好的混合专家模型可以通过自蒸馏转换为动态专家选择，允许简单token绕过不必要的专家计算，降低推理成本。",
+      "key_findings": [
+        "后训练MoE模型可通过自蒸馏跳过高达一半的专家计算",
+        "动态专家选择是输入相关的，让简单token使用更少的专家",
+        "转换适用于已训练的MoE，无需从头重训"
+      ],
+      "tags": ["moe", "efficiency", "self-distillation", "inference-optimization"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18643",
+        "huggingface": "https://huggingface.co/papers/2605.18643",
+        "pdf": "https://arxiv.org/pdf/2605.18643"
+      }
+    },
+    {
+      "id": "snlp-layer-parallel",
+      "title": "SNLP：基于结构化Newton修正的层并行推理",
+      "authors": ["Ligong Han", "Kai Xu", "Hao Wang", "Akash Srivastava"],
+      "affiliations": ["MIT", "MIT-IBM Watson AI Lab"],
+      "summary": "研究通过将隐状态轨迹视为非线性残差方程并用并行Newton式更新求解，来放松Transformer中的层间顺序依赖，实现层并行推理。",
+      "key_findings": [
+        "Transformer的层间依赖可以重新表述为非线性残差方程",
+        "结构化Newton修正无需精确Jacobian计算即可实现并行层执行",
+        "解决了传统张量或流水线并行无法消除的延迟瓶颈"
+      ],
+      "tags": ["inference", "parallelism", "newton-methods", "transformer-optimization"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17842",
+        "huggingface": "https://huggingface.co/papers/2605.17842",
+        "pdf": "https://arxiv.org/pdf/2605.17842"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek旗舰V4-Pro模型，大规模对话文本生成模型，获得4,042个赞，代表DeepSeek开放模型家族的最新迭代。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "deepseek"],
+      "metrics": {"downloads": 3435748, "likes": 4042},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4的轻量级变体，针对快速推理优化，下载量接近200万，面向延迟敏感型应用。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "fast-inference"],
+      "metrics": {"downloads": 1904105, "likes": 1146},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "qwen3-6-35b-a3b",
+      "name": "Qwen3.6-35B-A3B",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "Qwen的350亿参数MoE模型，30亿活跃参数，支持多模态图文任务。下载量领先达560万，表明开源社区的大规模采用。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B（3B活跃）",
+      "tags": ["moe", "multimodal", "qwen"],
+      "metrics": {"downloads": 5613637, "likes": 1817},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "基于扩散的图像生成模型，获1,412个赞，以单文件模型形式发布，兼容ComfyUI工作流。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusion", "image-generation", "comfyui"],
+      "metrics": {"downloads": 545205, "likes": 1412},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "文本到视频生成模型，下载量超百万，支持GGUF格式，代表开源生态中可访问视频生成模型的增长浪潮。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": {"downloads": 1049229, "likes": 1128},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "MiniCPM-V多模态模型系列的最新版本，用于图文到文本任务，以高效的多模态理解著称，强势登上趋势榜，获776个赞。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "efficient", "vision-language"],
+      "metrics": {"downloads": 80586, "likes": 776},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "supergemma4-26b-uncensored",
+      "name": "supergemma4-26b-uncensored",
+      "organization": "Jiunsong",
+      "description": "社区创建的Gemma4-26B无审查GGUF变体，为llama.cpp优化，626个赞反映了对无限制开放模型的强劲需求。",
+      "task_type": "text-generation",
+      "model_size": "26B",
+      "tags": ["gguf", "uncensored", "gemma4", "llama-cpp"],
+      "metrics": {"downloads": 267449, "likes": 626},
+      "source_url": "https://huggingface.co/Jiunsong/supergemma4-26b-uncensored-gguf-v2"
+    },
+    {
+      "id": "microsoft-fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "微软基于Qwen2.5-VL架构的70亿参数多模态模型，用于图文理解任务，578个赞显示业界对主要实验室高效多模态模型的兴趣。",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "microsoft", "vision-language"],
+      "metrics": {"downloads": 16011, "likes": 578},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "zyphra-zaya1-8b",
+      "name": "ZAYA1-8B",
+      "organization": "Zyphra",
+      "description": "Zyphra的80亿参数推理模型，基于ZAYA1-reasoning-base微调，532个赞表明对小型独立实验室专业推理能力的兴趣。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": ["reasoning", "zyphra", "fine-tuned"],
+      "metrics": {"downloads": 145609, "likes": 532},
+      "source_url": "https://huggingface.co/Zyphra/ZAYA1-8B"
+    },
+    {
+      "id": "supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "闪电般快速的多语言文本转语音模型，通过ONNX原生运行，425个赞，在端侧TTS领域势头强劲。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "onnx", "multilingual", "on-device"],
+      "metrics": {"downloads": 24031, "likes": 425},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "z-anime",
+      "name": "Z-Anime",
+      "organization": "SeeSee21",
+      "description": "面向动漫风格的文本到图像扩散模型，支持GGUF格式，反映了对专业化美学图像生成模型的持续需求。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["anime", "text-to-image", "diffusers", "gguf"],
+      "metrics": {"downloads": 15495, "likes": 410},
+      "source_url": "https://huggingface.co/SeeSee21/Z-Anime"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "基于Qwen3-VL架构的多模态模型，同时支持图像理解和图像生成，融合了图文到文本和图文到图像的能力。",
+      "task_type": "image-text-to-image",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "image-understanding"],
+      "metrics": {"downloads": 15024, "likes": 393},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openhuman",
+      "name": "tinyhumansai/openhuman",
+      "description": "用Rust编写的开源个人AI助手，主打隐私优先、本地优先的智能。以单日3,941星领跑今日GitHub趋势，反映对自托管AI替代方案的强劲需求。",
+      "language": "Rust",
+      "stars": 17925,
+      "stars_today": 3941,
+      "forks": 1563,
+      "url": "https://github.com/tinyhumansai/openhuman",
+      "tags": ["personal-ai", "rust", "privacy", "local-first"],
+      "relevance": "high"
+    },
+    {
+      "id": "academic-research-skills",
+      "name": "Imbad0202/academic-research-skills",
+      "description": "Claude Code学术研究技能，自动化完整的研究到定稿流程：研究、写作、评审、修改、定稿。今日趋势1,439星。",
+      "language": "Python",
+      "stars": 12285,
+      "stars_today": 1439,
+      "forks": 1233,
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "tags": ["claude-code", "research-automation", "academic", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "cloakbrowser",
+      "name": "CloakHQ/CloakBrowser",
+      "description": "通过所有机器人检测测试的隐身Chromium浏览器，作为Playwright的即插即用替代品，具有源码级指纹补丁，30/30测试通过。",
+      "language": "Python",
+      "stars": 15456,
+      "stars_today": 1420,
+      "forks": 1205,
+      "url": "https://github.com/CloakHQ/CloakBrowser",
+      "tags": ["browser-automation", "stealth", "web-scraping", "playwright"],
+      "relevance": "medium"
+    },
+    {
+      "id": "agent-skills-registry",
+      "name": "tech-leads-club/agent-skills",
+      "description": "面向专业AI编码Agent的安全、经验证的技能注册表，支持Antigravity、Claude Code、Cursor、Copilot等。今日1,244星标志着Agent技能标准的融合。",
+      "language": "TypeScript",
+      "stars": 4119,
+      "stars_today": 1244,
+      "forks": 357,
+      "url": "https://github.com/tech-leads-club/agent-skills",
+      "tags": ["agent-skills", "registry", "coding-agents", "standards"],
+      "relevance": "high"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "通过提供CLI接口使所有软件Agent原生化。包含CLI-Hub用于发现和分享CLI封装。今日1,049星，总计36,842星。",
+      "language": "Python",
+      "stars": 36842,
+      "stars_today": 1049,
+      "forks": 3565,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["cli", "agent-native", "software-tools", "automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-agents-for-beginners",
+      "name": "microsoft/ai-agents-for-beginners",
+      "description": "微软的12课AI Agent构建课程，今日获1,012星，总计63,591星。Agent开发的首选教育资源。",
+      "language": "Jupyter Notebook",
+      "stars": 63591,
+      "stars_today": 1012,
+      "forks": 21192,
+      "url": "https://github.com/microsoft/ai-agents-for-beginners",
+      "tags": ["education", "agents", "microsoft", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "shadowbroker",
+      "name": "BigBodyCobain/Shadowbroker",
+      "description": "开源情报平台，在统一界面中追踪飞机、卫星和地震事件，集成AI Agent发现未见的关联。",
+      "language": "Python",
+      "stars": 7825,
+      "stars_today": 767,
+      "forks": 1200,
+      "url": "https://github.com/BigBodyCobain/Shadowbroker",
+      "tags": ["osint", "intelligence", "data-aggregation", "ai-agents"],
+      "relevance": "medium"
+    },
+    {
+      "id": "supertonic",
+      "name": "supertone-inc/supertonic",
+      "description": "闪电般快速的端侧多语言TTS，通过ONNX原生运行。HuggingFace模型的配套仓库，今日715星，端侧语音合成势头强劲。",
+      "language": "Swift",
+      "stars": 8436,
+      "stars_today": 715,
+      "forks": 858,
+      "url": "https://github.com/supertone-inc/supertonic",
+      "tags": ["tts", "on-device", "onnx", "swift", "voice"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruview",
+      "name": "ruvnet/RuView",
+      "description": "将普通WiFi信号转化为实时空间智能、生命体征监测和存在检测，无需摄像头。60,027总星，今日700星。",
+      "language": "Rust",
+      "stars": 60027,
+      "stars_today": 700,
+      "forks": 7820,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["wifi-sensing", "spatial-intelligence", "privacy", "rust", "health-monitoring"],
+      "relevance": "high"
+    },
+    {
+      "id": "plausible-analytics",
+      "name": "plausible/analytics",
+      "description": "隐私优先、无Cookie的开源网页分析工具，作为Google Analytics的替代方案。今日638星反映日益增长的隐私意识。",
+      "language": "Elixir",
+      "stars": 26035,
+      "stars_today": 638,
+      "forks": 1497,
+      "url": "https://github.com/plausible/analytics",
+      "tags": ["analytics", "privacy", "self-hosted", "google-analytics-alternative"],
+      "relevance": "medium"
+    },
+    {
+      "id": "scientific-agent-skills",
+      "name": "K-Dense-AI/scientific-agent-skills",
+      "description": "面向研究、科学、工程、分析、金融和写作的即用型Agent技能。今日609星，总计24,500星，是更广泛Agent技能生态的一部分。",
+      "language": "Python",
+      "stars": 24500,
+      "stars_today": 609,
+      "forks": 2583,
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "tags": ["agent-skills", "research", "science", "engineering"],
+      "relevance": "high"
+    },
+    {
+      "id": "dograh",
+      "name": "dograh-hq/dograh",
+      "description": "开源语音Agent平台，今日获616星，赋能基于语音的AI Agent交互。",
+      "language": "Python",
+      "stars": 2196,
+      "stars_today": 616,
+      "forks": 448,
+      "url": "https://github.com/dograh-hq/dograh",
+      "tags": ["voice-agents", "platform", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "dreamserver",
+      "name": "Light-Heart-Labs/DreamServer",
+      "description": "本地AI全栈方案，提供LLM推理、聊天界面、语音、Agent、工作流、RAG和图像生成，无需云依赖或订阅。",
+      "language": "Shell",
+      "stars": 1490,
+      "stars_today": 458,
+      "forks": 224,
+      "url": "https://github.com/Light-Heart-Labs/DreamServer",
+      "tags": ["local-ai", "self-hosted", "inference", "all-in-one"],
+      "relevance": "high"
+    },
+    {
+      "id": "12-factor-agents",
+      "name": "humanlayer/12-factor-agents",
+      "description": "构建生产级LLM软件的原则，受12要素应用方法论启发。今日399星，总计20,731星。",
+      "language": "TypeScript",
+      "stars": 20731,
+      "stars_today": 399,
+      "forks": 1570,
+      "url": "https://github.com/humanlayer/12-factor-agents",
+      "tags": ["best-practices", "agents", "production", "architecture"],
+      "relevance": "high"
+    },
+    {
+      "id": "sana-image-synthesis",
+      "name": "NVlabs/Sana",
+      "description": "NVIDIA的线性扩散Transformer高效高分辨率图像合成，今日387星。代表NVIDIA在高效生成式图像模型方面的推进。",
+      "language": "Python",
+      "stars": 6606,
+      "stars_today": 387,
+      "forks": 469,
+      "url": "https://github.com/NVlabs/Sana",
+      "tags": ["image-synthesis", "diffusion", "nvidia", "efficient"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "视频生成基础设施走向成熟",
+      "description": "多篇论文攻克视频生成的互补瓶颈：KVPO解决AR视频模型的偏好对齐，LongLive-2.0处理NVFP4训练/推理并行，LiteFrame解决视觉编码器扩展。领域正从能力展示转向实用化部署基础设施。",
+      "related_paper_ids": ["kvpo-video-alignment", "longlive-2-nvfp4", "liteframe-video-llm"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI科研自动化与诚信",
+      "description": "今日最高互动量论文梳理了完整的自动化科研流程，同时暴露了关键诚信缺口。结合GitHub上趋势性的学术研究技能仓库，标志着科研工作自动化加速与风险意识同步增长。",
+      "related_paper_ids": ["ai-auto-research-roadmap"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM推理优化",
+      "description": "一组论文从多角度攻克推理效率：推理模型的语义保持型早期退出、MoE自蒸馏跳过专家、层并行Newton修正、以及面向量化的激活范围分析。领域正系统性地消除每一个计算浪费源。",
+      "related_paper_ids": ["semantic-early-exit-reasoning", "moe-expert-skipping", "snlp-layer-parallel", "max-activations-llm", "endprompt-long-context"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "扩散-语言模型混合化",
+      "description": "DiHAL的几何引导方法开创了混合架构的新范式，从简单的拼接或替换转向基于原理的、层特异性的不同计算范式整合。",
+      "related_paper_ids": ["dihal-diffusion-geometry"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent原生软件生态",
+      "description": "GitHub趋势显示Agent技能注册表、面向Agent的CLI封装和生产级Agent架构框架呈爆发式增长。行业正在趋同于标准和工具，使所有软件都可被Agent访问，而非将Agent作为独立应用构建。",
+      "related_paper_ids": ["model-adaptive-tool-necessity", "agent-bazaar-economic-alignment"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI安全机制理解",
+      "description": "对比神经元归因发现仅0.1%的MLP神经元能区分有害与良性提示，为理解和调控模型安全行为提供了新的高效路径，与Agent Bazaar的经济对齐框架形成互补。",
+      "related_paper_ids": ["contrastive-neuron-attribution", "agent-bazaar-economic-alignment"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-19T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
