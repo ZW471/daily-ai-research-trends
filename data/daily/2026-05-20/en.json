@@ -1,0 +1,526 @@
+{
+  "version": "1.0",
+  "date": "2026-05-20",
+  "generated_at": "2026-05-20T15:00:00Z",
+  "summary": {
+    "headline": "Artifact-Bench exposes MLLM blindspots in AI video quality assessment; OmniGUI pioneers omni-modal GUI agent benchmarking; agent skills and code knowledge graphs dominate GitHub with Karpathy-inspired best practices surging",
+    "body": "Today's research highlights critical gaps in how multimodal models perceive AI-generated content. **Artifact-Bench** (5 upvotes) reveals that even frontier MLLMs struggle to detect temporal inconsistencies and structural distortions in AI-generated videos, establishing a systematic benchmark with fine-grained diagnostic reasoning. This arrives alongside **OmniGUI**, which extends GUI agent evaluation beyond static screenshots into continuous audio-visual interaction, exposing how current agents fail when smartphone tasks require processing transient audio cues and video dynamics.\n\nOn the training methodology front, **CEPO** introduces contrastive evidence policy optimization for RLVR, solving the fundamental credit assignment problem where every token receives identical reward regardless of its reasoning contribution. **BetaPRM** complements this by adding reliability estimates to process reward models, so downstream methods know when to trust step-level predictions. Together, these papers signal a maturation of RL-based reasoning training beyond brute-force reward signals.\n\nGitHub trends paint a vivid picture of the **agent tooling ecosystem consolidating around knowledge graphs and best practices**. OpenHuman continues its Rust-based personal AI momentum (3,973 stars today), while codegraph (1,850 stars today) and code-review-graph join agentmemory in building persistent contextual infrastructure for coding agents. The Karpathy-skills repo (1,955 stars today) and superpowers framework (1,623 stars today) reflect the community crystallizing hard-won agent engineering wisdom into reusable artifacts.",
+    "key_themes": [
+      "ai-video-quality-evaluation",
+      "omni-modal-agent-benchmarking",
+      "rl-credit-assignment-and-process-rewards",
+      "agent-knowledge-graphs-and-memory",
+      "agent-skills-ecosystem-consolidation",
+      "multilingual-document-understanding"
+    ]
+  },
+  "researcher_notes": "**Video quality assessment is the new frontier for MLLM evaluation.** Artifact-Bench's finding that MLLMs cannot reliably detect temporal inconsistencies and structural distortions in AI-generated videos has immediate practical implications. As video generation models improve (Sulphur-2 at 1.1M downloads, ViMax gaining 503 stars/day), the quality assurance bottleneck shifts from generation to evaluation. Watch for this benchmark to become a standard evaluation axis for multimodal models, similar to how MMLU became ubiquitous for language understanding.\n\n**GUI agent evaluation is quietly revolutionary.** OmniGUI's insistence on continuous, interleaved multimodal inputs (screenshots + audio + video dynamics) for step-level evaluation is a significant methodological advance. Most GUI agent benchmarks assume the agent can reason from static screenshots, but real smartphone interaction requires processing transient audio notifications, loading animations, and modal dialogs that exist for fractions of a second. This benchmark will likely expose capability gaps that screenshot-based evaluation masks.\n\n**CEPO and BetaPRM together suggest process-level RL is maturing.** The token-level credit assignment problem in RLVR has been a known weakness — CEPO's contrastive approach (using the correct answer as a teacher to identify decisive tokens) is elegant but its interaction with the leakage problem deserves scrutiny. BetaPRM's distributional approach to step rewards adds a complementary dimension: not just whether a step is correct, but how confident the model should be in that assessment. Together, these may enable more sample-efficient reasoning training.\n\n**The code knowledge graph trend is the sleeper story.** Three repos — codegraph (1,850 stars/day), code-review-graph (123 stars/day), and agentmemory (1,609 stars/day) — all solve the same problem from different angles: giving AI coding agents persistent, structured context about codebases. This is a direct response to the token-consumption problem that rtk (704 stars/day, claiming 60-90% token reduction) addresses from the infrastructure side. The convergence suggests the industry recognizes that raw context windows are insufficient for production coding agents.\n\n**DeepSeek V4 continues to consolidate its position.** V4-Pro at 3.6M downloads and 4,069 likes, alongside V4-Flash at 2M downloads, represent the largest open model deployment since Qwen 3.5. The simultaneous trending of Ring-2.6-1T (inclusionAI's trillion-parameter hybrid) and ZAYA1-8B (Zyphra's compact reasoning model) illustrates the bifurcation: massive models for capability frontiers, small models for deployment efficiency.",
+  "papers": [
+    {
+      "id": "artifact-bench-video-quality",
+      "title": "Artifact-Bench: Evaluating MLLMs on Detecting and Assessing the Artifacts of AI-Generated Videos",
+      "authors": ["Yuqi Tang", "Yang Shi", "Zhuoran Zhang", "Qixun Wang", "Xuehai Bai"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "Introduces Artifact-Bench, a systematic benchmark for evaluating multimodal large language models on their ability to perceive and reason about artifacts in AI-generated videos, including temporal inconsistencies, structural distortions, and semantic incoherence.",
+      "key_findings": [
+        "Even frontier MLLMs struggle to detect fine-grained artifacts in AI-generated videos",
+        "Existing benchmarks lack systematic evaluation of artifact-aware perception and diagnostic reasoning",
+        "Provides fine-grained artifact taxonomy covering temporal, structural, and semantic dimensions"
+      ],
+      "tags": ["benchmark", "video-quality", "mllm-evaluation", "ai-generated-video"],
+      "relevance": "high",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18984",
+        "huggingface": "https://huggingface.co/papers/2605.18984",
+        "pdf": "https://arxiv.org/pdf/2605.18984"
+      }
+    },
+    {
+      "id": "omnigui-multimodal-benchmark",
+      "title": "OmniGUI: Benchmarking GUI Agents in Omni-Modal Smartphone Environments",
+      "authors": ["Felix Henry", "Xiaochen Lin", "Jiangyou Zhu", "Yangfan", "Bingqian Zhang"],
+      "affiliations": ["University of Science and Technology of China", "Tencent"],
+      "summary": "Introduces OmniGUI, the first step-level benchmark for GUI agents that evaluates performance with continuous, interleaved multimodal inputs including screenshots, audio cues, and video dynamics, bridging the gap between static screenshot evaluation and real-world smartphone interaction.",
+      "key_findings": [
+        "Current GUI agent benchmarks relying on static screenshots miss critical real-world interaction dynamics",
+        "Real smartphone tasks require agents to process transient audio cues and temporal video dynamics",
+        "Step-level evaluation with continuous multimodal inputs reveals capability gaps masked by screenshot-only benchmarks"
+      ],
+      "tags": ["gui-agents", "benchmark", "multimodal", "smartphone", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18758",
+        "huggingface": "https://huggingface.co/papers/2605.18758",
+        "pdf": "https://arxiv.org/pdf/2605.18758"
+      }
+    },
+    {
+      "id": "cepo-contrastive-evidence",
+      "title": "CEPO: RLVR Self-Distillation using Contrastive Evidence Policy Optimization",
+      "authors": ["Ahmed Heakl", "Abdelrahman M. Shaker", "Youssef Mohamed", "Rania Elbadry", "Omar Fetouh"],
+      "affiliations": ["University of Waterloo", "Mohamed bin Zayed University of Artificial Intelligence"],
+      "summary": "Proposes CEPO, a contrastive evidence approach to reinforcement learning with verifiable rewards that conditions on the correct answer as a teacher to identify decisive reasoning tokens, addressing the fundamental problem where every token receives identical reward signals.",
+      "key_findings": [
+        "Standard RLVR gives every token the same reward regardless of whether it is a decisive reasoning step or grammatical filler",
+        "Contrastive evidence policy optimization identifies tokens the model would have generated differently had it known the answer",
+        "Avoids both answer leakage into gradients and weak signal problems of prior credit assignment approaches"
+      ],
+      "tags": ["reinforcement-learning", "rlvr", "credit-assignment", "self-distillation", "reasoning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19436",
+        "huggingface": "https://huggingface.co/papers/2605.19436",
+        "pdf": "https://arxiv.org/pdf/2605.19436"
+      }
+    },
+    {
+      "id": "betaprm-learned-reliability",
+      "title": "Process Rewards with Learned Reliability",
+      "authors": ["Jinyuan Li", "Langlin Huang", "Chengsong Huang", "Shaoyang Xu", "Donghong Cai"],
+      "affiliations": ["National University of Singapore", "Sea AI Lab"],
+      "summary": "Proposes BetaPRM, a distributional process reward model that predicts both step-level success probability and the reliability of that prediction, enabling downstream methods to know when step-level reward predictions should be trusted.",
+      "key_findings": [
+        "Current PRMs output a single reward score per step with no indication of prediction reliability",
+        "BetaPRM predicts a Beta distribution over step success probability, capturing both estimate and confidence",
+        "Reliability-aware downstream methods outperform those that treat all step rewards as equally trustworthy"
+      ],
+      "tags": ["process-rewards", "prm", "reliability", "reasoning", "distributional"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.15529",
+        "huggingface": "https://huggingface.co/papers/2605.15529",
+        "pdf": "https://arxiv.org/pdf/2605.15529"
+      }
+    },
+    {
+      "id": "echo-forcing-video-memory",
+      "title": "Echo-Forcing: A Scene Memory Framework for Interactive Long Video Generation",
+      "authors": ["Mingqiang Wu", "Weilun Feng", "Zhefeng Zhang", "Haotong Qin", "Yuqi Li"],
+      "affiliations": ["Peking University", "Alibaba Group"],
+      "summary": "Identifies the functional entanglement of historical KV states as the core bottleneck for interactive long video generation, and proposes Echo-Forcing, a scene memory framework that disentangles stable anchors from recent dynamics to enable prompt switching and historical scene recall.",
+      "key_findings": [
+        "Existing long-video methods focus on single-prompt stable extension, failing at interactive scenarios with prompt switching",
+        "Core bottleneck is functional entanglement of stable anchors and recent dynamics in KV states",
+        "Echo-Forcing enables scene memory for old scene forgetting prevention and historical scene recall"
+      ],
+      "tags": ["video-generation", "long-video", "scene-memory", "interactive", "kv-cache"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.16003",
+        "huggingface": "https://huggingface.co/papers/2605.16003",
+        "pdf": "https://arxiv.org/pdf/2605.16003"
+      }
+    },
+    {
+      "id": "docatlas-multilingual-ocr",
+      "title": "DocAtlas: Multilingual Document Understanding Across 80+ Languages",
+      "authors": ["Ahmed Heakl", "Youssef Mohamed", "Abdullah Sohail", "Rania Elbadry", "Ahmed Nassar"],
+      "affiliations": ["University of Waterloo", "Mohamed bin Zayed University of Artificial Intelligence"],
+      "summary": "Introduces DocAtlas, a framework for constructing high-fidelity OCR datasets and benchmarks covering 82 languages and 9 evaluation tasks, using dual pipelines of differential rendering and synthetic LaTeX-based generation to produce precise structural annotations.",
+      "key_findings": [
+        "Multilingual document understanding is limited for low-resource languages due to scarce training data",
+        "Dual pipelines — differential DOCX rendering and synthetic LaTeX generation for RTL scripts — produce high-fidelity annotations",
+        "Covers 82 languages with 9 evaluation tasks in a unified COCO-format annotation scheme"
+      ],
+      "tags": ["ocr", "multilingual", "document-understanding", "low-resource", "benchmark"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.12623",
+        "huggingface": "https://huggingface.co/papers/2605.12623",
+        "pdf": "https://arxiv.org/pdf/2605.12623"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek's flagship V4-Pro conversational model continues dominating with 3.6M downloads and over 4,000 likes, maintaining its position as the most adopted open-weight large language model.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "deepseek"],
+      "metrics": {"downloads": 3622763, "likes": 4069},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek",
+      "description": "Lightweight inference-optimized variant of DeepSeek V4, approaching 2M downloads with strong community adoption for latency-sensitive deployment scenarios.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "fast-inference"],
+      "metrics": {"downloads": 1998112, "likes": 1159},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "Leading community diffusion model for image generation with 1,428 likes and over 558K downloads, distributed as a single-file model compatible with ComfyUI workflows.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusion", "image-generation", "comfyui"],
+      "metrics": {"downloads": 558113, "likes": 1428},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "Text-to-video generation model surpassing 1.1M downloads with GGUF support, reflecting the growing accessibility of open video generation capabilities.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": {"downloads": 1114657, "likes": 1176},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "Latest iteration of OpenBMB's efficient multimodal model series for image-text understanding, trending with 806 likes and 145K downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "efficient", "vision-language"],
+      "metrics": {"downloads": 144826, "likes": 806},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "microsoft-fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "Microsoft's 7B multimodal model built on Qwen2.5-VL architecture for image-text understanding, with 582 likes signaling continued interest in efficient vision-language models from major labs.",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "microsoft", "vision-language"],
+      "metrics": {"downloads": 14464, "likes": 582},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "zyphra-zaya1-8b",
+      "name": "ZAYA1-8B",
+      "organization": "Zyphra",
+      "description": "Compact 8B reasoning model from Zyphra fine-tuned from ZAYA1-reasoning-base, representing the growing capability of small specialized reasoning models.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": ["reasoning", "zyphra", "fine-tuned"],
+      "metrics": {"downloads": 146253, "likes": 536},
+      "source_url": "https://huggingface.co/Zyphra/ZAYA1-8B"
+    },
+    {
+      "id": "supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "Fast multilingual text-to-speech model running via ONNX, with 472 likes and growing momentum in the on-device TTS space.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "onnx", "multilingual", "on-device"],
+      "metrics": {"downloads": 28681, "likes": 472},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "z-anime",
+      "name": "Z-Anime",
+      "organization": "SeeSee21",
+      "description": "Anime-focused text-to-image diffusion model with GGUF support, reflecting continued demand for specialized aesthetic image generation.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["anime", "text-to-image", "diffusers", "gguf"],
+      "metrics": {"downloads": 15794, "likes": 418},
+      "source_url": "https://huggingface.co/SeeSee21/Z-Anime"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "Multimodal model supporting both image understanding and generation based on Qwen3-VL architecture, bridging image-text-to-text and image-text-to-image capabilities in a single model.",
+      "task_type": "image-text-to-image",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "image-understanding"],
+      "metrics": {"downloads": 15822, "likes": 402},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    },
+    {
+      "id": "qwen3-6-27b-mtp",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth (Qwen)",
+      "description": "Unsloth-optimized GGUF quantization of Qwen3.6-27B with multi-token prediction, reaching 337K downloads as the community's preferred local deployment format for mid-size Qwen models.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "qwen", "unsloth", "quantized"],
+      "metrics": {"downloads": 337076, "likes": 329},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "Unified multimodal model supporting image generation, video generation, and multimodal understanding, with 318 likes despite only 171 downloads suggesting strong research interest ahead of broad deployment.",
+      "task_type": "multimodal",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "unified"],
+      "metrics": {"downloads": 171, "likes": 318},
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openhuman",
+      "name": "tinyhumansai/openhuman",
+      "description": "Open-source personal AI assistant written in Rust, leading GitHub trends for the second consecutive day with 3,973 stars gained today. Privacy-first, local-first intelligence with no cloud dependencies.",
+      "language": "Rust",
+      "stars": 21447,
+      "stars_today": 3973,
+      "forks": 1896,
+      "url": "https://github.com/tinyhumansai/openhuman",
+      "tags": ["personal-ai", "rust", "privacy", "local-first"],
+      "relevance": "high"
+    },
+    {
+      "id": "academic-research-skills",
+      "name": "Imbad0202/academic-research-skills",
+      "description": "Academic research skills for Claude Code automating the full research pipeline: research, write, review, revise, finalize. Surging to 3,164 stars today, up from 1,439 yesterday.",
+      "language": "Python",
+      "stars": 14217,
+      "stars_today": 3164,
+      "forks": 1338,
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "tags": ["claude-code", "research-automation", "academic", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "A single CLAUDE.md file derived from Andrej Karpathy's observations on LLM coding pitfalls, improving Claude Code behavior. Explosive growth at 138K total stars with 1,955 today.",
+      "language": "",
+      "stars": 138183,
+      "stars_today": 1955,
+      "forks": 14172,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["claude-code", "best-practices", "karpathy", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "Pre-indexed code knowledge graph for Claude Code, Codex, Cursor, and OpenCode — fewer tokens, fewer tool calls, 100% local. Surging at 1,850 stars today.",
+      "language": "TypeScript",
+      "stars": 6728,
+      "stars_today": 1850,
+      "forks": 442,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "code-intelligence", "token-reduction", "local"],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "Agentic skills framework and software development methodology with 198K total stars — the most-starred agent skills repo. Gaining 1,623 stars today.",
+      "language": "Shell",
+      "stars": 198500,
+      "stars_today": 1623,
+      "forks": 17715,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "methodology", "software-development"],
+      "relevance": "high"
+    },
+    {
+      "id": "agentmemory",
+      "name": "rohitg00/agentmemory",
+      "description": "Persistent memory system for AI coding agents, ranked #1 based on real-world benchmarks. 1,609 stars today reflects urgent demand for agent context persistence.",
+      "language": "TypeScript",
+      "stars": 14218,
+      "stars_today": 1609,
+      "forks": 1183,
+      "url": "https://github.com/rohitg00/agentmemory",
+      "tags": ["agent-memory", "persistence", "coding-agents", "benchmarks"],
+      "relevance": "high"
+    },
+    {
+      "id": "cloakbrowser",
+      "name": "CloakHQ/CloakBrowser",
+      "description": "Stealth Chromium browser passing all bot detection tests as a drop-in Playwright replacement. 1,463 stars today with source-level fingerprint patches.",
+      "language": "Python",
+      "stars": 16677,
+      "stars_today": 1463,
+      "forks": 1287,
+      "url": "https://github.com/CloakHQ/CloakBrowser",
+      "tags": ["browser-automation", "stealth", "web-scraping", "playwright"],
+      "relevance": "medium"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "Complete AI agency with specialized expert agents — frontend wizards, community ninjas, whimsy injectors, and reality checkers. 101K total stars with 1,120 today.",
+      "language": "Shell",
+      "stars": 101695,
+      "stars_today": 1120,
+      "forks": 16802,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": ["ai-agency", "specialized-agents", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "Making all software agent-native by wrapping applications with CLI interfaces. Includes CLI-Hub for discovery. 1,038 stars today with 37K total.",
+      "language": "Python",
+      "stars": 37760,
+      "stars_today": 1038,
+      "forks": 3618,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["cli", "agent-native", "software-tools", "automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM-powered stock analysis system for A/H/US markets with multi-source data, real-time news, LLM decision dashboard, and multi-channel alerts. 891 stars today, 37.8K total.",
+      "language": "Python",
+      "stars": 37829,
+      "stars_today": 891,
+      "forks": 36547,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["financial-ai", "stock-analysis", "llm-applications"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-agents-for-beginners",
+      "name": "microsoft/ai-agents-for-beginners",
+      "description": "Microsoft's 12-lesson curriculum for building AI agents. 818 stars today with 64K total, remaining the definitive educational resource for agent development.",
+      "language": "Jupyter Notebook",
+      "stars": 64420,
+      "stars_today": 818,
+      "forks": 21310,
+      "url": "https://github.com/microsoft/ai-agents-for-beginners",
+      "tags": ["education", "agents", "microsoft", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "rtk-token-proxy",
+      "name": "rtk-ai/rtk",
+      "description": "CLI proxy written in Rust that reduces LLM token consumption by 60-90% on common dev commands. Single binary, zero dependencies. 704 stars today, 51K total.",
+      "language": "Rust",
+      "stars": 50960,
+      "stars_today": 704,
+      "forks": 3106,
+      "url": "https://github.com/rtk-ai/rtk",
+      "tags": ["token-reduction", "cli-proxy", "rust", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic's official public repository for agent skills, with 137K total stars and 667 gained today. The reference implementation for the agent skills standard.",
+      "language": "Python",
+      "stars": 137668,
+      "stars_today": 667,
+      "forks": 16241,
+      "url": "https://github.com/anthropics/skills",
+      "tags": ["agent-skills", "anthropic", "official", "reference"],
+      "relevance": "high"
+    },
+    {
+      "id": "shadowbroker",
+      "name": "BigBodyCobain/Shadowbroker",
+      "description": "Open-source intelligence platform tracking jets, satellites, and seismic events with AI agent integration for finding correlations across disparate data sources. 580 stars today.",
+      "language": "Python",
+      "stars": 8285,
+      "stars_today": 580,
+      "forks": 1249,
+      "url": "https://github.com/BigBodyCobain/Shadowbroker",
+      "tags": ["osint", "intelligence", "data-aggregation", "ai-agents"],
+      "relevance": "medium"
+    },
+    {
+      "id": "sana-image-synthesis",
+      "name": "NVlabs/Sana",
+      "description": "NVIDIA's efficient high-resolution image synthesis with linear diffusion transformer, gaining 575 stars today. Represents NVIDIA's push into efficient open generative models.",
+      "language": "Python",
+      "stars": 7032,
+      "stars_today": 575,
+      "forks": 510,
+      "url": "https://github.com/NVlabs/Sana",
+      "tags": ["image-synthesis", "diffusion", "nvidia", "efficient"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "AI-Generated Content Evaluation Gaps",
+      "description": "Artifact-Bench reveals that frontier MLLMs cannot reliably assess AI-generated video quality, while OmniGUI exposes how static-screenshot benchmarks mask real-world GUI agent failures. Together, these papers highlight a systematic evaluation gap: as generative models improve, the evaluation infrastructure lags dangerously behind.",
+      "related_paper_ids": ["artifact-bench-video-quality", "omnigui-multimodal-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RL Credit Assignment and Process Rewards",
+      "description": "CEPO's contrastive evidence approach to token-level credit assignment and BetaPRM's distributional reliability estimation for process rewards represent a maturation of RL-based reasoning training beyond uniform reward signals, enabling more sample-efficient and trustworthy training.",
+      "related_paper_ids": ["cepo-contrastive-evidence", "betaprm-learned-reliability"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Knowledge Graphs and Persistent Memory",
+      "description": "Three GitHub repos — codegraph, code-review-graph, and agentmemory — address persistent contextual understanding for coding agents from different angles, while rtk reduces token consumption at the infrastructure level. The convergence signals industry recognition that raw context windows are insufficient for production coding agents.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skills Ecosystem Consolidation",
+      "description": "The Karpathy-skills repo (138K stars), superpowers framework (198K stars), and Anthropic's official skills repo (137K stars) show the agent skills ecosystem rapidly consolidating around reusable, community-validated artifacts. Academic research skills surging to 3,164 stars/day indicates this extends beyond coding into research workflows.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Interactive Video Generation Infrastructure",
+      "description": "Echo-Forcing's scene memory framework for interactive long video generation, combined with ByteDance's Lance unified multimodal model and Sulphur-2's continued download growth, shows video generation evolving from single-prompt synthesis to interactive, scene-aware, and memory-augmented generation.",
+      "related_paper_ids": ["echo-forcing-video-memory"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Multilingual and Low-Resource AI",
+      "description": "DocAtlas's 82-language document understanding framework addresses the persistent gap in multilingual AI capabilities, particularly for low-resource languages and right-to-left scripts, using synthetic data generation to overcome training data scarcity.",
+      "related_paper_ids": ["docatlas-multilingual-ocr"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

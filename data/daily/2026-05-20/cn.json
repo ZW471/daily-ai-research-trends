@@ -1,0 +1,526 @@
+{
+  "version": "1.0",
+  "date": "2026-05-20",
+  "generated_at": "2026-05-20T15:00:00Z",
+  "summary": {
+    "headline": "Artifact-Bench揭示MLLM在AI视频质量评估中的盲点；OmniGUI开创全模态GUI智能体基准测试；智能体技能与代码知识图谱主导GitHub，Karpathy最佳实践激增",
+    "body": "今日研究揭示了多模态模型感知AI生成内容的关键缺陷。**Artifact-Bench**（5个点赞）发现即使是前沿MLLM也难以检测AI生成视频中的时间不一致性和结构性扭曲，建立了一个具有细粒度诊断推理的系统性基准。与此同时，**OmniGUI**将GUI智能体评估从静态截图扩展到连续的音视频交互，揭示了当智能手机任务需要处理瞬态音频提示和视频动态时，当前智能体的失败模式。\n\n在训练方法论方面，**CEPO**引入对比证据策略优化用于RLVR，解决了每个token无论其推理贡献如何都获得相同奖励的根本性信用分配问题。**BetaPRM**通过为过程奖励模型添加可靠性估计来补充这一工作，使下游方法能够判断何时可以信任步骤级预测。这些论文共同表明基于RL的推理训练正在超越粗暴的奖励信号走向成熟。\n\nGitHub趋势描绘了**智能体工具生态系统围绕知识图谱和最佳实践进行整合**的生动图景。OpenHuman延续其基于Rust的个人AI势头（今日3,973星），codegraph（今日1,850星）和code-review-graph与agentmemory一起为编程智能体构建持久的上下文基础设施。Karpathy-skills仓库（今日1,955星）和superpowers框架（今日1,623星）反映了社区正将来之不易的智能体工程智慧凝结为可复用的制品。",
+    "key_themes": [
+      "ai-video-quality-evaluation",
+      "omni-modal-agent-benchmarking",
+      "rl-credit-assignment-and-process-rewards",
+      "agent-knowledge-graphs-and-memory",
+      "agent-skills-ecosystem-consolidation",
+      "multilingual-document-understanding"
+    ]
+  },
+  "researcher_notes": "**视频质量评估是MLLM评估的新前沿。** Artifact-Bench发现MLLM无法可靠检测AI生成视频中的时间不一致性和结构性扭曲，这有直接的实际意义。随着视频生成模型的改进（Sulphur-2下载量达110万，ViMax每日获得503星），质量保证瓶颈正从生成转向评估。预计该基准将成为多模态模型的标准评估维度，类似于MMLU在语言理解中的普及。\n\n**GUI智能体评估正在悄然革新。** OmniGUI坚持使用连续、交错的多模态输入（截图+音频+视频动态）进行步骤级评估，是一个重要的方法论进步。大多数GUI智能体基准假设智能体可以从静态截图中推理，但真实的智能手机交互需要处理瞬态音频通知、加载动画和仅存在几分之一秒的模态对话框。该基准可能会暴露基于截图的评估所掩盖的能力差距。\n\n**CEPO和BetaPRM共同表明过程级RL正在成熟。** RLVR中的token级信用分配问题一直是已知弱点——CEPO的对比方法（使用正确答案作为教师来识别关键token）很优雅，但其与泄漏问题的交互值得审视。BetaPRM的分布式步骤奖励方法增加了互补维度：不仅判断步骤是否正确，还判断模型对该评估应有多大信心。这两者结合可能实现更高样本效率的推理训练。\n\n**代码知识图谱趋势是隐藏的重要故事。** 三个仓库——codegraph（每日1,850星）、code-review-graph（每日123星）和agentmemory（每日1,609星）——从不同角度解决同一问题：为AI编程智能体提供持久的、结构化的代码库上下文。这与rtk（每日704星，声称可减少60-90%的token消耗）从基础设施层面解决的问题相呼应。这种趋同表明业界认识到，原始上下文窗口对于生产级编程智能体来说是不够的。\n\n**DeepSeek V4继续巩固其地位。** V4-Pro以360万次下载和4,069个点赞，以及V4-Flash的200万次下载，代表了自Qwen 3.5以来最大规模的开放模型部署。Ring-2.6-1T（inclusionAI的万亿参数混合模型）和ZAYA1-8B（Zyphra的紧凑推理模型）同时趋势上升，说明了两极分化：大规模模型追求能力前沿，小型模型追求部署效率。",
+  "papers": [
+    {
+      "id": "artifact-bench-video-quality",
+      "title": "Artifact-Bench: 评估MLLM检测和评估AI生成视频伪影的能力",
+      "authors": ["Yuqi Tang", "Yang Shi", "Zhuoran Zhang", "Qixun Wang", "Xuehai Bai"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "引入Artifact-Bench，一个系统性基准，用于评估多模态大语言模型感知和推理AI生成视频中伪影的能力，包括时间不一致性、结构性扭曲和语义不连贯。",
+      "key_findings": [
+        "即使是前沿MLLM也难以检测AI生成视频中的细粒度伪影",
+        "现有基准缺乏对伪影感知和诊断推理的系统性评估",
+        "提供了涵盖时间、结构和语义维度的细粒度伪影分类体系"
+      ],
+      "tags": ["benchmark", "video-quality", "mllm-evaluation", "ai-generated-video"],
+      "relevance": "high",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18984",
+        "huggingface": "https://huggingface.co/papers/2605.18984",
+        "pdf": "https://arxiv.org/pdf/2605.18984"
+      }
+    },
+    {
+      "id": "omnigui-multimodal-benchmark",
+      "title": "OmniGUI: 全模态智能手机环境中GUI智能体的基准测试",
+      "authors": ["Felix Henry", "Xiaochen Lin", "Jiangyou Zhu", "Yangfan", "Bingqian Zhang"],
+      "affiliations": ["University of Science and Technology of China", "Tencent"],
+      "summary": "引入OmniGUI，首个步骤级GUI智能体基准，使用连续、交错的多模态输入（包括截图、音频提示和视频动态）评估性能，弥合了静态截图评估与真实智能手机交互之间的差距。",
+      "key_findings": [
+        "依赖静态截图的现有GUI智能体基准忽略了关键的真实交互动态",
+        "真实的智能手机任务要求智能体处理瞬态音频提示和时间视频动态",
+        "使用连续多模态输入的步骤级评估揭示了仅截图基准所掩盖的能力差距"
+      ],
+      "tags": ["gui-agents", "benchmark", "multimodal", "smartphone", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18758",
+        "huggingface": "https://huggingface.co/papers/2605.18758",
+        "pdf": "https://arxiv.org/pdf/2605.18758"
+      }
+    },
+    {
+      "id": "cepo-contrastive-evidence",
+      "title": "CEPO: 使用对比证据策略优化的RLVR自蒸馏",
+      "authors": ["Ahmed Heakl", "Abdelrahman M. Shaker", "Youssef Mohamed", "Rania Elbadry", "Omar Fetouh"],
+      "affiliations": ["University of Waterloo", "Mohamed bin Zayed University of Artificial Intelligence"],
+      "summary": "提出CEPO，一种基于对比证据的可验证奖励强化学习方法，通过以正确答案为教师来识别关键推理token，解决了每个token获得相同奖励信号的根本性问题。",
+      "key_findings": [
+        "标准RLVR给予每个token相同奖励，无论其是关键推理步骤还是语法填充",
+        "对比证据策略优化识别出模型在知道答案时会有不同生成的token",
+        "避免了先前信用分配方法中答案泄漏到梯度和信号微弱的问题"
+      ],
+      "tags": ["reinforcement-learning", "rlvr", "credit-assignment", "self-distillation", "reasoning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19436",
+        "huggingface": "https://huggingface.co/papers/2605.19436",
+        "pdf": "https://arxiv.org/pdf/2605.19436"
+      }
+    },
+    {
+      "id": "betaprm-learned-reliability",
+      "title": "具有学习可靠性的过程奖励",
+      "authors": ["Jinyuan Li", "Langlin Huang", "Chengsong Huang", "Shaoyang Xu", "Donghong Cai"],
+      "affiliations": ["National University of Singapore", "Sea AI Lab"],
+      "summary": "提出BetaPRM，一种分布式过程奖励模型，同时预测步骤级成功概率和该预测的可靠性，使下游方法能够判断何时应信任步骤级奖励预测。",
+      "key_findings": [
+        "当前PRM仅为每个步骤输出单一奖励分数，不指示预测可靠性",
+        "BetaPRM预测步骤成功概率的Beta分布，同时捕获估计值和置信度",
+        "可靠性感知的下游方法优于将所有步骤奖励视为同等可信的方法"
+      ],
+      "tags": ["process-rewards", "prm", "reliability", "reasoning", "distributional"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.15529",
+        "huggingface": "https://huggingface.co/papers/2605.15529",
+        "pdf": "https://arxiv.org/pdf/2605.15529"
+      }
+    },
+    {
+      "id": "echo-forcing-video-memory",
+      "title": "Echo-Forcing: 交互式长视频生成的场景记忆框架",
+      "authors": ["Mingqiang Wu", "Weilun Feng", "Zhefeng Zhang", "Haotong Qin", "Yuqi Li"],
+      "affiliations": ["Peking University", "Alibaba Group"],
+      "summary": "识别出历史KV状态的功能纠缠是交互式长视频生成的核心瓶颈，提出Echo-Forcing场景记忆框架，将稳定锚点与近期动态解耦，实现提示切换和历史场景回忆。",
+      "key_findings": [
+        "现有长视频方法专注于单提示稳定扩展，无法处理提示切换的交互场景",
+        "核心瓶颈在于KV状态中稳定锚点与近期动态的功能纠缠",
+        "Echo-Forcing实现场景记忆，防止旧场景遗忘并支持历史场景回忆"
+      ],
+      "tags": ["video-generation", "long-video", "scene-memory", "interactive", "kv-cache"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.16003",
+        "huggingface": "https://huggingface.co/papers/2605.16003",
+        "pdf": "https://arxiv.org/pdf/2605.16003"
+      }
+    },
+    {
+      "id": "docatlas-multilingual-ocr",
+      "title": "DocAtlas: 覆盖80+语言的多语言文档理解",
+      "authors": ["Ahmed Heakl", "Youssef Mohamed", "Abdullah Sohail", "Rania Elbadry", "Ahmed Nassar"],
+      "affiliations": ["University of Waterloo", "Mohamed bin Zayed University of Artificial Intelligence"],
+      "summary": "引入DocAtlas，一个用于构建高保真OCR数据集和基准的框架，覆盖82种语言和9个评估任务，使用差异渲染和合成LaTeX生成的双管线产生精确的结构化标注。",
+      "key_findings": [
+        "多语言文档理解因训练数据稀缺而在低资源语言中受限",
+        "双管线——差异DOCX渲染和针对从右到左文字的合成LaTeX生成——产生高保真标注",
+        "以统一的COCO格式标注方案覆盖82种语言和9个评估任务"
+      ],
+      "tags": ["ocr", "multilingual", "document-understanding", "low-resource", "benchmark"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.12623",
+        "huggingface": "https://huggingface.co/papers/2605.12623",
+        "pdf": "https://arxiv.org/pdf/2605.12623"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek旗舰V4-Pro对话模型继续以360万次下载和超过4,000个点赞占据主导地位，保持其作为最广泛采用的开放权重大语言模型的地位。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "deepseek"],
+      "metrics": {"downloads": 3622763, "likes": 4069},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4的轻量级推理优化变体，接近200万次下载，在延迟敏感部署场景中获得强劲社区采用。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "conversational", "fast-inference"],
+      "metrics": {"downloads": 1998112, "likes": 1159},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "领先的社区扩散模型，用于图像生成，拥有1,428个点赞和超过55.8万次下载，以兼容ComfyUI工作流的单文件模型分发。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusion", "image-generation", "comfyui"],
+      "metrics": {"downloads": 558113, "likes": 1428},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "文本到视频生成模型，下载量突破110万，支持GGUF格式，反映了开放视频生成能力日益增长的可及性。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": {"downloads": 1114657, "likes": 1176},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "OpenBMB高效多模态模型系列的最新迭代，用于图文理解，以806个点赞和14.5万次下载保持强势趋势。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "efficient", "vision-language"],
+      "metrics": {"downloads": 144826, "likes": 806},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "microsoft-fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "微软基于Qwen2.5-VL架构的7B多模态模型，用于图文理解，582个点赞表明业界对大型实验室高效视觉语言模型的持续兴趣。",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "microsoft", "vision-language"],
+      "metrics": {"downloads": 14464, "likes": 582},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "zyphra-zaya1-8b",
+      "name": "ZAYA1-8B",
+      "organization": "Zyphra",
+      "description": "Zyphra的8B紧凑推理模型，基于ZAYA1-reasoning-base微调，代表了小型专业推理模型日益增长的能力。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": ["reasoning", "zyphra", "fine-tuned"],
+      "metrics": {"downloads": 146253, "likes": 536},
+      "source_url": "https://huggingface.co/Zyphra/ZAYA1-8B"
+    },
+    {
+      "id": "supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "通过ONNX运行的快速多语言文本转语音模型，472个点赞，在端侧TTS领域势头强劲。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "onnx", "multilingual", "on-device"],
+      "metrics": {"downloads": 28681, "likes": 472},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "z-anime",
+      "name": "Z-Anime",
+      "organization": "SeeSee21",
+      "description": "面向动漫风格的文本到图像扩散模型，支持GGUF格式，反映了对专业化美学图像生成的持续需求。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["anime", "text-to-image", "diffusers", "gguf"],
+      "metrics": {"downloads": 15794, "likes": 418},
+      "source_url": "https://huggingface.co/SeeSee21/Z-Anime"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "基于Qwen3-VL架构的多模态模型，同时支持图像理解和图像生成，在单一模型中桥接图文到文本和图文到图像的能力。",
+      "task_type": "image-text-to-image",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "image-understanding"],
+      "metrics": {"downloads": 15822, "likes": 402},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    },
+    {
+      "id": "qwen3-6-27b-mtp",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth (Qwen)",
+      "description": "Unsloth优化的Qwen3.6-27B多token预测GGUF量化版，达到33.7万次下载，是社区首选的中型Qwen模型本地部署格式。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "qwen", "unsloth", "quantized"],
+      "metrics": {"downloads": 337076, "likes": 329},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "统一多模态模型，支持图像生成、视频生成和多模态理解，以318个点赞但仅171次下载表明强烈的研究兴趣领先于广泛部署。",
+      "task_type": "multimodal",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "unified"],
+      "metrics": {"downloads": 171, "likes": 318},
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openhuman",
+      "name": "tinyhumansai/openhuman",
+      "description": "基于Rust的开源个人AI助手，连续第二天领跑GitHub趋势，今日增长3,973星。隐私优先、本地优先的智能系统，无需云依赖。",
+      "language": "Rust",
+      "stars": 21447,
+      "stars_today": 3973,
+      "forks": 1896,
+      "url": "https://github.com/tinyhumansai/openhuman",
+      "tags": ["personal-ai", "rust", "privacy", "local-first"],
+      "relevance": "high"
+    },
+    {
+      "id": "academic-research-skills",
+      "name": "Imbad0202/academic-research-skills",
+      "description": "Claude Code学术研究技能，自动化完整研究流程：研究、写作、审阅、修订、定稿。今日激增至3,164星，较昨日1,439星大幅上升。",
+      "language": "Python",
+      "stars": 14217,
+      "stars_today": 3164,
+      "forks": 1338,
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "tags": ["claude-code", "research-automation", "academic", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "基于Andrej Karpathy对LLM编程缺陷观察的单一CLAUDE.md文件，用于改善Claude Code行为。总星数达13.8万，今日增长1,955。",
+      "language": "",
+      "stars": 138183,
+      "stars_today": 1955,
+      "forks": 14172,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["claude-code", "best-practices", "karpathy", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "为Claude Code、Codex、Cursor和OpenCode预索引的代码知识图谱——更少的token、更少的工具调用、100%本地化。今日激增1,850星。",
+      "language": "TypeScript",
+      "stars": 6728,
+      "stars_today": 1850,
+      "forks": 442,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "code-intelligence", "token-reduction", "local"],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架和软件开发方法论，总星数达19.8万——最高星数的智能体技能仓库。今日增长1,623星。",
+      "language": "Shell",
+      "stars": 198500,
+      "stars_today": 1623,
+      "forks": 17715,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "methodology", "software-development"],
+      "relevance": "high"
+    },
+    {
+      "id": "agentmemory",
+      "name": "rohitg00/agentmemory",
+      "description": "基于真实世界基准排名第一的AI编程智能体持久化记忆系统。今日1,609星反映了对智能体上下文持久化的迫切需求。",
+      "language": "TypeScript",
+      "stars": 14218,
+      "stars_today": 1609,
+      "forks": 1183,
+      "url": "https://github.com/rohitg00/agentmemory",
+      "tags": ["agent-memory", "persistence", "coding-agents", "benchmarks"],
+      "relevance": "high"
+    },
+    {
+      "id": "cloakbrowser",
+      "name": "CloakHQ/CloakBrowser",
+      "description": "通过所有机器人检测测试的隐身Chromium浏览器，作为Playwright的直接替代品。今日1,463星，具有源码级指纹修补。",
+      "language": "Python",
+      "stars": 16677,
+      "stars_today": 1463,
+      "forks": 1287,
+      "url": "https://github.com/CloakHQ/CloakBrowser",
+      "tags": ["browser-automation", "stealth", "web-scraping", "playwright"],
+      "relevance": "medium"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "完整的AI代理公司，包含专业化专家智能体——前端高手、社区忍者、趣味注入器和现实检查者。总星数10.1万，今日1,120。",
+      "language": "Shell",
+      "stars": 101695,
+      "stars_today": 1120,
+      "forks": 16802,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": ["ai-agency", "specialized-agents", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "通过为应用程序包装CLI接口使所有软件对智能体原生化。包含CLI-Hub用于发现和共享。今日1,038星，总计3.7万。",
+      "language": "Python",
+      "stars": 37760,
+      "stars_today": 1038,
+      "forks": 3618,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["cli", "agent-native", "software-tools", "automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM驱动的A/H/美股分析系统，多数据源行情、实时新闻、LLM决策仪表盘和多渠道推送。今日891星，总计3.78万。",
+      "language": "Python",
+      "stars": 37829,
+      "stars_today": 891,
+      "forks": 36547,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["financial-ai", "stock-analysis", "llm-applications"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-agents-for-beginners",
+      "name": "microsoft/ai-agents-for-beginners",
+      "description": "微软的12课时AI智能体构建课程。今日818星，总计6.4万，仍是智能体开发的权威教育资源。",
+      "language": "Jupyter Notebook",
+      "stars": 64420,
+      "stars_today": 818,
+      "forks": 21310,
+      "url": "https://github.com/microsoft/ai-agents-for-beginners",
+      "tags": ["education", "agents", "microsoft", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "rtk-token-proxy",
+      "name": "rtk-ai/rtk",
+      "description": "基于Rust编写的CLI代理，在常见开发命令上减少60-90%的LLM token消耗。单一二进制文件，零依赖。今日704星，总计5.1万。",
+      "language": "Rust",
+      "stars": 50960,
+      "stars_today": 704,
+      "forks": 3106,
+      "url": "https://github.com/rtk-ai/rtk",
+      "tags": ["token-reduction", "cli-proxy", "rust", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic官方智能体技能公共仓库，总星数13.7万，今日增长667。智能体技能标准的参考实现。",
+      "language": "Python",
+      "stars": 137668,
+      "stars_today": 667,
+      "forks": 16241,
+      "url": "https://github.com/anthropics/skills",
+      "tags": ["agent-skills", "anthropic", "official", "reference"],
+      "relevance": "high"
+    },
+    {
+      "id": "shadowbroker",
+      "name": "BigBodyCobain/Shadowbroker",
+      "description": "开源情报平台，跟踪飞机、卫星和地震事件，集成AI智能体用于发现跨异构数据源的关联。今日580星。",
+      "language": "Python",
+      "stars": 8285,
+      "stars_today": 580,
+      "forks": 1249,
+      "url": "https://github.com/BigBodyCobain/Shadowbroker",
+      "tags": ["osint", "intelligence", "data-aggregation", "ai-agents"],
+      "relevance": "medium"
+    },
+    {
+      "id": "sana-image-synthesis",
+      "name": "NVlabs/Sana",
+      "description": "NVIDIA的高效高分辨率图像合成，采用线性扩散Transformer，今日增长575星。代表NVIDIA在高效开放生成模型方面的推进。",
+      "language": "Python",
+      "stars": 7032,
+      "stars_today": 575,
+      "forks": 510,
+      "url": "https://github.com/NVlabs/Sana",
+      "tags": ["image-synthesis", "diffusion", "nvidia", "efficient"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "AI生成内容的评估差距",
+      "description": "Artifact-Bench揭示前沿MLLM无法可靠评估AI生成视频质量，OmniGUI则暴露了静态截图基准如何掩盖真实GUI智能体的失败。这些论文共同凸显了系统性评估差距：随着生成模型的改进，评估基础设施严重滞后。",
+      "related_paper_ids": ["artifact-bench-video-quality", "omnigui-multimodal-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RL信用分配与过程奖励",
+      "description": "CEPO的对比证据token级信用分配方法和BetaPRM的分布式可靠性估计代表了基于RL的推理训练的成熟，超越了统一奖励信号，实现更高效和更可信的训练。",
+      "related_paper_ids": ["cepo-contrastive-evidence", "betaprm-learned-reliability"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体知识图谱与持久记忆",
+      "description": "三个GitHub仓库——codegraph、code-review-graph和agentmemory——从不同角度解决编程智能体的持久上下文理解问题，而rtk从基础设施层面减少token消耗。这种趋同表明业界认识到原始上下文窗口对生产级编程智能体来说是不够的。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能生态系统整合",
+      "description": "Karpathy-skills仓库（13.8万星）、superpowers框架（19.8万星）和Anthropic官方技能仓库（13.7万星）显示智能体技能生态系统正快速围绕可复用、社区验证的制品进行整合。学术研究技能激增至每日3,164星表明这已超越编程延伸到研究工作流。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "交互式视频生成基础设施",
+      "description": "Echo-Forcing的交互式长视频生成场景记忆框架，结合ByteDance的Lance统一多模态模型和Sulphur-2持续增长的下载量，表明视频生成正从单一提示合成演进为交互式、场景感知和记忆增强的生成。",
+      "related_paper_ids": ["echo-forcing-video-memory"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "多语言与低资源AI",
+      "description": "DocAtlas覆盖82种语言的文档理解框架解决了多语言AI能力的持续差距，特别是低资源语言和从右到左文字，使用合成数据生成来克服训练数据稀缺。",
+      "related_paper_ids": ["docatlas-multilingual-ocr"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-20T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
