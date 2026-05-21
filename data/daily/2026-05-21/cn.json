@@ -1,0 +1,621 @@
+{
+  "version": "1.0",
+  "date": "2026-05-21",
+  "generated_at": "2026-05-21T15:00:00Z",
+  "summary": {
+    "headline": "音视觉「聪明汉斯效应」揭示多模态大模型幻觉问题；强化学习推理方法迎来五篇新论文高峰；OpenComputer和EnvFactory推动智能体基础设施走向可验证环境",
+    "body": "今日研究领域以多模态模型失败模式的深入审视和推理强化学习创新浪潮为主导。最突出的发现来自「When Vision Speaks for Sound」，揭示包括Google和OpenAI在内的领先多模态大模型依赖视觉线索来臆造音频理解，而非真正处理声音信号——这一发现对已部署的多模态系统具有重大影响。\n\n推理强化学习领域异常活跃，五种不同方法同日竞逐：通过PMI分析的反自蒸馏、面向长上下文的GoLongRL、分布式过程奖励BetaPRM、对比证据优化CEPO，以及概率递归推理GRAM。与此同时，智能体基础设施正在快速成熟——OpenComputer引入了计算机使用智能体的可验证软件环境，EnvFactory通过合成环境扩展工具使用训练，HASP则将技能复用形式化为显式干预机制。\n\n模型方面，DeepSeek V4 Pro和Flash以数百万下载量主导HuggingFace，而字节跳动的Lance引入了全模态架构。GitHub趋势生态反映了AI编程智能体的爆发，CLI-Anything、codegraph和agentmemory等仓库每日获得数千新星标。",
+    "key_themes": [
+      "rl-for-reasoning",
+      "agent-infrastructure",
+      "video-generation-editing",
+      "multimodal-hallucination",
+      "autonomous-research"
+    ]
+  },
+  "researcher_notes": "**音视觉「聪明汉斯效应」是本周最具影响力的发现。** 研究揭示最先进的多模态大模型通过视觉推断伪造音频理解，这对任何依赖视频MLLM进行音频相关任务的生产系统（内容审核、无障碍功能、监控）都需重新评估。87个点赞表明社区明确认识到其重要性。\n\n**推理强化学习领域正达到需要整合的饱和点。** 同一天出现了五篇提出不同改进方案的论文：反自蒸馏通过PMI分析定位自蒸馏失败原因，GoLongRL解决长上下文缺口，BetaPRM为过程奖励添加不确定性估计，CEPO解决RLVR中的信用分配问题，GRAM将递归推理重构为概率多轨迹计算。每篇贡献单独来看都很扎实，但该领域迫切需要这些方法之间的系统性比较。\n\n**智能体基础设施正悄然成为最具影响力的研究方向。** OpenComputer的可验证软件环境、EnvFactory的可扩展训练环境、HASP的技能程序代表了从「智能体能做X吗」到「如何可靠地大规模训练和评估智能体」的转变。GitHub趋势数据强化了这一判断：CLI-Anything（38K星）、agentmemory（15K星）和codegraph（10K星）显示开发者对智能体工具有巨大需求。\n\n**值得关注的隐藏亮点：AI同行评审研究值得仔细阅读。** GPT-5.2驱动的审稿人在综合指标上得分超过每篇论文评分最高的人类审稿人（60.0% vs 48.2%），这一发现令人瞩目，但细节很重要——AI审稿人之间的重叠度远高于人类（21% vs 3%），并表现出16种人类不具有的反复出现的弱点。这将AI审稿人定位为人类的补充而非替代。\n\n**DeepSeek V4在HuggingFace的主导地位不容忽视。** V4 Pro达到380万下载量，V4 Flash达到230万，DeepSeek正以一种一年前少有人预测的方式主导开源LLM部署。模型生态正日益分化为大规模前沿模型和高效专用模型（如sapientinc的HRM-Text-1B）两个阵营。",
+  "papers": [
+    {
+      "id": "when-vision-speaks-for-sound",
+      "title": "When Vision Speaks for Sound",
+      "authors": ["Xiaofei Wen", "Wenjie Jacky Mo", "Xingyu Fu", "Rui Cai", "Tinghui Zhu"],
+      "affiliations": ["University of Texas at Austin", "Carnegie Mellon University"],
+      "summary": "揭示具有视频理解能力的多模态大模型依赖视觉线索来推断或臆造音频信息，而非真正验证音频流，将此定性为音视觉「聪明汉斯效应」。该故障模式在开源全模态模型和Google、OpenAI的闭源模型中均存在。",
+      "key_findings": [
+        "最先进的MLLM表现出音视觉聪明汉斯效应，通过视觉推断伪造音频理解",
+        "该故障模式在开源和闭源模型中一致存在",
+        "模型利用视觉上下文线索生成貌似合理但未经验证的音频描述"
+      ],
+      "tags": ["multimodal", "audio-visual", "hallucination", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 87, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.16403",
+        "huggingface": "https://huggingface.co/papers/2605.16403",
+        "pdf": "https://arxiv.org/pdf/2605.16403"
+      }
+    },
+    {
+      "id": "active-learners-prp-rerankers",
+      "title": "Active Learners as Efficient PRP Rerankers",
+      "authors": ["Jeremías Figueiredo Paschmann", "Juan Kaplan", "Francisco Nattero", "Santiago Barron", "Juan Wisznia"],
+      "affiliations": ["Mercado Libre", "Universidad de Buenos Aires"],
+      "summary": "提出使用主动学习策略改进基于LLM的成对排序提示（PRP）重排序。解决了含噪声、顺序敏感的LLM判断与经典排序假设之间的不匹配问题，在调用预算约束下产生更可靠的top-K排序。",
+      "key_findings": [
+        "经典排序算法不适合聚合含噪声的LLM成对判断",
+        "主动学习策略比截断排序产生更可靠的top-K排序",
+        "该方法减少了可靠重排序所需的LLM调用次数"
+      ],
+      "tags": ["information-retrieval", "reranking", "active-learning", "LLM"],
+      "relevance": "high",
+      "engagement": {"upvotes": 85, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14236",
+        "huggingface": "https://huggingface.co/papers/2605.14236",
+        "pdf": "https://arxiv.org/pdf/2605.14236"
+      }
+    },
+    {
+      "id": "anti-self-distillation-reasoning-rl",
+      "title": "Anti-Self-Distillation for Reasoning RL via Pointwise Mutual Information",
+      "authors": ["Guobin Shen", "Xiang Cheng", "Chenxiao Zhao", "Lei Huang", "Jindong Li"],
+      "affiliations": ["Peking University", "Beijing Institute of Technology"],
+      "summary": "使用逐点互信息（PMI）分析解释了为何在线策略自蒸馏在数学推理中失败（尽管在其他任务中成功）。提出反自蒸馏方法，避免特权上下文在训练中泄露的陷阱。",
+      "key_findings": [
+        "PMI分析揭示特权上下文本身导致数学推理中的自蒸馏失败",
+        "反自蒸馏方法修正了训练过程中的上下文泄露问题",
+        "在标准自蒸馏产生不一致结果的情况下展示了稳定提升"
+      ],
+      "tags": ["reasoning", "reinforcement-learning", "self-distillation", "math"],
+      "relevance": "high",
+      "engagement": {"upvotes": 62, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.11609",
+        "huggingface": "https://huggingface.co/papers/2605.11609",
+        "pdf": "https://arxiv.org/pdf/2605.11609"
+      }
+    },
+    {
+      "id": "golongrl-long-context-rl",
+      "title": "GoLongRL: Capability-Oriented Long Context Reinforcement Learning with Multitask Alignment",
+      "authors": ["Minxuan Lv", "Tiehua Mei", "Tanlong Du", "Junmin Chen", "Zhenpeng Su"],
+      "affiliations": ["Tsinghua University", "Alibaba Group"],
+      "summary": "提出完全开源的长上下文强化学习后训练方案，使用可验证奖励（RLVR）。解决了现有方法任务覆盖同质化和奖励设计不充分的问题。",
+      "key_findings": [
+        "现有长上下文RL方法存在任务覆盖同质化和奖励设计不佳的问题",
+        "面向能力的多任务对齐产生更多样化且实用的长上下文能力",
+        "完全开源方案支持可复现的长上下文RL研究"
+      ],
+      "tags": ["long-context", "reinforcement-learning", "RLVR", "open-source"],
+      "relevance": "high",
+      "engagement": {"upvotes": 51, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19577",
+        "huggingface": "https://huggingface.co/papers/2605.19577",
+        "pdf": "https://arxiv.org/pdf/2605.19577"
+      }
+    },
+    {
+      "id": "opencomputer-verifiable-worlds",
+      "title": "OpenComputer: Verifiable Software Worlds for Computer-Use Agents",
+      "authors": ["Jinbiao Wei", "Qianran Ma", "Yilun Zhao", "Xiao Zhou", "Kangqi Ni"],
+      "affiliations": ["University of Minnesota", "Tsinghua University"],
+      "summary": "引入基于验证器的框架，为计算机使用智能体构建可验证的软件环境。包含应用级状态验证器、自进化验证层、自动任务生成管道和标准化评估框架。",
+      "key_findings": [
+        "应用级状态验证器通过结构化检查端点实现可靠评估",
+        "自进化验证层利用执行反馈提高可靠性",
+        "自动任务生成管道创建真实可机器验证的桌面任务"
+      ],
+      "tags": ["agents", "computer-use", "evaluation", "verification"],
+      "relevance": "high",
+      "engagement": {"upvotes": 51, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19769",
+        "huggingface": "https://huggingface.co/papers/2605.19769",
+        "pdf": "https://arxiv.org/pdf/2605.19769"
+      }
+    },
+    {
+      "id": "autoresearchclaw-autonomous-research",
+      "title": "AutoResearchClaw: Self-Reinforcing Autonomous Research with Human-AI Collaboration",
+      "authors": ["Jiaqi Liu", "Shi Qiu", "Mairui Li", "Bingzhou Li", "Haonian Ji"],
+      "affiliations": ["Zhejiang University", "Shanghai AI Laboratory"],
+      "summary": "将科学研究建模为迭代自强化过程，而非线性流水线。系统从多角度挑战假设，从实验失败中恢复，并在跨研究周期中积累经验，同时保持人机协作。",
+      "key_findings": [
+        "多视角假设挑战的迭代测试优于线性研究流水线",
+        "跨周期经验积累实现从失败实验中学习",
+        "人机协作循环比完全自主系统提升研究质量"
+      ],
+      "tags": ["autonomous-research", "scientific-discovery", "agents", "human-AI-collaboration"],
+      "relevance": "high",
+      "engagement": {"upvotes": 51, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.20025",
+        "huggingface": "https://huggingface.co/papers/2605.20025",
+        "pdf": "https://arxiv.org/pdf/2605.20025"
+      }
+    },
+    {
+      "id": "betaprm-process-rewards-reliability",
+      "title": "Process Rewards with Learned Reliability (BetaPRM)",
+      "authors": ["Jinyuan Li", "Langlin Huang", "Chengsong Huang", "Shaoyang Xu", "Donghong Cai"],
+      "affiliations": ["National University of Singapore", "Sea AI Lab"],
+      "summary": "提出BetaPRM——一种分布式过程奖励模型，同时预测步骤级成功概率和该预测的可靠性，使下游方法能够做出感知信任度的决策。",
+      "key_findings": [
+        "当前PRM仅输出单一奖励分数，无可靠性指示",
+        "BetaPRM的分布式方法同时预测成功概率和预测置信度",
+        "感知信任度的奖励信号改善下游推理性能"
+      ],
+      "tags": ["process-reward-models", "reasoning", "uncertainty", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 45, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.15529",
+        "huggingface": "https://huggingface.co/papers/2605.15529",
+        "pdf": "https://arxiv.org/pdf/2605.15529"
+      }
+    },
+    {
+      "id": "envfactory-tool-use-agents",
+      "title": "EnvFactory: Scaling Tool-Use Agents via Executable Environments Synthesis and Robust RL",
+      "authors": ["Minrui Xu", "Zilin Wang", "Mengyi DENG", "Zhiwei Li", "Zhicheng Yang"],
+      "affiliations": ["Nanyang Technological University", "Tencent AI Lab"],
+      "summary": "通过合成可执行环境解决工具使用智能体的可扩展训练瓶颈，避免依赖昂贵的真实API或易产生幻觉的LLM模拟器。结合环境合成与鲁棒强化学习。",
+      "key_findings": [
+        "合成可执行环境在无需真实API成本的情况下扩展工具使用训练",
+        "鲁棒RL比标准方法更好地处理环境缺陷",
+        "多轮真实训练数据捕获隐式人类推理模式"
+      ],
+      "tags": ["agents", "tool-use", "reinforcement-learning", "environment-synthesis"],
+      "relevance": "high",
+      "engagement": {"upvotes": 39, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18703",
+        "huggingface": "https://huggingface.co/papers/2605.18703",
+        "pdf": "https://arxiv.org/pdf/2605.18703"
+      }
+    },
+    {
+      "id": "cogomnicontrol-video-generation",
+      "title": "CogOmniControl: Reasoning-Driven Controllable Video Generation via Creative Intent Cognition",
+      "authors": ["Hongji Yang", "Songlian Li", "Yucheng Zhou", "Xiaotong Zhao", "Alan Zhao"],
+      "affiliations": ["Tsinghua University", "Zhipu AI"],
+      "summary": "解决扩散模型在抽象、稀疏或复杂条件下的脆弱性问题。引入推理驱动的控制，从故事板草图和粘土渲染等专业输入中解读创意意图，而非要求精确条件化输入。",
+      "key_findings": [
+        "当前扩散模型在故事板草图等抽象条件下失败",
+        "创意意图认知实现从稀疏专业输入中鲁棒生成视频",
+        "推理驱动控制优于基于适配器和VLM耦合的方法"
+      ],
+      "tags": ["video-generation", "diffusion-models", "controllable-generation", "creative-AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 31, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19995",
+        "huggingface": "https://huggingface.co/papers/2605.19995",
+        "pdf": "https://arxiv.org/pdf/2605.19995"
+      }
+    },
+    {
+      "id": "hasp-skill-programs",
+      "title": "Harnessing LLM Agents with Skill Programs (HASP)",
+      "authors": ["Hongjun Liu", "Yifei Ming", "Shafiq Joty", "Chen Zhao"],
+      "affiliations": ["Salesforce Research", "University of North Carolina"],
+      "summary": "将可复用智能体技能形式化为具有显式干预机制的可执行程序，超越建议性文本指导。技能程序明确指定何时及如何干预智能体循环，弥合经验编码与动作执行之间的差距。",
+      "key_findings": [
+        "文本化技能指导缺乏明确的干预时机和执行机制",
+        "具有显式何时/如何规范的技能程序优于建议性方法",
+        "可复用技能程序改善复杂长时间任务的性能"
+      ],
+      "tags": ["agents", "skill-learning", "program-synthesis", "long-horizon"],
+      "relevance": "high",
+      "engagement": {"upvotes": 27, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17734",
+        "huggingface": "https://huggingface.co/papers/2605.17734",
+        "pdf": "https://arxiv.org/pdf/2605.17734"
+      }
+    },
+    {
+      "id": "aurora-video-editing",
+      "title": "Aurora: Unified Video Editing with a Tool-Using Agent",
+      "authors": ["Yongsheng Yu", "Ziyun Zeng", "Zhiyuan Xiao", "Zhenghong Zhou", "Hang Hua"],
+      "affiliations": ["Columbia University", "ByteDance"],
+      "summary": "在统一扩散变换器视频编辑模型之上构建工具使用智能体，弥合模型能力与用户实际提供内容之间的差距。处理真实用户请求往往缺少模型就绪文本、参考图像和空间定位的实际挑战。",
+      "key_findings": [
+        "统一条件化设计假设模型就绪输入，但真实用户很少提供",
+        "工具使用智能体层自动为底层扩散模型准备输入",
+        "该方法处理替换、移除、风格迁移和参考驱动插入"
+      ],
+      "tags": ["video-editing", "agents", "diffusion-models", "user-interface"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 22, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18748",
+        "huggingface": "https://huggingface.co/papers/2605.18748",
+        "pdf": "https://arxiv.org/pdf/2605.18748"
+      }
+    },
+    {
+      "id": "ai-reviewers-limits-opportunities",
+      "title": "On the Limits and Opportunities of AI Reviewers",
+      "authors": ["Seungone Kim", "Dongkeun Yoon", "Kiril Gashteovski", "Juyoung Suk", "Graham Neubig et al."],
+      "affiliations": ["Carnegie Mellon University", "KAIST", "NEC Laboratories Europe"],
+      "summary": "大规模专家标注研究：45位领域科学家花费469小时评估82篇Nature系列论文中人类和AI评审的2960条批评意见。发现GPT-5.2驱动的评审在综合指标上超过每篇论文评分最高的人类评审，但AI评审之间重叠度远高，并表现出16种人类不具有的反复弱点。",
+      "key_findings": [
+        "GPT-5.2评审智能体在综合指标上超过最高评分人类评审（60.0% vs 48.2%）",
+        "AI评审发现26%人类未提出的问题，但彼此重叠度为21%（人类仅3%）",
+        "识别出16种AI特有的反复弱点，包括有限的子领域知识和对次要问题过度批评"
+      ],
+      "tags": ["peer-review", "scientific-evaluation", "LLM-capabilities", "human-AI-comparison"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.20668",
+        "huggingface": "https://huggingface.co/papers/2605.20668",
+        "pdf": "https://arxiv.org/pdf/2605.20668"
+      }
+    },
+    {
+      "id": "gram-generative-recursive-reasoning",
+      "title": "Generative Recursive Reasoning (GRAM)",
+      "authors": ["Junyeob Baek", "Mingyu Jo", "Minsu Kim", "Mengye Ren", "Yoshua Bengio", "Sungjin Ahn"],
+      "affiliations": ["KAIST", "Mila", "New York University"],
+      "summary": "引入GRAM框架，将递归潜在推理转化为概率多轨迹计算。将推理建模为随机潜在轨迹，支持多假设和替代求解策略，通过递归深度和并行轨迹采样实现推理时扩展。",
+      "key_findings": [
+        "概率多轨迹推理优于确定性单轨迹方法",
+        "通过递归深度和并行轨迹采样实现推理时扩展",
+        "通过潜变量建模支持条件推理和无条件生成"
+      ],
+      "tags": ["reasoning", "recursive-models", "probabilistic-inference", "generative-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19376",
+        "huggingface": "https://huggingface.co/papers/2605.19376",
+        "pdf": "https://arxiv.org/pdf/2605.19376"
+      }
+    },
+    {
+      "id": "cepo-contrastive-evidence-policy-optimization",
+      "title": "CEPO: RLVR Self-Distillation using Contrastive Evidence Policy Optimization",
+      "authors": ["Ahmed Heakl", "Abdelrahman M. Shaker", "Youssef Mohamed", "Rania Elbadry", "Omar Fetouh"],
+      "affiliations": ["University of Waterloo", "Mohamed bin Zayed University of AI"],
+      "summary": "解决RLVR中的信用分配问题——每个token无论推理重要性如何都获得相同奖励。利用答案条件化教师的对比证据识别决定性推理token，且不将答案泄露到梯度中。",
+      "key_findings": [
+        "标准RLVR对决定性推理步骤和语法填充给予相同奖励",
+        "答案条件化教师识别模型若已知答案时会有不同表现的token",
+        "对比证据优化避免了先前自蒸馏方法中的答案泄露"
+      ],
+      "tags": ["RLVR", "credit-assignment", "self-distillation", "reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 13, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19436",
+        "huggingface": "https://huggingface.co/papers/2605.19436",
+        "pdf": "https://arxiv.org/pdf/2605.19436"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek最新旗舰文本生成模型，在HuggingFace上获得大规模采用。代表V4架构演进，具备对话能力。",
+      "task_type": "text-generation",
+      "model_size": "MoE（未公开）",
+      "tags": ["text-generation", "conversational", "frontier"],
+      "metrics": {"downloads": 3817887, "likes": 4083},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4的高效变体，针对速度优化同时保持强劲性能。作为Pro变体的高性价比替代方案迅速获得采用。",
+      "task_type": "text-generation",
+      "model_size": "MoE（未公开）",
+      "tags": ["text-generation", "conversational", "efficient"],
+      "metrics": {"downloads": 2289519, "likes": 1166},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "高质量图像生成模型，以高点赞下载比快速获得社区采用，提供ComfyUI兼容的单文件扩散格式。",
+      "task_type": "image-generation",
+      "model_size": "未公开",
+      "tags": ["image-generation", "diffusion", "comfyui"],
+      "metrics": {"downloads": 571087, "likes": 1451},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "文本到视频生成模型，下载量超过100万，提供diffusers和GGUF两种格式。在开源文本到视频领域的采用率领先。",
+      "task_type": "text-to-video",
+      "model_size": "未公开",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": {"downloads": 1157497, "likes": 1205},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "具有图文到文本能力的多模态视觉语言模型。延续高效MiniCPM-V系列，在紧凑规模下实现强劲性能。",
+      "task_type": "image-text-to-text",
+      "model_size": "紧凑型",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": {"downloads": 166049, "likes": 827},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "微软基于Qwen2.5-VL架构的70亿参数多模态模型。专注于图文到文本理解任务，在可及规模下实现强劲性能。",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "vision-language", "microsoft"],
+      "metrics": {"downloads": 15167, "likes": 588},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "新型全模态模型，支持图像生成、视频生成和跨模态任务。代表字节跳动在统一多模态架构方面的推进。",
+      "task_type": "any-to-any",
+      "model_size": "未公开",
+      "tags": ["multimodal", "any-to-any", "image-generation", "video-generation"],
+      "metrics": {"downloads": 438, "likes": 471},
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "第三代文本到语音模型，支持ONNX格式广泛部署。专注于具有自然韵律的高质量语音合成。",
+      "task_type": "text-to-speech",
+      "model_size": "未公开",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": {"downloads": 31940, "likes": 503},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "结合Qwen3-VL架构的图像理解与生成模型，具备图文到图像能力。在单一模型中桥接理解与生成。",
+      "task_type": "image-text-to-image",
+      "model_size": "未公开",
+      "tags": ["image-generation", "multimodal", "vision-language"],
+      "metrics": {"downloads": 17645, "likes": 411},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    },
+    {
+      "id": "qwen3-6-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Qwen3.6-27B的GGUF量化版本，支持多token预测，针对本地推理优化。Unsloth流行量化生态的一部分。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["quantized", "gguf", "local-inference", "qwen"],
+      "metrics": {"downloads": 411598, "likes": 356},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "通过CLI接口使所有软件成为智能体原生的框架，使AI智能体能通过标准化命令行协议与任何应用交互。正迅速成为智能体工具的基础设施。",
+      "language": "Python",
+      "stars": 38572,
+      "stars_today": 890,
+      "forks": 3666,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["agents", "cli", "infrastructure", "agent-native"],
+      "relevance": "high"
+    },
+    {
+      "id": "autoresearch",
+      "name": "karpathy/autoresearch",
+      "description": "Andrej Karpathy的框架，用于AI智能体在单GPU上自动运行ML研究实验，包括nanochat训练。展示了实用的自主研究能力。",
+      "language": "Python",
+      "stars": 82348,
+      "stars_today": 367,
+      "forks": 11955,
+      "url": "https://github.com/karpathy/autoresearch",
+      "tags": ["autonomous-research", "ml-training", "agents", "experiments"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "为Claude Code、Codex、Cursor和OpenCode等AI编程工具设计的预索引代码知识图谱。实现超越简单文本搜索的结构化代码理解。",
+      "language": "TypeScript",
+      "stars": 9835,
+      "stars_today": 2123,
+      "forks": 604,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["code-intelligence", "knowledge-graph", "developer-tools", "AI-coding"],
+      "relevance": "high"
+    },
+    {
+      "id": "vimax",
+      "name": "HKUDS/ViMax",
+      "description": "多智能体视频生成系统，具有专业化AI角色（导演、编剧、制片人、视频生成器）协作从高层创意简报中制作视频。",
+      "language": "Python",
+      "stars": 6104,
+      "stars_today": 674,
+      "forks": 983,
+      "url": "https://github.com/HKUDS/ViMax",
+      "tags": ["video-generation", "agents", "creative-AI", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "openviking",
+      "name": "volcengine/OpenViking",
+      "description": "字节跳动火山引擎推出的面向AI智能体的上下文数据库，支持层级化上下文传递。满足结构化智能体记忆和上下文管理的日益增长需求。",
+      "language": "Python",
+      "stars": 24313,
+      "stars_today": 111,
+      "forks": 1821,
+      "url": "https://github.com/volcengine/OpenViking",
+      "tags": ["agents", "context-management", "database", "memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "agentmemory",
+      "name": "rohitg00/agentmemory",
+      "description": "为AI编程智能体设计的持久化记忆系统，基于真实世界任务进行基准测试。为长期运行的智能体会话提供结构化记忆存储与检索。",
+      "language": "TypeScript",
+      "stars": 15179,
+      "stars_today": 1080,
+      "forks": 1255,
+      "url": "https://github.com/rohitg00/agentmemory",
+      "tags": ["agents", "memory", "developer-tools", "persistence"],
+      "relevance": "high"
+    },
+    {
+      "id": "sana",
+      "name": "NVlabs/Sana",
+      "description": "NVIDIA的高效高分辨率图像合成模型，使用线性扩散变换器架构。以显著降低的计算成本实现高质量生成。",
+      "language": "Python",
+      "stars": 7166,
+      "stars_today": 218,
+      "forks": 523,
+      "url": "https://github.com/NVlabs/Sana",
+      "tags": ["image-generation", "diffusion", "efficient", "nvidia"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm",
+      "name": "vllm-project/vllm",
+      "description": "业界标准的高吞吐量、内存高效LLM推理引擎。持续作为生产环境LLM服务基础设施的核心。",
+      "language": "Python",
+      "stars": 80587,
+      "stars_today": 99,
+      "forks": 17024,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["inference", "serving", "LLM", "production"],
+      "relevance": "high"
+    },
+    {
+      "id": "unsloth",
+      "name": "unslothai/unsloth",
+      "description": "用于本地训练和运行Gemma 4、Qwen3.6、DeepSeek等开源模型的Web UI，具有优化的内存使用和速度。本地模型社区的必备工具。",
+      "language": "Python",
+      "stars": 64857,
+      "stars_today": 147,
+      "forks": 5741,
+      "url": "https://github.com/unslothai/unsloth",
+      "tags": ["training", "local-models", "optimization", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "e2b",
+      "name": "e2b-dev/E2B",
+      "description": "开源安全沙箱环境，为企业级AI智能体提供真实世界工具。为智能体动作提供隔离执行上下文。",
+      "language": "Python",
+      "stars": 12292,
+      "stars_today": 34,
+      "forks": 908,
+      "url": "https://github.com/e2b-dev/E2B",
+      "tags": ["agents", "sandboxing", "security", "enterprise"],
+      "relevance": "high"
+    },
+    {
+      "id": "openhuman",
+      "name": "tinyhumansai/openhuman",
+      "description": "基于Rust构建的私密个人AI超级智能，专注隐私优先的本地运行。今日增长3394星，为当日增长最快的仓库之一。",
+      "language": "Rust",
+      "stars": 23738,
+      "stars_today": 3394,
+      "forks": 2119,
+      "url": "https://github.com/tinyhumansai/openhuman",
+      "tags": ["personal-AI", "privacy", "local-first", "rust"],
+      "relevance": "medium"
+    },
+    {
+      "id": "spec-kit",
+      "name": "github/spec-kit",
+      "description": "GitHub官方的规范驱动开发工具包，通过规范优先工作流将AI集成到软件开发生命周期中。",
+      "language": "Python",
+      "stars": 104131,
+      "stars_today": 1074,
+      "forks": 9175,
+      "url": "https://github.com/github/spec-kit",
+      "tags": ["developer-tools", "spec-driven", "sdlc", "github"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "推理强化学习达到临界质量",
+      "description": "同一天出现五种不同的强化学习推理改进方法——反自蒸馏、GoLongRL、BetaPRM、CEPO和GRAM——表明基于RL的推理改进是主导研究前沿，但迫切需要整合和系统性比较。",
+      "related_paper_ids": ["anti-self-distillation-reasoning-rl", "golongrl-long-context-rl", "betaprm-process-rewards-reliability", "cepo-contrastive-evidence-policy-optimization", "gram-generative-recursive-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施成熟化",
+      "description": "研究和开源项目正从展示智能体能力转向构建可靠基础设施——可验证环境（OpenComputer）、可扩展训练（EnvFactory）、技能复用（HASP）、智能体记忆（agentmemory）和智能体原生软件（CLI-Anything）。",
+      "related_paper_ids": ["opencomputer-verifiable-worlds", "envfactory-tool-use-agents", "hasp-skill-programs"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频生成走向生产就绪",
+      "description": "视频生成研究日益聚焦于生产工作流——处理抽象创意输入（CogOmniControl）、弥合用户意图差距（Aurora）、多智能体创意流水线（ViMax），以及评估伪影质量（Artifact-Bench、MSAVBench）。",
+      "related_paper_ids": ["cogomnicontrol-video-generation", "aurora-video-editing"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多模态模型可问责性",
+      "description": "对多模态模型实际理解能力与伪装理解的审视日益增强——音视觉聪明汉斯效应揭示系统性幻觉模式，AI评审研究以前所未有的严谨度绘制了具体的能力边界。",
+      "related_paper_ids": ["when-vision-speaks-for-sound", "ai-reviewers-limits-opportunities"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自主科学研究",
+      "description": "多个信号表明自主研究正在变得实用——AutoResearchClaw引入自强化研究循环，Karpathy的autoresearch仓库显示大规模社区兴趣，AI评审研究验证了AI在科学过程中的互补角色。",
+      "related_paper_ids": ["autoresearchclaw-autonomous-research", "ai-reviewers-limits-opportunities"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending Python",
+      "url": "https://github.com/trending/python",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "error"
+    }
+  ]
+}

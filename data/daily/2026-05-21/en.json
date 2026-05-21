@@ -1,0 +1,621 @@
+{
+  "version": "1.0",
+  "date": "2026-05-21",
+  "generated_at": "2026-05-21T15:00:00Z",
+  "summary": {
+    "headline": "Audio-visual Clever Hans effect exposes MLLM hallucinations; RL-for-reasoning wave crests with five new methods; agent infrastructure matures as OpenComputer and EnvFactory tackle verifiable environments",
+    "body": "Today's research landscape is dominated by a critical examination of multimodal model failures and a surge of reinforcement learning innovations for reasoning. The standout finding comes from \"When Vision Speaks for Sound,\" which reveals that leading MLLMs — including models from Google and OpenAI — rely on visual cues to hallucinate audio understanding rather than genuinely processing sound, a discovery with significant implications for deployed multimodal systems.\n\nThe reasoning-RL space is remarkably active, with five distinct approaches competing for attention: Anti-Self-Distillation via PMI analysis, GoLongRL for long-context RLVR, BetaPRM for distributional process rewards, CEPO for contrastive evidence optimization, and GRAM for probabilistic recursive reasoning. Meanwhile, agent infrastructure is rapidly maturing — OpenComputer introduces verifiable software environments for computer-use agents, EnvFactory scales tool-use training through synthesized environments, and HASP formalizes skill reuse with explicit intervention mechanisms.\n\nOn the model front, DeepSeek V4 Pro and Flash dominate HuggingFace with millions of downloads, while ByteDance's Lance introduces an any-to-any multimodal architecture. The GitHub trending ecosystem reflects the AI coding agent boom, with repositories like CLI-Anything, codegraph, and agentmemory all gaining thousands of stars daily.",
+    "key_themes": [
+      "rl-for-reasoning",
+      "agent-infrastructure",
+      "video-generation-editing",
+      "multimodal-hallucination",
+      "autonomous-research"
+    ]
+  },
+  "researcher_notes": "**The audio-visual Clever Hans effect is this week's most consequential finding.** The discovery that state-of-the-art MLLMs fake audio understanding by inferring sound from visual context has immediate practical implications. Any production system relying on video MLLMs for audio-related tasks — content moderation, accessibility, surveillance — should be re-evaluated. With 87 upvotes, the community clearly recognizes its importance.\n\n**The RL-for-reasoning space is reaching a saturation point that demands consolidation.** Five papers in a single day propose distinct improvements to how RL trains reasoning models: Anti-Self-Distillation identifies why self-distillation fails via PMI analysis, GoLongRL tackles the long-context gap, BetaPRM adds uncertainty estimation to process rewards, CEPO addresses the credit-assignment problem in RLVR, and GRAM reimagines recursive reasoning as probabilistic multi-trajectory computation. Each contribution is solid individually, but the field urgently needs systematic comparisons across these approaches.\n\n**Agent infrastructure is quietly becoming the most consequential research direction.** OpenComputer's verifiable software environments, EnvFactory's scalable training environments, and HASP's skill programs represent a shift from \"can agents do X?\" to \"how do we reliably train and evaluate agents at scale?\" The GitHub trending data reinforces this: CLI-Anything (38K stars), agentmemory (15K stars), and codegraph (10K stars) show massive developer appetite for agent tooling.\n\n**Sleeper hit: the AI peer review study deserves close reading.** The finding that GPT-5.2-powered reviewers score above each paper's top-rated human reviewer (60.0% vs 48.2%) on a composite metric is striking, but the nuance matters — AI reviewers overlap far more with each other (21% vs 3%) and exhibit 16 recurring blind spots humans don't share. This positions AI reviewers as complementary, not replaceable.\n\n**DeepSeek V4's dominance on HuggingFace is hard to ignore.** With V4 Pro at 3.8M downloads and V4 Flash at 2.3M, DeepSeek is commanding open-source LLM deployment in a way that few predicted a year ago. The model ecosystem is increasingly bifurcating between massive frontier models and efficient specialized ones like sapientinc's HRM-Text-1B.",
+  "papers": [
+    {
+      "id": "when-vision-speaks-for-sound",
+      "title": "When Vision Speaks for Sound",
+      "authors": ["Xiaofei Wen", "Wenjie Jacky Mo", "Xingyu Fu", "Rui Cai", "Tinghui Zhu"],
+      "affiliations": ["University of Texas at Austin", "Carnegie Mellon University"],
+      "summary": "Reveals that video-capable MLLMs rely on visual cues to infer or hallucinate acoustic information rather than genuinely processing audio streams, characterizing this as an audio-visual Clever Hans effect. The finding applies across both open-source omni models and leading closed-source models from Google and OpenAI.",
+      "key_findings": [
+        "State-of-the-art MLLMs exhibit an audio-visual Clever Hans effect, faking audio understanding through visual inference",
+        "The failure mode is consistent across both open-source and closed-source models",
+        "Models use visual context cues to generate plausible but unverified audio descriptions"
+      ],
+      "tags": ["multimodal", "audio-visual", "hallucination", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 87, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.16403",
+        "huggingface": "https://huggingface.co/papers/2605.16403",
+        "pdf": "https://arxiv.org/pdf/2605.16403"
+      }
+    },
+    {
+      "id": "active-learners-prp-rerankers",
+      "title": "Active Learners as Efficient PRP Rerankers",
+      "authors": ["Jeremías Figueiredo Paschmann", "Juan Kaplan", "Francisco Nattero", "Santiago Barron", "Juan Wisznia"],
+      "affiliations": ["Mercado Libre", "Universidad de Buenos Aires"],
+      "summary": "Proposes using active learning strategies to improve Pairwise Ranking Prompting (PRP) for LLM-based reranking. Addresses the mismatch between noisy, order-sensitive LLM judgments and classical sorting assumptions, producing more reliable top-K rankings under call budgets.",
+      "key_findings": [
+        "Classical sorting algorithms are poorly suited for aggregating noisy LLM pairwise judgments",
+        "Active learning strategies produce more dependable top-K rankings than truncated sorting",
+        "The approach reduces the number of LLM calls needed for reliable reranking"
+      ],
+      "tags": ["information-retrieval", "reranking", "active-learning", "LLM"],
+      "relevance": "high",
+      "engagement": {"upvotes": 85, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14236",
+        "huggingface": "https://huggingface.co/papers/2605.14236",
+        "pdf": "https://arxiv.org/pdf/2605.14236"
+      }
+    },
+    {
+      "id": "anti-self-distillation-reasoning-rl",
+      "title": "Anti-Self-Distillation for Reasoning RL via Pointwise Mutual Information",
+      "authors": ["Guobin Shen", "Xiang Cheng", "Chenxiao Zhao", "Lei Huang", "Jindong Li"],
+      "affiliations": ["Peking University", "Beijing Institute of Technology"],
+      "summary": "Uses pointwise mutual information (PMI) analysis to explain why on-policy self-distillation fails for math reasoning despite succeeding elsewhere. Proposes an anti-self-distillation approach that avoids the pitfalls of privileged context leaking into training.",
+      "key_findings": [
+        "PMI analysis reveals that privileged context itself causes self-distillation to fail in math reasoning",
+        "The anti-self-distillation approach corrects for context leakage during training",
+        "Demonstrates consistent gains where standard self-distillation produces inconsistent results"
+      ],
+      "tags": ["reasoning", "reinforcement-learning", "self-distillation", "math"],
+      "relevance": "high",
+      "engagement": {"upvotes": 62, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.11609",
+        "huggingface": "https://huggingface.co/papers/2605.11609",
+        "pdf": "https://arxiv.org/pdf/2605.11609"
+      }
+    },
+    {
+      "id": "golongrl-long-context-rl",
+      "title": "GoLongRL: Capability-Oriented Long Context Reinforcement Learning with Multitask Alignment",
+      "authors": ["Minxuan Lv", "Tiehua Mei", "Tanlong Du", "Junmin Chen", "Zhenpeng Su"],
+      "affiliations": ["Tsinghua University", "Alibaba Group"],
+      "summary": "Presents a fully open-source post-training recipe for long-context reinforcement learning with verifiable rewards (RLVR). Addresses the limitations of existing methods that create homogeneous tasks with inadequate reward formulations for practical long-context needs.",
+      "key_findings": [
+        "Existing long-context RL methods suffer from homogeneous task coverage and poor reward design",
+        "Capability-oriented multitask alignment produces more diverse and practically useful long-context abilities",
+        "Fully open-source recipe enables reproducible long-context RL research"
+      ],
+      "tags": ["long-context", "reinforcement-learning", "RLVR", "open-source"],
+      "relevance": "high",
+      "engagement": {"upvotes": 51, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19577",
+        "huggingface": "https://huggingface.co/papers/2605.19577",
+        "pdf": "https://arxiv.org/pdf/2605.19577"
+      }
+    },
+    {
+      "id": "opencomputer-verifiable-worlds",
+      "title": "OpenComputer: Verifiable Software Worlds for Computer-Use Agents",
+      "authors": ["Jinbiao Wei", "Qianran Ma", "Yilun Zhao", "Xiao Zhou", "Kangqi Ni"],
+      "affiliations": ["University of Minnesota", "Tsinghua University"],
+      "summary": "Introduces a verifier-grounded framework for constructing verifiable software environments for computer-use agents, with app-specific state verifiers, self-evolving verification, automated task generation, and a standardized evaluation harness.",
+      "key_findings": [
+        "App-specific state verifiers expose structured inspection endpoints for reliable evaluation",
+        "Self-evolving verification layer improves reliability using execution-grounded feedback",
+        "Automated task-generation pipeline creates realistic, machine-checkable desktop tasks"
+      ],
+      "tags": ["agents", "computer-use", "evaluation", "verification"],
+      "relevance": "high",
+      "engagement": {"upvotes": 51, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19769",
+        "huggingface": "https://huggingface.co/papers/2605.19769",
+        "pdf": "https://arxiv.org/pdf/2605.19769"
+      }
+    },
+    {
+      "id": "autoresearchclaw-autonomous-research",
+      "title": "AutoResearchClaw: Self-Reinforcing Autonomous Research with Human-AI Collaboration",
+      "authors": ["Jiaqi Liu", "Shi Qiu", "Mairui Li", "Bingzhou Li", "Haonian Ji"],
+      "affiliations": ["Zhejiang University", "Shanghai AI Laboratory"],
+      "summary": "Models scientific research as an iterative, self-reinforcing process rather than a linear pipeline. The system challenges hypotheses from multiple perspectives, recovers from experimental failures, and accumulates lessons across research cycles with human collaboration.",
+      "key_findings": [
+        "Iterative hypothesis testing with multi-perspective challenges outperforms linear research pipelines",
+        "Cross-cycle experience accumulation enables learning from failed experiments",
+        "Human-AI collaboration loops improve research quality over fully autonomous systems"
+      ],
+      "tags": ["autonomous-research", "scientific-discovery", "agents", "human-AI-collaboration"],
+      "relevance": "high",
+      "engagement": {"upvotes": 51, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.20025",
+        "huggingface": "https://huggingface.co/papers/2605.20025",
+        "pdf": "https://arxiv.org/pdf/2605.20025"
+      }
+    },
+    {
+      "id": "betaprm-process-rewards-reliability",
+      "title": "Process Rewards with Learned Reliability (BetaPRM)",
+      "authors": ["Jinyuan Li", "Langlin Huang", "Chengsong Huang", "Shaoyang Xu", "Donghong Cai"],
+      "affiliations": ["National University of Singapore", "Sea AI Lab"],
+      "summary": "Proposes BetaPRM, a distributional Process Reward Model that predicts both step-level success probability and the reliability of that prediction, enabling downstream methods to make trust-aware decisions about when to follow step-level reward signals.",
+      "key_findings": [
+        "Current PRMs output only single reward scores with no reliability indication",
+        "BetaPRM's distributional approach predicts both success probability and prediction confidence",
+        "Trust-aware reward signals improve downstream reasoning performance"
+      ],
+      "tags": ["process-reward-models", "reasoning", "uncertainty", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 45, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.15529",
+        "huggingface": "https://huggingface.co/papers/2605.15529",
+        "pdf": "https://arxiv.org/pdf/2605.15529"
+      }
+    },
+    {
+      "id": "envfactory-tool-use-agents",
+      "title": "EnvFactory: Scaling Tool-Use Agents via Executable Environments Synthesis and Robust RL",
+      "authors": ["Minrui Xu", "Zilin Wang", "Mengyi DENG", "Zhiwei Li", "Zhicheng Yang"],
+      "affiliations": ["Nanyang Technological University", "Tencent AI Lab"],
+      "summary": "Addresses the bottleneck of scalable training environments for tool-use agents by synthesizing executable environments rather than relying on costly real-world APIs or hallucination-prone LLM simulators. Combines environment synthesis with robust reinforcement learning.",
+      "key_findings": [
+        "Synthesized executable environments scale tool-use training without real-world API costs",
+        "Robust RL handles environment imperfections better than standard approaches",
+        "Multi-turn realistic training data captures implicit human reasoning patterns"
+      ],
+      "tags": ["agents", "tool-use", "reinforcement-learning", "environment-synthesis"],
+      "relevance": "high",
+      "engagement": {"upvotes": 39, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18703",
+        "huggingface": "https://huggingface.co/papers/2605.18703",
+        "pdf": "https://arxiv.org/pdf/2605.18703"
+      }
+    },
+    {
+      "id": "cogomnicontrol-video-generation",
+      "title": "CogOmniControl: Reasoning-Driven Controllable Video Generation via Creative Intent Cognition",
+      "authors": ["Hongji Yang", "Songlian Li", "Yucheng Zhou", "Xiaotong Zhao", "Alan Zhao"],
+      "affiliations": ["Tsinghua University", "Zhipu AI"],
+      "summary": "Addresses the fragility of diffusion models under abstract, sparse, or complex conditions in professional video production workflows. Introduces reasoning-driven control that interprets creative intent from storyboard sketches and clay renders rather than requiring precise conditioning inputs.",
+      "key_findings": [
+        "Current diffusion models fail under abstract conditions like storyboard sketches",
+        "Creative intent cognition enables robust video generation from sparse professional inputs",
+        "Reasoning-driven control outperforms adapter-based and VLM-coupled approaches"
+      ],
+      "tags": ["video-generation", "diffusion-models", "controllable-generation", "creative-AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 31, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19995",
+        "huggingface": "https://huggingface.co/papers/2605.19995",
+        "pdf": "https://arxiv.org/pdf/2605.19995"
+      }
+    },
+    {
+      "id": "hasp-skill-programs",
+      "title": "Harnessing LLM Agents with Skill Programs (HASP)",
+      "authors": ["Hongjun Liu", "Yifei Ming", "Shafiq Joty", "Chen Zhao"],
+      "affiliations": ["Salesforce Research", "University of North Carolina"],
+      "summary": "Formalizes reusable agent skills as executable programs with explicit intervention mechanisms, moving beyond advisory textual guidance. Skill programs specify both when and how to intervene in the agent loop, bridging the gap between experience encoding and action execution.",
+      "key_findings": [
+        "Textual skill guidance lacks explicit mechanisms for intervention timing and execution",
+        "Skill programs with explicit when/how specifications outperform advisory approaches",
+        "Reusable skill programs improve performance on complex, long-horizon tasks"
+      ],
+      "tags": ["agents", "skill-learning", "program-synthesis", "long-horizon"],
+      "relevance": "high",
+      "engagement": {"upvotes": 27, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.17734",
+        "huggingface": "https://huggingface.co/papers/2605.17734",
+        "pdf": "https://arxiv.org/pdf/2605.17734"
+      }
+    },
+    {
+      "id": "aurora-video-editing",
+      "title": "Aurora: Unified Video Editing with a Tool-Using Agent",
+      "authors": ["Yongsheng Yu", "Ziyun Zeng", "Zhiyuan Xiao", "Zhenghong Zhou", "Hang Hua"],
+      "affiliations": ["Columbia University", "ByteDance"],
+      "summary": "Builds a tool-using agent on top of unified diffusion transformer video editing models to bridge the gap between what models can do and what users actually provide. Handles the practical challenge that real user requests often omit model-ready text, reference images, and spatial grounding.",
+      "key_findings": [
+        "Unified conditioning designs assume model-ready inputs that real users rarely provide",
+        "A tool-using agent layer automatically prepares inputs for the underlying diffusion model",
+        "The approach handles replacement, removal, style transfer, and reference-driven insertion"
+      ],
+      "tags": ["video-editing", "agents", "diffusion-models", "user-interface"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 22, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18748",
+        "huggingface": "https://huggingface.co/papers/2605.18748",
+        "pdf": "https://arxiv.org/pdf/2605.18748"
+      }
+    },
+    {
+      "id": "ai-reviewers-limits-opportunities",
+      "title": "On the Limits and Opportunities of AI Reviewers",
+      "authors": ["Seungone Kim", "Dongkeun Yoon", "Kiril Gashteovski", "Juyoung Suk", "Graham Neubig et al."],
+      "affiliations": ["Carnegie Mellon University", "KAIST", "NEC Laboratories Europe"],
+      "summary": "Large-scale expert annotation study with 45 domain scientists spending 469 hours rating 2,960 criticisms from human and AI reviews of 82 Nature-family papers. Finds GPT-5.2-powered reviewers score above each paper's top human reviewer on a composite metric, but AI reviewers overlap far more with each other and exhibit 16 recurring human-unlike weaknesses.",
+      "key_findings": [
+        "GPT-5.2 reviewing agent scores above top human reviewer on composite metric (60.0% vs 48.2%)",
+        "AI reviewers surface 26% of issues no human raises but overlap 21% vs 3% for human pairs",
+        "16 recurring AI-specific weaknesses identified including limited subfield knowledge and overly critical stance"
+      ],
+      "tags": ["peer-review", "scientific-evaluation", "LLM-capabilities", "human-AI-comparison"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.20668",
+        "huggingface": "https://huggingface.co/papers/2605.20668",
+        "pdf": "https://arxiv.org/pdf/2605.20668"
+      }
+    },
+    {
+      "id": "gram-generative-recursive-reasoning",
+      "title": "Generative Recursive Reasoning (GRAM)",
+      "authors": ["Junyeob Baek", "Mingyu Jo", "Minsu Kim", "Mengye Ren", "Yoshua Bengio", "Sungjin Ahn"],
+      "affiliations": ["KAIST", "Mila", "New York University"],
+      "summary": "Introduces GRAM, a framework that turns recursive latent reasoning into probabilistic multi-trajectory computation. Models reasoning as stochastic latent trajectories enabling multiple hypotheses and alternative solution strategies, with inference-time scaling through both recursive depth and parallel sampling.",
+      "key_findings": [
+        "Probabilistic multi-trajectory reasoning outperforms deterministic single-trajectory approaches",
+        "Inference-time scaling via both recursive depth and parallel trajectory sampling",
+        "Supports both conditional reasoning and unconditional generation through latent variable modeling"
+      ],
+      "tags": ["reasoning", "recursive-models", "probabilistic-inference", "generative-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19376",
+        "huggingface": "https://huggingface.co/papers/2605.19376",
+        "pdf": "https://arxiv.org/pdf/2605.19376"
+      }
+    },
+    {
+      "id": "cepo-contrastive-evidence-policy-optimization",
+      "title": "CEPO: RLVR Self-Distillation using Contrastive Evidence Policy Optimization",
+      "authors": ["Ahmed Heakl", "Abdelrahman M. Shaker", "Youssef Mohamed", "Rania Elbadry", "Omar Fetouh"],
+      "affiliations": ["University of Waterloo", "Mohamed bin Zayed University of AI"],
+      "summary": "Addresses the credit-assignment problem in RLVR where every token receives the same reward regardless of its reasoning importance. Uses contrastive evidence from answer-conditioned teacher to identify decisive reasoning tokens without leaking the answer into gradients.",
+      "key_findings": [
+        "Standard RLVR gives equal reward to decisive reasoning steps and grammatical filler",
+        "Answer-conditioned teacher identifies tokens that would differ if the model knew the answer",
+        "Contrastive evidence optimization avoids answer leakage that corrupts prior self-distillation approaches"
+      ],
+      "tags": ["RLVR", "credit-assignment", "self-distillation", "reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 13, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.19436",
+        "huggingface": "https://huggingface.co/papers/2605.19436",
+        "pdf": "https://arxiv.org/pdf/2605.19436"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "Latest flagship text-generation model from DeepSeek with massive adoption on HuggingFace. Represents the V4 architecture evolution with conversational capabilities.",
+      "task_type": "text-generation",
+      "model_size": "MoE (undisclosed)",
+      "tags": ["text-generation", "conversational", "frontier"],
+      "metrics": {"downloads": 3817887, "likes": 4083},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek",
+      "description": "Efficient variant of DeepSeek V4 optimized for speed while maintaining strong performance. Rapidly gaining adoption as a cost-effective alternative to the Pro variant.",
+      "task_type": "text-generation",
+      "model_size": "MoE (undisclosed)",
+      "tags": ["text-generation", "conversational", "efficient"],
+      "metrics": {"downloads": 2289519, "likes": 1166},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "High-quality image generation model gaining rapid community adoption with strong likes-to-download ratio, available in ComfyUI-compatible single-file diffusion format.",
+      "task_type": "image-generation",
+      "model_size": "undisclosed",
+      "tags": ["image-generation", "diffusion", "comfyui"],
+      "metrics": {"downloads": 571087, "likes": 1451},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "Text-to-video generation model with over 1M downloads, available in both diffusers and GGUF formats. Leading the open-source text-to-video space in adoption.",
+      "task_type": "text-to-video",
+      "model_size": "undisclosed",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": {"downloads": 1157497, "likes": 1205},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "Multimodal vision-language model with image-text-to-text capabilities. Continues the efficient MiniCPM-V series with strong performance at compact sizes.",
+      "task_type": "image-text-to-text",
+      "model_size": "compact",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": {"downloads": 166049, "likes": 827},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "7B-parameter multimodal model from Microsoft based on Qwen2.5-VL architecture. Focuses on image-text-to-text understanding tasks with strong performance at accessible size.",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "vision-language", "microsoft"],
+      "metrics": {"downloads": 15167, "likes": 588},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "Novel any-to-any multimodal model supporting image generation, video generation, and cross-modal tasks. Represents ByteDance's push into unified multimodal architectures.",
+      "task_type": "any-to-any",
+      "model_size": "undisclosed",
+      "tags": ["multimodal", "any-to-any", "image-generation", "video-generation"],
+      "metrics": {"downloads": 438, "likes": 471},
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "Third-generation text-to-speech model with ONNX format support for broad deployment. Focuses on high-quality speech synthesis with natural prosody.",
+      "task_type": "text-to-speech",
+      "model_size": "undisclosed",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": {"downloads": 31940, "likes": 503},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "Image understanding and generation model combining Qwen3-VL architecture with image-text-to-image capabilities. Bridges comprehension and generation in a single model.",
+      "task_type": "image-text-to-image",
+      "model_size": "undisclosed",
+      "tags": ["image-generation", "multimodal", "vision-language"],
+      "metrics": {"downloads": 17645, "likes": 411},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    },
+    {
+      "id": "qwen3-6-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "GGUF-quantized version of Qwen3.6-27B with multi-token prediction, optimized for local inference. Part of Unsloth's popular quantization ecosystem.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["quantized", "gguf", "local-inference", "qwen"],
+      "metrics": {"downloads": 411598, "likes": 356},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "Framework for making all software agent-native through CLI interfaces, enabling AI agents to interact with any application through standardized command-line protocols. Rapidly becoming infrastructure for agent tooling.",
+      "language": "Python",
+      "stars": 38572,
+      "stars_today": 890,
+      "forks": 3666,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["agents", "cli", "infrastructure", "agent-native"],
+      "relevance": "high"
+    },
+    {
+      "id": "autoresearch",
+      "name": "karpathy/autoresearch",
+      "description": "Andrej Karpathy's framework for AI agents that autonomously run ML research experiments on single-GPU setups, including nanochat training runs. Demonstrates practical autonomous research capabilities.",
+      "language": "Python",
+      "stars": 82348,
+      "stars_today": 367,
+      "forks": 11955,
+      "url": "https://github.com/karpathy/autoresearch",
+      "tags": ["autonomous-research", "ml-training", "agents", "experiments"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "Pre-indexed code knowledge graph designed for AI coding tools including Claude Code, Codex, Cursor, and OpenCode. Enables structural code understanding beyond simple text search.",
+      "language": "TypeScript",
+      "stars": 9835,
+      "stars_today": 2123,
+      "forks": 604,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["code-intelligence", "knowledge-graph", "developer-tools", "AI-coding"],
+      "relevance": "high"
+    },
+    {
+      "id": "vimax",
+      "name": "HKUDS/ViMax",
+      "description": "Agentic video generation system with specialized AI roles (Director, Screenwriter, Producer, Video Generator) collaborating to produce videos from high-level creative briefs.",
+      "language": "Python",
+      "stars": 6104,
+      "stars_today": 674,
+      "forks": 983,
+      "url": "https://github.com/HKUDS/ViMax",
+      "tags": ["video-generation", "agents", "creative-AI", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "openviking",
+      "name": "volcengine/OpenViking",
+      "description": "Context database designed for AI agents with hierarchical context delivery, from ByteDance's Volcengine platform. Addresses the growing need for structured agent memory and context management.",
+      "language": "Python",
+      "stars": 24313,
+      "stars_today": 111,
+      "forks": 1821,
+      "url": "https://github.com/volcengine/OpenViking",
+      "tags": ["agents", "context-management", "database", "memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "agentmemory",
+      "name": "rohitg00/agentmemory",
+      "description": "Persistent memory system for AI coding agents, benchmarked against real-world tasks. Provides structured memory storage and retrieval for long-running agent sessions.",
+      "language": "TypeScript",
+      "stars": 15179,
+      "stars_today": 1080,
+      "forks": 1255,
+      "url": "https://github.com/rohitg00/agentmemory",
+      "tags": ["agents", "memory", "developer-tools", "persistence"],
+      "relevance": "high"
+    },
+    {
+      "id": "sana",
+      "name": "NVlabs/Sana",
+      "description": "NVIDIA's efficient high-resolution image synthesis model using Linear Diffusion Transformer architecture. Achieves strong quality with significantly reduced computational cost.",
+      "language": "Python",
+      "stars": 7166,
+      "stars_today": 218,
+      "forks": 523,
+      "url": "https://github.com/NVlabs/Sana",
+      "tags": ["image-generation", "diffusion", "efficient", "nvidia"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm",
+      "name": "vllm-project/vllm",
+      "description": "Industry-standard high-throughput and memory-efficient inference engine for LLMs. Continues to be the backbone of production LLM serving infrastructure.",
+      "language": "Python",
+      "stars": 80587,
+      "stars_today": 99,
+      "forks": 17024,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["inference", "serving", "LLM", "production"],
+      "relevance": "high"
+    },
+    {
+      "id": "unsloth",
+      "name": "unslothai/unsloth",
+      "description": "Web UI for training and running open models like Gemma 4, Qwen3.6, and DeepSeek locally with optimized memory usage and speed. Essential tool for the local model community.",
+      "language": "Python",
+      "stars": 64857,
+      "stars_today": 147,
+      "forks": 5741,
+      "url": "https://github.com/unslothai/unsloth",
+      "tags": ["training", "local-models", "optimization", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "e2b",
+      "name": "e2b-dev/E2B",
+      "description": "Open-source secure sandboxed environments with real-world tools for enterprise-grade AI agents. Provides isolated execution contexts for agent actions.",
+      "language": "Python",
+      "stars": 12292,
+      "stars_today": 34,
+      "forks": 908,
+      "url": "https://github.com/e2b-dev/E2B",
+      "tags": ["agents", "sandboxing", "security", "enterprise"],
+      "relevance": "high"
+    },
+    {
+      "id": "openhuman",
+      "name": "tinyhumansai/openhuman",
+      "description": "Private personal AI super-intelligence built in Rust, focusing on privacy-first local operation. One of the fastest-growing repos today with 3,394 stars in a single day.",
+      "language": "Rust",
+      "stars": 23738,
+      "stars_today": 3394,
+      "forks": 2119,
+      "url": "https://github.com/tinyhumansai/openhuman",
+      "tags": ["personal-AI", "privacy", "local-first", "rust"],
+      "relevance": "medium"
+    },
+    {
+      "id": "spec-kit",
+      "name": "github/spec-kit",
+      "description": "GitHub's official toolkit for spec-driven development, integrating AI into the software development lifecycle through specification-first workflows.",
+      "language": "Python",
+      "stars": 104131,
+      "stars_today": 1074,
+      "forks": 9175,
+      "url": "https://github.com/github/spec-kit",
+      "tags": ["developer-tools", "spec-driven", "sdlc", "github"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "RL for Reasoning Reaches Critical Mass",
+      "description": "Five distinct reinforcement learning approaches for improving LLM reasoning appeared in a single day — Anti-Self-Distillation, GoLongRL, BetaPRM, CEPO, and GRAM — signaling that RL-based reasoning improvement is the dominant research frontier but urgently needs consolidation and systematic comparison.",
+      "related_paper_ids": ["anti-self-distillation-reasoning-rl", "golongrl-long-context-rl", "betaprm-process-rewards-reliability", "cepo-contrastive-evidence-policy-optimization", "gram-generative-recursive-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Maturation",
+      "description": "Research and open-source projects are shifting from demonstrating agent capabilities to building reliable infrastructure — verifiable environments (OpenComputer), scalable training (EnvFactory), skill reuse (HASP), agent memory (agentmemory), and agent-native software (CLI-Anything).",
+      "related_paper_ids": ["opencomputer-verifiable-worlds", "envfactory-tool-use-agents", "hasp-skill-programs"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video Generation Production Readiness",
+      "description": "Video generation research is increasingly focused on production workflows — handling abstract creative inputs (CogOmniControl), bridging user intent gaps (Aurora), multi-agent creative pipelines (ViMax), and evaluating artifact quality (Artifact-Bench, MSAVBench).",
+      "related_paper_ids": ["cogomnicontrol-video-generation", "aurora-video-editing"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Model Accountability",
+      "description": "Growing scrutiny of what multimodal models actually understand versus what they fake — the audio-visual Clever Hans effect reveals systematic hallucination patterns, while the AI reviewer study maps specific capability boundaries with unprecedented rigor.",
+      "related_paper_ids": ["when-vision-speaks-for-sound", "ai-reviewers-limits-opportunities"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Autonomous Scientific Research",
+      "description": "Multiple signals point to autonomous research becoming practical — AutoResearchClaw introduces self-reinforcing research loops, Karpathy's autoresearch repo shows massive community interest, and the AI reviewer study validates AI's complementary role in the scientific process.",
+      "related_paper_ids": ["autoresearchclaw-autonomous-research", "ai-reviewers-limits-opportunities"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending Python",
+      "url": "https://github.com/trending/python",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-21T15:00:00Z",
+      "status": "error"
+    }
+  ]
+}
