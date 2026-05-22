@@ -1,0 +1,577 @@
+{
+  "version": "1.0",
+  "date": "2026-05-22",
+  "generated_at": "2026-05-22T15:00:00Z",
+  "summary": {
+    "headline": "智能体轨迹编译(ACC)开辟长上下文训练新范式；Gated DeltaNet-2解耦线性注意力记忆编辑；代码知识图谱与智能体技能框架在GitHub爆发",
+    "body": "今日研究焦点集中在改进LLM如何从智能体交互中学习，以及高效注意力机制如何管理压缩记忆。最突出的论文是ACC（智能体轨迹编译），它将工具使用型智能体产生的海量轨迹重新定义为长上下文训练数据的天然来源——这一优雅的洞察绕过了合成长文档策划的高昂成本。Gated DeltaNet-2则解决了线性注意力中的一个根本矛盾：如何在不破坏现有关联的情况下编辑固定大小的循环状态，通过引入解耦的擦除-写入门控来改进KDA的通道级衰减机制。\n\n智能体和基准测试领域持续快速成熟。TerminalWorld引入了一个可扩展的数据引擎，从真实终端录制中逆向工程评估任务，生成了涵盖18个类别的1,530个经验证任务。Spreadsheet-RL将强化学习应用于电子表格自动化，pi-Bench评估主动式个人助手对隐含意图的检测能力。同时，SCRL引入了带有可验证子问题的课程式强化学习，以解决推理中的信用分配问题。\n\n在模型方面，DeepSeek V4继续保持主导地位，Pro版下载量超400万，Flash版超240万。ByteDance的Lance和OpenBMB的MiniCPM-V-4.6持续推动多模态技术的边界。GitHub趋势则被智能体编程革命主导：codegraph（今日4,294星）、andrej-karpathy-skills（今日2,614星）和superpowers（今日1,576星）反映出开发者对AI辅助开发工具的巨大需求。",
+    "key_themes": [
+      "agent-training-from-trajectories",
+      "efficient-attention-mechanisms",
+      "agent-benchmarks-evaluation",
+      "agentic-coding-tools",
+      "curriculum-reinforcement-learning"
+    ]
+  },
+  "researcher_notes": "**ACC将智能体轨迹视为天然长上下文训练数据的洞察看似简单但可能具有变革性。** 工具使用型智能体将证据分散在多个交互轮次中——需要整合远距离上下文片段——这恰好反映了我们希望LLM学习的那种远程推理能力。与其进行昂贵的合成数据策划，这种方法从智能体执行有用工作的过程中直接收获训练信号。值得关注后续将其应用于代码智能体的工作，因为代码场景中的轨迹尤其丰富。\n\n**Gated DeltaNet-2代表了实用线性注意力的重要进展。** 核心问题——delta规则模型使用单个标量门控同时处理擦除和写入，导致一个操作无意中扭曲另一个——在这里得到了很好的刻画。将这些操作解耦为独立的门控机制是那种随规模扩展而产生复合效应的精准架构改进。与KDA（Kimi Delta Attention）及其通道级衰减的关联表明，这条研究路线正在收敛于一个长序列全softmax注意力的实用替代方案。\n\n**基准测试浪潮值得关注，因为它揭示了领域的成熟度。** TerminalWorld（从8万条真实录制中提取1,530个任务）、Spreadsheet-RL（真实电子表格自动化）和pi-Bench（主动助手评估）都共享一个共同理念：基于真实世界使用模式的评估，而非合成任务。从「模型能否在玩具问题上完成X」到「模型能否处理X的混乱现实」的转变，是实际部署准备就绪的先行指标。\n\n**GitHub趋势数据讲述了2026年的故事：智能体编程已经成为主流。** codegraph的4,294日星（预索引代码知识图谱）加上andrej-karpathy-skills的2,614日星（一个CLAUDE.md最佳实践文件），表明开发者正在围绕AI编程智能体优化工作流程，而不再将其视为新奇事物。hermes-agent达到161K总星和agency-agents达到103K总星，表明智能体编排平台正在成为核心基础设施。\n\n**值得关注的潜力股：WorldKV用于持久视频世界生成。** 虽然参与度数据不高，但在长视频推出中维持一致世界状态——重新访问某个视角应产生相同内容——的问题对实时交互应用至关重要。其检索和压缩方式的KV缓存管理方法可能对视频生成之外的领域也有启发意义。",
+  "papers": [
+    {
+      "id": "acc-compiling-agent-trajectories",
+      "title": "ACC：编译智能体轨迹用于长上下文训练",
+      "authors": ["Qisheng Su", "Zhen Fang", "Shiting Huang", "Yu Zeng", "Yiming Zhao"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "提出利用工具使用型智能体产生的海量轨迹作为LLM长上下文训练数据的天然来源。智能体轨迹将证据分散在多个工具调用和环境观察轮次中，需要整合远距离上下文片段——这恰好是长上下文训练旨在发展的能力。",
+      "key_findings": [
+        "智能体轨迹提供了自然结构化的长上下文训练数据，无需昂贵的人工策划",
+        "多轮工具交互中分散的证据需要远程上下文整合",
+        "编译方法绕过了先前工作中使用的启发式上下文合成方法"
+      ],
+      "tags": ["agents", "long-context", "training-data", "trajectories"],
+      "relevance": "high",
+      "engagement": {"upvotes": 9, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21850",
+        "huggingface": "https://huggingface.co/papers/2605.21850",
+        "pdf": "https://arxiv.org/pdf/2605.21850"
+      }
+    },
+    {
+      "id": "gated-deltanet-2",
+      "title": "Gated DeltaNet-2：解耦线性注意力中的擦除与写入",
+      "authors": ["Ali Hatamizadeh", "Yejin Choi", "Jan Kautz"],
+      "affiliations": ["NVIDIA", "University of Washington"],
+      "summary": "解决了delta规则线性注意力模型中的一个根本限制：单个标量门控同时控制压缩循环状态的擦除和写入。通过将这些操作解耦为独立的门控机制，模型避免了一个操作扰乱另一个操作关联的干扰问题。",
+      "key_findings": [
+        "单门控delta规则模型在压缩记忆中存在擦除-写入干扰问题",
+        "解耦门控机制允许独立控制记忆擦除和新值写入",
+        "改进了KDA的通道级衰减方法来管理固定大小的循环状态"
+      ],
+      "tags": ["linear-attention", "efficient-transformers", "architecture", "memory"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22791",
+        "huggingface": "https://huggingface.co/papers/2605.22791",
+        "pdf": "https://arxiv.org/pdf/2605.22791"
+      }
+    },
+    {
+      "id": "worldkv-efficient-world-memory",
+      "title": "WorldKV：基于世界检索与压缩的高效世界记忆",
+      "authors": ["Jung Yi", "Minjae Kim", "Paul Hyunbin Cho", "Wooseok Jang", "Sangdoo Yun"],
+      "affiliations": ["NAVER AI Lab", "Korea Advanced Institute of Science and Technology"],
+      "summary": "为自回归视频扩散模型提出检索与压缩相结合的KV缓存管理方法，使持久世界生成中重新访问先前看到的视角时能产生一致的内容，同时不破坏实时约束。",
+      "key_findings": [
+        "完整KV缓存注意力保持世界一致性，但记忆和计算量随推出长度线性增长",
+        "滑动窗口推理恢复了吞吐量但牺牲了长期一致性",
+        "WorldKV结合检索和压缩同时保持一致性和实时性能"
+      ],
+      "tags": ["video-generation", "world-models", "KV-cache", "real-time"],
+      "relevance": "high",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22718",
+        "huggingface": "https://huggingface.co/papers/2605.22718",
+        "pdf": "https://arxiv.org/pdf/2605.22718"
+      }
+    },
+    {
+      "id": "spreadsheet-rl",
+      "title": "Spreadsheet-RL：通过强化学习提升大语言模型智能体的真实电子表格任务能力",
+      "authors": ["Banghao Chi", "Yining Xie", "Mingyuan Wu", "Jingcheng Yang", "Jize Jiang"],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "将强化学习应用于训练LLM智能体完成真实电子表格自动化任务。解决了基于特化提示的方法在复杂多步骤电子表格操作中难以胜任的局限性。",
+      "key_findings": [
+        "基于通用LLM的特化提示方法在复杂电子表格操作上表现不佳",
+        "强化学习训练使智能体能够学习多步骤电子表格操作策略",
+        "弥合了玩具级电子表格任务与真实数据工作流之间的差距"
+      ],
+      "tags": ["agents", "reinforcement-learning", "spreadsheets", "automation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22642",
+        "huggingface": "https://huggingface.co/papers/2605.22642",
+        "pdf": "https://arxiv.org/pdf/2605.22642"
+      }
+    },
+    {
+      "id": "swift-sampling-temporal-surprises",
+      "title": "Swift Sampling：通过泰勒级数选择时间惊喜",
+      "authors": ["Dahye Kim", "Bhuvan Sachdeva", "Karan Uppal", "Naman Gupta", "Vineeth N. Balasubramanian"],
+      "affiliations": ["Indian Institute of Technology Hyderabad", "Samsung Research"],
+      "summary": "引入一种受大脑预测编码启发的免训练帧选择算法，通过将视频建模为视觉潜在空间中的可微轨迹并计算基于速度的惊喜分数，自动识别长视频中的高信息量时刻。",
+      "key_findings": [
+        "长视频中大部分帧是冗余的，关键信息存在于时间惊喜中",
+        "基于泰勒级数的速度计算识别视觉特征偏离预测演化的时刻",
+        "免训练方法无需特定任务微调即可进行帧选择"
+      ],
+      "tags": ["video-understanding", "frame-selection", "predictive-coding", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22678",
+        "huggingface": "https://huggingface.co/papers/2605.22678",
+        "pdf": "https://arxiv.org/pdf/2605.22678"
+      }
+    },
+    {
+      "id": "diversed-model-discovery",
+      "title": "通过结构化表格发现实现多样化模型发现",
+      "authors": ["Zhengyuan Dong", "Renée J. Miller"],
+      "affiliations": ["Northeastern University"],
+      "summary": "指出模型搜索本质上是比较性的，提出利用模型卡中的结构化工件——性能表、配置数据、数据集元数据——来生成超越文本语义相似度所能实现的多样化、差异化模型推荐。",
+      "key_findings": [
+        "基于文本的模型搜索因语义相似性聚类而产生同质化结果",
+        "模型卡中的结构化表格工件捕获了文本遗漏的差异化维度",
+        "比较性模型搜索需要平衡任务对齐与可度量的差异化"
+      ],
+      "tags": ["model-discovery", "model-cards", "information-retrieval", "structured-data"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22766",
+        "huggingface": "https://huggingface.co/papers/2605.22766",
+        "pdf": "https://arxiv.org/pdf/2605.22766"
+      }
+    },
+    {
+      "id": "scrl-curriculum-rl-reasoning",
+      "title": "从推理链到可验证子问题：课程强化学习实现LLM推理的信用分配",
+      "authors": ["Xitai Jiang", "Zihan Tang", "Wenze Lin", "Yang Yue", "Shenzhi Wang"],
+      "affiliations": ["Shanghai Jiao Tong University", "Tsinghua University"],
+      "summary": "引入SCRL，一个课程式强化学习框架，从参考推理链中推导可验证子问题，并使用渐进难度调度来解决基于结果的RLVR中的信用分配问题——在该场景下正确最终答案的采样对于困难问题来说过于稀少。",
+      "key_findings": [
+        "基于结果的RLVR在困难问题上效率低下，因为正确最终答案的采样很稀少",
+        "将问题分解为可验证子问题实现了从失败尝试中的部分信用分配",
+        "从易到难的课程调度提高了样本效率"
+      ],
+      "tags": ["reinforcement-learning", "reasoning", "curriculum-learning", "credit-assignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22074",
+        "huggingface": "https://huggingface.co/papers/2605.22074",
+        "pdf": "https://arxiv.org/pdf/2605.22074"
+      }
+    },
+    {
+      "id": "bernini-latent-semantic-planning",
+      "title": "Bernini：面向视频扩散的潜在语义规划",
+      "authors": ["Bernini Team", "Chenchen Liu", "Junyi Chen", "Lei Li", "Lu Chi"],
+      "affiliations": ["ByteDance"],
+      "summary": "通过分工合作统一多模态大语言模型和扩散模型：MLLM执行语义规划，扩散模型从高级语义指导和低级视觉特征中渲染像素，实现具有强语义基础的可控视频生成。",
+      "key_findings": [
+        "MLLM和扩散模型可以通过语义规划加像素渲染的方式统一",
+        "潜在语义表示弥合了语言推理和视觉生成之间的差距",
+        "这种分工方式在不妥协的情况下发挥了每种架构族的优势"
+      ],
+      "tags": ["video-generation", "diffusion", "multimodal", "semantic-planning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22344",
+        "huggingface": "https://huggingface.co/papers/2605.22344",
+        "pdf": "https://arxiv.org/pdf/2605.22344"
+      }
+    },
+    {
+      "id": "terminalworld-benchmark",
+      "title": "TerminalWorld：基于真实终端任务的智能体基准测试",
+      "authors": ["Zhaoyang Chu", "Jiarui Hu", "Xingyu Jiang", "Pengyu Zou", "Han Li"],
+      "affiliations": ["Renmin University of China", "Ant Group"],
+      "summary": "引入可扩展的数据引擎，从80,870条真实终端录制中逆向工程评估任务，生成涵盖18个类别和1,280个唯一命令的1,530个经验证任务，并策划了200个具有代表性的人工审核任务子集。",
+      "key_findings": [
+        "自动化流水线将8万条真实终端录制转换为1,530个经验证评估任务",
+        "任务涵盖18个真实世界类别，从短操作到超过50步的工作流",
+        "覆盖1,280个唯一命令，提供了人工制作基准无法达到的广度"
+      ],
+      "tags": ["benchmarks", "agents", "terminal", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22535",
+        "huggingface": "https://huggingface.co/papers/2605.22535",
+        "pdf": "https://arxiv.org/pdf/2605.22535"
+      }
+    },
+    {
+      "id": "pi-bench-proactive-assistants",
+      "title": "pi-Bench：评估长周期工作流中的主动式个人助手智能体",
+      "authors": ["Haoran Zhang", "Luxin Xu", "Zhilin Wang", "Runquan Gui", "Shunkai Zhang"],
+      "affiliations": ["Peking University", "Microsoft Research"],
+      "summary": "评估个人助手智能体能否识别并响应隐含意图——用户未明确表述的需求、约束和偏好——在持续的长周期工作流中，解决现有基准忽视的主动协助核心挑战。",
+      "key_findings": [
+        "现有基准很少评估对未表述用户需求的主动识别能力",
+        "长周期工作流放大了隐含意图检测的重要性",
+        "主动协助需要与被动任务完成不同的能力"
+      ],
+      "tags": ["agents", "personal-assistants", "benchmarks", "proactive-AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14678",
+        "huggingface": "https://huggingface.co/papers/2605.14678",
+        "pdf": "https://arxiv.org/pdf/2605.14678"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek最新旗舰模型，下载量超400万，继续以V4架构主导开源LLM生态系统的对话和通用文本生成任务。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "frontier"],
+      "metrics": {"downloads": 4041458, "likes": 4112},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4的高效变体，针对更快推理进行优化，同时保持强大的对话和文本生成能力，下载量达240万以上。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "efficient"],
+      "metrics": {"downloads": 2425002, "likes": 1176},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "扩散模型，获得1,468个赞，在生成图像社区中获得强劲关注，兼容ComfyUI工作流。",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "image-generation", "comfyui"],
+      "metrics": {"downloads": 591834, "likes": 1468},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "文本生成视频模型，下载量超110万，支持diffusers和GGUF格式，确立了开源视频生成模型的领先地位。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": {"downloads": 1198471, "likes": 1233},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "多模态视觉语言模型，下载量19.6万，876个赞，延续MiniCPM-V系列在高效模型规模下图文理解的强劲表现。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": {"downloads": 196105, "likes": 876},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "ByteDance推出的任意模态互转模型，支持图像和视频生成，尽管下载量较低但以572个赞快速获得社区关注，显示早期采用者的强烈兴趣。",
+      "task_type": "multimodal",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": {"downloads": 739, "likes": 572},
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "microsoft-fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "微软推出的70亿参数多模态视觉语言模型，基于Qwen2.5-VL架构构建，获得592个赞和1.5万次下载，用于图文理解任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "vision-language", "qwen"],
+      "metrics": {"downloads": 15175, "likes": 592},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "文本转语音模型，支持ONNX格式，获得535个赞和3.4万次下载，用于高质量语音合成应用。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": {"downloads": 34965, "likes": 535},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "基于Qwen3-VL的视觉语言模型，在单一架构中结合图像理解和图像生成能力，获得417个赞和2.1万次下载。",
+      "task_type": "image-text-to-image",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "vision-language"],
+      "metrics": {"downloads": 21558, "likes": 417},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    },
+    {
+      "id": "unsloth-qwen3-6-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Qwen3.6-27B的GGUF量化版本，支持多令牌预测，实现高效本地部署，下载量达47.8万。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "efficient-inference"],
+      "metrics": {"downloads": 478488, "likes": 376},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "为AI编程智能体（Claude Code、Codex、Cursor、OpenCode）提供预索引代码知识图谱，减少令牌使用和工具调用，完全本地运行。以4,294日星领跑GitHub趋势。",
+      "language": "TypeScript",
+      "stars": 13742,
+      "stars_today": 4294,
+      "forks": 781,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["code-knowledge-graph", "ai-coding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "源自Andrej Karpathy对LLM编程陷阱观察的单个CLAUDE.md文件，被迅速采纳为Claude Code智能体的最佳实践指南。总计14.3万星。",
+      "language": "",
+      "stars": 143343,
+      "stars_today": 2614,
+      "forks": 14696,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["ai-coding", "best-practices", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "academic-research-skills",
+      "name": "Imbad0202/academic-research-skills",
+      "description": "Claude Code的学术研究工作流技能，覆盖从研究到写作、审稿、修改和定稿的完整流程。日增2,579星。",
+      "language": "Python",
+      "stars": 18243,
+      "stars_today": 2579,
+      "forks": 1573,
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "tags": ["academic-research", "ai-writing", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Nous Research的个人AI智能体平台，总计16.1万星，日增2,056星，定位为领先的开源个人智能体框架。",
+      "language": "Python",
+      "stars": 161605,
+      "stars_today": 2056,
+      "forks": 26319,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "personal-ai", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架和软件开发方法论，总计20.1万星，提供AI辅助开发的结构化方法。",
+      "language": "Shell",
+      "stars": 201595,
+      "stars_today": 1576,
+      "forks": 17958,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agentic-skills", "development-methodology", "ai-assisted-dev"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "全面的AI工程学习资源，覆盖从基础到部署的全栈内容，日增1,333星。",
+      "language": "Python",
+      "stars": 10787,
+      "stars_today": 1333,
+      "forks": 2126,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "full-stack"],
+      "relevance": "medium"
+    },
+    {
+      "id": "streambert",
+      "name": "truelockmc/streambert",
+      "description": "跨平台Electron桌面应用，用于流媒体内容的播放和下载，零广告，日增1,094星。",
+      "language": "JavaScript",
+      "stars": 4046,
+      "stars_today": 1094,
+      "forks": 315,
+      "url": "https://github.com/truelockmc/streambert",
+      "tags": ["electron", "streaming", "desktop-app"],
+      "relevance": "low"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "完整的AI代理框架，包含不同领域的专家智能体——从前端开发到社区管理——每个都有定义的流程和交付物。总计10.3万星。",
+      "language": "Shell",
+      "stars": 103715,
+      "stars_today": 1018,
+      "forks": 17063,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": ["ai-agents", "specialized-agents", "agency"],
+      "relevance": "high"
+    },
+    {
+      "id": "the-book-of-secret-knowledge",
+      "name": "trimstray/the-book-of-secret-knowledge",
+      "description": "精选的灵感清单、手册、速查表和开发者工具合集，总计22.2万星，常驻趋势资源。",
+      "language": "",
+      "stars": 222478,
+      "stars_today": 756,
+      "forks": 13327,
+      "url": "https://github.com/trimstray/the-book-of-secret-knowledge",
+      "tags": ["developer-resources", "cheatsheets", "reference"],
+      "relevance": "low"
+    },
+    {
+      "id": "openwa",
+      "name": "rmyndharis/OpenWA",
+      "description": "免费、开源、自托管的WhatsApp API网关，日增730星，支持编程式WhatsApp集成。",
+      "language": "TypeScript",
+      "stars": 5444,
+      "stars_today": 730,
+      "forks": 1085,
+      "url": "https://github.com/rmyndharis/OpenWA",
+      "tags": ["whatsapp", "api-gateway", "messaging"],
+      "relevance": "low"
+    },
+    {
+      "id": "claude-plugins-official",
+      "name": "anthropics/claude-plugins-official",
+      "description": "Anthropic官方的高质量Claude Code插件目录，随着插件生态系统的成熟日增682星。",
+      "language": "Python",
+      "stars": 22585,
+      "stars_today": 682,
+      "forks": 2650,
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "tags": ["claude-code", "plugins", "ecosystem"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将代码转换为可交互的知识图谱，支持探索、搜索和问答——兼容Claude Code、Codex、Cursor、Copilot和Gemini CLI。日增666星。",
+      "language": "TypeScript",
+      "stars": 16719,
+      "stars_today": 666,
+      "forks": 1564,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "visualization"],
+      "relevance": "high"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "通过CLI接口使所有软件成为智能体原生，总计3.9万星。HKUDS智能体原生软件计划的一部分。",
+      "language": "Python",
+      "stars": 39163,
+      "stars_today": 656,
+      "forks": 3717,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["cli", "agent-native", "software-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "multica",
+      "name": "multica-ai/multica",
+      "description": "开源托管智能体平台，将编程智能体变成真正的团队成员，支持任务分配、进度跟踪和技能复合。日增534星。",
+      "language": "Go",
+      "stars": 30785,
+      "stars_today": 534,
+      "forks": 3737,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["managed-agents", "agent-platform", "task-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "vimax",
+      "name": "HKUDS/ViMax",
+      "description": "智能体式视频生成系统，在一个框架中结合导演、编剧、制片人和视频生成器角色。日增537星。",
+      "language": "Python",
+      "stars": 6472,
+      "stars_today": 537,
+      "forks": 1020,
+      "url": "https://github.com/HKUDS/ViMax",
+      "tags": ["video-generation", "agentic", "creative-ai"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "从智能体轨迹中训练",
+      "description": "ACC展示了智能体轨迹提供天然长上下文训练数据，而SCRL引入课程式强化学习用于信用分配——两者都推进了从智能体交互中训练模型的方法。",
+      "related_paper_ids": ["acc-compiling-agent-trajectories", "scrl-curriculum-rl-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效注意力与记忆机制",
+      "description": "Gated DeltaNet-2和WorldKV都解决了序列模型中管理压缩记忆的根本挑战——在线性注意力中解耦擦除/写入操作，以及视频世界模型的检索-压缩方案。",
+      "related_paper_ids": ["gated-deltanet-2", "worldkv-efficient-world-memory"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基准与真实世界评估",
+      "description": "TerminalWorld、Spreadsheet-RL和pi-Bench都将评估推向真实世界使用模式而非合成任务，反映出对生态有效智能体评估日益增长的需求。",
+      "related_paper_ids": ["terminalworld-benchmark", "spreadsheet-rl", "pi-bench-proactive-assistants"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体编程工具生态系统",
+      "description": "GitHub趋势被AI编程工具主导——codegraph、andrej-karpathy-skills、academic-research-skills、superpowers和claude-plugins-official共计每日新增超1万星，标志着AI辅助开发的主流化。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频生成与世界模型",
+      "description": "Bernini的视频扩散语义规划、WorldKV的持久世界生成以及ViMax的智能体式视频生成框架展示了可控视频合成持续强劲的发展势头。",
+      "related_paper_ids": ["bernini-latent-semantic-planning", "worldkv-efficient-world-memory"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

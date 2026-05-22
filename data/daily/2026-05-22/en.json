@@ -1,0 +1,577 @@
+{
+  "version": "1.0",
+  "date": "2026-05-22",
+  "generated_at": "2026-05-22T15:00:00Z",
+  "summary": {
+    "headline": "Agent trajectory compilation (ACC) opens new long-context training paradigm; Gated DeltaNet-2 decouples linear attention memory editing; code knowledge graphs and agentic skills frameworks explode on GitHub",
+    "body": "Today's research centers on improving how LLMs learn from agent interactions and how efficient attention mechanisms manage compressed memory. The standout paper is ACC (Agent Trajectory Compilation), which reframes the massive trajectories produced by tool-using agents as a natural source of long-context training data — an elegant insight that sidesteps the cost of synthetic long-document curation. Gated DeltaNet-2 tackles a fundamental tension in linear attention: how to edit a fixed-size recurrent state without corrupting existing associations, introducing decoupled erase-write gates that improve on KDA's channel-wise decay.\n\nThe agent and benchmark space continues to mature rapidly. TerminalWorld introduces a scalable data engine that reverse-engineers evaluation tasks from real terminal recordings, yielding 1,530 validated tasks across 18 categories. Spreadsheet-RL applies reinforcement learning to spreadsheet automation, and pi-Bench evaluates proactive personal assistants on hidden-intent detection. Meanwhile, SCRL introduces curriculum RL with verifiable subproblems to solve credit assignment in reasoning.\n\nOn the model front, DeepSeek V4 continues its dominance with Pro (4M+ downloads) and Flash (2.4M+), while ByteDance's Lance and OpenBMB's MiniCPM-V-4.6 push multimodal boundaries. GitHub is dominated by the agentic coding revolution: codegraph (4,294 stars today), andrej-karpathy-skills (2,614 stars today), and superpowers (1,576 stars today) reflect massive developer appetite for AI-assisted development tooling.",
+    "key_themes": [
+      "agent-training-from-trajectories",
+      "efficient-attention-mechanisms",
+      "agent-benchmarks-evaluation",
+      "agentic-coding-tools",
+      "curriculum-reinforcement-learning"
+    ]
+  },
+  "researcher_notes": "**ACC's insight that agent trajectories are natural long-context training data is deceptively simple but potentially transformative.** The observation that tool-using agents scatter evidence across many turns — requiring integration of distant context segments — mirrors exactly the kind of long-range reasoning we want LLMs to learn. Rather than expensive synthetic data curation, this approach harvests training signal from the very process of agents doing useful work. Watch for follow-up work applying this to code agents, where trajectories are especially rich.\n\n**Gated DeltaNet-2 represents a meaningful step toward practical linear attention.** The core problem — that delta-rule models use a single scalar gate for both erasing and writing, causing one operation to inadvertently distort the other — is well-characterized here. Decoupling these operations into separate gating mechanisms is the kind of surgical architectural improvement that compounds across scale. The connection to KDA (Kimi Delta Attention) and its channel-wise decay suggests this line of work is converging on a practical alternative to full softmax attention for long sequences.\n\n**The benchmarking wave deserves attention for what it reveals about field maturity.** TerminalWorld (1,530 tasks from 80K real recordings), Spreadsheet-RL (realistic spreadsheet automation), and pi-Bench (proactive assistant evaluation) all share a common philosophy: evaluation grounded in real-world usage patterns rather than synthetic tasks. This shift from 'can the model do X on a toy problem' to 'can the model handle the messy reality of X' is a leading indicator of practical deployment readiness.\n\n**The GitHub trending data tells the story of 2026: agentic coding has gone mainstream.** codegraph's 4,294 daily stars for pre-indexed code knowledge graphs, combined with andrej-karpathy-skills' 2,614 daily stars for a single CLAUDE.md best-practices file, shows that developers are now optimizing their workflow around AI coding agents rather than treating them as novelties. The emergence of hermes-agent at 161K total stars and agency-agents at 103K total stars suggests agent orchestration platforms are becoming core infrastructure.\n\n**Sleeper hit: WorldKV for persistent video world generation.** While the engagement numbers are modest, the problem of maintaining consistent world state across long video rollouts — where revisiting a viewpoint should yield the same content — is fundamental to real-time interactive applications. The retrieval-and-compression approach to KV-cache management could have implications well beyond video generation.",
+  "papers": [
+    {
+      "id": "acc-compiling-agent-trajectories",
+      "title": "ACC: Compiling Agent Trajectories for Long-Context Training",
+      "authors": ["Qisheng Su", "Zhen Fang", "Shiting Huang", "Yu Zeng", "Yiming Zhao"],
+      "affiliations": ["Tsinghua University", "ByteDance"],
+      "summary": "Proposes using the massive trajectories produced by tool-using agents as a natural source of long-context training data for LLMs. Agent trajectories scatter evidence across many turns of tool invocation and environment observation, requiring integration of distant context segments — exactly the capacity long-context training aims to develop.",
+      "key_findings": [
+        "Agent trajectories provide naturally structured long-context training data without expensive manual curation",
+        "Evidence scattered across multi-turn tool interactions requires long-range context integration",
+        "The compilation approach sidesteps heuristic context synthesis methods used in prior work"
+      ],
+      "tags": ["agents", "long-context", "training-data", "trajectories"],
+      "relevance": "high",
+      "engagement": {"upvotes": 9, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21850",
+        "huggingface": "https://huggingface.co/papers/2605.21850",
+        "pdf": "https://arxiv.org/pdf/2605.21850"
+      }
+    },
+    {
+      "id": "gated-deltanet-2",
+      "title": "Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention",
+      "authors": ["Ali Hatamizadeh", "Yejin Choi", "Jan Kautz"],
+      "affiliations": ["NVIDIA", "University of Washington"],
+      "summary": "Addresses a fundamental limitation in delta-rule linear attention models where a single scalar gate controls both erasing and writing to the compressed recurrent state. By decoupling these operations into separate gating mechanisms, the model avoids the interference where one operation scrambles the other's associations.",
+      "key_findings": [
+        "Single-gate delta-rule models suffer from erase-write interference in compressed memory",
+        "Decoupled gating mechanisms allow independent control of memory erasure and new value writing",
+        "Improves upon KDA's channel-wise decay approach for managing the fixed-size recurrent state"
+      ],
+      "tags": ["linear-attention", "efficient-transformers", "architecture", "memory"],
+      "relevance": "high",
+      "engagement": {"upvotes": 1, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22791",
+        "huggingface": "https://huggingface.co/papers/2605.22791",
+        "pdf": "https://arxiv.org/pdf/2605.22791"
+      }
+    },
+    {
+      "id": "worldkv-efficient-world-memory",
+      "title": "WorldKV: Efficient World Memory with World Retrieval and Compression",
+      "authors": ["Jung Yi", "Minjae Kim", "Paul Hyunbin Cho", "Wooseok Jang", "Sangdoo Yun"],
+      "affiliations": ["NAVER AI Lab", "Korea Advanced Institute of Science and Technology"],
+      "summary": "Proposes a retrieval-and-compression approach to KV-cache management for autoregressive video diffusion models, enabling persistent world generation where revisiting previously seen viewpoints yields consistent content without breaking real-time constraints.",
+      "key_findings": [
+        "Full KV-cache attention preserves world consistency but memory and compute grow linearly with rollout length",
+        "Sliding window inference restores throughput but sacrifices long-term consistency",
+        "WorldKV combines retrieval and compression to maintain both consistency and real-time performance"
+      ],
+      "tags": ["video-generation", "world-models", "KV-cache", "real-time"],
+      "relevance": "high",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22718",
+        "huggingface": "https://huggingface.co/papers/2605.22718",
+        "pdf": "https://arxiv.org/pdf/2605.22718"
+      }
+    },
+    {
+      "id": "spreadsheet-rl",
+      "title": "Spreadsheet-RL: Advancing Large Language Model Agents on Realistic Spreadsheet Tasks via Reinforcement Learning",
+      "authors": ["Banghao Chi", "Yining Xie", "Mingyuan Wu", "Jingcheng Yang", "Jize Jiang"],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "Applies reinforcement learning to train LLM agents for realistic spreadsheet automation tasks. Addresses limitations of specialized prompting approaches that struggle with complex multi-step spreadsheet operations beyond simple cell manipulation.",
+      "key_findings": [
+        "Specialized prompting over general-purpose LLMs fails on complex spreadsheet operations",
+        "RL training enables agents to learn multi-step spreadsheet manipulation strategies",
+        "Bridges the gap between toy spreadsheet tasks and real-world data-centric workflows"
+      ],
+      "tags": ["agents", "reinforcement-learning", "spreadsheets", "automation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22642",
+        "huggingface": "https://huggingface.co/papers/2605.22642",
+        "pdf": "https://arxiv.org/pdf/2605.22642"
+      }
+    },
+    {
+      "id": "swift-sampling-temporal-surprises",
+      "title": "Swift Sampling: Selecting Temporal Surprises via Taylor Series",
+      "authors": ["Dahye Kim", "Bhuvan Sachdeva", "Karan Uppal", "Naman Gupta", "Vineeth N. Balasubramanian"],
+      "affiliations": ["Indian Institute of Technology Hyderabad", "Samsung Research"],
+      "summary": "Introduces a training-free frame selection algorithm inspired by the brain's predictive coding that identifies high-information moments in long-form video by modeling it as a differentiable trajectory in visual latent space and computing velocity-based surprise scores.",
+      "key_findings": [
+        "Most frames in long-form video are redundant; critical information resides in temporal surprises",
+        "Taylor series-based velocity computation identifies moments where visual features deviate from predicted evolution",
+        "Training-free approach requires no task-specific fine-tuning for frame selection"
+      ],
+      "tags": ["video-understanding", "frame-selection", "predictive-coding", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22678",
+        "huggingface": "https://huggingface.co/papers/2605.22678",
+        "pdf": "https://arxiv.org/pdf/2605.22678"
+      }
+    },
+    {
+      "id": "diversed-model-discovery",
+      "title": "Diversed Model Discovery via Structured Table Discovery",
+      "authors": ["Zhengyuan Dong", "Renée J. Miller"],
+      "affiliations": ["Northeastern University"],
+      "summary": "Argues that model search is inherently comparative and proposes leveraging structured artifacts from model cards — performance tables, configuration data, dataset metadata — to produce diverse, differentiated model recommendations beyond what text-based semantic similarity can achieve.",
+      "key_findings": [
+        "Text-based model search produces homogeneous results due to semantic similarity clustering",
+        "Structured table artifacts in model cards capture differentiation dimensions text misses",
+        "Comparative model search requires balancing task alignment with measurable differentiation"
+      ],
+      "tags": ["model-discovery", "model-cards", "information-retrieval", "structured-data"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22766",
+        "huggingface": "https://huggingface.co/papers/2605.22766",
+        "pdf": "https://arxiv.org/pdf/2605.22766"
+      }
+    },
+    {
+      "id": "scrl-curriculum-rl-reasoning",
+      "title": "From Reasoning Chains to Verifiable Subproblems: Curriculum Reinforcement Learning Enables Credit Assignment for LLM Reasoning",
+      "authors": ["Xitai Jiang", "Zihan Tang", "Wenze Lin", "Yang Yue", "Shenzhi Wang"],
+      "affiliations": ["Shanghai Jiao Tong University", "Tsinghua University"],
+      "summary": "Introduces SCRL, a curriculum RL framework that derives verifiable subproblems from reference reasoning chains and uses progressive difficulty scheduling to solve the credit assignment problem in outcome-based RLVR, where correct final-answer rollouts are too rare for efficient learning on hard problems.",
+      "key_findings": [
+        "Outcome-based RLVR is inefficient on hard problems because correct final-answer rollouts are rare",
+        "Decomposing problems into verifiable subproblems enables partial credit assignment from failed attempts",
+        "Curriculum scheduling from easy to hard subproblems improves sample efficiency"
+      ],
+      "tags": ["reinforcement-learning", "reasoning", "curriculum-learning", "credit-assignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22074",
+        "huggingface": "https://huggingface.co/papers/2605.22074",
+        "pdf": "https://arxiv.org/pdf/2605.22074"
+      }
+    },
+    {
+      "id": "bernini-latent-semantic-planning",
+      "title": "Bernini: Latent Semantic Planning for Video Diffusion",
+      "authors": ["Bernini Team", "Chenchen Liu", "Junyi Chen", "Lei Li", "Lu Chi"],
+      "affiliations": ["ByteDance"],
+      "summary": "Unifies multimodal large language models and diffusion models through a division of labor: MLLMs perform semantic planning while diffusion models render pixels from high-level semantic guidance and low-level visual features, enabling controllable video generation with strong semantic grounding.",
+      "key_findings": [
+        "MLLMs and diffusion models can be unified through semantic planning plus pixel rendering",
+        "Latent semantic representations bridge the gap between language reasoning and visual generation",
+        "The division of labor leverages each architecture family's strengths without compromise"
+      ],
+      "tags": ["video-generation", "diffusion", "multimodal", "semantic-planning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22344",
+        "huggingface": "https://huggingface.co/papers/2605.22344",
+        "pdf": "https://arxiv.org/pdf/2605.22344"
+      }
+    },
+    {
+      "id": "terminalworld-benchmark",
+      "title": "TerminalWorld: Benchmarking Agents on Real-World Terminal Tasks",
+      "authors": ["Zhaoyang Chu", "Jiarui Hu", "Xingyu Jiang", "Pengyu Zou", "Han Li"],
+      "affiliations": ["Renmin University of China", "Ant Group"],
+      "summary": "Introduces a scalable data engine that reverse-engineers evaluation tasks from 80,870 real terminal recordings, producing 1,530 validated tasks spanning 18 categories and 1,280 unique commands, with a curated verified subset of 200 tasks for comprehensive agent evaluation.",
+      "key_findings": [
+        "Automated pipeline converts 80K real terminal recordings into 1,530 validated evaluation tasks",
+        "Tasks span 18 real-world categories from short operations to 50+ step workflows",
+        "Coverage of 1,280 unique commands provides breadth unavailable in manually crafted benchmarks"
+      ],
+      "tags": ["benchmarks", "agents", "terminal", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22535",
+        "huggingface": "https://huggingface.co/papers/2605.22535",
+        "pdf": "https://arxiv.org/pdf/2605.22535"
+      }
+    },
+    {
+      "id": "pi-bench-proactive-assistants",
+      "title": "pi-Bench: Evaluating Proactive Personal Assistant Agents in Long-Horizon Workflows",
+      "authors": ["Haoran Zhang", "Luxin Xu", "Zhilin Wang", "Runquan Gui", "Shunkai Zhang"],
+      "affiliations": ["Peking University", "Microsoft Research"],
+      "summary": "Evaluates whether personal assistant agents can identify and act on hidden intents — needs, constraints, and preferences that users leave unstated — in sustained long-horizon workflows, addressing a core challenge in proactive assistance that existing benchmarks overlook.",
+      "key_findings": [
+        "Existing benchmarks rarely evaluate proactive identification of unstated user needs",
+        "Long-horizon workflows amplify the importance of hidden intent detection",
+        "Proactive assistance requires different capabilities than reactive task completion"
+      ],
+      "tags": ["agents", "personal-assistants", "benchmarks", "proactive-AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14678",
+        "huggingface": "https://huggingface.co/papers/2605.14678",
+        "pdf": "https://arxiv.org/pdf/2605.14678"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "organization": "DeepSeek",
+      "description": "Latest flagship model from DeepSeek with 4M+ downloads, continuing the V4 architecture's dominance in the open-source LLM ecosystem for conversational and general text generation tasks.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "frontier"],
+      "metrics": {"downloads": 4041458, "likes": 4112},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "organization": "DeepSeek",
+      "description": "Efficient variant of DeepSeek V4 optimized for faster inference while maintaining strong conversational and text generation capabilities, achieving 2.4M+ downloads.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "efficient"],
+      "metrics": {"downloads": 2425002, "likes": 1176},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "Diffusion model with 1,468 likes gaining strong traction in the generative image community, compatible with ComfyUI workflows.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "image-generation", "comfyui"],
+      "metrics": {"downloads": 591834, "likes": 1468},
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "Text-to-video model with over 1.1M downloads, available in both diffusers and GGUF formats, establishing itself as a leading open-source video generation model.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": {"downloads": 1198471, "likes": 1233},
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "Multimodal vision-language model with 196K downloads and 876 likes, continuing the MiniCPM-V series' strong performance in image-text understanding at efficient model sizes.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": {"downloads": 196105, "likes": 876},
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "Any-to-any multimodal model supporting image and video generation from ByteDance, rapidly gaining community attention with 572 likes despite relatively low download count, suggesting strong interest from early adopters.",
+      "task_type": "multimodal",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": {"downloads": 739, "likes": 572},
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "microsoft-fara-7b",
+      "name": "Fara-7B",
+      "organization": "Microsoft",
+      "description": "7B parameter multimodal vision-language model from Microsoft built on Qwen2.5-VL architecture, achieving 592 likes and 15K downloads for image-text understanding tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["multimodal", "vision-language", "qwen"],
+      "metrics": {"downloads": 15175, "likes": 592},
+      "source_url": "https://huggingface.co/microsoft/Fara-7B"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "Text-to-speech model with ONNX format support, achieving 535 likes and 34K downloads for high-quality speech synthesis applications.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": {"downloads": 34965, "likes": 535},
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "hidream-o1-image",
+      "name": "HiDream-O1-Image",
+      "organization": "HiDream AI",
+      "description": "Vision-language model combining image understanding and image generation capabilities in a single architecture based on Qwen3-VL, with 417 likes and 21K downloads.",
+      "task_type": "image-text-to-image",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "vision-language"],
+      "metrics": {"downloads": 21558, "likes": 417},
+      "source_url": "https://huggingface.co/HiDream-ai/HiDream-O1-Image"
+    },
+    {
+      "id": "unsloth-qwen3-6-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "GGUF quantized version of Qwen3.6-27B with Multi-Token Prediction, enabling efficient local deployment with 478K downloads.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "efficient-inference"],
+      "metrics": {"downloads": 478488, "likes": 376},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "Pre-indexed code knowledge graph for AI coding agents (Claude Code, Codex, Cursor, OpenCode), reducing token usage and tool calls while keeping everything local. Leading today's GitHub trending with 4,294 daily stars.",
+      "language": "TypeScript",
+      "stars": 13742,
+      "stars_today": 4294,
+      "forks": 781,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["code-knowledge-graph", "ai-coding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "A single CLAUDE.md file derived from Andrej Karpathy's observations on LLM coding pitfalls, rapidly adopted as best-practice guidance for Claude Code agents. 143K total stars.",
+      "language": "",
+      "stars": 143343,
+      "stars_today": 2614,
+      "forks": 14696,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["ai-coding", "best-practices", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "academic-research-skills",
+      "name": "Imbad0202/academic-research-skills",
+      "description": "Academic research workflow skills for Claude Code covering the full pipeline from research to writing, review, revision, and finalization. 2,579 daily stars.",
+      "language": "Python",
+      "stars": 18243,
+      "stars_today": 2579,
+      "forks": 1573,
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "tags": ["academic-research", "ai-writing", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Nous Research's personal AI agent platform with 161K total stars and 2,056 daily stars, positioning itself as the leading open-source personal agent framework.",
+      "language": "Python",
+      "stars": 161605,
+      "stars_today": 2056,
+      "forks": 26319,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "personal-ai", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "Agentic skills framework and software development methodology with 201K total stars, providing structured approaches to AI-assisted development.",
+      "language": "Shell",
+      "stars": 201595,
+      "stars_today": 1576,
+      "forks": 17958,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agentic-skills", "development-methodology", "ai-assisted-dev"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Comprehensive learning resource for AI engineering covering the full stack from foundations to deployment, gaining 1,333 daily stars.",
+      "language": "Python",
+      "stars": 10787,
+      "stars_today": 1333,
+      "forks": 2126,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "full-stack"],
+      "relevance": "medium"
+    },
+    {
+      "id": "streambert",
+      "name": "truelockmc/streambert",
+      "description": "Cross-platform Electron desktop app for streaming and downloading media content with zero ads, gaining 1,094 daily stars.",
+      "language": "JavaScript",
+      "stars": 4046,
+      "stars_today": 1094,
+      "forks": 315,
+      "url": "https://github.com/truelockmc/streambert",
+      "tags": ["electron", "streaming", "desktop-app"],
+      "relevance": "low"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "Complete AI agency framework with specialized expert agents for different domains — from frontend development to community management — each with defined processes and deliverables. 103K total stars.",
+      "language": "Shell",
+      "stars": 103715,
+      "stars_today": 1018,
+      "forks": 17063,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": ["ai-agents", "specialized-agents", "agency"],
+      "relevance": "high"
+    },
+    {
+      "id": "the-book-of-secret-knowledge",
+      "name": "trimstray/the-book-of-secret-knowledge",
+      "description": "Curated collection of inspiring lists, manuals, cheatsheets, and developer tools with 222K total stars, a perennial trending resource.",
+      "language": "",
+      "stars": 222478,
+      "stars_today": 756,
+      "forks": 13327,
+      "url": "https://github.com/trimstray/the-book-of-secret-knowledge",
+      "tags": ["developer-resources", "cheatsheets", "reference"],
+      "relevance": "low"
+    },
+    {
+      "id": "openwa",
+      "name": "rmyndharis/OpenWA",
+      "description": "Free, open-source, self-hosted WhatsApp API gateway gaining 730 daily stars, enabling programmatic WhatsApp integration.",
+      "language": "TypeScript",
+      "stars": 5444,
+      "stars_today": 730,
+      "forks": 1085,
+      "url": "https://github.com/rmyndharis/OpenWA",
+      "tags": ["whatsapp", "api-gateway", "messaging"],
+      "relevance": "low"
+    },
+    {
+      "id": "claude-plugins-official",
+      "name": "anthropics/claude-plugins-official",
+      "description": "Anthropic's official directory of high-quality Claude Code plugins, gaining 682 daily stars as the plugin ecosystem matures.",
+      "language": "Python",
+      "stars": 22585,
+      "stars_today": 682,
+      "forks": 2650,
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "tags": ["claude-code", "plugins", "ecosystem"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Converts code into interactive knowledge graphs for exploration, search, and Q&A — compatible with Claude Code, Codex, Cursor, Copilot, and Gemini CLI. 666 daily stars.",
+      "language": "TypeScript",
+      "stars": 16719,
+      "stars_today": 666,
+      "forks": 1564,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "visualization"],
+      "relevance": "high"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "Makes all software agent-native through CLI interfaces, with 39K total stars. Part of HKUDS's agent-native software initiative.",
+      "language": "Python",
+      "stars": 39163,
+      "stars_today": 656,
+      "forks": 3717,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": ["cli", "agent-native", "software-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "multica",
+      "name": "multica-ai/multica",
+      "description": "Open-source managed agents platform that turns coding agents into real teammates with task assignment, progress tracking, and skill compounding. 534 daily stars.",
+      "language": "Go",
+      "stars": 30785,
+      "stars_today": 534,
+      "forks": 3737,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["managed-agents", "agent-platform", "task-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "vimax",
+      "name": "HKUDS/ViMax",
+      "description": "Agentic video generation system that combines Director, Screenwriter, Producer, and Video Generator roles in one framework. 537 daily stars.",
+      "language": "Python",
+      "stars": 6472,
+      "stars_today": 537,
+      "forks": 1020,
+      "url": "https://github.com/HKUDS/ViMax",
+      "tags": ["video-generation", "agentic", "creative-ai"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Training from Trajectories",
+      "description": "ACC demonstrates that agent trajectories provide natural long-context training data, while SCRL introduces curriculum RL for credit assignment — both advancing how we train models from agent interactions.",
+      "related_paper_ids": ["acc-compiling-agent-trajectories", "scrl-curriculum-rl-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Attention and Memory",
+      "description": "Gated DeltaNet-2 and WorldKV both address the fundamental challenge of managing compressed memory in sequence models — decoupling erase/write operations in linear attention and retrieval-compression for video world models.",
+      "related_paper_ids": ["gated-deltanet-2", "worldkv-efficient-world-memory"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Benchmarks and Real-World Evaluation",
+      "description": "TerminalWorld, Spreadsheet-RL, and pi-Bench all push evaluation toward real-world usage patterns rather than synthetic tasks, reflecting growing demand for ecologically valid agent assessment.",
+      "related_paper_ids": ["terminalworld-benchmark", "spreadsheet-rl", "pi-bench-proactive-assistants"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Coding Tools Ecosystem",
+      "description": "GitHub trending is dominated by AI coding tools — codegraph, andrej-karpathy-skills, academic-research-skills, superpowers, and claude-plugins-official collectively gaining 10K+ daily stars, signaling mainstream adoption of AI-assisted development.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video Generation and World Models",
+      "description": "Bernini's semantic planning for video diffusion, WorldKV's persistent world generation, and ViMax's agentic video generation framework show continued strong momentum in controllable video synthesis.",
+      "related_paper_ids": ["bernini-latent-semantic-planning", "worldkv-efficient-world-memory"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-22T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
