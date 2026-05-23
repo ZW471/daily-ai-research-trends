@@ -1,0 +1,627 @@
+{
+  "version": "1.0",
+  "date": "2026-05-23",
+  "generated_at": "2026-05-23T00:00:00Z",
+  "summary": {
+    "headline": "RLVR token-credit assignment (DelTA) advances fine-grained LLM training signals; full-attention sparsification shows LLMs are intrinsically sparse; agent governance and tooling ecosystems explode on GitHub",
+    "body": "The most engaged papers today center on reinforcement learning improvements for LLMs. **DelTA** (124 upvotes) introduces a discriminator-theoretic view of RLVR updates, revealing that policy-gradient steps implicitly act as linear discriminators over token-gradient vectors — a finding that could reshape how the community thinks about credit assignment in post-training pipelines. Meanwhile, **Full Attention Strikes Back** demonstrates that standard full-attention LLMs are already intrinsically sparse, enabling sparse conversion in under 100 training steps, which has immediate implications for inference efficiency without sacrificing expressivity.\n\nOn the evaluation and dataset front, **TransitLM** (162 upvotes) released the largest publicly known transit-planning corpus (13M+ records, 120K stations), setting a new scale benchmark for geographic reasoning without map APIs. **Perception or Prejudice** formalizes Grounded Personality Reasoning for MLLMs, surfacing a key reliability gap: current multimodal models often pattern-match rather than genuinely perceive behavioral signals. **pi-Bench** and **Spreadsheet-RL** extend the agentic evaluation frontier into long-horizon proactive workflows and real-world spreadsheet automation respectively.\n\nGitHub trends signal a rapidly maturing agent-infrastructure layer: Microsoft's **agent-governance-toolkit** (covering OWASP Agentic Top 10), **plastic-labs/honcho** (stateful agent memory), and Anthropic's **claude-plugins-official** directory all gained significant traction. The proliferation of Claude Code plugin and skill registries, combined with pre-indexed code knowledge graphs (**codegraph**, **Understand-Anything**), suggests the developer tooling stack around AI coding agents is consolidating fast.",
+    "key_themes": [
+      "rlvr-and-credit-assignment",
+      "attention-sparsification",
+      "agentic-evaluation-benchmarks",
+      "agent-infrastructure-and-governance",
+      "multimodal-robustness",
+      "kv-cache-and-inference-efficiency"
+    ]
+  },
+  "researcher_notes": "**The DelTA-sparsification connection is non-obvious but important.** DelTA shows that RLVR updates implicitly discriminate over token-gradient vectors, while Full Attention Strikes Back shows that trained LLMs are already sparse in attention patterns. Together, these suggest a future where sparse-attention models trained with token-discriminative RL rewards might be both cheaper to run *and* more precisely shaped by fine-grained feedback — a compounding efficiency gain worth tracking.\n\n**Unsupervised PRMs are a sleeper hit.** With only 17 upvotes, the unsupervised process reward model paper may be underappreciated relative to its potential impact. If PRMs can be trained without expert step-level annotations, the scaling bottleneck for verifier-guided search collapses significantly. This pairs well with DelTA's credit-assignment framing: both papers are attacking the labeling cost of process-level supervision from different angles.\n\n**The KV-cache stack is fragmenting into specialized solutions.** WorldKV (video diffusion), KVServe (disaggregated LLM serving), and the RLVR sparsification work all touch KV-cache efficiency but from entirely different angles — video generation consistency, network bandwidth under SLO constraints, and attention sparsity respectively. The absence of a unified framework is notable, and the first system to integrate these perspectives might define the next generation of inference engines.\n\n**Agent governance is crossing the chasm.** Microsoft's agent-governance-toolkit explicitly maps to OWASP Agentic Top 10, AWS's aidlc-workflows provides adaptive steering rules, and Tracer-Cloud's opensre targets AI SRE use cases. The simultaneous emergence of governance tooling from a hyperscaler (Microsoft), cloud provider (AWS), and startup (Tracer-Cloud) within the same trending window suggests enterprise AI agent deployment is moving from pilot to production at scale, creating urgent demand for policy enforcement and zero-trust identity primitives.\n\n**pi-Bench and Spreadsheet-RL reveal a maturation inflection in agentic benchmarks.** Early agent benchmarks (WebArena, SWE-bench) tested reactive task completion. The new generation — pi-Bench with hidden-intent proactive workflows, Spreadsheet-RL with multi-step real-world spreadsheet operations — tests whether agents can sustain intentional, long-horizon behavior. This shift mirrors what happened in NLP evaluation when GLUE gave way to BIG-Bench, and suggests the next 12-18 months will see capability thresholds redefined by proactive and sustained-action metrics.",
+  "papers": [
+    {
+      "id": "transit-lm",
+      "title": "TransitLM: A Large-Scale Dataset and Benchmark for Map-Free Transit Route Generation",
+      "authors": ["Hanyu Guo", "Jiedong Yang", "Chao Chen", "Longfei Xu", "Kaikui Liu"],
+      "affiliations": ["Peking University", "ByteDance"],
+      "summary": "Releases a corpus of over 13 million transit route planning records from four Chinese cities covering 120,845 stations and 13,666 lines. The dataset is designed as a continual pre-training corpus and benchmark for LLM-based transit planning that does not rely on map infrastructure, enabling geographic reasoning in resource-constrained settings.",
+      "key_findings": [
+        "First large-scale open dataset for map-free transit route planning with 13M+ records",
+        "Covers 4 Chinese cities, 120,845 stations, and 13,666 lines at unprecedented scale",
+        "Enables continual pre-training of LLMs for transit reasoning without external map APIs"
+      ],
+      "tags": ["dataset", "transit-planning", "geographic-reasoning", "llm", "benchmark"],
+      "relevance": "high",
+      "engagement": { "upvotes": 162, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22355",
+        "huggingface": "https://huggingface.co/papers/2605.22355",
+        "pdf": "https://arxiv.org/pdf/2605.22355"
+      }
+    },
+    {
+      "id": "perception-or-prejudice-mllm-personality",
+      "title": "Perception or Prejudice: Can MLLMs Go Beyond First Impressions of Personality?",
+      "authors": ["Caixin Kang", "Tianyu Yan", "Sitong Gong", "Mingfang Zhang", "Liangyang Ouyang"],
+      "affiliations": ["Tsinghua University", "Renmin University of China"],
+      "summary": "Formalizes the task of Grounded Personality Reasoning (GPR) to evaluate whether multimodal LLMs genuinely perceive personality through behavioral understanding or merely prejudge via superficial pattern matching. The work reveals a systematic reliability gap in current MLLMs.",
+      "key_findings": [
+        "Current MLLMs predominantly pattern-match superficial cues rather than reasoning from behavior",
+        "Introduces GPR as a formal evaluation framework distinguishing genuine perception from prejudice",
+        "Identifies a category of failure modes specific to first-impression bias in multimodal models"
+      ],
+      "tags": ["multimodal", "evaluation", "personality-reasoning", "mllm", "benchmark"],
+      "relevance": "high",
+      "engagement": { "upvotes": 152, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22109",
+        "huggingface": "https://huggingface.co/papers/2605.22109",
+        "pdf": "https://arxiv.org/pdf/2605.22109"
+      }
+    },
+    {
+      "id": "delta-token-credit-assignment",
+      "title": "DelTA: Discriminative Token Credit Assignment for Reinforcement Learning from Verifiable Rewards",
+      "authors": ["Kaiyi Zhang", "Wei Wu", "Yankai Lin"],
+      "affiliations": ["Renmin University of China", "Tsinghua University"],
+      "summary": "Introduces a discriminator view of RLVR updates, demonstrating that policy-gradient steps implicitly act as linear discriminators over token-gradient vectors, determining which token probabilities increase or decrease. This theoretical reframing enables more principled credit assignment at the token level.",
+      "key_findings": [
+        "Policy-gradient RLVR updates are equivalent to linear discriminators over token-gradient vectors",
+        "Provides theoretical grounding for fine-grained token-level credit assignment in RL fine-tuning",
+        "Discriminative framing opens new design space for reward shaping and token selection"
+      ],
+      "tags": ["rlvr", "reinforcement-learning", "credit-assignment", "llm-training", "theory"],
+      "relevance": "high",
+      "engagement": { "upvotes": 124, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21467",
+        "huggingface": "https://huggingface.co/papers/2605.21467",
+        "pdf": "https://arxiv.org/pdf/2605.21467"
+      }
+    },
+    {
+      "id": "pi-bench-proactive-agents",
+      "title": "π-Bench: Evaluating Proactive Personal Assistant Agents in Long-Horizon Workflows",
+      "authors": ["Haoran Zhang", "Luxin Xu", "Zhilin Wang", "Runquan Gui", "Shunkai Zhang"],
+      "affiliations": ["Peking University", "Alibaba Group"],
+      "summary": "Introduces a benchmark evaluating whether agents can identify and act on hidden user intents before they are explicitly stated, across sustained long-horizon workflows. Addresses the proactive assistance challenge that reactive benchmarks cannot capture.",
+      "key_findings": [
+        "First benchmark specifically targeting proactive intent identification in long-horizon workflows",
+        "Reveals that current agents fail to act on implicit user goals without explicit instruction",
+        "Long-horizon workflow structure exposes compounding failures invisible in short-task evaluations"
+      ],
+      "tags": ["agent-evaluation", "proactive-assistance", "long-horizon", "benchmark", "llm-agents"],
+      "relevance": "high",
+      "engagement": { "upvotes": 81, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14678",
+        "huggingface": "https://huggingface.co/papers/2605.14678",
+        "pdf": "https://arxiv.org/pdf/2605.14678"
+      }
+    },
+    {
+      "id": "full-attention-sparse",
+      "title": "Full Attention Strikes Back: Transferring Full Attention into Sparse within Hundred Training Steps",
+      "authors": ["Yanke Zhou", "Yiduo Li", "Hanlin Tang", "Maohua Li", "Kan Liu"],
+      "affiliations": ["Peking University", "Microsoft Research"],
+      "summary": "Demonstrates that full-attention LLMs are already intrinsically sparse in their attention patterns, and can be converted into highly sparse models with minimal adaptation — under 100 training steps. Identifies three key observations about inherent sparsity patterns.",
+      "key_findings": [
+        "Full-attention LLMs exhibit intrinsic sparsity that can be exploited without retraining from scratch",
+        "Sparse conversion requires fewer than 100 training steps, making it practical for deployed models",
+        "Three distinct sparsity pattern types identified across model families"
+      ],
+      "tags": ["attention-sparsification", "efficiency", "inference", "llm", "sparse-attention"],
+      "relevance": "high",
+      "engagement": { "upvotes": 75, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.16928",
+        "huggingface": "https://huggingface.co/papers/2605.16928",
+        "pdf": "https://arxiv.org/pdf/2605.16928"
+      }
+    },
+    {
+      "id": "acc-agent-trajectories-long-context",
+      "title": "ACC: Compiling Agent Trajectories for Long-Context Training",
+      "authors": ["Qisheng Su", "Zhen Fang", "Shiting Huang", "Yu Zeng", "Yiming Zhao"],
+      "affiliations": ["Shanghai AI Laboratory", "Fudan University"],
+      "summary": "Proposes using agent trajectories — which naturally contain evidence scattered across many turns — as long-context training data for LLMs. Addresses the challenge that agentic problem-solving requires integrating distant context, making trajectories ideal for training long-context integration.",
+      "key_findings": [
+        "Agent trajectories naturally encode long-context dependencies, making them ideal training data",
+        "Compilation approach aggregates multi-turn agentic outputs into coherent long-context examples",
+        "Training on compiled trajectories improves long-context reasoning on downstream benchmarks"
+      ],
+      "tags": ["long-context", "agent-training", "data-curation", "llm", "trajectories"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 52, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21850",
+        "huggingface": "https://huggingface.co/papers/2605.21850",
+        "pdf": "https://arxiv.org/pdf/2605.21850"
+      }
+    },
+    {
+      "id": "physx-omni-3d-generation",
+      "title": "PhysX-Omni: Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated Objects",
+      "authors": ["Ziang Cao", "Yinghao Liu", "Haitian Li", "Runmao Yao", "Fangzhou Hong"],
+      "affiliations": ["Nanyang Technological University", "NVIDIA"],
+      "summary": "Presents a unified framework for generating simulation-ready 3D assets across rigid, deformable, and articulated object types through a novel geometry pipeline. Addresses the fragmentation of prior work that handled each asset class separately.",
+      "key_findings": [
+        "Unified pipeline handles rigid, deformable, and articulated objects in a single framework",
+        "Generated assets are immediately simulation-ready without manual post-processing",
+        "Novel geometry pipeline enables physically accurate asset generation at scale"
+      ],
+      "tags": ["3d-generation", "simulation", "physics", "robotics", "asset-generation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 42, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21572",
+        "huggingface": "https://huggingface.co/papers/2605.21572",
+        "pdf": "https://arxiv.org/pdf/2605.21572"
+      }
+    },
+    {
+      "id": "latent-omni-audio-visual",
+      "title": "LatentOmni: Rethinking Omni-Modal Understanding via Unified Audio-Visual Latent Reasoning",
+      "authors": ["Yifan Dai", "Zhenhua Wu", "Bohan Zeng", "Daili Hua", "Jialing Liu"],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "Proposes a unified latent space for audio-visual reasoning instead of text-based chain-of-thought, addressing the core problem that explicit CoT compresses continuous audio-visual signals into discrete tokens, weakening temporal grounding and cross-modal alignment.",
+      "key_findings": [
+        "Text-based CoT for audio-visual tasks loses temporal grounding by discretizing continuous signals",
+        "Unified latent reasoning space preserves audio-visual continuity across modalities",
+        "Outperforms text-CoT baselines on temporal grounding and cross-modal reasoning tasks"
+      ],
+      "tags": ["multimodal", "audio-visual", "latent-reasoning", "temporal-grounding", "omni-modal"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 35, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22012",
+        "huggingface": "https://huggingface.co/papers/2605.22012",
+        "pdf": "https://arxiv.org/pdf/2605.22012"
+      }
+    },
+    {
+      "id": "spreadsheet-rl",
+      "title": "Spreadsheet-RL: Advancing LLM Agents on Realistic Spreadsheet Tasks via RL",
+      "authors": ["Banghao Chi", "Yining Xie", "Mingyuan Wu", "Jingcheng Yang", "Jize Jiang"],
+      "affiliations": ["National University of Singapore", "Microsoft"],
+      "summary": "Applies reinforcement learning to train LLM agents on realistic spreadsheet automation tasks, addressing the limitations of specialized prompting on complex multi-step operations. Extends agentic RL into the practical enterprise office automation domain.",
+      "key_findings": [
+        "Specialized prompting fails on complex multi-step spreadsheet operations",
+        "RL training significantly improves agent performance on realistic spreadsheet benchmarks",
+        "Office automation tasks require sustained multi-step planning that RL is well-suited for"
+      ],
+      "tags": ["reinforcement-learning", "spreadsheet", "office-automation", "llm-agents", "rl"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 29, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22642",
+        "huggingface": "https://huggingface.co/papers/2605.22642",
+        "pdf": "https://arxiv.org/pdf/2605.22642"
+      }
+    },
+    {
+      "id": "unsupervised-process-reward-models",
+      "title": "Unsupervised Process Reward Models",
+      "authors": ["Artyom Gadetsky", "Maxim Kodryan", "Siba Smarak Panigrahi", "Hang Guo", "Maria Brbic"],
+      "affiliations": ["EPFL", "ETH Zurich"],
+      "summary": "Introduces a method for training process reward models without human supervision, eliminating the need for step-by-step annotations or ground-truth verification. Directly attacks the expert annotation bottleneck that has limited PRM scaling.",
+      "key_findings": [
+        "PRMs can be trained without any step-level human annotations",
+        "Unsupervised approach matches or approaches supervised PRMs on reasoning benchmarks",
+        "Removes the primary scaling bottleneck for verifier-guided search in LLM reasoning"
+      ],
+      "tags": ["process-reward-models", "unsupervised-learning", "rlhf", "reasoning", "llm-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 17, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.10158",
+        "huggingface": "https://huggingface.co/papers/2605.10158",
+        "pdf": "https://arxiv.org/pdf/2605.10158"
+      }
+    },
+    {
+      "id": "gated-deltanet-2-linear-attention",
+      "title": "Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention",
+      "authors": ["Ali Hatamizadeh", "Yejin Choi", "Jan Kautz"],
+      "affiliations": ["NVIDIA"],
+      "summary": "Decouples the erase and write operations in linear attention's compressed memory representation, arguing that a single scalar gate causes interference between the two operations. Separate gating mechanisms enable independent control over memory retention and updates.",
+      "key_findings": [
+        "Single scalar gate in linear attention causes interference between erase and write operations",
+        "Separate gating for erase and write improves memory control in linear attention models",
+        "Gated DeltaNet-2 achieves better language modeling perplexity and downstream task performance"
+      ],
+      "tags": ["linear-attention", "efficient-transformers", "memory", "architecture", "ssm"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 16, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22791",
+        "huggingface": "https://huggingface.co/papers/2605.22791",
+        "pdf": "https://arxiv.org/pdf/2605.22791"
+      }
+    },
+    {
+      "id": "maestro-hierarchical-model-skill",
+      "title": "Maestro: Reinforcement Learning to Orchestrate Hierarchical Model-Skill Ensembles",
+      "authors": ["Jinyang Wu", "Guocheng Zhai", "Ruihan Jin", "Yuhao Shen", "Zhengxi Lu"],
+      "affiliations": ["Tsinghua University", "Peking University"],
+      "summary": "Applies RL to orchestrate multiple LLMs and modular skills, exploiting complementary strengths across domains instead of relying on a single monolithic model. Hierarchical ensemble enables dynamic routing based on task requirements.",
+      "key_findings": [
+        "RL-based orchestration outperforms static routing and monolithic models across diverse domains",
+        "Complementary specialization across models can be exploited by a learned orchestrator",
+        "Hierarchical skill ensembles reduce inference cost while improving accuracy on mixed workloads"
+      ],
+      "tags": ["model-ensemble", "reinforcement-learning", "llm-routing", "multi-agent", "orchestration"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 17, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22177",
+        "huggingface": "https://huggingface.co/papers/2605.22177",
+        "pdf": "https://arxiv.org/pdf/2605.22177"
+      }
+    },
+    {
+      "id": "forecasting-scientific-progress",
+      "title": "Forecasting Scientific Progress with AI",
+      "authors": ["Sean Wu", "Pan Lu", "Yupeng Chen", "Jonathan Bragg", "Yutaro Yamada"],
+      "affiliations": ["Allen Institute for AI", "UCLA"],
+      "summary": "Introduces CUSP, a benchmark for evaluating AI systems on scientific forecasting under controlled knowledge constraints, enabling multi-disciplinary event-level evaluation of how well models can predict future scientific developments.",
+      "key_findings": [
+        "CUSP provides controlled knowledge cutoffs enabling fair comparison of forecasting capabilities",
+        "Multi-disciplinary coverage reveals domain-specific forecasting strengths and weaknesses",
+        "Current frontier models show significant gaps in scientific event prediction accuracy"
+      ],
+      "tags": ["scientific-ai", "forecasting", "benchmark", "knowledge-cutoff", "multi-disciplinary"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 29, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22681",
+        "huggingface": "https://huggingface.co/papers/2605.22681",
+        "pdf": "https://arxiv.org/pdf/2605.22681"
+      }
+    },
+    {
+      "id": "sensor2sensor-autonomous-driving",
+      "title": "Sensor2Sensor: Cross-Embodiment Sensor Conversion for Autonomous Driving",
+      "authors": ["Jiahao Wang", "Bo Sun", "Yijing Bai", "Vincent Casser", "Songyou Peng"],
+      "affiliations": ["Waymo", "Google"],
+      "summary": "Converts in-the-wild dashcam video to match proprietary AV sensor configurations, enabling the use of massive diverse dashcam datasets for training AV perception systems that require structured fleet sensor data.",
+      "key_findings": [
+        "Dashcam-to-AV sensor conversion bridges the data gap between consumer and fleet sensor configurations",
+        "Cross-embodiment approach enables leveraging billions of dashcam frames for AV training",
+        "Sensor conversion quality is sufficient to improve downstream AV perception task performance"
+      ],
+      "tags": ["autonomous-driving", "sensor-fusion", "data-augmentation", "cross-embodiment", "perception"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 22, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22809",
+        "huggingface": "https://huggingface.co/papers/2605.22809",
+        "pdf": "https://arxiv.org/pdf/2605.22809"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "Latest flagship text generation model from DeepSeek with 4.2M+ downloads and 4,152 likes, representing the leading open-weight frontier model. Continues the V4 series with architectural improvements.",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": ["text-generation", "transformers", "safetensors", "deepseek"],
+      "metrics": { "downloads": 4287396, "likes": 4152 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "qwen-3-6-27b",
+      "name": "Qwen3.6-27B",
+      "organization": "Qwen / Alibaba",
+      "description": "Qwen3.6 27B dense multimodal model with 4M downloads and 1,390 likes, supporting image-text-to-text tasks. Part of the Qwen3 series advancing open multimodal frontier models.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["transformers", "safetensors", "multimodal", "qwen3"],
+      "metrics": { "downloads": 4049995, "likes": 1390 },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "Highly-liked ComfyUI diffusion model with 1,499 likes and 602K downloads, designed for high-quality image/video generation workflows in the ComfyUI ecosystem.",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["diffusion-single-file", "comfyui", "image-generation"],
+      "metrics": { "downloads": 602483, "likes": 1499 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "Text-to-video diffusion model available in GGUF and diffusers formats with 1.25M downloads, indicating strong community adoption for local video generation workflows.",
+      "task_type": "text-to-video",
+      "model_size": "Unknown",
+      "tags": ["diffusers", "gguf", "text-to-video"],
+      "metrics": { "downloads": 1249582, "likes": 1268 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB / Tsinghua",
+      "description": "Efficient multimodal model with 221K downloads and 904 likes, part of the MiniCPM-V series known for strong performance relative to its compact size in image-text-to-text tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "~4.6B",
+      "tags": ["transformers", "safetensors", "multimodal", "efficient"],
+      "metrics": { "downloads": 221612, "likes": 904 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "ByteDance Research multimodal model supporting both image and video generation with 649 likes, representing ByteDance's entry into unified visual generation.",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "safetensors"],
+      "metrics": { "downloads": 1001, "likes": 649 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "Advanced text-to-speech and speech synthesis model in ONNX format with 37K downloads and 582 likes, offering high-quality voice synthesis capabilities.",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["supertonic", "onnx", "text-to-speech", "speech-synthesis", "tts"],
+      "metrics": { "downloads": 37545, "likes": 582 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen3-6-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth-optimized GGUF quantization of Qwen3.6 27B MTP variant with 532K downloads and 413 likes, enabling efficient local deployment of the Qwen3.6 series.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["transformers", "gguf", "unsloth", "qwen", "quantization"],
+      "metrics": { "downloads": 532255, "likes": 413 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "Tencent's compact 1.8B translation-capable text generation model based on HunyuanV1 dense architecture, designed for efficient multilingual translation tasks.",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["transformers", "safetensors", "text-generation", "translation"],
+      "metrics": { "downloads": 564, "likes": 280 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "resemble-ai-dramabox",
+      "name": "Dramabox",
+      "organization": "ResembleAI",
+      "description": "High-quality TTS and voice cloning model with 1,354 downloads and 230 likes, specialized for dramatic and expressive speech synthesis with voice cloning capabilities.",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["tts", "voice-cloning", "speech-synthesis", "drama"],
+      "metrics": { "downloads": 1354, "likes": 230 },
+      "source_url": "https://huggingface.co/ResembleAI/Dramabox"
+    },
+    {
+      "id": "tencent-pixal3d",
+      "name": "Pixal3D",
+      "organization": "TencentARC",
+      "description": "Image-to-3D model from TencentARC with 192 likes enabling single-image 3D reconstruction, contributing to the growing ecosystem of 3D generation tools.",
+      "task_type": "image-to-3d",
+      "model_size": "Unknown",
+      "tags": ["image-to-3d", "3d-generation", "reconstruction"],
+      "metrics": { "downloads": 0, "likes": 192 },
+      "source_url": "https://huggingface.co/TencentARC/Pixal3D"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "anthropics-claude-plugins-official",
+      "name": "anthropics/claude-plugins-official",
+      "description": "Official Anthropic-managed directory of high-quality Claude Code plugins, serving as the authoritative registry for the growing Claude Code plugin ecosystem. Explosive growth with 2,549 stars today signals rapid ecosystem adoption.",
+      "language": "Python",
+      "stars": 25031,
+      "stars_today": 2549,
+      "forks": 2768,
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "tags": ["claude-code", "plugins", "anthropic", "developer-tools", "ai-coding"],
+      "relevance": "high"
+    },
+    {
+      "id": "colbymchenry-codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "Pre-indexed code knowledge graph for Claude Code, Codex, Cursor, and OpenCode that reduces token usage and tool calls while running 100% locally. Highest stars today in the trending list (3,684) indicates strong resonance with AI coding workflows.",
+      "language": "TypeScript",
+      "stars": 16662,
+      "stars_today": 3684,
+      "forks": 919,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "claude-code", "coding-agents", "developer-tools", "efficiency"],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "General-purpose agent framework from NousResearch with 163K stars and 1,743 new stars today, positioning as a composable and growing agent platform built on the Hermes model family.",
+      "language": "Python",
+      "stars": 163211,
+      "stars_today": 1743,
+      "forks": 26713,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["llm-agents", "hermes", "open-source", "agent-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "lum1104-understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Converts code repositories into interactive knowledge graphs compatible with Claude Code, Codex, Cursor, Copilot, and Gemini CLI. Gained 1,393 stars today, reflecting demand for code-comprehension tooling across AI coding agent stacks.",
+      "language": "TypeScript",
+      "stars": 18761,
+      "stars_today": 1393,
+      "forks": 1699,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools", "ai-coding"],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Comprehensive AI engineering curriculum covering building and shipping AI applications from scratch, with 988 stars today showing strong community interest in practical AI engineering education.",
+      "language": "Python",
+      "stars": 11989,
+      "stars_today": 988,
+      "forks": 2277,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "llm", "machine-learning", "curriculum"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruvnet-ruview",
+      "name": "ruvnet/RuView",
+      "description": "Converts WiFi signals into real-time spatial intelligence, vital sign monitoring, and presence detection without requiring video cameras. Gained 978 stars today, representing a novel privacy-preserving sensing approach.",
+      "language": "Rust",
+      "stars": 64067,
+      "stars_today": 978,
+      "forks": 8467,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["spatial-intelligence", "wifi-sensing", "privacy", "rust", "computer-vision"],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "Microsoft's AI agent governance toolkit covering policy enforcement, zero-trust identity, execution sandboxing, and reliability engineering, explicitly addressing all 10 OWASP Agentic Top 10 risks.",
+      "language": "Python",
+      "stars": 1834,
+      "stars_today": 86,
+      "forks": 343,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "owasp", "policy-enforcement", "enterprise-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "plastic-labs-honcho",
+      "name": "plastic-labs/honcho",
+      "description": "Memory library for building stateful agents, providing persistent memory infrastructure for long-running agent workflows. Gained 133 stars today as stateful agent memory becomes a critical infrastructure component.",
+      "language": "Python",
+      "stars": 4024,
+      "stars_today": 133,
+      "forks": 467,
+      "url": "https://github.com/plastic-labs/honcho",
+      "tags": ["agent-memory", "stateful-agents", "llm-agents", "memory-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-vimax",
+      "name": "HKUDS/ViMax",
+      "description": "Agentic video generation system combining Director, Screenwriter, Producer, and Video Generator roles into a single all-in-one system, demonstrating multi-agent collaboration for complex creative tasks.",
+      "language": "Python",
+      "stars": 6733,
+      "stars_today": 266,
+      "forks": 1065,
+      "url": "https://github.com/HKUDS/ViMax",
+      "tags": ["video-generation", "multi-agent", "creative-ai", "agentic"],
+      "relevance": "medium"
+    },
+    {
+      "id": "chromdevtools-chrome-devtools-mcp",
+      "name": "ChromeDevTools/chrome-devtools-mcp",
+      "description": "Chrome DevTools as an MCP server for AI coding agents, enabling programmatic browser inspection and debugging within agent workflows. 501 stars today reflects growing adoption of browser tooling in agentic developer stacks.",
+      "language": "TypeScript",
+      "stars": 40991,
+      "stars_today": 501,
+      "forks": 2604,
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "tags": ["mcp", "chrome-devtools", "browser-automation", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "facebookresearch-sam3",
+      "name": "facebookresearch/sam3",
+      "description": "Meta's Segment Anything Model 3 for inference and fine-tuning, extending the highly influential SAM series with improved capabilities for segmentation tasks.",
+      "language": "Python",
+      "stars": 10057,
+      "stars_today": 63,
+      "forks": 1501,
+      "url": "https://github.com/facebookresearch/sam3",
+      "tags": ["segmentation", "computer-vision", "meta", "foundation-model", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "aiming-lab-autoresearchclaw",
+      "name": "aiming-lab/AutoResearchClaw",
+      "description": "Fully autonomous and self-evolving research system that operates from idea generation to paper writing, representing a significant step toward automated scientific research pipelines.",
+      "language": "Python",
+      "stars": 12508,
+      "stars_today": 73,
+      "forks": 1466,
+      "url": "https://github.com/aiming-lab/AutoResearchClaw",
+      "tags": ["autonomous-research", "scientific-ai", "paper-generation", "self-evolving"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "RLVR Credit Assignment and Process Supervision",
+      "description": "Multiple papers tackle the granularity and efficiency of reward signals in LLM training — from token-level discriminative assignment (DelTA) to eliminating annotation bottlenecks in process reward models (Unsupervised PRMs). Together they signal a push toward more principled and scalable RL feedback.",
+      "related_paper_ids": ["delta-token-credit-assignment", "unsupervised-process-reward-models", "spreadsheet-rl", "maestro-hierarchical-model-skill"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Attention Sparsification and Inference Efficiency",
+      "description": "Full Attention Strikes Back demonstrates that LLMs are intrinsically sparse, while Gated DeltaNet-2 improves linear attention's memory operations. Both reduce inference cost without sacrificing model quality, pointing toward a convergence on efficient attention mechanisms.",
+      "related_paper_ids": ["full-attention-sparse", "gated-deltanet-2-linear-attention"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Evaluation and Long-Horizon Benchmarks",
+      "description": "A new generation of benchmarks — pi-Bench for proactive workflows, Spreadsheet-RL for realistic office tasks, and CUSP for scientific forecasting — moves beyond reactive task completion to evaluate sustained, intentional, and proactive agent behavior.",
+      "related_paper_ids": ["pi-bench-proactive-agents", "spreadsheet-rl", "forecasting-scientific-progress"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure and Governance",
+      "description": "The GitHub trending data shows rapid maturation of agent infrastructure: governance toolkits, stateful memory libraries, and MCP-based browser tooling all trended simultaneously, indicating enterprise-ready agent deployment is imminent.",
+      "related_paper_ids": ["acc-agent-trajectories-long-context"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Robustness and Grounded Reasoning",
+      "description": "Perception or Prejudice, LatentOmni, and SpaceDG all probe whether multimodal models genuinely reason or merely pattern-match. The theme spans personality grounding, audio-visual temporal reasoning, and spatial understanding under degraded inputs.",
+      "related_paper_ids": ["perception-or-prejudice-mllm-personality", "latent-omni-audio-visual", "sensor2sensor-autonomous-driving"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "KV-Cache Innovation Across Domains",
+      "description": "KV-cache optimization is fragmenting into domain-specific solutions: WorldKV for video diffusion consistency, KVServe for network-efficient disaggregated LLM serving, and attention sparsification for standard LLM inference. Unification remains an open challenge.",
+      "related_paper_ids": ["full-attention-sparse", "gated-deltanet-2-linear-attention"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-23T00:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-05-23T00:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-23T00:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

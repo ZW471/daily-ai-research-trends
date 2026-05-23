@@ -1,0 +1,627 @@
+{
+  "version": "1.0",
+  "date": "2026-05-23",
+  "generated_at": "2026-05-23T00:00:00Z",
+  "summary": {
+    "headline": "DelTA 的 RLVR 令牌信用分配推进精细化 LLM 训练信号；全注意力稀疏化研究揭示大模型内在稀疏性；智能体治理与工具生态在 GitHub 上爆发式增长",
+    "body": "今日热度最高的论文集中于大语言模型的强化学习改进方向。**DelTA**（124 票）引入了 RLVR 更新的判别器理论视角，揭示策略梯度步骤隐式地作为令牌梯度向量上的线性判别器运作——这一发现可能重塑学界对后训练流程中信用分配的理解。与此同时，**Full Attention Strikes Back** 证明标准全注意力 LLM 已天然具备内在稀疏性，可在不足 100 个训练步骤内完成稀疏化转换，对推理效率的提升具有直接意义，且不损失表达能力。\n\n在评测与数据集方面，**TransitLM**（162 票）发布了目前已知规模最大的公开交通规划语料库（超过 1300 万条记录，12 万余个站点），为无需地图 API 的地理推理设立了新的规模基准。**Perception or Prejudice** 为多模态大模型（MLLM）正式定义了「有依据的性格推理」（GPR）任务，揭示了一个关键可靠性缺口：当前多模态模型往往依赖模式匹配而非真正感知行为信号。**pi-Bench** 与 **Spreadsheet-RL** 分别将智能体评测的前沿拓展至长时域主动工作流和现实世界电子表格自动化。\n\nGitHub 趋势显示智能体基础设施层正在快速成熟：Microsoft 的 **agent-governance-toolkit**（覆盖 OWASP Agentic Top 10 风险）、**plastic-labs/honcho**（有状态智能体记忆）以及 Anthropic 的 **claude-plugins-official** 官方目录均获得大量关注。Claude Code 插件与技能注册表的大量涌现，结合预索引代码知识图谱（**codegraph**、**Understand-Anything**），表明围绕 AI 编程智能体的开发者工具链正在快速整合。",
+    "key_themes": [
+      "rlvr-and-credit-assignment",
+      "attention-sparsification",
+      "agentic-evaluation-benchmarks",
+      "agent-infrastructure-and-governance",
+      "multimodal-robustness",
+      "kv-cache-and-inference-efficiency"
+    ]
+  },
+  "researcher_notes": "**DelTA 与稀疏化的联系并不显而易见，但至关重要。** DelTA 表明 RLVR 更新隐式地在令牌梯度向量上进行判别，而 Full Attention Strikes Back 则表明经过训练的 LLM 在注意力模式上已天然稀疏。两者合并来看，预示着未来采用令牌判别式 RL 奖励训练的稀疏注意力模型，既可降低运行成本，又能获得更精细反馈的精确塑形——这种复合效率收益值得持续关注。\n\n**无监督过程奖励模型是潜力股。** 仅凭 17 票，无监督过程奖励模型（PRM）论文相对其潜在影响力可能被低估。若 PRM 无需专家级步骤标注即可训练，验证器引导搜索的规模化瓶颈将大幅消解。这与 DelTA 的信用分配框架相辅相成：两篇论文都在从不同角度攻克过程级监督的标注成本问题。\n\n**KV 缓存技术栈正在碎片化为专项方案。** WorldKV（视频扩散）、KVServe（分离式 LLM 服务）以及 RLVR 稀疏化工作均涉及 KV 缓存效率，但出发点截然不同——分别针对视频生成一致性、SLO 约束下的网络带宽，以及注意力稀疏性。统一框架的缺失值得注意，率先整合这些视角的系统或将定义下一代推理引擎。\n\n**智能体治理正在跨越鸿沟。** Microsoft 的 agent-governance-toolkit 明确映射至 OWASP Agentic Top 10，AWS 的 aidlc-workflows 提供自适应调度规则，Tracer-Cloud 的 opensre 面向 AI SRE 场景。来自超大规模云服务商（Microsoft）、云提供商（AWS）和初创公司（Tracer-Cloud）的治理工具在同一趋势窗口内同时涌现，表明企业级 AI 智能体部署正从试点走向规模化生产，对策略执行与零信任身份原语产生迫切需求。\n\n**pi-Bench 与 Spreadsheet-RL 揭示智能体基准测试的成熟拐点。** 早期智能体基准（WebArena、SWE-bench）测试的是被动任务完成能力。新一代基准——pi-Bench 采用隐藏意图的主动工作流，Spreadsheet-RL 采用多步骤真实电子表格操作——测试的是智能体能否持续保持有意图的长时域行为。这一转变与 NLP 评测从 GLUE 演进至 BIG-Bench 时的历程相似，预示着未来 12-18 个月内能力阈值将由主动行为与持续动作指标重新定义。",
+  "papers": [
+    {
+      "id": "transit-lm",
+      "title": "TransitLM: A Large-Scale Dataset and Benchmark for Map-Free Transit Route Generation",
+      "authors": ["Hanyu Guo", "Jiedong Yang", "Chao Chen", "Longfei Xu", "Kaikui Liu"],
+      "affiliations": ["Peking University", "ByteDance"],
+      "summary": "发布了一个涵盖中国四个城市、超过 1300 万条交通路线规划记录的语料库，覆盖 120,845 个站点和 13,666 条线路。该数据集旨在作为持续预训练语料库和基准，支持无需地图基础设施的 LLM 交通规划，从而在资源受限场景下实现地理推理。",
+      "key_findings": [
+        "首个面向无地图交通路线规划的大规模开放数据集，包含 1300 万余条记录",
+        "覆盖 4 个中国城市、120,845 个站点及 13,666 条线路，规模前所未有",
+        "支持对 LLM 进行持续预训练以实现无需外部地图 API 的交通推理"
+      ],
+      "tags": ["dataset", "transit-planning", "geographic-reasoning", "llm", "benchmark"],
+      "relevance": "high",
+      "engagement": { "upvotes": 162, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22355",
+        "huggingface": "https://huggingface.co/papers/2605.22355",
+        "pdf": "https://arxiv.org/pdf/2605.22355"
+      }
+    },
+    {
+      "id": "perception-or-prejudice-mllm-personality",
+      "title": "Perception or Prejudice: Can MLLMs Go Beyond First Impressions of Personality?",
+      "authors": ["Caixin Kang", "Tianyu Yan", "Sitong Gong", "Mingfang Zhang", "Liangyang Ouyang"],
+      "affiliations": ["Tsinghua University", "Renmin University of China"],
+      "summary": "正式定义了「有依据的性格推理」（GPR）任务，用于评估多模态大语言模型是否真正通过行为理解来感知人格，还是仅通过表层模式匹配进行偏见性预判。研究揭示了当前 MLLM 中系统性的可靠性缺口。",
+      "key_findings": [
+        "当前 MLLM 主要通过匹配表层线索进行模式识别，而非基于行为进行推理",
+        "引入 GPR 作为正式评测框架，用于区分真实感知与偏见预判",
+        "识别出多模态模型中一类特有的失效模式——第一印象偏见"
+      ],
+      "tags": ["multimodal", "evaluation", "personality-reasoning", "mllm", "benchmark"],
+      "relevance": "high",
+      "engagement": { "upvotes": 152, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22109",
+        "huggingface": "https://huggingface.co/papers/2605.22109",
+        "pdf": "https://arxiv.org/pdf/2605.22109"
+      }
+    },
+    {
+      "id": "delta-token-credit-assignment",
+      "title": "DelTA: Discriminative Token Credit Assignment for Reinforcement Learning from Verifiable Rewards",
+      "authors": ["Kaiyi Zhang", "Wei Wu", "Yankai Lin"],
+      "affiliations": ["Renmin University of China", "Tsinghua University"],
+      "summary": "引入了 RLVR 更新的判别器视角，证明策略梯度步骤隐式地作为令牌梯度向量上的线性判别器运作，决定哪些令牌的概率上升或下降。这一理论重构为 RL 微调中令牌级别的精细信用分配提供了更坚实的理论基础。",
+      "key_findings": [
+        "策略梯度 RLVR 更新等价于令牌梯度向量上的线性判别器",
+        "为 RL 微调中细粒度令牌级信用分配提供了理论支撑",
+        "判别器框架为奖励塑形和令牌选择开辟了新的设计空间"
+      ],
+      "tags": ["rlvr", "reinforcement-learning", "credit-assignment", "llm-training", "theory"],
+      "relevance": "high",
+      "engagement": { "upvotes": 124, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21467",
+        "huggingface": "https://huggingface.co/papers/2605.21467",
+        "pdf": "https://arxiv.org/pdf/2605.21467"
+      }
+    },
+    {
+      "id": "pi-bench-proactive-agents",
+      "title": "π-Bench: Evaluating Proactive Personal Assistant Agents in Long-Horizon Workflows",
+      "authors": ["Haoran Zhang", "Luxin Xu", "Zhilin Wang", "Runquan Gui", "Shunkai Zhang"],
+      "affiliations": ["Peking University", "Alibaba Group"],
+      "summary": "提出了一个基准，用于评估智能体能否在持续的长时域工作流中识别并响应用户尚未明确表达的隐性意图。解决了被动式基准无法捕捉的主动辅助挑战。",
+      "key_findings": [
+        "首个专门针对长时域工作流中主动意图识别的基准",
+        "揭示当前智能体在缺乏明确指令的情况下无法响应用户隐性目标",
+        "长时域工作流结构暴露出在短任务评测中不可见的复合性失效"
+      ],
+      "tags": ["agent-evaluation", "proactive-assistance", "long-horizon", "benchmark", "llm-agents"],
+      "relevance": "high",
+      "engagement": { "upvotes": 81, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.14678",
+        "huggingface": "https://huggingface.co/papers/2605.14678",
+        "pdf": "https://arxiv.org/pdf/2605.14678"
+      }
+    },
+    {
+      "id": "full-attention-sparse",
+      "title": "Full Attention Strikes Back: Transferring Full Attention into Sparse within Hundred Training Steps",
+      "authors": ["Yanke Zhou", "Yiduo Li", "Hanlin Tang", "Maohua Li", "Kan Liu"],
+      "affiliations": ["Peking University", "Microsoft Research"],
+      "summary": "证明全注意力 LLM 在其注意力模式中已天然具备内在稀疏性，只需极少的适配——不足 100 个训练步骤——即可转换为高度稀疏的模型。研究识别出关于内在稀疏模式的三个关键观察。",
+      "key_findings": [
+        "全注意力 LLM 表现出内在稀疏性，无需从头重新训练即可加以利用",
+        "稀疏化转换仅需不足 100 个训练步骤，对已部署模型具有实际可行性",
+        "在不同模型系列中识别出三种不同类型的稀疏模式"
+      ],
+      "tags": ["attention-sparsification", "efficiency", "inference", "llm", "sparse-attention"],
+      "relevance": "high",
+      "engagement": { "upvotes": 75, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.16928",
+        "huggingface": "https://huggingface.co/papers/2605.16928",
+        "pdf": "https://arxiv.org/pdf/2605.16928"
+      }
+    },
+    {
+      "id": "acc-agent-trajectories-long-context",
+      "title": "ACC: Compiling Agent Trajectories for Long-Context Training",
+      "authors": ["Qisheng Su", "Zhen Fang", "Shiting Huang", "Yu Zeng", "Yiming Zhao"],
+      "affiliations": ["Shanghai AI Laboratory", "Fudan University"],
+      "summary": "提出将智能体轨迹——其中自然包含分散在多轮对话中的证据——用作 LLM 的长上下文训练数据。解决了智能体问题求解需要整合远距离上下文这一挑战，使轨迹成为训练长上下文整合能力的理想数据来源。",
+      "key_findings": [
+        "智能体轨迹天然编码长上下文依赖关系，是理想的训练数据",
+        "编译方法将多轮智能体输出聚合为连贯的长上下文示例",
+        "基于编译轨迹的训练可改善下游基准上的长上下文推理能力"
+      ],
+      "tags": ["long-context", "agent-training", "data-curation", "llm", "trajectories"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 52, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21850",
+        "huggingface": "https://huggingface.co/papers/2605.21850",
+        "pdf": "https://arxiv.org/pdf/2605.21850"
+      }
+    },
+    {
+      "id": "physx-omni-3d-generation",
+      "title": "PhysX-Omni: Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated Objects",
+      "authors": ["Ziang Cao", "Yinghao Liu", "Haitian Li", "Runmao Yao", "Fangzhou Hong"],
+      "affiliations": ["Nanyang Technological University", "NVIDIA"],
+      "summary": "提出了一个统一框架，通过新颖的几何处理流程，为刚体、可形变体和铰接式物体等多种类型生成即用于仿真的 3D 资产。解决了以往工作分别处理各类资产的碎片化问题。",
+      "key_findings": [
+        "统一流程在单一框架内处理刚体、可形变体和铰接式物体",
+        "生成的资产无需手动后处理即可直接用于仿真",
+        "新颖的几何处理流程支持大规模生成物理精确的资产"
+      ],
+      "tags": ["3d-generation", "simulation", "physics", "robotics", "asset-generation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 42, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.21572",
+        "huggingface": "https://huggingface.co/papers/2605.21572",
+        "pdf": "https://arxiv.org/pdf/2605.21572"
+      }
+    },
+    {
+      "id": "latent-omni-audio-visual",
+      "title": "LatentOmni: Rethinking Omni-Modal Understanding via Unified Audio-Visual Latent Reasoning",
+      "authors": ["Yifan Dai", "Zhenhua Wu", "Bohan Zeng", "Daili Hua", "Jialing Liu"],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "提出以统一的潜空间进行音视频推理，取代基于文本的思维链（CoT），从根本上解决显式 CoT 将连续音视频信号压缩为离散令牌、导致时序定位和跨模态对齐减弱的问题。",
+      "key_findings": [
+        "用于音视频任务的文本 CoT 因离散化连续信号而丢失时序定位能力",
+        "统一潜推理空间在模态间保持音视频的连续性",
+        "在时序定位和跨模态推理任务上优于文本 CoT 基线"
+      ],
+      "tags": ["multimodal", "audio-visual", "latent-reasoning", "temporal-grounding", "omni-modal"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 35, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22012",
+        "huggingface": "https://huggingface.co/papers/2605.22012",
+        "pdf": "https://arxiv.org/pdf/2605.22012"
+      }
+    },
+    {
+      "id": "spreadsheet-rl",
+      "title": "Spreadsheet-RL: Advancing LLM Agents on Realistic Spreadsheet Tasks via RL",
+      "authors": ["Banghao Chi", "Yining Xie", "Mingyuan Wu", "Jingcheng Yang", "Jize Jiang"],
+      "affiliations": ["National University of Singapore", "Microsoft"],
+      "summary": "应用强化学习训练 LLM 智能体完成真实的电子表格自动化任务，解决专项提示工程在复杂多步骤操作上的局限性。将智能体强化学习拓展至企业办公自动化这一实际应用领域。",
+      "key_findings": [
+        "专项提示工程在复杂多步骤电子表格操作上表现不足",
+        "强化学习训练显著提升智能体在真实电子表格基准上的表现",
+        "办公自动化任务需要持续的多步骤规划，强化学习尤为适合"
+      ],
+      "tags": ["reinforcement-learning", "spreadsheet", "office-automation", "llm-agents", "rl"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 29, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22642",
+        "huggingface": "https://huggingface.co/papers/2605.22642",
+        "pdf": "https://arxiv.org/pdf/2605.22642"
+      }
+    },
+    {
+      "id": "unsupervised-process-reward-models",
+      "title": "Unsupervised Process Reward Models",
+      "authors": ["Artyom Gadetsky", "Maxim Kodryan", "Siba Smarak Panigrahi", "Hang Guo", "Maria Brbic"],
+      "affiliations": ["EPFL", "ETH Zurich"],
+      "summary": "提出了一种无需人工监督即可训练过程奖励模型（PRM）的方法，消除了对逐步骤标注或真值验证的依赖，直接攻克限制 PRM 规模化的专家标注瓶颈。",
+      "key_findings": [
+        "PRM 无需任何步骤级人工标注即可训练",
+        "无监督方法在推理基准上达到或接近有监督 PRM 的水平",
+        "消除了 LLM 推理中验证器引导搜索的主要规模化瓶颈"
+      ],
+      "tags": ["process-reward-models", "unsupervised-learning", "rlhf", "reasoning", "llm-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 17, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.10158",
+        "huggingface": "https://huggingface.co/papers/2605.10158",
+        "pdf": "https://arxiv.org/pdf/2605.10158"
+      }
+    },
+    {
+      "id": "gated-deltanet-2-linear-attention",
+      "title": "Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention",
+      "authors": ["Ali Hatamizadeh", "Yejin Choi", "Jan Kautz"],
+      "affiliations": ["NVIDIA"],
+      "summary": "将线性注意力压缩记忆表示中的「擦除」与「写入」操作解耦，指出单一标量门控会导致两个操作之间产生干扰。独立的门控机制可对记忆保留和更新实现独立控制。",
+      "key_findings": [
+        "线性注意力中的单一标量门控会在擦除和写入操作之间造成干扰",
+        "为擦除与写入分别设置门控可改善线性注意力模型的记忆控制",
+        "Gated DeltaNet-2 在语言建模困惑度和下游任务性能上均有提升"
+      ],
+      "tags": ["linear-attention", "efficient-transformers", "memory", "architecture", "ssm"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 16, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22791",
+        "huggingface": "https://huggingface.co/papers/2605.22791",
+        "pdf": "https://arxiv.org/pdf/2605.22791"
+      }
+    },
+    {
+      "id": "maestro-hierarchical-model-skill",
+      "title": "Maestro: Reinforcement Learning to Orchestrate Hierarchical Model-Skill Ensembles",
+      "authors": ["Jinyang Wu", "Guocheng Zhai", "Ruihan Jin", "Yuhao Shen", "Zhengxi Lu"],
+      "affiliations": ["Tsinghua University", "Peking University"],
+      "summary": "将强化学习应用于协同编排多个 LLM 和模块化技能，充分利用不同领域间的互补优势，而非依赖单一庞大模型。层次化集成支持根据任务需求进行动态路由。",
+      "key_findings": [
+        "基于 RL 的编排在多样化领域上优于静态路由和单一模型",
+        "学习得到的编排器可充分利用模型间的互补专项能力",
+        "层次化技能集成在混合工作负载上既降低推理成本又提升精度"
+      ],
+      "tags": ["model-ensemble", "reinforcement-learning", "llm-routing", "multi-agent", "orchestration"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 17, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22177",
+        "huggingface": "https://huggingface.co/papers/2605.22177",
+        "pdf": "https://arxiv.org/pdf/2605.22177"
+      }
+    },
+    {
+      "id": "forecasting-scientific-progress",
+      "title": "Forecasting Scientific Progress with AI",
+      "authors": ["Sean Wu", "Pan Lu", "Yupeng Chen", "Jonathan Bragg", "Yutaro Yamada"],
+      "affiliations": ["Allen Institute for AI", "UCLA"],
+      "summary": "提出 CUSP 基准，用于在受控知识约束下评估 AI 系统的科学预测能力，支持多学科事件级评测，衡量模型预测未来科学进展的能力。",
+      "key_findings": [
+        "CUSP 提供受控知识截止点，支持对预测能力进行公平比较",
+        "多学科覆盖揭示了各领域预测的优势与薄弱环节",
+        "当前前沿模型在科学事件预测精度上存在显著差距"
+      ],
+      "tags": ["scientific-ai", "forecasting", "benchmark", "knowledge-cutoff", "multi-disciplinary"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 29, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22681",
+        "huggingface": "https://huggingface.co/papers/2605.22681",
+        "pdf": "https://arxiv.org/pdf/2605.22681"
+      }
+    },
+    {
+      "id": "sensor2sensor-autonomous-driving",
+      "title": "Sensor2Sensor: Cross-Embodiment Sensor Conversion for Autonomous Driving",
+      "authors": ["Jiahao Wang", "Bo Sun", "Yijing Bai", "Vincent Casser", "Songyou Peng"],
+      "affiliations": ["Waymo", "Google"],
+      "summary": "将野外行车记录仪视频转换为与专有自动驾驶（AV）传感器配置相匹配的格式，使海量多样化的行车记录仪数据集得以用于训练需要结构化车队传感器数据的 AV 感知系统。",
+      "key_findings": [
+        "行车记录仪到 AV 传感器的转换弥合了消费者与车队传感器配置之间的数据鸿沟",
+        "跨本体方法支持利用数十亿帧行车记录仪画面进行 AV 训练",
+        "传感器转换质量足以提升下游 AV 感知任务的性能"
+      ],
+      "tags": ["autonomous-driving", "sensor-fusion", "data-augmentation", "cross-embodiment", "perception"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 22, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.22809",
+        "huggingface": "https://huggingface.co/papers/2605.22809",
+        "pdf": "https://arxiv.org/pdf/2605.22809"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek 最新旗舰文本生成模型，下载量超 420 万次，获 4,152 个点赞，是领先的开放权重前沿模型。延续 V4 系列并引入架构改进。",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": ["text-generation", "transformers", "safetensors", "deepseek"],
+      "metrics": { "downloads": 4287396, "likes": 4152 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "qwen-3-6-27b",
+      "name": "Qwen3.6-27B",
+      "organization": "Qwen / Alibaba",
+      "description": "Qwen3.6 27B 稠密多模态模型，下载量超 400 万次，获 1,390 个点赞，支持图文到文本任务。属于 Qwen3 系列，持续推进开放多模态前沿模型的发展。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["transformers", "safetensors", "multimodal", "qwen3"],
+      "metrics": { "downloads": 4049995, "likes": 1390 },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "高点赞数的 ComfyUI 扩散模型，获 1,499 个点赞，下载量约 60 万次，专为 ComfyUI 生态中的高质量图像/视频生成工作流而设计。",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["diffusion-single-file", "comfyui", "image-generation"],
+      "metrics": { "downloads": 602483, "likes": 1499 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "文本到视频扩散模型，提供 GGUF 和 diffusers 格式，下载量约 125 万次，表明其在本地视频生成工作流中获得强劲的社区认可。",
+      "task_type": "text-to-video",
+      "model_size": "Unknown",
+      "tags": ["diffusers", "gguf", "text-to-video"],
+      "metrics": { "downloads": 1249582, "likes": 1268 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB / Tsinghua",
+      "description": "高效多模态模型，下载量约 22 万次，获 904 个点赞，属于 MiniCPM-V 系列，以紧凑体量实现出色性能，擅长图文到文本任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "~4.6B",
+      "tags": ["transformers", "safetensors", "multimodal", "efficient"],
+      "metrics": { "downloads": 221612, "likes": 904 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "字节跳动研究院出品的多模态模型，同时支持图像和视频生成，获 649 个点赞，代表字节跳动进军统一视觉生成领域的探索。",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "safetensors"],
+      "metrics": { "downloads": 1001, "likes": 649 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "高级文本转语音及语音合成模型，提供 ONNX 格式，下载量约 3.7 万次，获 582 个点赞，提供高质量语音合成能力。",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["supertonic", "onnx", "text-to-speech", "speech-synthesis", "tts"],
+      "metrics": { "downloads": 37545, "likes": 582 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen3-6-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth 优化的 Qwen3.6 27B MTP 变体 GGUF 量化版本，下载量约 53 万次，获 413 个点赞，支持高效本地部署 Qwen3.6 系列模型。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["transformers", "gguf", "unsloth", "qwen", "quantization"],
+      "metrics": { "downloads": 532255, "likes": 413 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "腾讯推出的紧凑型 1.8B 支持翻译的文本生成模型，基于 HunyuanV1 稠密架构，专为高效多语言翻译任务而设计。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["transformers", "safetensors", "text-generation", "translation"],
+      "metrics": { "downloads": 564, "likes": 280 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "resemble-ai-dramabox",
+      "name": "Dramabox",
+      "organization": "ResembleAI",
+      "description": "高质量 TTS 及声音克隆模型，下载量约 1,354 次，获 230 个点赞，专为戏剧性和富有表现力的语音合成设计，具备声音克隆能力。",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["tts", "voice-cloning", "speech-synthesis", "drama"],
+      "metrics": { "downloads": 1354, "likes": 230 },
+      "source_url": "https://huggingface.co/ResembleAI/Dramabox"
+    },
+    {
+      "id": "tencent-pixal3d",
+      "name": "Pixal3D",
+      "organization": "TencentARC",
+      "description": "TencentARC 出品的图像转 3D 模型，获 192 个点赞，支持单图 3D 重建，为不断扩展的 3D 生成工具生态做出贡献。",
+      "task_type": "image-to-3d",
+      "model_size": "Unknown",
+      "tags": ["image-to-3d", "3d-generation", "reconstruction"],
+      "metrics": { "downloads": 0, "likes": 192 },
+      "source_url": "https://huggingface.co/TencentARC/Pixal3D"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "anthropics-claude-plugins-official",
+      "name": "anthropics/claude-plugins-official",
+      "description": "Anthropic 官方维护的高质量 Claude Code 插件目录，是不断扩展的 Claude Code 插件生态系统的权威注册表。今日新增 2,549 颗星的爆发式增长印证了生态的快速普及。",
+      "language": "Python",
+      "stars": 25031,
+      "stars_today": 2549,
+      "forks": 2768,
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "tags": ["claude-code", "plugins", "anthropic", "developer-tools", "ai-coding"],
+      "relevance": "high"
+    },
+    {
+      "id": "colbymchenry-codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "面向 Claude Code、Codex、Cursor 和 OpenCode 的预索引代码知识图谱，在降低令牌用量和工具调用次数的同时实现 100% 本地运行。今日新增 3,684 颗星（趋势榜最高），表明其与 AI 编程工作流高度契合。",
+      "language": "TypeScript",
+      "stars": 16662,
+      "stars_today": 3684,
+      "forks": 919,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "claude-code", "coding-agents", "developer-tools", "efficiency"],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch 出品的通用智能体框架，累计获 163K 颗星，今日新增 1,743 颗星，定位为基于 Hermes 模型系列构建的可组合、持续增长的智能体平台。",
+      "language": "Python",
+      "stars": 163211,
+      "stars_today": 1743,
+      "forks": 26713,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["llm-agents", "hermes", "open-source", "agent-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "lum1104-understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将代码仓库转换为可与 Claude Code、Codex、Cursor、Copilot 和 Gemini CLI 兼容的交互式知识图谱。今日新增 1,393 颗星，反映了跨 AI 编程智能体技术栈对代码理解工具的旺盛需求。",
+      "language": "TypeScript",
+      "stars": 18761,
+      "stars_today": 1393,
+      "forks": 1699,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools", "ai-coding"],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "全面的 AI 工程课程，涵盖从零开始构建和交付 AI 应用的完整内容，今日新增 988 颗星，显示社区对实践性 AI 工程教育的强烈兴趣。",
+      "language": "Python",
+      "stars": 11989,
+      "stars_today": 988,
+      "forks": 2277,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "llm", "machine-learning", "curriculum"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruvnet-ruview",
+      "name": "ruvnet/RuView",
+      "description": "将 WiFi 信号转化为实时空间智能、生命体征监测和存在检测，无需摄像头。今日新增 978 颗星，代表一种新颖的保护隐私的传感方案。",
+      "language": "Rust",
+      "stars": 64067,
+      "stars_today": 978,
+      "forks": 8467,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["spatial-intelligence", "wifi-sensing", "privacy", "rust", "computer-vision"],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "Microsoft 出品的 AI 智能体治理工具包，涵盖策略执行、零信任身份、执行沙箱和可靠性工程，明确针对 OWASP Agentic Top 10 全部十项风险。",
+      "language": "Python",
+      "stars": 1834,
+      "stars_today": 86,
+      "forks": 343,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "owasp", "policy-enforcement", "enterprise-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "plastic-labs-honcho",
+      "name": "plastic-labs/honcho",
+      "description": "用于构建有状态智能体的记忆库，为长时运行的智能体工作流提供持久化记忆基础设施。今日新增 133 颗星，印证有状态智能体记忆正成为关键基础设施组件。",
+      "language": "Python",
+      "stars": 4024,
+      "stars_today": 133,
+      "forks": 467,
+      "url": "https://github.com/plastic-labs/honcho",
+      "tags": ["agent-memory", "stateful-agents", "llm-agents", "memory-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-vimax",
+      "name": "HKUDS/ViMax",
+      "description": "智能体视频生成系统，将导演、编剧、制片人和视频生成器等角色整合进单一一体化系统，展示多智能体协作完成复杂创意任务的能力。",
+      "language": "Python",
+      "stars": 6733,
+      "stars_today": 266,
+      "forks": 1065,
+      "url": "https://github.com/HKUDS/ViMax",
+      "tags": ["video-generation", "multi-agent", "creative-ai", "agentic"],
+      "relevance": "medium"
+    },
+    {
+      "id": "chromdevtools-chrome-devtools-mcp",
+      "name": "ChromeDevTools/chrome-devtools-mcp",
+      "description": "将 Chrome DevTools 作为 MCP 服务器供 AI 编程智能体使用，支持在智能体工作流内进行程序化浏览器检查和调试。今日新增 501 颗星，反映浏览器工具在智能体开发者技术栈中的普及趋势。",
+      "language": "TypeScript",
+      "stars": 40991,
+      "stars_today": 501,
+      "forks": 2604,
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "tags": ["mcp", "chrome-devtools", "browser-automation", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "facebookresearch-sam3",
+      "name": "facebookresearch/sam3",
+      "description": "Meta 推出的 Segment Anything Model 3（第三代万物分割模型），用于推理和微调，在极具影响力的 SAM 系列基础上进一步提升了分割任务的能力。",
+      "language": "Python",
+      "stars": 10057,
+      "stars_today": 63,
+      "forks": 1501,
+      "url": "https://github.com/facebookresearch/sam3",
+      "tags": ["segmentation", "computer-vision", "meta", "foundation-model", "fine-tuning"],
+      "relevance": "high"
+    },
+    {
+      "id": "aiming-lab-autoresearchclaw",
+      "name": "aiming-lab/AutoResearchClaw",
+      "description": "完全自主、自我进化的研究系统，能够从创意生成到论文撰写全程自动运行，是迈向自动化科学研究流程的重要一步。",
+      "language": "Python",
+      "stars": 12508,
+      "stars_today": 73,
+      "forks": 1466,
+      "url": "https://github.com/aiming-lab/AutoResearchClaw",
+      "tags": ["autonomous-research", "scientific-ai", "paper-generation", "self-evolving"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "RLVR 信用分配与过程监督",
+      "description": "多篇论文从不同角度攻克 LLM 训练中奖励信号的粒度与效率问题——从令牌级判别分配（DelTA）到消除过程奖励模型的标注瓶颈（无监督 PRM）。它们共同指向更有原则性、更可规模化的强化学习反馈方向。",
+      "related_paper_ids": ["delta-token-credit-assignment", "unsupervised-process-reward-models", "spreadsheet-rl", "maestro-hierarchical-model-skill"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "注意力稀疏化与推理效率",
+      "description": "Full Attention Strikes Back 证明 LLM 天然具备稀疏性，Gated DeltaNet-2 则改进了线性注意力的记忆操作。两者均在不损失模型质量的前提下降低推理成本，预示高效注意力机制的走向趋于统一。",
+      "related_paper_ids": ["full-attention-sparse", "gated-deltanet-2-linear-attention"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体评测与长时域基准",
+      "description": "新一代基准——面向主动工作流的 pi-Bench、面向真实办公任务的 Spreadsheet-RL，以及面向科学预测的 CUSP——超越了被动任务完成的评测范式，转而评估智能体的持续性、有意图性和主动性行为。",
+      "related_paper_ids": ["pi-bench-proactive-agents", "spreadsheet-rl", "forecasting-scientific-progress"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施与治理",
+      "description": "GitHub 趋势数据显示智能体基础设施正在快速成熟：治理工具包、有状态记忆库和基于 MCP 的浏览器工具同时上榜趋势，表明面向企业的智能体部署即将到来。",
+      "related_paper_ids": ["acc-agent-trajectories-long-context"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多模态鲁棒性与有依据的推理",
+      "description": "「感知还是偏见」、LatentOmni 和 SpaceDG 均在探究多模态模型是真正在推理还是仅在模式匹配。这一主题横跨性格依据、音视频时序推理以及降质输入下的空间理解等多个维度。",
+      "related_paper_ids": ["perception-or-prejudice-mllm-personality", "latent-omni-audio-visual", "sensor2sensor-autonomous-driving"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "跨领域 KV 缓存创新",
+      "description": "KV 缓存优化正碎片化为各领域专项方案：WorldKV 针对视频扩散一致性，KVServe 针对网络高效的分离式 LLM 服务，注意力稀疏化则面向标准 LLM 推理。统一框架仍是开放的挑战。",
+      "related_paper_ids": ["full-attention-sparse", "gated-deltanet-2-linear-attention"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-23T00:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-05-23T00:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-23T00:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
