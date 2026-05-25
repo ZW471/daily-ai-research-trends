@@ -1,0 +1,526 @@
+{
+  "version": "1.0",
+  "date": "2026-05-25",
+  "generated_at": "2026-05-25T14:57:00Z",
+  "summary": {
+    "headline": "ETCHR 将图像编辑与推理解耦，实现细粒度视觉思维链；Shannon 扩展定律将大语言模型训练重构为噪声信道传输问题；AI 编程智能体基础设施主导 GitHub 热榜，Understand-Anything 今日新增 4000 星，andrej-karpathy-skills 今日新增 2551 星",
+    "body": "今日研究论文集中于两大核心问题：提升多模态推理的精确性，以及完善大语言模型的规模化理论。**ETCHR**（1 票，早期曝光）提出将专用图像编辑模型与理解模型解耦，实现「以图思考」的范式，规避了统一多模态方案的噪声损耗与固定工具集方案的灵活性不足。与此同时，**Shannon 扩展定律**将信息论引入大语言模型训练动态研究，通过 Shannon-Hartley 定理将训练过程建模为噪声信道上的信息传输，首次为灾难性过训练、量化引发的性能退化等非单调现象提供了统一解释。\n\n在智能体前沿，两篇姊妹论文研究了语言智能体的技能生成与优化问题。**From Raw Experience to Skill Consumption** 系统梳理了模型生成智能体技能从知识蒸馏到复用的完整生命周期，**SkillOpt** 则将技能演化建模为文本空间中的优化问题，以权重空间梯度下降的严谨性加以约束，自称是首个系统化可控的文本空间优化器。**GenRecon** 将生成式先验与多视角三维场景重建相融合，把重建任务转化为对空间局部化重叠块的条件三维生成，以 Trellis.2 为骨干网络。**PiD**（像素扩散）针对文本生成图像流程中被忽视的潜在解码器瓶颈，提出基于扩散过程的解码器，在逆变换的基础上额外合成细节信息。\n\nGitHub 趋势清晰勾勒出 AI 编程智能体基础设施层的快速整合态势：**Understand-Anything**（今日新增 3999 星）可将任意代码库转化为交互式知识图谱；**colbymchenry/codegraph**（今日新增 3003 星）为 Claude Code 等智能体提供预索引代码知识图谱；**multica-ai/andrej-karpathy-skills**（今日新增 2551 星）将编程智能体的行为启发式规则加以系统化整理。模型生态方面，**DeepSeek-V4-Pro**（下载量 467 万，获赞 4227）、**SulphurAI/Sulphur-2**（文本转视频，下载量 133 万）和 **openbmb/MiniCPM-V-4.6**（高效多模态推理，获赞 918）占据主导地位。",
+    "key_themes": [
+      "visual-chain-of-thought-reasoning",
+      "scaling-laws-information-theory",
+      "agent-skill-optimization",
+      "3d-scene-reconstruction",
+      "ai-coding-agent-infrastructure",
+      "efficient-image-generation"
+    ]
+  },
+  "researcher_notes": "**ETCHR 论文为多模态大语言模型的顽固痛点提供了原则性的架构解答。** 现有「以图思考」方案分为两类：一类是统一多模态模型，在生成中间图像时存在幻觉或噪声问题；另一类是模块化流水线，受限于预定义的固定工具集。ETCHR 的核心洞见是将图像编辑与视觉理解分别对待——通过专用编辑模型处理变换操作，同时保持推理模型的纯净性。这种解耦模式与成熟软件系统的关注点分离原则如出一辙，其成功表明单体多模态模型或许并非多步视觉推理的最佳载体。该论文刚发布当日即获关注（1 票），值得随着社区对这一方向的评估而持续跟进。\n\n**Shannon 扩展定律是今日理论雄心最大的论文。** 当前的幂律扩展模型基于经验拟合，恰恰在最需要它们的时候——过训练、量化性能退化、能力涌现等场景——出现失效。通过将大语言模型训练根植于 Shannon-Hartley 定理（信道容量 = 带宽 × log₂(1 + 信噪比)），该框架提供了一个物理动机明确的解释，说明为何计算量增加时性能反而可能下降：信道已饱和，或噪声基底被抬高。若该框架能通过实证验证，将深刻改变从业者对训练预算、量化阈值以及模型架构（带宽）与数据质量（信噪比）关系的认知方式。\n\n**SkillOpt 与 Raw Experience 论文天然配对，应结合阅读。** 前者描述性地梳理了技能的生命周期，后者提出了一个优化框架，将技能文本视为冻结智能体的外部可训练参数。与权重空间梯度下降的类比精确无误：技能是参数，反馈是梯度信号，SkillOpt 是优化器。这一框架优雅简洁，为将优化器设计洞见（动量、自适应学习率、正则化）迁移到文本域开辟了直接路径。对智能体系统构建者的实际启示是：技能应当是经过版本管理并持续优化的工件，而非一次性产物。\n\n**GenRecon 的分块条件生成策略因其可扩展性而值得关注。** 大多数三维重建方法在处理大场景时举步维艰，因为全局表征的计算代价难以承受。将场景划分为重叠的空间局部化块，并在重叠约束下独立应用生成式先验，是一种分治策略，在继承 Trellis.2 保真度的同时可扩展至房间乃至建筑尺度。这一模式值得持续关注：将生成模型先验用作重建的*正则化器*，而非将生成与重建视为独立任务。\n\n**AI 编程智能体基础设施浪潮尚无平息迹象。** 今日按日新增星数排列的前五大 GitHub 仓库中，有三个直接服务于提升 AI 编程智能体效能：Understand-Anything（3999 星）、codegraph（3003 星）、andrej-karpathy-skills（2551 星）。rohitg00/ai-engineering-from-scratch 仓库（今日新增 1853 星）反映出市场对结构化 AI 工程教育的强烈需求。基础设施的故事脉络清晰：原始编程智能体能力正在商品化，竞争护城河正向知识图谱质量、上下文压缩和智能体行为对齐迁移。基于 Claude Code、Aider 或类似工具进行构建的团队，应将代码库索引与检索质量作为首要性能杠杆加以优化。",
+  "papers": [
+    {
+      "id": "etchr-editing-visual-reasoning",
+      "title": "ETCHR: Editing To Clarify and Harness Reasoning",
+      "authors": ["Beichen Zhang", "Yuhong Liu", "Jinsong Li", "Yuhang Zang", "Jiaqi Wang"],
+      "affiliations": ["Shanghai AI Laboratory", "University of Science and Technology of China"],
+      "summary": "ETCHR 提出将专用图像编辑模型与视觉理解模型解耦，从而实现清晰的「以图思考」思维链范式。不同于在中间图像中产生噪声的统一多模态方法，也不同于缺乏灵活性的固定工具集方案，ETCHR 通过专用编辑器路由细粒度视觉变换，同时保持推理模型不受污染。这种分离使精确的焦点调整和视角变换得以作为中间推理步骤使用。",
+      "key_findings": [
+        "将图像编辑与视觉理解解耦，消除了统一多模态「以图思考」方案带来的噪声损耗",
+        "专用编辑模型使细粒度焦点与视角变换可作为推理步骤使用，不受预定义工具集约束",
+        "该架构在细粒度视觉推理基准上超越了统一多模态方法和固定工具集流水线"
+      ],
+      "tags": ["multimodal", "visual-reasoning", "chain-of-thought", "image-editing", "mllm"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23897",
+        "huggingface": "https://huggingface.co/papers/2605.23897",
+        "pdf": "https://arxiv.org/pdf/2605.23897"
+      }
+    },
+    {
+      "id": "genrecon-generative-3d-reconstruction",
+      "title": "GenRecon: Bridging Generative Priors for Multi-View 3D Scene Reconstruction",
+      "authors": ["Katharina Schmid", "Nicolas von Lützow", "Jozef Hladký", "Angela Dai", "Matthias Nießner"],
+      "affiliations": ["Technical University of Munich"],
+      "summary": "GenRecon 提出了一种高保真三维场景重建方法，将重建与强大的生成式三维先验（Trellis.2）紧密结合。该方法将场景重建转化为对空间局部化重叠块的条件三维生成，以分块方式覆盖整个场景，在继承前沿生成形状模型保真度与完整性的同时，实现对大尺度场景的可扩展性。",
+      "key_findings": [
+        "将三维重建建模为对重叠空间局部化块的条件生成，实现大场景可扩展性",
+        "在不牺牲完整性、无需显式全局表征的前提下，继承 Trellis.2 生成先验的保真度",
+        "基于分块的分治策略将重建扩展至房间乃至建筑尺度"
+      ],
+      "tags": ["3d-reconstruction", "generative-models", "multi-view", "scene-understanding", "neural-rendering"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23888",
+        "huggingface": "https://huggingface.co/papers/2605.23888",
+        "pdf": "https://arxiv.org/pdf/2605.23888"
+      }
+    },
+    {
+      "id": "shannon-scaling-law-llm",
+      "title": "LLMs as Noisy Channels: A Shannon Perspective on Model Capacity and Scaling Laws",
+      "authors": ["Xu Ouyang", "Deyi Liu", "Yuhang Cai", "Jing Liu", "Yuan Yang"],
+      "affiliations": ["Tianjin University", "Nankai University"],
+      "summary": "该论文提出 Shannon 扩展定律，以 Shannon-Hartley 定理为基础，将大语言模型训练建模为噪声信道上的信息传输过程。这一统一理论框架能够解释非单调扩展现象，如灾难性过训练和量化引发的性能退化，而传统单调幂律扩展模型对此无能为力。",
+      "key_findings": [
+        "Shannon-Hartley 定理为非单调大语言模型扩展现象（包括灾难性过训练）提供了原则性解释",
+        "将大语言模型架构建模为信道带宽、数据质量建模为信噪比，从而实现容量预测",
+        "首个在单一扩展理论框架内解释量化引发性能退化的统一框架"
+      ],
+      "tags": ["scaling-laws", "information-theory", "llm-theory", "quantization", "overtraining"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23901",
+        "huggingface": "https://huggingface.co/papers/2605.23901",
+        "pdf": "https://arxiv.org/pdf/2605.23901"
+      }
+    },
+    {
+      "id": "raw-experience-agent-skills",
+      "title": "From Raw Experience to Skill Consumption: A Systematic Study of Model-Generated Agent Skills",
+      "authors": ["Zisu Huang", "Jingwen Xu", "Yifan Yang", "Ziyang Gong", "Qihao Yang"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "该论文对模型生成智能体技能的完整生命周期进行了系统研究，从从过往经验中蒸馏领域特定的重复性流程，到结构化复用的各个环节。研究聚焦于领域级技能，此类技能无需耗费大量人力手工制作，即可实现在领域内的快速适应。",
+      "key_findings": [
+        "领域级模型生成技能通过编码领域特定的重复性流程，实现在领域内的快速适应",
+        "系统性研究梳理了从原始经验蒸馏到结构化消费的完整技能生命周期",
+        "模型生成技能在保持领域专一性的同时，超越了手工制作工件的规模上限"
+      ],
+      "tags": ["agent-skills", "language-agents", "procedural-learning", "experience-replay", "llm-agents"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23899",
+        "huggingface": "https://huggingface.co/papers/2605.23899",
+        "pdf": "https://arxiv.org/pdf/2605.23899"
+      }
+    },
+    {
+      "id": "skillopt-text-space-optimizer",
+      "title": "SkillOpt: Executive Strategy for Self-Evolving Agent Skills",
+      "authors": ["Yifan Yang", "Ziyang Gong", "Weiquan Huang", "Qihao Yang", "Ziwei Zhou"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "SkillOpt 将智能体技能视为冻结智能体的外部可训练状态，并将权重空间优化的严谨方法论引入文本空间的技能演化。该系统自称是首个系统化可控的文本空间优化器，能够在反馈驱动下实现可重复的技能改进，优于手工制作、一次性生成或松散自我修订等方案。",
+      "key_findings": [
+        "将智能体技能建模为冻结智能体的外部可训练参数，实现优化器式的迭代改进",
+        "首个系统化可控的文本空间优化器，在反馈驱动下提供可重复的改进保证",
+        "反馈驱动的技能优化持续优于手工制作、一次性生成和松散自我修订的基线方案"
+      ],
+      "tags": ["agent-skills", "text-optimization", "self-evolving-agents", "llm-agents", "optimization"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23904",
+        "huggingface": "https://huggingface.co/papers/2605.23904",
+        "pdf": "https://arxiv.org/pdf/2605.23904"
+      }
+    },
+    {
+      "id": "pid-pixel-diffusion-decoder",
+      "title": "PiD: Fast and High-Resolution Latent Decoding with Pixel Diffusion",
+      "authors": ["Yifan Lu", "Qi Wu", "Jay Zhangjie Wu", "Zian Wang", "Huan Ling"],
+      "affiliations": ["NVIDIA", "National University of Singapore"],
+      "summary": "PiD 针对文本生成图像系统中潜在解码器面向重建的瓶颈问题，以像素扩散过程替代标准解码器，在编码器逆变换的基础上额外合成细节信息。相比传统 VAE 解码器，该方法在百万像素尺度上兼具更强的表达能力与更高的计算效率。",
+      "key_findings": [
+        "潜在到像素的解码器是面向重建的瓶颈，限制了高分辨率生成中的细节合成能力",
+        "像素扩散解码器在编码器逆变换之上合成额外细节，在百万像素尺度上实现更高保真度",
+        "PiD 在潜在扩散和自回归模型中均比标准 VAE 解码器更快、表达能力更强"
+      ],
+      "tags": ["image-generation", "diffusion-models", "latent-decoding", "text-to-image", "efficiency"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23902",
+        "huggingface": "https://huggingface.co/papers/2605.23902",
+        "pdf": "https://arxiv.org/pdf/2605.23902"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek 旗舰对话文本生成模型，延续 V4 系列，具备专业级推理与指令跟随能力。今日下载量遥遥领先，超过 460 万次。",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": ["conversational", "text-generation", "reasoning", "instruction-following"],
+      "metrics": { "downloads": 4666078, "likes": 4227 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "高下载量文本转视频生成模型，提供 GGUF 和 diffusers 两种格式，显示其在量化及标准部署环境中均获得广泛社区采用。",
+      "task_type": "text-to-video",
+      "model_size": "Unknown",
+      "tags": ["text-to-video", "diffusers", "gguf", "video-generation"],
+      "metrics": { "downloads": 1331058, "likes": 1325 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "circlestone-labs",
+      "description": "支持 ComfyUI 的单文件扩散模型，面向高质量图像或视频生成，获赞数相对下载量较高，社区参与度突出。",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["diffusion-single-file", "comfyui", "image-generation"],
+      "metrics": { "downloads": 637329, "likes": 1531 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB (Tsinghua University)",
+      "description": "MiniCPM 视觉语言模型系列的最新版本，提供图像-文本到文本的多模态能力，体积轻巧，适合端侧多模态推理部署。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown (efficient)",
+      "tags": ["multimodal", "vision-language", "efficient", "image-text-to-text"],
+      "metrics": { "downloads": 269589, "likes": 918 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth (Qwen base by Alibaba)",
+      "description": "Unsloth 对 Qwen3.6 27B 多令牌预测模型的量化 GGUF 打包版本，支持大规模 Qwen 模型的高效本地部署。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "qwen", "quantized", "multi-token-prediction", "text-generation"],
+      "metrics": { "downloads": 660321, "likes": 456 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "以 ONNX 格式提供的文本转语音与语音合成模型，今日在音频模型中下载量最高，在语音生成应用领域获得广泛社区采用。",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["text-to-speech", "speech-synthesis", "onnx", "tts"],
+      "metrics": { "downloads": 43119, "likes": 645 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "字节跳动研究院的多模态模型，同时支持图像和视频生成任务，获赞与下载比率高，显示社区在质量层面的高度认可。",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "safetensors"],
+      "metrics": { "downloads": 1474, "likes": 765 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "腾讯 Hy-MT2 翻译模型家族中最小的成员，以 18 亿参数提供高效的多语言文本生成与翻译能力。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "text-generation", "multilingual", "efficient"],
+      "metrics": { "downloads": 4534, "likes": 615 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "tencent-hy-mt2-30b-a3b",
+      "name": "Hy-MT2-30B-A3B",
+      "organization": "Tencent",
+      "description": "腾讯 Hy-MT2 翻译系列的旗舰 MoE 模型，总参数量 300 亿，每令牌激活参数 30 亿，在强多语言翻译质量与推理效率之间取得平衡。",
+      "task_type": "translation",
+      "model_size": "30B (3B active)",
+      "tags": ["translation", "moe", "text-generation", "multilingual"],
+      "metrics": { "downloads": 1243, "likes": 309 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-30B-A3B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "SapientInc",
+      "description": "10 亿参数紧凑型文本生成模型，今日在 20 亿参数以下模型中原始下载量最高，显示其在轻量级部署场景中被广泛采用。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "efficient", "small-model"],
+      "metrics": { "downloads": 84346, "likes": 271 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "resembleai-dramabox",
+      "name": "Dramabox",
+      "organization": "ResembleAI",
+      "description": "ResembleAI 的文本转语音与声音克隆模型，支持具有戏剧性语音合成能力的音频生成，面向媒体和娱乐应用场景。",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["tts", "voice-cloning", "audio-generation", "speech-synthesis"],
+      "metrics": { "downloads": 1450, "likes": 243 },
+      "source_url": "https://huggingface.co/ResembleAI/Dramabox"
+    },
+    {
+      "id": "coherelabs-command-a-plus-w4a4",
+      "name": "command-a-plus-05-2026-w4a4",
+      "organization": "Cohere Labs",
+      "description": "Cohere Command A+ 视觉语言模型的 W4A4（4 位权重、4 位激活）量化版本，实现高度高效的多模态对话部署。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown (W4A4 quantized)",
+      "tags": ["quantization", "multimodal", "conversational", "image-text-to-text", "efficient"],
+      "metrics": { "downloads": 5627, "likes": 190 },
+      "source_url": "https://huggingface.co/CohereLabs/command-a-plus-05-2026-w4a4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将任意代码仓库转化为交互式知识图谱，帮助开发者和 AI 智能体通过结构化视觉与语义表示导航大型代码库。",
+      "language": "TypeScript",
+      "stars": 26286,
+      "stars_today": 3999,
+      "forks": 2265,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "ai-coding-agent", "codebase-navigation"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "专为 Claude Code 及类似 AI 编程智能体设计的预索引代码知识图谱，无需运行时索引即可快速检索结构化代码库上下文。",
+      "language": "TypeScript",
+      "stars": 22257,
+      "stars_today": 3003,
+      "forks": 1231,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "claude-code", "ai-coding-agent", "context-retrieval"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "一个包含结构化行为指南的 CLAUDE.md 文件，用于改善 Claude Code 编程智能体的行为，灵感来源于 Andrej Karpathy 的 AI 工程原则。",
+      "language": "(none)",
+      "stars": 152270,
+      "stars_today": 2551,
+      "forks": 15613,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["claude-code", "ai-coding-agent", "behavioral-guidelines", "prompt-engineering"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "基于 Python 的全面 AI 工程学习资源，覆盖从基础到生产部署的完整技术栈，遵循「学习-构建-上线」方法论。",
+      "language": "Python",
+      "stars": 16212,
+      "stars_today": 1853,
+      "forks": 2871,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "python", "full-stack-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-plugins-official",
+      "name": "anthropics/claude-plugins-official",
+      "description": "Anthropic 官方维护的高质量 Claude Code 插件目录，用于扩展 Claude 的编程智能体能力。",
+      "language": "Python",
+      "stars": 27284,
+      "stars_today": 1173,
+      "forks": 2906,
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "tags": ["claude-code", "plugins", "anthropic", "ai-coding-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "cybersecurity-skills-anthropic",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 个结构化网络安全技能集合，格式化供 AI 智能体使用，使智能体工作流具备安全感知推理和任务执行能力。",
+      "language": "Python",
+      "stars": 8398,
+      "stars_today": 930,
+      "forks": 1060,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "ai-agents", "security"],
+      "relevance": "high"
+    },
+    {
+      "id": "multica-multica",
+      "name": "multica-ai/multica",
+      "description": "开源托管智能体平台，支持团队大规模部署、协调和治理 AI 智能体，内置编排与监控功能。",
+      "language": "TypeScript",
+      "stars": 32544,
+      "stars_today": 585,
+      "forks": 3908,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["managed-agents", "agent-orchestration", "open-source", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic 面向知识工作者工作流的开源插件仓库，为 Claude Code 扩展文档分析、研究和生产力功能。",
+      "language": "Python",
+      "stars": 14110,
+      "stars_today": 550,
+      "forks": 1746,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["claude-code", "plugins", "knowledge-work", "productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "cmux-terminal",
+      "name": "manaflow-ai/cmux",
+      "description": "基于 Ghostty 的 macOS 终端应用，专为 AI 编程智能体打造，提供优化的终端复用与会话管理功能，适用于智能体驱动的开发工作流。",
+      "language": "Swift",
+      "stars": 19049,
+      "stars_today": 696,
+      "forks": 1449,
+      "url": "https://github.com/manaflow-ai/cmux",
+      "tags": ["terminal", "macos", "ai-coding-agent", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "fincept-terminal",
+      "name": "Fincept-Corporation/FinceptTerminal",
+      "description": "现代 Python 金融终端应用，提供实时市场数据、分析和交易功能，面向量化金融工作流。",
+      "language": "Python",
+      "stars": 23476,
+      "stars_today": 462,
+      "forks": 3249,
+      "url": "https://github.com/Fincept-Corporation/FinceptTerminal",
+      "tags": ["finance", "quantitative", "terminal", "market-data"],
+      "relevance": "medium"
+    },
+    {
+      "id": "earendil-pi",
+      "name": "earendil-works/pi",
+      "description": "TypeScript AI 智能体工具包，提供构建、组合和部署 AI 智能体的基础原语，注重开发者工效学与可扩展性。",
+      "language": "TypeScript",
+      "stars": 53981,
+      "stars_today": 456,
+      "forks": 6445,
+      "url": "https://github.com/earendil-works/pi",
+      "tags": ["ai-agents", "toolkit", "typescript", "agent-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "free-claude-code",
+      "name": "Alishahryar1/free-claude-code",
+      "description": "通过终端、VSCode 扩展或 Discord 免费使用 Claude Code，无需付费订阅即可获取 Claude 编程智能体能力。",
+      "language": "Python",
+      "stars": 29200,
+      "stars_today": 553,
+      "forks": 4384,
+      "url": "https://github.com/Alishahryar1/free-claude-code",
+      "tags": ["claude-code", "free-access", "vscode", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos-financial-foundation",
+      "name": "shiyu-coder/Kronos",
+      "description": "面向金融市场的基础模型，能够处理和推理金融数据语言，为量化金融应用提供领域专用预训练能力。",
+      "language": "Python",
+      "stars": 25812,
+      "stars_today": 106,
+      "forks": 4496,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["foundation-model", "finance", "domain-specific", "nlp"],
+      "relevance": "medium"
+    },
+    {
+      "id": "nvlabs-longlive",
+      "name": "NVlabs/LongLive",
+      "description": "NVIDIA LongLive 2.0 长视频生成基础设施，提供可扩展的训练与推理流水线，用于扩展时序视频合成。",
+      "language": "Python",
+      "stars": 1963,
+      "stars_today": 236,
+      "forks": 177,
+      "url": "https://github.com/NVlabs/LongLive",
+      "tags": ["video-generation", "long-video", "nvidia", "diffusion"],
+      "relevance": "high"
+    },
+    {
+      "id": "honcho-memory-agents",
+      "name": "plastic-labs/honcho",
+      "description": "用于构建有状态 AI 智能体的记忆库，提供持久化的用户与会话上下文，使智能体能够与用户维持连贯的长期关系。",
+      "language": "Python",
+      "stars": 4189,
+      "stars_today": 87,
+      "forks": 488,
+      "url": "https://github.com/plastic-labs/honcho",
+      "tags": ["agent-memory", "stateful-agents", "personalization", "llm-agents"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "视觉思维链与多模态推理",
+      "description": "研究正在向专用图像编辑流水线汇聚，将其作为视觉推理步骤更清晰的载体，超越了将生成与理解混为一谈的统一多模态模型。ETCHR 正是这种解耦策略的典型代表。",
+      "related_paper_ids": ["etchr-editing-visual-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "信息论扩展定律",
+      "description": "Shannon 扩展定律代表着从经验性幂律拟合转向物理基础驱动的大语言模型训练动态解释，解决了传统扩展定律无法解释的非单调失效模式。",
+      "related_paper_ids": ["shannon-scaling-law-llm"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能生命周期与文本空间优化",
+      "description": "新兴共识表明，智能体技能应被视为第一类可优化工件——进行版本管理、在反馈下迭代、以优化器式的严谨性加以治理——而非一次性产物。",
+      "related_paper_ids": ["raw-experience-agent-skills", "skillopt-text-space-optimizer"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI 编程智能体基础设施",
+      "description": "AI 编程智能体的工具层正快速向知识图谱、行为指南和专用终端整合，多个项目在单日内各自吸引数千颗星。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "基于生成式先验的三维场景重建",
+      "description": "将三维重建视为条件生成，通过空间局部化分块分解继承生成模型保真度，同时扩展到大尺度场景。",
+      "related_paper_ids": ["genrecon-generative-3d-reconstruction"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "高效高分辨率图像与视频生成",
+      "description": "潜在解码器瓶颈和长视频生成基础设施是当前活跃研究前沿，PiD 面向表达性解码，NVlabs/LongLive 提供大规模生成基础设施。",
+      "related_paper_ids": ["pid-pixel-diffusion-decoder"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "error"
+    }
+  ]
+}

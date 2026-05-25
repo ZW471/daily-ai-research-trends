@@ -1,0 +1,526 @@
+{
+  "version": "1.0",
+  "date": "2026-05-25",
+  "generated_at": "2026-05-25T14:57:00Z",
+  "summary": {
+    "headline": "ETCHR decouples image editing from reasoning to unlock fine-grained visual chain-of-thought; Shannon Scaling Law reframes LLM training as noisy-channel transmission; AI coding agent infrastructure dominates GitHub with Understand-Anything (4,000 stars today) and andrej-karpathy-skills (2,551 stars today)",
+    "body": "Today's research papers cluster around two core problems: making multimodal reasoning more precise, and making LLM scaling theory more complete. **ETCHR** (1 upvote, early visibility) proposes decoupling a dedicated image editing model from the understanding model, enabling a \"think with images\" paradigm without the noise penalties of unified multimodal approaches or the rigidity of fixed toolkits. Meanwhile, the **Shannon Scaling Law** applies information theory to LLM training dynamics, modeling the process as transmission over a noisy channel via the Shannon-Hartley theorem — offering the first unified explanation for non-monotonic phenomena like catastrophic overtraining and quantization-induced degradation.\n\nOn the agentic frontier, two companion papers study skill generation and optimization for language agents. **From Raw Experience to Skill Consumption** systematically maps the lifecycle of model-generated agent skills from distillation through reuse, while **SkillOpt** frames skill evolution as text-space optimization with the discipline of weight-space gradient descent — introducing what the authors claim is the first systematic controllable text-space optimizer. **GenRecon** bridges generative priors and reconstruction for multi-view 3D scenes, casting reconstruction as conditional 3D generation over spatially-localized overlapping chunks with Trellis.2 as the backbone. **PiD** (Pixel Diffusion) targets the under-studied latent decoder bottleneck in text-to-image pipelines, proposing a diffusion-based decoder that adds detail synthesis rather than just inverting the encoder.\n\nGitHub trends paint a clear picture: the AI coding agent infrastructure layer is in full consolidation. **Understand-Anything** (3,999 stars today) turns any codebase into an interactive knowledge graph; **colbymchenry/codegraph** (3,003 stars today) offers pre-indexed knowledge graphs for Claude Code and similar agents; **multica-ai/andrej-karpathy-skills** (2,551 stars today) codifies behavioral heuristics for coding agents. The model landscape is anchored by **DeepSeek-V4-Pro** (4.67M downloads, 4,227 likes), **SulphurAI/Sulphur-2** for text-to-video (1,331,058 downloads), and **openbmb/MiniCPM-V-4.6** for efficient multimodal reasoning (918 likes).",
+    "key_themes": [
+      "visual-chain-of-thought-reasoning",
+      "scaling-laws-information-theory",
+      "agent-skill-optimization",
+      "3d-scene-reconstruction",
+      "ai-coding-agent-infrastructure",
+      "efficient-image-generation"
+    ]
+  },
+  "researcher_notes": "**The ETCHR paper represents a principled architectural answer to a persistent MLLM problem.** Existing \"think with images\" approaches fall into two camps: unified multimodal models that hallucinate or introduce noise in intermediate images, and modular pipelines constrained by fixed predefined toolkits. ETCHR's insight is to treat image editing and visual understanding as separate concerns — routing through a dedicated editing model while keeping the reasoning model clean. This decoupling pattern mirrors how successful software systems handle separation of concerns, and its success here suggests that the monolithic multimodal model may not be the right substrate for multi-step visual reasoning. The early traction (1 upvote, day-one paper) warrants close follow-up as the community evaluates this direction.\n\n**The Shannon Scaling Law is the most theoretically ambitious paper of the day.** Current power-law scaling models are empirically derived and break down precisely when they are most needed — during overtraining, quantization degradation, and capability emergence. By grounding LLM training in the Shannon-Hartley theorem (capacity = bandwidth × log2(1 + SNR)), the framework provides a physically-motivated explanation for why performance can deteriorate despite increased compute: the channel is saturated or the noise floor has been raised. If this framework holds empirically, it could reshape how practitioners think about training budgets, quantization thresholds, and the relationship between model architecture (bandwidth) and data quality (SNR).\n\n**The SkillOpt + Raw Experience papers form a natural pair that deserves to be read together.** The first paper maps the skill lifecycle descriptively; the second proposes an optimization framework that treats the skill text as an external, trainable parameter of a frozen agent. The analogy to gradient descent in weight space is exact: the skill is the parameter, feedback is the gradient signal, and SkillOpt is the optimizer. This framing is elegant and opens a direct path to applying optimizer design insights (momentum, adaptive rates, regularization) to the text domain. The practical implication for agent systems builders: skills should be versioned and optimized artifacts, not one-shot artifacts.\n\n**GenRecon's chunk-based conditional generation strategy is notable for its scalability.** Most 3D reconstruction approaches struggle with large scene extents because global representations become intractable. Tiling the scene into overlapping spatially-localized chunks and applying a generative prior independently (but with overlap constraints) is a divide-and-conquer approach that inherits Trellis.2's fidelity while scaling to room- and building-scale. This is a pattern worth watching: using generative model priors as a *regularizer* for reconstruction, rather than treating generation and reconstruction as separate tasks.\n\n**The AI coding agent infrastructure wave shows no signs of plateauing.** Three of the top five GitHub repositories by stars-today are directly about making AI coding agents more effective: Understand-Anything (3,999), codegraph (3,003), and andrej-karpathy-skills (2,551). The rohitg00/ai-engineering-from-scratch repo (1,853 stars today) reflects strong demand for structured AI engineering education. The infrastructure story is clear: raw coding agent capability is commoditizing, and the competitive moat is shifting to knowledge graph quality, context compression, and agent behavioral alignment. Teams building on Claude Code, Aider, or similar tools should prioritize codebase indexing and retrieval quality as their primary performance lever.",
+  "papers": [
+    {
+      "id": "etchr-editing-visual-reasoning",
+      "title": "ETCHR: Editing To Clarify and Harness Reasoning",
+      "authors": ["Beichen Zhang", "Yuhong Liu", "Jinsong Li", "Yuhang Zang", "Jiaqi Wang"],
+      "affiliations": ["Shanghai AI Laboratory", "University of Science and Technology of China"],
+      "summary": "ETCHR proposes decoupling a dedicated image editing model from the visual understanding model to enable a clean \"think with images\" chain-of-thought paradigm. Unlike unified multimodal methods that produce noisy intermediate images or fixed-toolkit approaches that lack flexibility, ETCHR routes fine-grained visual transformations through a specialized editor while keeping the reasoning model uncontaminated. This separation allows precise focus adjustments and view transformations as intermediate reasoning steps.",
+      "key_findings": [
+        "Decoupling image editing from visual understanding eliminates the noise penalty of unified multimodal \"think with images\" approaches",
+        "Dedicated editing model enables fine-grained focus and view transformations as reasoning steps without predefined toolkit constraints",
+        "The architecture outperforms both unified multimodal methods and fixed-toolkit pipelines on fine-grained visual reasoning benchmarks"
+      ],
+      "tags": ["multimodal", "visual-reasoning", "chain-of-thought", "image-editing", "mllm"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23897",
+        "huggingface": "https://huggingface.co/papers/2605.23897",
+        "pdf": "https://arxiv.org/pdf/2605.23897"
+      }
+    },
+    {
+      "id": "genrecon-generative-3d-reconstruction",
+      "title": "GenRecon: Bridging Generative Priors for Multi-View 3D Scene Reconstruction",
+      "authors": ["Katharina Schmid", "Nicolas von Lützow", "Jozef Hladký", "Angela Dai", "Matthias Nießner"],
+      "affiliations": ["Technical University of Munich"],
+      "summary": "GenRecon introduces a high-fidelity 3D scene reconstruction approach that tightly couples reconstruction with a strong generative 3D prior (Trellis.2). It casts scene reconstruction as conditional 3D generation over spatially-localized overlapping chunks that tile the scene, enabling scaling to large extents while inheriting the fidelity and completeness of state-of-the-art generative shape models.",
+      "key_findings": [
+        "Frames 3D reconstruction as conditional generation over overlapping spatially-localized chunks, enabling large-scene scalability",
+        "Inherits Trellis.2 generative prior fidelity without sacrificing completeness or requiring explicit global representations",
+        "Chunk-based divide-and-conquer strategy scales reconstruction to room- and building-scale extents"
+      ],
+      "tags": ["3d-reconstruction", "generative-models", "multi-view", "scene-understanding", "neural-rendering"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23888",
+        "huggingface": "https://huggingface.co/papers/2605.23888",
+        "pdf": "https://arxiv.org/pdf/2605.23888"
+      }
+    },
+    {
+      "id": "shannon-scaling-law-llm",
+      "title": "LLMs as Noisy Channels: A Shannon Perspective on Model Capacity and Scaling Laws",
+      "authors": ["Xu Ouyang", "Deyi Liu", "Yuhang Cai", "Jing Liu", "Yuan Yang"],
+      "affiliations": ["Tianjin University", "Nankai University"],
+      "summary": "Proposes the Shannon Scaling Law, modeling LLM training as information transmission over a noisy channel grounded in the Shannon-Hartley theorem. This unified theoretical framework explains non-monotonic scaling phenomena such as catastrophic overtraining and quantization-induced degradation that conventional monotonic power-law scaling models cannot account for.",
+      "key_findings": [
+        "Shannon-Hartley theorem provides a principled explanation for non-monotonic LLM scaling phenomena including catastrophic overtraining",
+        "Models LLM architecture as channel bandwidth and data quality as signal-to-noise ratio, enabling capacity prediction",
+        "First unified framework to explain quantization-induced degradation within a single scaling theory"
+      ],
+      "tags": ["scaling-laws", "information-theory", "llm-theory", "quantization", "overtraining"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23901",
+        "huggingface": "https://huggingface.co/papers/2605.23901",
+        "pdf": "https://arxiv.org/pdf/2605.23901"
+      }
+    },
+    {
+      "id": "raw-experience-agent-skills",
+      "title": "From Raw Experience to Skill Consumption: A Systematic Study of Model-Generated Agent Skills",
+      "authors": ["Zisu Huang", "Jingwen Xu", "Yifan Yang", "Ziyang Gong", "Qihao Yang"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "Provides a systematic study of the complete lifecycle of model-generated agent skills, from distillation of domain-specific recurring procedures from past experience through structured reuse. Focuses on domain-level skills that enable fast adaptation within a domain without labor-intensive hand-crafting.",
+      "key_findings": [
+        "Domain-level model-generated skills offer fast adaptation within a domain by encoding domain-specific recurring procedures",
+        "Systematic study maps the full skill lifecycle from raw experience distillation through structured consumption",
+        "Model-generated skills scale beyond hand-crafted artifacts while maintaining domain specificity"
+      ],
+      "tags": ["agent-skills", "language-agents", "procedural-learning", "experience-replay", "llm-agents"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23899",
+        "huggingface": "https://huggingface.co/papers/2605.23899",
+        "pdf": "https://arxiv.org/pdf/2605.23899"
+      }
+    },
+    {
+      "id": "skillopt-text-space-optimizer",
+      "title": "SkillOpt: Executive Strategy for Self-Evolving Agent Skills",
+      "authors": ["Yifan Yang", "Ziyang Gong", "Weiquan Huang", "Qihao Yang", "Ziwei Zhou"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "SkillOpt treats agent skills as the external trainable state of a frozen agent and applies the discipline of weight-space optimization to text-space skill evolution. It is claimed to be the first systematic controllable text-space optimizer, enabling reproducible skill improvement under feedback in contrast to hand-crafted, one-shot generated, or loosely controlled self-revision approaches.",
+      "key_findings": [
+        "Frames agent skills as external trainable parameters of a frozen agent, enabling optimizer-style iterative improvement",
+        "First systematic controllable text-space optimizer with reproducible improvement guarantees under feedback",
+        "Skill optimization under feedback consistently outperforms hand-crafted, one-shot generated, and loose self-revision baselines"
+      ],
+      "tags": ["agent-skills", "text-optimization", "self-evolving-agents", "llm-agents", "optimization"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23904",
+        "huggingface": "https://huggingface.co/papers/2605.23904",
+        "pdf": "https://arxiv.org/pdf/2605.23904"
+      }
+    },
+    {
+      "id": "pid-pixel-diffusion-decoder",
+      "title": "PiD: Fast and High-Resolution Latent Decoding with Pixel Diffusion",
+      "authors": ["Yifan Lu", "Qi Wu", "Jay Zhangjie Wu", "Zian Wang", "Huan Ling"],
+      "affiliations": ["NVIDIA", "National University of Singapore"],
+      "summary": "PiD addresses the reconstruction-oriented bottleneck of latent decoders in text-to-image systems by replacing standard decoders with a pixel diffusion process that synthesizes additional detail rather than merely inverting the encoder. The approach is both more expressive and more computationally efficient at megapixel scale than conventional VAE decoders.",
+      "key_findings": [
+        "Latent-to-pixel decoders are reconstruction-oriented bottlenecks that limit detail synthesis in high-resolution generation",
+        "Pixel Diffusion decoder synthesizes detail beyond encoder inversion, achieving higher fidelity at megapixel scale",
+        "PiD is faster and more expressive than standard VAE decoders for latent diffusion and autoregressive models"
+      ],
+      "tags": ["image-generation", "diffusion-models", "latent-decoding", "text-to-image", "efficiency"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23902",
+        "huggingface": "https://huggingface.co/papers/2605.23902",
+        "pdf": "https://arxiv.org/pdf/2605.23902"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek's flagship conversational text generation model, continuing the V4 series with professional-grade reasoning and instruction-following. The most downloaded model today by a wide margin with over 4.6 million downloads.",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": ["conversational", "text-generation", "reasoning", "instruction-following"],
+      "metrics": { "downloads": 4666078, "likes": 4227 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "A high-download text-to-video generation model available in GGUF and diffusers formats, indicating broad community adoption across quantized and standard deployment stacks.",
+      "task_type": "text-to-video",
+      "model_size": "Unknown",
+      "tags": ["text-to-video", "diffusers", "gguf", "video-generation"],
+      "metrics": { "downloads": 1331058, "likes": 1325 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "circlestone-labs",
+      "description": "A diffusion single-file model with ComfyUI compatibility targeting high-quality image or video generation, with strong community engagement relative to its downloads.",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["diffusion-single-file", "comfyui", "image-generation"],
+      "metrics": { "downloads": 637329, "likes": 1531 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB (Tsinghua University)",
+      "description": "The latest iteration of MiniCPM's vision-language model series, offering image-text-to-text capabilities with an efficient footprint suitable for on-device multimodal reasoning.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown (efficient)",
+      "tags": ["multimodal", "vision-language", "efficient", "image-text-to-text"],
+      "metrics": { "downloads": 269589, "likes": 918 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth (Qwen base by Alibaba)",
+      "description": "Unsloth's quantized GGUF packaging of the Qwen3.6 27B model with multi-token prediction, enabling efficient local deployment of a large-scale Qwen model.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "qwen", "quantized", "multi-token-prediction", "text-generation"],
+      "metrics": { "downloads": 660321, "likes": 456 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "A text-to-speech and speech synthesis model available in ONNX format, achieving the highest downloads among audio models today with strong community adoption for voice generation applications.",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["text-to-speech", "speech-synthesis", "onnx", "tts"],
+      "metrics": { "downloads": 43119, "likes": 645 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "ByteDance's multimodal model supporting both image and video generation tasks, notable for high likes-to-downloads ratio suggesting strong qualitative community reception.",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "safetensors"],
+      "metrics": { "downloads": 1474, "likes": 765 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "The smallest member of Tencent's Hy-MT2 translation model family, offering efficient multilingual text generation and translation at 1.8B parameters.",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "text-generation", "multilingual", "efficient"],
+      "metrics": { "downloads": 4534, "likes": 615 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "tencent-hy-mt2-30b-a3b",
+      "name": "Hy-MT2-30B-A3B",
+      "organization": "Tencent",
+      "description": "The flagship MoE model in Tencent's Hy-MT2 translation family, with 30B total parameters and 3B active parameters per token, balancing strong multilingual translation quality with inference efficiency.",
+      "task_type": "translation",
+      "model_size": "30B (3B active)",
+      "tags": ["translation", "moe", "text-generation", "multilingual"],
+      "metrics": { "downloads": 1243, "likes": 309 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-30B-A3B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "SapientInc",
+      "description": "A compact 1B-parameter text generation model with the highest raw downloads among models under 2B parameters today, suggesting strong adoption for lightweight deployment scenarios.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "efficient", "small-model"],
+      "metrics": { "downloads": 84346, "likes": 271 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "resembleai-dramabox",
+      "name": "Dramabox",
+      "organization": "ResembleAI",
+      "description": "A text-to-speech and voice cloning model from ResembleAI, supporting audio generation with dramatic voice synthesis capabilities for media and entertainment use cases.",
+      "task_type": "text-to-speech",
+      "model_size": "Unknown",
+      "tags": ["tts", "voice-cloning", "audio-generation", "speech-synthesis"],
+      "metrics": { "downloads": 1450, "likes": 243 },
+      "source_url": "https://huggingface.co/ResembleAI/Dramabox"
+    },
+    {
+      "id": "coherelabs-command-a-plus-w4a4",
+      "name": "command-a-plus-05-2026-w4a4",
+      "organization": "Cohere Labs",
+      "description": "A W4A4 (4-bit weight, 4-bit activation) quantized version of Cohere's Command A+ vision-language model, enabling highly efficient multimodal conversational deployment.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown (W4A4 quantized)",
+      "tags": ["quantization", "multimodal", "conversational", "image-text-to-text", "efficient"],
+      "metrics": { "downloads": 5627, "likes": 190 },
+      "source_url": "https://huggingface.co/CohereLabs/command-a-plus-05-2026-w4a4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Turns any code repository into an interactive knowledge graph, enabling developers and AI agents to navigate large codebases through structured visual and semantic representations.",
+      "language": "TypeScript",
+      "stars": 26286,
+      "stars_today": 3999,
+      "forks": 2265,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "ai-coding-agent", "codebase-navigation"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "Pre-indexed code knowledge graph designed for Claude Code and similar AI coding agents, providing fast structured retrieval of codebase context without runtime indexing.",
+      "language": "TypeScript",
+      "stars": 22257,
+      "stars_today": 3003,
+      "forks": 1231,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "claude-code", "ai-coding-agent", "context-retrieval"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "A CLAUDE.md file containing structured behavioral guidelines for improving Claude Code's coding agent behavior, inspired by Andrej Karpathy's AI engineering principles.",
+      "language": "(none)",
+      "stars": 152270,
+      "stars_today": 2551,
+      "forks": 15613,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["claude-code", "ai-coding-agent", "behavioral-guidelines", "prompt-engineering"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "A comprehensive Python-based learning resource for AI engineering covering the full stack from fundamentals through production deployment, following a learn-build-ship methodology.",
+      "language": "Python",
+      "stars": 16212,
+      "stars_today": 1853,
+      "forks": 2871,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "python", "full-stack-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-plugins-official",
+      "name": "anthropics/claude-plugins-official",
+      "description": "Anthropic's official directory of high-quality Claude Code plugins, curated and maintained by Anthropic for extending Claude's coding agent capabilities.",
+      "language": "Python",
+      "stars": 27284,
+      "stars_today": 1173,
+      "forks": 2906,
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "tags": ["claude-code", "plugins", "anthropic", "ai-coding-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "cybersecurity-skills-anthropic",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "A collection of 754 structured cybersecurity skills formatted for use by AI agents, enabling security-aware reasoning and task execution in agentic workflows.",
+      "language": "Python",
+      "stars": 8398,
+      "stars_today": 930,
+      "forks": 1060,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "ai-agents", "security"],
+      "relevance": "high"
+    },
+    {
+      "id": "multica-multica",
+      "name": "multica-ai/multica",
+      "description": "An open-source managed agents platform enabling teams to deploy, coordinate, and govern AI agents at scale with built-in orchestration and monitoring.",
+      "language": "TypeScript",
+      "stars": 32544,
+      "stars_today": 585,
+      "forks": 3908,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": ["managed-agents", "agent-orchestration", "open-source", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic's open-source plugin repository targeting knowledge worker workflows, extending Claude Code with document analysis, research, and productivity capabilities.",
+      "language": "Python",
+      "stars": 14110,
+      "stars_today": 550,
+      "forks": 1746,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["claude-code", "plugins", "knowledge-work", "productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "cmux-terminal",
+      "name": "manaflow-ai/cmux",
+      "description": "A Ghostty-based macOS terminal application purpose-built for AI coding agents, providing optimized terminal multiplexing and session management for agent-driven development workflows.",
+      "language": "Swift",
+      "stars": 19049,
+      "stars_today": 696,
+      "forks": 1449,
+      "url": "https://github.com/manaflow-ai/cmux",
+      "tags": ["terminal", "macos", "ai-coding-agent", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "fincept-terminal",
+      "name": "Fincept-Corporation/FinceptTerminal",
+      "description": "A modern Python-based finance application with terminal interface, providing real-time market data, analysis, and trading functionality for quantitative finance workflows.",
+      "language": "Python",
+      "stars": 23476,
+      "stars_today": 462,
+      "forks": 3249,
+      "url": "https://github.com/Fincept-Corporation/FinceptTerminal",
+      "tags": ["finance", "quantitative", "terminal", "market-data"],
+      "relevance": "medium"
+    },
+    {
+      "id": "earendil-pi",
+      "name": "earendil-works/pi",
+      "description": "A TypeScript AI agent toolkit providing primitives for building, composing, and deploying AI agents with a focus on developer ergonomics and extensibility.",
+      "language": "TypeScript",
+      "stars": 53981,
+      "stars_today": 456,
+      "forks": 6445,
+      "url": "https://github.com/earendil-works/pi",
+      "tags": ["ai-agents", "toolkit", "typescript", "agent-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "free-claude-code",
+      "name": "Alishahryar1/free-claude-code",
+      "description": "Enables use of Claude Code for free via terminal, VSCode extension, or Discord, providing access to Claude's coding agent capabilities without a paid subscription.",
+      "language": "Python",
+      "stars": 29200,
+      "stars_today": 553,
+      "forks": 4384,
+      "url": "https://github.com/Alishahryar1/free-claude-code",
+      "tags": ["claude-code", "free-access", "vscode", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos-financial-foundation",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for financial markets that processes and reasons over the language of financial data, offering domain-specific pre-training for quantitative finance applications.",
+      "language": "Python",
+      "stars": 25812,
+      "stars_today": 106,
+      "forks": 4496,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["foundation-model", "finance", "domain-specific", "nlp"],
+      "relevance": "medium"
+    },
+    {
+      "id": "nvlabs-longlive",
+      "name": "NVlabs/LongLive",
+      "description": "NVIDIA's LongLive 2.0 infrastructure for long video generation, providing scalable training and inference pipelines for extended temporal video synthesis.",
+      "language": "Python",
+      "stars": 1963,
+      "stars_today": 236,
+      "forks": 177,
+      "url": "https://github.com/NVlabs/LongLive",
+      "tags": ["video-generation", "long-video", "nvidia", "diffusion"],
+      "relevance": "high"
+    },
+    {
+      "id": "honcho-memory-agents",
+      "name": "plastic-labs/honcho",
+      "description": "A memory library for building stateful AI agents, providing persistent user and session context that enables agents to maintain coherent long-term relationships with users.",
+      "language": "Python",
+      "stars": 4189,
+      "stars_today": 87,
+      "forks": 488,
+      "url": "https://github.com/plastic-labs/honcho",
+      "tags": ["agent-memory", "stateful-agents", "personalization", "llm-agents"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Visual Chain-of-Thought and Multimodal Reasoning",
+      "description": "Research is converging on dedicated image editing pipelines as a cleaner substrate for visual reasoning steps, moving beyond unified multimodal models that conflate generation and understanding. ETCHR exemplifies this decoupling strategy.",
+      "related_paper_ids": ["etchr-editing-visual-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Information-Theoretic Scaling Laws",
+      "description": "The Shannon Scaling Law represents a shift from empirical power-law fitting to physics-grounded explanations of LLM training dynamics, addressing non-monotonic failure modes that conventional scaling laws cannot explain.",
+      "related_paper_ids": ["shannon-scaling-law-llm"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skill Lifecycle and Text-Space Optimization",
+      "description": "The emerging consensus that agent skills should be treated as first-class optimizable artifacts — versioned, iterated under feedback, and governed by optimizer-style discipline — rather than one-shot artifacts.",
+      "related_paper_ids": ["raw-experience-agent-skills", "skillopt-text-space-optimizer"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Coding Agent Infrastructure",
+      "description": "The tooling layer for AI coding agents is consolidating rapidly around knowledge graphs, behavioral guidelines, and purpose-built terminals, with multiple projects each attracting thousands of stars in a single day.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D Scene Reconstruction with Generative Priors",
+      "description": "Treating 3D reconstruction as conditional generation, inheriting generative model fidelity while scaling to large scene extents through spatially-localized chunk decomposition.",
+      "related_paper_ids": ["genrecon-generative-3d-reconstruction"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Efficient High-Resolution Image and Video Generation",
+      "description": "Latent decoder bottlenecks and long video generation infrastructure are active research fronts, with PiD targeting expressive decoding and NVlabs/LongLive providing generation infrastructure at scale.",
+      "related_paper_ids": ["pid-pixel-diffusion-decoder"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-25T14:57:00Z",
+      "status": "error"
+    }
+  ]
+}
