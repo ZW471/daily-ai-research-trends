@@ -1,0 +1,494 @@
+{
+  "version": "1.0",
+  "date": "2026-05-26",
+  "generated_at": "2026-05-26T14:57:00Z",
+  "summary": {
+    "headline": "SMART 以即插即用方式激活冻结单向量模型中潜藏的多向量检索能力；AutoResearch AI 全面梳理 AI 驱动科研自动化的发展谱系；腾讯 Hy-MT2 翻译模型系列与字节跳动 Lance 多模态生成器领跑 HuggingFace 热榜；ECC（192K 星）、andrej-karpathy-skills（155K 星）和 Understand-Anything（31K 星）引领 GitHub AI 编程智能体工具整合加速",
+    "body": "本周一论文数量偏少但焦点集中。**SMART**（6 票，今日最高互动量）证明标准单向量嵌入模型已隐含多向量检索能力——池化嵌入的对比训练会通过梯度流隐式塑造前续隐层状态的检索几何结构。在推理时对冻结隐层状态进行延迟交互（Late-Interaction），SMART 提供了一种无需训练的升级方案，使最先进模型在 MMEB-V2 上进一步提升。轻量级后训练在视觉文档检索任务上更使单向量模型超越专用多向量系统。**AutoResearch AI**（4 票）提供了一份系统性综述，梳理了 AI 驱动科研自动化的完整发展谱系，区分了「Vibe Research」（人工引导的提示式辅助）与新兴 AI 主导系统，并提出五个自主性评估维度。\n\n模型生态由两大发布集群主导。**腾讯 Hy-MT2 系列**（1.8B、7B、30B-A3B 三款）带来专用翻译模型，早期社区反响热烈（1.8B 获赞 823），而**字节跳动 Lance**（获赞 820）主攻多模态图文和视频生成。常青树稳居榜首：**DeepSeek-V4-Pro**（下载量 482 万，获赞 4276）、**SulphurAI/Sulphur-2-base**（文本转视频，下载量 135 万）和 **openbmb/MiniCPM-V-4.6**（高效多模态推理，获赞 943）。新晋入榜的 **Supertone/supertonic-3**（语音合成，获赞 675）和**美团 LongCat-Video-Avatar-1.5**（音频驱动视频虚拟形象，获赞 230）反映了语音与虚拟形象生成领域的持续升温。\n\nGitHub 热榜清晰呈现 AI 编程智能体基础设施加速整合的态势。**ECC**（192K 星，今日新增 2025）提供含技能、记忆和安全层的全套智能体工作台。**andrej-karpathy-skills**（155K 星，今日新增 2749）将编程智能体的行为启发式规则系统化。**Understand-Anything**（31K 星，今日新增 5604）和 **codegraph**（25K 星，今日新增 3161）从互补角度构建代码库知识图谱。金融 AI 工具（**TrendRadar**、**MiroFish**、**Kronos**、**FinceptTerminal**）构成显著的第二梯队。",
+    "key_themes": [
+      "multi-vector-retrieval-efficiency",
+      "ai-research-automation",
+      "translation-model-specialization",
+      "multimodal-generation-convergence",
+      "ai-coding-agent-infrastructure",
+      "financial-ai-tooling"
+    ]
+  },
+  "researcher_notes": "**SMART 的核心洞见看似简单，实则具有重要的架构意义。** 论文表明，对池化嵌入进行对比训练会在前续隐层状态中创建有价值的几何结构——而标准单向量检索完全忽略了这一结构。在推理时对冻结状态进行延迟交互（ColBERT 风格），相当于推理层面的「免费午餐」，无需任何额外训练。实践意义立竿见影：使用任意标准嵌入模型的团队均可将 SMART 作为即插即用的推理封装层，并可预期稳定的性能提升。更深层的意义在于：单向量训练可能正在进行隐式的多粒度表示学习，这重构了单向量与多向量之间的对立框架，将其揭示为伪命题。轻量级后训练在视觉文档检索上的结果——单向量模型超越专用多向量系统——表明这可能成为生产检索流水线的默认方案，尤其适用于无法承担真正多向量索引存储开销的场景。\n\n**AutoResearch AI 填补了快速扩张的科学 AI 文献中的重要空白。** 该综述的核心贡献在于「AutoResearch」框架，明确区分了从提示辅助（「Vibe Research」）到混合主动协作研究，再到完全自主 AI 科学家系统的发展谱系。五个评估维度（新颖性、有效性、影响力、可靠性、溯源性）是最具可操作性的核心成果，为比较那些因运作在不同自主等级、不同领域、采用不同验证机制而难以横向对比的系统提供了原则性框架。「自主可信度受领域制约」的发现——在结构化、可执行、可快速验证的场景中更高，在具身、延迟性或伦理性场景中更低——为优先部署科研自动化的方向提供了重要指引。\n\n**腾讯 Hy-MT2 系列是对专用翻译模型的战略性押注。** 尽管通用大语言模型已具备翻译能力，腾讯选择发布专用的 1.8B、7B 和 30B-A3B 翻译模型，表明其在任务专精化方面看到了显著的质量或效率增益。其中 30B-A3B 混合专家架构尤为值得关注——每个令牌仅激活 30B 总参数中的 3B，以小模型推理成本实现大模型翻译质量。结合字节跳动 Lance 的多模态生成，这一态势折射出更广泛的趋势：中国科技公司在开源基础模型方面，正从单纯拼规模转向发布针对特定任务的专用模型。\n\n**GitHub 热榜数据揭示 AI 编程智能体基础设施已抵达新的成熟门槛。** 按今日新增星数排列的前十仓库中，有五个直接服务于提升编程智能体效能：ECC（2025）、andrej-karpathy-skills（2749）、Understand-Anything（5604）、codegraph（3161）、gstack（640）。仅这五个仓库的日新增星数总量就达约 14000 颗，数字惊人。趋势清晰：原始大语言模型编程能力已商品化，竞争护城河正向上下文工程（知识图谱、代码库索引）、行为对齐（技能文件、品味约束）和运营基础设施（终端集成、治理体系）转移。未在这些层面投入的团队，正在白白浪费大量性能潜力。\n\n**GitHub 热榜中的金融 AI 集群值得单独关注。** TrendRadar（58K 星）、MiroFish（63K 星）、Kronos（26K 星）、FinceptTerminal（24K 星）和 OpenBB（68K 星）共同构成一个日趋成熟的 AI 金融分析工具生态。Kronos 将自身定位为「金融市场语言的基础模型」，技术雄心最为突出；TrendRadar 的多平台趋势监控与 AI 告警功能则反映了真实的运营需求。金融工具在热榜的集中出现，标志着 AI 在量化金融与零售金融领域的主流应用进一步深化。",
+  "papers": [
+    {
+      "id": "smart-multi-vector-retrieval",
+      "title": "Your Embedding Model is SMARTer Than You Think",
+      "authors": ["Jianrui Zhang", "Hyun Jung Lee", "Sukanta Ganguly", "Tae-Eui Kam", "Donghyun Kim", "Yong Jae Lee"],
+      "affiliations": ["University of Wisconsin-Madison", "Korea Advanced Institute of Science and Technology"],
+      "summary": "SMART 提出了一个框架，用于激活标准单向量嵌入模型中潜藏的多向量检索能力。研究表明，对池化嵌入的对比训练会通过梯度流隐式塑造前续隐层状态的检索几何结构，在推理时对这些冻结状态进行延迟交互，可作为即插即用升级方案，跨多种模态持续提升性能，在 MMEB-V2 上使最先进模型进一步提升。",
+      "key_findings": [
+        "标准对比训练通过梯度流在前续隐层状态中隐式创建有价值的多向量几何结构",
+        "对冻结隐层状态进行延迟交互，提供无训练推理升级，在 MMEB-V2 上使最先进模型进一步提升",
+        "在视觉文档检索上进行轻量级后训练，使单向量模型超越专用多向量系统"
+      ],
+      "tags": ["multimodal-retrieval", "embedding-models", "late-interaction", "visual-document-retrieval", "plug-and-play"],
+      "relevance": "high",
+      "engagement": { "upvotes": 6, "comments": 4 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.24938",
+        "huggingface": "https://huggingface.co/papers/2605.24938",
+        "pdf": "https://arxiv.org/pdf/2605.24938"
+      }
+    },
+    {
+      "id": "autoresearch-ai-survey",
+      "title": "AutoResearch AI: Towards AI-Powered Research Automation for Scientific Discovery",
+      "authors": ["Guiyao Tie", "Jiawen Shi", "Dingjie Song", "Yixiao Huang", "Ziji Sheng et al."],
+      "affiliations": ["Lehigh University", "University of Illinois Chicago", "Salesforce Research", "Microsoft Research", "Stanford University"],
+      "summary": "这是一篇全面梳理 AI 驱动科研工作流自动化（AutoResearch）的综述论文，涵盖从人工引导的「Vibe Research」到混合主动协作研究，再到新兴 AI 主导系统的完整发展谱系。论文围绕五大工作流条件组织全文，并提出新颖性、有效性、影响力、可靠性、溯源性五个评估维度，指出 AI 自主可信度受领域制约。",
+      "key_findings": [
+        "提出 AutoResearch 框架，区分 Vibe Research（人工引导）与 AI 主导系统在自主性谱系上的位置",
+        "提出五个评估维度（新颖性、有效性、影响力、可靠性、溯源性），用于比较跨自主等级的科研自动化系统",
+        "揭示 AI 科研自主可信度受领域制约：在结构化、可执行场景中更高，在具身或伦理性场景中更低"
+      ],
+      "tags": ["ai-for-science", "research-automation", "survey", "ai-agents", "scientific-discovery"],
+      "relevance": "high",
+      "engagement": { "upvotes": 4, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23204",
+        "huggingface": "https://huggingface.co/papers/2605.23204",
+        "pdf": "https://arxiv.org/pdf/2605.23204"
+      }
+    },
+    {
+      "id": "pantheon360-digital-twin",
+      "title": "Pantheon360: Taming Digital Twin Generation via 3D-Aware 360° Video Diffusion",
+      "authors": ["Ting-Hsuan Chen", "Ying-Huan Chen", "Tao Tu", "Jie-Ying Lee", "Cho-Ying Wu"],
+      "affiliations": ["National Taiwan University", "University of Southern California"],
+      "summary": "Pantheon360 通过 360° 视频扩散而非透视视频生成来解决数字孪生生成问题。全景覆盖简化了轨迹设计，并提供强大的几何先验，缓解了窄视场透视生成器在拼接长轨迹或多视角时产生的跨视角不一致和时序漂移问题。",
+      "key_findings": [
+        "360° 视频生成提供自然全景覆盖，消除了窄视场透视生成器的跨视角不一致问题",
+        "全景先验简化了完整场景覆盖的轨迹设计，适用于数字孪生生成",
+        "三维感知 360° 扩散维持严格的时空一致性，超越了透视方法的能力边界"
+      ],
+      "tags": ["360-video", "digital-twins", "video-diffusion", "3d-generation", "scene-generation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.25449",
+        "huggingface": "https://huggingface.co/papers/2605.25449",
+        "pdf": "https://arxiv.org/pdf/2605.25449"
+      }
+    },
+    {
+      "id": "metaphorvu-video-understanding",
+      "title": "MetaphorVU: Towards Metaphorical Video Understanding",
+      "authors": ["Zhuoqun Li", "Boxi Cao", "Guiping Jiang", "Fangrui Lv", "Ruotong Pan"],
+      "affiliations": ["Peking University", "Chinese Academy of Sciences"],
+      "summary": "MetaphorVU-Bench 提出了首个针对隐喻视频理解的系统性基准，聚焦于标准视频基准未评测的高阶认知能力。隐喻视频在广告、影视和社交媒体中普遍存在，但多模态大语言模型在理解视频中比喻意义方面尚未接受系统性评估。",
+      "key_findings": [
+        "首个专门针对隐喻视频理解的系统性综合基准，覆盖多个认知维度",
+        "揭示当前多模态大语言模型在理解视频内容中比喻和隐喻意义方面的显著不足",
+        "覆盖广告、影视、社交媒体等隐喻沟通普遍存在的真实应用场景"
+      ],
+      "tags": ["video-understanding", "metaphor", "benchmark", "mllm", "cognitive-reasoning"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.25461",
+        "huggingface": "https://huggingface.co/papers/2605.25461",
+        "pdf": "https://arxiv.org/pdf/2605.25461"
+      }
+    },
+    {
+      "id": "skillopt-agent-skill-optimizer",
+      "title": "SkillOpt: Executive Strategy for Self-Evolving Agent Skills",
+      "authors": ["Yifan Yang", "Ziyang Gong", "Weiquan Huang", "Qihao Yang", "Ziwei Zhou et al."],
+      "affiliations": ["Microsoft Research", "Fudan University"],
+      "summary": "SkillOpt 是首个针对智能体技能的系统化可控文本空间优化器，将技能视为外部可训练智能体状态，实现稳定更新且部署推理零开销。其框架类比权重空间梯度下降：以运行轨迹为梯度信号、增删改编辑为参数更新、文本学习率预算保障稳定性，在六项基准测试中使 GPT-5.5 直接对话准确率提升 23.5 个百分点，Claude Code 提升 19.1 个百分点。",
+      "key_findings": [
+        "首个文本空间智能体技能优化器，将技能文本建模为可训练外部参数，采用类梯度下降式更新",
+        "在六项基准、七款目标模型上使 GPT-5.5 直接对话提升 23.5 分、Codex 提升 24.8 分、Claude Code 提升 19.1 分",
+        "部署推理零额外开销——技能离线优化后作为静态上下文在推理时使用"
+      ],
+      "tags": ["agent-skills", "text-optimization", "llm-agents", "skill-evolution", "claude-code"],
+      "relevance": "high",
+      "engagement": { "upvotes": 159, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23904",
+        "huggingface": "https://huggingface.co/papers/2605.23904",
+        "pdf": "https://arxiv.org/pdf/2605.23904"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek 旗舰大语言模型，在推理和编码任务上表现卓越，持续主导开放权重模型生态，用户采用量庞大。",
+      "task_type": "text-generation",
+      "model_size": "未知",
+      "tags": ["conversational", "reasoning", "coding"],
+      "metrics": { "downloads": 4820866, "likes": 4276 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "基于扩散的图像生成模型，社区采用率高，支持 ComfyUI 集成，专注于高质量视觉内容创作。",
+      "task_type": "image-generation",
+      "model_size": "未知",
+      "tags": ["diffusion", "comfyui", "image-generation"],
+      "metrics": { "downloads": 651655, "likes": 1545 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "主流开放文本转视频生成模型，下载量巨大，同时提供 diffusers 和 GGUF 格式，部署灵活性强。",
+      "task_type": "text-to-video",
+      "model_size": "未知",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": { "downloads": 1354786, "likes": 1352 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "高效多模态视觉语言模型，在强大图文理解能力与紧凑参数量之间取得平衡，适合设备端和边缘部署场景。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": { "downloads": 285414, "likes": 943 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "qwen36-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS（社区）",
+      "description": "Qwen 3.6 35B 混合专家模型的社区无审查微调版本，针对无限制文本生成和视觉任务进行激进调优。",
+      "task_type": "text-generation",
+      "model_size": "35B（激活 3B）",
+      "tags": ["moe", "uncensored", "vision", "qwen3.6"],
+      "metrics": { "downloads": 1392596, "likes": 858 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "腾讯",
+      "description": "腾讯混元系列轻量机器翻译模型，高效支持多语言翻译，早期社区反响热烈（获赞 823）。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 5552, "likes": 823 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "字节跳动研究院",
+      "description": "同时支持图像和视频生成任务的多模态生成模型，代表字节跳动进军开放权重多模态内容创作领域。",
+      "task_type": "image-generation",
+      "model_size": "未知",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": { "downloads": 1679, "likes": 820 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "支持 ONNX 高效推理的先进文本转语音模型，为生产部署提供高质量语音合成能力。",
+      "task_type": "text-to-speech",
+      "model_size": "未知",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": { "downloads": 45800, "likes": 675 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth 出品的 Qwen 3.6 27B 量化 GGUF 版本，支持多令牌预测，针对本地推理优化。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "unsloth", "qwen"],
+      "metrics": { "downloads": 695277, "likes": 480 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "tencent-hy-mt2-30b-a3b",
+      "name": "Hy-MT2-30B-A3B",
+      "organization": "腾讯",
+      "description": "腾讯混合专家翻译模型，30B 总参数量但每令牌仅激活 3B，以小模型推理成本实现大模型翻译质量。",
+      "task_type": "translation",
+      "model_size": "30B（激活 3B）",
+      "tags": ["translation", "moe", "hunyuan"],
+      "metrics": { "downloads": 1494, "likes": 327 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-30B-A3B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "紧凑型 10 亿参数文本生成模型，相对体量而言下载量惊人，显示出在轻量级部署场景中的强劲采用势头。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "compact", "hrm"],
+      "metrics": { "downloads": 90026, "likes": 316 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "cohere-command-a-plus-w4a4",
+      "name": "Command A+（2026 年 5 月，W4A4）",
+      "organization": "Cohere Labs",
+      "description": "Cohere Command A+ 视觉语言旗舰模型的激进量化版本（W4A4），以 4 位权重和激活实现高效部署。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": ["quantized", "vision-language", "conversational"],
+      "metrics": { "downloads": 7449, "likes": 200 },
+      "source_url": "https://huggingface.co/CohereLabs/command-a-plus-05-2026-w4a4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将任意代码库转化为可探索、可搜索、支持自然语言问答的交互式知识图谱。兼容 Claude Code、Codex、Cursor、Copilot 和 Gemini CLI。今日新增星数 5604，为当日最高。",
+      "language": "TypeScript",
+      "stars": 31421,
+      "stars_today": 5604,
+      "forks": 2581,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "ai-coding-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "覆盖从基础到生产部署全栈的 AI 工程学习课程。今日新增 3154 颗星，反映出市场对结构化 AI 工程教育的强烈需求。",
+      "language": "Python",
+      "stars": 18741,
+      "stars_today": 3154,
+      "forks": 3173,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "curriculum"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "为 Claude Code、Codex、Cursor、OpenCode 和 Hermes Agent 提供预索引代码知识图谱，减少令牌消耗和工具调用次数，完全本地运行。",
+      "language": "TypeScript",
+      "stars": 25257,
+      "stars_today": 3161,
+      "forks": 1399,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "code-context", "ai-coding-agent", "local"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "一个 CLAUDE.md 文件，将 Andrej Karpathy 对大语言模型编程陷阱的观察提炼为行为启发式规则，适用于 Claude Code。拥有 155K 星和今日 2749 新增星，显示出广泛的社区采用。",
+      "language": "",
+      "stars": 155103,
+      "stars_today": 2749,
+      "forks": 15896,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["ai-coding-agent", "claude-code", "skills", "behavioral-alignment"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc",
+      "name": "affaan-m/ECC",
+      "description": "全套智能体工作台性能优化系统，涵盖技能、本能、记忆、安全和研究优先开发模式，支持 Claude Code、Codex、Opencode、Cursor 等。星数最大的集群仓库，拥有 192K 星。",
+      "language": "JavaScript",
+      "stars": 192465,
+      "stars_today": 2025,
+      "forks": 29785,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "ai-coding-agent", "skills", "memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic 官方发布的知识工作者 Claude Cowork 插件开源仓库，首日获得 1441 颗星。",
+      "language": "Python",
+      "stars": 15555,
+      "stars_today": 1441,
+      "forks": 1874,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["anthropic", "claude", "plugins", "knowledge-work"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 条结构化网络安全技能，映射到 MITRE ATT&CK、NIST CSF 2.0、MITRE ATLAS、D3FEND 和 NIST AI RMF 五大框架，兼容 Claude Code、Copilot、Codex、Cursor、Gemini CLI 等 20 余个平台。",
+      "language": "Python",
+      "stars": 9291,
+      "stars_today": 1004,
+      "forks": 1139,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "ai-agents", "mitre", "nist", "skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "微软 AI 智能体治理工具包，提供策略执行、零信任身份、执行沙箱和可靠性工程，覆盖 OWASP Agentic Top 10 全部 10 项风险。",
+      "language": "Python",
+      "stars": 2262,
+      "stars_today": 271,
+      "forks": 394,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "zero-trust", "owasp", "microsoft"],
+      "relevance": "high"
+    },
+    {
+      "id": "mirofish",
+      "name": "666ghj/MiroFish",
+      "description": "通用群体智能引擎，适用于各领域预测任务，利用集体智能算法进行通用预测。",
+      "language": "Python",
+      "stars": 62521,
+      "stars_today": 534,
+      "forks": 9762,
+      "url": "https://github.com/666ghj/MiroFish",
+      "tags": ["swarm-intelligence", "prediction", "forecasting"],
+      "relevance": "medium"
+    },
+    {
+      "id": "trendradar",
+      "name": "sansan0/TrendRadar",
+      "description": "AI 驱动的舆情与趋势监控平台，支持多平台聚合、RSS 订阅和智能告警，具备 AI 筛选、翻译和分析功能，可推送至微信、Telegram、Slack 等渠道。",
+      "language": "Python",
+      "stars": 58281,
+      "stars_today": 122,
+      "forks": 24414,
+      "url": "https://github.com/sansan0/TrendRadar",
+      "tags": ["trend-monitoring", "ai-analysis", "rss", "multi-platform"],
+      "relevance": "medium"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan 的 Claude Code 配置方案，23 个工具分别扮演 CEO、设计师、工程经理、发布经理、文档工程师和 QA 角色，为 AI 辅助产品开发工作流提供强力背书。",
+      "language": "TypeScript",
+      "stars": 102531,
+      "stars_today": 640,
+      "forks": 15291,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": ["claude-code", "ai-coding-agent", "workflow", "tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "金融市场语言基础模型，将 Transformer 架构应用于金融时间序列和市场数据，用于预测和分析。",
+      "language": "Python",
+      "stars": 26036,
+      "stars_today": 245,
+      "forks": 4521,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "time-series", "markets"],
+      "relevance": "medium"
+    },
+    {
+      "id": "cmux",
+      "name": "manaflow-ai/cmux",
+      "description": "基于 Ghostty 的 macOS 终端，配备垂直标签页和通知功能，专为 AI 编程智能体工作流设计，是专用智能体终端基础设施的代表。",
+      "language": "Swift",
+      "stars": 19522,
+      "stars_today": 603,
+      "forks": 1474,
+      "url": "https://github.com/manaflow-ai/cmux",
+      "tags": ["terminal", "macos", "ai-coding-agent", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ppf-contact-solver",
+      "name": "st-tech/ppf-contact-solver",
+      "description": "用于壳、固体和杆物理模拟的接触求解器，今日新增 432 星，反映出差分物理仿真工具领域的持续升温。",
+      "language": "Python",
+      "stars": 3180,
+      "stars_today": 432,
+      "forks": 230,
+      "url": "https://github.com/st-tech/ppf-contact-solver",
+      "tags": ["physics-simulation", "contact-solver", "differentiable-physics"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "多向量检索效率",
+      "description": "SMART 证明单向量模型已隐含多向量检索能力，重构了检索架构之争，并在推理层面提供了「免费午餐」，适用于生产级搜索系统。",
+      "related_paper_ids": ["smart-multi-vector-retrieval"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI 科研自动化谱系",
+      "description": "AutoResearch AI 梳理了从提示辅助到自主 AI 科学家的完整谱系，建立的评估框架将塑造科研自动化系统的评估与跨领域部署方式。",
+      "related_paper_ids": ["autoresearch-ai-survey"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI 编程智能体基础设施整合",
+      "description": "GitHub 热榜前五仓库中有五个聚焦于通过知识图谱、行为技能和运营工具提升编程智能体效能。基础设施层正在商品化，护城河向上下文工程迁移。",
+      "related_paper_ids": ["skillopt-agent-skill-optimizer"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "专用翻译与多模态模型",
+      "description": "腾讯 Hy-MT2 系列和字节跳动 Lance 标志着一种趋势：发布针对特定任务的专用基础模型，而非单纯拼规模，尤其在中国科技公司中更为明显。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "金融 AI 工具成熟化",
+      "description": "GitHub 热榜金融 AI 工具密集出现——TrendRadar、MiroFish、Kronos、FinceptTerminal、OpenBB——反映 AI 在量化金融和零售金融领域的监控、预测和分析应用进入主流。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "视频与三维场景生成",
+      "description": "Pantheon360 通过 360° 视频扩散攻克数字孪生生成，MetaphorVU 从认知层面为视频理解立标杆，共同呈现视频域生成与理解能力的持续拓展。",
+      "related_paper_ids": ["pantheon360-digital-twin", "metaphorvu-video-understanding"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

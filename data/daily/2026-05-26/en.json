@@ -1,0 +1,494 @@
+{
+  "version": "1.0",
+  "date": "2026-05-26",
+  "generated_at": "2026-05-26T14:57:00Z",
+  "summary": {
+    "headline": "SMART unlocks latent multi-vector retrieval from frozen single-vector models as a plug-and-play upgrade; AutoResearch AI surveys the full spectrum of AI-powered scientific workflow automation; Tencent Hy-MT2 translation models and ByteDance Lance multimodal generator dominate HuggingFace trending; AI coding agent tooling consolidation accelerates with ECC (192K stars), andrej-karpathy-skills (155K stars), and Understand-Anything (31K stars) leading GitHub",
+    "body": "Monday's paper slate is lean but focused. **SMART** (6 upvotes, highest engagement of the day) demonstrates that standard single-vector embedding models already contain latent multi-vector retrieval capabilities — their pooled-embedding contrastive training implicitly shapes the geometry of preceding hidden states. By applying late-interaction at inference over frozen hidden states, SMART delivers a training-free upgrade that pushes even state-of-the-art models further on MMEB-V2, with lightweight post-training enabling a single-vector model to outperform dedicated multi-vector retrievers on visual document retrieval. **AutoResearch AI** (4 upvotes) provides a comprehensive survey mapping the full developmental spectrum of AI-powered research automation, distinguishing between \"Vibe Research\" (human-steered prompt-based assistance) and emerging AI-led systems, while proposing five evaluation dimensions for autonomy assessment.\n\nThe model landscape is dominated by two release clusters. **Tencent's Hy-MT2 family** (1.8B, 7B, 30B-A3B variants) brings specialized translation models with strong early traction (823 likes for the 1.8B), while **ByteDance's Lance** (820 likes) targets multimodal image and video generation. The perennial leaders maintain position: **DeepSeek-V4-Pro** (4.82M downloads, 4,276 likes), **SulphurAI/Sulphur-2-base** for text-to-video (1.35M downloads), and **openbmb/MiniCPM-V-4.6** for efficient multimodal reasoning (943 likes). New entrants **Supertone/supertonic-3** for TTS (675 likes) and **Meituan's LongCat-Video-Avatar-1.5** for audio-driven video avatars (230 likes) reflect growing interest in speech and avatar generation.\n\nGitHub trends paint a striking picture of AI coding agent infrastructure consolidation. **ECC** (192K stars, 2,025 stars today) offers a comprehensive agent harness with skills, memory, and security layers. **andrej-karpathy-skills** (155K stars, 2,749 stars today) codifies behavioral heuristics for coding agents. **Understand-Anything** (31K stars, 5,604 stars today) and **codegraph** (25K stars, 3,161 stars today) provide complementary approaches to codebase knowledge graphs. Financial AI tools (**TrendRadar**, **MiroFish**, **Kronos**, **FinceptTerminal**) form a notable secondary cluster.",
+    "key_themes": [
+      "multi-vector-retrieval-efficiency",
+      "ai-research-automation",
+      "translation-model-specialization",
+      "multimodal-generation-convergence",
+      "ai-coding-agent-infrastructure",
+      "financial-ai-tooling"
+    ]
+  },
+  "researcher_notes": "**SMART's core insight is deceptively simple but architecturally significant.** The paper shows that contrastive training on pooled embeddings creates useful geometric structure in the preceding hidden states — structure that standard single-vector retrieval completely ignores. Late-interaction (ColBERT-style) over these frozen states acts as a free lunch at inference time, with no additional training required. The practical implication is immediate: teams using any standard embedding model can apply SMART as a plug-and-play inference wrapper and expect consistent gains. The deeper implication is that single-vector training may be performing implicit multi-granularity representation learning, which reframes the single-vs-multi-vector debate as a false dichotomy. The lightweight post-training results on visual document retrieval — where a SMART-enhanced single-vector model outperforms dedicated multi-vector systems — suggest this could become the default approach for production retrieval pipelines that cannot afford the storage overhead of true multi-vector indexing.\n\n**AutoResearch AI fills an important gap in the rapidly expanding AI-for-science literature.** The survey's key contribution is the \"AutoResearch\" framing that explicitly separates the spectrum from prompt-based assistance (\"Vibe Research\") through mixed-initiative co-research to fully autonomous AI scientist systems. The five evaluation dimensions (novelty, validity, impact, reliability, provenance) are the most actionable takeaway: they provide a principled framework for comparing systems that are otherwise incommensurable because they operate at different autonomy levels, in different domains, with different validation mechanisms. The finding that autonomy credibility is domain-conditioned — higher in structured/executable/verifiable settings, lower in embodied/delayed/ethical contexts — is important guidance for where to deploy research automation first.\n\n**The Tencent Hy-MT2 family signals a strategic bet on specialized translation models.** While general-purpose LLMs can translate, Tencent's decision to release dedicated 1.8B, 7B, and 30B-A3B translation models suggests they see significant quality or efficiency gains from task specialization. The 30B-A3B variant is particularly interesting — a mixture-of-experts architecture where only 3B parameters are active per token, offering large-model quality at small-model inference cost for translation-specific workloads. Combined with ByteDance's Lance for multimodal generation, this reflects a broader trend of Chinese tech companies releasing increasingly specialized foundation models rather than competing solely on general-purpose scale.\n\n**The GitHub trending data reveals that AI coding agent infrastructure has reached a new maturity threshold.** Five of the top ten repos by stars-today are directly about making coding agents more effective: ECC (2,025), andrej-karpathy-skills (2,749), Understand-Anything (5,604), codegraph (3,161), and gstack (640). The total star velocity across these five repos alone is ~14,000 stars/day, which is extraordinary. The pattern is clear: raw LLM coding capability is now commodity, and the competitive moat is moving to context engineering (knowledge graphs, codebase indexing), behavioral alignment (skills files, taste constraints), and operational infrastructure (terminal integration, governance). Teams not investing in these layers are leaving significant performance on the table.\n\n**The financial AI cluster in GitHub trending deserves separate attention.** TrendRadar (58K stars), MiroFish (63K stars), Kronos (26K stars), FinceptTerminal (24K stars), and OpenBB (68K stars) collectively represent a maturing ecosystem of AI-powered financial analysis tools. Kronos — positioning itself as a \"foundation model for the language of financial markets\" — is the most technically ambitious, while TrendRadar's multi-platform trend monitoring with AI-powered alerts reflects real operational demand. The concentration of financial tools in trending suggests increasing mainstream adoption of AI in quantitative and retail finance.",
+  "papers": [
+    {
+      "id": "smart-multi-vector-retrieval",
+      "title": "Your Embedding Model is SMARTer Than You Think",
+      "authors": ["Jianrui Zhang", "Hyun Jung Lee", "Sukanta Ganguly", "Tae-Eui Kam", "Donghyun Kim", "Yong Jae Lee"],
+      "affiliations": ["University of Wisconsin-Madison", "Korea Advanced Institute of Science and Technology"],
+      "summary": "SMART introduces a framework that unlocks latent multi-vector retrieval capabilities from standard single-vector embedding models. It shows that contrastive training on pooled embeddings implicitly shapes the retrieval geometry of preceding hidden states, and that applying late-interaction over these frozen states at inference acts as a plug-and-play upgrade that consistently improves performance across diverse modalities on MMEB-V2.",
+      "key_findings": [
+        "Standard contrastive training on pooled embeddings implicitly creates useful multi-vector geometry in preceding hidden states via gradient flow",
+        "Late-interaction over frozen hidden states provides a training-free inference upgrade that improves even state-of-the-art models on MMEB-V2",
+        "Lightweight post-training on visual document retrieval allows a single-vector model to outperform dedicated multi-vector counterparts"
+      ],
+      "tags": ["multimodal-retrieval", "embedding-models", "late-interaction", "visual-document-retrieval", "plug-and-play"],
+      "relevance": "high",
+      "engagement": { "upvotes": 6, "comments": 4 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.24938",
+        "huggingface": "https://huggingface.co/papers/2605.24938",
+        "pdf": "https://arxiv.org/pdf/2605.24938"
+      }
+    },
+    {
+      "id": "autoresearch-ai-survey",
+      "title": "AutoResearch AI: Towards AI-Powered Research Automation for Scientific Discovery",
+      "authors": ["Guiyao Tie", "Jiawen Shi", "Dingjie Song", "Yixiao Huang", "Ziji Sheng et al."],
+      "affiliations": ["Lehigh University", "University of Illinois Chicago", "Salesforce Research", "Microsoft Research", "Stanford University"],
+      "summary": "A comprehensive survey examining AI-powered scientific workflow automation (AutoResearch), spanning the full spectrum from human-steered 'Vibe Research' through mixed-initiative co-research to emerging AI-led systems. Organizes the field around five workflow conditions and proposes five evaluation dimensions — novelty, validity, impact, reliability, and provenance — showing that autonomy credibility is domain-conditioned.",
+      "key_findings": [
+        "Introduces the AutoResearch framework distinguishing Vibe Research (human-steered) from AI-led systems across the autonomy spectrum",
+        "Proposes five evaluation dimensions (novelty, validity, impact, reliability, provenance) for comparing research automation systems",
+        "Shows AI research autonomy is domain-conditioned: more credible in structured, executable settings but limited in embodied or ethical contexts"
+      ],
+      "tags": ["ai-for-science", "research-automation", "survey", "ai-agents", "scientific-discovery"],
+      "relevance": "high",
+      "engagement": { "upvotes": 4, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23204",
+        "huggingface": "https://huggingface.co/papers/2605.23204",
+        "pdf": "https://arxiv.org/pdf/2605.23204"
+      }
+    },
+    {
+      "id": "pantheon360-digital-twin",
+      "title": "Pantheon360: Taming Digital Twin Generation via 3D-Aware 360° Video Diffusion",
+      "authors": ["Ting-Hsuan Chen", "Ying-Huan Chen", "Tao Tu", "Jie-Ying Lee", "Cho-Ying Wu"],
+      "affiliations": ["National Taiwan University", "University of Southern California"],
+      "summary": "Pantheon360 addresses digital twin generation through 360° video diffusion rather than perspective video generation. Panoramic coverage simplifies trajectory design and provides strong geometric priors that mitigate cross-view inconsistency and temporal drift — persistent problems when narrow field-of-view generators must stitch together long or multi-view trajectories.",
+      "key_findings": [
+        "360° video generation provides natural panoramic coverage that eliminates the cross-view inconsistency of narrow-FoV perspective generators",
+        "Panoramic priors simplify trajectory design for complete scene coverage in digital twin generation",
+        "3D-aware 360° diffusion maintains strict spatial-temporal consistency that perspective approaches struggle with"
+      ],
+      "tags": ["360-video", "digital-twins", "video-diffusion", "3d-generation", "scene-generation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.25449",
+        "huggingface": "https://huggingface.co/papers/2605.25449",
+        "pdf": "https://arxiv.org/pdf/2605.25449"
+      }
+    },
+    {
+      "id": "metaphorvu-video-understanding",
+      "title": "MetaphorVU: Towards Metaphorical Video Understanding",
+      "authors": ["Zhuoqun Li", "Boxi Cao", "Guiping Jiang", "Fangrui Lv", "Ruotong Pan"],
+      "affiliations": ["Peking University", "Chinese Academy of Sciences"],
+      "summary": "MetaphorVU-Bench introduces the first systematic benchmark for metaphorical video understanding, targeting high-order cognitive capabilities that standard video benchmarks do not assess. Metaphorical videos are prevalent in advertising, film, and social media, but MLLMs have not been systematically evaluated on their ability to interpret figurative meaning in video.",
+      "key_findings": [
+        "First systematic and comprehensive benchmark dedicated to metaphorical video understanding across multiple cognitive dimensions",
+        "Reveals significant gaps in current MLLMs' ability to interpret figurative and metaphorical meaning in video content",
+        "Covers real-world scenarios including advertising, film, and social media where metaphorical communication is prevalent"
+      ],
+      "tags": ["video-understanding", "metaphor", "benchmark", "mllm", "cognitive-reasoning"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.25461",
+        "huggingface": "https://huggingface.co/papers/2605.25461",
+        "pdf": "https://arxiv.org/pdf/2605.25461"
+      }
+    },
+    {
+      "id": "skillopt-agent-skill-optimizer",
+      "title": "SkillOpt: Executive Strategy for Self-Evolving Agent Skills",
+      "authors": ["Yifan Yang", "Ziyang Gong", "Weiquan Huang", "Qihao Yang", "Ziwei Zhou et al."],
+      "affiliations": ["Microsoft Research", "Fudan University"],
+      "summary": "SkillOpt is the first systematic controllable text-space optimizer for agent skills, treating skills as external trainable agent state with stable updates and zero deployment inference overhead. It frames skill evolution with the discipline of weight-space gradient descent — using rollouts as gradient signal, add/delete/replace edits as parameter updates, and a textual learning-rate budget for stability. Achieves +23.5 accuracy points on GPT-5.5 in direct chat and +19.1 in Claude Code across six benchmarks.",
+      "key_findings": [
+        "First systematic text-space optimizer for agent skills, framing skill text as a trainable external parameter with gradient-descent-style updates",
+        "Achieves +23.5 accuracy on GPT-5.5 direct chat, +24.8 in Codex, and +19.1 in Claude Code across six benchmarks and seven target models",
+        "Zero deployment inference overhead — skills are optimized offline and applied as static context at inference time"
+      ],
+      "tags": ["agent-skills", "text-optimization", "llm-agents", "skill-evolution", "claude-code"],
+      "relevance": "high",
+      "engagement": { "upvotes": 159, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23904",
+        "huggingface": "https://huggingface.co/papers/2605.23904",
+        "pdf": "https://arxiv.org/pdf/2605.23904"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "DeepSeek's flagship large language model with state-of-the-art performance on reasoning and coding tasks. Continues to dominate the open-weight model landscape with massive adoption.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "reasoning", "coding"],
+      "metrics": { "downloads": 4820866, "likes": 4276 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "Diffusion-based image generation model with strong community adoption and ComfyUI integration, targeting high-quality visual content creation.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "comfyui", "image-generation"],
+      "metrics": { "downloads": 651655, "likes": 1545 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "Leading open text-to-video generation model with massive download volume, available in both diffusers and GGUF formats for broad deployment flexibility.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "gguf"],
+      "metrics": { "downloads": 1354786, "likes": 1352 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "Efficient multimodal vision-language model combining strong image-text understanding with compact parameter count, enabling on-device and edge deployments.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": { "downloads": 285414, "likes": 943 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "qwen36-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (Community)",
+      "description": "Community-tuned uncensored variant of the Qwen 3.6 35B MoE model with aggressive tuning for unrestricted text generation and vision tasks.",
+      "task_type": "text-generation",
+      "model_size": "35B (3B active)",
+      "tags": ["moe", "uncensored", "vision", "qwen3.6"],
+      "metrics": { "downloads": 1392596, "likes": 858 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "Tencent's compact machine translation model from the Hunyuan family, offering efficient multilingual translation with strong early community reception (823 likes).",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 5552, "likes": 823 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "Multimodal generation model supporting both image and video generation tasks, representing ByteDance's entry into open-weight multimodal content creation.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": { "downloads": 1679, "likes": 820 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "Advanced text-to-speech model with ONNX support for efficient inference, delivering high-quality speech synthesis for production deployment.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": { "downloads": 45800, "likes": 675 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Quantized GGUF version of Qwen 3.6 27B by Unsloth, optimized for local inference with multi-token prediction support.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "unsloth", "qwen"],
+      "metrics": { "downloads": 695277, "likes": 480 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "tencent-hy-mt2-30b-a3b",
+      "name": "Hy-MT2-30B-A3B",
+      "organization": "Tencent",
+      "description": "Tencent's mixture-of-experts translation model with 30B total parameters but only 3B active per token, offering large-model translation quality at small-model inference cost.",
+      "task_type": "translation",
+      "model_size": "30B (3B active)",
+      "tags": ["translation", "moe", "hunyuan"],
+      "metrics": { "downloads": 1494, "likes": 327 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-30B-A3B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "Compact 1B parameter text generation model with notably high download volume relative to its size, suggesting strong adoption for lightweight deployment scenarios.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "compact", "hrm"],
+      "metrics": { "downloads": 90026, "likes": 316 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "cohere-command-a-plus-w4a4",
+      "name": "Command A+ (May 2026, W4A4)",
+      "organization": "Cohere Labs",
+      "description": "Aggressively quantized (W4A4) version of Cohere's Command A+ vision-language model, enabling efficient deployment of a flagship multimodal model with 4-bit weights and activations.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["quantized", "vision-language", "conversational"],
+      "metrics": { "downloads": 7449, "likes": 200 },
+      "source_url": "https://huggingface.co/CohereLabs/command-a-plus-05-2026-w4a4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Converts any codebase into an interactive knowledge graph for exploration, search, and natural language Q&A. Compatible with Claude Code, Codex, Cursor, Copilot, and Gemini CLI. Highest star velocity of the day at 5,604 stars today.",
+      "language": "TypeScript",
+      "stars": 31421,
+      "stars_today": 5604,
+      "forks": 2581,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "ai-coding-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Comprehensive AI engineering curriculum covering the full stack from fundamentals to production deployment. Extremely high star velocity (3,154 stars today) reflects surging demand for structured AI engineering education.",
+      "language": "Python",
+      "stars": 18741,
+      "stars_today": 3154,
+      "forks": 3173,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "curriculum"],
+      "relevance": "high"
+    },
+    {
+      "id": "codegraph",
+      "name": "colbymchenry/codegraph",
+      "description": "Pre-indexed code knowledge graph for Claude Code, Codex, Cursor, OpenCode, and Hermes Agent. Reduces token usage and tool calls by providing structured codebase context. 100% local execution.",
+      "language": "TypeScript",
+      "stars": 25257,
+      "stars_today": 3161,
+      "forks": 1399,
+      "url": "https://github.com/colbymchenry/codegraph",
+      "tags": ["knowledge-graph", "code-context", "ai-coding-agent", "local"],
+      "relevance": "high"
+    },
+    {
+      "id": "andrej-karpathy-skills",
+      "name": "multica-ai/andrej-karpathy-skills",
+      "description": "A single CLAUDE.md file encoding behavioral heuristics for Claude Code, derived from Andrej Karpathy's observations on LLM coding pitfalls. 155K stars and 2,749 stars today indicate massive community adoption.",
+      "language": "",
+      "stars": 155103,
+      "stars_today": 2749,
+      "forks": 15896,
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "tags": ["ai-coding-agent", "claude-code", "skills", "behavioral-alignment"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc",
+      "name": "affaan-m/ECC",
+      "description": "Comprehensive agent harness performance optimization system with skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond. The largest repo in this cluster at 192K stars.",
+      "language": "JavaScript",
+      "stars": 192465,
+      "stars_today": 2025,
+      "forks": 29785,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "ai-coding-agent", "skills", "memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic's open-source repository of plugins for knowledge workers to use in Claude Cowork. Official Anthropic release with strong first-day traction (1,441 stars today).",
+      "language": "Python",
+      "stars": 15555,
+      "stars_today": 1441,
+      "forks": 1874,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["anthropic", "claude", "plugins", "knowledge-work"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 structured cybersecurity skills for AI agents mapped to 5 frameworks (MITRE ATT&CK, NIST CSF 2.0, MITRE ATLAS, D3FEND, NIST AI RMF). Works with Claude Code, Copilot, Codex, Cursor, Gemini CLI and 20+ platforms.",
+      "language": "Python",
+      "stars": 9291,
+      "stars_today": 1004,
+      "forks": 1139,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "ai-agents", "mitre", "nist", "skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "Microsoft's AI Agent Governance Toolkit providing policy enforcement, zero-trust identity, execution sandboxing, and reliability engineering for autonomous AI agents. Covers all 10 OWASP Agentic Top 10 risks.",
+      "language": "Python",
+      "stars": 2262,
+      "stars_today": 271,
+      "forks": 394,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "zero-trust", "owasp", "microsoft"],
+      "relevance": "high"
+    },
+    {
+      "id": "mirofish",
+      "name": "666ghj/MiroFish",
+      "description": "Universal swarm intelligence engine for prediction tasks. Uses collective intelligence algorithms for general-purpose forecasting across domains.",
+      "language": "Python",
+      "stars": 62521,
+      "stars_today": 534,
+      "forks": 9762,
+      "url": "https://github.com/666ghj/MiroFish",
+      "tags": ["swarm-intelligence", "prediction", "forecasting"],
+      "relevance": "medium"
+    },
+    {
+      "id": "trendradar",
+      "name": "sansan0/TrendRadar",
+      "description": "AI-driven public opinion and trend monitoring platform with multi-platform aggregation, RSS support, and smart alerts. Supports AI-powered filtering, translation, and analysis with push notifications to WeChat, Telegram, Slack, and more.",
+      "language": "Python",
+      "stars": 58281,
+      "stars_today": 122,
+      "forks": 24414,
+      "url": "https://github.com/sansan0/TrendRadar",
+      "tags": ["trend-monitoring", "ai-analysis", "rss", "multi-platform"],
+      "relevance": "medium"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan's Claude Code setup with 23 opinionated tools serving as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA roles. Strong endorsement signal for AI-assisted product development workflows.",
+      "language": "TypeScript",
+      "stars": 102531,
+      "stars_today": 640,
+      "forks": 15291,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": ["claude-code", "ai-coding-agent", "workflow", "tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "Foundation model for the language of financial markets. Applies transformer architecture to financial time series and market data for prediction and analysis.",
+      "language": "Python",
+      "stars": 26036,
+      "stars_today": 245,
+      "forks": 4521,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "time-series", "markets"],
+      "relevance": "medium"
+    },
+    {
+      "id": "cmux",
+      "name": "manaflow-ai/cmux",
+      "description": "Ghostty-based macOS terminal with vertical tabs and notifications designed specifically for AI coding agents. Purpose-built terminal infrastructure for agent workflows.",
+      "language": "Swift",
+      "stars": 19522,
+      "stars_today": 603,
+      "forks": 1474,
+      "url": "https://github.com/manaflow-ai/cmux",
+      "tags": ["terminal", "macos", "ai-coding-agent", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ppf-contact-solver",
+      "name": "st-tech/ppf-contact-solver",
+      "description": "Physics-based contact solver for simulations involving shells, solids and rods. Gains 432 stars today, reflecting growing interest in differentiable physics simulation tooling.",
+      "language": "Python",
+      "stars": 3180,
+      "stars_today": 432,
+      "forks": 230,
+      "url": "https://github.com/st-tech/ppf-contact-solver",
+      "tags": ["physics-simulation", "contact-solver", "differentiable-physics"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Multi-Vector Retrieval Efficiency",
+      "description": "SMART demonstrates that single-vector models already contain latent multi-vector capabilities, reframing the retrieval architecture debate and offering a free lunch at inference time for production search systems.",
+      "related_paper_ids": ["smart-multi-vector-retrieval"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Research Automation Spectrum",
+      "description": "AutoResearch AI maps the full spectrum from prompt-based assistance to autonomous AI scientists, establishing evaluation frameworks that will shape how research automation systems are assessed and deployed across domains.",
+      "related_paper_ids": ["autoresearch-ai-survey"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Coding Agent Infrastructure Consolidation",
+      "description": "Five of the top trending GitHub repos focus on making coding agents more effective through knowledge graphs, behavioral skills, and operational tooling. The infrastructure layer is commoditizing and the moat is moving to context engineering.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Specialized Translation and Multimodal Models",
+      "description": "Tencent's Hy-MT2 family and ByteDance's Lance signal a trend toward releasing specialized foundation models for specific tasks rather than competing solely on general-purpose scale, particularly from Chinese tech companies.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Financial AI Tooling Maturation",
+      "description": "A dense cluster of financial AI tools in GitHub trending — TrendRadar, MiroFish, Kronos, FinceptTerminal, OpenBB — reflects mainstream adoption of AI in quantitative and retail finance for monitoring, prediction, and analysis.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Video and 3D Scene Generation",
+      "description": "Pantheon360 tackles digital twin generation via 360° video diffusion while MetaphorVU benchmarks video understanding at a cognitive level, reflecting continued expansion of generative and understanding capabilities in the video domain.",
+      "related_paper_ids": ["pantheon360-digital-twin", "metaphorvu-video-understanding"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-26T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
