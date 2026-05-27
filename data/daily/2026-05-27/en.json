@@ -1,0 +1,480 @@
+{
+  "version": "1.0",
+  "date": "2026-05-27",
+  "generated_at": "2026-05-27T14:57:00Z",
+  "summary": {
+    "headline": "Light paper day highlights KAIST's GARD for robust 3D reconstruction under degraded conditions and Tencent's EvalVerse for cinematic video evaluation; NousResearch hermes-agent (169K stars) and ECC agent harness (194K stars) dominate GitHub; DeepSeek-V4-Pro maintains 5M-download lead as Anima (1,556 likes) and Hy-MT2 translation models surge",
+    "body": "Tuesday's HuggingFace Daily Papers slate is unusually thin at just four submissions, likely reflecting the post-holiday weekend cadence. The highest-engagement paper is **GARD** from KAIST AI (3 upvotes), which introduces geometry-aware diffusion-based restoration in the feature space of feed-forward 3D reconstruction models — a practical approach to handling real-world image degradations that most 3D reconstruction pipelines ignore. **EvalVerse** from Tencent (2 upvotes) addresses a genuine evaluation gap in cinematic video generation, moving beyond basic prompt-following to assess professional filmmaking quality through expert-calibrated VLM fine-tuning. **RT-Lynx** proposes a paradigm shift from weight to activation sparsification in Diffusion Transformers, achieving 1.55x speedup while preserving quality. **SpatialBench** from HKUST and NTU delivers a comprehensive 41-model benchmark across 19 datasets for spatial foundation models, revealing that egocentric and wrist-view domains remain dominant failure modes.\n\nThe model landscape continues to be dominated by **DeepSeek-V4-Pro** (5M downloads, 4,315 likes), but the most interesting movements are in specialized models. **Circlestone Labs' Anima** (1,556 likes) has emerged as a leading open diffusion model, while **Tencent's Hy-MT2-1.8B** (1,033 likes) continues its strong run as a dedicated translation model. **ByteDance's Lance** (866 likes) targets multimodal image and video generation. The Qwen 3.6 ecosystem remains vibrant with multiple community quantizations from Unsloth and Jackrong.\n\nGitHub trending is dominated by AI agent infrastructure. **ECC** (194K stars, 1,915 today) and **NousResearch/hermes-agent** (169K stars, 1,502 today) represent the scale of the agent tooling ecosystem. **Understand-Anything** leads in star velocity (4,697 today) with its interactive codebase knowledge graphs. Anthropic's **knowledge-work-plugins** (1,718 stars today) and Microsoft's **agent-governance-toolkit** (282 stars today) signal growing institutional investment in agent infrastructure and safety.",
+    "key_themes": [
+      "robust-3d-reconstruction",
+      "video-generation-evaluation",
+      "diffusion-model-efficiency",
+      "spatial-foundation-models",
+      "ai-agent-infrastructure",
+      "specialized-model-ecosystem"
+    ]
+  },
+  "researcher_notes": "**GARD's approach to 3D reconstruction robustness is architecturally elegant.** Rather than adding a separate preprocessing restoration stage (which discards 3D geometric information), GARD performs diffusion-based denoising directly in the feature space of the 3D reconstructor. This means the restoration process has access to geometry-aware representations from the start, rather than operating on pixels that must later be re-interpreted geometrically. The dual-output design — recovering both scene geometry and RGB images from the same refined features — is a practical win for pipelines that need both. The benchmark on Depth Anything 3 (DA3) demonstrates effectiveness, but the real value will be in deployment: multi-view 3D reconstruction systems routinely encounter motion blur, noise, and exposure variation that current feed-forward models silently degrade on.\n\n**EvalVerse fills a genuine gap, but its impact depends on adoption.** The core insight — that existing video generation benchmarks measure 'rightness' (prompt-following) but not 'goodness' (cinematic quality) — is correct and well-documented by anyone who has compared VBench scores to actual video quality. The pipeline-aware taxonomy aligned to pre-production, production, and post-production is sensible, and the expert-calibrated VLM fine-tuning approach is the right way to inject domain knowledge. The extension to multi-shot sequencing and audio-visual integration is particularly timely as video generation moves toward longer, more complex outputs. The key question is whether the community will adopt EvalVerse as a standard benchmark or whether it will remain an academic contribution.\n\n**RT-Lynx's activation sparsification insight is important for the diffusion inference optimization space.** The observation that DiT activations are intrinsically sparse and more robust to N:M sparsification than weights reframes the sparsity conversation. Weight sparsification has dominated the literature because it seems more natural (prune unused capacity), but RT-Lynx shows that activation sparsification can deliver 1.55x speedup with minimal quality degradation. The custom CUDA kernels are essential — without hardware-level support, sparse operations often fail to translate theoretical FLOP savings into wall-clock speedups. This is a practical contribution that could integrate with existing quantization and distillation techniques for compound speedups.\n\n**SpatialBench's scale is impressive, and its findings are actionable.** Testing 41 models across 6 paradigms on 19 datasets with 546 scenes is the kind of comprehensive evaluation the spatial AI community needs. The finding that full-context attention maximizes accuracy while bounded-memory strategies unlock long-sequence scalability maps directly to system design decisions. The revelation that egocentric and wrist-view domains are dominant failure modes points to a clear data gap — most training data comes from structured, third-person perspectives. The DA-Next-5M dataset (22K scenes, 5.5M frames) targeting embodied domains is a concrete step toward closing this gap.\n\n**The GitHub trending data tells a story of AI agent tooling consolidation reaching unprecedented scale.** The combined star counts of the top agent-related repos — ECC (194K), hermes-agent (169K), claude-mem (79K), learn-claude-code (63K), Understand-Anything (36K) — represent a massive open-source ecosystem that barely existed a year ago. The emergence of governance tooling (Microsoft's agent-governance-toolkit) and security tooling (Anthropic-Cybersecurity-Skills) alongside the raw capabilities indicates the ecosystem is maturing beyond 'make it work' toward 'make it safe and manageable.' The star velocity of Understand-Anything (4,697/day) suggests that codebase comprehension — turning code into interactive knowledge graphs — is the current frontier of developer productivity tooling.",
+  "papers": [
+    {
+      "id": "gard-geometry-aware-3d-reconstruction",
+      "title": "Geometry-Aware Representation Denoising for Robust Multi-view 3D Reconstruction",
+      "authors": ["Jin Hyeon Kim", "Jaeeun Lee", "Claire Kim", "Kyoungjin Oh", "Paul Hyunbin Cho et al."],
+      "affiliations": ["KAIST AI", "Korea Advanced Institute of Science and Technology"],
+      "summary": "GARD introduces a novel framework that performs diffusion-based multi-view restoration directly in the feature space of a feed-forward 3D reconstruction model. By exploiting geometry-aware feature representations, GARD effectively recovers accurate scene geometry from degraded inputs while simultaneously restoring high-quality RGB images through an additional decoder.",
+      "key_findings": [
+        "Diffusion-based restoration in the 3D reconstructor's feature space exploits geometry-aware representations to recover accurate scene geometry from degraded inputs",
+        "An additional RGB image decoder enables simultaneous recovery of both 3D scene geometry and high-quality imagery from the same refined features",
+        "Comprehensive experiments on the Depth Anything 3 (DA3) benchmark demonstrate effectiveness across multiple degradation types"
+      ],
+      "tags": ["3d-reconstruction", "diffusion-denoising", "feature-space-restoration", "multi-view", "robustness"],
+      "relevance": "high",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.26230",
+        "huggingface": "https://huggingface.co/papers/2605.26230",
+        "pdf": "https://arxiv.org/pdf/2605.26230"
+      }
+    },
+    {
+      "id": "evalverse-cinematic-video-benchmark",
+      "title": "EvalVerse: Pipeline-Aware and Expert-Calibrated Benchmarking for Professional Cinematic Video Generation",
+      "authors": ["Songlin Yang", "Haobin Zhong", "Ruilin Zhang", "Xiaotong Zhao", "Shuai Li et al."],
+      "affiliations": ["Tencent"],
+      "summary": "EvalVerse introduces a comprehensive evaluation framework for cinematic video generation that goes beyond basic prompt-following to assess professional filmmaking quality. It organizes evaluation around the filmmaking workflow (pre-production, production, post-production) and injects expert-calibrated judgments into VLMs through fine-tuning, enabling Chain-of-Thought reasoning about cinematic quality.",
+      "key_findings": [
+        "Existing benchmarks evaluate 'rightness' (prompt-following) but fundamentally neglect 'goodness' (cinematic quality, acting, and aesthetics)",
+        "Expert-calibrated VLM fine-tuning enables explicit Chain-of-Thought reasoning about professional cinematic quality",
+        "Extends evaluation coverage to complex multi-shot sequencing and audio-visual integration beyond single-clip assessment"
+      ],
+      "tags": ["video-generation", "benchmark", "cinematic-quality", "vlm-evaluation", "expert-calibration"],
+      "relevance": "high",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23271",
+        "huggingface": "https://huggingface.co/papers/2605.23271",
+        "pdf": "https://arxiv.org/pdf/2605.23271"
+      }
+    },
+    {
+      "id": "rt-lynx-activation-sparsity-diffusion",
+      "title": "RT-Lynx: Putting the GEMM Sparsity In a Right Way for Diffusion Models",
+      "authors": ["Xing Cong", "Hanlin Tang", "Kan Liu", "Lan Tao", "Lin Qu", "Chenhao Xie"],
+      "affiliations": ["Beihang University"],
+      "summary": "RT-Lynx advocates a paradigm shift from weight to activation sparsification for Diffusion Transformers. The key insight is that DiT activations are intrinsically sparse and significantly more robust to N:M semi-structured sparsification than weights. With error-compensation techniques and optimized CUDA kernels, RT-Lynx achieves up to 1.55x inference speedup while preserving generation quality.",
+      "key_findings": [
+        "DiT activations are intrinsically sparse and significantly more robust to N:M semi-structured sparsification than weights",
+        "Activation sparsification with error-compensation techniques preserves generation quality across multiple diffusion models",
+        "Optimized CUDA kernels achieve up to 1.55x average speedup in linear layers, translating theoretical FLOP savings to wall-clock gains"
+      ],
+      "tags": ["diffusion-transformers", "sparsity", "inference-optimization", "activation-pruning", "cuda-kernels"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.26632",
+        "huggingface": "https://huggingface.co/papers/2605.26632",
+        "pdf": "https://arxiv.org/pdf/2605.26632"
+      }
+    },
+    {
+      "id": "spatialbench-spatial-foundation-model",
+      "title": "SpatialBench: Is Your Spatial Foundation Model an All-Round Player?",
+      "authors": ["Haosong Peng", "Hao Li", "Jiaqi Chen", "Yuhao Pan", "Runmao Yao et al."],
+      "affiliations": ["Hong Kong University of Science and Technology", "Nanyang Technological University", "Northwestern Polytechnical University"],
+      "summary": "SpatialBench presents a comprehensive cross-paradigm benchmark for spatial foundation models, evaluating 41 models across 6 paradigms on 19 datasets with 546 scenes spanning 5 diverse spatial domains. It reveals that full-context attention maximizes accuracy while bounded-memory strategies enable long-sequence scalability, and that egocentric and wrist-view domains remain dominant failure modes.",
+      "key_findings": [
+        "Full-context attention maximizes accuracy while bounded-memory strategies unlock long-sequence scalability — a direct system design tradeoff",
+        "Data quality outweighs data volume: carefully curated pseudo-GT supervision consistently outperforms larger noisy datasets",
+        "Egocentric and wrist-view domains remain dominant out-of-distribution failure modes, pointing to a clear training data gap"
+      ],
+      "tags": ["spatial-ai", "benchmark", "3d-vision", "foundation-models", "embodied-ai"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27367",
+        "huggingface": "https://huggingface.co/papers/2605.27367",
+        "pdf": "https://arxiv.org/pdf/2605.27367"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "The dominant open-weight large language model with conversational capabilities, maintaining its position as the most-downloaded model on HuggingFace with massive community adoption.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "deepseek"],
+      "metrics": { "downloads": 5019884, "likes": 4315 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "A leading open diffusion model compatible with ComfyUI, gaining strong traction as a community-favored image generation model with single-file distribution.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "comfyui", "image-generation"],
+      "metrics": { "downloads": 676447, "likes": 1556 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "A leading open text-to-video generation model available in both diffusers and GGUF formats, maintaining high download volume for video generation workloads.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": { "downloads": 1376847, "likes": 1376 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "A specialized 1.8B-parameter translation model from Tencent's Hunyuan family, demonstrating strong community interest in dedicated translation models over general-purpose LLMs.",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 7471, "likes": 1033 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "An efficient multimodal vision-language model for image-text understanding, continuing the MiniCPM-V series with strong community adoption for on-device and edge deployment scenarios.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": { "downloads": 314347, "likes": 978 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "hauhaucs-qwen36-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "A community-produced uncensored variant of Qwen3.6-35B using mixture-of-experts architecture (3B active parameters), distributed in GGUF format for local deployment with vision capabilities.",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B (MoE)",
+      "tags": ["qwen3.6", "moe", "gguf", "uncensored", "vision"],
+      "metrics": { "downloads": 1598473, "likes": 912 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "ByteDance's multimodal generation model targeting both image and video generation, representing the company's push into open multimodal foundation models.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": { "downloads": 1908, "likes": 866 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "A text-to-speech and speech synthesis model using ONNX format, reflecting growing interest in high-quality open TTS solutions.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": { "downloads": 48112, "likes": 698 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth's GGUF quantization of Qwen3.6-27B with Multi-Token Prediction support, enabling efficient local inference of the popular Qwen model family.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "mtp"],
+      "metrics": { "downloads": 735349, "likes": 503 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "A compact 1B-parameter text generation model with high download volume, suggesting strong utility for lightweight text generation use cases.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "compact", "hrm"],
+      "metrics": { "downloads": 103033, "likes": 379 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "nemostation-marlin-2b",
+      "name": "Marlin-2B",
+      "organization": "NemoStation",
+      "description": "A 2B-parameter multimodal video captioning model, supporting video understanding and description generation from video inputs.",
+      "task_type": "video-captioning",
+      "model_size": "2B",
+      "tags": ["video", "multimodal", "video-captioning"],
+      "metrics": { "downloads": 9144, "likes": 380 },
+      "source_url": "https://huggingface.co/NemoStation/Marlin-2B"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "The latest 1B-parameter entry in the MiniCPM series, offering a highly compact language model suitable for edge deployment and resource-constrained environments.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["compact", "minicpm", "edge-deployment"],
+      "metrics": { "downloads": 2409, "likes": 313 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "A comprehensive agent harness performance optimization system with skills, instincts, memory, security, and research-first development for Claude Code, Codex, Cursor, and other AI coding tools.",
+      "language": "JavaScript",
+      "stars": 194492,
+      "stars_today": 1915,
+      "forks": 29983,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "An extensible AI agent framework from NousResearch that grows with the user, representing one of the largest open-source agent platforms by star count.",
+      "language": "Python",
+      "stars": 168799,
+      "stars_today": 1502,
+      "forks": 28062,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["ai-agent", "framework", "extensible"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Turns any codebase into an interactive knowledge graph for exploration, search, and Q&A. Compatible with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more. Leading today's star velocity at 4,697 stars/day.",
+      "language": "TypeScript",
+      "stars": 36120,
+      "stars_today": 4697,
+      "forks": 2895,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Persistent context across AI agent sessions — captures session activity, compresses it with AI, and injects relevant context into future sessions. Works across multiple agent platforms.",
+      "language": "TypeScript",
+      "stars": 78703,
+      "stars_today": 352,
+      "forks": 6769,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["agent-memory", "context-persistence", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "mirofish-swarm-intelligence",
+      "name": "666ghj/MiroFish",
+      "description": "A universal swarm intelligence engine for prediction tasks, applying collective intelligence algorithms to diverse forecasting domains.",
+      "language": "Python",
+      "stars": 62655,
+      "stars_today": 162,
+      "forks": 9796,
+      "url": "https://github.com/666ghj/MiroFish",
+      "tags": ["swarm-intelligence", "prediction", "collective-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic's open-source repository of plugins for knowledge workers to use with Claude Cowork, signaling institutional investment in agent-assisted workflows.",
+      "language": "Python",
+      "stars": 16713,
+      "stars_today": 1718,
+      "forks": 1958,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["plugins", "knowledge-work", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "A comprehensive learning resource for AI engineering covering the full lifecycle from learning to building to shipping, gaining 2,155 stars today.",
+      "language": "Python",
+      "stars": 20849,
+      "stars_today": 2155,
+      "forks": 3462,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "learning-resource"],
+      "relevance": "high"
+    },
+    {
+      "id": "kronos-financial-ai",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for the language of financial markets, representing the most technically ambitious entry in the growing financial AI tooling ecosystem.",
+      "language": "Python",
+      "stars": 26516,
+      "stars_today": 425,
+      "forks": 4600,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "markets"],
+      "relevance": "high"
+    },
+    {
+      "id": "taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "A skill file that gives AI coding agents 'good taste' by preventing generation of boring, generic output. Part of the growing agent behavioral alignment ecosystem.",
+      "language": "Shell",
+      "stars": 21942,
+      "stars_today": 1430,
+      "forks": 1753,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["agent-skills", "behavioral-alignment", "quality-control"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 structured cybersecurity skills mapped to 5 frameworks (MITRE ATT&CK, NIST CSF 2.0, MITRE ATLAS, D3FEND, NIST AI RMF) for use with AI coding agents across 26 security domains.",
+      "language": "Python",
+      "stars": 10164,
+      "stars_today": 880,
+      "forks": 1193,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "security-frameworks"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "Microsoft's policy enforcement, zero-trust identity, execution sandboxing, and reliability engineering toolkit for autonomous AI agents, covering all OWASP Agentic Top 10 risks.",
+      "language": "Python",
+      "stars": 2737,
+      "stars_today": 282,
+      "forks": 436,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "microsoft", "zero-trust"],
+      "relevance": "high"
+    },
+    {
+      "id": "dograh-voice-ai",
+      "name": "dograh-hq/dograh",
+      "description": "Open source voice AI platform and self-hosted alternative to Vapi and Retell, with on-prem deployment, visual workflow builder, MCP native support, and telephony integration.",
+      "language": "Python",
+      "stars": 3270,
+      "stars_today": 399,
+      "forks": 708,
+      "url": "https://github.com/dograh-hq/dograh",
+      "tags": ["voice-ai", "self-hosted", "telephony"],
+      "relevance": "medium"
+    },
+    {
+      "id": "learn-claude-code",
+      "name": "shareAI-lab/learn-claude-code",
+      "description": "A nano Claude Code-like agent harness built from scratch, serving as both an educational resource and lightweight implementation reference for agent development.",
+      "language": "Python",
+      "stars": 62828,
+      "stars_today": 246,
+      "forks": 10268,
+      "url": "https://github.com/shareAI-lab/learn-claude-code",
+      "tags": ["education", "agent-harness", "claude-code"],
+      "relevance": "medium"
+    },
+    {
+      "id": "funasr-speech-recognition",
+      "name": "modelscope/FunASR",
+      "description": "Industrial-grade speech recognition toolkit supporting 170x realtime processing, 50+ languages, speaker diarization, emotion detection, streaming, and OpenAI-compatible API.",
+      "language": "Python",
+      "stars": 16326,
+      "stars_today": 42,
+      "forks": 1693,
+      "url": "https://github.com/modelscope/FunASR",
+      "tags": ["speech-recognition", "asr", "multilingual"],
+      "relevance": "medium"
+    },
+    {
+      "id": "stop-slop",
+      "name": "hardikpandya/stop-slop",
+      "description": "A skill file for removing AI tells from prose, complementing taste-skill in the growing ecosystem of behavioral alignment tools for AI coding agents.",
+      "language": "",
+      "stars": 5059,
+      "stars_today": 539,
+      "forks": 403,
+      "url": "https://github.com/hardikpandya/stop-slop",
+      "tags": ["agent-skills", "writing-quality", "behavioral-alignment"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "AI Agent Infrastructure at Scale",
+      "description": "The agent tooling ecosystem has reached unprecedented scale, with ECC (194K stars), hermes-agent (169K stars), and claude-mem (79K stars) indicating that the competitive frontier has shifted from raw LLM capabilities to context engineering, behavioral alignment, and operational infrastructure.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D and Spatial Foundation Model Evaluation",
+      "description": "Both GARD and SpatialBench address robustness and evaluation gaps in 3D/spatial AI — GARD tackles input degradation resilience while SpatialBench reveals systematic failure modes in egocentric domains, pointing to critical training data gaps.",
+      "related_paper_ids": ["gard-geometry-aware-3d-reconstruction", "spatialbench-spatial-foundation-model"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Diffusion Model Efficiency and Evaluation",
+      "description": "RT-Lynx's activation sparsification and EvalVerse's cinematic quality benchmarking represent two sides of the diffusion model maturation: making them faster to run and harder to evaluate, reflecting the shift from capability demonstration to production deployment.",
+      "related_paper_ids": ["rt-lynx-activation-sparsity-diffusion", "evalverse-cinematic-video-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Governance and Security",
+      "description": "Microsoft's agent-governance-toolkit and Anthropic-Cybersecurity-Skills signal that agent safety is becoming a first-class concern, with structured frameworks mapped to established security standards like MITRE ATT&CK and OWASP.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Specialized Model Ecosystem Diversification",
+      "description": "The model landscape shows increasing specialization: Tencent Hy-MT2 for translation, Supertone for TTS, NemoStation Marlin for video captioning, and NVIDIA PiD for super-resolution, alongside generalist giants like DeepSeek-V4-Pro.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

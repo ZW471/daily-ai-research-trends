@@ -1,0 +1,480 @@
+{
+  "version": "1.0",
+  "date": "2026-05-27",
+  "generated_at": "2026-05-27T14:57:00Z",
+  "summary": {
+    "headline": "论文淡日聚焦KAIST的GARD鲁棒3D重建与腾讯EvalVerse电影级视频评估；NousResearch hermes-agent（169K星）与ECC智能体框架（194K星）领跑GitHub；DeepSeek-V4-Pro保持500万下载量领先，Anima（1,556赞）与Hy-MT2翻译模型势头强劲",
+    "body": "周二的HuggingFace每日论文仅有四篇提交，数量异常稀少，可能反映了节后周末的节奏。最高互动论文是来自KAIST AI的**GARD**（3票），该方法在前馈3D重建模型的特征空间中进行基于扩散的多视图修复——一种处理现实世界图像退化的实用方案，而大多数3D重建流水线忽视了这一问题。腾讯的**EvalVerse**（2票）填补了电影级视频生成的评估空白，从基本的提示跟随转向通过专家校准的VLM微调来评估专业电影制作质量。**RT-Lynx**提出了扩散Transformer中从权重稀疏化到激活稀疏化的范式转换，在保持生成质量的同时实现了1.55倍加速。**SpatialBench**来自香港科技大学和南洋理工大学，在19个数据集上对41个空间基础模型进行了全面基准测试，揭示了自我中心视角和手腕视角仍是主要的分布外失败模式。\n\n模型格局继续由**DeepSeek-V4-Pro**（500万下载，4,315赞）主导，但最有趣的变化发生在专用模型领域。**Circlestone Labs的Anima**（1,556赞）已成为领先的开源扩散模型，**腾讯的Hy-MT2-1.8B**（1,033赞）作为专用翻译模型持续走强。**字节跳动的Lance**（866赞）瞄准多模态图像和视频生成。Qwen 3.6生态系统依然活跃，Unsloth和Jackrong提供了多种社区量化版本。\n\nGitHub趋势由AI智能体基础设施主导。**ECC**（194K星，今日1,915）和**NousResearch/hermes-agent**（169K星，今日1,502）代表了智能体工具生态的规模。**Understand-Anything**以今日4,697星领先星标增速，提供交互式代码库知识图谱。Anthropic的**knowledge-work-plugins**（今日1,718星）和微软的**agent-governance-toolkit**（今日282星）表明机构对智能体基础设施和安全的投入正在增长。",
+    "key_themes": [
+      "robust-3d-reconstruction",
+      "video-generation-evaluation",
+      "diffusion-model-efficiency",
+      "spatial-foundation-models",
+      "ai-agent-infrastructure",
+      "specialized-model-ecosystem"
+    ]
+  },
+  "researcher_notes": "**GARD的3D重建鲁棒性方案在架构上颇为优雅。** 与添加单独的预处理修复阶段（会丢弃3D几何信息）不同，GARD直接在3D重建器的特征空间中执行基于扩散的去噪。这意味着修复过程从一开始就能访问几何感知表示，而非对像素进行操作后再重新进行几何解释。双输出设计——从相同的精炼特征中同时恢复场景几何和RGB图像——对需要两者的流水线来说是一个实用的优势。在Depth Anything 3（DA3）基准上的实验证明了其有效性，但真正的价值将体现在部署中：多视图3D重建系统经常遇到运动模糊、噪声和曝光变化，而当前的前馈模型在这些情况下会默默退化。\n\n**EvalVerse填补了一个真实的空白，但其影响力取决于被采纳程度。** 核心洞察——现有视频生成基准衡量的是「正确性」（提示跟随）而非「优质性」（电影质量）——是正确的，任何比较过VBench分数与实际视频质量的人都能证实这一点。与前期制作、制作、后期制作对齐的流水线感知分类法是合理的，专家校准的VLM微调方法是注入领域知识的正确方式。向多镜头序列和视听整合的扩展尤其及时，因为视频生成正在向更长、更复杂的输出发展。关键问题是社区是否会将EvalVerse作为标准基准采纳，还是仅停留在学术贡献层面。\n\n**RT-Lynx的激活稀疏化洞察对扩散推理优化领域很重要。** DiT激活本质上是稀疏的，比权重对N:M稀疏化更具鲁棒性——这一观察重新定义了稀疏性讨论。权重稀疏化之所以主导文献，是因为它看起来更自然（修剪未使用的容量），但RT-Lynx表明激活稀疏化可以在质量退化最小的情况下实现1.55倍加速。定制CUDA内核是必不可少的——没有硬件级支持，稀疏操作往往无法将理论FLOPs节省转化为实际时钟加速。这是一个实用的贡献，可以与现有的量化和蒸馏技术结合产生复合加速效果。\n\n**SpatialBench的规模令人印象深刻，其发现具有可操作性。** 在19个数据集上测试41个模型、覆盖6种范式和546个场景，是空间AI社区所需的全面评估。全上下文注意力最大化精度而有界内存策略解锁长序列可扩展性的发现，直接映射到系统设计决策。自我中心视角和手腕视角是主要失败模式的揭示，指向了一个明确的数据缺口——大多数训练数据来自结构化的第三人称视角。面向具身领域的DA-Next-5M数据集（22K场景，550万帧）是缩小这一差距的具体步骤。\n\n**GitHub趋势数据讲述了AI智能体工具整合达到空前规模的故事。** 顶级智能体相关仓库的合计星标数——ECC（194K）、hermes-agent（169K）、claude-mem（79K）、learn-claude-code（63K）、Understand-Anything（36K）——代表了一年前几乎不存在的庞大开源生态系统。治理工具（微软的agent-governance-toolkit）和安全工具（Anthropic-Cybersecurity-Skills）与原始能力并行出现，表明生态系统正在从「让它工作」走向「让它安全可控」。Understand-Anything的星标增速（4,697/天）表明，代码库理解——将代码转化为交互式知识图谱——是当前开发者生产力工具的前沿。",
+  "papers": [
+    {
+      "id": "gard-geometry-aware-3d-reconstruction",
+      "title": "Geometry-Aware Representation Denoising for Robust Multi-view 3D Reconstruction",
+      "authors": ["Jin Hyeon Kim", "Jaeeun Lee", "Claire Kim", "Kyoungjin Oh", "Paul Hyunbin Cho et al."],
+      "affiliations": ["KAIST AI", "Korea Advanced Institute of Science and Technology"],
+      "summary": "GARD引入了一种新框架，直接在前馈3D重建模型的特征空间中执行基于扩散的多视图修复。通过利用几何感知特征表示，GARD能够从退化输入中有效恢复精确的场景几何，同时通过额外的解码器恢复高质量RGB图像。",
+      "key_findings": [
+        "在3D重建器特征空间中的基于扩散的修复利用几何感知表示从退化输入中恢复精确的场景几何",
+        "额外的RGB图像解码器使从相同精炼特征中同时恢复3D场景几何和高质量图像成为可能",
+        "在Depth Anything 3（DA3）基准上的综合实验证明了在多种退化类型下的有效性"
+      ],
+      "tags": ["3d-reconstruction", "diffusion-denoising", "feature-space-restoration", "multi-view", "robustness"],
+      "relevance": "high",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.26230",
+        "huggingface": "https://huggingface.co/papers/2605.26230",
+        "pdf": "https://arxiv.org/pdf/2605.26230"
+      }
+    },
+    {
+      "id": "evalverse-cinematic-video-benchmark",
+      "title": "EvalVerse: Pipeline-Aware and Expert-Calibrated Benchmarking for Professional Cinematic Video Generation",
+      "authors": ["Songlin Yang", "Haobin Zhong", "Ruilin Zhang", "Xiaotong Zhao", "Shuai Li et al."],
+      "affiliations": ["Tencent"],
+      "summary": "EvalVerse引入了一个全面的电影级视频生成评估框架，超越基本的提示跟随来评估专业电影制作质量。它围绕电影制作工作流（前期制作、制作、后期制作）组织评估，并通过微调将专家校准的判断注入VLM，实现对电影质量的思维链推理。",
+      "key_findings": [
+        "现有基准评估「正确性」（提示跟随）但根本忽略了「优质性」（电影质量、表演和美学）",
+        "专家校准的VLM微调使对专业电影质量的显式思维链推理成为可能",
+        "将评估覆盖范围扩展到超越单片段评估的复杂多镜头序列和视听整合"
+      ],
+      "tags": ["video-generation", "benchmark", "cinematic-quality", "vlm-evaluation", "expert-calibration"],
+      "relevance": "high",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.23271",
+        "huggingface": "https://huggingface.co/papers/2605.23271",
+        "pdf": "https://arxiv.org/pdf/2605.23271"
+      }
+    },
+    {
+      "id": "rt-lynx-activation-sparsity-diffusion",
+      "title": "RT-Lynx: Putting the GEMM Sparsity In a Right Way for Diffusion Models",
+      "authors": ["Xing Cong", "Hanlin Tang", "Kan Liu", "Lan Tao", "Lin Qu", "Chenhao Xie"],
+      "affiliations": ["Beihang University"],
+      "summary": "RT-Lynx倡导扩散Transformer从权重稀疏化到激活稀疏化的范式转换。关键洞察是DiT激活本质上是稀疏的，比权重对N:M半结构化稀疏化具有明显更强的鲁棒性。结合误差补偿技术和优化的CUDA内核，RT-Lynx在保持生成质量的同时实现了高达1.55倍的推理加速。",
+      "key_findings": [
+        "DiT激活本质上是稀疏的，比权重对N:M半结构化稀疏化具有明显更强的鲁棒性",
+        "带有误差补偿技术的激活稀疏化在多个扩散模型中保持了生成质量",
+        "优化的CUDA内核在线性层中实现了平均高达1.55倍的加速，将理论FLOPs节省转化为实际时钟增益"
+      ],
+      "tags": ["diffusion-transformers", "sparsity", "inference-optimization", "activation-pruning", "cuda-kernels"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.26632",
+        "huggingface": "https://huggingface.co/papers/2605.26632",
+        "pdf": "https://arxiv.org/pdf/2605.26632"
+      }
+    },
+    {
+      "id": "spatialbench-spatial-foundation-model",
+      "title": "SpatialBench: Is Your Spatial Foundation Model an All-Round Player?",
+      "authors": ["Haosong Peng", "Hao Li", "Jiaqi Chen", "Yuhao Pan", "Runmao Yao et al."],
+      "affiliations": ["Hong Kong University of Science and Technology", "Nanyang Technological University", "Northwestern Polytechnical University"],
+      "summary": "SpatialBench提出了一个全面的跨范式空间基础模型基准，在19个数据集上评估了41个模型，覆盖6种范式和5个不同的空间领域共546个场景。研究揭示全上下文注意力最大化精度而有界内存策略实现长序列可扩展性，且自我中心视角和手腕视角仍是主要的分布外失败模式。",
+      "key_findings": [
+        "全上下文注意力最大化精度而有界内存策略解锁长序列可扩展性——直接的系统设计权衡",
+        "数据质量胜过数据量：精心策划的伪真值监督始终优于更大的噪声数据集",
+        "自我中心视角和手腕视角仍是主要的分布外失败模式，指向明确的训练数据缺口"
+      ],
+      "tags": ["spatial-ai", "benchmark", "3d-vision", "foundation-models", "embodied-ai"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27367",
+        "huggingface": "https://huggingface.co/papers/2605.27367",
+        "pdf": "https://arxiv.org/pdf/2605.27367"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "占据主导地位的开放权重大语言模型，具备对话能力，继续保持HuggingFace上下载量最高的模型地位，拥有庞大的社区采用量。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "deepseek"],
+      "metrics": { "downloads": 5019884, "likes": 4315 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "一个领先的开源扩散模型，兼容ComfyUI，作为社区青睐的图像生成模型获得强劲增长，采用单文件分发方式。",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "comfyui", "image-generation"],
+      "metrics": { "downloads": 676447, "likes": 1556 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "领先的开源文本转视频生成模型，提供diffusers和GGUF两种格式，在视频生成工作负载中保持高下载量。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": { "downloads": 1376847, "likes": 1376 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "腾讯混元家族的专用18亿参数翻译模型，展示了社区对专用翻译模型相对于通用大语言模型的强烈兴趣。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 7471, "likes": 1033 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "高效的多模态视觉-语言模型，用于图像-文本理解，延续MiniCPM-V系列的强劲社区采用，适用于端侧和边缘部署场景。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": { "downloads": 314347, "likes": 978 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "hauhaucs-qwen36-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "社区制作的Qwen3.6-35B无审查变体，采用混合专家架构（每token激活3B参数），以GGUF格式分发，支持本地部署和视觉能力。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B（MoE）",
+      "tags": ["qwen3.6", "moe", "gguf", "uncensored", "vision"],
+      "metrics": { "downloads": 1598473, "likes": 912 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "字节跳动的多模态生成模型，同时面向图像和视频生成，代表该公司在开源多模态基础模型领域的推进。",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": { "downloads": 1908, "likes": 866 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "使用ONNX格式的文本转语音和语音合成模型，反映了对高质量开源TTS解决方案日益增长的兴趣。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": { "downloads": 48112, "likes": 698 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth对Qwen3.6-27B的GGUF量化版本，支持多Token预测，为流行的Qwen模型家族提供高效的本地推理。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "mtp"],
+      "metrics": { "downloads": 735349, "likes": 503 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "紧凑的10亿参数文本生成模型，下载量高，表明在轻量级文本生成用例中具有强大的实用性。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "compact", "hrm"],
+      "metrics": { "downloads": 103033, "likes": 379 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "nemostation-marlin-2b",
+      "name": "Marlin-2B",
+      "organization": "NemoStation",
+      "description": "20亿参数的多模态视频字幕模型，支持从视频输入进行视频理解和描述生成。",
+      "task_type": "video-captioning",
+      "model_size": "2B",
+      "tags": ["video", "multimodal", "video-captioning"],
+      "metrics": { "downloads": 9144, "likes": 380 },
+      "source_url": "https://huggingface.co/NemoStation/Marlin-2B"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "MiniCPM系列的最新10亿参数版本，提供高度紧凑的语言模型，适合边缘部署和资源受限环境。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["compact", "minicpm", "edge-deployment"],
+      "metrics": { "downloads": 2409, "likes": 313 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "全面的智能体框架性能优化系统，集技能、直觉、记忆、安全和研究优先开发于一体，支持Claude Code、Codex、Cursor等AI编码工具。",
+      "language": "JavaScript",
+      "stars": 194492,
+      "stars_today": 1915,
+      "forks": 29983,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch推出的可扩展AI智能体框架，按星标数计是最大的开源智能体平台之一，能够随用户一起成长。",
+      "language": "Python",
+      "stars": 168799,
+      "stars_today": 1502,
+      "forks": 28062,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["ai-agent", "framework", "extensible"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将任意代码库转化为可探索、搜索和问答的交互式知识图谱。兼容Claude Code、Codex、Cursor、Copilot、Gemini CLI等，以今日4,697星领跑星标增速。",
+      "language": "TypeScript",
+      "stars": 36120,
+      "stars_today": 4697,
+      "forks": 2895,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "AI智能体跨会话持久化上下文——捕获会话活动，用AI压缩，并将相关上下文注入未来会话。支持多种智能体平台。",
+      "language": "TypeScript",
+      "stars": 78703,
+      "stars_today": 352,
+      "forks": 6769,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["agent-memory", "context-persistence", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "mirofish-swarm-intelligence",
+      "name": "666ghj/MiroFish",
+      "description": "通用群体智能引擎，将集体智能算法应用于多种预测领域的预测任务。",
+      "language": "Python",
+      "stars": 62655,
+      "stars_today": 162,
+      "forks": 9796,
+      "url": "https://github.com/666ghj/MiroFish",
+      "tags": ["swarm-intelligence", "prediction", "collective-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic开源的知识工作者插件库，用于Claude Cowork，标志着机构对智能体辅助工作流的投入。",
+      "language": "Python",
+      "stars": 16713,
+      "stars_today": 1718,
+      "forks": 1958,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["plugins", "knowledge-work", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "全面的AI工程学习资源，覆盖从学习到构建到交付的完整生命周期，今日获得2,155星。",
+      "language": "Python",
+      "stars": 20849,
+      "stars_today": 2155,
+      "forks": 3462,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "learning-resource"],
+      "relevance": "high"
+    },
+    {
+      "id": "kronos-financial-ai",
+      "name": "shiyu-coder/Kronos",
+      "description": "金融市场语言的基础模型，是不断增长的金融AI工具生态系统中技术野心最大的项目。",
+      "language": "Python",
+      "stars": 26516,
+      "stars_today": 425,
+      "forks": 4600,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "markets"],
+      "relevance": "high"
+    },
+    {
+      "id": "taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "赋予AI编码智能体「好品味」的技能文件，防止生成无聊、通用的输出。属于不断增长的智能体行为对齐生态系统。",
+      "language": "Shell",
+      "stars": 21942,
+      "stars_today": 1430,
+      "forks": 1753,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["agent-skills", "behavioral-alignment", "quality-control"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754个结构化网络安全技能，映射到5个框架（MITRE ATT&CK、NIST CSF 2.0、MITRE ATLAS、D3FEND、NIST AI RMF），覆盖26个安全领域，供AI编码智能体使用。",
+      "language": "Python",
+      "stars": 10164,
+      "stars_today": 880,
+      "forks": 1193,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "security-frameworks"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "微软面向自主AI智能体的策略执行、零信任身份、执行沙箱和可靠性工程工具包，覆盖全部OWASP智能体Top 10风险。",
+      "language": "Python",
+      "stars": 2737,
+      "stars_today": 282,
+      "forks": 436,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "microsoft", "zero-trust"],
+      "relevance": "high"
+    },
+    {
+      "id": "dograh-voice-ai",
+      "name": "dograh-hq/dograh",
+      "description": "开源语音AI平台，Vapi和Retell的自托管替代方案，支持本地部署、可视化工作流构建器、MCP原生支持和电话集成。",
+      "language": "Python",
+      "stars": 3270,
+      "stars_today": 399,
+      "forks": 708,
+      "url": "https://github.com/dograh-hq/dograh",
+      "tags": ["voice-ai", "self-hosted", "telephony"],
+      "relevance": "medium"
+    },
+    {
+      "id": "learn-claude-code",
+      "name": "shareAI-lab/learn-claude-code",
+      "description": "从零开始构建的类Claude Code迷你智能体框架，既是教育资源也是智能体开发的轻量级实现参考。",
+      "language": "Python",
+      "stars": 62828,
+      "stars_today": 246,
+      "forks": 10268,
+      "url": "https://github.com/shareAI-lab/learn-claude-code",
+      "tags": ["education", "agent-harness", "claude-code"],
+      "relevance": "medium"
+    },
+    {
+      "id": "funasr-speech-recognition",
+      "name": "modelscope/FunASR",
+      "description": "工业级语音识别工具包，支持170倍实时处理、50+语言、说话人分离、情感检测、流式处理和兼容OpenAI的API。",
+      "language": "Python",
+      "stars": 16326,
+      "stars_today": 42,
+      "forks": 1693,
+      "url": "https://github.com/modelscope/FunASR",
+      "tags": ["speech-recognition", "asr", "multilingual"],
+      "relevance": "medium"
+    },
+    {
+      "id": "stop-slop",
+      "name": "hardikpandya/stop-slop",
+      "description": "用于去除散文中AI痕迹的技能文件，与taste-skill共同构成不断增长的AI编码智能体行为对齐工具生态系统。",
+      "language": "",
+      "stars": 5059,
+      "stars_today": 539,
+      "forks": 403,
+      "url": "https://github.com/hardikpandya/stop-slop",
+      "tags": ["agent-skills", "writing-quality", "behavioral-alignment"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "AI智能体基础设施大规模化",
+      "description": "智能体工具生态系统已达到空前规模，ECC（194K星）、hermes-agent（169K星）和claude-mem（79K星）表明竞争前沿已从原始LLM能力转向上下文工程、行为对齐和运营基础设施。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D与空间基础模型评估",
+      "description": "GARD和SpatialBench分别解决了3D/空间AI中的鲁棒性和评估空白——GARD处理输入退化弹性，而SpatialBench揭示了自我中心领域的系统性失败模式，指向关键的训练数据缺口。",
+      "related_paper_ids": ["gard-geometry-aware-3d-reconstruction", "spatialbench-spatial-foundation-model"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "扩散模型效率与评估",
+      "description": "RT-Lynx的激活稀疏化和EvalVerse的电影质量基准测试代表了扩散模型成熟的两面：使其运行更快和评估更严格，反映了从能力展示到生产部署的转变。",
+      "related_paper_ids": ["rt-lynx-activation-sparsity-diffusion", "evalverse-cinematic-video-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体治理与安全",
+      "description": "微软的agent-governance-toolkit和Anthropic-Cybersecurity-Skills表明智能体安全正成为一等公民关注点，结构化框架映射到MITRE ATT&CK和OWASP等成熟安全标准。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "专用模型生态多样化",
+      "description": "模型格局呈现日益专业化的趋势：腾讯Hy-MT2用于翻译、Supertone用于TTS、NemoStation Marlin用于视频字幕、NVIDIA PiD用于超分辨率，与DeepSeek-V4-Pro等通才巨头并行发展。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-27T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
