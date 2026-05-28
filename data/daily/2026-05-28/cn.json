@@ -1,0 +1,486 @@
+{
+  "version": "1.0",
+  "date": "2026-05-28",
+  "generated_at": "2026-05-28T14:57:00Z",
+  "summary": {
+    "headline": "首尔大学ResearchMath-14K发布最大研究级数学数据集并采用多智能体策划；NEO-ov开创原生一体视觉模型用于多图像和视频理解；Understand-Anything以日增4,465星领跑GitHub，智能体技能生态爆发",
+    "body": "周三的HuggingFace每日论文收录四篇论文，涵盖研究级数学推理、视觉语言模型评估、原生多模态架构和高效视频生成。最受关注的论文是首尔大学的**ResearchMath-14K**（8票赞同），通过多智能体流水线构建了最大的研究级数学问题集（14,056道），同时附带220K条教师推理轨迹，揭示了新一代大语言模型中令人担忧的引用伪造行为。**Chartographer**通过引入反事实图表来解决图表问答中的捷径问题，强制模型进行真正的视觉推理。**NEO-ov**提出了一种原生基础模型，摒弃了传统VLM的编码器-解码器拼接方式，直接从原始像素学习跨帧表示。**OSP-Next**结合稀疏注意力、HiF8量化和强化学习实现高效视频生成。\n\n模型方面，**DeepSeek-V4-Pro**（500万下载、4,360赞）继续保持主导地位。**字节跳动Lance**（924赞，较昨日866赞上升）在多模态生成领域表现亮眼。**HauhauCS的Qwen3.6-35B无审查版**以160万下载量领跑，**OpenBMB的MiniCPM5-1B**（418赞）和**MiniCPM-V-4.6**（1,013赞）则体现了对高效小型模型的强劲需求。新上榜模型包括**美团LongCat-Video-Avatar-1.5**（345赞）用于音频驱动视频头像生成，以及**CohereLabs的command-a-plus**量化视觉模型。\n\nGitHub趋势由智能体技能和工具生态主导。**Understand-Anything**延续爆发式增长（4万星，日增4,465），**ECC**（19.6万星）、**Superpowers**（21万星）和**taste-skill**（2.4万星，日增2,715）代表了日益成熟的智能体行为对齐方向。**MoneyPrinterTurbo**以日增1,742星冲高，用于AI视频生成。",
+    "key_themes": [
+      "research-level-mathematical-reasoning",
+      "native-vision-language-models",
+      "agent-skills-ecosystem",
+      "efficient-video-generation",
+      "agent-governance-and-security",
+      "compact-model-deployment"
+    ]
+  },
+  "researcher_notes": "**ResearchMath-14K最具启发性的发现不是数据集本身，而是对伪造行为的分析。** 在八个开放权重模型中，新一代模型每条推理轨迹产生的引用增加5.6倍，伪造引用增加5.0倍。这是对广泛怀疑的失败模式的一个具体量化证明：随着模型生成看似合理的数学推理能力增强，它们同时更容易编造引文和数学结论。多智能体策划流水线（从学术论文中获取、过滤并生成教师轨迹）是解决真实瓶颈的务实方法——研究级数学问题稀缺，因为它们需要领域专业知识来构造。在Qwen3（4B-30B）上，经过滤的开放问题尝试带来平均9.2分的提升，表明即使不完美的监督信号在困难问题上也能提供有用信息，这挑战了训练数据必须完全正确的传统认知。\n\n**NEO-ov的原生像素到语言方法代表了一种真正的架构选择。** 当前VLM采用模块化流水线：图像编码器产生特征，适配器映射到语言空间，解码器生成文本。这种方法有效但会造成信息碎片化——像素级信号在通过编码器瓶颈压缩后才能与语言标记交互。NEO-ov直接从原始像素学习跨帧表示，原则上保留了更细粒度的视觉信息。在多图像、视频理解和空间智能方面，这种架构可能展现出优势，因为跨帧的时间和空间关系正是编码-对齐范式中容易丢失的信息。从零开始学习视觉表示（而非利用预训练编码器）的训练成本是否能被质量提升所证明，仍是关键问题。\n\n**Chartographer解决的评估问题不仅限于图表领域。** 核心洞察是模型可以通过利用捷径或先验知识正确回答图表问题，而非真正阅读图表——这几乎适用于所有VLM基准测试。通过创建反事实图表（视觉内容改变但问题结构不变），Chartographer将视觉推理与其他因素隔离开来。这在方法论上是严谨的，在实践中也很重要：如果我们无法区分真正阅读图表的模型和模式匹配的模型，就无法在包含新数据的生产环境中信任它们。\n\n**GitHub趋势数据显示智能体技能生态进入新阶段。** 综合规模令人瞩目：Superpowers（21万星）、ECC（19.6万星）、FreeDomain（16.9万星）、Anthropic Skills（14.2万星）、taste-skill（2.4万星，日增2,715）。更有趣的信号是从通用智能体工具向行为对齐工具的多样化发展。taste-skill（防止通用输出）、stop-slop（去除AI痕迹）和Anthropic-Cybersecurity-Skills（结构化安全能力）都聚焦于智能体「应该做什么和不应该做什么」，而非「如何让它们运行」。这是成熟的信号——社区已经从「能否构建智能体」转向「如何让智能体产出高质量输出」。微软的agent-governance-toolkit（2,975星，日增472）则增加了企业治理层。\n\n**视频生成领域正在趋向共同的效率方案。** OSP-Next结合稀疏注意力、量化（HiF8）和基于强化学习的优化——本质上是语言模型推理使用的同一套工具，现在应用于扩散Transformer。美团的LongCat-Video-Avatar-1.5（345赞，零下载，暗示刚刚发布）针对音频驱动的头像生成，而SulphurAI的Sulphur-2-base（140万下载）继续在开放文本转视频领域领先。模式很清晰：视频生成正在沿着语言模型的轨迹——能力→效率→专业化——发展，只是时间线被大幅压缩。",
+  "papers": [
+    {
+      "id": "researchmath-14k-research-level-math",
+      "title": "ResearchMath-14K：通过智能体扩展研究级数学",
+      "authors": ["Guijin Son", "Seungyeop Yi", "Minju Gwak", "Hyunwoo Ko", "Wongi Jang", "Youngjae Yu"],
+      "affiliations": ["Seoul National University"],
+      "summary": "提出ResearchMath-14K，通过多智能体流水线策划了14,056道研究级数学问题，是迄今为止最大的此类数据集。同时生成包含220K条教师轨迹的ResearchMath-Reasoning，揭示新一代大语言模型每条轨迹产生5.6倍更多引用和5.0倍更多伪造引用，而经过滤的开放问题尝试仍能在Qwen3模型上平均提升9.2分。",
+      "key_findings": [
+        "多智能体流水线从学术来源策划14,056道研究级数学问题，成为迄今最大的此类数据集",
+        "新一代大语言模型每条推理轨迹产生5.6倍更多引用和5.0倍更多伪造引用，量化了数学推理中的幻觉趋势",
+        "经过滤的开放问题尝试使Qwen3模型（4B-30B）平均提升9.2分，证明不完美推理轨迹也能提供有用监督"
+      ],
+      "tags": ["mathematical-reasoning", "dataset", "multi-agent", "hallucination-analysis", "fine-tuning"],
+      "relevance": "high",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28003",
+        "huggingface": "https://huggingface.co/papers/2605.28003",
+        "pdf": "https://arxiv.org/pdf/2605.28003"
+      }
+    },
+    {
+      "id": "chartographer-counterfactual-chart-evaluation",
+      "title": "Chartographer：用于评估视觉语言模型的反事实图表生成",
+      "authors": ["Yifan Jiang", "Dae Yon Hwang", "Jesse C. Cresswell", "Freda Shi"],
+      "affiliations": ["University of Waterloo", "Layer 6 AI", "University of Waterloo"],
+      "summary": "提出反事实图表生成方法，通过固定图表问题任务同时改变底层图表数据和答案，严格评估VLM的视觉推理能力。引入将图表逆向工程为可执行规范的框架，能够系统地生成反事实图表，将真正的视觉推理能力与捷径和先验知识隔离开来。",
+      "key_findings": [
+        "模型可以通过捷径或先验知识正确回答图表问题，而非通过视觉推理，削弱了基准测试的有效性",
+        "固定问题结构同时改变视觉内容的反事实图表能够隔离出真正的视觉推理能力",
+        "框架将图表逆向工程为可执行规范，实现系统化的反事实生成"
+      ],
+      "tags": ["vlm-evaluation", "chart-qa", "counterfactual", "visual-reasoning", "benchmark"],
+      "relevance": "high",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27311",
+        "huggingface": "https://huggingface.co/papers/2605.27311",
+        "pdf": "https://arxiv.org/pdf/2605.27311"
+      }
+    },
+    {
+      "id": "neo-ov-native-one-vision",
+      "title": "从像素到文字——大规模原生一体视觉模型",
+      "authors": ["Haiwen Diao", "Jiahao Wang", "Penghao Wu", "Yuhao Dong", "Yuwei Niu"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "提出NEO-ov，一种原生基础模型，摒弃了传统视觉语言模型的编码器-解码器拼接方式。NEO-ov直接从原始像素学习跨帧表示，在不丢失模块化流水线中固有信息的情况下，实现多图像、视频理解和空间智能。",
+      "key_findings": [
+        "原生像素到语言架构避免了独立编码器-适配器-解码器流水线造成的信息碎片化",
+        "从原始像素进行跨帧表示学习，保留了用于时间和空间推理的细粒度视觉信息",
+        "将原生VLM能力从单图像扩展到多图像、视频理解和空间智能"
+      ],
+      "tags": ["vision-language-model", "native-architecture", "multi-image", "video-understanding", "spatial-intelligence"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28820",
+        "huggingface": "https://huggingface.co/papers/2605.28820",
+        "pdf": "https://arxiv.org/pdf/2605.28820"
+      }
+    },
+    {
+      "id": "osp-next-efficient-video-generation",
+      "title": "OSP-Next：基于稀疏序列并行、HiF8量化和强化学习的高效高质量视频生成",
+      "authors": ["Yunyang Ge", "Xianyi He", "Zezhong Zhang", "Bin Lin", "Bin Zhu"],
+      "affiliations": ["Microsoft Research"],
+      "summary": "OSP-Next集成稀疏注意力、并行化、HiF8量化和强化学习，实现高效的文本到视频生成。混合全-稀疏注意力架构使用Skiparse-2D注意力，沿空间和时间维度应用令牌级和组级稀疏注意力模式，降低扩散Transformer中全注意力的二次方代价。",
+      "key_findings": [
+        "混合全-稀疏注意力架构配合Skiparse-2D注意力，降低扩散Transformer中的二次方注意力代价",
+        "HiF8量化结合稀疏序列并行，实现高质量视频生成的实际部署",
+        "基于强化学习的优化在保持效率提升的同时进一步改善生成质量"
+      ],
+      "tags": ["video-generation", "sparse-attention", "quantization", "diffusion-transformers", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28691",
+        "huggingface": "https://huggingface.co/papers/2605.28691",
+        "pdf": "https://arxiv.org/pdf/2605.28691"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "主导性开放权重大语言模型，以超过500万下载量和大规模社区采用保持HuggingFace上下载量最高模型的地位。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "deepseek"],
+      "metrics": { "downloads": 5019884, "likes": 4360 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "兼容ComfyUI的领先开源扩散模型，以单文件分发方式持续获得社区青睐，点赞数增长至1,573。",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "comfyui", "image-generation"],
+      "metrics": { "downloads": 690196, "likes": 1573 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "领先的开源文本到视频生成模型，同时提供diffusers和GGUF格式，保持140万的高下载量。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": { "downloads": 1376847, "likes": 1400 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "腾讯混元系列18亿参数专用翻译模型，以超过1,000赞展示了社区对专用翻译模型的持续兴趣。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 7471, "likes": 1072 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "高效多模态视觉语言模型，延续MiniCPM-V系列，以超过35.5万下载量展现了在设备端和边缘部署场景中的强劲社区采用。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": { "downloads": 355020, "likes": 1013 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "hauhaucs-qwen36-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "社区制作的Qwen3.6-35B无审查版本，采用混合专家架构（3B活跃参数），以GGUF格式分发，支持视觉能力。以160万下载量领跑。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B (MoE)",
+      "tags": ["qwen3.6", "moe", "gguf", "uncensored", "vision"],
+      "metrics": { "downloads": 1598473, "likes": 947 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "字节跳动的多模态生成模型，面向图像和视频生成，社区参与度持续上升，点赞从昨日的866升至924。",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": { "downloads": 1908, "likes": 924 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "采用ONNX格式的文本转语音和语音合成模型，以713赞反映了对高质量开源TTS解决方案的持续兴趣。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": { "downloads": 48112, "likes": 713 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth对Qwen3.6-27B的GGUF量化版本，支持多令牌预测，以73.5万下载量实现高效本地推理。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "mtp"],
+      "metrics": { "downloads": 735349, "likes": 519 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "MiniCPM系列最新的10亿参数模型，适用于边缘部署的紧凑型语言模型，以418赞获得显著关注。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["compact", "minicpm", "edge-deployment"],
+      "metrics": { "downloads": 2409, "likes": 418 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "紧凑型10亿参数文本生成模型，以10.3万高下载量表明其在轻量级文本生成场景中的强大实用性。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "compact", "hrm"],
+      "metrics": { "downloads": 103033, "likes": 394 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "美团新发布的音频驱动视频头像生成模型，支持音频-文本-到-视频和音频-图像-文本-到-视频流水线，以345赞进入头像生成领域。",
+      "task_type": "audio-text-to-video",
+      "model_size": "unknown",
+      "tags": ["video-avatar", "audio-driven", "diffusers"],
+      "metrics": { "downloads": 0, "likes": 345 },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "superpowers-agentic-framework",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架和软件开发方法论，现已成为GitHub上最大的智能体框架，拥有21万星，日增1,511星。",
+      "language": "Shell",
+      "stars": 209632,
+      "stars_today": 1511,
+      "forks": 18682,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-framework", "skills", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "智能体工具性能优化系统，涵盖技能、直觉、记忆、安全和研究优先开发，持续增长至19.6万星。",
+      "language": "JavaScript",
+      "stars": 196113,
+      "stars_today": 2062,
+      "forks": 30175,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "freedomain-free-domains",
+      "name": "DigitalPlatDev/FreeDomain",
+      "description": "免费域名服务，以日增2,222星和16.9万总星数领跑原始星标增速。",
+      "language": "HTML",
+      "stars": 169227,
+      "stars_today": 2222,
+      "forks": 3205,
+      "url": "https://github.com/DigitalPlatDev/FreeDomain",
+      "tags": ["free-domain", "developer-tools", "infrastructure"],
+      "relevance": "low"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic的公共智能体技能仓库，Claude的官方技能生态系统，拥有14.2万星，日增686星。",
+      "language": "Python",
+      "stars": 141973,
+      "stars_today": 686,
+      "forks": 16784,
+      "url": "https://github.com/anthropics/skills",
+      "tags": ["agent-skills", "anthropic", "claude"],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo-ai-video",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用AI大模型一键生成高清短视频的工具，日增1,742星至6.2万总星，结合AI内容生成与自动化视频制作。",
+      "language": "Python",
+      "stars": 62381,
+      "stars_today": 1742,
+      "forks": 9109,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "content-creation", "llm-application"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将任意代码库转换为交互式知识图谱，支持探索、搜索和问答。在AI相关仓库中以日增4,465星领跑，总星数达4万。",
+      "language": "TypeScript",
+      "stars": 40086,
+      "stars_today": 4465,
+      "forks": 3198,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "twenty-crm",
+      "name": "twentyhq/twenty",
+      "description": "面向AI设计的开源Salesforce替代方案，拥有4.7万星，日增519星，代表了AI原生商业软件的增长趋势。",
+      "language": "TypeScript",
+      "stars": 47364,
+      "stars_today": 519,
+      "forks": 6724,
+      "url": "https://github.com/twentyhq/twenty",
+      "tags": ["crm", "ai-native", "salesforce-alternative"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos-financial-ai",
+      "name": "shiyu-coder/Kronos",
+      "description": "金融市场语言基础模型，以2.7万星和日增401星持续强劲增长。",
+      "language": "Python",
+      "stars": 26901,
+      "stars_today": 401,
+      "forks": 4660,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "markets"],
+      "relevance": "high"
+    },
+    {
+      "id": "taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "赋予AI编程智能体「好品味」的技能文件，防止生成无聊通用输出，以日增2,715星领跑行为对齐类别。",
+      "language": "Shell",
+      "stars": 24418,
+      "stars_today": 2715,
+      "forks": 1882,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["agent-skills", "behavioral-alignment", "quality-control"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "覆盖AI工程全生命周期的综合学习资源，日增1,739星至2.26万总星。",
+      "language": "Python",
+      "stars": 22649,
+      "stars_today": 1739,
+      "forks": 3699,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "learning-resource"],
+      "relevance": "high"
+    },
+    {
+      "id": "heretic-censorship-removal",
+      "name": "p-e-w/heretic",
+      "description": "全自动语言模型审查移除工具，拥有2.2万星，日增211星，属于不断壮大的模型定制生态。",
+      "language": "Python",
+      "stars": 22046,
+      "stars_today": 211,
+      "forks": 2353,
+      "url": "https://github.com/p-e-w/heretic",
+      "tags": ["model-customization", "uncensoring", "llm-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic面向知识工作者的开源Claude Cowork插件，以1.7万星和日增695星保持强劲增长。",
+      "language": "Python",
+      "stars": 17323,
+      "stars_today": 695,
+      "forks": 2020,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["plugins", "knowledge-work", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "iii-service-composition",
+      "name": "iii-hq/iii",
+      "description": "基于Rust的实时服务组合、扩展和观测平台，日增376星，总星1.7万。",
+      "language": "Rust",
+      "stars": 16907,
+      "stars_today": 376,
+      "forks": 1107,
+      "url": "https://github.com/iii-hq/iii",
+      "tags": ["service-composition", "observability", "rust"],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754个结构化网络安全技能，映射到5个框架（MITRE ATT&CK、NIST CSF 2.0、MITRE ATLAS、D3FEND、NIST AI RMF），以1.1万星和日增886星持续获得强劲采用。",
+      "language": "Python",
+      "stars": 11010,
+      "stars_today": 886,
+      "forks": 1255,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "security-frameworks"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "微软AI智能体治理工具包，涵盖策略执行、零信任身份验证、执行沙箱和可靠性工程，覆盖所有OWASP智能体Top 10风险。",
+      "language": "Python",
+      "stars": 2975,
+      "stars_today": 472,
+      "forks": 468,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "microsoft", "zero-trust"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "研究级数学推理",
+      "description": "ResearchMath-14K通过多智能体策划流水线解决了大语言模型训练中研究级数学问题的稀缺问题，同时揭示了新模型日益严重的数学引用伪造问题——这对领域可靠性至关重要。",
+      "related_paper_ids": ["researchmath-14k-research-level-math"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能与行为对齐生态",
+      "description": "智能体生态已从原始能力转向行为对齐，taste-skill（日增2,715星）、stop-slop、Anthropic-Cybersecurity-Skills和Anthropic Skills（14.2万星）都聚焦于智能体应该和不应该做什么，而非如何运行。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "原生视觉语言架构",
+      "description": "NEO-ov的原生像素到语言方法和Chartographer的严格评估方法论都解决了模块化VLM流水线的根本局限——编码器瓶颈导致的信息丢失和掩盖真实视觉推理的评估捷径。",
+      "related_paper_ids": ["neo-ov-native-one-vision", "chartographer-counterfactual-chart-evaluation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频生成效率与专业化",
+      "description": "OSP-Next将语言模型效率工具（稀疏注意力、量化、强化学习）应用于扩散Transformer，而美团的LongCat和SulphurAI的Sulphur-2分别代表了视频生成向头像和通用文本转视频的专业化发展。",
+      "related_paper_ids": ["osp-next-efficient-video-generation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体治理与企业安全",
+      "description": "微软的agent-governance-toolkit（日增472星）和Anthropic-Cybersecurity-Skills（日增886星）表明智能体安全和治理正成为一流的企业关注点，采用映射到已建立安全标准的结构化框架。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "紧凑模型部署",
+      "description": "OpenBMB的MiniCPM5-1B和MiniCPM-V-4.6、Sapient的HRM-Text-1B以及Qwen3.6 GGUF量化版展示了对高效、可边缘部署模型的持续需求，在能力和资源约束之间取得平衡。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

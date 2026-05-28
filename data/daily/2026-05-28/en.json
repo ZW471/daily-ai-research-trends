@@ -1,0 +1,486 @@
+{
+  "version": "1.0",
+  "date": "2026-05-28",
+  "generated_at": "2026-05-28T14:57:00Z",
+  "summary": {
+    "headline": "ResearchMath-14K introduces largest research-level math dataset with multi-agent curation from Seoul National University; NEO-ov pioneers native one-vision VLMs for multi-image and video understanding; Understand-Anything leads GitHub with 4,465 stars/day as agent skills ecosystem explodes",
+    "body": "Wednesday's HuggingFace Daily Papers features four submissions spanning research-level mathematical reasoning, vision-language model evaluation, native multimodal architectures, and efficient video generation. The top paper is **ResearchMath-14K** from Seoul National University (8 upvotes), which constructs the largest collection of research-level math problems (14,056) via a multi-agent pipeline, along with 220K teacher trajectories that reveal concerning fabrication behaviors in newer LLMs. **Chartographer** tackles the perennial shortcut problem in chart QA by introducing counterfactual charts that force genuine visual reasoning. **NEO-ov** proposes a native foundation model that eliminates the traditional encoder-decoder stitching approach for VLMs, learning cross-frame representations from raw pixels. **OSP-Next** combines sparse attention, HiF8 quantization, and reinforcement learning for efficient video generation.\n\nThe model landscape sees continued dominance by **DeepSeek-V4-Pro** (5M downloads, 4,360 likes), with notable gains for **ByteDance Lance** (924 likes, up from 866) in multimodal generation. **HauhauCS's Qwen3.6-35B uncensored** leads downloads at 1.6M, while **OpenBMB's MiniCPM5-1B** (418 likes) and **MiniCPM-V-4.6** (1,013 likes) demonstrate the strong demand for efficient compact models. New entrants include **Meituan's LongCat-Video-Avatar-1.5** (345 likes) for audio-driven video avatars and **CohereLabs' command-a-plus** quantized vision model.\n\nGitHub trending is dominated by the agent skills and tooling ecosystem. **Understand-Anything** continues its explosive growth (40K stars, 4,465 today), while **ECC** (196K stars), **Superpowers** (210K stars), and **taste-skill** (24K stars, 2,715 today) represent the maturing agent behavioral alignment space. **MoneyPrinterTurbo** surges with 1,742 stars today for AI video generation, and **DigitalPlatDev/FreeDomain** (169K stars, 2,222 today) leads in raw star velocity among non-AI repos.",
+    "key_themes": [
+      "research-level-mathematical-reasoning",
+      "native-vision-language-models",
+      "agent-skills-ecosystem",
+      "efficient-video-generation",
+      "agent-governance-and-security",
+      "compact-model-deployment"
+    ]
+  },
+  "researcher_notes": "**ResearchMath-14K's most provocative finding is not the dataset itself but the fabrication behavior analysis.** Across eight open-weight models, newer generations produce 5.6x more references and 5.0x more fake references per reasoning trace. This is a concrete, quantified demonstration of a widely suspected failure mode: as models become more capable at generating plausible-looking mathematical reasoning, they simultaneously become more prone to hallucinating citations and mathematical results. The multi-agent curation pipeline (sourcing from academic papers, filtering, and generating teacher trajectories) is a pragmatic approach to a real bottleneck — research-level math problems are scarce because they require domain expertise to formulate. The 9.2-point average improvement from filtered open-problem attempts on Qwen3 (4B-30B) shows that even imperfect supervision on hard problems provides useful signal, which challenges the conventional wisdom that training data must be fully correct.\n\n**NEO-ov's native pixel-to-language approach represents a genuine architectural bet.** Current VLMs use a modular pipeline: image encoder produces features, adapter maps them to language space, decoder generates text. This works but fragments information — pixel-level signals are compressed through the encoder bottleneck before they can interact with language tokens. NEO-ov learns cross-frame representations directly from raw pixels, which in principle preserves more fine-grained visual information. The extension to multi-image, video understanding, and spatial intelligence is where this architecture could show its advantages, since temporal and spatial relationships across frames are precisely what gets lost in the encode-then-align paradigm. Whether the training cost of learning visual representations from scratch (rather than leveraging pre-trained encoders) is justified by the quality gains remains the key question.\n\n**Chartographer addresses a fundamental evaluation problem that extends beyond charts.** The core insight — that models can answer chart questions correctly by exploiting shortcuts or prior knowledge rather than actually reading the chart — applies to virtually every VLM benchmark. By creating counterfactual charts where the visual content changes but the question structure remains fixed, Chartographer isolates visual reasoning from everything else. This is methodologically rigorous but also practically important: if we can't distinguish models that truly read charts from those that pattern-match, we can't trust them in production settings where the charts contain novel data.\n\n**The GitHub trending data reveals the agent skills ecosystem reaching a new phase.** The combined scale is remarkable: Superpowers (210K stars), ECC (196K stars), FreeDomain (169K stars), Anthropic Skills (142K stars), and taste-skill (24K stars gaining 2,715/day). But the more interesting signal is the diversification from generic agent harnesses toward behavioral alignment tools. taste-skill (preventing generic output), stop-slop (removing AI tells from prose), and Anthropic-Cybersecurity-Skills (structured security capabilities) all focus on _what_ agents should and shouldn't do, rather than _how_ to make them run. This is a maturation signal — the community has moved past 'can we build agents' to 'how do we make agents that produce quality output.' Microsoft's agent-governance-toolkit (2,975 stars, 472 today) adds the enterprise governance layer.\n\n**The video generation space is converging on a common efficiency playbook.** OSP-Next combines sparse attention, quantization (HiF8), and RL-based optimization — which is essentially the same toolkit that language model inference has used, now applied to Diffusion Transformers. Meituan's LongCat-Video-Avatar-1.5 (345 likes with zero downloads, suggesting it just launched) targets audio-driven avatar generation, while SulphurAI's Sulphur-2-base (1.4M downloads) continues to lead in open text-to-video. The pattern is clear: video generation is following the language model trajectory of capability → efficiency → specialization, compressed into a much shorter timeline.",
+  "papers": [
+    {
+      "id": "researchmath-14k-research-level-math",
+      "title": "ResearchMath-14K: Scaling Research-Level Mathematics via Agents",
+      "authors": ["Guijin Son", "Seungyeop Yi", "Minju Gwak", "Hyunwoo Ko", "Wongi Jang", "Youngjae Yu"],
+      "affiliations": ["Seoul National University"],
+      "summary": "Introduces ResearchMath-14K, the largest collection of 14,056 research-level mathematical problems curated via a multi-agent pipeline, along with ResearchMath-Reasoning containing 220K teacher trajectories. Reveals that newer LLM generations produce 5.6x more references and 5.0x more fabricated references per trace, while showing that filtered open-problem attempts still improve Qwen3 models by 9.2 points on average.",
+      "key_findings": [
+        "Multi-agent pipeline curates 14,056 research-level math problems from academic sources, making it the largest such dataset to date",
+        "Newer LLM generations produce 5.6x more references and 5.0x more fake references per reasoning trace, quantifying hallucination trends in mathematical reasoning",
+        "Filtered open-problem attempts improve Qwen3 models (4B-30B) by 9.2 points on average, demonstrating useful supervision from imperfect reasoning traces"
+      ],
+      "tags": ["mathematical-reasoning", "dataset", "multi-agent", "hallucination-analysis", "fine-tuning"],
+      "relevance": "high",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28003",
+        "huggingface": "https://huggingface.co/papers/2605.28003",
+        "pdf": "https://arxiv.org/pdf/2605.28003"
+      }
+    },
+    {
+      "id": "chartographer-counterfactual-chart-evaluation",
+      "title": "Chartographer: Counterfactual Chart Generation for Evaluating Vision-Language Models",
+      "authors": ["Yifan Jiang", "Dae Yon Hwang", "Jesse C. Cresswell", "Freda Shi"],
+      "affiliations": ["University of Waterloo", "Layer 6 AI", "University of Waterloo"],
+      "summary": "Proposes counterfactual chart generation to rigorously evaluate visual reasoning in VLMs by fixing the chart-question task while varying the underlying chart data and answers. Introduces a framework to reverse-engineer charts into executable specifications and regenerate them with modified data, isolating genuine visual reasoning from shortcuts and prior knowledge.",
+      "key_findings": [
+        "Models can answer chart questions correctly via shortcuts or prior familiarity rather than visual reasoning, undermining benchmark validity",
+        "Counterfactual charts that fix question structure while varying visual content isolate genuine visual reasoning ability",
+        "Framework reverse-engineers charts into executable specifications enabling systematic counterfactual generation"
+      ],
+      "tags": ["vlm-evaluation", "chart-qa", "counterfactual", "visual-reasoning", "benchmark"],
+      "relevance": "high",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27311",
+        "huggingface": "https://huggingface.co/papers/2605.27311",
+        "pdf": "https://arxiv.org/pdf/2605.27311"
+      }
+    },
+    {
+      "id": "neo-ov-native-one-vision",
+      "title": "From Pixels to Words -- Towards Native One-Vision Models at Scale",
+      "authors": ["Haiwen Diao", "Jiahao Wang", "Penghao Wu", "Yuhao Dong", "Yuwei Niu"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "Introduces NEO-ov, a native foundation model that eliminates the traditional encoder-decoder stitching approach for vision-language models. NEO-ov learns cross-frame representations directly from raw pixels, enabling multi-image, video understanding, and spatial intelligence without the information loss inherent in modular pipelines.",
+      "key_findings": [
+        "Native pixel-to-language architecture avoids the information fragmentation caused by separate encoder-adapter-decoder pipelines",
+        "Cross-frame representation learning from raw pixels preserves fine-grained visual information for temporal and spatial reasoning",
+        "Extends native VLM capabilities beyond single images to multi-image, video understanding, and spatial intelligence"
+      ],
+      "tags": ["vision-language-model", "native-architecture", "multi-image", "video-understanding", "spatial-intelligence"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28820",
+        "huggingface": "https://huggingface.co/papers/2605.28820",
+        "pdf": "https://arxiv.org/pdf/2605.28820"
+      }
+    },
+    {
+      "id": "osp-next-efficient-video-generation",
+      "title": "OSP-Next: Efficient High-Quality Video Generation with Sparse Sequence Parallelism, HiF8 Quantization, and Reinforcement Learning",
+      "authors": ["Yunyang Ge", "Xianyi He", "Zezhong Zhang", "Bin Lin", "Bin Zhu"],
+      "affiliations": ["Microsoft Research"],
+      "summary": "OSP-Next integrates sparse attention, parallelism, HiF8 quantization, and reinforcement learning for efficient text-to-video generation. The hybrid full-sparse attention architecture uses Skiparse-2D Attention with token-wise and group-wise sparse patterns along spatial and temporal dimensions to reduce the quadratic cost of full attention in Diffusion Transformers.",
+      "key_findings": [
+        "Hybrid full-sparse attention architecture with Skiparse-2D Attention reduces quadratic attention cost in Diffusion Transformers",
+        "HiF8 quantization combined with sparse sequence parallelism enables practical deployment of high-quality video generation",
+        "Reinforcement learning-based optimization further improves generation quality while maintaining efficiency gains"
+      ],
+      "tags": ["video-generation", "sparse-attention", "quantization", "diffusion-transformers", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28691",
+        "huggingface": "https://huggingface.co/papers/2605.28691",
+        "pdf": "https://arxiv.org/pdf/2605.28691"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "The dominant open-weight large language model, maintaining its position as the most-downloaded model on HuggingFace with over 5 million downloads and massive community adoption for conversational tasks.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "deepseek"],
+      "metrics": { "downloads": 5019884, "likes": 4360 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "circlestone-anima",
+      "name": "Anima",
+      "organization": "Circlestone Labs",
+      "description": "A leading open diffusion model compatible with ComfyUI, continuing strong traction as a community-favored image generation model with single-file distribution and growing likes.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["diffusion", "comfyui", "image-generation"],
+      "metrics": { "downloads": 690196, "likes": 1573 },
+      "source_url": "https://huggingface.co/circlestone-labs/Anima"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "A leading open text-to-video generation model available in both diffusers and GGUF formats, maintaining high download volume of 1.4M for video generation workloads.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": { "downloads": 1376847, "likes": 1400 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "A specialized 1.8B-parameter translation model from Tencent's Hunyuan family, demonstrating sustained community interest in dedicated translation models with over 1,000 likes.",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 7471, "likes": 1072 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "openbmb-minicpm-v-4-6",
+      "name": "MiniCPM-V-4.6",
+      "organization": "OpenBMB",
+      "description": "An efficient multimodal vision-language model continuing the MiniCPM-V series, with strong community adoption for on-device and edge deployment scenarios at over 355K downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": { "downloads": 355020, "likes": 1013 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.6"
+    },
+    {
+      "id": "hauhaucs-qwen36-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "A community-produced uncensored variant of Qwen3.6-35B using mixture-of-experts architecture (3B active parameters), distributed in GGUF format with vision capabilities. Leads in download volume at 1.6M.",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B (MoE)",
+      "tags": ["qwen3.6", "moe", "gguf", "uncensored", "vision"],
+      "metrics": { "downloads": 1598473, "likes": 947 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "ByteDance's multimodal generation model targeting both image and video generation, showing rising community engagement with 924 likes, up from 866 yesterday.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation"],
+      "metrics": { "downloads": 1908, "likes": 924 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "A text-to-speech and speech synthesis model using ONNX format, reflecting continued interest in high-quality open TTS solutions with 713 likes.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "onnx"],
+      "metrics": { "downloads": 48112, "likes": 713 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth's GGUF quantization of Qwen3.6-27B with Multi-Token Prediction support, enabling efficient local inference with 735K downloads.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "mtp"],
+      "metrics": { "downloads": 735349, "likes": 519 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "The latest 1B-parameter entry in the MiniCPM series, a compact language model suitable for edge deployment that has gained significant traction with 418 likes.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["compact", "minicpm", "edge-deployment"],
+      "metrics": { "downloads": 2409, "likes": 418 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "A compact 1B-parameter text generation model with high download volume of 103K, suggesting strong utility for lightweight text generation use cases.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "compact", "hrm"],
+      "metrics": { "downloads": 103033, "likes": 394 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "A new audio-driven video avatar generation model supporting audio-text-to-video and audio-image-text-to-video pipelines, representing Meituan's entry into the avatar generation space with 345 likes.",
+      "task_type": "audio-text-to-video",
+      "model_size": "unknown",
+      "tags": ["video-avatar", "audio-driven", "diffusers"],
+      "metrics": { "downloads": 0, "likes": 345 },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "superpowers-agentic-framework",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology that works, now the largest agent framework on GitHub at 210K stars with sustained momentum of 1,511 stars/day.",
+      "language": "Shell",
+      "stars": 209632,
+      "stars_today": 1511,
+      "forks": 18682,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-framework", "skills", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "The agent harness performance optimization system with skills, instincts, memory, security, and research-first development, continuing its massive growth to 196K stars.",
+      "language": "JavaScript",
+      "stars": 196113,
+      "stars_today": 2062,
+      "forks": 30175,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "freedomain-free-domains",
+      "name": "DigitalPlatDev/FreeDomain",
+      "description": "Free domain service for everyone, leading in raw star velocity at 2,222 stars/day and 169K total stars, indicating massive community interest.",
+      "language": "HTML",
+      "stars": 169227,
+      "stars_today": 2222,
+      "forks": 3205,
+      "url": "https://github.com/DigitalPlatDev/FreeDomain",
+      "tags": ["free-domain", "developer-tools", "infrastructure"],
+      "relevance": "low"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic's public repository for agent skills, the official skills ecosystem for Claude with 142K stars and sustained daily growth of 686 stars.",
+      "language": "Python",
+      "stars": 141973,
+      "stars_today": 686,
+      "forks": 16784,
+      "url": "https://github.com/anthropics/skills",
+      "tags": ["agent-skills", "anthropic", "claude"],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo-ai-video",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "AI-powered one-click short video generation tool using LLMs, surging with 1,742 stars today to 62K total. Combines AI content generation with automated video production.",
+      "language": "Python",
+      "stars": 62381,
+      "stars_today": 1742,
+      "forks": 9109,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "content-creation", "llm-application"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Turns any codebase into an interactive knowledge graph for exploration, search, and Q&A. Leading in AI-related star velocity at 4,465 stars/day, up to 40K total stars.",
+      "language": "TypeScript",
+      "stars": 40086,
+      "stars_today": 4465,
+      "forks": 3198,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "twenty-crm",
+      "name": "twentyhq/twenty",
+      "description": "The open alternative to Salesforce designed for AI, with 47K stars and 519 new stars today, representing the growing AI-native business software trend.",
+      "language": "TypeScript",
+      "stars": 47364,
+      "stars_today": 519,
+      "forks": 6724,
+      "url": "https://github.com/twentyhq/twenty",
+      "tags": ["crm", "ai-native", "salesforce-alternative"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos-financial-ai",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for the language of financial markets, continuing its strong growth at 27K stars with 401 new stars today.",
+      "language": "Python",
+      "stars": 26901,
+      "stars_today": 401,
+      "forks": 4660,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "markets"],
+      "relevance": "high"
+    },
+    {
+      "id": "taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "A skill file that gives AI coding agents 'good taste' by preventing generic output generation, leading the behavioral alignment category with 2,715 stars today.",
+      "language": "Shell",
+      "stars": 24418,
+      "stars_today": 2715,
+      "forks": 1882,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["agent-skills", "behavioral-alignment", "quality-control"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Comprehensive learning resource for AI engineering covering the full lifecycle, surging with 1,739 stars today to 22.6K total.",
+      "language": "Python",
+      "stars": 22649,
+      "stars_today": 1739,
+      "forks": 3699,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "learning-resource"],
+      "relevance": "high"
+    },
+    {
+      "id": "heretic-censorship-removal",
+      "name": "p-e-w/heretic",
+      "description": "Fully automatic censorship removal for language models with 22K stars and 211 new stars today, part of the growing model customization ecosystem.",
+      "language": "Python",
+      "stars": 22046,
+      "stars_today": 211,
+      "forks": 2353,
+      "url": "https://github.com/p-e-w/heretic",
+      "tags": ["model-customization", "uncensoring", "llm-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic's open-source plugins for knowledge workers using Claude Cowork, maintaining strong growth at 17K stars with 695 new stars today.",
+      "language": "Python",
+      "stars": 17323,
+      "stars_today": 695,
+      "forks": 2020,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["plugins", "knowledge-work", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "iii-service-composition",
+      "name": "iii-hq/iii",
+      "description": "A Rust-based platform to compose, extend, and observe services in real-time, gaining 376 stars today with 17K total stars.",
+      "language": "Rust",
+      "stars": 16907,
+      "stars_today": 376,
+      "forks": 1107,
+      "url": "https://github.com/iii-hq/iii",
+      "tags": ["service-composition", "observability", "rust"],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 structured cybersecurity skills mapped to 5 frameworks (MITRE ATT&CK, NIST CSF 2.0, MITRE ATLAS, D3FEND, NIST AI RMF) for AI agents, continuing strong adoption at 11K stars with 886 today.",
+      "language": "Python",
+      "stars": 11010,
+      "stars_today": 886,
+      "forks": 1255,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "security-frameworks"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "Microsoft's AI agent governance toolkit with policy enforcement, zero-trust identity, execution sandboxing, and reliability engineering covering all OWASP Agentic Top 10 risks.",
+      "language": "Python",
+      "stars": 2975,
+      "stars_today": 472,
+      "forks": 468,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-governance", "security", "microsoft", "zero-trust"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Research-Level Mathematical Reasoning",
+      "description": "ResearchMath-14K tackles the scarcity of research-level math problems for LLM training with a multi-agent curation pipeline, while revealing that newer models increasingly fabricate mathematical references — a critical finding for the field's reliability.",
+      "related_paper_ids": ["researchmath-14k-research-level-math"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skills and Behavioral Alignment Ecosystem",
+      "description": "The agent ecosystem has shifted from raw capability to behavioral alignment, with taste-skill (2,715 stars/day), stop-slop, Anthropic-Cybersecurity-Skills, and Anthropic Skills (142K stars) all focusing on what agents should and shouldn't do rather than how to make them run.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Native Vision-Language Architectures",
+      "description": "NEO-ov's native pixel-to-language approach and Chartographer's rigorous evaluation methodology both address fundamental limitations of modular VLM pipelines — information loss through encoder bottlenecks and evaluation shortcuts that mask true visual reasoning.",
+      "related_paper_ids": ["neo-ov-native-one-vision", "chartographer-counterfactual-chart-evaluation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video Generation Efficiency and Specialization",
+      "description": "OSP-Next applies the language model efficiency playbook (sparse attention, quantization, RL) to Diffusion Transformers, while Meituan's LongCat and SulphurAI's Sulphur-2 represent the specialization phase of video generation toward avatars and general text-to-video respectively.",
+      "related_paper_ids": ["osp-next-efficient-video-generation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Governance and Enterprise Security",
+      "description": "Microsoft's agent-governance-toolkit (472 stars/day) and Anthropic-Cybersecurity-Skills (886 stars/day) signal that agent safety and governance are becoming first-class enterprise concerns, with structured frameworks mapped to established security standards.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Compact Model Deployment",
+      "description": "OpenBMB's MiniCPM5-1B and MiniCPM-V-4.6, Sapient's HRM-Text-1B, and the Qwen3.6 GGUF quantizations demonstrate sustained demand for efficient, edge-deployable models that balance capability with resource constraints.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-28T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
