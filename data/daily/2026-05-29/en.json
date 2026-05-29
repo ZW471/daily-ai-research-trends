@@ -1,0 +1,533 @@
+{
+  "version": "1.0",
+  "date": "2026-05-29",
+  "generated_at": "2026-05-29T14:57:00Z",
+  "summary": {
+    "headline": "LaRA detects data contamination in RL post-training via layer-wise representation analysis; NAVA from Baidu achieves native audio-visual alignment for joint generation; agent skills ecosystem continues explosive growth with Understand-Anything gaining 3,776 stars/day",
+    "body": "Thursday's HuggingFace Daily Papers features five submissions spanning RL training integrity, multimodal generation, cinematic video control, agent benchmarking, and physics-based animal simulation. The top paper is **LaRA** from Yonsei University (5 upvotes), which introduces a layer-wise representation analysis framework for detecting data contamination in RL post-trained LLMs, a critical problem as reinforcement learning reshapes model behavior through trajectory-level rewards rather than token likelihoods. **NAVA** from Baidu proposes a native audio-visual alignment framework for joint audio-video generation with a novel Align-then-Fuse MMDiT architecture. **SmartDirector** and **MoZoo** from Orange Team tackle keyframe-conditioned cinematic generation and physics-based animal simulation respectively. **AsyncTool** benchmarks the under-explored problem of asynchronous function calling in multi-task agent scenarios.\n\nThe model landscape sees **DeepSeek-V4-Pro** maintaining dominance with 5.3M downloads and 4,405 likes. **HauhauCS's Qwen3.6-35B uncensored** surpasses 1.95M downloads. Notable new entries include **LiquidAI's LFM2.5-8B-A1B**, a mixture-of-experts model with 8B total / 1B active parameters just launched yesterday with 116 likes. **ByteDance Lance** reaches 956 likes for multimodal any-to-any generation, while **Qwen/Qwen3.6-27B** leads official releases at 4.8M downloads and 1,510 likes. **OpenBMB MiniCPM5-1B** grows to 498 likes, confirming sustained demand for compact edge models.\n\nGitHub trending is dominated by the agent skills and tooling ecosystem reaching unprecedented scale. **Understand-Anything** leads AI repos with 3,776 stars/day (42.9K total), converting code into interactive knowledge graphs. **MoneyPrinterTurbo** surges to 66.5K stars with 4,698 stars/day for AI video generation. **NousResearch/hermes-agent** (171.7K stars, 1,411/day) and **ECC** (197.4K stars, 1,385/day) represent the mature agent platform layer, while **taste-skill** (26.6K stars, 2,234/day) and **stop-slop** (6.5K stars, 761/day) signal growing focus on AI output quality alignment.",
+    "key_themes": [
+      "rl-training-integrity",
+      "native-multimodal-generation",
+      "agent-skills-ecosystem",
+      "cinematic-video-generation",
+      "compact-edge-models",
+      "ai-output-quality-alignment"
+    ]
+  },
+  "researcher_notes": "**LaRA's contribution is methodologically significant because it attacks a blind spot in the RL post-training evaluation pipeline.** Existing contamination detection relies on output-level signals like likelihood or entropy, but RL fundamentally changes the relationship between these signals and model behavior — RL shapes behavior through trajectory-level rewards, not token-level probabilities. LaRA instead examines perturbation sensitivity, directional collapse, and local representation rigidity across layers, finding that contamination produces progressive geometric deviations. This is exactly the kind of geometric analysis that should generalize across different RL algorithms and reward structures, because the underlying mechanism (memorization of specific trajectories) produces consistent representational signatures regardless of how the reward was structured. The practical implication is clear: as RL post-training becomes standard practice (RLHF, GRPO, etc.), we need contamination detection methods that work at the representation level, not the output level.\n\n**NAVA from Baidu represents a principled middle ground in the multimodal generation architecture debate.** The current landscape has two extremes: dual-tower designs that generate audio and video separately then align them post-hoc, and fully unified tri-modal architectures that mix text, audio, and video in one shared space. The former loses fine-grained co-evolution, the latter couples semantic conditioning with low-level synchronization. NAVA's Align-then-Fuse MMDiT first establishes audio-video correspondence in a dedicated interaction space, then uses external context to condition joint denoising. The Timbre-in-Context Conditioning is a particularly clever addition — associating reference timbre cues with corresponding speech spans for controllable speech timbre. At 6.3B parameters, NAVA achieves competitive quality while remaining significantly smaller than many unified approaches.\n\n**AsyncTool highlights a critical gap in how we evaluate agent capabilities.** Most tool-calling benchmarks assume synchronous execution — the agent calls a tool, gets a response, then decides what to do next. But real-world agent deployments involve concurrent tasks with different latencies, and the ability to productively use idle time while waiting for slow tool responses is essential for practical efficiency. The finding that delayed tool feedback causes clear performance degradation across current models is important but unsurprising — models are trained primarily on synchronous interaction patterns. The more interesting question is whether this capability can be improved through training or whether it requires architectural changes to how models handle temporal context.\n\n**The GitHub trending data reveals an inflection point in the AI agent ecosystem.** The sheer scale is remarkable: obra/superpowers (211K stars), affaan-m/ECC (197K stars), NousResearch/hermes-agent (172K stars), DigitalPlatDev/FreeDomain (171K stars), and anthropics/skills (143K stars). But today's most notable signal is the emergence of **AI output quality tools** as a distinct category. taste-skill (2,234 stars/day) and stop-slop (761 stars/day) both focus on making AI-generated content less generic and more authentic. This is a demand-side signal that complements the supply-side scaling of agent platforms — users don't just want agents that work, they want agents that produce output indistinguishable from skilled human work. Microsoft's RAMPART (304 stars, new) adds safety testing for agentic AI applications, addressing the governance side of the same maturation trend.\n\n**The compact model trend continues its strong trajectory.** MiniCPM5-1B (498 likes, growing), LiquidAI LFM2.5-8B-A1B (116 likes, just launched), and NemoStation Marlin-2B (430 likes) all demonstrate that the community is actively seeking models that balance capability with deployability. LiquidAI's MoE approach (8B total, 1B active) is particularly interesting as it applies the mixture-of-experts scaling strategy to the edge deployment use case — getting the representational capacity of a larger model while keeping inference cost at the 1B-parameter level. The continued success of unsloth's quantized variants (806K downloads for Qwen3.6-27B-MTP-GGUF) confirms that efficient local inference remains a primary community priority.",
+  "papers": [
+    {
+      "id": "lara-contamination-detection-rl",
+      "title": "LaRA: Layer-wise Representation Analysis for Detecting Data Contamination in RL Post-Training",
+      "authors": ["Minju Gwak", "Minseo Kwak", "Dongseok Lee", "Guijin Son", "Alan Ritter", "Jaehyung Kim"],
+      "affiliations": ["Yonsei University", "Georgia Institute of Technology"],
+      "summary": "Introduces LaRA, a layer-wise representation analysis framework for detecting data contamination in RL post-trained LLMs. Uses three complementary metrics — perturbation sensitivity, directional collapse, and local representation rigidity — to identify progressive geometric deviations caused by contamination across model layers.",
+      "key_findings": [
+        "Existing output-level contamination detection methods (likelihood, entropy) become unreliable for RL-trained models since RL shapes behavior through trajectory-level rewards",
+        "Contamination produces progressive geometric deviations across layers including amplified perturbation sensitivity, stronger directional collapse, and enhanced local rigidity",
+        "The aggregated representation-level detection protocol outperforms existing output-level baselines for contamination detection in RL-trained reasoning models"
+      ],
+      "tags": ["reinforcement-learning", "data-contamination", "representation-analysis", "llm-evaluation", "post-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29888",
+        "huggingface": "https://huggingface.co/papers/2605.29888",
+        "pdf": "https://arxiv.org/pdf/2605.29888"
+      }
+    },
+    {
+      "id": "nava-audio-visual-alignment",
+      "title": "Native Audio-Visual Alignment for Generation",
+      "authors": ["Longbin Ji", "Guan Wang", "Xuan Wei", "Chenye Yang", "Xiangrui Liu", "Zhenyu Zhang", "Shuohuan Wang", "Yu Sun", "Jingzhou He"],
+      "affiliations": ["Baidu", "ERNIE Research"],
+      "summary": "Proposes NAVA, a Native Audio-Visual Alignment framework for joint audio-video generation that first establishes audio-video correspondence in a dedicated interaction space, then conditions joint denoising with external context. Achieves superior video quality and precise audio-visual synchronization at 6.3B parameters.",
+      "key_findings": [
+        "Align-then-Fuse MMDiT architecture transitions from modality-aware audio-video alignment to modality-shared joint denoising, avoiding the weaknesses of both dual-tower and unified tri-modal designs",
+        "Timbre-in-Context Conditioning associates reference timbre cues with speech spans for controllable speech timbre generation",
+        "Achieves superior video quality and precise audio-visual synchronization compared to existing methods at only 6.3B parameters"
+      ],
+      "tags": ["audio-visual-generation", "multimodal", "diffusion-transformer", "speech-synthesis", "video-generation"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30073",
+        "huggingface": "https://huggingface.co/papers/2605.30073",
+        "pdf": "https://arxiv.org/pdf/2605.30073"
+      }
+    },
+    {
+      "id": "smartdirector-cinematic-video",
+      "title": "SmartDirector: Keyframe-Conditioned Cinematic Video Generation with Narrative Pacing Control",
+      "authors": ["Zhida Zhang", "Jie Ma", "Zhan Peng", "Haoxue Wu", "Yang Han", "Jun Liang", "Jie Cao", "Jing Li"],
+      "affiliations": ["Orange Team"],
+      "summary": "Proposes SmartDirector, a framework that enhances narrative capacity of video generation through multiple keyframes. Operates in two stages: Director-Gen generates low-resolution video conditioned on keyframes, and Director-SR refines using high-resolution keyframes as semantic anchors.",
+      "key_findings": [
+        "Two-stage architecture separates narrative structure generation from visual quality refinement using keyframes as conditioning signals",
+        "Supports flexible generation scenarios including single-shot, multi-shot narrative synthesis, and video extension",
+        "Data pipeline curates single-shot and multi-shot sequences from movies for robust multi-keyframe training"
+      ],
+      "tags": ["video-generation", "keyframe-conditioning", "narrative-control", "cinematic", "temporal-pacing"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27891",
+        "huggingface": "https://huggingface.co/papers/2605.27891",
+        "pdf": "https://arxiv.org/pdf/2605.27891"
+      }
+    },
+    {
+      "id": "asynctool-async-function-calling",
+      "title": "AsyncTool: Evaluating the Asynchronous Function Calling Capability under Multi-Task Scenarios",
+      "authors": ["Kou Shi", "Ziao Zhang", "Shiting Huang", "Avery Nie", "Zhen Fang", "Qiuchen Wang", "Lin Chen", "Huaian Chen", "Zehui Chen", "Feng Zhao"],
+      "affiliations": ["University of Science and Technology of China"],
+      "summary": "Introduces AsyncTool, a benchmark for evaluating LLM-based agents in interactive multi-task tool-use environments with delayed tool feedback. Demonstrates that delayed tool responses pose substantial challenges to current agents, identifying key failure modes in task coordination and temporal reasoning.",
+      "key_findings": [
+        "Delayed tool feedback causes clear performance degradation across current LLM-based agents, exposing weaknesses in temporal reasoning",
+        "Models that better coordinate task switching, dependency tracking, and state maintenance achieve stronger performance",
+        "Efficiency-oriented metrics at step, sub-task, and task levels provide more granular evaluation of agent coordination capabilities"
+      ],
+      "tags": ["agent-evaluation", "tool-calling", "benchmark", "asynchronous", "multi-task"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27995",
+        "huggingface": "https://huggingface.co/papers/2605.27995",
+        "pdf": "https://arxiv.org/pdf/2605.27995"
+      }
+    },
+    {
+      "id": "mozoo-animal-simulation",
+      "title": "MoZoo: Unleashing Video Diffusion Power in Animal Fur and Muscle Simulation",
+      "authors": ["Dongxia Liu", "Jie Ma", "Xiaochen Yang", "Jiancheng Zhang", "Bin Xia", "Zhehan Kan", "Nisha Huang", "Jun Liang", "Wenming Yang", "Jin Li"],
+      "affiliations": ["Orange Team", "Tsinghua University"],
+      "summary": "Presents MoZoo, a generative dynamics solver that synthesizes high-fidelity animal videos from coarse meshes under multimodal guidance. Introduces Role-Aware RoPE for motion alignment and Asymmetric Decoupled Attention for computational efficiency, along with MoZoo-Data synthetic-to-real pipeline and MoZooBench benchmark.",
+      "key_findings": [
+        "Role-Aware RoPE employs role-based index remapping to synchronize motion alignment while decoupling reference information via fixed temporal offsets",
+        "Asymmetric Decoupled Attention partitions latent sequences to enforce unidirectional information flow, preventing feature interference",
+        "MoZoo-Data synthetic-to-real pipeline addresses training data scarcity with paired sequences from rendering engines and inverse mapping"
+      ],
+      "tags": ["video-diffusion", "animal-simulation", "physics-based", "positional-encoding", "benchmark"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.13857",
+        "huggingface": "https://huggingface.co/papers/2605.13857",
+        "pdf": "https://arxiv.org/pdf/2605.13857"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "The dominant open-weight large language model, maintaining its position with over 5.3 million downloads and 4,405 likes, the most-liked model on HuggingFace trending.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "deepseek"],
+      "metrics": { "downloads": 5281601, "likes": 4405 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "qwen-qwen36-27b",
+      "name": "Qwen3.6-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Qwen's flagship 27B-parameter multimodal model leading official releases with 4.8M downloads and 1,510 likes, supporting image-text-to-text tasks with conversation capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "vision-language", "conversational"],
+      "metrics": { "downloads": 4790806, "likes": 1510 },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "A leading open text-to-video generation model with 1.47M downloads and 1,421 likes, available in both diffusers and GGUF formats for video generation workloads.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": { "downloads": 1472982, "likes": 1421 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "A compact 1.8B-parameter translation model from Tencent's Hunyuan family supporting 35+ languages, with 1,079 likes reflecting strong demand for dedicated multilingual translation models.",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 14600, "likes": 1079 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "hauhaucs-qwen36-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "A community-produced uncensored variant of Qwen3.6-35B using mixture-of-experts architecture (3B active parameters), distributed in GGUF format with vision capabilities. Leads community models in downloads at 1.95M.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": ["qwen3.6", "moe", "gguf", "uncensored", "vision"],
+      "metrics": { "downloads": 1956558, "likes": 1002 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "ByteDance's multimodal any-to-any generation model supporting image generation, video generation, and image editing, with rising engagement at 956 likes.",
+      "task_type": "any-to-any",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "any-to-any"],
+      "metrics": { "downloads": 2506, "likes": 956 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "A multilingual text-to-speech model supporting 30+ languages using ONNX format, with 727 likes and 52K downloads reflecting strong demand for high-quality open TTS solutions.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "multilingual", "onnx"],
+      "metrics": { "downloads": 52022, "likes": 727 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth's GGUF quantization of Qwen3.6-27B with Multi-Token Prediction support, enabling efficient local inference with 807K downloads, confirming local inference as a primary community priority.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "mtp", "local-inference"],
+      "metrics": { "downloads": 806874, "likes": 533 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "A compact 1B-parameter model in the MiniCPM series designed for on-device and edge AI deployment, with 498 likes and growing, featuring tool-calling and long-context support.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["compact", "minicpm", "edge-deployment", "tool-calling"],
+      "metrics": { "downloads": 15629, "likes": 498 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "nemostation-marlin-2b",
+      "name": "Marlin-2B",
+      "organization": "NemoStation",
+      "description": "A 2B-parameter video-text-to-text model for video captioning and temporal grounding, based on Qwen3.5-2B with 430 likes, targeting efficient video understanding.",
+      "task_type": "video-text-to-text",
+      "model_size": "2B",
+      "tags": ["video-captioning", "temporal-grounding", "multimodal", "compact"],
+      "metrics": { "downloads": 13855, "likes": 430 },
+      "source_url": "https://huggingface.co/NemoStation/Marlin-2B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "A 1B-parameter text generation model with hierarchical reasoning and prefix-LM architecture, maintaining high download volume of 122K for lightweight text generation.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "hierarchical-reasoning", "prefix-lm"],
+      "metrics": { "downloads": 121862, "likes": 400 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "An audio-driven video avatar generation model supporting audio-text-to-video and audio-image-text-to-video pipelines, with 368 likes and growing interest in avatar generation.",
+      "task_type": "audio-text-to-video",
+      "model_size": "unknown",
+      "tags": ["video-avatar", "audio-driven", "diffusers"],
+      "metrics": { "downloads": 0, "likes": 368 },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's 3B-parameter grounding and object detection model based on the Eagle architecture, supporting visual grounding tasks with 199 likes.",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": ["object-detection", "grounding", "vision", "nvidia"],
+      "metrics": { "downloads": 1755, "likes": 199 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "numind-nuextract3",
+      "name": "NuExtract3",
+      "organization": "NuMind",
+      "description": "A vision-language model for structured document extraction, OCR, and document-to-markdown conversion based on Qwen3.5-4B, with 186 likes and 45K downloads.",
+      "task_type": "image-to-text",
+      "model_size": "4B",
+      "tags": ["document-understanding", "information-extraction", "ocr", "structured-extraction"],
+      "metrics": { "downloads": 44827, "likes": 186 },
+      "source_url": "https://huggingface.co/numind/NuExtract3"
+    },
+    {
+      "id": "liquidai-lfm25-8b-a1b",
+      "name": "LFM2.5-8B-A1B",
+      "organization": "Liquid AI",
+      "description": "A newly launched mixture-of-experts model with 8B total parameters and 1B active, designed for edge deployment. Represents Liquid AI's latest entry with 116 likes and zero downloads (just launched).",
+      "task_type": "text-generation",
+      "model_size": "8B-A1B (MoE)",
+      "tags": ["moe", "edge-deployment", "liquid", "text-generation"],
+      "metrics": { "downloads": 0, "likes": 116 },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "superpowers-agentic-framework",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology, now the largest agent framework on GitHub at 211K stars with sustained momentum of 1,730 stars/day.",
+      "language": "Shell",
+      "stars": 211157,
+      "stars_today": 1730,
+      "forks": 18799,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-framework", "skills", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "The agent harness performance optimization system with skills, instincts, memory, and security, continuing massive growth to 197K stars with 1,385 stars/day.",
+      "language": "JavaScript",
+      "stars": 197352,
+      "stars_today": 1385,
+      "forks": 30349,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch's self-growing agent framework at 171.7K stars, gaining 1,411 stars/day as a leading open-source agentic platform.",
+      "language": "Python",
+      "stars": 171673,
+      "stars_today": 1411,
+      "forks": 28806,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent-framework", "nous-research", "self-improving"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic's official agent skills repository for Claude with 143K stars and 718 stars/day, the canonical skills ecosystem for the Claude platform.",
+      "language": "Python",
+      "stars": 142886,
+      "stars_today": 718,
+      "forks": 16875,
+      "url": "https://github.com/anthropics/skills",
+      "tags": ["agent-skills", "anthropic", "claude"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic's agentic coding tool for the terminal, with 127K stars and 319 stars/day, serving as the primary interface for Claude-based development workflows.",
+      "language": "Python",
+      "stars": 127377,
+      "stars_today": 319,
+      "forks": 20873,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["coding-agent", "cli", "anthropic", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo-ai-video",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "AI-powered one-click short video generation using LLMs, surging with 4,698 stars/day to 66.5K total. The highest daily velocity among Python repos.",
+      "language": "Python",
+      "stars": 66550,
+      "stars_today": 4698,
+      "forks": 9625,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "content-creation", "llm-application"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "Turns code into interactive knowledge graphs for exploration and Q&A. Leading AI-related repos in star velocity at 3,776 stars/day, up to 42.9K total stars.",
+      "language": "TypeScript",
+      "stars": 42893,
+      "stars_today": 3776,
+      "forks": 3421,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "taste-skill-ai-quality",
+      "name": "Leonxlnx/taste-skill",
+      "description": "A skill for giving AI agents better taste and preventing generic output, leading the AI quality alignment movement at 2,234 stars/day to 26.6K total.",
+      "language": "Shell",
+      "stars": 26552,
+      "stars_today": 2234,
+      "forks": 1990,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["ai-quality", "agent-skills", "output-alignment"],
+      "relevance": "high"
+    },
+    {
+      "id": "markitdown-document-conversion",
+      "name": "microsoft/markitdown",
+      "description": "Microsoft's Python tool for converting files and office documents to Markdown, maintaining massive scale at 128K stars with 1,410 stars/day.",
+      "language": "Python",
+      "stars": 127814,
+      "stars_today": 1410,
+      "forks": 8749,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos-financial-model",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for the language of financial markets, gaining 357 stars/day to 27K total, representing growing interest in domain-specific AI for finance.",
+      "language": "Python",
+      "stars": 27137,
+      "stars_today": 357,
+      "forks": 4694,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "domain-specific"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 structured cybersecurity skills for AI agents mapped to MITRE ATT&CK, NIST CSF 2.0, and other frameworks, gaining 737 stars/day to 11.6K total.",
+      "language": "Python",
+      "stars": 11585,
+      "stars_today": 737,
+      "forks": 1301,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "security-frameworks"],
+      "relevance": "high"
+    },
+    {
+      "id": "stop-slop-ai-writing",
+      "name": "hardikpandya/stop-slop",
+      "description": "A skill file for removing AI tells from prose, gaining 761 stars/day to 6.5K total. Part of the emerging AI output quality alignment trend.",
+      "language": "",
+      "stars": 6456,
+      "stars_today": 761,
+      "forks": 470,
+      "url": "https://github.com/hardikpandya/stop-slop",
+      "tags": ["ai-quality", "writing", "output-alignment"],
+      "relevance": "medium"
+    },
+    {
+      "id": "crawl4ai-web-crawler",
+      "name": "unclecode/crawl4ai",
+      "description": "Open-source LLM-friendly web crawler and scraper at 67K stars, a foundational tool in the AI data pipeline ecosystem.",
+      "language": "Python",
+      "stars": 66978,
+      "stars_today": 154,
+      "forks": 6858,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": ["web-crawler", "data-pipeline", "llm-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-financial-services",
+      "name": "anthropics/financial-services",
+      "description": "Anthropic's financial services toolkit at 28.5K stars gaining 385 stars/day, providing AI integration patterns for the financial sector.",
+      "language": "Python",
+      "stars": 28523,
+      "stars_today": 385,
+      "forks": 3996,
+      "url": "https://github.com/anthropics/financial-services",
+      "tags": ["financial-services", "anthropic", "enterprise-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "rampart-agentic-testing",
+      "name": "microsoft/RAMPART",
+      "description": "A pytest-native safety and security testing framework for agentic AI applications from Microsoft, newly trending at 304 stars.",
+      "language": "Python",
+      "stars": 304,
+      "stars_today": 62,
+      "forks": 35,
+      "url": "https://github.com/microsoft/RAMPART",
+      "tags": ["safety-testing", "security", "agentic-ai", "pytest"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "RL Training Integrity and Evaluation",
+      "description": "LaRA addresses the critical blind spot of data contamination detection in RL post-training, while AsyncTool exposes temporal reasoning gaps in tool-calling agents, together highlighting fundamental evaluation challenges as AI systems become more complex.",
+      "related_paper_ids": ["lara-contamination-detection-rl", "asynctool-async-function-calling"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Native Multimodal Generation Architectures",
+      "description": "NAVA's Align-then-Fuse approach and SmartDirector's keyframe conditioning represent the ongoing shift from modular pipelines to natively integrated multimodal architectures for audio, video, and visual content generation.",
+      "related_paper_ids": ["nava-audio-visual-alignment", "smartdirector-cinematic-video", "mozoo-animal-simulation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skills and Quality Alignment Ecosystem",
+      "description": "The massive growth of taste-skill, stop-slop, and cybersecurity skills alongside established platforms like Superpowers and ECC signals a maturation from 'can agents work' to 'how do agents produce quality, safe output.'",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Compact and Edge-Deployable Models",
+      "description": "MiniCPM5-1B, LFM2.5-8B-A1B, Marlin-2B, and HRM-Text-1B demonstrate sustained demand for models that balance capability with deployability, with MoE architectures extending this to larger representational capacity at small inference cost.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Domain-Specific AI Foundation Models",
+      "description": "Kronos for financial markets, Anthropic's financial-services toolkit, and MetaTrader MCP server reflect growing investment in vertical AI applications beyond general-purpose language and vision models.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

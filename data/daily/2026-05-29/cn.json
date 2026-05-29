@@ -1,0 +1,533 @@
+{
+  "version": "1.0",
+  "date": "2026-05-29",
+  "generated_at": "2026-05-29T14:57:00Z",
+  "summary": {
+    "headline": "LaRA通过逐层表征分析检测RL后训练中的数据污染；百度NAVA实现原生音视频对齐联合生成；Agent技能生态持续爆发增长，Understand-Anything日增3,776星",
+    "body": "周四HuggingFace每日论文收录五篇论文，涵盖RL训练完整性、多模态生成、电影级视频控制、智能体基准测试和基于物理的动物模拟。最受关注的论文是延世大学的**LaRA**（5个赞），提出了一种逐层表征分析框架，用于检测RL后训练LLM中的数据污染问题——这是一个关键问题，因为强化学习通过轨迹级奖励而非token级似然来重塑模型行为。百度的**NAVA**提出了一种原生音视频对齐框架，采用创新的先对齐后融合MMDiT架构实现联合音视频生成。Orange Team的**SmartDirector**和**MoZoo**分别处理关键帧条件的电影级生成和基于物理的动物模拟。**AsyncTool**对多任务场景下异步函数调用这一未充分探索的问题进行了基准测试。\n\n模型方面，**DeepSeek-V4-Pro**以530万下载量和4,405个赞保持主导地位。**HauhauCS的Qwen3.6-35B无审查版**下载量突破195万。值得关注的新模型包括**LiquidAI的LFM2.5-8B-A1B**，一个总参数8B、活跃参数1B的混合专家模型，昨日刚发布即获116个赞。**ByteDance Lance**在多模态全能生成方面达到956个赞，**Qwen/Qwen3.6-27B**以480万下载量和1,510个赞领跑官方发布。**OpenBMB MiniCPM5-1B**增长至498个赞，确认了紧凑边缘模型的持续需求。\n\nGitHub趋势由Agent技能和工具生态主导，规模空前。**Understand-Anything**以日增3,776星（总计42.9K星）领跑AI仓库，将代码转化为交互式知识图谱。**MoneyPrinterTurbo**以日增4,698星飙升至66.5K星。**NousResearch/hermes-agent**（171.7K星，日增1,411）和**ECC**（197.4K星，日增1,385）代表成熟的Agent平台层，而**taste-skill**（26.6K星，日增2,234）和**stop-slop**（6.5K星，日增761）标志着对AI输出质量对齐的日益关注。",
+    "key_themes": [
+      "rl-training-integrity",
+      "native-multimodal-generation",
+      "agent-skills-ecosystem",
+      "cinematic-video-generation",
+      "compact-edge-models",
+      "ai-output-quality-alignment"
+    ]
+  },
+  "researcher_notes": "**LaRA的贡献在方法论上意义重大，因为它攻克了RL后训练评估流程中的盲区。**现有的污染检测依赖于似然或熵等输出级信号，但RL从根本上改变了这些信号与模型行为之间的关系——RL通过轨迹级奖励而非token级概率来塑造行为。LaRA转而检查各层的扰动敏感性、方向坍塌和局部表征刚性，发现污染会产生渐进式几何偏差。这种几何分析应该能够跨不同RL算法和奖励结构泛化，因为底层机制（特定轨迹的记忆化）无论奖励如何构建都会产生一致的表征特征。实际意义很明确：随着RL后训练成为标准实践（RLHF、GRPO等），我们需要在表征层面而非输出层面运作的污染检测方法。\n\n**百度的NAVA代表了多模态生成架构辩论中一种有原则的中间路线。**当前格局有两个极端：双塔设计分别生成音频和视频后进行后期对齐，完全统一的三模态架构在一个共享空间中混合文本、音频和视频。前者失去精细的协同演化，后者将语义条件与低级同步耦合。NAVA的先对齐后融合MMDiT首先在专用交互空间中建立音视频对应关系，然后使用外部上下文来条件化联合去噪。上下文中的音色条件化（Timbre-in-Context Conditioning）是一个特别巧妙的补充——将参考音色线索与对应的语音片段关联，实现可控的语音音色。在6.3B参数规模下，NAVA实现了有竞争力的质量，同时显著小于许多统一方法。\n\n**AsyncTool揭示了我们评估Agent能力方面的关键差距。**大多数工具调用基准假设同步执行——Agent调用工具、获取响应，然后决定下一步操作。但现实世界的Agent部署涉及具有不同延迟的并发任务，在等待慢工具响应时有效利用空闲时间的能力对实际效率至关重要。延迟工具反馈导致当前模型性能明显下降的发现重要但并不令人意外——模型主要在同步交互模式上训练。更有趣的问题是，这种能力是否可以通过训练改进，还是需要对模型处理时间上下文的方式进行架构变革。\n\n**GitHub趋势数据揭示了AI Agent生态系统的转折点。**规模令人惊叹：obra/superpowers（211K星）、affaan-m/ECC（197K星）、NousResearch/hermes-agent（172K星）、DigitalPlatDev/FreeDomain（171K星）和anthropics/skills（143K星）。但今天最值得注意的信号是**AI输出质量工具**作为独立类别的出现。taste-skill（日增2,234星）和stop-slop（日增761星）都专注于让AI生成的内容更少通用感、更加真实。这是一个需求端信号，补充了Agent平台的供给端扩展——用户不仅想要能工作的Agent，还想要能产出与熟练人工作品无法区分的输出的Agent。微软的RAMPART（304星，新上榜）为智能体AI应用添加了安全测试，回应了同一成熟趋势的治理层面。\n\n**紧凑模型趋势继续保持强劲势头。**MiniCPM5-1B（498个赞，持续增长）、LiquidAI LFM2.5-8B-A1B（116个赞，刚推出）和NemoStation Marlin-2B（430个赞）都表明社区正积极寻求在能力和可部署性之间取得平衡的模型。LiquidAI的MoE方法（总8B，活跃1B）特别有趣，因为它将混合专家扩展策略应用于边缘部署用例——以1B参数级的推理成本获得更大模型的表示能力。Unsloth量化版本的持续成功（Qwen3.6-27B-MTP-GGUF达806K下载量）确认高效本地推理仍然是社区的首要优先事项。",
+  "papers": [
+    {
+      "id": "lara-contamination-detection-rl",
+      "title": "LaRA：用于检测RL后训练中数据污染的逐层表征分析",
+      "authors": ["Minju Gwak", "Minseo Kwak", "Dongseok Lee", "Guijin Son", "Alan Ritter", "Jaehyung Kim"],
+      "affiliations": ["Yonsei University", "Georgia Institute of Technology"],
+      "summary": "提出LaRA，一种用于检测RL后训练LLM中数据污染的逐层表征分析框架。使用三个互补指标——扰动敏感性、方向坍塌和局部表征刚性——来识别污染导致的跨模型层渐进式几何偏差。",
+      "key_findings": [
+        "现有的基于输出级的污染检测方法（似然、熵）对RL训练模型不可靠，因为RL通过轨迹级奖励塑造行为",
+        "污染在各层产生渐进式几何偏差，包括扰动敏感性放大、方向坍塌增强和局部刚性增强",
+        "聚合表征级检测协议在RL训练推理模型的污染检测上优于现有输出级基线"
+      ],
+      "tags": ["reinforcement-learning", "data-contamination", "representation-analysis", "llm-evaluation", "post-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29888",
+        "huggingface": "https://huggingface.co/papers/2605.29888",
+        "pdf": "https://arxiv.org/pdf/2605.29888"
+      }
+    },
+    {
+      "id": "nava-audio-visual-alignment",
+      "title": "原生音视频对齐生成",
+      "authors": ["Longbin Ji", "Guan Wang", "Xuan Wei", "Chenye Yang", "Xiangrui Liu", "Zhenyu Zhang", "Shuohuan Wang", "Yu Sun", "Jingzhou He"],
+      "affiliations": ["Baidu", "ERNIE Research"],
+      "summary": "提出NAVA，一种原生音视频对齐框架，用于联合音视频生成。首先在专用交互空间中建立音视频对应关系，然后使用外部上下文条件化联合去噪。以6.3B参数实现优越的视频质量和精确的音视频同步。",
+      "key_findings": [
+        "先对齐后融合MMDiT架构从模态感知音视频对齐过渡到模态共享联合去噪，避免了双塔和统一三模态设计的弱点",
+        "上下文中的音色条件化将参考音色线索与语音片段关联，实现可控的语音音色生成",
+        "仅以6.3B参数即实现优于现有方法的视频质量和精确的音视频同步"
+      ],
+      "tags": ["audio-visual-generation", "multimodal", "diffusion-transformer", "speech-synthesis", "video-generation"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30073",
+        "huggingface": "https://huggingface.co/papers/2605.30073",
+        "pdf": "https://arxiv.org/pdf/2605.30073"
+      }
+    },
+    {
+      "id": "smartdirector-cinematic-video",
+      "title": "SmartDirector：关键帧条件的电影级视频生成与叙事节奏控制",
+      "authors": ["Zhida Zhang", "Jie Ma", "Zhan Peng", "Haoxue Wu", "Yang Han", "Jun Liang", "Jie Cao", "Jing Li"],
+      "affiliations": ["Orange Team"],
+      "summary": "提出SmartDirector，一个通过多关键帧增强视频生成叙事能力的框架。分两阶段运作：Director-Gen生成以关键帧为条件的低分辨率视频，Director-SR利用高分辨率关键帧作为语义锚点进行细化。",
+      "key_findings": [
+        "两阶段架构将叙事结构生成与视觉质量细化分离，使用关键帧作为条件信号",
+        "支持灵活的生成场景，包括单镜头、多镜头叙事合成和视频扩展",
+        "数据管线从电影中策划单镜头和多镜头序列，用于稳健的多关键帧训练"
+      ],
+      "tags": ["video-generation", "keyframe-conditioning", "narrative-control", "cinematic", "temporal-pacing"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27891",
+        "huggingface": "https://huggingface.co/papers/2605.27891",
+        "pdf": "https://arxiv.org/pdf/2605.27891"
+      }
+    },
+    {
+      "id": "asynctool-async-function-calling",
+      "title": "AsyncTool：多任务场景下的异步函数调用能力评估",
+      "authors": ["Kou Shi", "Ziao Zhang", "Shiting Huang", "Avery Nie", "Zhen Fang", "Qiuchen Wang", "Lin Chen", "Huaian Chen", "Zehui Chen", "Feng Zhao"],
+      "affiliations": ["University of Science and Technology of China"],
+      "summary": "提出AsyncTool，用于评估LLM智能体在具有延迟工具反馈的交互式多任务工具使用环境中的基准。证明延迟的工具响应对当前智能体构成重大挑战，识别了任务协调和时间推理方面的关键失败模式。",
+      "key_findings": [
+        "延迟的工具反馈导致当前LLM智能体性能明显下降，暴露了时间推理方面的弱点",
+        "在任务切换、依赖追踪和状态维护方面协调更好的模型表现更强",
+        "步骤、子任务和任务级别的效率导向指标提供了对Agent协调能力更精细的评估"
+      ],
+      "tags": ["agent-evaluation", "tool-calling", "benchmark", "asynchronous", "multi-task"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27995",
+        "huggingface": "https://huggingface.co/papers/2605.27995",
+        "pdf": "https://arxiv.org/pdf/2605.27995"
+      }
+    },
+    {
+      "id": "mozoo-animal-simulation",
+      "title": "MoZoo：释放视频扩散在动物毛发和肌肉模拟中的力量",
+      "authors": ["Dongxia Liu", "Jie Ma", "Xiaochen Yang", "Jiancheng Zhang", "Bin Xia", "Zhehan Kan", "Nisha Huang", "Jun Liang", "Wenming Yang", "Jin Li"],
+      "affiliations": ["Orange Team", "Tsinghua University"],
+      "summary": "提出MoZoo，一种生成式动力学求解器，在多模态引导下从粗糙网格合成高保真动物视频。引入角色感知RoPE用于运动对齐和非对称解耦注意力提升计算效率，以及MoZoo-Data合成到真实的数据管线和MoZooBench基准。",
+      "key_findings": [
+        "角色感知RoPE采用基于角色的索引重映射来同步运动对齐，同时通过固定时间偏移解耦参考信息",
+        "非对称解耦注意力分割潜在序列以强制单向信息流，防止特征干扰",
+        "MoZoo-Data合成到真实管线通过渲染引擎和逆映射方法构建大规模配对序列解决训练数据稀缺问题"
+      ],
+      "tags": ["video-diffusion", "animal-simulation", "physics-based", "positional-encoding", "benchmark"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 1, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.13857",
+        "huggingface": "https://huggingface.co/papers/2605.13857",
+        "pdf": "https://arxiv.org/pdf/2605.13857"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "占据主导地位的开源大语言模型，以超过530万次下载量和4,405个赞维持HuggingFace趋势模型中最受欢迎的地位。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["conversational", "text-generation", "deepseek"],
+      "metrics": { "downloads": 5281601, "likes": 4405 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "qwen-qwen36-27b",
+      "name": "Qwen3.6-27B",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "Qwen的旗舰27B参数多模态模型，以480万下载量和1,510个赞领跑官方发布，支持图像文本到文本任务及对话功能。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "vision-language", "conversational"],
+      "metrics": { "downloads": 4790806, "likes": 1510 },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "领先的开源文本转视频生成模型，拥有147万下载量和1,421个赞，提供diffusers和GGUF两种格式用于视频生成工作负载。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["text-to-video", "diffusers", "video-generation"],
+      "metrics": { "downloads": 1472982, "likes": 1421 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "tencent-hy-mt2-1-8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "腾讯混元系列的紧凑型1.8B参数翻译模型，支持35+种语言，1,079个赞反映了对专用多语言翻译模型的强烈需求。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": ["translation", "hunyuan", "multilingual"],
+      "metrics": { "downloads": 14600, "likes": 1079 },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "hauhaucs-qwen36-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "社区制作的Qwen3.6-35B无审查版本，采用混合专家架构（3B活跃参数），以GGUF格式分发，具备视觉能力。社区模型下载量领先，达195万。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B（MoE）",
+      "tags": ["qwen3.6", "moe", "gguf", "uncensored", "vision"],
+      "metrics": { "downloads": 1956558, "likes": 1002 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "字节跳动的多模态全能生成模型，支持图像生成、视频生成和图像编辑，社区参与度持续上升，达956个赞。",
+      "task_type": "any-to-any",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-generation", "video-generation", "any-to-any"],
+      "metrics": { "downloads": 2506, "likes": 956 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "支持30+种语言的多语言文本转语音模型，采用ONNX格式，727个赞和52K下载量反映了对高质量开源TTS方案的强烈需求。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["tts", "speech-synthesis", "multilingual", "onnx"],
+      "metrics": { "downloads": 52022, "likes": 727 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    },
+    {
+      "id": "unsloth-qwen36-27b-mtp-gguf",
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth对Qwen3.6-27B的GGUF量化版本，支持多Token预测，以807K下载量实现高效本地推理，确认本地推理是社区首要优先事项。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["gguf", "quantized", "qwen", "mtp", "local-inference"],
+      "metrics": { "downloads": 806874, "likes": 533 },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "MiniCPM系列的紧凑1B参数模型，专为端侧和边缘AI部署设计，498个赞且持续增长，具备工具调用和长上下文支持。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["compact", "minicpm", "edge-deployment", "tool-calling"],
+      "metrics": { "downloads": 15629, "likes": 498 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "nemostation-marlin-2b",
+      "name": "Marlin-2B",
+      "organization": "NemoStation",
+      "description": "2B参数的视频文本到文本模型，用于视频字幕和时间定位，基于Qwen3.5-2B，430个赞，面向高效视频理解。",
+      "task_type": "video-text-to-text",
+      "model_size": "2B",
+      "tags": ["video-captioning", "temporal-grounding", "multimodal", "compact"],
+      "metrics": { "downloads": 13855, "likes": 430 },
+      "source_url": "https://huggingface.co/NemoStation/Marlin-2B"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "具有层次推理和前缀语言模型架构的1B参数文本生成模型，维持122K的高下载量用于轻量级文本生成。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["text-generation", "hierarchical-reasoning", "prefix-lm"],
+      "metrics": { "downloads": 121862, "likes": 400 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "音频驱动的视频数字人生成模型，支持音频文本到视频和音频图像文本到视频管线，368个赞，数字人生成兴趣持续增长。",
+      "task_type": "audio-text-to-video",
+      "model_size": "unknown",
+      "tags": ["video-avatar", "audio-driven", "diffusers"],
+      "metrics": { "downloads": 0, "likes": 368 },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA的3B参数目标定位和检测模型，基于Eagle架构，支持视觉定位任务，199个赞。",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": ["object-detection", "grounding", "vision", "nvidia"],
+      "metrics": { "downloads": 1755, "likes": 199 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "numind-nuextract3",
+      "name": "NuExtract3",
+      "organization": "NuMind",
+      "description": "用于结构化文档提取、OCR和文档转Markdown的视觉语言模型，基于Qwen3.5-4B，186个赞和45K下载量。",
+      "task_type": "image-to-text",
+      "model_size": "4B",
+      "tags": ["document-understanding", "information-extraction", "ocr", "structured-extraction"],
+      "metrics": { "downloads": 44827, "likes": 186 },
+      "source_url": "https://huggingface.co/numind/NuExtract3"
+    },
+    {
+      "id": "liquidai-lfm25-8b-a1b",
+      "name": "LFM2.5-8B-A1B",
+      "organization": "Liquid AI",
+      "description": "新推出的混合专家模型，总参数8B、活跃参数1B，专为边缘部署设计。代表Liquid AI的最新力作，116个赞，零下载量（刚发布）。",
+      "task_type": "text-generation",
+      "model_size": "8B-A1B（MoE）",
+      "tags": ["moe", "edge-deployment", "liquid", "text-generation"],
+      "metrics": { "downloads": 0, "likes": 116 },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "superpowers-agentic-framework",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架和软件开发方法论，以211K星成为GitHub最大的Agent框架，日增1,730星保持强劲势头。",
+      "language": "Shell",
+      "stars": 211157,
+      "stars_today": 1730,
+      "forks": 18799,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-framework", "skills", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "Agent性能优化系统，涵盖技能、直觉、记忆和安全，持续大规模增长至197K星，日增1,385星。",
+      "language": "JavaScript",
+      "stars": 197352,
+      "stars_today": 1385,
+      "forks": 30349,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "coding-agents", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch的自成长Agent框架，171.7K星，日增1,411星，作为领先的开源智能体平台。",
+      "language": "Python",
+      "stars": 171673,
+      "stars_today": 1411,
+      "forks": 28806,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent-framework", "nous-research", "self-improving"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic为Claude打造的官方Agent技能仓库，143K星，日增718星，是Claude平台的标准技能生态。",
+      "language": "Python",
+      "stars": 142886,
+      "stars_today": 718,
+      "forks": 16875,
+      "url": "https://github.com/anthropics/skills",
+      "tags": ["agent-skills", "anthropic", "claude"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic的终端智能编程工具，127K星，日增319星，是基于Claude开发工作流的主要交互界面。",
+      "language": "Python",
+      "stars": 127377,
+      "stars_today": 319,
+      "forks": 20873,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["coding-agent", "cli", "anthropic", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo-ai-video",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用AI大模型一键生成高清短视频的工具，日增4,698星飙升至66.5K总星数，是Python仓库中日增最高的项目。",
+      "language": "Python",
+      "stars": 66550,
+      "stars_today": 4698,
+      "forks": 9625,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "content-creation", "llm-application"],
+      "relevance": "high"
+    },
+    {
+      "id": "understand-anything",
+      "name": "Lum1104/Understand-Anything",
+      "description": "将代码转化为交互式知识图谱进行探索和问答。以日增3,776星领跑AI相关仓库，总计达42.9K星。",
+      "language": "TypeScript",
+      "stars": 42893,
+      "stars_today": 3776,
+      "forks": 3421,
+      "url": "https://github.com/Lum1104/Understand-Anything",
+      "tags": ["knowledge-graph", "code-understanding", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "taste-skill-ai-quality",
+      "name": "Leonxlnx/taste-skill",
+      "description": "赋予AI良好品味、防止生成无聊通用内容的技能，以日增2,234星引领AI质量对齐运动，总计26.6K星。",
+      "language": "Shell",
+      "stars": 26552,
+      "stars_today": 2234,
+      "forks": 1990,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["ai-quality", "agent-skills", "output-alignment"],
+      "relevance": "high"
+    },
+    {
+      "id": "markitdown-document-conversion",
+      "name": "microsoft/markitdown",
+      "description": "微软的Python文件和办公文档转Markdown工具，以128K星和日增1,410星保持大规模增长。",
+      "language": "Python",
+      "stars": 127814,
+      "stars_today": 1410,
+      "forks": 8749,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "kronos-financial-model",
+      "name": "shiyu-coder/Kronos",
+      "description": "金融市场语言基础模型，日增357星达27K总星数，代表领域特定AI在金融方向的增长兴趣。",
+      "language": "Python",
+      "stars": 27137,
+      "stars_today": 357,
+      "forks": 4694,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "foundation-model", "domain-specific"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754个结构化网络安全技能，映射到MITRE ATT&CK、NIST CSF 2.0等5个框架，日增737星达11.6K总星数。",
+      "language": "Python",
+      "stars": 11585,
+      "stars_today": 737,
+      "forks": 1301,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "security-frameworks"],
+      "relevance": "high"
+    },
+    {
+      "id": "stop-slop-ai-writing",
+      "name": "hardikpandya/stop-slop",
+      "description": "用于消除文章中AI痕迹的技能文件，日增761星达6.5K总星数。属于新兴的AI输出质量对齐趋势。",
+      "language": "",
+      "stars": 6456,
+      "stars_today": 761,
+      "forks": 470,
+      "url": "https://github.com/hardikpandya/stop-slop",
+      "tags": ["ai-quality", "writing", "output-alignment"],
+      "relevance": "medium"
+    },
+    {
+      "id": "crawl4ai-web-crawler",
+      "name": "unclecode/crawl4ai",
+      "description": "开源的LLM友好型网络爬虫和抓取器，67K星，是AI数据管线生态中的基础工具。",
+      "language": "Python",
+      "stars": 66978,
+      "stars_today": 154,
+      "forks": 6858,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": ["web-crawler", "data-pipeline", "llm-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-financial-services",
+      "name": "anthropics/financial-services",
+      "description": "Anthropic的金融服务工具包，28.5K星，日增385星，为金融行业提供AI集成模式。",
+      "language": "Python",
+      "stars": 28523,
+      "stars_today": 385,
+      "forks": 3996,
+      "url": "https://github.com/anthropics/financial-services",
+      "tags": ["financial-services", "anthropic", "enterprise-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "rampart-agentic-testing",
+      "name": "microsoft/RAMPART",
+      "description": "微软推出的基于pytest的智能体AI应用安全测试框架，新上趋势榜，304星。",
+      "language": "Python",
+      "stars": 304,
+      "stars_today": 62,
+      "forks": 35,
+      "url": "https://github.com/microsoft/RAMPART",
+      "tags": ["safety-testing", "security", "agentic-ai", "pytest"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "RL训练完整性与评估",
+      "description": "LaRA解决了RL后训练中数据污染检测的关键盲区，AsyncTool暴露了工具调用Agent的时间推理差距，共同凸显了AI系统日益复杂化带来的根本评估挑战。",
+      "related_paper_ids": ["lara-contamination-detection-rl", "asynctool-async-function-calling"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "原生多模态生成架构",
+      "description": "NAVA的先对齐后融合方法和SmartDirector的关键帧条件化代表了从模块化管线向原生集成多模态架构的持续转变，用于音频、视频和视觉内容生成。",
+      "related_paper_ids": ["nava-audio-visual-alignment", "smartdirector-cinematic-video", "mozoo-animal-simulation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent技能与质量对齐生态",
+      "description": "taste-skill、stop-slop和网络安全技能与Superpowers、ECC等成熟平台的大规模增长，标志着从「Agent能否工作」向「Agent如何产出高质量、安全的输出」的成熟化转变。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "紧凑型边缘可部署模型",
+      "description": "MiniCPM5-1B、LFM2.5-8B-A1B、Marlin-2B和HRM-Text-1B展示了对能力与可部署性平衡模型的持续需求，MoE架构以较小推理成本扩展到更大表示能力。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "领域特定AI基础模型",
+      "description": "Kronos金融市场模型、Anthropic金融服务工具包和MetaTrader MCP服务器反映了在通用语言和视觉模型之外，垂直AI应用投资的增长趋势。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace趋势模型",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv趋势",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-05-29T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
