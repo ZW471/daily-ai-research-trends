@@ -1,0 +1,656 @@
+{
+  "version": "1.0",
+  "date": "2026-06-01",
+  "generated_at": "2026-06-01T14:57:00Z",
+  "summary": {
+    "headline": "AgentDoG 1.5 surges to 127 upvotes as agent safety remains the week's top story; NVIDIA LocateAnything-3B debuts as trending model leader with 606 likes; microsoft/markitdown dominates GitHub at 2,798 stars/day",
+    "body": "Sunday's landscape reflects weekend momentum with only 4 new papers on HuggingFace Daily Papers, but continued strong engagement on the week's top research. **AgentDoG 1.5** has climbed to 127 upvotes, cementing its position as the most-engaged paper of the week as agent safety alignment attracts sustained community interest. **Qwen-VLA** holds strong at 108 upvotes, confirming the community's appetite for unified embodied AI models. The new papers for today include **LongDS-Bench**, exposing how current AI agents fail at long-horizon data analysis with the best model reaching only 48.45% accuracy, and **Function2Scene**, which reframes indoor scene synthesis from object placement to functional space design.\n\nThe model ecosystem shows significant new entries: **NVIDIA LocateAnything-3B** leads trending with 606 likes for its object detection and grounding capabilities built on Qwen2.5, while **MiniCPM5-1B** from OpenBMB enters with 659 likes as an efficient edge-AI model. **DeepSeek-V4-Pro** maintains its download throne at 5.9M, with **Qwen3.6-27B** closing the gap at 5.1M. **ByteDance's Lance** (992 likes) offers a unified any-to-any multimodal model covering image generation, video generation, and understanding. The **LiquidAI LFM2.5-8B-A1B** sparse MoE architecture continues gaining traction at 321 likes.\n\nGitHub trending is dominated by AI productivity tools: **microsoft/markitdown** leads all repos at 135K stars with 2,798 stars/day for document-to-markdown conversion, while **MoneyPrinterTurbo** continues its viral run at 74K stars (1,937/day) for AI-powered short video generation. **OpenBMB/VoxCPM** for tokenizer-free multilingual TTS (635 stars/day) and **FareedKhan-dev/train-llm-from-scratch** (626 stars/day) reflect strong educational and tooling demand in the AI space.",
+    "key_themes": [
+      "agent-safety-alignment-momentum",
+      "long-horizon-agent-evaluation",
+      "edge-ai-model-proliferation",
+      "unified-multimodal-models",
+      "ai-developer-tooling-explosion",
+      "speech-and-video-generation"
+    ]
+  },
+  "researcher_notes": "**AgentDoG 1.5 reaching 127 upvotes over the weekend is remarkable.** Weekend engagement typically drops, making this sustained climb from 111 to 127 a strong signal of genuine community concern about agent safety. The paper's core insight — that frontier models drastically lower attack barriers for agent exploitation — is no longer theoretical. With Codex-class models now serving as standard agent backbones, the lightweight alignment approach (0.8B-8B parameters, ~1K training samples) addresses a real deployment bottleneck: heavy safety frameworks that add inference overhead won't survive in production agent systems where latency budgets are already tight. The fact that these small models match GPT-5.4 on safety benchmarks suggests the community may have been overcomplicating the alignment problem.\n\n**LongDS-Bench exposes a critical gap in agentic AI evaluation.** The finding that the best model reaches only 48.45% accuracy on long-horizon data analysis, with performance dropping 47 points from early to late turns, should concern anyone building production agent systems. More importantly, the paper shows that simply giving agents more interaction steps doesn't help — the bottleneck is maintaining correct analytical state over extended sessions, not computational budget. This aligns with the growing consensus that current benchmarks dramatically overstate agent capabilities by testing isolated or short-horizon tasks. The 52-69% long-horizon error rate suggests production agent deployments need robust state management architectures, not just better base models.\n\n**NVIDIA's LocateAnything-3B leading the trending models is architecturally interesting.** Built on Qwen2.5-3B-Instruct as a base, it represents NVIDIA's push into the open model ecosystem beyond just training infrastructure. Combined with NVIDIA's PiD for pixel-level diffusion decoding (218 likes), NVIDIA is building a full-stack open model presence. Meanwhile, ByteDance's Lance (992 likes) is quietly establishing the any-to-any multimodal paradigm — a single model handling image generation, video generation, image editing, and video understanding — which could simplify production multimodal pipelines significantly.\n\n**The GitHub trending landscape tells a clear story about AI's current adoption phase.** The top repos aren't cutting-edge research tools — they're practical productivity multipliers. microsoft/markitdown (2,798 stars/day) converts documents to markdown for LLM consumption. MoneyPrinterTurbo (1,937 stars/day) automates short video production. dreammis/social-auto-upload automates social media posting. This pattern suggests AI adoption has entered the practical automation phase where the highest demand is for tools that connect AI capabilities to everyday workflows, not for the capabilities themselves.\n\n**The Kronos financial foundation model (27.8K stars, 183/day) is a sleeper hit worth watching.** A foundation model specifically for financial market language suggests domain-specific LLMs are maturing beyond healthcare and legal into quantitative finance. Combined with the stable-worldmodel platform (157 stars/day) for reproducible world model research, we're seeing infrastructure investments that could accelerate domain-specific AI deployment significantly.",
+  "papers": [
+    {
+      "id": "agentdog-1-5-safety-alignment",
+      "title": "AgentDoG 1.5: A Lightweight and Scalable Alignment Framework for AI Agent Safety and Security",
+      "authors": ["Dongrui Liu", "Yu Li", "Zhonghao Yang", "Peng Wang", "Guanxu Chen et al."],
+      "affiliations": ["Shanghai AI Lab", "Tsinghua University", "Institute of Automation, CAS"],
+      "summary": "Proposes a lightweight and scalable agent safety alignment framework with updated safety taxonomy for emergent risks from frontier AI models. Trains AgentDoG 1.5 variants (0.8B-8B) using only ~1K samples, achieving performance comparable to GPT-5.4 on safety benchmarks.",
+      "key_findings": [
+        "Updates agent safety taxonomy for emergent risks from Codex and OpenClaw execution scenarios",
+        "Lightweight models (0.8B-8B parameters) trained on ~1K samples match leading closed-source models on safety",
+        "Reduces deployment overhead in Docker-level environments by two orders of magnitude",
+        "Deployed as training-free online guardrail for real-time safety moderation"
+      ],
+      "tags": ["agent-safety", "alignment", "lightweight-models", "guardrails", "open-source"],
+      "relevance": "high",
+      "engagement": { "upvotes": 127, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29801",
+        "huggingface": "https://huggingface.co/papers/2605.29801",
+        "pdf": "https://arxiv.org/pdf/2605.29801"
+      }
+    },
+    {
+      "id": "qwen-vla-unified-embodied",
+      "title": "Qwen-VLA: Unifying Vision-Language-Action Modeling across Tasks, Environments, and Robot Embodiments",
+      "authors": ["Qiuyue Wang", "Mingsheng Li", "Jian Guan", "Jinhui Ye", "Sicheng Xie et al."],
+      "affiliations": ["Alibaba Group", "Tsinghua University"],
+      "summary": "Presents a unified embodied foundation model extending Qwen's VL stack to continuous action and trajectory generation via a DiT-based action decoder. Achieves 97.9% on LIBERO, 73.7% on Simpler-WidowX, and 76.9% OOD success in real-world ALOHA experiments.",
+      "key_findings": [
+        "Unifies manipulation, navigation, and trajectory prediction in a single VLA model",
+        "Introduces embodiment-aware prompt conditioning for multi-robot support",
+        "Achieves 97.9% on LIBERO and 76.9% average OOD success on real-world ALOHA",
+        "Demonstrates consistent out-of-distribution generalization across scene layouts, lighting, and objects"
+      ],
+      "tags": ["embodied-ai", "vision-language-action", "robotics", "foundation-model", "qwen"],
+      "relevance": "high",
+      "engagement": { "upvotes": 108, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30280",
+        "huggingface": "https://huggingface.co/papers/2605.30280",
+        "pdf": "https://arxiv.org/pdf/2605.30280"
+      }
+    },
+    {
+      "id": "omniretrieval-unified-heterogeneous",
+      "title": "OmniRetrieval: Unified Retrieval across Heterogeneous Knowledge Sources",
+      "authors": ["Jinheon Baek", "Soyeong Jeong", "Sangwoo Park", "Woongyeong Yeo", "Minki Kang et al."],
+      "affiliations": ["KAIST", "Google DeepMind"],
+      "summary": "Introduces a framework that takes natural-language queries, identifies appropriate knowledge sources, and dispatches source-native queries across text, tables, knowledge graphs, and property graphs without collapsing structural affordances.",
+      "key_findings": [
+        "Unifies retrieval across text, relational tables, knowledge graphs, and property graphs",
+        "Preserves structural affordances rather than homogenizing diverse sources",
+        "Exceeds single-source baselines across 13 datasets and 309 distinct knowledge bases"
+      ],
+      "tags": ["information-retrieval", "knowledge-graphs", "unified-retrieval", "rag", "heterogeneous-data"],
+      "relevance": "high",
+      "engagement": { "upvotes": 66, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29250",
+        "huggingface": "https://huggingface.co/papers/2605.29250",
+        "pdf": "https://arxiv.org/pdf/2605.29250"
+      }
+    },
+    {
+      "id": "collectionlora-50-effects",
+      "title": "CollectionLoRA: Collecting 50 Effects in 1 LoRA via Multi-Teacher On-Policy Distillation",
+      "authors": ["Fangtai Wu", "Hailong Guo", "Shijie Huang", "Jiayi Song", "Yubo Huang et al."],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "Distills up to 50 different effect LoRAs along with few-step generation capabilities into a single LoRA using multi-teacher on-policy distillation, resolving feature interference and reducing deployment overhead.",
+      "key_findings": [
+        "Distills 50 effect LoRAs into a single LoRA with comparable concept fidelity",
+        "Introduces Probabilistic Dual-Stream Routing for generalization across unseen scenarios",
+        "Asymmetric Orthogonal Prompting achieves concept isolation within prompt space",
+        "Reduces deployment costs by eliminating need for dynamic LoRA loading"
+      ],
+      "tags": ["lora", "distillation", "diffusion-models", "image-editing", "deployment-efficiency"],
+      "relevance": "high",
+      "engagement": { "upvotes": 53, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.25378",
+        "huggingface": "https://huggingface.co/papers/2605.25378",
+        "pdf": "https://arxiv.org/pdf/2605.25378"
+      }
+    },
+    {
+      "id": "minwm-interactive-video-world-models",
+      "title": "minWM: A Full-Stack Open-Source Framework for Real-Time Interactive Video World Models",
+      "authors": ["Min Zhao", "Hongzhou Zhu", "Bokai Yan", "Zihan Zhou", "Yimin Chen et al."],
+      "affiliations": ["Tsinghua University", "Renmin University of China"],
+      "summary": "Provides an end-to-end open-source pipeline that converts bidirectional video foundation models into camera-controllable few-step autoregressive world models with real-time rollout capabilities.",
+      "key_findings": [
+        "Converts bidirectional T2V/TI2V models into camera-controllable autoregressive world models",
+        "Modular pipeline covering data construction, controllable fine-tuning, AR training, distillation, and streaming inference",
+        "Instantiated on Wan2.1-T2V-1.3B and HY1.5-TI2V-8B backbones",
+        "Supports adapting existing video world models to new data distributions and latency targets"
+      ],
+      "tags": ["world-models", "video-generation", "real-time", "open-source", "interactive"],
+      "relevance": "high",
+      "engagement": { "upvotes": 49, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30263",
+        "huggingface": "https://huggingface.co/papers/2605.30263",
+        "pdf": "https://arxiv.org/pdf/2605.30263"
+      }
+    },
+    {
+      "id": "yocausal-video-causality",
+      "title": "YoCausal: How Far is Video Generation from World Model? A Causality Perspective",
+      "authors": ["You-Zhe Xie", "Yu-Hsuan Li", "Jie-Ying Lee", "Kaipeng Zhang", "Yu-Lun Liu et al."],
+      "affiliations": ["Alaya Studio", "National Tsing Hua University"],
+      "summary": "Introduces a two-level benchmark inspired by the Violation of Expectation paradigm from cognitive science to evaluate whether video diffusion models truly understand causality or merely overfit to temporal patterns.",
+      "key_findings": [
+        "Reveals that perceiving the arrow of time does not imply understanding causality in VDMs",
+        "Uses temporally reversed real-world videos as zero-cost counterfactual samples",
+        "Evaluates 13 state-of-the-art VDMs, finding a significant gap relative to human-level causal cognition",
+        "Introduces Reverse Surprise Index and Causality Cognition Index metrics"
+      ],
+      "tags": ["world-models", "causality", "video-generation", "benchmarks", "cognitive-science"],
+      "relevance": "high",
+      "engagement": { "upvotes": 41, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30346",
+        "huggingface": "https://huggingface.co/papers/2605.30346",
+        "pdf": "https://arxiv.org/pdf/2605.30346"
+      }
+    },
+    {
+      "id": "why-far-looks-up-spatial-vlm",
+      "title": "Why Far Looks Up: Probing Spatial Representation in Vision-Language Models",
+      "authors": ["Cheolhong Min", "Jaeyun Jung", "Daeun Lee", "Hyeonseong Jeon", "Yu Su et al."],
+      "affiliations": ["NVIDIA", "Seoul National University", "Ohio State University"],
+      "summary": "Reveals that VLMs consistently entangle vertical image position with distance, mirroring perspective bias of natural photographs. Introduces SpatialTunnel synthetic benchmark to expose spatial shortcut biases.",
+      "key_findings": [
+        "VLMs conflate vertical image position with distance due to perspective bias in training data",
+        "Accuracy gap persists between perspective-consistent and counter-heuristic spatial examples",
+        "The entanglement intensifies under data scaling even as overall benchmark accuracy improves",
+        "Models with well-separated spatial axes exhibit greater robustness across benchmarks"
+      ],
+      "tags": ["vlm", "spatial-reasoning", "benchmarks", "representation-analysis", "bias"],
+      "relevance": "high",
+      "engagement": { "upvotes": 40, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30161",
+        "huggingface": "https://huggingface.co/papers/2605.30161",
+        "pdf": "https://arxiv.org/pdf/2605.30161"
+      }
+    },
+    {
+      "id": "genclaw-code-driven-image-gen",
+      "title": "GenClaw: Code-Driven Agentic Image Generation",
+      "authors": ["Junyan Ye", "Jun He", "Zilong Huang", "Dongzhi Jiang", "Xuan Yang et al."],
+      "affiliations": ["Tencent Hunyuan", "Huazhong University of Science and Technology"],
+      "summary": "Proposes a code-driven agentic image generation paradigm where agents create like human artists: conceptualizing, sketching via code (SVG/HTML/Three.js), then coloring with generative models.",
+      "key_findings": [
+        "Uses code as controllable intermediate canvas bridging linguistic reasoning and pixel synthesis",
+        "Agent workflow mirrors human artistic process: conceptualize, sketch, color",
+        "Integrates programmatic logic with visual expressiveness of generative models",
+        "Transforms image generation from black-box to staged, interpretable process"
+      ],
+      "tags": ["image-generation", "code-generation", "agentic-ai", "controllable-generation", "multimodal"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 31, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30248",
+        "huggingface": "https://huggingface.co/papers/2605.30248",
+        "pdf": "https://arxiv.org/pdf/2605.30248"
+      }
+    },
+    {
+      "id": "how-lora-remembers-parametric-memory",
+      "title": "How LoRA Remembers? A Parametric Memory Law for LLM Finetuning",
+      "authors": ["Ziwen Xu", "Haiwen Hong", "Linsong Yu", "Benglei Cui", "Longtao Huang et al."],
+      "affiliations": ["Alibaba Group", "Zhejiang University"],
+      "summary": "Introduces the Parametric Memory Law linking loss reduction to effective parameters and sequence length, revealing a deterministic phase transition for verbatim recall under greedy decoding.",
+      "key_findings": [
+        "Discovers a robust power law linking loss reduction to effective parameters and sequence length",
+        "Prediction probability p > 0.5 is sufficient for verbatim recall under greedy decoding",
+        "Introduces MemFT strategy that dynamically redistributes training budget toward sub-threshold tokens",
+        "Provides first quantitative capacity limits for exact parametric memory in LoRA"
+      ],
+      "tags": ["lora", "finetuning", "memory", "scaling-laws", "optimization"],
+      "relevance": "high",
+      "engagement": { "upvotes": 30, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30260",
+        "huggingface": "https://huggingface.co/papers/2605.30260",
+        "pdf": "https://arxiv.org/pdf/2605.30260"
+      }
+    },
+    {
+      "id": "longds-bench-long-horizon-agents",
+      "title": "LongDS-Bench: On the Failure of Long-Horizon Agentic Data Analysis",
+      "authors": ["Kewei Xu", "Xiaoben Lu", "Shuofei Qiao", "Zihan Ding", "Haoming Xu et al."],
+      "affiliations": ["Zhejiang University"],
+      "summary": "Introduces a benchmark for long-horizon, multi-turn data analysis where agents must maintain evolving analytical states. Best model reaches only 48.45% accuracy with performance dropping 47 points from early to late turns.",
+      "key_findings": [
+        "Best model achieves only 48.45% average accuracy on long-horizon data analysis tasks",
+        "Performance drops nearly 47 points from early to late turns",
+        "Long-horizon errors account for 52-69% of all failures",
+        "Additional agent steps do not improve performance — the bottleneck is maintaining correct analytical state"
+      ],
+      "tags": ["agents", "benchmarks", "data-analysis", "long-horizon", "state-management"],
+      "relevance": "high",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30434",
+        "huggingface": "https://huggingface.co/papers/2605.30434",
+        "pdf": "https://arxiv.org/pdf/2605.30434"
+      }
+    },
+    {
+      "id": "earlytom-fast-video-understanding",
+      "title": "EarlyTom: Early Token Compression Completes Fast Video Understanding",
+      "authors": ["Hesong Wang", "Xin Jin", "Lu Lu", "Chenhaowen Li", "Jian Chen et al."],
+      "affiliations": ["Eastern Institute of Technology", "Peking University"],
+      "summary": "Proposes a training-free token compression framework that performs early-stage visual token compression inside the vision encoder, reducing TTFT by up to 2.65x and FLOPs by 61% while maintaining accuracy.",
+      "key_findings": [
+        "Vision encoding contributes a large portion to time-to-first-token in Video-LLMs",
+        "Early-stage compression inside the vision encoder yields significantly better TTFT reduction",
+        "Reduces TTFT by 2.65x and FLOPs by 61% on LLaVA-OneVision-7B",
+        "Training-free approach maintains accuracy comparable to full-token baseline"
+      ],
+      "tags": ["video-understanding", "token-compression", "efficiency", "inference-optimization", "vlm"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 27, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30010",
+        "huggingface": "https://huggingface.co/papers/2605.30010",
+        "pdf": "https://arxiv.org/pdf/2605.30010"
+      }
+    },
+    {
+      "id": "hide-and-seek-vla-failure-detection",
+      "title": "Hide-and-Seek in Trajectories: Discovering Failure Signals for VLA Runtime Monitoring",
+      "authors": ["Seongheon Park", "Wendi Li", "Changdae Oh", "Samuel Yeh", "Zsolt Kira et al."],
+      "affiliations": ["Georgia Institute of Technology", "University of Wisconsin-Madison"],
+      "summary": "Proposes a framework for VLA failure detection using coarsely supervised contrastive learning, localizing failure-indicative actions from trajectory-level supervision without step-level annotation.",
+      "key_findings": [
+        "Formulates VLA failure detection as a coarsely supervised learning problem",
+        "Combines inter-trajectory and intra-trajectory contrastive objectives to localize failures",
+        "Achieves state-of-the-art multi-task failure detection across LIBERO, VLABench, and real-world robots",
+        "Generalizes to both seen and unseen tasks across OpenVLA, pi_0, and pi_0.5 policies"
+      ],
+      "tags": ["robotics", "vla", "failure-detection", "runtime-monitoring", "contrastive-learning"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30834",
+        "huggingface": "https://huggingface.co/papers/2605.30834",
+        "pdf": "https://arxiv.org/pdf/2605.30834"
+      }
+    },
+    {
+      "id": "function2scene-functional-layout",
+      "title": "Function2Scene: 3D Indoor Scene Layout from Functional Specifications",
+      "authors": ["Ruiqi Wang", "Qimin Chen", "Daniel Ritchie", "Angel X. Chang", "Manolis Savva et al."],
+      "affiliations": ["Simon Fraser University", "Brown University"],
+      "summary": "Generates 3D indoor layouts from functional specifications describing who uses a room and what they need to do, using iterative evaluation and refinement through a tool-augmented check-and-repair loop.",
+      "key_findings": [
+        "Reframes scene synthesis from placing plausible objects to designing spaces that support human use",
+        "Uses taxonomy of 17 functional design criteria spanning spatial, ergonomic, and environmental considerations",
+        "Results preferred in 94.3% of pairwise comparisons against recent baselines",
+        "Iterative tool-augmented loop combines geometric measurements, LLM reasoning, and VLM assessment"
+      ],
+      "tags": ["3d-generation", "scene-synthesis", "interior-design", "functional-design", "vlm"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30819",
+        "huggingface": "https://huggingface.co/papers/2605.30819",
+        "pdf": "https://arxiv.org/pdf/2605.30819"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B-parameter vision model for object detection and visual grounding built on Qwen2.5-3B-Instruct. Supports image-text-to-text conversational interactions for precise object localization.",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": ["object-detection", "grounding", "vision", "eagle"],
+      "metrics": { "downloads": 24586, "likes": 606 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "A 1B-parameter efficient language model designed for on-device and edge-AI deployment, featuring long-context support and tool-calling capabilities.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["edge-ai", "on-device", "long-context", "tool-calling"],
+      "metrics": { "downloads": 36730, "likes": 659 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "A unified any-to-any multimodal model handling image generation, video generation, image editing, and video understanding in a single framework, built on Qwen2.5-VL-3B-Instruct.",
+      "task_type": "any-to-any",
+      "model_size": "3B+",
+      "tags": ["multimodal", "image-generation", "video-generation", "any-to-any"],
+      "metrics": { "downloads": 2948, "likes": 992 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek's flagship text generation model maintaining the highest download count among open models at 5.9M downloads with strong benchmark performance.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["text-generation", "conversational", "flagship"],
+      "metrics": { "downloads": 5886599, "likes": 4502 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "liquidai-lfm2-5-8b-a1b",
+      "name": "LFM2.5-8B-A1B",
+      "organization": "LiquidAI",
+      "description": "A sparse MoE model with only 1B active parameters in an 8B framework, representing the liquid foundation model architecture for efficient edge deployment across 9 languages.",
+      "task_type": "text-generation",
+      "model_size": "8B (1B active)",
+      "tags": ["liquid", "moe", "edge", "multilingual"],
+      "metrics": { "downloads": 27677, "likes": 321 },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+    },
+    {
+      "id": "qwen-3-6-27b",
+      "name": "Qwen3.6-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Qwen's 27B multimodal model reaching 5.1M downloads and 1,552 likes, supporting image-text-to-text tasks with strong evaluation results.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "conversational", "flagship"],
+      "metrics": { "downloads": 5064096, "likes": 1552 },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "An audio-driven video avatar model for generating talking head videos with audio-text-to-video and audio-image-text-to-video capabilities.",
+      "task_type": "audio-text-to-video",
+      "model_size": "N/A",
+      "tags": ["avatar", "video-generation", "audio-driven", "talking-head"],
+      "metrics": { "downloads": 0, "likes": 440 },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "A 1B-parameter hierarchical reasoning model using prefix-LM architecture with pre-alignment approach. Non-chat, non-instruction-tuned base model for text generation.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["hierarchical-reasoning", "prefix-lm", "pre-alignment", "base-model"],
+      "metrics": { "downloads": 143904, "likes": 427 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "A text-to-video generation model with 1.5M downloads and 1,469 likes, representing strong community adoption for video generation tasks.",
+      "task_type": "text-to-video",
+      "model_size": "N/A",
+      "tags": ["text-to-video", "video-generation", "diffusers"],
+      "metrics": { "downloads": 1590236, "likes": 1469 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "A multilingual text-to-speech model supporting 30+ languages with on-device deployment capability, offering high-quality speech synthesis.",
+      "task_type": "text-to-speech",
+      "model_size": "N/A",
+      "tags": ["tts", "multilingual", "on-device", "speech-synthesis"],
+      "metrics": { "downloads": 56472, "likes": 754 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "Python tool for converting files and office documents to Markdown, widely used for preparing documents for LLM consumption. Leads all GitHub repos in daily star growth.",
+      "language": "Python",
+      "stars": 135152,
+      "stars_today": 2798,
+      "forks": 9236,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "llm-tooling", "productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "harry0703-moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "AI-powered tool for generating high-quality short videos with one click using large language models. Continues its viral growth trajectory with nearly 2K stars/day.",
+      "language": "Python",
+      "stars": 74443,
+      "stars_today": 1937,
+      "forks": 10615,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "ai-automation", "content-creation", "llm"],
+      "relevance": "high"
+    },
+    {
+      "id": "codecrafters-build-your-own-x",
+      "name": "codecrafters-io/build-your-own-x",
+      "description": "Master programming by recreating your favorite technologies from scratch. The most-starred educational programming repository with over 509K stars.",
+      "language": "Markdown",
+      "stars": 509452,
+      "stars_today": 1158,
+      "forks": 48324,
+      "url": "https://github.com/codecrafters-io/build-your-own-x",
+      "tags": ["education", "programming", "tutorials", "learning"],
+      "relevance": "low"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "Tokenizer-free TTS system for multilingual speech generation, creative voice design, and true-to-life voice cloning. Strong growth at 635 stars/day.",
+      "language": "Python",
+      "stars": 23585,
+      "stars_today": 635,
+      "forks": 2721,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": ["tts", "speech-generation", "voice-cloning", "tokenizer-free"],
+      "relevance": "high"
+    },
+    {
+      "id": "fareedkhan-train-llm-from-scratch",
+      "name": "FareedKhan-dev/train-llm-from-scratch",
+      "description": "A straightforward educational resource for training LLMs from scratch, covering data downloading through text generation. Surging at 626 stars/day.",
+      "language": "Jupyter Notebook",
+      "stars": 2999,
+      "stars_today": 626,
+      "forks": 448,
+      "url": "https://github.com/FareedKhan-dev/train-llm-from-scratch",
+      "tags": ["education", "llm-training", "tutorials", "machine-learning"],
+      "relevance": "high"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "An adaptive web scraping framework that handles everything from single requests to full-scale crawls, with 56.7K total stars.",
+      "language": "Python",
+      "stars": 56705,
+      "stars_today": 606,
+      "forks": 5500,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": ["web-scraping", "data-collection", "automation", "crawling"],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster. Maintains strong momentum at 489 stars/day.",
+      "language": "Python",
+      "stars": 128946,
+      "stars_today": 489,
+      "forks": 21002,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["agentic-coding", "developer-tools", "llm", "terminal"],
+      "relevance": "high"
+    },
+    {
+      "id": "crosstalk-project-nomad",
+      "name": "Crosstalk-Solutions/project-nomad",
+      "description": "Self-contained offline survival computer packed with critical tools, knowledge, and AI capabilities for disconnected environments.",
+      "language": "TypeScript",
+      "stars": 27745,
+      "stars_today": 374,
+      "forks": 2713,
+      "url": "https://github.com/Crosstalk-Solutions/project-nomad",
+      "tags": ["offline-ai", "survival", "edge-computing", "self-contained"],
+      "relevance": "medium"
+    },
+    {
+      "id": "nesquena-hermes-webui",
+      "name": "nesquena/hermes-webui",
+      "description": "Web and mobile interface for the Hermes Agent, making agent interactions accessible from any device.",
+      "language": "Python",
+      "stars": 10036,
+      "stars_today": 357,
+      "forks": 1373,
+      "url": "https://github.com/nesquena/hermes-webui",
+      "tags": ["agent-ui", "web-interface", "hermes", "mobile"],
+      "relevance": "high"
+    },
+    {
+      "id": "revfactory-harness",
+      "name": "revfactory/harness",
+      "description": "A meta-skill that designs domain-specific agent teams, defines specialized agents, and generates skills for agent orchestration.",
+      "language": "HTML",
+      "stars": 4634,
+      "stars_today": 323,
+      "forks": 651,
+      "url": "https://github.com/revfactory/harness",
+      "tags": ["agent-orchestration", "meta-skill", "agent-teams", "skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "dreammis-social-auto-upload",
+      "name": "dreammis/social-auto-upload",
+      "description": "Automated video upload tool for social media platforms including Douyin, Xiaohongshu, TikTok, YouTube, and Bilibili.",
+      "language": "Python",
+      "stars": 11999,
+      "stars_today": 286,
+      "forks": 2111,
+      "url": "https://github.com/dreammis/social-auto-upload",
+      "tags": ["social-media", "automation", "video-upload", "content-distribution"],
+      "relevance": "medium"
+    },
+    {
+      "id": "supermemoryai-supermemory",
+      "name": "supermemoryai/supermemory",
+      "description": "An extremely fast and scalable memory engine providing the Memory API for the AI era, designed for building memory-augmented AI applications.",
+      "language": "TypeScript",
+      "stars": 23386,
+      "stars_today": 264,
+      "forks": 2111,
+      "url": "https://github.com/supermemoryai/supermemory",
+      "tags": ["memory", "ai-infrastructure", "api", "scalable"],
+      "relevance": "high"
+    },
+    {
+      "id": "everyinc-compound-engineering-plugin",
+      "name": "EveryInc/compound-engineering-plugin",
+      "description": "Official Compound Engineering plugin for Claude Code, Codex, Cursor, and other AI coding tools.",
+      "language": "TypeScript",
+      "stars": 18731,
+      "stars_today": 251,
+      "forks": 1408,
+      "url": "https://github.com/EveryInc/compound-engineering-plugin",
+      "tags": ["developer-tools", "ai-coding", "plugin", "compound-engineering"],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for the language of financial markets, applying LLM techniques to quantitative finance and market data.",
+      "language": "Python",
+      "stars": 27785,
+      "stars_today": 183,
+      "forks": 4803,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "quantitative", "market-language"],
+      "relevance": "high"
+    },
+    {
+      "id": "galilai-stable-worldmodel",
+      "name": "galilai-group/stable-worldmodel",
+      "description": "A platform for reproducible world model research and evaluation, providing standardized tools for building and comparing world models.",
+      "language": "Python",
+      "stars": 1574,
+      "stars_today": 157,
+      "forks": 176,
+      "url": "https://github.com/galilai-group/stable-worldmodel",
+      "tags": ["world-models", "research-platform", "reproducibility", "evaluation"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Safety and Alignment at Scale",
+      "description": "Agent safety alignment continues to dominate community engagement, with AgentDoG 1.5's lightweight approach showing that small models (~1K samples) can match frontier models on safety benchmarks. The growing agent deployment surface area makes this a production-critical concern.",
+      "related_paper_ids": ["agentdog-1-5-safety-alignment", "longds-bench-long-horizon-agents", "hide-and-seek-vla-failure-detection"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Horizon Agent Evaluation and State Management",
+      "description": "LongDS-Bench reveals that current agents fail dramatically on long-horizon tasks, with the bottleneck being state management rather than computational budget. Combined with VLA failure detection work, the community is recognizing evaluation gaps in agentic AI.",
+      "related_paper_ids": ["longds-bench-long-horizon-agents", "hide-and-seek-vla-failure-detection", "qwen-vla-unified-embodied"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Unified Multimodal and Embodied Foundation Models",
+      "description": "Qwen-VLA unifies manipulation, navigation, and trajectory prediction in a single model. ByteDance's Lance offers any-to-any multimodal capabilities. The trend toward single models handling diverse modalities and tasks is accelerating.",
+      "related_paper_ids": ["qwen-vla-unified-embodied", "genclaw-code-driven-image-gen", "function2scene-functional-layout"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video World Models and Causality",
+      "description": "minWM provides an open-source pipeline for real-time interactive video world models, while YoCausal questions whether video generation models truly understand causality. The gap between temporal pattern matching and genuine causal understanding remains significant.",
+      "related_paper_ids": ["minwm-interactive-video-world-models", "yocausal-video-causality"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "LoRA Optimization and Efficient Fine-tuning",
+      "description": "CollectionLoRA demonstrates distilling 50 effects into a single LoRA, while How LoRA Remembers provides the first quantitative capacity limits for parametric memory. Both address practical deployment bottlenecks in fine-tuned model management.",
+      "related_paper_ids": ["collectionlora-50-effects", "how-lora-remembers-parametric-memory"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI Developer Tooling and Practical Automation",
+      "description": "GitHub trending is dominated by practical AI productivity tools rather than research repos. markitdown, MoneyPrinterTurbo, social-auto-upload, and compound-engineering-plugin all connect AI capabilities to everyday workflows, signaling the practical automation phase of AI adoption.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

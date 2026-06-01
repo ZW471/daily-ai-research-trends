@@ -1,0 +1,656 @@
+{
+  "version": "1.0",
+  "date": "2026-06-01",
+  "generated_at": "2026-06-01T14:57:00Z",
+  "summary": {
+    "headline": "AgentDoG 1.5飙升至127点赞，智能体安全仍是本周头号话题；NVIDIA LocateAnything-3B以606赞登顶热门模型；microsoft/markitdown以日增2,798星领跑GitHub",
+    "body": "周日的研究动态反映了周末的持续热度，HuggingFace Daily Papers仅有4篇新论文，但本周重点研究仍保持强劲互动。**AgentDoG 1.5**攀升至127点赞，巩固了其作为本周最受关注论文的地位，智能体安全对齐持续吸引社区关注。**Qwen-VLA**以108点赞保持强势，证实了社区对统一具身AI模型的需求。今日新论文包括**LongDS-Bench**，揭示当前AI智能体在长程数据分析中的失败——最佳模型准确率仅48.45%；以及**Function2Scene**，将室内场景合成从物体放置重构为功能性空间设计。\n\n模型生态系统出现重要新成员：**NVIDIA LocateAnything-3B**以606赞领跑热门榜，基于Qwen2.5构建的目标检测与视觉定位能力；OpenBMB的**MiniCPM5-1B**以659赞作为高效边缘AI模型入榜。**DeepSeek-V4-Pro**以590万下载量保持榜首，**Qwen3.6-27B**以510万下载量紧追其后。ByteDance的**Lance**（992赞）提供统一的多模态模型，覆盖图像生成、视频生成和理解。**LiquidAI LFM2.5-8B-A1B**稀疏MoE架构以321赞继续获得关注。\n\nGitHub热门由AI生产力工具主导：**microsoft/markitdown**以13.5万星、日增2,798星领跑所有仓库，用于文档到Markdown的转换；**MoneyPrinterTurbo**以7.4万星（日增1,937）继续其病毒式增长，提供AI驱动的短视频生成。**OpenBMB/VoxCPM**（日增635星）的无分词器多语言TTS和**FareedKhan-dev/train-llm-from-scratch**（日增626星）反映了AI领域强劲的教育和工具需求。",
+    "key_themes": [
+      "agent-safety-alignment-momentum",
+      "long-horizon-agent-evaluation",
+      "edge-ai-model-proliferation",
+      "unified-multimodal-models",
+      "ai-developer-tooling-explosion",
+      "speech-and-video-generation"
+    ]
+  },
+  "researcher_notes": "**AgentDoG 1.5在周末达到127点赞值得关注。**周末互动通常会下降，从111升至127的持续攀升是社区对智能体安全真正关注的强信号。论文的核心洞察——前沿模型大幅降低了智能体利用的攻击门槛——已不再是理论问题。随着Codex级模型成为标准智能体骨干，轻量级对齐方案（0.8B-8B参数，约1K训练样本）解决了真实的部署瓶颈：增加推理开销的重型安全框架在延迟预算已经紧张的生产智能体系统中无法生存。这些小模型在安全基准上匹配GPT-5.4的事实表明，社区可能一直在过度复杂化对齐问题。\n\n**LongDS-Bench暴露了智能体AI评估中的关键缺口。**最佳模型在长程数据分析中仅达到48.45%准确率，从早期到晚期轮次性能下降47分，这应该引起所有构建生产智能体系统的人的关注。更重要的是，论文表明简单地给智能体更多交互步骤并没有帮助——瓶颈在于维持正确的分析状态，而非计算预算。这与日益增长的共识一致：当前基准通过测试孤立或短程任务大幅高估了智能体能力。52-69%的长程错误率表明，生产智能体部署需要健壮的状态管理架构，而不仅仅是更好的基础模型。\n\n**NVIDIA的LocateAnything-3B领跑热门模型在架构上值得关注。**基于Qwen2.5-3B-Instruct构建，代表了NVIDIA向开放模型生态系统的推进，不仅限于训练基础设施。结合NVIDIA的PiD像素级扩散解码器（218赞），NVIDIA正在构建全栈开放模型。同时，ByteDance的Lance（992赞）正在悄然建立多模态统一范式——单一模型处理图像生成、视频生成、图像编辑和视频理解——这可能显著简化生产多模态管道。\n\n**GitHub热门趋势清晰揭示了AI当前的采用阶段。**排名靠前的仓库不是前沿研究工具——它们是实用的生产力倍增器。microsoft/markitdown（日增2,798星）将文档转换为Markdown供LLM消费。MoneyPrinterTurbo（日增1,937星）自动化短视频生产。dreammis/social-auto-upload自动化社交媒体发布。这种模式表明AI采用已进入实用自动化阶段，最高需求是将AI能力连接到日常工作流的工具，而非能力本身。\n\n**Kronos金融基础模型（2.78万星，日增183）是值得关注的潜力项目。**专门针对金融市场语言的基础模型表明，领域特定LLM正在从医疗和法律领域成熟扩展到量化金融。结合stable-worldmodel平台（日增157星）用于可复现的世界模型研究，我们看到基础设施投资可能显著加速领域特定AI部署。",
+  "papers": [
+    {
+      "id": "agentdog-1-5-safety-alignment",
+      "title": "AgentDoG 1.5：一个轻量级且可扩展的AI智能体安全与保障对齐框架",
+      "authors": ["Dongrui Liu", "Yu Li", "Zhonghao Yang", "Peng Wang", "Guanxu Chen et al."],
+      "affiliations": ["Shanghai AI Lab", "Tsinghua University", "Institute of Automation, CAS"],
+      "summary": "提出了轻量级且可扩展的智能体安全对齐框架，更新了安全分类体系以应对前沿AI模型带来的新兴风险。使用约1K样本训练AgentDoG 1.5变体（0.8B-8B），在安全基准上达到与GPT-5.4相当的性能。",
+      "key_findings": [
+        "更新智能体安全分类体系，覆盖Codex和OpenClaw执行场景的新兴风险",
+        "轻量级模型（0.8B-8B参数）仅用约1K样本训练即可匹配领先闭源模型的安全性能",
+        "将Docker级环境中的部署开销降低两个数量级",
+        "作为无需训练的在线护栏部署，用于实时安全审核"
+      ],
+      "tags": ["agent-safety", "alignment", "lightweight-models", "guardrails", "open-source"],
+      "relevance": "high",
+      "engagement": { "upvotes": 127, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29801",
+        "huggingface": "https://huggingface.co/papers/2605.29801",
+        "pdf": "https://arxiv.org/pdf/2605.29801"
+      }
+    },
+    {
+      "id": "qwen-vla-unified-embodied",
+      "title": "Qwen-VLA：统一跨任务、环境和机器人实体的视觉-语言-动作建模",
+      "authors": ["Qiuyue Wang", "Mingsheng Li", "Jian Guan", "Jinhui Ye", "Sicheng Xie et al."],
+      "affiliations": ["Alibaba Group", "Tsinghua University"],
+      "summary": "提出统一的具身基础模型，通过基于DiT的动作解码器将Qwen的视觉-语言建模栈扩展到连续动作和轨迹生成。在LIBERO上达到97.9%，在Simpler-WidowX上达到73.7%，在真实世界ALOHA实验中达到76.9%的OOD成功率。",
+      "key_findings": [
+        "在单一VLA模型中统一操控、导航和轨迹预测",
+        "引入实体感知提示条件化以支持多机器人平台",
+        "在LIBERO上达到97.9%，在真实世界ALOHA上达到76.9%的OOD成功率",
+        "在场景布局、光照和物体变化下展示一致的分布外泛化能力"
+      ],
+      "tags": ["embodied-ai", "vision-language-action", "robotics", "foundation-model", "qwen"],
+      "relevance": "high",
+      "engagement": { "upvotes": 108, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30280",
+        "huggingface": "https://huggingface.co/papers/2605.30280",
+        "pdf": "https://arxiv.org/pdf/2605.30280"
+      }
+    },
+    {
+      "id": "omniretrieval-unified-heterogeneous",
+      "title": "OmniRetrieval：跨异构知识源的统一检索",
+      "authors": ["Jinheon Baek", "Soyeong Jeong", "Sangwoo Park", "Woongyeong Yeo", "Minki Kang et al."],
+      "affiliations": ["KAIST", "Google DeepMind"],
+      "summary": "引入了一个框架，接受自然语言查询，识别适当的知识源，并在文本、表格、知识图谱和属性图之间分发原生查询，同时不破坏结构特性。",
+      "key_findings": [
+        "统一跨文本、关系表、知识图谱和属性图的检索",
+        "保留结构特性而非同质化多样来源",
+        "在13个数据集和309个不同知识库上超越单源基线"
+      ],
+      "tags": ["information-retrieval", "knowledge-graphs", "unified-retrieval", "rag", "heterogeneous-data"],
+      "relevance": "high",
+      "engagement": { "upvotes": 66, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29250",
+        "huggingface": "https://huggingface.co/papers/2605.29250",
+        "pdf": "https://arxiv.org/pdf/2605.29250"
+      }
+    },
+    {
+      "id": "collectionlora-50-effects",
+      "title": "CollectionLoRA：通过多教师在线策略蒸馏在1个LoRA中收集50种效果",
+      "authors": ["Fangtai Wu", "Hailong Guo", "Shijie Huang", "Jiayi Song", "Yubo Huang et al."],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "summary": "使用多教师在线策略蒸馏将多达50种不同的效果LoRA连同少步生成能力蒸馏到单个LoRA中，解决特征干扰问题并减少部署开销。",
+      "key_findings": [
+        "将50个效果LoRA蒸馏到单个LoRA中，保持可比的概念保真度",
+        "引入概率双流路由机制以增强未见场景的泛化",
+        "非对称正交提示在提示空间中实现概念隔离",
+        "通过消除动态LoRA加载需求降低部署成本"
+      ],
+      "tags": ["lora", "distillation", "diffusion-models", "image-editing", "deployment-efficiency"],
+      "relevance": "high",
+      "engagement": { "upvotes": 53, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.25378",
+        "huggingface": "https://huggingface.co/papers/2605.25378",
+        "pdf": "https://arxiv.org/pdf/2605.25378"
+      }
+    },
+    {
+      "id": "minwm-interactive-video-world-models",
+      "title": "minWM：实时交互式视频世界模型的全栈开源框架",
+      "authors": ["Min Zhao", "Hongzhou Zhu", "Bokai Yan", "Zihan Zhou", "Yimin Chen et al."],
+      "affiliations": ["Tsinghua University", "Renmin University of China"],
+      "summary": "提供端到端开源管道，将双向视频基础模型转换为具有实时推演能力的相机可控少步自回归世界模型。",
+      "key_findings": [
+        "将双向T2V/TI2V模型转换为相机可控的自回归世界模型",
+        "模块化管道覆盖数据构建、可控微调、AR训练、蒸馏和流式推理",
+        "在Wan2.1-T2V-1.3B和HY1.5-TI2V-8B骨干网络上实例化",
+        "支持将现有视频世界模型适配到新的数据分布和延迟目标"
+      ],
+      "tags": ["world-models", "video-generation", "real-time", "open-source", "interactive"],
+      "relevance": "high",
+      "engagement": { "upvotes": 49, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30263",
+        "huggingface": "https://huggingface.co/papers/2605.30263",
+        "pdf": "https://arxiv.org/pdf/2605.30263"
+      }
+    },
+    {
+      "id": "yocausal-video-causality",
+      "title": "YoCausal：从因果性角度看视频生成距世界模型有多远？",
+      "authors": ["You-Zhe Xie", "Yu-Hsuan Li", "Jie-Ying Lee", "Kaipeng Zhang", "Yu-Lun Liu et al."],
+      "affiliations": ["Alaya Studio", "National Tsing Hua University"],
+      "summary": "引入受认知科学中期望违反范式启发的两级基准，评估视频扩散模型是否真正理解因果性还是仅过拟合时间模式。",
+      "key_findings": [
+        "揭示感知时间之箭并不意味着VDM理解因果性",
+        "使用时间反转的真实世界视频作为零成本反事实样本",
+        "评估13个最先进的VDM，发现与人类水平的因果认知之间存在显著差距",
+        "引入反转惊奇指数和因果认知指数指标"
+      ],
+      "tags": ["world-models", "causality", "video-generation", "benchmarks", "cognitive-science"],
+      "relevance": "high",
+      "engagement": { "upvotes": 41, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30346",
+        "huggingface": "https://huggingface.co/papers/2605.30346",
+        "pdf": "https://arxiv.org/pdf/2605.30346"
+      }
+    },
+    {
+      "id": "why-far-looks-up-spatial-vlm",
+      "title": "为什么远处看起来在上方：探测视觉-语言模型中的空间表征",
+      "authors": ["Cheolhong Min", "Jaeyun Jung", "Daeun Lee", "Hyeonseong Jeon", "Yu Su et al."],
+      "affiliations": ["NVIDIA", "Seoul National University", "Ohio State University"],
+      "summary": "揭示VLM一致性地将垂直图像位置与距离纠缠在一起，反映了自然照片的透视偏差。引入SpatialTunnel合成基准以暴露空间捷径偏差。",
+      "key_findings": [
+        "VLM由于训练数据中的透视偏差，将垂直图像位置与距离混淆",
+        "透视一致和反启发式空间示例之间存在准确率差距",
+        "即使整体基准准确率提高，数据扩展下纠缠现象仍加剧",
+        "具有良好分离的空间轴的模型在基准测试中表现更稳健"
+      ],
+      "tags": ["vlm", "spatial-reasoning", "benchmarks", "representation-analysis", "bias"],
+      "relevance": "high",
+      "engagement": { "upvotes": 40, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30161",
+        "huggingface": "https://huggingface.co/papers/2605.30161",
+        "pdf": "https://arxiv.org/pdf/2605.30161"
+      }
+    },
+    {
+      "id": "genclaw-code-driven-image-gen",
+      "title": "GenClaw：代码驱动的智能体图像生成",
+      "authors": ["Junyan Ye", "Jun He", "Zilong Huang", "Dongzhi Jiang", "Xuan Yang et al."],
+      "affiliations": ["Tencent Hunyuan", "Huazhong University of Science and Technology"],
+      "summary": "提出代码驱动的智能体图像生成范式，智能体像人类艺术家一样创作：先构思，然后通过代码（SVG/HTML/Three.js）绘制草图，最后用生成模型上色。",
+      "key_findings": [
+        "使用代码作为可控中间画布，桥接语言推理和像素合成",
+        "智能体工作流模仿人类艺术创作过程：构思、草图、上色",
+        "将程序化逻辑与生成模型的视觉表现力无缝集成",
+        "将图像生成从黑盒范式转变为分阶段的可解释过程"
+      ],
+      "tags": ["image-generation", "code-generation", "agentic-ai", "controllable-generation", "multimodal"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 31, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30248",
+        "huggingface": "https://huggingface.co/papers/2605.30248",
+        "pdf": "https://arxiv.org/pdf/2605.30248"
+      }
+    },
+    {
+      "id": "how-lora-remembers-parametric-memory",
+      "title": "LoRA如何记忆？LLM微调的参数化记忆定律",
+      "authors": ["Ziwen Xu", "Haiwen Hong", "Linsong Yu", "Benglei Cui", "Longtao Huang et al."],
+      "affiliations": ["Alibaba Group", "Zhejiang University"],
+      "summary": "引入将损失降低与有效参数和序列长度联系的参数化记忆定律，揭示贪心解码下逐字召回的确定性相变。",
+      "key_findings": [
+        "发现将损失降低与有效参数和序列长度联系的鲁棒幂律",
+        "预测概率p > 0.5是贪心解码下逐字召回的充分条件",
+        "引入MemFT策略，动态将训练预算重新分配给阈值以下的token",
+        "首次提供LoRA中精确参数化记忆的量化容量限制"
+      ],
+      "tags": ["lora", "finetuning", "memory", "scaling-laws", "optimization"],
+      "relevance": "high",
+      "engagement": { "upvotes": 30, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30260",
+        "huggingface": "https://huggingface.co/papers/2605.30260",
+        "pdf": "https://arxiv.org/pdf/2605.30260"
+      }
+    },
+    {
+      "id": "longds-bench-long-horizon-agents",
+      "title": "LongDS-Bench：论长程智能体数据分析的失败",
+      "authors": ["Kewei Xu", "Xiaoben Lu", "Shuofei Qiao", "Zihan Ding", "Haoming Xu et al."],
+      "affiliations": ["Zhejiang University"],
+      "summary": "引入长程多轮数据分析基准，智能体必须维持演进的分析状态。最佳模型准确率仅48.45%，从早期到晚期轮次性能下降47分。",
+      "key_findings": [
+        "最佳模型在长程数据分析任务上仅达到48.45%的平均准确率",
+        "从早期到晚期轮次性能下降近47分",
+        "长程错误占所有失败的52-69%",
+        "增加智能体步骤并不能改善性能——瓶颈在于维持正确的分析状态"
+      ],
+      "tags": ["agents", "benchmarks", "data-analysis", "long-horizon", "state-management"],
+      "relevance": "high",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30434",
+        "huggingface": "https://huggingface.co/papers/2605.30434",
+        "pdf": "https://arxiv.org/pdf/2605.30434"
+      }
+    },
+    {
+      "id": "earlytom-fast-video-understanding",
+      "title": "EarlyTom：早期Token压缩实现快速视频理解",
+      "authors": ["Hesong Wang", "Xin Jin", "Lu Lu", "Chenhaowen Li", "Jian Chen et al."],
+      "affiliations": ["Eastern Institute of Technology", "Peking University"],
+      "summary": "提出无需训练的token压缩框架，在视觉编码器内部执行早期视觉token压缩，将TTFT降低2.65倍，FLOPs减少61%，同时保持准确率。",
+      "key_findings": [
+        "视觉编码在Video-LLM的首次token时间中占很大比例",
+        "编码器内部的早期压缩比后置压缩能更显著降低TTFT",
+        "在LLaVA-OneVision-7B上将TTFT降低2.65倍，FLOPs减少61%",
+        "无需训练的方法保持与全token基线相当的准确率"
+      ],
+      "tags": ["video-understanding", "token-compression", "efficiency", "inference-optimization", "vlm"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 27, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30010",
+        "huggingface": "https://huggingface.co/papers/2605.30010",
+        "pdf": "https://arxiv.org/pdf/2605.30010"
+      }
+    },
+    {
+      "id": "hide-and-seek-vla-failure-detection",
+      "title": "轨迹中的捉迷藏：发现VLA运行时监控的失败信号",
+      "authors": ["Seongheon Park", "Wendi Li", "Changdae Oh", "Samuel Yeh", "Zsolt Kira et al."],
+      "affiliations": ["Georgia Institute of Technology", "University of Wisconsin-Madison"],
+      "summary": "提出使用粗粒度监督对比学习进行VLA失败检测的框架，从轨迹级监督中定位失败指示性动作，无需步骤级标注。",
+      "key_findings": [
+        "将VLA失败检测形式化为粗粒度监督学习问题",
+        "结合轨迹间和轨迹内对比目标定位失败",
+        "在LIBERO、VLABench和真实世界机器人上达到最先进的多任务失败检测",
+        "在OpenVLA、pi_0和pi_0.5策略上泛化到已见和未见任务"
+      ],
+      "tags": ["robotics", "vla", "failure-detection", "runtime-monitoring", "contrastive-learning"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30834",
+        "huggingface": "https://huggingface.co/papers/2605.30834",
+        "pdf": "https://arxiv.org/pdf/2605.30834"
+      }
+    },
+    {
+      "id": "function2scene-functional-layout",
+      "title": "Function2Scene：基于功能规格的3D室内场景布局",
+      "authors": ["Ruiqi Wang", "Qimin Chen", "Daniel Ritchie", "Angel X. Chang", "Manolis Savva et al."],
+      "affiliations": ["Simon Fraser University", "Brown University"],
+      "summary": "从描述房间使用者和使用需求的功能规格生成3D室内布局，使用工具增强的检查-修复循环进行迭代评估和优化。",
+      "key_findings": [
+        "将场景合成从放置合理物体重构为设计支持人类使用的空间",
+        "使用包含17项功能设计标准的分类体系，涵盖空间、人体工学和环境考量",
+        "在与近期基线的成对比较中，94.3%的案例中结果更受偏好",
+        "迭代工具增强循环结合几何测量、LLM推理和VLM视觉评估"
+      ],
+      "tags": ["3d-generation", "scene-synthesis", "interior-design", "functional-design", "vlm"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 3, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30819",
+        "huggingface": "https://huggingface.co/papers/2605.30819",
+        "pdf": "https://arxiv.org/pdf/2605.30819"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "基于Qwen2.5-3B-Instruct构建的30亿参数视觉模型，用于目标检测和视觉定位。支持图像-文本到文本的对话交互，实现精确的物体定位。",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": ["object-detection", "grounding", "vision", "eagle"],
+      "metrics": { "downloads": 24586, "likes": 606 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "10亿参数的高效语言模型，专为端侧和边缘AI部署设计，具备长上下文支持和工具调用能力。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["edge-ai", "on-device", "long-context", "tool-calling"],
+      "metrics": { "downloads": 36730, "likes": 659 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "统一的多模态模型，在单一框架内处理图像生成、视频生成、图像编辑和视频理解，基于Qwen2.5-VL-3B-Instruct构建。",
+      "task_type": "any-to-any",
+      "model_size": "3B+",
+      "tags": ["multimodal", "image-generation", "video-generation", "any-to-any"],
+      "metrics": { "downloads": 2948, "likes": 992 },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek旗舰文本生成模型，以590万下载量保持开放模型中最高的下载量，具有强劲的基准性能。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["text-generation", "conversational", "flagship"],
+      "metrics": { "downloads": 5886599, "likes": 4502 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "liquidai-lfm2-5-8b-a1b",
+      "name": "LFM2.5-8B-A1B",
+      "organization": "LiquidAI",
+      "description": "稀疏MoE模型，在8B框架中仅有1B活跃参数，代表了液态基础模型架构，用于跨9种语言的高效边缘部署。",
+      "task_type": "text-generation",
+      "model_size": "8B（1B活跃）",
+      "tags": ["liquid", "moe", "edge", "multilingual"],
+      "metrics": { "downloads": 27677, "likes": 321 },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+    },
+    {
+      "id": "qwen-3-6-27b",
+      "name": "Qwen3.6-27B",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "Qwen的27B多模态模型，达到510万下载量和1,552赞，支持图像-文本到文本任务，具有强劲的评估结果。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "conversational", "flagship"],
+      "metrics": { "downloads": 5064096, "likes": 1552 },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "音频驱动的视频数字人模型，用于生成说话头部视频，具有音频-文本到视频和音频-图像-文本到视频能力。",
+      "task_type": "audio-text-to-video",
+      "model_size": "N/A",
+      "tags": ["avatar", "video-generation", "audio-driven", "talking-head"],
+      "metrics": { "downloads": 0, "likes": 440 },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    },
+    {
+      "id": "sapientinc-hrm-text-1b",
+      "name": "HRM-Text-1B",
+      "organization": "Sapient Inc",
+      "description": "10亿参数的分层推理模型，使用前缀LM架构和预对齐方法。非对话、非指令微调的基础模型。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["hierarchical-reasoning", "prefix-lm", "pre-alignment", "base-model"],
+      "metrics": { "downloads": 143904, "likes": 427 },
+      "source_url": "https://huggingface.co/sapientinc/HRM-Text-1B"
+    },
+    {
+      "id": "sulphurai-sulphur-2-base",
+      "name": "Sulphur-2-base",
+      "organization": "SulphurAI",
+      "description": "文本到视频生成模型，以150万下载量和1,469赞展现强劲的社区采用度。",
+      "task_type": "text-to-video",
+      "model_size": "N/A",
+      "tags": ["text-to-video", "video-generation", "diffusers"],
+      "metrics": { "downloads": 1590236, "likes": 1469 },
+      "source_url": "https://huggingface.co/SulphurAI/Sulphur-2-base"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "Supertonic-3",
+      "organization": "Supertone",
+      "description": "支持30+种语言的多语言文本到语音模型，具备端侧部署能力，提供高质量语音合成。",
+      "task_type": "text-to-speech",
+      "model_size": "N/A",
+      "tags": ["tts", "multilingual", "on-device", "speech-synthesis"],
+      "metrics": { "downloads": 56472, "likes": 754 },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "将文件和办公文档转换为Markdown的Python工具，广泛用于为LLM准备文档消费。日增星数领跑全部GitHub仓库。",
+      "language": "Python",
+      "stars": 135152,
+      "stars_today": 2798,
+      "forks": 9236,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": ["document-conversion", "markdown", "llm-tooling", "productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "harry0703-moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用AI大模型一键生成高清短视频的工具。日增近2K星，继续保持病毒式增长。",
+      "language": "Python",
+      "stars": 74443,
+      "stars_today": 1937,
+      "forks": 10615,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "ai-automation", "content-creation", "llm"],
+      "relevance": "high"
+    },
+    {
+      "id": "codecrafters-build-your-own-x",
+      "name": "codecrafters-io/build-your-own-x",
+      "description": "通过从头重建你喜爱的技术来精通编程。超过50.9万星的最受欢迎编程教育仓库。",
+      "language": "Markdown",
+      "stars": 509452,
+      "stars_today": 1158,
+      "forks": 48324,
+      "url": "https://github.com/codecrafters-io/build-your-own-x",
+      "tags": ["education", "programming", "tutorials", "learning"],
+      "relevance": "low"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "无分词器的多语言语音生成、创意声音设计和逼真声音克隆TTS系统。日增635星增长强劲。",
+      "language": "Python",
+      "stars": 23585,
+      "stars_today": 635,
+      "forks": 2721,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": ["tts", "speech-generation", "voice-cloning", "tokenizer-free"],
+      "relevance": "high"
+    },
+    {
+      "id": "fareedkhan-train-llm-from-scratch",
+      "name": "FareedKhan-dev/train-llm-from-scratch",
+      "description": "从头训练LLM的直观教育资源，涵盖从数据下载到文本生成。以日增626星快速增长。",
+      "language": "Jupyter Notebook",
+      "stars": 2999,
+      "stars_today": 626,
+      "forks": 448,
+      "url": "https://github.com/FareedKhan-dev/train-llm-from-scratch",
+      "tags": ["education", "llm-training", "tutorials", "machine-learning"],
+      "relevance": "high"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "自适应网页抓取框架，处理从单个请求到大规模爬取的所有场景，总计5.67万星。",
+      "language": "Python",
+      "stars": 56705,
+      "stars_today": 606,
+      "forks": 5500,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": ["web-scraping", "data-collection", "automation", "crawling"],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-claude-code",
+      "name": "anthropics/claude-code",
+      "description": "驻留在终端中的智能体编程工具，理解你的代码库并帮助你更快编码。以日增489星保持强劲势头。",
+      "language": "Python",
+      "stars": 128946,
+      "stars_today": 489,
+      "forks": 21002,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["agentic-coding", "developer-tools", "llm", "terminal"],
+      "relevance": "high"
+    },
+    {
+      "id": "crosstalk-project-nomad",
+      "name": "Crosstalk-Solutions/project-nomad",
+      "description": "自包含的离线生存计算机，集成关键工具、知识和AI能力，用于断网环境。",
+      "language": "TypeScript",
+      "stars": 27745,
+      "stars_today": 374,
+      "forks": 2713,
+      "url": "https://github.com/Crosstalk-Solutions/project-nomad",
+      "tags": ["offline-ai", "survival", "edge-computing", "self-contained"],
+      "relevance": "medium"
+    },
+    {
+      "id": "nesquena-hermes-webui",
+      "name": "nesquena/hermes-webui",
+      "description": "Hermes Agent的Web和移动端界面，从任何设备访问智能体交互。",
+      "language": "Python",
+      "stars": 10036,
+      "stars_today": 357,
+      "forks": 1373,
+      "url": "https://github.com/nesquena/hermes-webui",
+      "tags": ["agent-ui", "web-interface", "hermes", "mobile"],
+      "relevance": "high"
+    },
+    {
+      "id": "revfactory-harness",
+      "name": "revfactory/harness",
+      "description": "设计领域特定智能体团队、定义专业化智能体并生成技能的元技能框架。",
+      "language": "HTML",
+      "stars": 4634,
+      "stars_today": 323,
+      "forks": 651,
+      "url": "https://github.com/revfactory/harness",
+      "tags": ["agent-orchestration", "meta-skill", "agent-teams", "skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "dreammis-social-auto-upload",
+      "name": "dreammis/social-auto-upload",
+      "description": "社交媒体平台自动视频上传工具，支持抖音、小红书、TikTok、YouTube和B站。",
+      "language": "Python",
+      "stars": 11999,
+      "stars_today": 286,
+      "forks": 2111,
+      "url": "https://github.com/dreammis/social-auto-upload",
+      "tags": ["social-media", "automation", "video-upload", "content-distribution"],
+      "relevance": "medium"
+    },
+    {
+      "id": "supermemoryai-supermemory",
+      "name": "supermemoryai/supermemory",
+      "description": "极速且可扩展的记忆引擎，为AI时代提供Memory API，专为构建记忆增强的AI应用设计。",
+      "language": "TypeScript",
+      "stars": 23386,
+      "stars_today": 264,
+      "forks": 2111,
+      "url": "https://github.com/supermemoryai/supermemory",
+      "tags": ["memory", "ai-infrastructure", "api", "scalable"],
+      "relevance": "high"
+    },
+    {
+      "id": "everyinc-compound-engineering-plugin",
+      "name": "EveryInc/compound-engineering-plugin",
+      "description": "适用于Claude Code、Codex、Cursor等AI编程工具的官方Compound Engineering插件。",
+      "language": "TypeScript",
+      "stars": 18731,
+      "stars_today": 251,
+      "forks": 1408,
+      "url": "https://github.com/EveryInc/compound-engineering-plugin",
+      "tags": ["developer-tools", "ai-coding", "plugin", "compound-engineering"],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "面向金融市场语言的基础模型，将LLM技术应用于量化金融和市场数据。",
+      "language": "Python",
+      "stars": 27785,
+      "stars_today": 183,
+      "forks": 4803,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "quantitative", "market-language"],
+      "relevance": "high"
+    },
+    {
+      "id": "galilai-stable-worldmodel",
+      "name": "galilai-group/stable-worldmodel",
+      "description": "可复现世界模型研究和评估平台，提供标准化工具用于构建和比较世界模型。",
+      "language": "Python",
+      "stars": 1574,
+      "stars_today": 157,
+      "forks": 176,
+      "url": "https://github.com/galilai-group/stable-worldmodel",
+      "tags": ["world-models", "research-platform", "reproducibility", "evaluation"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体安全与对齐规模化",
+      "description": "智能体安全对齐继续主导社区关注度，AgentDoG 1.5的轻量级方案表明小模型（约1K样本）可在安全基准上匹配前沿模型。日益增长的智能体部署面使其成为生产关键问题。",
+      "related_paper_ids": ["agentdog-1-5-safety-alignment", "longds-bench-long-horizon-agents", "hide-and-seek-vla-failure-detection"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "长程智能体评估与状态管理",
+      "description": "LongDS-Bench揭示当前智能体在长程任务中的显著失败，瓶颈在于状态管理而非计算预算。结合VLA失败检测工作，社区正在认识到智能体AI的评估缺口。",
+      "related_paper_ids": ["longds-bench-long-horizon-agents", "hide-and-seek-vla-failure-detection", "qwen-vla-unified-embodied"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "统一多模态与具身基础模型",
+      "description": "Qwen-VLA在单一模型中统一操控、导航和轨迹预测。ByteDance的Lance提供任意到任意的多模态能力。单一模型处理多种模态和任务的趋势正在加速。",
+      "related_paper_ids": ["qwen-vla-unified-embodied", "genclaw-code-driven-image-gen", "function2scene-functional-layout"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视频世界模型与因果性",
+      "description": "minWM提供实时交互式视频世界模型的开源管道，而YoCausal质疑视频生成模型是否真正理解因果性。时间模式匹配与真正因果理解之间的差距仍然显著。",
+      "related_paper_ids": ["minwm-interactive-video-world-models", "yocausal-video-causality"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "LoRA优化与高效微调",
+      "description": "CollectionLoRA展示将50种效果蒸馏到单个LoRA中，而「LoRA如何记忆」提供了参数化记忆的首个量化容量限制。两者都解决了微调模型管理中的实际部署瓶颈。",
+      "related_paper_ids": ["collectionlora-50-effects", "how-lora-remembers-parametric-memory"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI开发者工具与实用自动化",
+      "description": "GitHub热门由实用AI生产力工具主导，而非研究仓库。markitdown、MoneyPrinterTurbo、social-auto-upload和compound-engineering-plugin都将AI能力连接到日常工作流，标志着AI采用的实用自动化阶段。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-01T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
