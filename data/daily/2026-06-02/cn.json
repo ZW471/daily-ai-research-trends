@@ -1,0 +1,751 @@
+{
+  "version": "1.0",
+  "date": "2026-06-02",
+  "generated_at": "2026-06-02T15:00:00Z",
+  "summary": {
+    "headline": "VLM与VGM空间智能对比揭示互补优势；ESPO通过早停PPO减少20%RL训练浪费；NVIDIA LocateAnything-3B以807个赞领跑趋势模型",
+    "body": "今日论文聚焦于AI系统的效率与理解能力。来自Om AI Lab的重点研究首次系统性比较了视觉-语言模型与视频生成模型在空间智能方面的表现，发现VLM擅长语义任务而VGM主导几何理解——即使是简单的特征融合也能超越任一单独模型。同时，ESPO引入了一种实用的强化学习优化方法，能够提前检测到注定失败的推理轨迹并终止，在数学基准测试中节省20%以上计算量的同时提升准确率。\n\n在模型方面，NVIDIA的LocateAnything-3B凭借其定位能力以807个赞领跑趋势榜，DeepSeek-V4-Pro继续以580万次下载量保持统治地位。值得关注的新入榜模型包括LiquidAI的LFM2.5-8B-A1B混合专家模型和字节跳动的Lance多模态生成模型（超过1000个赞）。GitHub趋势榜被AI相关工具主导——microsoft/markitdown飙升至138K星标，MoneyPrinterTurbo达到77K，AI智能体生态系统持续扩展，Hermes WebUI和复合工程插件快速增长。",
+    "key_themes": [
+      "spatial-intelligence-pretraining",
+      "efficient-rl-training",
+      "inference-acceleration",
+      "brain-computer-interfaces",
+      "edge-ai-models",
+      "ai-agent-tooling"
+    ]
+  },
+  "researcher_notes": "**空间智能成为下一个前沿领域。** Om AI Lab的VLM与VGM探测研究（9个赞，今日最高）尤为有趣，其亮点不在于单个发现——VLM擅长语义而VGM擅长几何本在预期之内——而在于融合结果。*简单的*特征组合就已经超越了两个模型家族，这表明空间智能领域一直在错失唾手可得的收益。这与集成/混合方法超越单一模型的大趋势一致，预计将催生一波VLM+VGM融合架构。\n\n**ESPO与「不浪费算力」运动。** ESPO论文解决了一个出人意料地未被充分探索的问题：为什么在RL训练的模型明显走错方向时，还要强制其完成生成？替代遗憾机制——从采样时已有的logits中计算——几乎不增加额外开销。在数学推理上节省20%的token是对大规模RL训练的重大改进，而且该方法不局限于数学领域。预计将被集成到开源RL框架中。\n\n**推测性流水线解码重新思考推理。** SPD将模型分为流水线阶段并从中间特征进行推测的方法在架构上十分优雅。与传统需要单独草稿模型的推测解码不同，SPD使用目标模型自身的中间表示，这应该能提高接受率。零气泡的声明值得审视，但如果成立，这将有意义地改变大模型的部署方式。\n\n**Brain-IT-VQA与神经解码的稳步推进。** Weizmann研究组的fMRI到VQA工作虽然是渐进式的但很重要——NSD-VQA基准测试每张图片包含20个受控问题类别，这才是真正的贡献，使该领域能够超越粗粒度评估。他们现在能够可靠地从脑信号中解码特定的视觉和语义类别，这一事实的影响远超VQA本身。\n\n**模型格局持续多元化。** 本周趋势模型清晰呈现：行业正在分化为大型前沿模型（DeepSeek-V4-Pro）和高效边缘模型（MiniCPM5-1B、LFM2.5-8B-A1B）。NVIDIA的LocateAnything-3B在30亿参数模型中引入定位能力值得关注，TTS领域也在升温，Supertone的supertonic-3和MOSS-TTS加入竞争。",
+  "papers": [
+    {
+      "id": "vlm-vgm-spatial-intelligence",
+      "title": "哪种预训练范式更好地服务于空间智能？视觉-语言模型与视频生成模型的实证比较",
+      "authors": [
+        "Haozhan Shen",
+        "Tiancheng Zhao",
+        "Kangjia Zhao",
+        "Jianwei Yin"
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "Om AI Lab"
+      ],
+      "summary": "首次系统性冻结特征探测研究，比较VLM和VGM在空间智能三个轴上的表现：语义标注、实例分组和3D几何预测。发现明确的互补性——VLM擅长语义而VGM提供更好的几何和相机运动信号——并证明简单融合已经能产生更优的表示。",
+      "key_findings": [
+        "VLM在语义标注和实例分组方面强于VGM",
+        "VGM为密集几何和相机运动预测提供更可获取的信号",
+        "VLM和VGM特征的简单融合在几何和语义方面均超越任一单独模型家族"
+      ],
+      "tags": [
+        "spatial-intelligence",
+        "vision-language-models",
+        "video-generation",
+        "representation-learning",
+        "3d-geometry"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28132",
+        "huggingface": "https://huggingface.co/papers/2605.28132",
+        "pdf": "https://arxiv.org/pdf/2605.28132"
+      }
+    },
+    {
+      "id": "speculative-pipeline-decoding",
+      "title": "推测性流水线解码：通过流水线并行实现更高精度和零气泡推测",
+      "authors": [
+        "Yijiong Yu",
+        "Huazheng Wang",
+        "Shuai Yuan",
+        "Ruilong Ren",
+        "Ji Pei"
+      ],
+      "affiliations": [
+        "Oregon State University"
+      ],
+      "summary": "提出SPD框架，利用流水线并行进行推测解码，将LLM划分为流水线阶段并使用中间特征进行推测。实现零气泡执行，具有有界难度和高于传统推测解码方法的接受率。",
+      "key_findings": [
+        "流水线并行通过将LLM划分为n个阶段实现n个token的并行处理",
+        "基于中间特征的推测实现有界难度和更高的接受率",
+        "通过推测与流水线步骤严格并行执行实现零延迟气泡"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "pipeline-parallelism",
+        "inference-acceleration",
+        "llm-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30852",
+        "huggingface": "https://huggingface.co/papers/2605.30852",
+        "pdf": "https://arxiv.org/pdf/2605.30852"
+      }
+    },
+    {
+      "id": "espo-early-stopping-ppo",
+      "title": "ESPO：早停近端策略优化",
+      "authors": [
+        "Zihang Li",
+        "Rui Zhou",
+        "Yingcheng Shi",
+        "Wenhan Yu",
+        "Zhewen Tan et al."
+      ],
+      "affiliations": [
+        "Alibaba DAMO Academy",
+        "Ant Group"
+      ],
+      "summary": "引入ESPO方法，在RL训练中实时检测轨迹失败并提前终止回滚，使用从现有logits计算的替代遗憾值。在数学基准测试上超越PPO的同时节省超过20%的回滚token。",
+      "key_findings": [
+        "从采样logits计算的替代遗憾值以零额外开销检测轨迹失败",
+        "在AIME 2024（46.28% vs 45.25%）、AMC 2023（85.83% vs 82.94%）和MATH-500（87.42% vs 85.43%）上超越PPO",
+        "通过提前终止失败轨迹累计节省超过20%的回滚token"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "ppo",
+        "training-efficiency",
+        "mathematical-reasoning",
+        "llm-alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29860",
+        "huggingface": "https://huggingface.co/papers/2605.29860",
+        "pdf": "https://arxiv.org/pdf/2605.29860"
+      }
+    },
+    {
+      "id": "brain-it-vqa",
+      "title": "Brain-IT-VQA：从脑信号到答案",
+      "authors": [
+        "Roman Beliy",
+        "Matias Cosarinsky",
+        "Oliver Heinimann",
+        "Navve Wasserman",
+        "Michal Irani"
+      ],
+      "affiliations": [
+        "Weizmann Institute of Science"
+      ],
+      "summary": "提出一个基于Brain Interaction Transformer的fMRI脑信号视觉问答框架，以及NSD-VQA新基准，包含每张图片20个受控问题类别，实现对脑解码能力更可靠的评估。",
+      "key_findings": [
+        "Brain-IT-VQA大幅超越此前基于fMRI的图像描述和VQA方法",
+        "NSD-VQA基准提供每张图片约20个跨20个受控类别的问答对",
+        "分析量化了哪些形式的视觉和语义信息可以从fMRI响应中可靠解码"
+      ],
+      "tags": [
+        "brain-computer-interface",
+        "fmri-decoding",
+        "visual-question-answering",
+        "neuroscience",
+        "benchmark"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29588",
+        "huggingface": "https://huggingface.co/papers/2605.29588",
+        "pdf": "https://arxiv.org/pdf/2605.29588"
+      }
+    },
+    {
+      "id": "locateanything-parallel-box-decoding",
+      "title": "LocateAnything：通过并行框解码实现快速高质量视觉-语言定位",
+      "authors": [
+        "Shihao Wang",
+        "Shilong Liu",
+        "Yuanguo Kuang",
+        "Xinyu Wei",
+        "Yangzhou Liu et al."
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Tsinghua University"
+      ],
+      "summary": "引入并行框解码用于视觉-语言定位，将几何元素作为原子解码单元而非顺序坐标token。在统一视觉定位和检测任务中实现更快的吞吐量和更高的定位质量。",
+      "key_findings": [
+        "并行框解码将框几何视为原子单元，相比顺序坐标生成提升几何一致性",
+        "在保持或提升定位精度的同时显著提高解码吞吐量",
+        "大规模训练数据使模型在定位和检测任务上具有强泛化能力"
+      ],
+      "tags": [
+        "visual-grounding",
+        "object-detection",
+        "vision-language",
+        "parallel-decoding",
+        "nvidia"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 130,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27365",
+        "huggingface": "https://huggingface.co/papers/2605.27365",
+        "pdf": "https://arxiv.org/pdf/2605.27365"
+      }
+    },
+    {
+      "id": "lance-unified-multimodal",
+      "title": "Lance：通过多任务协同的统一多模态建模",
+      "authors": [
+        "Fengyi Fu",
+        "Mengqi Huang",
+        "Shaojin Wu",
+        "Yunsheng Jiang",
+        "Yufei Huo et al."
+      ],
+      "affiliations": [
+        "ByteDance Research"
+      ],
+      "summary": "提出Lance，一个通过双流架构、协同多任务训练和模态感知旋转位置编码实现图像和视频的理解、生成和编辑的统一多模态模型。",
+      "key_findings": [
+        "统一架构在单一模型中处理多模态理解、生成和编辑",
+        "带有自适应数据调度的协同多任务训练提升所有任务的性能",
+        "具有解耦能力通道的双流架构实现有效的多任务协同"
+      ],
+      "tags": [
+        "multimodal",
+        "image-generation",
+        "video-generation",
+        "mixture-of-experts",
+        "unified-model"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 78,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18678",
+        "huggingface": "https://huggingface.co/papers/2605.18678",
+        "pdf": "https://arxiv.org/pdf/2605.18678"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "30亿参数视觉模型，支持目标检测、定位和特征提取，基于Qwen2.5-3B-Instruct构建。支持具有定位能力的对话式图文交互。",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": [
+        "object-detection",
+        "grounding",
+        "vision",
+        "eagle"
+      ],
+      "metrics": {
+        "downloads": 35783,
+        "likes": 807
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "紧凑型10亿参数文本生成模型，支持长上下文、工具调用和端侧边缘AI部署。支持中英双语。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": [
+        "edge-ai",
+        "on-device",
+        "long-context",
+        "tool-calling"
+      ],
+      "metrics": {
+        "downloads": 45698,
+        "likes": 692
+      },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "liquidai-lfm25-8b-a1b",
+      "name": "LFM2.5-8B-A1B",
+      "organization": "LiquidAI",
+      "description": "80亿参数混合专家模型，10亿活跃参数，支持9种语言的多语言文本生成。为边缘部署设计，效率极高。",
+      "task_type": "text-generation",
+      "model_size": "8B (1B active)",
+      "tags": [
+        "mixture-of-experts",
+        "edge",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 37893,
+        "likes": 397
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "前沿级对话式文本生成模型，持续主导下载量。DeepSeek V4系列成员。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "conversational",
+        "frontier-model",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 5851826,
+        "likes": 4532
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "支持图像和视频生成的多模态生成模型，以超过1000个赞快速获得社区关注。",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "image-generation",
+        "video-generation"
+      ],
+      "metrics": {
+        "downloads": 3041,
+        "likes": 1002
+      },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "音频驱动的视频数字人生成模型，可从音频、图像和文本输入创建说话头像视频。",
+      "task_type": "audio-text-to-video",
+      "model_size": "unknown",
+      "tags": [
+        "video-avatar",
+        "audio-driven",
+        "talking-head"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 467
+      },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    },
+    {
+      "id": "stepfun-step37-flash",
+      "name": "Step-3.7-Flash",
+      "organization": "StepFun AI",
+      "description": "针对快速推理优化的视觉-语言模型，支持文本和图像输入的多模态对话。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "vision-language",
+        "flash",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 9256,
+        "likes": 195
+      },
+      "source_url": "https://huggingface.co/stepfun-ai/Step-3.7-Flash"
+    },
+    {
+      "id": "tencent-hy-mt2-1.8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "紧凑型18亿参数混元系模型，专为机器翻译任务优化，以1100个赞快速获得社区认可。",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": [
+        "translation",
+        "hunyuan",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 18131,
+        "likes": 1100
+      },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "nvidia-pid",
+      "name": "PiD",
+      "organization": "NVIDIA",
+      "description": "基于扩散模型的超分辨率模型，使用PyTorch和diffusers库进行图像增强和放大。",
+      "task_type": "super-resolution",
+      "model_size": "unknown",
+      "tags": [
+        "super-resolution",
+        "diffusion",
+        "image-enhancement"
+      ],
+      "metrics": {
+        "downloads": 577,
+        "likes": 239
+      },
+      "source_url": "https://huggingface.co/nvidia/PiD"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "文本转语音和语音合成模型，生成高质量语音输出，是不断增长的TTS生态系统的一部分，社区反响强烈。",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": [
+        "tts",
+        "speech-synthesis",
+        "voice-generation"
+      ],
+      "metrics": {
+        "downloads": 57627,
+        "likes": 771
+      },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "Python文件和办公文档转Markdown工具。今日新增超过3000星标，反映AI工作流中对文档转Markdown管道的旺盛需求。",
+      "language": "Python",
+      "stars": 138612,
+      "stars_today": 3034,
+      "forks": 9439,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": [
+        "document-conversion",
+        "markdown",
+        "office-documents",
+        "ai-preprocessing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "harry0703-moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用AI大模型一键生成短视频的工具，今日新增3375星标。为内容创作者自动化视频制作。",
+      "language": "Python",
+      "stars": 76916,
+      "stars_today": 3375,
+      "forks": 10915,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": [
+        "video-generation",
+        "content-creation",
+        "llm-applications"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nesquena-hermes-webui",
+      "name": "nesquena/hermes-webui",
+      "description": "Hermes Agent的网页和移动端界面，今日新增945星标快速增长。为智能体交互提供便捷UI。",
+      "language": "Python",
+      "stars": 11393,
+      "stars_today": 945,
+      "forks": 1458,
+      "url": "https://github.com/nesquena/hermes-webui",
+      "tags": [
+        "agent-ui",
+        "web-interface",
+        "hermes"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "自适应网页爬取框架，处理从单个请求到大规模爬取的各种场景，今日新增1486星标。在AI数据收集管道中日益重要。",
+      "language": "Python",
+      "stars": 58115,
+      "stars_today": 1486,
+      "forks": 5640,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": [
+        "web-scraping",
+        "data-collection",
+        "crawling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic的终端智能编程工具。129K星标，今日新增599，仍是AI辅助开发生态系统的核心工具。",
+      "language": "Python",
+      "stars": 129355,
+      "stars_today": 599,
+      "forks": 21045,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": [
+        "ai-coding",
+        "agentic",
+        "developer-tools",
+        "cli"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "VoxCPM2：无需分词器的多语言语音生成、创意声音设计和逼真声音克隆TTS系统。今日新增888星标。",
+      "language": "Python",
+      "stars": 24295,
+      "stars_today": 888,
+      "forks": 2805,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": [
+        "text-to-speech",
+        "voice-cloning",
+        "multilingual",
+        "tokenizer-free"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "多智能体LLM金融交易框架，现已达81K星标。展示了LLM智能体在量化金融领域的日益普及。",
+      "language": "Python",
+      "stars": 81815,
+      "stars_today": 299,
+      "forks": 15904,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "llm-agents",
+        "finance"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "supermemoryai-supermemory",
+      "name": "supermemoryai/supermemory",
+      "description": "面向AI时代的快速可扩展记忆引擎和API，今日新增647星标。为AI应用提供持久记忆能力。",
+      "language": "TypeScript",
+      "stars": 24025,
+      "stars_today": 647,
+      "forks": 2150,
+      "url": "https://github.com/supermemoryai/supermemory",
+      "tags": [
+        "memory-engine",
+        "ai-infrastructure",
+        "api"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "everyinc-compound-engineering",
+      "name": "EveryInc/compound-engineering-plugin",
+      "description": "Claude Code、Codex、Cursor等的官方复合工程插件。随着复合工程范式的兴起，今日新增417星标。",
+      "language": "TypeScript",
+      "stars": 19129,
+      "stars_today": 417,
+      "forks": 1428,
+      "url": "https://github.com/EveryInc/compound-engineering-plugin",
+      "tags": [
+        "compound-engineering",
+        "ai-coding",
+        "plugin"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "pbakaus-impeccable",
+      "name": "pbakaus/impeccable",
+      "description": "让AI工具在设计任务上表现更出色的设计语言。32K星标，今日新增485，反映对AI设计能力的日益重视。",
+      "language": "JavaScript",
+      "stars": 32775,
+      "stars_today": 485,
+      "forks": 1785,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": [
+        "design-language",
+        "ai-design",
+        "ui-generation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "can1357-oh-my-pi",
+      "name": "can1357/oh-my-pi",
+      "description": "终端AI编程智能体，支持哈希锚定编辑、优化工具框架、LSP集成、Python支持、浏览器访问和子智能体等功能。",
+      "language": "TypeScript",
+      "stars": 9490,
+      "stars_today": 335,
+      "forks": 760,
+      "url": "https://github.com/can1357/oh-my-pi",
+      "tags": [
+        "ai-coding",
+        "terminal-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fareedkhan-train-llm",
+      "name": "FareedKhan-dev/train-llm-from-scratch",
+      "description": "从头训练LLM的直观教程，涵盖从数据下载到文本生成的完整流程。今日飙升861星标。",
+      "language": "Jupyter Notebook",
+      "stars": 3750,
+      "stars_today": 861,
+      "forks": 520,
+      "url": "https://github.com/FareedKhan-dev/train-llm-from-scratch",
+      "tags": [
+        "education",
+        "llm-training",
+        "tutorial"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "revfactory-harness",
+      "name": "revfactory/harness",
+      "description": "设计领域专用智能体团队、定义专业化智能体并生成其所用技能的元技能工具。今日新增524星标。",
+      "language": "HTML",
+      "stars": 5181,
+      "stars_today": 524,
+      "forks": 696,
+      "url": "https://github.com/revfactory/harness",
+      "tags": [
+        "agent-design",
+        "meta-skill",
+        "agent-teams"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "dmtrkovalenko-fff",
+      "name": "dmtrKovalenko/fff",
+      "description": "面向AI智能体、Neovim、Rust、C和NodeJS的最快最精确文件搜索工具包。稳步增长至7.2K星标。",
+      "language": "Rust",
+      "stars": 7202,
+      "stars_today": 135,
+      "forks": 298,
+      "url": "https://github.com/dmtrKovalenko/fff",
+      "tags": [
+        "file-search",
+        "ai-agents",
+        "developer-tools",
+        "rust"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "codecrafters-build-your-own-x",
+      "name": "codecrafters-io/build-your-own-x",
+      "description": "海量教程合集，通过从头重建喜爱的技术来掌握编程。510K星标，今日新增1212，终极学习资源。",
+      "language": "Markdown",
+      "stars": 510465,
+      "stars_today": 1212,
+      "forks": 48396,
+      "url": "https://github.com/codecrafters-io/build-your-own-x",
+      "tags": [
+        "education",
+        "tutorials",
+        "programming"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "空间智能与多模态理解",
+      "description": "研究探索不同预训练范式如何捕获空间和几何理解，VLM-VGM融合作为构建更强空间智能骨干网络的有前景方向正在兴起。",
+      "related_paper_ids": [
+        "vlm-vgm-spatial-intelligence",
+        "brain-it-vqa"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM高效RL训练",
+      "description": "减少语言模型强化学习计算浪费的新方法，通过早停机制检测并终止失败轨迹，无需额外模型开销。",
+      "related_paper_ids": [
+        "espo-early-stopping-ppo"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM推理加速",
+      "description": "推测解码和推理优化的持续创新，流水线并行为降低自回归生成延迟提供了新的架构方法。",
+      "related_paper_ids": [
+        "speculative-pipeline-decoding"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "边缘AI与紧凑模型",
+      "description": "30亿参数以下模型和面向边缘部署的混合专家架构势头强劲，NVIDIA、OpenBMB和LiquidAI均发布了有竞争力的紧凑模型。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI智能体生态系统扩张",
+      "description": "GitHub趋势榜被智能体相关工具主导，包括网页UI、复合工程插件、元技能框架和记忆引擎，标志着AI智能体开发栈的快速成熟。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "语音合成文艺复兴",
+      "description": "多个TTS模型同时登上趋势——Supertone的supertonic-3、MOSS-TTS和VoxCPM2——标志着语音生成质量和多语言支持的竞争浪潮。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

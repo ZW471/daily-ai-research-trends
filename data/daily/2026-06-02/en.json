@@ -1,0 +1,751 @@
+{
+  "version": "1.0",
+  "date": "2026-06-02",
+  "generated_at": "2026-06-02T15:00:00Z",
+  "summary": {
+    "headline": "VLM vs VGM spatial intelligence showdown reveals complementary strengths; ESPO cuts RL rollout waste by 20% with early-stopping PPO; NVIDIA LocateAnything-3B leads trending models with 807 likes",
+    "body": "Today's papers center on efficiency and understanding in AI systems. The headline research from Om AI Lab presents the first systematic comparison of Vision-Language Models and Video Generation Models for spatial intelligence, finding that VLMs excel at semantic tasks while VGMs dominate geometry — and that even naive fusion outperforms either alone. Meanwhile, ESPO introduces a practical optimization for reinforcement learning that detects doomed trajectories early and terminates them, saving 20%+ compute while improving accuracy on math benchmarks.\n\nOn the model front, NVIDIA's LocateAnything-3B dominates trending with 807 likes for its grounding capabilities, while DeepSeek-V4-Pro continues its reign with 5.8M downloads. Notable new entrants include LiquidAI's LFM2.5-8B-A1B mixture-of-experts model and ByteDance's Lance multimodal generation model with over 1,000 likes. The GitHub trending scene is dominated by AI-adjacent tooling — microsoft/markitdown surges to 138K stars, MoneyPrinterTurbo hits 77K, and the agent ecosystem continues expanding with Hermes WebUI and compound engineering plugins gaining rapid traction.",
+    "key_themes": [
+      "spatial-intelligence-pretraining",
+      "efficient-rl-training",
+      "inference-acceleration",
+      "brain-computer-interfaces",
+      "edge-ai-models",
+      "ai-agent-tooling"
+    ]
+  },
+  "researcher_notes": "**Spatial Intelligence as the Next Frontier.** The VLM-vs-VGM probing study from Om AI Lab (9 upvotes, highest today) is particularly interesting not for its individual findings — VLMs being better at semantics and VGMs at geometry is somewhat expected — but for the fusion result. A *naive* combination already outperforms both families, suggesting that the spatial intelligence community has been leaving easy gains on the table. This mirrors the broader trend of ensemble/hybrid approaches outperforming monolithic models, and it wouldn't be surprising to see this spawn a wave of VLM+VGM fusion architectures.\n\n**ESPO and the \"Don't Waste Compute\" Movement.** The ESPO paper addresses a surprisingly underexplored problem: why do we force RL-trained models to finish generating when they've clearly gone wrong? The surrogate regret mechanism — computed from logits already available during sampling — adds essentially zero overhead. The 20% token savings on math reasoning is significant for anyone running RL training at scale, and the approach generalizes beyond math. Watch for this to be integrated into open-source RL frameworks.\n\n**Speculative Pipeline Decoding Rethinks Inference.** SPD's approach of partitioning the model into pipeline stages and speculating from intermediate features is architecturally elegant. Unlike traditional speculative decoding that requires a separate draft model, SPD uses the target model's own intermediate representations, which should improve acceptance rates. The zero-bubble claim deserves scrutiny, but if it holds, this could meaningfully change how we deploy large models.\n\n**Brain-IT-VQA and the Slow March of Neural Decoding.** The Weizmann group's work on fMRI-to-VQA is incremental but important — the NSD-VQA benchmark with 20 controlled question categories per image is the real contribution here, enabling the field to move beyond coarse evaluations. The fact that they can now reliably decode specific visual and semantic categories from brain signals has implications well beyond VQA.\n\n**The Model Landscape Continues to Diversify.** This week's trending models tell a clear story: the industry is splitting between massive frontier models (DeepSeek-V4-Pro) and efficient edge models (MiniCPM5-1B, LFM2.5-8B-A1B). NVIDIA's LocateAnything-3B is notable for bringing grounding capabilities to a 3B parameter model, and the TTS space is heating up with Supertone's supertonic-3 and MOSS-TTS joining the fray.",
+  "papers": [
+    {
+      "id": "vlm-vgm-spatial-intelligence",
+      "title": "Which Pretraining Paradigm Better Serves Spatial Intelligence? An Empirical Comparison of Vision-Language and Video Generation Models",
+      "authors": [
+        "Haozhan Shen",
+        "Tiancheng Zhao",
+        "Kangjia Zhao",
+        "Jianwei Yin"
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "Om AI Lab"
+      ],
+      "summary": "First systematic frozen-feature probing study comparing VLMs and VGMs across three spatial intelligence axes: semantic tagging, instance grouping, and 3D geometry prediction. Finds clear complementarity — VLMs excel at semantics while VGMs provide better geometry and camera motion signals — and demonstrates that naive fusion already yields superior representations.",
+      "key_findings": [
+        "VLMs are stronger at semantic tagging and instance grouping than VGMs",
+        "VGMs provide more accessible signals for dense geometry and camera motion prediction",
+        "Naive fusion of VLM and VGM features outperforms either family alone at both geometry and semantics"
+      ],
+      "tags": [
+        "spatial-intelligence",
+        "vision-language-models",
+        "video-generation",
+        "representation-learning",
+        "3d-geometry"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.28132",
+        "huggingface": "https://huggingface.co/papers/2605.28132",
+        "pdf": "https://arxiv.org/pdf/2605.28132"
+      }
+    },
+    {
+      "id": "speculative-pipeline-decoding",
+      "title": "Speculative Pipeline Decoding: Higher-Accuracy and Zero-Bubble Speculation via Pipeline Parallelism",
+      "authors": [
+        "Yijiong Yu",
+        "Huazheng Wang",
+        "Shuai Yuan",
+        "Ruilong Ren",
+        "Ji Pei"
+      ],
+      "affiliations": [
+        "Oregon State University"
+      ],
+      "summary": "Proposes SPD, a framework that leverages pipeline parallelism for speculative decoding by partitioning the LLM into pipeline stages and using intermediate features for speculation. Achieves zero-bubble execution with bounded difficulty and higher acceptance rates than traditional speculative decoding methods.",
+      "key_findings": [
+        "Pipeline parallelism enables n tokens to be processed in parallel by partitioning the LLM into n stages",
+        "Speculation from intermediate features achieves bounded difficulty and higher acceptance rates",
+        "Zero latency bubbles achieved by executing speculation strictly in parallel with pipeline steps"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "pipeline-parallelism",
+        "inference-acceleration",
+        "llm-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.30852",
+        "huggingface": "https://huggingface.co/papers/2605.30852",
+        "pdf": "https://arxiv.org/pdf/2605.30852"
+      }
+    },
+    {
+      "id": "espo-early-stopping-ppo",
+      "title": "ESPO: Early-Stopping Proximal Policy Optimization",
+      "authors": [
+        "Zihang Li",
+        "Rui Zhou",
+        "Yingcheng Shi",
+        "Wenhan Yu",
+        "Zhewen Tan et al."
+      ],
+      "affiliations": [
+        "Alibaba DAMO Academy",
+        "Ant Group"
+      ],
+      "summary": "Introduces ESPO, which detects trajectory failure on-the-fly during RL training and terminates rollouts early using surrogate regret computed from existing logits. Achieves better accuracy than PPO on math benchmarks while saving over 20% of rollout tokens.",
+      "key_findings": [
+        "Surrogate regret computed from sampling logits detects trajectory failures with zero additional overhead",
+        "Outperforms PPO on AIME 2024 (46.28% vs 45.25%), AMC 2023 (85.83% vs 82.94%), and MATH-500 (87.42% vs 85.43%)",
+        "Saves more than 20% of rollout tokens cumulatively by terminating failed trajectories early"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "ppo",
+        "training-efficiency",
+        "mathematical-reasoning",
+        "llm-alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29860",
+        "huggingface": "https://huggingface.co/papers/2605.29860",
+        "pdf": "https://arxiv.org/pdf/2605.29860"
+      }
+    },
+    {
+      "id": "brain-it-vqa",
+      "title": "Brain-IT-VQA: From Brain Signals to Answers",
+      "authors": [
+        "Roman Beliy",
+        "Matias Cosarinsky",
+        "Oliver Heinimann",
+        "Navve Wasserman",
+        "Michal Irani"
+      ],
+      "affiliations": [
+        "Weizmann Institute of Science"
+      ],
+      "summary": "Presents a framework for visual question answering from fMRI brain signals using Brain Interaction Transformer, along with NSD-VQA, a new benchmark with 20 controlled question categories per image enabling more reliable evaluation of brain decoding capabilities.",
+      "key_findings": [
+        "Brain-IT-VQA substantially outperforms previous fMRI-based captioning and VQA approaches",
+        "NSD-VQA benchmark provides ~20 question-answer pairs per image across 20 controlled categories",
+        "Analysis quantifies which forms of visual and semantic information can be reliably decoded from fMRI responses"
+      ],
+      "tags": [
+        "brain-computer-interface",
+        "fmri-decoding",
+        "visual-question-answering",
+        "neuroscience",
+        "benchmark"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.29588",
+        "huggingface": "https://huggingface.co/papers/2605.29588",
+        "pdf": "https://arxiv.org/pdf/2605.29588"
+      }
+    },
+    {
+      "id": "locateanything-parallel-box-decoding",
+      "title": "LocateAnything: Fast and High-Quality Vision-Language Grounding with Parallel Box Decoding",
+      "authors": [
+        "Shihao Wang",
+        "Shilong Liu",
+        "Yuanguo Kuang",
+        "Xinyu Wei",
+        "Yangzhou Liu et al."
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Tsinghua University"
+      ],
+      "summary": "Introduces Parallel Box Decoding for vision-language grounding, treating geometric elements as atomic decoding units rather than sequential coordinate tokens. Achieves both faster throughput and higher localization quality in unified visual grounding and detection tasks.",
+      "key_findings": [
+        "Parallel Box Decoding treats box geometry as atomic units, improving geometric coherence over sequential coordinate generation",
+        "Achieves significantly higher decoding throughput while maintaining or improving localization accuracy",
+        "Large-scale training data enables strong generalization across grounding and detection tasks"
+      ],
+      "tags": [
+        "visual-grounding",
+        "object-detection",
+        "vision-language",
+        "parallel-decoding",
+        "nvidia"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 130,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.27365",
+        "huggingface": "https://huggingface.co/papers/2605.27365",
+        "pdf": "https://arxiv.org/pdf/2605.27365"
+      }
+    },
+    {
+      "id": "lance-unified-multimodal",
+      "title": "Lance: Unified Multimodal Modeling by Multi-Task Synergy",
+      "authors": [
+        "Fengyi Fu",
+        "Mengqi Huang",
+        "Shaojin Wu",
+        "Yunsheng Jiang",
+        "Yufei Huo et al."
+      ],
+      "affiliations": [
+        "ByteDance Research"
+      ],
+      "summary": "Presents Lance, a unified multimodal model combining understanding, generation, and editing for both images and videos through a dual-stream architecture with collaborative multi-task training and modality-aware rotary positional encoding.",
+      "key_findings": [
+        "Unified architecture handles multimodal understanding, generation, and editing in a single model",
+        "Collaborative multi-task training with adaptive data scheduling improves performance across all tasks",
+        "Dual-stream architecture with decoupled capability pathways enables effective multi-task synergy"
+      ],
+      "tags": [
+        "multimodal",
+        "image-generation",
+        "video-generation",
+        "mixture-of-experts",
+        "unified-model"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 78,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.18678",
+        "huggingface": "https://huggingface.co/papers/2605.18678",
+        "pdf": "https://arxiv.org/pdf/2605.18678"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B parameter vision model for object detection, grounding, and feature extraction, built on Qwen2.5-3B-Instruct. Supports conversational image-text-to-text interactions with grounding capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": [
+        "object-detection",
+        "grounding",
+        "vision",
+        "eagle"
+      ],
+      "metrics": {
+        "downloads": 35783,
+        "likes": 807
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "openbmb-minicpm5-1b",
+      "name": "MiniCPM5-1B",
+      "organization": "OpenBMB",
+      "description": "A compact 1B parameter text generation model supporting long-context, tool-calling, and on-device edge AI deployment. Multilingual with English and Chinese support.",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": [
+        "edge-ai",
+        "on-device",
+        "long-context",
+        "tool-calling"
+      ],
+      "metrics": {
+        "downloads": 45698,
+        "likes": 692
+      },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM5-1B"
+    },
+    {
+      "id": "liquidai-lfm25-8b-a1b",
+      "name": "LFM2.5-8B-A1B",
+      "organization": "LiquidAI",
+      "description": "An 8B parameter mixture-of-experts model with 1B active parameters, supporting multilingual text generation across 9 languages. Designed for edge deployment with high efficiency.",
+      "task_type": "text-generation",
+      "model_size": "8B (1B active)",
+      "tags": [
+        "mixture-of-experts",
+        "edge",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 37893,
+        "likes": 397
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek",
+      "description": "Frontier-scale conversational text generation model with massive adoption, continuing to dominate downloads. Part of the DeepSeek V4 family.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "conversational",
+        "frontier-model",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 5851826,
+        "likes": 4532
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "bytedance-lance",
+      "name": "Lance",
+      "organization": "ByteDance Research",
+      "description": "A multimodal generation model supporting both image and video generation, rapidly gaining community attention with over 1,000 likes.",
+      "task_type": "image-generation",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "image-generation",
+        "video-generation"
+      ],
+      "metrics": {
+        "downloads": 3041,
+        "likes": 1002
+      },
+      "source_url": "https://huggingface.co/bytedance-research/Lance"
+    },
+    {
+      "id": "meituan-longcat-video-avatar",
+      "name": "LongCat-Video-Avatar-1.5",
+      "organization": "Meituan",
+      "description": "Audio-driven video avatar generation model for creating talking-head videos from audio, image, and text inputs.",
+      "task_type": "audio-text-to-video",
+      "model_size": "unknown",
+      "tags": [
+        "video-avatar",
+        "audio-driven",
+        "talking-head"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 467
+      },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.5"
+    },
+    {
+      "id": "stepfun-step37-flash",
+      "name": "Step-3.7-Flash",
+      "organization": "StepFun AI",
+      "description": "A vision-language model optimized for fast inference, supporting multimodal conversations with text and image inputs.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "vision-language",
+        "flash",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 9256,
+        "likes": 195
+      },
+      "source_url": "https://huggingface.co/stepfun-ai/Step-3.7-Flash"
+    },
+    {
+      "id": "tencent-hy-mt2-1.8b",
+      "name": "Hy-MT2-1.8B",
+      "organization": "Tencent",
+      "description": "A compact 1.8B parameter Hunyuan-based model specifically optimized for machine translation tasks, rapidly gaining community traction with 1,100 likes.",
+      "task_type": "translation",
+      "model_size": "1.8B",
+      "tags": [
+        "translation",
+        "hunyuan",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 18131,
+        "likes": 1100
+      },
+      "source_url": "https://huggingface.co/tencent/Hy-MT2-1.8B"
+    },
+    {
+      "id": "nvidia-pid",
+      "name": "PiD",
+      "organization": "NVIDIA",
+      "description": "A diffusion-based super-resolution model using PyTorch and the diffusers library for image enhancement and upscaling.",
+      "task_type": "super-resolution",
+      "model_size": "unknown",
+      "tags": [
+        "super-resolution",
+        "diffusion",
+        "image-enhancement"
+      ],
+      "metrics": {
+        "downloads": 577,
+        "likes": 239
+      },
+      "source_url": "https://huggingface.co/nvidia/PiD"
+    },
+    {
+      "id": "supertone-supertonic-3",
+      "name": "supertonic-3",
+      "organization": "Supertone",
+      "description": "A text-to-speech and speech synthesis model generating high-quality voice output, part of the growing TTS ecosystem with strong community reception.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": [
+        "tts",
+        "speech-synthesis",
+        "voice-generation"
+      ],
+      "metrics": {
+        "downloads": 57627,
+        "likes": 771
+      },
+      "source_url": "https://huggingface.co/Supertone/supertonic-3"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "microsoft-markitdown",
+      "name": "microsoft/markitdown",
+      "description": "Python tool for converting files and office documents to Markdown. Surging with over 3,000 stars today, reflecting growing demand for document-to-Markdown pipelines in AI workflows.",
+      "language": "Python",
+      "stars": 138612,
+      "stars_today": 3034,
+      "forks": 9439,
+      "url": "https://github.com/microsoft/markitdown",
+      "tags": [
+        "document-conversion",
+        "markdown",
+        "office-documents",
+        "ai-preprocessing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "harry0703-moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "AI-powered short video generation tool using large language models, gaining 3,375 stars today. Automates video creation with AI for content creators.",
+      "language": "Python",
+      "stars": 76916,
+      "stars_today": 3375,
+      "forks": 10915,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": [
+        "video-generation",
+        "content-creation",
+        "llm-applications"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nesquena-hermes-webui",
+      "name": "nesquena/hermes-webui",
+      "description": "Web and mobile interface for the Hermes Agent, rapidly growing with 945 stars today. Provides accessible UI for agent interaction.",
+      "language": "Python",
+      "stars": 11393,
+      "stars_today": 945,
+      "forks": 1458,
+      "url": "https://github.com/nesquena/hermes-webui",
+      "tags": [
+        "agent-ui",
+        "web-interface",
+        "hermes"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "Adaptive web scraping framework handling everything from single requests to full-scale crawls, gaining 1,486 stars today. Increasingly relevant for AI data collection pipelines.",
+      "language": "Python",
+      "stars": 58115,
+      "stars_today": 1486,
+      "forks": 5640,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": [
+        "web-scraping",
+        "data-collection",
+        "crawling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic's agentic coding tool for the terminal. At 129K stars and gaining 599 today, it remains a cornerstone of the AI-assisted development ecosystem.",
+      "language": "Python",
+      "stars": 129355,
+      "stars_today": 599,
+      "forks": 21045,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": [
+        "ai-coding",
+        "agentic",
+        "developer-tools",
+        "cli"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openbmb-voxcpm",
+      "name": "OpenBMB/VoxCPM",
+      "description": "VoxCPM2: Tokenizer-free TTS for multilingual speech generation, creative voice design, and true-to-life cloning. Gaining 888 stars today with strong community interest.",
+      "language": "Python",
+      "stars": 24295,
+      "stars_today": 888,
+      "forks": 2805,
+      "url": "https://github.com/OpenBMB/VoxCPM",
+      "tags": [
+        "text-to-speech",
+        "voice-cloning",
+        "multilingual",
+        "tokenizer-free"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "Multi-agent LLM framework for financial trading, now at 81K stars. Demonstrates growing adoption of LLM agents in quantitative finance.",
+      "language": "Python",
+      "stars": 81815,
+      "stars_today": 299,
+      "forks": 15904,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "llm-agents",
+        "finance"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "supermemoryai-supermemory",
+      "name": "supermemoryai/supermemory",
+      "description": "Fast and scalable memory engine and API for the AI era, gaining 647 stars today. Provides persistent memory capabilities for AI applications.",
+      "language": "TypeScript",
+      "stars": 24025,
+      "stars_today": 647,
+      "forks": 2150,
+      "url": "https://github.com/supermemoryai/supermemory",
+      "tags": [
+        "memory-engine",
+        "ai-infrastructure",
+        "api"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "everyinc-compound-engineering",
+      "name": "EveryInc/compound-engineering-plugin",
+      "description": "Official Compound Engineering plugin for Claude Code, Codex, Cursor, and more. Gaining 417 stars today as the compound engineering paradigm gains traction.",
+      "language": "TypeScript",
+      "stars": 19129,
+      "stars_today": 417,
+      "forks": 1428,
+      "url": "https://github.com/EveryInc/compound-engineering-plugin",
+      "tags": [
+        "compound-engineering",
+        "ai-coding",
+        "plugin"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "pbakaus-impeccable",
+      "name": "pbakaus/impeccable",
+      "description": "Design language that makes AI harnesses better at design tasks. At 32K stars with 485 today, reflecting growing focus on AI design capabilities.",
+      "language": "JavaScript",
+      "stars": 32775,
+      "stars_today": 485,
+      "forks": 1785,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": [
+        "design-language",
+        "ai-design",
+        "ui-generation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "can1357-oh-my-pi",
+      "name": "can1357/oh-my-pi",
+      "description": "AI coding agent for the terminal with hash-anchored edits, optimized tool harness, LSP integration, Python support, browser access, and subagent capabilities.",
+      "language": "TypeScript",
+      "stars": 9490,
+      "stars_today": 335,
+      "forks": 760,
+      "url": "https://github.com/can1357/oh-my-pi",
+      "tags": [
+        "ai-coding",
+        "terminal-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fareedkhan-train-llm",
+      "name": "FareedKhan-dev/train-llm-from-scratch",
+      "description": "Straightforward educational guide for training an LLM from scratch, from downloading data to generating text. Surging with 861 stars today.",
+      "language": "Jupyter Notebook",
+      "stars": 3750,
+      "stars_today": 861,
+      "forks": 520,
+      "url": "https://github.com/FareedKhan-dev/train-llm-from-scratch",
+      "tags": [
+        "education",
+        "llm-training",
+        "tutorial"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "revfactory-harness",
+      "name": "revfactory/harness",
+      "description": "Meta-skill that designs domain-specific agent teams, defines specialized agents, and generates the skills they use. Gaining 524 stars today.",
+      "language": "HTML",
+      "stars": 5181,
+      "stars_today": 524,
+      "forks": 696,
+      "url": "https://github.com/revfactory/harness",
+      "tags": [
+        "agent-design",
+        "meta-skill",
+        "agent-teams"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "dmtrkovalenko-fff",
+      "name": "dmtrKovalenko/fff",
+      "description": "Fastest and most accurate file search toolkit for AI agents, Neovim, Rust, C, and NodeJS. Growing steadily at 7.2K stars.",
+      "language": "Rust",
+      "stars": 7202,
+      "stars_today": 135,
+      "forks": 298,
+      "url": "https://github.com/dmtrKovalenko/fff",
+      "tags": [
+        "file-search",
+        "ai-agents",
+        "developer-tools",
+        "rust"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "codecrafters-build-your-own-x",
+      "name": "codecrafters-io/build-your-own-x",
+      "description": "Massive collection of tutorials for recreating favorite technologies from scratch. At 510K stars with 1,212 today, the definitive learning resource.",
+      "language": "Markdown",
+      "stars": 510465,
+      "stars_today": 1212,
+      "forks": 48396,
+      "url": "https://github.com/codecrafters-io/build-your-own-x",
+      "tags": [
+        "education",
+        "tutorials",
+        "programming"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Spatial Intelligence and Multimodal Understanding",
+      "description": "Research exploring how different pretraining paradigms capture spatial and geometric understanding, with VLM-VGM fusion emerging as a promising direction for building stronger spatial-intelligence backbones.",
+      "related_paper_ids": [
+        "vlm-vgm-spatial-intelligence",
+        "brain-it-vqa"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient RL Training for LLMs",
+      "description": "New approaches to reduce computational waste in reinforcement learning for language models, with early-stopping mechanisms that detect and terminate failed trajectories without additional model overhead.",
+      "related_paper_ids": [
+        "espo-early-stopping-ppo"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Inference Acceleration",
+      "description": "Continued innovation in speculative decoding and inference optimization, with pipeline parallelism offering new architectural approaches to reduce latency in autoregressive generation.",
+      "related_paper_ids": [
+        "speculative-pipeline-decoding"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Edge AI and Compact Models",
+      "description": "Strong momentum in sub-3B parameter models and mixture-of-experts architectures designed for edge deployment, with NVIDIA, OpenBMB, and LiquidAI all releasing competitive compact models.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Agent Ecosystem Expansion",
+      "description": "GitHub trending dominated by agent-related tooling including web UIs, compound engineering plugins, meta-skill harnesses, and memory engines, signaling rapid maturation of the AI agent development stack.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Speech Synthesis Renaissance",
+      "description": "Multiple TTS models trending simultaneously — Supertone's supertonic-3, MOSS-TTS, and VoxCPM2 — indicating a competitive wave in voice generation quality and multilingual support.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-02T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
