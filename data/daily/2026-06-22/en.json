@@ -1,0 +1,331 @@
+{
+  "version": "1.0",
+  "date": "2026-06-22",
+  "generated_at": "2026-06-22T08:00:00Z",
+  "summary": {
+    "headline": "PerceptionDLM achieves parallel region perception via diffusion LMs; GLM-5.2 and DeepSeek-V4-Pro lead model trending; AI agent tooling explosion continues with OpenMontage, headroom, and hermes-agent",
+    "body": "Today's standout paper is **PerceptionDLM**, which challenges the dominance of autoregressive generation by proposing a multimodal diffusion language model architecture optimized for parallel region perception — a meaningful efficiency gain for dense captioning tasks. With only one HuggingFace daily paper featured, the day's narrative pivots quickly to model releases and ecosystem tooling.\n\nOn the model side, **GLM-5.2** from Zai-org leads trending with strong engagement (1831 likes), followed by a cluster of Gemma-4 12B fine-tunes by yuxinlu1 targeting coding and agentic workflows, and **nvidia/LocateAnything-3B** at 2244 likes signaling continued interest in grounded visual understanding. **DeepSeek-V4-Pro** holds impressive traction at 5000 likes with ~2.6M downloads, confirming sustained open-source LLM consumption.\n\nThe GitHub trending surface is dominated by agentic infrastructure: **headroom** (44k stars, 2624 today) for token-compression before LLMs; **OpenMontage**, the first open agentic video pipeline; **hermes-agent** from NousResearch (199k stars, 700 today); and **codebase-memory-mcp** for sub-millisecond code knowledge graph queries. The pattern is clear — the AI community is rapidly industrializing the plumbing around LLMs: memory, compression, orchestration, and tooling.",
+    "key_themes": ["diffusion-lm", "parallel-generation", "agentic-infrastructure", "token-compression", "visual-grounding"]
+  },
+  "researcher_notes": "**The diffusion LM moment is arriving.** PerceptionDLM joins a growing set of papers (Plaid, MDLM, etc.) exploring masked/diffusion generation for structured or multi-token tasks. The key insight is that autoregression is a poor fit for region-parallel tasks like dense captioning — where you need to emit N independent captions simultaneously. Diffusion LMs naturally parallelize this. Watch for more \"diffusion-native\" perception architectures in H2 2026.\n\n**Gemma-4 12B is the new fine-tune base.** Two yuxinlu1 GGUF variants (coder and agentic) appeared in the top trending models, both leveraging fable5/composer2.5. This signals a community convergence on Gemma-4 12B as a sweet spot for locally-runnable, task-specialized models — good performance per parameter at a size that runs on a single consumer GPU.\n\n**The headroom pattern is underappreciated.** 2624 stars today for a token-compression proxy suggests the market is finally internalizing that LLM cost scales with context length, and that most RAG/agent pipelines are deeply wasteful. Headroom's 60–95% token reduction claim (if it holds in practice) is a bigger deal than it sounds — it could shift the economics of production agentic systems substantially.\n\n**codebase-memory-mcp is a sleeper.** 1032 stars today for a static-binary MCP server that indexes a repo in milliseconds and answers queries in sub-ms deserves more attention. The zero-dependency, 158-language design hints at serious engineering discipline. This could become the default code intelligence layer for Claude Code and similar tools.",
+  "papers": [
+    {
+      "id": "perception-dlm",
+      "title": "PerceptionDLM: Parallel Region Perception with Multimodal Diffusion Language Models",
+      "authors": ["Yueyi Sun", "Yuhao Wang", "Jason Li", "Ye Tian", "Tao Zhang"],
+      "affiliations": ["University of Science and Technology of China", "Microsoft Research Asia"],
+      "summary": "PerceptionDLM proposes a multimodal diffusion language model optimized for efficient parallel region perception tasks. By moving beyond autoregressive generation, it enables simultaneous captioning of multiple image regions without sequential decoding bottlenecks.",
+      "key_findings": [
+        "Parallel region captioning achieves state-of-the-art performance while significantly reducing inference latency vs. autoregressive baselines",
+        "Diffusion-based decoding naturally fits multi-region tasks where outputs are conditionally independent given the image",
+        "PerceptionDLM-Base provides a strong foundational checkpoint for further fine-tuning on perception tasks"
+      ],
+      "tags": ["multimodal", "diffusion-lm", "visual-perception", "region-captioning", "parallel-generation"],
+      "relevance": "high",
+      "engagement": { "upvotes": 4, "comments": 4 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.19534",
+        "huggingface": "https://huggingface.co/papers/2606.19534",
+        "pdf": "https://arxiv.org/pdf/2606.19534"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zai-org",
+      "description": "GLM-5.2 is a next-generation conversational text-generation model from Zai-org, featuring a MoE DSA architecture. It is trending strongly with 1831 likes and broad community adoption.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["transformers", "moe", "conversational", "text-generation"],
+      "metrics": { "downloads": 27413, "likes": 1831 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "yuxinlu1",
+      "description": "A Gemma-4 12B fine-tune targeting coding and reasoning tasks, quantized to GGUF for local deployment. Composer2.5 tuning yields strong code generation with fable5 base.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "coding", "reasoning"],
+      "metrics": { "downloads": 358677, "likes": 2089 },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "nvidia-locate-anything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's LocateAnything-3B is a compact visual grounding model for image-feature extraction. With 2244 likes it is among the most-liked trending models today.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": ["transformers", "visual-grounding", "nvidia"],
+      "metrics": { "downloads": 241845, "likes": 2244 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-V4-Pro is a large open-source conversational LLM with 2.6M downloads and nearly 5000 likes, cementing DeepSeek's dominance in the open-weight LLM space.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["transformers", "conversational", "text-generation"],
+      "metrics": { "downloads": 2611991, "likes": 4999 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax-M3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-M3 is a multimodal image-text-to-text model with 104k downloads and 1177 likes, representing MiniMaxAI's latest push into vision-language capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["transformers", "multimodal", "vision-language"],
+      "metrics": { "downloads": 104076, "likes": 1177 },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3"
+    },
+    {
+      "id": "kimi-k2-7-code",
+      "name": "Kimi-K2.7-Code",
+      "organization": "Moonshot AI",
+      "description": "Kimi-K2.7-Code is a code-specialized model from Moonshot AI with 363k downloads, indicating strong adoption in developer-facing agentic workflows.",
+      "task_type": "image-feature-extraction",
+      "model_size": "unknown",
+      "tags": ["transformers", "coding", "kimi"],
+      "metrics": { "downloads": 363308, "likes": 945 },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+    },
+    {
+      "id": "diffusion-gemma-26b",
+      "name": "diffusiongemma-26B-A4B-it",
+      "organization": "Google",
+      "description": "Google's diffusiongemma-26B is a 26B-parameter diffusion-based vision-language model with 762k downloads, signaling Google's investment in diffusion LM architectures for multimodal tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "26B",
+      "tags": ["transformers", "diffusion", "gemma", "multimodal"],
+      "metrics": { "downloads": 762861, "likes": 1035 },
+      "source_url": "https://huggingface.co/google/diffusiongemma-26B-A4B-it"
+    },
+    {
+      "id": "nemotron-3-5-asr",
+      "name": "nemotron-3.5-asr-streaming-0.6b",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's Nemotron-3.5 ASR streaming model (0.6B) targets real-time speech recognition with cache-aware streaming, making it suitable for low-latency voice interfaces.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "0.6B",
+      "tags": ["nemo", "asr", "streaming", "speech-recognition"],
+      "metrics": { "downloads": 27275, "likes": 612 },
+      "source_url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b"
+    },
+    {
+      "id": "cohere-north-mini-code",
+      "name": "North-Mini-Code-1.0",
+      "organization": "Cohere Labs",
+      "description": "Cohere Labs' North-Mini-Code-1.0 is a compact MoE code-generation model with 474 likes, extending Cohere's open-source push into developer tooling.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["transformers", "moe", "code", "cohere"],
+      "metrics": { "downloads": 19551, "likes": 474 },
+      "source_url": "https://huggingface.co/CohereLabs/North-Mini-Code-1.0"
+    },
+    {
+      "id": "vibe-thinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "WeiboAI's VibeThinker-3B is a compact math-reasoning model based on Qwen2, with 563 likes. Its small size makes it suitable for edge deployment in math-heavy agentic pipelines.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": ["transformers", "math", "reasoning", "qwen2"],
+      "metrics": { "downloads": 20277, "likes": 563 },
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "headroom",
+      "name": "chopratejas/headroom",
+      "description": "A token-compression library, proxy, and MCP server that reduces LLM context by 60–95% before it reaches the model. Addresses the core cost/latency problem of production agentic systems by compressing tool outputs, logs, files, and RAG chunks.",
+      "language": "Python",
+      "stars": 44667,
+      "stars_today": 2624,
+      "forks": 3117,
+      "url": "https://github.com/chopratejas/headroom",
+      "tags": ["llm", "token-compression", "rag", "mcp", "optimization"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Nous Research's general-purpose agent harness 'that grows with you' — 700 stars today on a 199k-star repo signals active re-engagement. Positioned as a flexible, extensible agent foundation.",
+      "language": "Python",
+      "stars": 199072,
+      "stars_today": 700,
+      "forks": 35357,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent", "llm", "nous-research"],
+      "relevance": "high"
+    },
+    {
+      "id": "open-montage",
+      "name": "calesthio/OpenMontage",
+      "description": "The first open-source agentic video production system, featuring 12 pipelines, 52 tools, and 500+ agent skills. Turns AI coding assistants into full video production studios.",
+      "language": "Python",
+      "stars": 9003,
+      "stars_today": 987,
+      "forks": 1325,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["agent", "video", "agentic", "creative-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "codebase-memory-mcp",
+      "name": "DeusData/codebase-memory-mcp",
+      "description": "High-performance MCP server that indexes codebases into a persistent knowledge graph. Repo indexing in milliseconds, sub-ms queries, 99% fewer tokens, 158 languages, zero dependencies via a single static binary.",
+      "language": "C",
+      "stars": 10415,
+      "stars_today": 1032,
+      "forks": 788,
+      "url": "https://github.com/DeusData/codebase-memory-mcp",
+      "tags": ["mcp", "code-intelligence", "knowledge-graph", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "palmier-pro",
+      "name": "palmier-io/palmier-pro",
+      "description": "A macOS video editor purpose-built for AI workflows. Trending strongly with 1834 stars today, suggesting growing demand for AI-native media tools.",
+      "language": "Swift",
+      "stars": 5365,
+      "stars_today": 1834,
+      "forks": 405,
+      "url": "https://github.com/palmier-io/palmier-pro",
+      "tags": ["video-editing", "macos", "ai-native"],
+      "relevance": "medium"
+    },
+    {
+      "id": "skills-mattpocock",
+      "name": "mattpocock/skills",
+      "description": "A curated collection of Claude Code skills from Matt Pocock's .claude directory. 1443 stars today reflects the growing ecosystem of shareable AI coding workflows.",
+      "language": "Shell",
+      "stars": 139932,
+      "stars_today": 1443,
+      "forks": 12141,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["claude-code", "skills", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "deer-flow",
+      "name": "bytedance/deer-flow",
+      "description": "ByteDance's open-source long-horizon SuperAgent harness supporting research, coding, and creation tasks across minutes-to-hours timeframes using sandboxes, memories, tools, and subagents.",
+      "language": "Python",
+      "stars": 72643,
+      "stars_today": 442,
+      "forks": 9836,
+      "url": "https://github.com/bytedance/deer-flow",
+      "tags": ["agent", "long-horizon", "bytedance", "superagent"],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee",
+      "name": "topoteretes/cognee",
+      "description": "Open-source AI memory platform for agents, providing persistent long-term memory across sessions via a self-hosted knowledge graph engine.",
+      "language": "Python",
+      "stars": 18685,
+      "stars_today": 347,
+      "forks": 1971,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": ["agent-memory", "knowledge-graph", "rag", "agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "754 structured cybersecurity skills for AI agents, mapped to MITRE ATT&CK, NIST CSF 2.0, MITRE ATLAS, D3FEND, and NIST AI RMF frameworks. Compatible with Claude Code, GitHub Copilot, Codex CLI, and 20+ platforms.",
+      "language": "Python",
+      "stars": 17769,
+      "stars_today": 361,
+      "forks": 2133,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "agent-skills", "claude-code", "mitre"],
+      "relevance": "medium"
+    },
+    {
+      "id": "penpot",
+      "name": "penpot/penpot",
+      "description": "The open-source design tool for design and code collaboration. 1135 stars today suggests sustained growth as an open alternative to Figma.",
+      "language": "Clojure",
+      "stars": 52305,
+      "stars_today": 1135,
+      "forks": 3347,
+      "url": "https://github.com/penpot/penpot",
+      "tags": ["design", "open-source", "figma-alternative"],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Diffusion Language Models for Perception",
+      "description": "PerceptionDLM and Google's diffusiongemma demonstrate that diffusion-based generation is gaining traction for multimodal and perception tasks, challenging the autoregressive default.",
+      "related_paper_ids": ["perception-dlm"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Token Compression & Context Efficiency",
+      "description": "headroom's explosive growth signals mainstream recognition that LLM context waste is a first-order cost problem; codebase-memory-mcp attacks the same problem from the code intelligence angle.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Infrastructure Maturation",
+      "description": "OpenMontage, deer-flow, hermes-agent, and cognee collectively represent a second wave of agentic tooling — more specialized, more production-ready, and increasingly domain-specific.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Visual Grounding & Region Understanding",
+      "description": "PerceptionDLM and nvidia/LocateAnything-3B both push toward richer spatial understanding in vision-language models, a capability gap that prior MLLMs handled poorly.",
+      "related_paper_ids": ["perception-dlm"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open-Weight Model Ecosystem Fragmentation",
+      "description": "The trending model list spans GLM-5.2, Gemma-4 fine-tunes, DeepSeek-V4-Pro, Qwen3.6 variants, and Kimi-K2.7 — suggesting the open-weight space is healthy but increasingly fragmented across organizational lines.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-06-22T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-06-22T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-06-22T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-06-22T08:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-22T08:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
