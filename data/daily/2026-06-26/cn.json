@@ -1,0 +1,493 @@
+{
+  "version": "1.0",
+  "date": "2026-06-26",
+  "generated_at": "2026-06-26T16:00:00Z",
+  "summary": {
+    "headline": "Qwen-Image-Agent推进智能体驱动的图像生成；GLM-5.2 MoE与Krea-2领跑模型趋势；Agent-Reach与OpenMontage引领开源智能体工具爆发",
+    "body": "今日论文聚焦**统一生成模型**与**世界建模**。来自阿里巴巴的Qwen-Image-Agent提出了一个上下文感知的智能体框架，通过整合规划、搜索、记忆和反馈循环，弥合了用户模糊请求与完全定义的图像生成之间的差距。DanceOPD提出了一种在线策略的生成场蒸馏方法，用于在流匹配模型中组合互相冲突的能力（文生图、局部编辑、全局编辑）。Fast LeWorldModel和PhysiFormer则分别从前缀并行规划和坐标空间扩散两个不同角度推进了潜在世界建模。\n\n模型趋势由**GLM-5.2**（2479点赞）领衔，这是来自Zai-org的新一代MoE-DSA架构，紧随其后的是Krea的文生图模型**Krea-2**和阿里巴巴面向智能体的MoE模型**Qwen-AgentWorld-35B-A3B**。Gemma-4 12B微调生态系统持续扩展，涵盖编程和智能体变体。\n\nGitHub趋势今日格外火爆：**Agent-Reach**（今日1547星）赋予AI智能体对Twitter、Reddit、YouTube等的浏览器级访问能力；**Apple container**（今日1351星）将轻量级Linux虚拟机引入Mac；**google-labs-code/design.md**（今日1475星）提出了面向编程智能体的视觉身份规范；**OpenMontage**（今日3434星）交付了首个开源智能体视频制作管线，包含52个工具和500+技能。",
+    "key_themes": ["agentic-image-generation", "world-modeling", "moe-architectures", "agent-tooling-infrastructure", "design-for-agents"]
+  },
+  "researcher_notes": "**智能体驱动的图像生成是下一个前沿。** Qwen-Image-Agent对「上下文差距」的定义——用户表达与T2I模型所需之间的不匹配——精准概括了真实的生产瓶颈。将搜索、记忆和反馈整合到生成循环中，这一模式与我们在编程和研究工具中看到的更广泛智能体化趋势一致。预计更多T2I系统将采用智能体包装器，通过真实上下文来定义生成，而非依赖提示工程。\n\n**DanceOPD有着不容忽视的重要性。** 统一图像模型中的能力冲突问题（编辑降低T2I质量、全局与局部编辑相互干扰）广为人知却难以解决。DanceOPD将每种能力视为速度场并在学生引导的推演状态上训练的方法十分优雅。将无分类器引导吸收为一个普通场的能力更是简化了部署。\n\n**智能体基础设施的爆发持续加速。** Agent-Reach（今日1547星）、OpenMontage（今日3434星）、gstack（今日767星）和deer-flow（今日282星）共同描绘了AI智能体周围快速工业化的图景。模式正从「构建一个智能体」转向「为智能体配备企业级工具」——浏览器访问、视频制作、安全扫描（SkillSpector）和设计系统（design.md）。\n\n**design.md值得特别关注。** Google Labs提出的DESIGN.md格式——一种让编程智能体持久理解视觉身份的结构化规范——填补了真实的空白。当前的智能体能写代码但缺乏一致的设计上下文。如果这一格式得到广泛采用，它可能像README.md一样成为智能体辅助开发的标准。\n\n**PhysiFormer的坐标空间扩散对机器人领域意义深远。** 通过将顶点轨迹预测转化为世界坐标中的单一去噪过程（无潜在空间、无自回归），PhysiFormer实现了具有不确定性量化的排列不变多物体推理。对混合材料和未见几何体的泛化能力表明其在机器人仿真到真实迁移中具有切实的应用前景。",
+  "papers": [
+    {
+      "id": "qwen-image-agent",
+      "title": "Qwen-Image-Agent：弥合真实世界图像生成中的上下文差距",
+      "authors": ["Zekai Zhang", "Jiahao Li", "Jie Zhang", "Kaiyuan Gao", "Kun Yan et al."],
+      "affiliations": ["Alibaba Group", "Peking University"],
+      "summary": "Qwen-Image-Agent引入了一个统一的智能体框架，通过上下文感知的规划、推理、搜索、记忆和反馈管线，弥合用户模糊请求与T2I模型所需的充分生成上下文之间的「上下文差距」。同时提出了评估智能体图像生成的新基准IA-Bench。",
+      "key_findings": [
+        "识别出「上下文差距」是核心挑战：用户请求往往隐含、欠定义或依赖于T2I模型缺失的最新知识",
+        "上下文感知规划通过推理、搜索、记忆和反馈模块识别并获取缺失的上下文",
+        "在IA-Bench、Mindbench和WISE-Verified基准上达到最先进水平，超越强基线"
+      ],
+      "tags": ["agentic-generation", "text-to-image", "context-grounding", "multimodal-agent", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 3, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26907",
+        "huggingface": "https://huggingface.co/papers/2606.26907",
+        "pdf": "https://arxiv.org/pdf/2606.26907"
+      }
+    },
+    {
+      "id": "danceopd",
+      "title": "DanceOPD：在线策略生成场蒸馏",
+      "authors": ["Wei Zhou", "Xiongwei Zhu", "Zelin Xu", "Bo Dong", "Lixue Gong et al."],
+      "affiliations": ["National University of Singapore", "Tencent"],
+      "summary": "DanceOPD提出了一种面向流匹配模型的在线策略生成场蒸馏框架，将每个样本路由到一个能力场，使用简单的速度MSE目标进行训练。该方法解决了统一图像生成模型中互相冲突的能力（文生图、局部编辑、全局编辑）之间的根本张力。",
+      "key_findings": [
+        "将每种能力（文生图、编辑、CFG）视为共享流状态空间上的速度场，实现原则性组合",
+        "在学生引导的推演状态上进行在线策略训练，避免教师和学生之间的分布不匹配",
+        "将无分类器引导吸收为普通场，简化部署的同时改善多能力组合效果"
+      ],
+      "tags": ["flow-matching", "distillation", "image-generation", "multi-capability", "unified-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 8, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27377",
+        "huggingface": "https://huggingface.co/papers/2606.27377",
+        "pdf": "https://arxiv.org/pdf/2606.27377"
+      }
+    },
+    {
+      "id": "physiformer",
+      "title": "PhysiFormer：在世界空间中学习模拟力学",
+      "authors": ["Yiming Chen", "Yushi Lan", "Andrea Vedaldi"],
+      "affiliations": ["University of Oxford", "Visual Geometry Group"],
+      "summary": "PhysiFormer提出了一种用于物理合理3D物体运动的扩散Transformer，直接在世界坐标中操作而非视图依赖的像素空间或临时潜在空间。将顶点轨迹预测转化为单一去噪扩散过程，注意力在时间、空间和物体维度上分解。",
+      "key_findings": [
+        "坐标空间扩散在无需显式刚性或因果性等归纳偏置的情况下取得优异结果",
+        "通过分解注意力实现排列不变的多物体推理，可泛化到未见物体数量和混合材料场景",
+        "在轨迹精度、刚性保持和基于动量的物理一致性方面大幅超越自回归基线"
+      ],
+      "tags": ["physics-simulation", "diffusion-transformer", "world-model", "3d-mesh", "robotics"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27364",
+        "huggingface": "https://huggingface.co/papers/2606.27364",
+        "pdf": "https://arxiv.org/pdf/2606.27364"
+      }
+    },
+    {
+      "id": "fast-leworldmodel",
+      "title": "Fast LeWorldModel",
+      "authors": ["Yuntian Gao", "Xiangyu Xu"],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "Fast LeWorldModel用动作前缀预测替代了JEPA视觉世界模型中的自回归潜在推演，实现并行的未来状态评估。在大幅减少规划时间的同时提升了多个任务的平均成功率。",
+      "key_findings": [
+        "动作前缀预测消除了顺序状态推演的需要，实现并行规划评估",
+        "前缀级监督迫使模型学习连续的状态演化而非仅拟合单步转换，减少累积的潜在误差",
+        "在大幅减少规划计算时间的同时改善了相比LeWM的平均成功率"
+      ],
+      "tags": ["world-model", "jepa", "visual-planning", "latent-prediction", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26217",
+        "huggingface": "https://huggingface.co/papers/2606.26217",
+        "pdf": "https://arxiv.org/pdf/2606.26217"
+      }
+    },
+    {
+      "id": "corigami",
+      "title": "COrigami：共同设计可平折可视觉识别折纸的AI管线",
+      "authors": ["Tom Zahavy", "Shaobo Hou", "Thomas Tumiel", "James Doran", "Francesco Faccio et al."],
+      "affiliations": ["Google DeepMind"],
+      "summary": "COrigami提出了一个端到端的计算折纸AI管线，从自然语言生成折痕图案，同时满足平折叠几何约束和主观视觉美学。使用基于强化学习的自主美学评估进行精炼。",
+      "key_findings": [
+        "将几何约束满足（平折叠性）与通过强化学习的美学优化相整合",
+        "端到端管线：语义棒图生成、基础打包、折痕图案求解和RL驱动的精炼",
+        "在具有严格数学约束的领域展示了AI-人类共创能力"
+      ],
+      "tags": ["computational-origami", "reinforcement-learning", "generative-design", "geometric-constraints", "co-creativity"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26299",
+        "huggingface": "https://huggingface.co/papers/2606.26299",
+        "pdf": "https://arxiv.org/pdf/2606.26299"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zai-org",
+      "description": "GLM-5.2是采用MoE DSA（动态稀疏注意力）架构的新一代对话式文本生成模型。以2479点赞领跑HuggingFace趋势，代表了大语言模型高效稀疏架构的最新演进。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["transformers", "moe", "conversational", "text-generation"],
+      "metrics": {"downloads": 67107, "likes": 2479},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "yuxinlu1",
+      "description": "面向编程和推理任务优化的Gemma-4 12B微调版本，量化为GGUF格式以实现高效本地部署。以49.5万下载量和2366点赞锚定了Gemma-4微调生态系统。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "coding", "reasoning"],
+      "metrics": {"downloads": 495813, "likes": 2366},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA的紧凑型视觉定位模型，用于图像特征提取。以2365点赞和40.7万下载量保持强劲趋势，反映了对高效视觉理解模型的持续需求。",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": ["transformers", "visual-grounding", "nvidia"],
+      "metrics": {"downloads": 407838, "likes": 2365},
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "qwen3-6-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "Qwen3.6 35B MoE的无审查变体，3B活跃参数并支持视觉能力。以350万下载量和2237点赞领跑下载榜，表明社区对无限制多模态模型的巨大需求。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B（3B活跃）",
+      "tags": ["gguf", "uncensored", "qwen3.6", "moe", "vision"],
+      "metrics": {"downloads": 3520206, "likes": 2237},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax-M3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-M3是一款多模态视觉语言模型，具有强劲参与度（1241点赞、15.4万下载量）。支持图文到文本任务，具备稳健的视觉理解能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["transformers", "multimodal", "vision-language"],
+      "metrics": {"downloads": 154350, "likes": 1241},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度的Unlimited-OCR模型用于特征提取，获得898点赞和7万下载量。面向多种文档类型和格式的鲁棒光学字符识别。",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": ["transformers", "ocr", "feature-extraction", "baidu"],
+      "metrics": {"downloads": 70743, "likes": 898},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "来自微博AI的紧凑型3B数学推理模型，获得715点赞和5.1万下载量。以高效的参数利用率面向数学问题求解。",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": ["transformers", "math", "reasoning", "compact"],
+      "metrics": {"downloads": 51717, "likes": 715},
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "nvidia-nemotron-asr",
+      "name": "nemotron-3.5-asr-streaming-0.6b",
+      "organization": "NVIDIA",
+      "description": "NVIDIA Nemotron 3.5系列的0.6B流式自动语音识别模型。以695点赞和5万下载量，为实时应用提供缓存感知的流式ASR。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "0.6B",
+      "tags": ["nemo", "speech-recognition", "streaming-asr", "cache-aware"],
+      "metrics": {"downloads": 50553, "likes": 695},
+      "source_url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2-GGUF",
+      "organization": "yuxinlu1",
+      "description": "面向智能体工作流的Gemma-4 12B微调版本，专注于终端环境。v2 3.5x tau2变体获得618点赞和16.5万下载量，与编程变体互补。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "agentic", "terminal"],
+      "metrics": {"downloads": 165187, "likes": 618},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "基于Qwen3.5的9B推理模型，支持1M上下文，量化为GGUF。以487点赞和13.4万下载量，面向长上下文推理工作流。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "qwen3.5", "reasoning", "long-context"],
+      "metrics": {"downloads": 134294, "likes": 487},
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Krea-2-Turbo是基于Krea-2-Raw构建的速度优化文生图扩散模型。以243点赞，代表了图像生成模型领域的新参与者。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusers", "text-to-image", "fast-inference"],
+      "metrics": {"downloads": 2996, "likes": 243},
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "qwen-agentworld",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "来自阿里巴巴Qwen团队的专用智能体导向MoE模型，总参数35B / 活跃参数3B。专为具备多模态（图文到文本）能力的智能体工作流设计。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B（3B活跃）",
+      "tags": ["transformers", "qwen", "moe", "agent"],
+      "metrics": {"downloads": 3389, "likes": 243},
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "首个开源智能体视频制作系统，包含12条管线、52个工具和500+智能体技能。将AI编程助手转变为完整的视频制作工作室，是智能体创意工具的重大突破。",
+      "language": "Python",
+      "stars": 22173,
+      "stars_today": 3434,
+      "forks": 2488,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["agentic", "video-production", "creative-ai", "multi-pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "赋予AI智能体对Twitter、Reddit、YouTube、GitHub、B站和小红书的浏览器级访问能力，单一CLI、零API费用。今日爆发性增长1547星。",
+      "language": "Python",
+      "stars": 41285,
+      "stars_today": 1547,
+      "forks": 3270,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agent-tooling", "web-scraping", "social-media", "browser-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "design-md",
+      "name": "google-labs-code/design.md",
+      "description": "Google Labs提出的面向编程智能体描述视觉身份的格式规范。DESIGN.md为智能体提供对设计系统的持久结构化理解，有望成为智能体辅助开发的新标准。",
+      "language": "TypeScript",
+      "stars": 19371,
+      "stars_today": 1475,
+      "forks": 1657,
+      "url": "https://github.com/google-labs-code/design.md",
+      "tags": ["design-system", "coding-agents", "specification", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "apple-container",
+      "name": "apple/container",
+      "description": "Apple官方工具，使用轻量级虚拟机在Mac上创建和运行Linux容器，以Swift编写并针对Apple Silicon优化。重要的基础设施发布。",
+      "language": "Swift",
+      "stars": 43241,
+      "stars_today": 1351,
+      "forks": 1269,
+      "url": "https://github.com/apple/container",
+      "tags": ["containers", "linux-vm", "apple-silicon", "infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM驱动的多市场股票智能分析系统，整合多源行情、实时新闻、决策看板和自动推送，支持零成本定时运行。",
+      "language": "Python",
+      "stars": 49563,
+      "stars_today": 1209,
+      "forks": 43490,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["llm-application", "finance", "stock-analysis", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-website-cloner",
+      "name": "JCodesMore/ai-website-cloner-template",
+      "description": "使用AI编程智能体一条命令克隆任何网站。今日1024星强劲增长，反映了对AI辅助网页开发工具的需求。",
+      "language": "TypeScript",
+      "stars": 20506,
+      "stars_today": 1024,
+      "forks": 3017,
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "tags": ["web-development", "ai-agent", "automation", "cloning"],
+      "relevance": "medium"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan的23个定制Claude Code工具集，涵盖CEO、设计师、工程经理、发布经理、文档工程师和QA角色。以11.5万星成为智能体驱动开发的参考架构。",
+      "language": "TypeScript",
+      "stars": 115860,
+      "stars_today": 767,
+      "forks": 17174,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": ["claude-code", "developer-tools", "agent-setup", "productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "hiring-agent",
+      "name": "interviewstreet/hiring-agent",
+      "description": "来自HackerRank母公司的AI简历评估和打分智能体。今日683星增长，是更广泛AI-HR浪潮的一部分。",
+      "language": "Python",
+      "stars": 2760,
+      "stars_today": 683,
+      "forks": 655,
+      "url": "https://github.com/interviewstreet/hiring-agent",
+      "tags": ["hr-tech", "resume-screening", "ai-agent", "hiring"],
+      "relevance": "medium"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "将复杂文档（PDF、Office文档）转换为LLM就绪的markdown/JSON，服务于智能体工作流。以6.9万星和今日644星，是文档处理生态系统的中流砥柱。",
+      "language": "Python",
+      "stars": 69631,
+      "stars_today": 644,
+      "forks": 5888,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": ["document-processing", "pdf", "llm-pipeline", "agentic-workflows"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "面向AI智能体的817个结构化网络安全技能，映射到6个框架（MITRE ATT&CK、NIST CSF 2.0等）。兼容Claude Code、GitHub Copilot、Cursor等20+平台。",
+      "language": "Python",
+      "stars": 21276,
+      "stars_today": 571,
+      "forks": 2451,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "ai-agents", "mitre", "skills-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "nvidia-skillspector",
+      "name": "NVIDIA/SkillSpector",
+      "description": "NVIDIA的AI智能体技能安全扫描器，检测漏洞、恶意模式和安全风险。在智能体技能生态快速扩展之际推出的及时工具。",
+      "language": "Python",
+      "stars": 10696,
+      "stars_today": 352,
+      "forks": 860,
+      "url": "https://github.com/NVIDIA/SkillSpector",
+      "tags": ["security", "ai-agents", "vulnerability-scanner", "nvidia"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "基于Claude Code构建的价值投资研究框架，融合巴菲特、芒格、段永平和李录四大师方法论，采用多智能体对抗分析。",
+      "language": "Python",
+      "stars": 2008,
+      "stars_today": 309,
+      "forks": 308,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": ["value-investing", "claude-code", "multi-agent", "finance"],
+      "relevance": "medium"
+    },
+    {
+      "id": "deer-flow",
+      "name": "bytedance/deer-flow",
+      "description": "字节跳动的开源长时段超级智能体框架，集研究、编码和创作于一体。具备沙箱、记忆、工具、技能、子智能体和消息网关，处理数分钟到数小时的任务。",
+      "language": "Python",
+      "stars": 74731,
+      "stars_today": 282,
+      "forks": 10075,
+      "url": "https://github.com/bytedance/deer-flow",
+      "tags": ["super-agent", "long-horizon", "bytedance", "orchestration"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-best-practice",
+      "name": "shanraisshan/claude-code-best-practice",
+      "description": "从氛围编程到智能体工程的综合指南。以6万星成为Claude Code最佳实践的社区事实标准参考。",
+      "language": "HTML",
+      "stars": 60627,
+      "stars_today": 287,
+      "forks": 6071,
+      "url": "https://github.com/shanraisshan/claude-code-best-practice",
+      "tags": ["claude-code", "best-practices", "agentic-engineering", "guide"],
+      "relevance": "medium"
+    },
+    {
+      "id": "page-agent",
+      "name": "alibaba/page-agent",
+      "description": "阿里巴巴的JavaScript页内GUI智能体，使用自然语言控制网页界面。以1.9万星，实现无需浏览器自动化开销的自然语言网页交互。",
+      "language": "TypeScript",
+      "stars": 19871,
+      "stars_today": 163,
+      "forks": 1707,
+      "url": "https://github.com/alibaba/page-agent",
+      "tags": ["gui-agent", "web-automation", "natural-language", "alibaba"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体驱动的图像生成",
+      "description": "Qwen-Image-Agent引入了一种新范式，将图像生成包装在智能体循环中，在生成前通过搜索、记忆和推理收集上下文。这反映了AI领域从单次调用到智能体化工作流的更广泛转变。",
+      "related_paper_ids": ["qwen-image-agent", "danceopd"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "世界建模进展",
+      "description": "Fast LeWorldModel和PhysiFormer分别从潜在空间和坐标空间推进世界模型。共同主线是超越自回归推演，转向并行或扩散预测以提高效率和精度。",
+      "related_paper_ids": ["fast-leworldmodel", "physiformer"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施爆发",
+      "description": "Agent-Reach、OpenMontage、SkillSpector、gstack、deer-flow和design.md共同代表了智能体工具的快速工业化。社区正在构建中间件层：浏览器访问、视频制作、安全扫描、设计系统和编排框架。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MoE架构主导",
+      "description": "GLM-5.2、Qwen-AgentWorld-35B-A3B和Qwen3.6-35B-A3B都采用混合专家架构。在35B+模型中使用3B活跃参数的MoE正成为平衡能力和推理成本的标准方法。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "智能体安全与治理",
+      "description": "NVIDIA SkillSpector和Anthropic-Cybersecurity-Skills应对AI智能体生态不断扩大的安全面。随着智能体获得更多工具和技能，漏洞扫描和安全框架映射变得至关重要。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

@@ -1,0 +1,493 @@
+{
+  "version": "1.0",
+  "date": "2026-06-26",
+  "generated_at": "2026-06-26T16:00:00Z",
+  "summary": {
+    "headline": "Agentic image generation advances with Qwen-Image-Agent; GLM-5.2 MoE and Krea-2 lead model trending; Agent-Reach and OpenMontage drive massive open-source agentic tooling surge",
+    "body": "Today's papers center on **unified generative models** and **world modeling**. Qwen-Image-Agent from Alibaba introduces a context-aware agentic framework that bridges the gap between underspecified user requests and fully-grounded image generation, integrating planning, search, memory, and feedback loops. DanceOPD proposes on-policy generative field distillation for composing conflicting capabilities (T2I, local editing, global editing) in flow-matching models. Meanwhile, Fast LeWorldModel and PhysiFormer advance latent world modeling from different angles — prefix-parallel planning and coordinate-space diffusion for physics simulation respectively.\n\nThe model landscape is dominated by **GLM-5.2** (2479 likes), a new MoE-DSA architecture from Zai-org, alongside **Krea-2** from Krea for text-to-image generation and **Qwen-AgentWorld-35B-A3B**, a specialized agent-oriented MoE model from Alibaba. The Gemma-4 12B fine-tune ecosystem continues to expand with coding and agentic variants.\n\nGitHub trending is explosive today: **Agent-Reach** (1547 stars today) gives AI agents browser-level access to Twitter, Reddit, YouTube, and more; **Apple container** (1351 stars today) brings lightweight Linux VMs to Mac; **google-labs-code/design.md** (1475 stars today) proposes a specification for visual identity in coding agents; and **OpenMontage** (3434 stars today) delivers the first open-source agentic video production pipeline with 52 tools and 500+ skills.",
+    "key_themes": ["agentic-image-generation", "world-modeling", "moe-architectures", "agent-tooling-infrastructure", "design-for-agents"]
+  },
+  "researcher_notes": "**Agentic image generation is the next frontier.** Qwen-Image-Agent's framing of the \"Context Gap\" — the mismatch between what users say and what T2I models need — is a clean articulation of a real production bottleneck. The integration of search, memory, and feedback into the generation loop mirrors the broader agentic pattern we see in coding and research tools. Expect more T2I systems to adopt agentic wrappers that ground generation in real-world context rather than relying on prompt engineering alone.\n\n**DanceOPD is quietly important.** The capability-conflict problem in unified image models (editing degrades T2I, global and local editing interfere) is well-known but poorly solved. DanceOPD's approach of treating each capability as a velocity field and training on student-induced rollout states is elegant. The ability to absorb classifier-free guidance as just another field is a bonus that simplifies deployment.\n\n**The agent infrastructure explosion continues to accelerate.** Agent-Reach (1547 stars today), OpenMontage (3434 stars today), gstack (767 stars today), and deer-flow (282 stars today) collectively paint a picture of rapid industrialization around AI agents. The pattern is shifting from \"build an agent\" to \"equip agents with enterprise-grade tooling\" — browser access, video production, security scanning (SkillSpector), and design systems (design.md).\n\n**design.md deserves special attention.** Google Labs' proposal for a DESIGN.md format — a structured specification that gives coding agents persistent understanding of a visual identity — addresses a real gap. Current agents can write code but have no consistent design context. If this format gains adoption, it could become as standard as README.md for agent-assisted development.\n\n**PhysiFormer's coordinate-space diffusion is a sleeper for robotics.** By casting vertex trajectory prediction as a single denoising process in world coordinates (no latent space, no autoregression), PhysiFormer achieves permutation-invariant multi-object reasoning with uncertainty quantification. The generalization to mixed materials and unseen geometries suggests real applicability to sim-to-real transfer in robotics.",
+  "papers": [
+    {
+      "id": "qwen-image-agent",
+      "title": "Qwen-Image-Agent: Bridging the Context Gap in Real-World Image Generation",
+      "authors": ["Zekai Zhang", "Jiahao Li", "Jie Zhang", "Kaiyuan Gao", "Kun Yan et al."],
+      "affiliations": ["Alibaba Group", "Peking University"],
+      "summary": "Qwen-Image-Agent introduces a unified agentic framework that bridges the 'Context Gap' between underspecified user requests and the sufficient generation context needed by T2I models. It integrates planning, reasoning, search, memory, and feedback in a context-centric pipeline, along with a new benchmark (IA-Bench) for evaluating agentic image generation.",
+      "key_findings": [
+        "Identifies the 'Context Gap' as a core challenge: user requests are often implicit, underspecified, or require up-to-date knowledge that T2I models lack",
+        "Context-Aware Planning identifies missing context and plans acquisition through reason, search, memory, and feedback modules",
+        "Achieves state-of-the-art on IA-Bench, Mindbench, and WISE-Verified benchmarks, outperforming strong baselines"
+      ],
+      "tags": ["agentic-generation", "text-to-image", "context-grounding", "multimodal-agent", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 3, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26907",
+        "huggingface": "https://huggingface.co/papers/2606.26907",
+        "pdf": "https://arxiv.org/pdf/2606.26907"
+      }
+    },
+    {
+      "id": "danceopd",
+      "title": "DanceOPD: On-Policy Generative Field Distillation",
+      "authors": ["Wei Zhou", "Xiongwei Zhu", "Zelin Xu", "Bo Dong", "Lixue Gong et al."],
+      "affiliations": ["National University of Singapore", "Tencent"],
+      "summary": "DanceOPD proposes an on-policy generative field distillation framework for flow-matching models that routes each sample to one capability field and trains with a simple velocity MSE objective. It addresses the fundamental tension between conflicting capabilities (T2I, local editing, global editing) in unified image generation models.",
+      "key_findings": [
+        "Treats each capability (T2I, editing, CFG) as a velocity field over a shared flow state space, enabling principled composition",
+        "On-policy training on student-induced rollout states avoids distribution mismatch between teacher and student",
+        "Absorbs classifier-free guidance as just another field, simplifying deployment while improving multi-capability composition"
+      ],
+      "tags": ["flow-matching", "distillation", "image-generation", "multi-capability", "unified-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 8, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27377",
+        "huggingface": "https://huggingface.co/papers/2606.27377",
+        "pdf": "https://arxiv.org/pdf/2606.27377"
+      }
+    },
+    {
+      "id": "physiformer",
+      "title": "PhysiFormer: Learning to Simulate Mechanics in World Space",
+      "authors": ["Yiming Chen", "Yushi Lan", "Andrea Vedaldi"],
+      "affiliations": ["University of Oxford", "Visual Geometry Group"],
+      "summary": "PhysiFormer presents a diffusion transformer for physically-plausible 3D object motion that operates directly in world coordinates rather than view-dependent pixel space or ad-hoc latent spaces. It casts vertex trajectory prediction as a single denoising diffusion process with attention factorized over time, space, and objects.",
+      "key_findings": [
+        "Coordinate-space diffusion achieves excellent results without inductive biases like explicit rigidity or causality enforcement",
+        "Permutation-invariant multi-object reasoning via factorized attention enables generalization to unseen object counts and mixed materials",
+        "Substantially outperforms autoregressive baselines in trajectory accuracy, rigidity preservation, and momentum-based physical consistency"
+      ],
+      "tags": ["physics-simulation", "diffusion-transformer", "world-model", "3d-mesh", "robotics"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27364",
+        "huggingface": "https://huggingface.co/papers/2606.27364",
+        "pdf": "https://arxiv.org/pdf/2606.27364"
+      }
+    },
+    {
+      "id": "fast-leworldmodel",
+      "title": "Fast LeWorldModel",
+      "authors": ["Yuntian Gao", "Xiangyu Xu"],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "Fast LeWorldModel replaces autoregressive latent rollout in JEPA-based visual world models with action-prefix prediction, enabling parallel future-state evaluation. This reduces planning time substantially while improving average success rates across tasks.",
+      "key_findings": [
+        "Action-prefix prediction eliminates the need for sequential state rollouts, enabling parallel planning evaluation",
+        "Prefix-level supervision forces learning of continuous state evolution rather than just one-step transitions, reducing accumulated latent errors",
+        "Achieves improved average success over LeWM while substantially reducing planning computation time"
+      ],
+      "tags": ["world-model", "jepa", "visual-planning", "latent-prediction", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26217",
+        "huggingface": "https://huggingface.co/papers/2606.26217",
+        "pdf": "https://arxiv.org/pdf/2606.26217"
+      }
+    },
+    {
+      "id": "corigami",
+      "title": "COrigami: An AI Pipeline for Co-Designing Flat-Foldable Visually Recognisable Origami",
+      "authors": ["Tom Zahavy", "Shaobo Hou", "Thomas Tumiel", "James Doran", "Francesco Faccio et al."],
+      "affiliations": ["Google DeepMind"],
+      "summary": "COrigami presents an end-to-end AI pipeline for computational origami that generates crease patterns from natural language, satisfying both flat-foldability geometric constraints and subjective visual aesthetics. Uses RL-driven autonomous aesthetic evaluation for refinement.",
+      "key_findings": [
+        "Integrates geometric constraint satisfaction (flat foldability) with aesthetic optimization via reinforcement learning",
+        "End-to-end pipeline: semantic stick figure generation, base packing, crease pattern solving, and RL-driven refinement",
+        "Demonstrates AI-human co-creativity in a domain with strict mathematical constraints"
+      ],
+      "tags": ["computational-origami", "reinforcement-learning", "generative-design", "geometric-constraints", "co-creativity"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26299",
+        "huggingface": "https://huggingface.co/papers/2606.26299",
+        "pdf": "https://arxiv.org/pdf/2606.26299"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zai-org",
+      "description": "GLM-5.2 is a next-generation conversational text-generation model featuring a MoE DSA (Dynamic Sparse Attention) architecture. Leading HuggingFace trending with 2479 likes, it represents the latest evolution in efficient sparse architectures for large language models.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["transformers", "moe", "conversational", "text-generation"],
+      "metrics": {"downloads": 67107, "likes": 2479},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "yuxinlu1",
+      "description": "A Gemma-4 12B fine-tune optimized for coding and reasoning tasks, quantized to GGUF for efficient local deployment. With 495K downloads and 2366 likes, it anchors the Gemma-4 fine-tune ecosystem.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "coding", "reasoning"],
+      "metrics": {"downloads": 495813, "likes": 2366},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's compact visual grounding model for image-feature extraction. Maintains strong trending with 2365 likes and 407K downloads, signaling continued demand for efficient visual understanding models.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": ["transformers", "visual-grounding", "nvidia"],
+      "metrics": {"downloads": 407838, "likes": 2365},
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "qwen3-6-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "An uncensored Qwen3.6 35B MoE variant with 3B active parameters and vision capabilities. Leading downloads at 3.5M with 2237 likes, indicating massive community demand for unrestricted multimodal models.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": ["gguf", "uncensored", "qwen3.6", "moe", "vision"],
+      "metrics": {"downloads": 3520206, "likes": 2237},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax-M3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-M3 is a multimodal vision-language model with strong engagement (1241 likes, 154K downloads). Supports image-text-to-text tasks with robust visual understanding capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["transformers", "multimodal", "vision-language"],
+      "metrics": {"downloads": 154350, "likes": 1241},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's Unlimited-OCR model for feature extraction achieves 898 likes and 70K downloads. Targets robust optical character recognition across diverse document types and formats.",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": ["transformers", "ocr", "feature-extraction", "baidu"],
+      "metrics": {"downloads": 70743, "likes": 898},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "A compact 3B math reasoning model from WeiboAI with 715 likes and 51K downloads. Targets mathematical problem-solving with efficient parameter usage.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": ["transformers", "math", "reasoning", "compact"],
+      "metrics": {"downloads": 51717, "likes": 715},
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "nvidia-nemotron-asr",
+      "name": "nemotron-3.5-asr-streaming-0.6b",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's 0.6B streaming automatic speech recognition model from the Nemotron 3.5 family. With 695 likes and 50K downloads, it provides cache-aware streaming ASR for real-time applications.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "0.6B",
+      "tags": ["nemo", "speech-recognition", "streaming-asr", "cache-aware"],
+      "metrics": {"downloads": 50553, "likes": 695},
+      "source_url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2-GGUF",
+      "organization": "yuxinlu1",
+      "description": "An agentic-focused Gemma-4 12B fine-tune targeting terminal-based agent workflows. The v2 3.5x tau2 variant achieves 618 likes and 165K downloads, complementing the coder variant.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "agentic", "terminal"],
+      "metrics": {"downloads": 165187, "likes": 618},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "A Qwen3.5-based 9B reasoning model with 1M context, quantized to GGUF. With 487 likes and 134K downloads, it targets long-context reasoning workflows.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "qwen3.5", "reasoning", "long-context"],
+      "metrics": {"downloads": 134294, "likes": 487},
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Krea-2-Turbo is a text-to-image diffusion model optimized for speed, built on Krea-2-Raw. With 243 likes, it represents a new entrant in the image generation model space.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusers", "text-to-image", "fast-inference"],
+      "metrics": {"downloads": 2996, "likes": 243},
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "qwen-agentworld",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen (Alibaba)",
+      "description": "A specialized agent-oriented MoE model from Alibaba's Qwen team with 35B total / 3B active parameters. Designed for agentic workflows with multimodal (image-text-to-text) capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": ["transformers", "qwen", "moe", "agent"],
+      "metrics": {"downloads": 3389, "likes": 243},
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "The first open-source agentic video production system featuring 12 pipelines, 52 tools, and 500+ agent skills. Turns AI coding assistants into full video production studios, representing a major step in agentic creative tooling.",
+      "language": "Python",
+      "stars": 22173,
+      "stars_today": 3434,
+      "forks": 2488,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["agentic", "video-production", "creative-ai", "multi-pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "Gives AI agents browser-level access to Twitter, Reddit, YouTube, GitHub, Bilibili, and XiaoHongShu with a single CLI and zero API fees. Trending explosively at 1547 stars today.",
+      "language": "Python",
+      "stars": 41285,
+      "stars_today": 1547,
+      "forks": 3270,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agent-tooling", "web-scraping", "social-media", "browser-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "design-md",
+      "name": "google-labs-code/design.md",
+      "description": "A format specification from Google Labs for describing visual identity to coding agents. DESIGN.md gives agents persistent, structured understanding of a design system — a potential standard for agent-assisted development.",
+      "language": "TypeScript",
+      "stars": 19371,
+      "stars_today": 1475,
+      "forks": 1657,
+      "url": "https://github.com/google-labs-code/design.md",
+      "tags": ["design-system", "coding-agents", "specification", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "apple-container",
+      "name": "apple/container",
+      "description": "Apple's official tool for creating and running Linux containers using lightweight virtual machines on Mac, written in Swift and optimized for Apple Silicon. A significant infrastructure release.",
+      "language": "Swift",
+      "stars": 43241,
+      "stars_today": 1351,
+      "forks": 1269,
+      "url": "https://github.com/apple/container",
+      "tags": ["containers", "linux-vm", "apple-silicon", "infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboards, and automated notifications. Supports zero-cost scheduled runs.",
+      "language": "Python",
+      "stars": 49563,
+      "stars_today": 1209,
+      "forks": 43490,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["llm-application", "finance", "stock-analysis", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-website-cloner",
+      "name": "JCodesMore/ai-website-cloner-template",
+      "description": "Clone any website with one command using AI coding agents. Trending strongly at 1024 stars today, reflecting demand for AI-assisted web development tools.",
+      "language": "TypeScript",
+      "stars": 20506,
+      "stars_today": 1024,
+      "forks": 3017,
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "tags": ["web-development", "ai-agent", "automation", "cloning"],
+      "relevance": "medium"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan's opinionated Claude Code setup with 23 tools serving as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA. At 115K stars, it's a reference architecture for agent-driven development.",
+      "language": "TypeScript",
+      "stars": 115860,
+      "stars_today": 767,
+      "forks": 17174,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": ["claude-code", "developer-tools", "agent-setup", "productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "hiring-agent",
+      "name": "interviewstreet/hiring-agent",
+      "description": "AI agent for evaluating and scoring resumes from HackerRank's parent company. Trending at 683 stars today, part of the broader AI-in-HR wave.",
+      "language": "Python",
+      "stars": 2760,
+      "stars_today": 683,
+      "forks": 655,
+      "url": "https://github.com/interviewstreet/hiring-agent",
+      "tags": ["hr-tech", "resume-screening", "ai-agent", "hiring"],
+      "relevance": "medium"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "Transforms complex documents (PDFs, Office docs) into LLM-ready markdown/JSON for agentic workflows. At 69K stars with 644 stars today, it's a mainstay of the document processing ecosystem.",
+      "language": "Python",
+      "stars": 69631,
+      "stars_today": 644,
+      "forks": 5888,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": ["document-processing", "pdf", "llm-pipeline", "agentic-workflows"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-cybersecurity-skills",
+      "name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "description": "817 structured cybersecurity skills for AI agents mapped to 6 frameworks (MITRE ATT&CK, NIST CSF 2.0, etc.). Works with Claude Code, GitHub Copilot, Cursor, and 20+ platforms.",
+      "language": "Python",
+      "stars": 21276,
+      "stars_today": 571,
+      "forks": 2451,
+      "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills",
+      "tags": ["cybersecurity", "ai-agents", "mitre", "skills-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "nvidia-skillspector",
+      "name": "NVIDIA/SkillSpector",
+      "description": "NVIDIA's security scanner for AI agent skills that detects vulnerabilities, malicious patterns, and security risks. A timely tool as agent skill ecosystems expand rapidly.",
+      "language": "Python",
+      "stars": 10696,
+      "stars_today": 352,
+      "forks": 860,
+      "url": "https://github.com/NVIDIA/SkillSpector",
+      "tags": ["security", "ai-agents", "vulnerability-scanner", "nvidia"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "A value investing research framework built on Claude Code, implementing methodologies from Buffett, Munger, Duan Yongping, and Li Lu with multi-agent adversarial analysis.",
+      "language": "Python",
+      "stars": 2008,
+      "stars_today": 309,
+      "forks": 308,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": ["value-investing", "claude-code", "multi-agent", "finance"],
+      "relevance": "medium"
+    },
+    {
+      "id": "deer-flow",
+      "name": "bytedance/deer-flow",
+      "description": "ByteDance's open-source long-horizon SuperAgent harness that researches, codes, and creates. Features sandboxes, memories, tools, skills, subagents, and message gateway for tasks that take minutes to hours.",
+      "language": "Python",
+      "stars": 74731,
+      "stars_today": 282,
+      "forks": 10075,
+      "url": "https://github.com/bytedance/deer-flow",
+      "tags": ["super-agent", "long-horizon", "bytedance", "orchestration"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-best-practice",
+      "name": "shanraisshan/claude-code-best-practice",
+      "description": "Comprehensive guide from vibe coding to agentic engineering with Claude Code. At 60K stars, it's become the de facto community reference for Claude Code best practices.",
+      "language": "HTML",
+      "stars": 60627,
+      "stars_today": 287,
+      "forks": 6071,
+      "url": "https://github.com/shanraisshan/claude-code-best-practice",
+      "tags": ["claude-code", "best-practices", "agentic-engineering", "guide"],
+      "relevance": "medium"
+    },
+    {
+      "id": "page-agent",
+      "name": "alibaba/page-agent",
+      "description": "Alibaba's JavaScript in-page GUI agent that controls web interfaces with natural language. At 19K stars, it enables natural language-driven web interaction without browser automation overhead.",
+      "language": "TypeScript",
+      "stars": 19871,
+      "stars_today": 163,
+      "forks": 1707,
+      "url": "https://github.com/alibaba/page-agent",
+      "tags": ["gui-agent", "web-automation", "natural-language", "alibaba"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agentic Image Generation",
+      "description": "Qwen-Image-Agent introduces a new paradigm where image generation is wrapped in an agentic loop that gathers context through search, memory, and reasoning before generating. This mirrors the broader shift from single-shot to agentic workflows across AI.",
+      "related_paper_ids": ["qwen-image-agent", "danceopd"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "World Modeling Advances",
+      "description": "Fast LeWorldModel and PhysiFormer advance latent and coordinate-space world models respectively. The common thread is moving beyond autoregressive rollouts toward parallel or diffusion-based prediction for efficiency and accuracy.",
+      "related_paper_ids": ["fast-leworldmodel", "physiformer"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Explosion",
+      "description": "Agent-Reach, OpenMontage, SkillSpector, gstack, deer-flow, and design.md collectively represent rapid industrialization of agent tooling. The community is building the middleware layer: browser access, video production, security scanning, design systems, and orchestration harnesses.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MoE Architecture Dominance",
+      "description": "GLM-5.2, Qwen-AgentWorld-35B-A3B, and Qwen3.6-35B-A3B all use Mixture-of-Experts architectures. MoE with 3B active parameters in 35B+ models is becoming the standard approach for balancing capability and inference cost.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Agent Security and Governance",
+      "description": "NVIDIA SkillSpector and Anthropic-Cybersecurity-Skills address the growing security surface of AI agent ecosystems. As agents gain more tools and skills, scanning for vulnerabilities and mapping to security frameworks becomes critical.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-26T16:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
