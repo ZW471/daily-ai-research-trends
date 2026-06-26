@@ -1,0 +1,380 @@
+{
+  "version": "1.0",
+  "date": "2026-06-23",
+  "generated_at": "2026-06-23T15:00:00Z",
+  "summary": {
+    "headline": "KaLM reranker decouples query-passage computation for efficient retrieval; EvoEmbedding brings temporal memory to embeddings; agentic benchmarking matures with DailyReport, PlanBench-XL, and PhySciBench; OpenMontage and codebase-memory-mcp lead GitHub trending",
+    "body": "Today's top HuggingFace paper is **KaLM-Reranker-V1**, which proposes a \"fast but not late interaction\" (FBNL) reranker that decouples query and passage encoding while retaining expressive cross-attention relevance modeling. This is a meaningful architectural step: existing cross-encoders couple query and passage at encode time (expensive), while bi-encoders are fast but sacrifice quality. KaLM-V1 stakes out a middle ground that could reshape production retrieval stacks.\n\nThe second notable paper is **EvoEmbedding**, which challenges the static nature of existing embedding models by introducing evolvable representations that update a latent memory state as they process sequential inputs. This is directly relevant to long-context RAG and agent memory systems where context evolves over time. The agentic benchmarking theme continues with three papers: **DailyReport** (open-ended search agent eval), **PlanBench-XL** (long-horizon tool-use planning over 1,665 tools), and **PhySciBench** (physics/chemistry reasoning for deep research agents).\n\nOn GitHub, **OpenMontage** (2,938 stars today) leads as the first open agentic video pipeline, and **codebase-memory-mcp** (2,051 stars today) continues its momentum as a zero-dependency code knowledge graph server. The overall signal: 2026 H1 is the year of agentic infrastructure hardening — evaluation, memory, retrieval efficiency, and orchestration are all maturing rapidly.",
+    "key_themes": ["efficient-reranking", "evolvable-embeddings", "agentic-benchmarking", "long-horizon-planning", "agentic-video"]
+  },
+  "researcher_notes": "**KaLM's FBNL architecture is worth watching closely.** The encoder-decoder design that decouples query/passage computation while enabling cross-attention interaction is a real engineering achievement. If the quality-speed tradeoff holds at scale, this pattern could become the default for production rerankers in 2026 — particularly for RAG pipelines where passage indices are precomputed.\n\n**EvoEmbedding surfaces a gap nobody talks about enough.** Most RAG systems treat embeddings as static snapshots. EvoEmbedding's sequential latent memory is a conceptual precursor to what \"memory-augmented retrieval\" will look like when agents operate over long conversations or evolving document corpora. The paper's focus on temporal order is the key insight.\n\n**The agentic benchmarking wave is accelerating.** Three benchmarks in one day (DailyReport, PlanBench-XL, PhySciBench) signals that the community is recognizing a measurement gap: existing evals don't cover real-world search tasks, large tool ecosystems, or science-domain reasoning. Expect a consolidation paper or leaderboard to emerge in H2 2026.\n\n**PlanBench-XL's 1,665-tool eval is a stress test for tool retrieval.** The key insight is that agents must iteratively discover relevant tools rather than having full visibility — this mirrors production scenarios where tool catalogs are too large to fit in context. This benchmark could become the standard for evaluating tool-augmented LLMs in enterprise settings.\n\n**OpenMontage (2,938 stars today) is the agentic video moment.** The first open pipeline for agentic video generation/editing represents a category-defining moment similar to when LangChain first appeared for text agents. Watch for rapid ecosystem growth around this repo.",
+  "papers": [
+    {
+      "id": "kalm-reranker-v1",
+      "title": "KaLM-Reranker-V1: Fast but Not Late Interaction for Compressed Document Reranking",
+      "authors": ["Xinping Zhao", "Jiaxin Xu", "Ziqi Dai", "Xin Zhang", "Shouzheng Huang"],
+      "affiliations": ["Harbin Institute of Technology", "Tencent AI Lab"],
+      "summary": "KaLM-Reranker-V1 proposes a fast-but-not-late-interaction (FBNL) reranker that decouples query and passage computation via an encoder-decoder architecture, enabling precomputation of passage representations while preserving expressive cross-attention relevance modeling.",
+      "key_findings": [
+        "FBNL decoupling allows passage indices to be precomputed offline, reducing online latency significantly vs. full cross-encoders",
+        "Encoder-decoder architecture retains cross-attention interaction at decode time, outperforming bi-encoder baselines on relevance quality",
+        "KaLM-Reranker-V1 achieves competitive BEIR and MSMARCO scores while enabling deployment at cross-encoder quality with bi-encoder speed characteristics"
+      ],
+      "tags": ["retrieval", "reranking", "encoder-decoder", "rag", "information-retrieval"],
+      "relevance": "high",
+      "engagement": { "upvotes": 12, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.22807",
+        "huggingface": "https://huggingface.co/papers/2606.22807",
+        "pdf": "https://arxiv.org/pdf/2606.22807"
+      }
+    },
+    {
+      "id": "evo-embedding",
+      "title": "EvoEmbedding: Evolvable Representations for Long-Context Retrieval and Agentic Memory",
+      "authors": ["Chang Nie", "Chaoyou Fu", "Junlan Feng", "Caifeng Shan"],
+      "affiliations": ["University of Science and Technology of China", "China Mobile Research Institute"],
+      "summary": "EvoEmbedding introduces a novel embedding model that generates evolvable representations by maintaining a continuously updated latent memory as it sequentially processes inputs, enabling retrieval over long-context and temporally ordered documents.",
+      "key_findings": [
+        "Static embeddings fail for sequential/temporal corpora where context evolves over time",
+        "EvoEmbedding's latent memory state tracks document order and enables context-aware retrieval across long sequences",
+        "Strong performance on long-context retrieval benchmarks where standard bi-encoders degrade"
+      ],
+      "tags": ["embeddings", "retrieval", "long-context", "agentic-memory", "sequential-modeling"],
+      "relevance": "high",
+      "engagement": { "upvotes": 10, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.21649",
+        "huggingface": "https://huggingface.co/papers/2606.21649",
+        "pdf": "https://arxiv.org/pdf/2606.21649"
+      }
+    },
+    {
+      "id": "world-action-models-survey",
+      "title": "World Action Models: A Survey",
+      "authors": ["Qiuhong Shen", "Shihua Zhang", "Yue Liao", "Qi Li", "Zhenxiong Tan"],
+      "affiliations": ["Peking University", "Shanghai AI Laboratory"],
+      "summary": "A comprehensive survey distinguishing World Action Models (WAMs) from broad world models, video generation models, and VLA policies, providing a unified taxonomy for embodied predictive-action architectures.",
+      "key_findings": [
+        "WAMs are embodied predictive-action models that make forecasts of the future available to action — distinct from general world models",
+        "Two lines: video-generation-based WAMs and language/VLM-based WAMs without a video generation core",
+        "The survey clarifies blurred boundaries among WAMs, video generation models, action-grounded video world models, and VLA policies"
+      ],
+      "tags": ["world-models", "robotics", "vla", "video-generation", "survey"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 6, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.20781",
+        "huggingface": "https://huggingface.co/papers/2606.20781",
+        "pdf": "https://arxiv.org/pdf/2606.20781"
+      }
+    },
+    {
+      "id": "dailyreport-benchmark",
+      "title": "DailyReport: An Open-ended Benchmark for Evaluating Search Agents on Daily Search Tasks",
+      "authors": ["Jingxuan Han", "Wei Liu", "Mingyang Zhu", "Youpeng Wang", "Ziwen Wang"],
+      "affiliations": ["Alibaba DAMO Academy", "Zhejiang University"],
+      "summary": "DailyReport introduces an open-ended benchmark for search agents that covers real-world daily search tasks, moving beyond specialized academic tasks with fine-grained rubrics for improved evaluation interpretability.",
+      "key_findings": [
+        "Prior search agent benchmarks focus on specialized tasks unlikely to arise in real-world user scenarios",
+        "DailyReport provides fine-grained task-level rubrics, enabling better interpretability of agent performance",
+        "Open-ended evaluation format exposes failure modes hidden by coarse binary rubrics in existing benchmarks"
+      ],
+      "tags": ["search-agents", "benchmarking", "evaluation", "llm-agents", "information-seeking"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 5, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.12871",
+        "huggingface": "https://huggingface.co/papers/2606.12871",
+        "pdf": "https://arxiv.org/pdf/2606.12871"
+      }
+    },
+    {
+      "id": "physci-bench",
+      "title": "Deep Research in Physical Sciences: A Multi-Agent Framework and Comprehensive Benchmark",
+      "authors": ["Yigeng Jiang", "Tengchao Yang", "Taoyong Cui", "Jiaxing Wan", "Yuan Wang"],
+      "affiliations": ["Tsinghua University", "Institute of Physics, Chinese Academy of Sciences"],
+      "summary": "PhySciBench introduces a 200-question benchmark for deep research agents in physics and chemistry, evaluating multi-step scientific reasoning and autonomous research capabilities of LLM-based agents.",
+      "key_findings": [
+        "200 expert-curated questions balanced between physics and chemistry, targeting scientific depth rather than breadth",
+        "Current deep research agents perform significantly below human expert baselines on domain-specific scientific reasoning",
+        "Multi-agent framework design outperforms single-agent approaches on complex multi-step physics derivations"
+      ],
+      "tags": ["scientific-reasoning", "deep-research", "benchmarking", "multi-agent", "physics"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 4, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.18648",
+        "huggingface": "https://huggingface.co/papers/2606.18648",
+        "pdf": "https://arxiv.org/pdf/2606.18648"
+      }
+    },
+    {
+      "id": "planbench-xl",
+      "title": "PlanBench-XL: Evaluating Long-Horizon Planning of LLM Tool-Use Agents in Large-Scale Tool Ecosystems",
+      "authors": ["Jiayu Liu", "Qihan Lin", "Cheng Qian", "Rui Wang", "Emre Can Acikgoz"],
+      "affiliations": ["University of Illinois Urbana-Champaign", "Microsoft Research"],
+      "summary": "PlanBench-XL is an interactive benchmark of 327 retail tasks over 1,665 tools that evaluates whether LLM agents can iteratively discover tools, infer implicit sub-goals, and adapt over long horizons under retrieval-limited tool visibility.",
+      "key_findings": [
+        "327 retail tasks spanning 1,665 tools stress-test tool discovery and long-horizon planning simultaneously",
+        "Retrieval-limited tool visibility (agents cannot see all tools at once) is a critical and understudied challenge",
+        "Current top LLMs struggle significantly with multi-step tool chaining when tool catalogs exceed context windows"
+      ],
+      "tags": ["tool-use", "planning", "benchmarking", "llm-agents", "retrieval"],
+      "relevance": "high",
+      "engagement": { "upvotes": 3, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.22388",
+        "huggingface": "https://huggingface.co/papers/2606.22388",
+        "pdf": "https://arxiv.org/pdf/2606.22388"
+      }
+    },
+    {
+      "id": "reward-backprop-flow-matching",
+      "title": "Exploring the Design Space of Reward Backpropagation for Flow Matching",
+      "authors": ["Ruoyu Wang", "Boye Niu", "Xiangxin Zhou", "Yushi Huang", "Tongliang Liu"],
+      "affiliations": ["University of Sydney", "ByteDance Research"],
+      "summary": "A systematic study of reward backpropagation pathologies in text-to-image flow matching models, proposing connector-based methods that replace full backward trajectories with short pinned paths to avoid activation storage and gradient inflation issues.",
+      "key_findings": [
+        "Full reward backpropagation through flow matching sampling trajectories is infeasible at scale due to activation memory and gradient inflation",
+        "Connector-based methods (e.g. LeapAlign) replace the full backward path with a short pinned segment, enabling efficient reward alignment",
+        "Systematic design space exploration reveals key tradeoffs between reward fidelity and training stability"
+      ],
+      "tags": ["flow-matching", "reward-backpropagation", "text-to-image", "rlhf", "diffusion"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 4, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.11075",
+        "huggingface": "https://huggingface.co/papers/2606.11075",
+        "pdf": "https://arxiv.org/pdf/2606.11075"
+      }
+    },
+    {
+      "id": "hydrahead-attention-hybridization",
+      "title": "HydraHead: From Head-Level Functional Heterogeneity to Specialized Attention Hybridization",
+      "authors": ["Zhentao Tan", "Wei Chen", "Jingyi Shen", "Yao Liu", "Xu Shen"],
+      "affiliations": ["Institute of Computing Technology, Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+      "summary": "HydraHead proposes head-level hybridization of full attention and linear attention, motivated by interpretability analysis showing that attention heads within a layer exhibit heterogeneous functional specialization rather than uniform behavior.",
+      "key_findings": [
+        "Attention heads within the same layer exhibit block-wise functional heterogeneity — not all heads need full attention",
+        "Head-level hybridization (mixing FA and LA per-head) outperforms layer-level hybridization approaches",
+        "HydraHead reduces quadratic complexity for long-context processing while preserving full-attention quality for critical heads"
+      ],
+      "tags": ["attention", "linear-attention", "hybrid-architecture", "long-context", "efficiency"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 2, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.20097",
+        "huggingface": "https://huggingface.co/papers/2606.20097",
+        "pdf": "https://arxiv.org/pdf/2606.20097"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-r1",
+      "name": "DeepSeek-R1",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-R1 remains the most-liked open-source model on HuggingFace with 13,408 likes and nearly 7M downloads — a testament to its continued dominance as the open-weight reasoning model of choice.",
+      "task_type": "text-generation",
+      "model_size": "671B",
+      "tags": ["transformers", "deepseek", "reasoning", "text-generation", "conversational"],
+      "metrics": { "downloads": 6909931, "likes": 13408 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+    },
+    {
+      "id": "flux-1-dev",
+      "name": "FLUX.1-dev",
+      "organization": "Black Forest Labs",
+      "description": "FLUX.1-dev continues as the second most-liked model overall with 13,317 likes and over 1M downloads, cementing its position as the leading open-weight text-to-image model.",
+      "task_type": "text-to-image",
+      "model_size": "12B",
+      "tags": ["diffusers", "flux", "text-to-image", "image-generation"],
+      "metrics": { "downloads": 1118340, "likes": 13317 },
+      "source_url": "https://huggingface.co/black-forest-labs/FLUX.1-dev"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-V4-Pro maintains strong traction with nearly 5,000 likes and 2.4M downloads, confirming sustained open-source LLM consumption at the frontier level.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["transformers", "deepseek_v4", "text-generation", "conversational"],
+      "metrics": { "downloads": 2421858, "likes": 5013 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "openai-gpt-oss-120b",
+      "name": "GPT-OSS-120B",
+      "organization": "OpenAI",
+      "description": "OpenAI's GPT-OSS-120B has rapidly accumulated 4,907 likes and 4M downloads since its open release, representing a significant shift in OpenAI's open-source strategy.",
+      "task_type": "text-generation",
+      "model_size": "120B",
+      "tags": ["transformers", "gpt_oss", "text-generation", "vllm"],
+      "metrics": { "downloads": 4059983, "likes": 4907 },
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b"
+    },
+    {
+      "id": "z-image-turbo",
+      "name": "Z-Image-Turbo",
+      "organization": "Tongyi-MAI (Alibaba)",
+      "description": "Alibaba's Z-Image-Turbo is a fast text-to-image model with 4,853 likes and 934K downloads, representing the top Chinese commercial lab entry in image generation.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["diffusers", "text-to-image", "turbo", "efficient-generation"],
+      "metrics": { "downloads": 934514, "likes": 4853 },
+      "source_url": "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "calesthio-openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "OpenMontage is the first open-source agentic video pipeline, enabling autonomous video generation and editing through agent-driven workflows. Leading GitHub trending today with 2,938 stars.",
+      "language": "Python",
+      "stars": 2938,
+      "stars_today": 2938,
+      "forks": 0,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["agentic", "video-generation", "pipeline", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "deusdata-codebase-memory-mcp",
+      "name": "DeusData/codebase-memory-mcp",
+      "description": "A zero-dependency MCP server that indexes codebases into a static knowledge graph and answers queries in sub-millisecond latency. Supports 158 languages with a single binary distribution.",
+      "language": "Rust",
+      "stars": 2051,
+      "stars_today": 2051,
+      "forks": 0,
+      "url": "https://github.com/DeusData/codebase-memory-mcp",
+      "tags": ["mcp", "code-intelligence", "knowledge-graph", "claude-code"],
+      "relevance": "high"
+    },
+    {
+      "id": "palmier-io-palmier-pro",
+      "name": "palmier-io/palmier-pro",
+      "description": "Palmier Pro is an AI-powered development environment with deep codebase understanding, earning 956 stars today as developers seek smarter code navigation tools.",
+      "language": "TypeScript",
+      "stars": 956,
+      "stars_today": 956,
+      "forks": 0,
+      "url": "https://github.com/palmier-io/palmier-pro",
+      "tags": ["ide", "ai-coding", "code-intelligence"],
+      "relevance": "medium"
+    },
+    {
+      "id": "jamiepine-voicebox",
+      "name": "jamiepine/voicebox",
+      "description": "Voicebox is an open-source voice AI interface that enables real-time voice conversations with LLMs, gaining 728 stars today as voice-first AI interaction grows.",
+      "language": "TypeScript",
+      "stars": 728,
+      "stars_today": 728,
+      "forks": 0,
+      "url": "https://github.com/jamiepine/voicebox",
+      "tags": ["voice-ai", "real-time", "llm-interface"],
+      "relevance": "medium"
+    },
+    {
+      "id": "stirling-tools-stirling-pdf",
+      "name": "Stirling-Tools/Stirling-PDF",
+      "description": "Stirling-PDF is a self-hosted PDF manipulation tool that continues to trend with 573 stars today, serving as an indicator of growing demand for privacy-preserving document tools.",
+      "language": "Java",
+      "stars": 54000,
+      "stars_today": 573,
+      "forks": 0,
+      "url": "https://github.com/Stirling-Tools/Stirling-PDF",
+      "tags": ["pdf", "self-hosted", "document-processing"],
+      "relevance": "low"
+    },
+    {
+      "id": "bytedance-deer-flow",
+      "name": "bytedance/deer-flow",
+      "description": "ByteDance's deer-flow is an agentic workflow orchestration framework, reflecting the major AI labs' push to open-source their internal agent infrastructure.",
+      "language": "Python",
+      "stars": 15000,
+      "stars_today": 193,
+      "forks": 0,
+      "url": "https://github.com/bytedance/deer-flow",
+      "tags": ["agentic", "workflow", "orchestration", "bytedance"],
+      "relevance": "medium"
+    },
+    {
+      "id": "firecrawl-firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "Firecrawl is a web scraping and crawling API optimized for LLM data ingestion, continuing to trend as the go-to web content extraction layer for AI applications.",
+      "language": "TypeScript",
+      "stars": 38000,
+      "stars_today": 100,
+      "forks": 0,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": ["web-scraping", "llm-data", "crawling", "rag"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Efficient Retrieval Architecture",
+      "description": "KaLM-Reranker-V1 and EvoEmbedding both attack fundamental limitations in retrieval systems: KaLM decouples query/passage computation for speed, while EvoEmbedding adds temporal memory for evolving corpora.",
+      "related_paper_ids": ["kalm-reranker-v1", "evo-embedding"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Benchmarking Wave",
+      "description": "Three major benchmarks released today (DailyReport, PlanBench-XL, PhySciBench) signal a community consensus that existing evals are insufficient for real-world agentic systems.",
+      "related_paper_ids": ["dailyreport-benchmark", "planbench-xl", "physci-bench"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Hybrid Attention Architectures",
+      "description": "HydraHead extends hybrid attention from layer-level to head-level, motivated by interpretability evidence of within-layer functional heterogeneity.",
+      "related_paper_ids": ["hydrahead-attention-hybridization"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Agentic Video Pipelines",
+      "description": "OpenMontage's explosive debut as the first open agentic video pipeline marks a new frontier in AI-driven video creation and editing.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Code Intelligence MCP Tools",
+      "description": "codebase-memory-mcp's strong showing (2,051 stars today) reflects growing demand for sub-millisecond code intelligence layers compatible with Claude Code and similar agents.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-23T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-06-23T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv CS",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-23T14:57:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-23T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-23T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
