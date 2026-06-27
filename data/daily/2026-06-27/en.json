@@ -1,0 +1,661 @@
+{
+  "version": "1.0",
+  "date": "2026-06-27",
+  "generated_at": "2026-06-27T14:57:00Z",
+  "summary": {
+    "headline": "Verification becomes the bottleneck for coding agents; DanceOPD unifies conflicting image generation capabilities via field distillation; agent infrastructure explodes with design.md, OpenMontage, and AI-Berkshire",
+    "body": "Today's research landscape is dominated by a critical theme: **the limits of verification in agentic AI**. \"The Verification Horizon\" argues that as coding agents become more capable, reliably verifying their outputs has become harder than generating them — every verifier is merely a proxy for human intent. This pairs with work on multi-step tool-use RL collapse, discretizing reward models, and the co-failure ceiling for multi-model systems, collectively painting a picture of an AI field grappling with the gap between generation capability and reliable evaluation.\n\n**Unified generative models** continue to advance. DanceOPD from ByteDance Seed introduces on-policy generative field distillation to compose conflicting capabilities (T2I, local editing, global editing) in flow-matching models. ViQ from Tencent Hunyuan achieves 20-70% training acceleration by unifying text and vision in discrete representations. Qwen-Image-Agent bridges the \"Context Gap\" between underspecified user requests and T2I model requirements through agentic planning and grounding.\n\n**GitHub trending is explosive.** Google Labs' design.md (2407 stars today) proposes a structured specification for giving coding agents persistent design system awareness. OpenMontage (1754 stars today) delivers 52 tools for agentic video production. AI-Berkshire (1274 stars today) applies multi-agent Claude Code to value investing research. The Gemma-4 12B fine-tune ecosystem and GLM-5.2 MoE continue dominating model trending.",
+    "key_themes": ["verification-bottleneck", "unified-generative-models", "agentic-rl-and-distillation", "agent-infrastructure-tooling", "world-modeling", "efficient-inference"]
+  },
+  "researcher_notes": "**The verification crisis is real and underappreciated.** \"The Verification Horizon\" from Alibaba DAMO makes a provocative but well-supported argument: for coding agents, the classical intuition that verification is easier than generation is being inverted. Every verifier — tests, static analysis, human review — is only a proxy for intent, and as agents produce increasingly complex solutions, these proxies become increasingly leaky. The paper's framing of verification as subject to a \"horizon\" beyond which no practical verifier can reliably distinguish correct from incorrect is a sobering contribution. Combined with the co-failure ceiling paper showing that multi-model systems hit a hard accuracy cap determined by correlated failures, we're seeing a maturation of the field's understanding of its own limitations.\n\n**DanceOPD's velocity field formulation is elegant and practical.** By treating each capability (T2I, editing, CFG) as a velocity field over a shared flow state space, it turns the capability-conflict problem into a principled field composition problem. The key insight is training on student-induced rollout states rather than teacher states, avoiding distribution mismatch. That it also absorbs classifier-free guidance as just another field is a deployment simplification that practitioners will appreciate.\n\n**OPID and the tool-use RL collapse paper are two sides of the same coin.** OPID shows how to extract dense supervision from sparse trajectory rewards via hierarchical skill distillation, while the collapse paper diagnoses why naive RL often fails for tool use — unexpected probability spikes in control tokens cause catastrophic structural failure. Together they suggest that stable agentic RL requires careful attention to token-level dynamics, not just outcome-level rewards.\n\n**The agent infrastructure buildout is accelerating into specialization.** design.md (2407 stars today) addresses a genuinely unserved need — coding agents have no persistent design context. AI-Berkshire applies multi-agent patterns to value investing. graphify turns codebases into knowledge graphs. gstack packages an opinionated agent toolkit. This is the \"picks and shovels\" phase of the agent gold rush, and the projects gaining traction are the ones solving specific workflow gaps rather than building yet another general agent framework.\n\n**Sleeper: Microsoft's FastContext-1.0-4B-SFT.** A 4B parameter model focused on fast context processing, built on Qwen3 architecture, is trending with 355 likes. If it delivers efficient long-context handling at this scale, it could become a workhorse for retrieval-augmented and agentic workflows where full-size models are too expensive.",
+  "papers": [
+    {
+      "id": "danceopd",
+      "title": "DanceOPD: On-Policy Generative Field Distillation",
+      "authors": ["Wei Zhou", "Xiongwei Zhu", "Zelin Xu", "Bo Dong", "Lixue Gong et al."],
+      "affiliations": ["ByteDance Seed", "National University of Singapore"],
+      "summary": "DanceOPD proposes an on-policy generative field distillation framework for flow-matching models that routes each sample to one capability field and trains with a velocity MSE objective. It addresses the fundamental tension between conflicting capabilities (T2I, local editing, global editing) in unified image generation models by treating each capability as a velocity field over a shared flow state space.",
+      "key_findings": [
+        "Treats each capability (T2I, editing, CFG) as a velocity field over a shared flow state space, enabling principled composition",
+        "On-policy training on student-induced rollout states avoids distribution mismatch between teacher and student",
+        "Absorbs classifier-free guidance as just another field, simplifying deployment while improving multi-capability composition"
+      ],
+      "tags": ["flow-matching", "distillation", "image-generation", "multi-capability", "unified-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27377",
+        "huggingface": "https://huggingface.co/papers/2606.27377",
+        "pdf": "https://arxiv.org/pdf/2606.27377"
+      }
+    },
+    {
+      "id": "viq",
+      "title": "ViQ: Text-Aligned Visual Quantized Representations at Any Resolution",
+      "authors": ["Xumin Yu", "Zuyan Liu", "Zhenyu Yang", "Yuhao Dong", "Shengsheng Qian et al."],
+      "affiliations": ["Tencent Hunyuan", "Tsinghua University"],
+      "summary": "ViQ presents a visual quantization framework that balances semantic richness and detail preservation in discrete representations, enabling efficient multimodal training with native-resolution inputs. Uses text-aligned pre-training followed by proximal representation learning for progressive feature compaction.",
+      "key_findings": [
+        "Two-stage quantization: text-aligned pre-training provides semantic supervision, then proximal representation learning progressively compacts the feature space",
+        "Position-aware head-wise quantization enables flexible processing of arbitrary resolutions without fixed-grid assumptions",
+        "Achieves 20-70% training acceleration across different base LLMs while maintaining competitive performance with continuous-feature encoders"
+      ],
+      "tags": ["visual-quantization", "multimodal", "discrete-representations", "efficiency", "native-resolution"],
+      "relevance": "high",
+      "engagement": {"upvotes": 36, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27313",
+        "huggingface": "https://huggingface.co/papers/2606.27313",
+        "pdf": "https://arxiv.org/pdf/2606.27313"
+      }
+    },
+    {
+      "id": "opid",
+      "title": "OPID: On-Policy Skill Distillation for Agentic Reinforcement Learning",
+      "authors": ["Shuo Yang", "Jinyang Wu", "Zhengxi Lu", "Yuhao Shen", "Fan Zhang et al."],
+      "affiliations": ["Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+      "summary": "OPID extracts dense skill supervision directly from completed on-policy trajectories via hierarchical skills (episode-level and step-level), combined with a critical-first routing mechanism. The token-level self-distillation advantage is merged with outcome-level rewards for stable policy optimization.",
+      "key_findings": [
+        "Hierarchical skill extraction: episode-level skills capture global workflows, step-level skills capture critical decision knowledge",
+        "Critical-first routing uses step-level skills at critical timesteps and falls back to episode-level guidance otherwise",
+        "Improves agent performance, sample efficiency, and robustness over outcome-only RL on ALFWorld, WebShop, and Search-based QA"
+      ],
+      "tags": ["reinforcement-learning", "skill-distillation", "agentic-rl", "on-policy", "language-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 35, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26790",
+        "huggingface": "https://huggingface.co/papers/2606.26790",
+        "pdf": "https://arxiv.org/pdf/2606.26790"
+      }
+    },
+    {
+      "id": "qwen-image-agent",
+      "title": "Qwen-Image-Agent: Bridging the Context Gap in Real-World Image Generation",
+      "authors": ["Zekai Zhang", "Jiahao Li", "Jie Zhang", "Kaiyuan Gao", "Kun Yan et al."],
+      "affiliations": ["Alibaba Group", "Peking University"],
+      "summary": "Qwen-Image-Agent introduces a unified agentic framework that bridges the 'Context Gap' between underspecified user requests and T2I model requirements. Integrates planning, reasoning, search, memory, and feedback in a context-centric pipeline, with a new IA-Bench benchmark for evaluating agentic image generation.",
+      "key_findings": [
+        "Identifies the 'Context Gap' as a core production bottleneck: user requests are often implicit, underspecified, or require current knowledge",
+        "Context-Aware Planning identifies missing context and acquires it through reason, search, memory, and feedback modules",
+        "State-of-the-art on IA-Bench, Mindbench, and WISE-Verified, outperforming strong baselines"
+      ],
+      "tags": ["agentic-generation", "text-to-image", "context-grounding", "multimodal-agent", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 35, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26907",
+        "huggingface": "https://huggingface.co/papers/2606.26907",
+        "pdf": "https://arxiv.org/pdf/2606.26907"
+      }
+    },
+    {
+      "id": "verification-horizon",
+      "title": "The Verification Horizon: No Silver Bullet for Coding Agent Rewards",
+      "authors": ["Binghai Wang", "Chenlong Zhang", "Dayiheng Liu", "Jiajun Zhang", "Jiawei Chen et al."],
+      "affiliations": ["Alibaba DAMO Academy", "Chinese Academy of Sciences"],
+      "summary": "Argues that verification has become harder than generation for coding agents. Every verifier is only a proxy for human intent, creating a 'verification horizon' beyond which no practical verifier can reliably distinguish correct from incorrect solutions. Proposes a taxonomy of verification approaches and their fundamental limitations.",
+      "key_findings": [
+        "The classical intuition that verification is easier than generation is being inverted for complex coding tasks",
+        "All verification proxies (tests, static analysis, execution) are subject to Goodhart's Law when used as RL rewards",
+        "Identifies a 'verification horizon' that bounds the complexity of tasks where automated verification remains reliable"
+      ],
+      "tags": ["coding-agents", "verification", "reward-design", "reinforcement-learning", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 34, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26300",
+        "huggingface": "https://huggingface.co/papers/2606.26300",
+        "pdf": "https://arxiv.org/pdf/2606.26300"
+      }
+    },
+    {
+      "id": "jetspec",
+      "title": "JetSpec: Breaking the Scaling Ceiling of Speculative Decoding with Parallel Tree Drafting",
+      "authors": ["Lanxiang Hu", "Zhaoxiang Feng", "Yulun Wu", "Haoran Yuan", "Yujie Zhao et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "JetSpec overcomes the scaling limitation of speculative decoding by introducing parallel tree drafting. Prior head-based methods face a causality-efficiency dilemma; JetSpec sidesteps this by generating path-conditioned candidate trees in parallel while maintaining verification correctness.",
+      "key_findings": [
+        "Identifies a causality-efficiency dilemma in existing head-based speculative decoding methods",
+        "Parallel tree drafting generates candidate trees without autoregressive dependency between draft tokens",
+        "Breaks the scaling ceiling: increasing draft budget now yields proportional speed improvements with high acceptance rates"
+      ],
+      "tags": ["speculative-decoding", "inference-efficiency", "llm-serving", "parallel-decoding", "tree-drafting"],
+      "relevance": "high",
+      "engagement": {"upvotes": 25, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.18394",
+        "huggingface": "https://huggingface.co/papers/2606.18394",
+        "pdf": "https://arxiv.org/pdf/2606.18394"
+      }
+    },
+    {
+      "id": "gui-vs-cli",
+      "title": "GUI vs. CLI: Execution Bottlenecks in Screen-Only and Skill-Mediated Computer-Use Agents",
+      "authors": ["Xiao Zhou", "Siyue Zhang", "Yilun Zhao", "Jinbiao Wei", "Tingyu Song et al."],
+      "affiliations": ["University of Illinois Urbana-Champaign", "Yale University"],
+      "summary": "Introduces a matched execution-layer benchmark of 440 desktop tasks across 18 applications, where GUI agents and CLI agents receive identical goals, states, and verifiers. Reveals systematic execution bottlenecks in screen-only agents vs. skill-mediated approaches.",
+      "key_findings": [
+        "CLI/skill-mediated agents substantially outperform GUI-only agents on complex multi-step tasks",
+        "Screen-only agents suffer from compounding visual grounding errors across long action sequences",
+        "Matched-task evaluation eliminates confounds from task difficulty, initial states, and verification differences"
+      ],
+      "tags": ["computer-use", "agent-evaluation", "gui-agents", "benchmark", "desktop-automation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.24551",
+        "huggingface": "https://huggingface.co/papers/2606.24551",
+        "pdf": "https://arxiv.org/pdf/2606.24551"
+      }
+    },
+    {
+      "id": "fast-leworldmodel",
+      "title": "Fast LeWorldModel",
+      "authors": ["Yuntian Gao", "Xiangyu Xu"],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "Replaces autoregressive latent rollout in JEPA-based visual world models with action-prefix prediction, enabling parallel future-state evaluation and reducing planning computation time while improving average task success rates.",
+      "key_findings": [
+        "Action-prefix prediction eliminates sequential state rollouts, enabling parallel planning evaluation",
+        "Prefix-level supervision forces learning of continuous state evolution, reducing accumulated latent errors",
+        "Improved average success over LeWM with substantially reduced planning computation time"
+      ],
+      "tags": ["world-model", "jepa", "visual-planning", "latent-prediction", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 17, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26217",
+        "huggingface": "https://huggingface.co/papers/2606.26217",
+        "pdf": "https://arxiv.org/pdf/2606.26217"
+      }
+    },
+    {
+      "id": "tool-use-rl-collapse",
+      "title": "Why Multi-Step Tool-Use Reinforcement Learning Collapses and How Supervisory Signals Fix It",
+      "authors": ["Yupu Hao", "Zhuoran Jin", "Huanxuan Liao", "Kang Liu", "Jun Zhao"],
+      "affiliations": ["Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+      "summary": "Diagnoses catastrophic collapse in RL-trained tool-use models: performance abruptly drops and tool-invocation structures fail due to unexpected probability spikes in control tokens. Proposes supervisory signal interventions to stabilize training.",
+      "key_findings": [
+        "Identifies catastrophic collapse mechanism: unexpected probability spikes in specific control tokens disrupt tool invocation structure",
+        "Collapse stems from RL reward signal interference with the learned format of tool calls, not from reward hacking",
+        "Supervisory signals (format constraints, structure-preserving regularization) prevent collapse without sacrificing exploration"
+      ],
+      "tags": ["tool-use", "reinforcement-learning", "training-stability", "language-agents", "collapse"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26027",
+        "huggingface": "https://huggingface.co/papers/2606.26027",
+        "pdf": "https://arxiv.org/pdf/2606.26027"
+      }
+    },
+    {
+      "id": "gauntletbench",
+      "title": "Running the Gauntlet: Re-evaluating the Capabilities of Agents Beyond Familiar Environments",
+      "authors": ["Mykola Vysotskyi", "Runqi Lin", "Grzegorz Biziel", "Michal Zakrzewski", "Sebastian Montagna et al."],
+      "affiliations": ["Samsung R&D Institute Poland", "Samsung Research"],
+      "summary": "GauntletBench introduces a web-based benchmark for evaluating agentic systems on unfamiliar applications with complex tasks across broader capability dimensions. Addresses saturation in existing benchmarks that use popular, well-known applications.",
+      "key_findings": [
+        "Current benchmarks saturate because agents exploit familiarity with popular applications seen during training",
+        "Unfamiliar environments reveal systematic capability gaps in state-of-the-art agents",
+        "Multi-dimensional evaluation across navigation, form-filling, reasoning, and error recovery provides more discriminative assessment"
+      ],
+      "tags": ["agent-evaluation", "benchmark", "web-agents", "generalization", "unfamiliar-environments"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.14397",
+        "huggingface": "https://huggingface.co/papers/2606.14397",
+        "pdf": "https://arxiv.org/pdf/2606.14397"
+      }
+    },
+    {
+      "id": "lisa",
+      "title": "LISA: Likelihood Score Alignment for Visual-condition Controllable Generation",
+      "authors": ["Yanghao Wang", "Hongxu Chen", "Jiazhen Liu", "Zhenqi He", "Rui Liu et al."],
+      "affiliations": ["Peking University", "Alibaba Group"],
+      "summary": "Revisits the prevalent dual-branch paradigm for visual-condition controllable generation through the lens of score-based generative modeling. Shows that the main network preserves visual priors while the side branch provides condition-specific score corrections.",
+      "key_findings": [
+        "Provides score-based theoretical justification for why dual-branch architectures work for controllable generation",
+        "Likelihood score alignment improves training efficiency of the side branch by directly optimizing for score correction",
+        "Achieves improved control quality with fewer training steps than standard dual-branch training"
+      ],
+      "tags": ["controllable-generation", "score-based-models", "dual-branch", "visual-conditions", "diffusion"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27192",
+        "huggingface": "https://huggingface.co/papers/2606.27192",
+        "pdf": "https://arxiv.org/pdf/2606.27192"
+      }
+    },
+    {
+      "id": "coffeebench",
+      "title": "CoffeeBench: Benchmarking Long-Horizon LLM Agents in Heterogeneous Multi-Agent Economies",
+      "authors": ["Issa Sugiura", "Daichi Hattori", "Kazuo Araragi", "Keita Ogawa", "Shota Onose et al."],
+      "affiliations": ["NTT Corporation", "NTT Research"],
+      "summary": "CoffeeBench evaluates LLM agents in long-horizon multi-agent economic systems where autonomous agents must communicate, negotiate, and transact while pursuing independent objectives over extended periods.",
+      "key_findings": [
+        "Multi-agent economic evaluation reveals failures invisible in single-agent benchmarks: coordination breakdowns, exploitative strategies, market instability",
+        "Long-horizon interactions expose compounding decision errors that short-horizon benchmarks miss",
+        "Heterogeneous agent economies create emergent dynamics not captured by self-play or homogeneous populations"
+      ],
+      "tags": ["multi-agent", "economics", "benchmark", "long-horizon", "negotiation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.16613",
+        "huggingface": "https://huggingface.co/papers/2606.16613",
+        "pdf": "https://arxiv.org/pdf/2606.16613"
+      }
+    },
+    {
+      "id": "discretizing-reward-models",
+      "title": "Discretizing Reward Models",
+      "authors": ["Vijay Viswanathan", "Shiqi Wang", "Devamanyu Hazarika", "Chirag Nagpal", "Tongshuang Wu"],
+      "affiliations": ["Carnegie Mellon University", "Microsoft Research"],
+      "summary": "Shows that continuous reward model scores are a serious weakness, not a strength: many responses cluster near identical scores, making fine-grained distinctions unreliable. Discretizing reward models into categorical judgments improves downstream RL stability.",
+      "key_findings": [
+        "Continuous reward scores create an illusion of precision — many responses cluster near identical values",
+        "Discretized (categorical) reward models reduce reward hacking and improve RL training stability",
+        "The apparent strength of continuous scoring (sensitivity to fine-grained differences) is actually its weakness in RL optimization"
+      ],
+      "tags": ["reward-models", "rlhf", "discretization", "training-stability", "alignment"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.21795",
+        "huggingface": "https://huggingface.co/papers/2606.21795",
+        "pdf": "https://arxiv.org/pdf/2606.21795"
+      }
+    },
+    {
+      "id": "co-failure-ceiling",
+      "title": "When Does Combining Language Models Help? A Co-Failure Ceiling on Routing, Voting, and Mixture-of-Agents Across 67 Frontier Models",
+      "authors": ["Josef Chen"],
+      "affiliations": ["Independent Researcher"],
+      "summary": "Shows that multi-model LLM systems (routing, voting, cascades, mixture-of-agents) hit a hard accuracy ceiling determined by beta — the rate at which every model fails on the same query. This co-failure rate, not average pairwise correlation, is the binding constraint.",
+      "key_findings": [
+        "Accuracy of any policy selecting from member model answers cannot exceed 1 - beta, where beta is the all-model co-failure rate",
+        "Average pairwise error correlation (commonly reported) cannot identify beta — laws with identical marginals but different joint structure give different ceilings",
+        "Across 67 frontier models on MMLU-Pro, the co-failure ceiling is surprisingly tight, limiting gains from model combination"
+      ],
+      "tags": ["model-combination", "routing", "voting", "mixture-of-agents", "evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27288",
+        "huggingface": "https://huggingface.co/papers/2606.27288",
+        "pdf": "https://arxiv.org/pdf/2606.27288"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zai-org",
+      "description": "Large-scale Mixture-of-Experts model with Dense Sparse Attention (MoE-DSA) architecture for text generation and conversational tasks. Rapidly gaining community traction as a capable open alternative.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "text-generation"],
+      "metrics": {"downloads": 83589, "likes": 2595},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwen3-6-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored",
+      "organization": "HauhauCS",
+      "description": "Uncensored MoE vision-language model based on Qwen3.6 architecture with 35B total / 3B active parameters. Highest download count in today's trending at 3.4M+.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B",
+      "tags": ["moe", "uncensored", "vision-language", "qwen3.6"],
+      "metrics": {"downloads": 3453492, "likes": 2265},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "gemma-4-12b-coder",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5",
+      "organization": "yuxinlu1",
+      "description": "GGUF-quantized Gemma 4 12B fine-tuned for coding with Fable 5 and Composer 2.5 training. Leading the Gemma-4 coding ecosystem with 516K downloads and 2400 likes.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gemma4", "coding", "gguf", "reasoning"],
+      "metrics": {"downloads": 516333, "likes": 2400},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "3B-parameter image feature extraction model for spatial localization tasks. Trending with nearly 495K downloads and 2385 likes, indicating strong adoption for grounding and detection pipelines.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": ["localization", "image-features", "nvidia", "grounding"],
+      "metrics": {"downloads": 494756, "likes": 2385},
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Feature extraction model for OCR tasks from Baidu, rapidly trending with 134K downloads and 1044 likes. Designed for high-accuracy document and scene text recognition.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["ocr", "feature-extraction", "document-ai", "baidu"],
+      "metrics": {"downloads": 134146, "likes": 1044},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "Compact 3B-parameter reasoning model from WeiboAI focused on mathematical reasoning, built on Qwen2 architecture. Strong community reception with 732 likes.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": ["math", "reasoning", "compact", "qwen2"],
+      "metrics": {"downloads": 54638, "likes": 732},
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5",
+      "organization": "yuxinlu1",
+      "description": "Agentic variant of Gemma 4 12B fine-tuned for terminal/agent workflows with Fable 5 and Composer 2.5. Complements the coding variant with agent-specific capabilities.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gemma4", "agentic", "terminal", "gguf"],
+      "metrics": {"downloads": 186663, "likes": 689},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "nemotron-3-5-asr",
+      "name": "Nemotron-3.5-ASR-Streaming-0.6B",
+      "organization": "NVIDIA",
+      "description": "Lightweight 0.6B streaming automatic speech recognition model from NVIDIA's Nemotron 3.5 family. Designed for real-time speech-to-text with low latency.",
+      "task_type": "speech-recognition",
+      "model_size": "0.6B",
+      "tags": ["asr", "streaming", "speech-recognition", "nvidia"],
+      "metrics": {"downloads": 56434, "likes": 708},
+      "source_url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b"
+    },
+    {
+      "id": "qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M",
+      "organization": "Empero AI",
+      "description": "9B vision-language model based on Qwen3.5 architecture, fine-tuned with Claude-derived reasoning data. Available in both safetensors and GGUF formats.",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": ["vision-language", "qwen3.5", "reasoning", "quantized"],
+      "metrics": {"downloads": 486810, "likes": 591},
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "fastcontext-4b",
+      "name": "FastContext-1.0-4B-SFT",
+      "organization": "Microsoft",
+      "description": "4B parameter model from Microsoft focused on fast context processing, built on Qwen3 architecture. Designed for efficient long-context handling in agentic and retrieval workflows.",
+      "task_type": "text-generation",
+      "model_size": "4B",
+      "tags": ["fast-context", "qwen3", "sft", "efficiency"],
+      "metrics": {"downloads": 5735, "likes": 355},
+      "source_url": "https://huggingface.co/microsoft/FastContext-1.0-4B-SFT"
+    },
+    {
+      "id": "qwen-agentworld",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Agent-oriented MoE model from Alibaba's Qwen team with 35B total / 3B active parameters, specialized for agentic world interaction and multimodal understanding.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B",
+      "tags": ["agent", "moe", "qwen", "multimodal"],
+      "metrics": {"downloads": 13186, "likes": 322},
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Turbo variant of Krea's text-to-image model, offering faster generation with the Krea-2 architecture. Built on top of Krea-2-Raw.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "diffusion", "turbo", "image-generation"],
+      "metrics": {"downloads": 8721, "likes": 285},
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "design-md",
+      "name": "google-labs-code/design.md",
+      "description": "A format specification from Google Labs for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system, analogous to README.md for project documentation.",
+      "language": "TypeScript",
+      "stars": 21319,
+      "stars_today": 2407,
+      "forks": 1727,
+      "url": "https://github.com/google-labs-code/design.md",
+      "tags": ["design-system", "coding-agents", "specification", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "World's first open-source agentic video production system with 12 pipelines, 52 tools, and 500+ agent skills. Turns AI coding assistants into full video production studios.",
+      "language": "Python",
+      "stars": 23676,
+      "stars_today": 1754,
+      "forks": 2634,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["video-production", "agentic", "multimodal", "creative-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "Value investing research framework built on Claude Code with multi-agent adversarial analysis. Implements methodologies from Buffett, Munger, Duan Yongping, and Li Lu.",
+      "language": "Python",
+      "stars": 3149,
+      "stars_today": 1274,
+      "forks": 466,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": ["finance", "multi-agent", "claude-code", "value-investing"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "Gives AI agents eyes to see the entire internet. Read and search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu with one CLI and zero API fees.",
+      "language": "Python",
+      "stars": 42398,
+      "stars_today": 1194,
+      "forks": 3369,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agent-tooling", "web-scraping", "multi-platform", "cli"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-website-cloner",
+      "name": "JCodesMore/ai-website-cloner-template",
+      "description": "Clone any website with one command using AI coding agents. Template-based approach for rapid website reproduction.",
+      "language": "TypeScript",
+      "stars": 21391,
+      "stars_today": 1088,
+      "forks": 3102,
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "tags": ["web-cloning", "ai-agents", "automation", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "trek",
+      "name": "mauriceboe/TREK",
+      "description": "Self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support, SSO, budgets, packing lists, and more.",
+      "language": "TypeScript",
+      "stars": 7684,
+      "stars_today": 1060,
+      "forks": 650,
+      "url": "https://github.com/mauriceboe/TREK",
+      "tags": ["self-hosted", "travel", "collaboration", "pwa"],
+      "relevance": "low"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "Transforms complex documents (PDFs, Office docs) into LLM-ready markdown/JSON for agentic workflows. Leading document parsing tool with consistent high trending.",
+      "language": "Python",
+      "stars": 70455,
+      "stars_today": 960,
+      "forks": 5940,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": ["document-parsing", "pdf", "agentic-workflows", "data-pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan's exact Claude Code setup: 23 opinionated tools that serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA. Massively popular agent toolkit.",
+      "language": "TypeScript",
+      "stars": 116653,
+      "stars_today": 950,
+      "forks": 17312,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": ["claude-code", "agent-toolkit", "developer-tools", "opinionated"],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee",
+      "name": "topoteretes/cognee",
+      "description": "Open-source AI memory platform for agents. Provides persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
+      "language": "Python",
+      "stars": 23242,
+      "stars_today": 729,
+      "forks": 2209,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": ["agent-memory", "knowledge-graph", "self-hosted", "long-term-memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "mediacrawler",
+      "name": "NanmiCoder/MediaCrawler",
+      "description": "Multi-platform social media crawler supporting Xiaohongshu, Douyin, Kuaishou, Bilibili, Weibo, Baidu Tieba, and Zhihu. Content and comment extraction.",
+      "language": "Python",
+      "stars": 53379,
+      "stars_today": 673,
+      "forks": 10979,
+      "url": "https://github.com/NanmiCoder/MediaCrawler",
+      "tags": ["web-scraping", "social-media", "data-collection", "chinese-platforms"],
+      "relevance": "medium"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
+      "language": "Python",
+      "stars": 50137,
+      "stars_today": 637,
+      "forks": 43828,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["finance", "llm-application", "stock-analysis", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "casaos",
+      "name": "IceWhaleTech/CasaOS",
+      "description": "Simple, easy-to-use, elegant open-source personal cloud system. Self-hosted alternative for home servers and personal infrastructure.",
+      "language": "Go",
+      "stars": 35397,
+      "stars_today": 619,
+      "forks": 2027,
+      "url": "https://github.com/IceWhaleTech/CasaOS",
+      "tags": ["self-hosted", "personal-cloud", "home-server", "docker"],
+      "relevance": "low"
+    },
+    {
+      "id": "graphify",
+      "name": "safishamsi/graphify",
+      "description": "AI coding assistant skill that turns any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. Works with Claude Code, Codex, Cursor, and more.",
+      "language": "Python",
+      "stars": 72619,
+      "stars_today": 474,
+      "forks": 7282,
+      "url": "https://github.com/safishamsi/graphify",
+      "tags": ["knowledge-graph", "code-understanding", "ai-assistant", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm",
+      "name": "vllm-project/vllm",
+      "description": "High-throughput and memory-efficient inference and serving engine for LLMs. The de facto standard for production LLM serving.",
+      "language": "Python",
+      "stars": 84471,
+      "stars_today": 178,
+      "forks": 18563,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["llm-serving", "inference", "high-throughput", "production"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "The Verification Crisis in Agentic AI",
+      "description": "Multiple papers converge on a fundamental challenge: as AI agents become more capable at generating solutions, reliably verifying those solutions has become the harder problem. The verification horizon, reward model discretization, and co-failure ceiling collectively expose limits of current evaluation paradigms.",
+      "related_paper_ids": ["verification-horizon", "discretizing-reward-models", "co-failure-ceiling", "tool-use-rl-collapse"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Unified Generative Model Composition",
+      "description": "DanceOPD's velocity field approach and ViQ's text-aligned quantization both tackle the challenge of unifying multiple capabilities in a single model without destructive interference, marking progress toward truly general-purpose generative systems.",
+      "related_paper_ids": ["danceopd", "viq", "lisa", "qwen-image-agent"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic RL: Dense Supervision from Sparse Rewards",
+      "description": "OPID's hierarchical skill distillation and the tool-use RL collapse diagnosis both address the same core problem: outcome-level rewards are insufficient for training capable agents. Token-level supervisory signals and structure-preserving regularization are emerging as necessary complements.",
+      "related_paper_ids": ["opid", "tool-use-rl-collapse", "verification-horizon"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Industrialization",
+      "description": "GitHub trending reveals a shift from building agents to equipping them: design.md for visual context, graphify for code understanding, cognee for persistent memory, Agent-Reach for internet access. The picks-and-shovels phase of the agent ecosystem.",
+      "related_paper_ids": ["gui-vs-cli", "gauntletbench"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "World Modeling Beyond Pixels",
+      "description": "Fast LeWorldModel and PhysiFormer (from yesterday) push world models toward more efficient and physically grounded representations — prefix-parallel planning in latent space and coordinate-space diffusion for physics simulation respectively.",
+      "related_paper_ids": ["fast-leworldmodel"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

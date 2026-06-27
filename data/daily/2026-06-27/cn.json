@@ -1,0 +1,661 @@
+{
+  "version": "1.0",
+  "date": "2026-06-27",
+  "generated_at": "2026-06-27T14:57:00Z",
+  "summary": {
+    "headline": "验证成为编码智能体的瓶颈；DanceOPD通过场蒸馏统一冲突的图像生成能力；design.md、OpenMontage和AI-Berkshire推动智能体基础设施爆发",
+    "body": "今日研究主题围绕一个核心议题：**智能体AI中验证的局限性**。「The Verification Horizon」指出，随着编码智能体能力增强，可靠地验证其输出已比生成更为困难——每个验证器都只是人类意图的近似。这与多步工具使用RL崩溃、奖励模型离散化以及多模型系统共失败上限等工作相互呼应，共同描绘出AI领域在生成能力与可靠评估之间鸿沟的深刻认知。\n\n**统一生成模型**持续推进。字节跳动Seed的DanceOPD引入在策略生成场蒸馏，在流匹配模型中组合冲突的能力（文生图、局部编辑、全局编辑）。腾讯混元的ViQ通过在离散表示中统一文本和视觉，实现20-70%的训练加速。Qwen-Image-Agent通过智能体规划和上下文锚定，弥合了用户模糊请求与文生图模型需求之间的「上下文鸿沟」。\n\n**GitHub趋势火爆。** Google Labs的design.md（今日2407星）提出了一种结构化规范，让编码智能体能持久理解设计系统。OpenMontage（今日1754星）提供52个工具用于智能体视频制作。AI-Berkshire（今日1274星）将多智能体Claude Code应用于价值投资研究。Gemma-4 12B微调生态和GLM-5.2 MoE继续主导模型趋势。",
+    "key_themes": ["verification-bottleneck", "unified-generative-models", "agentic-rl-and-distillation", "agent-infrastructure-tooling", "world-modeling", "efficient-inference"]
+  },
+  "researcher_notes": "**验证危机真实存在且被低估。** 阿里达摩院的「The Verification Horizon」提出了一个有挑衅性但有充分依据的论点：对于编码智能体，验证比生成更容易这一经典直觉正在被颠覆。所有验证代理（测试、静态分析、人工审查）都只是意图的近似，随着智能体产出越来越复杂的解决方案，这些近似变得越来越不可靠。论文将验证描述为一个存在「地平线」的问题——超过这个地平线，任何实际的验证器都无法可靠区分正确与错误——这一贡献发人深省。结合共失败上限论文（表明多模型系统受到相关失败的硬性精度上限约束），我们正见证该领域对自身局限性理解的成熟。\n\n**DanceOPD的速度场公式优雅且实用。** 将每种能力（文生图、编辑、CFG）视为共享流状态空间上的速度场，将能力冲突问题转化为原则性的场组合问题。关键洞见是在学生诱导的展开状态上训练，而非教师状态，避免分布不匹配。同时还能将无分类器引导作为另一个场来吸收，这是从业者会欣赏的部署简化。\n\n**OPID和工具使用RL崩溃论文是同一枚硬币的两面。** OPID展示了如何通过分层技能蒸馏从稀疏轨迹奖励中提取密集监督，而崩溃论文诊断了为什么朴素RL在工具使用中经常失败——控制标记中意外的概率尖峰导致灾难性的结构失败。两者共同表明，稳定的智能体RL需要仔细关注标记级动态，而不仅仅是结果级奖励。\n\n**智能体基础设施建设正加速走向专业化。** design.md（今日2407星）解决了一个真正未被满足的需求——编码智能体没有持久的设计上下文。AI-Berkshire将多智能体模式应用于价值投资。graphify将代码库转化为知识图谱。gstack打包了一套有主见的智能体工具包。这是智能体淘金热的「卖铲子」阶段，获得关注的项目是那些解决特定工作流痛点的项目，而非构建又一个通用智能体框架。\n\n**值得关注：微软的FastContext-1.0-4B-SFT。** 一个专注于快速上下文处理的40亿参数模型，基于Qwen3架构构建，趋势中获得355赞。如果它能在这个规模上实现高效的长上下文处理，可能成为检索增强和智能体工作流中的主力模型，因为在这些场景中全尺寸模型过于昂贵。",
+  "papers": [
+    {
+      "id": "danceopd",
+      "title": "DanceOPD：在策略生成场蒸馏",
+      "authors": ["Wei Zhou", "Xiongwei Zhu", "Zelin Xu", "Bo Dong", "Lixue Gong et al."],
+      "affiliations": ["ByteDance Seed", "National University of Singapore"],
+      "summary": "DanceOPD提出了一种在策略生成场蒸馏框架，用于流匹配模型，将每个样本路由到一个能力场，并使用速度MSE目标进行训练。它通过将每种能力视为共享流状态空间上的速度场，解决了统一图像生成模型中冲突能力（文生图、局部编辑、全局编辑）之间的根本张力。",
+      "key_findings": [
+        "将每种能力（文生图、编辑、CFG）视为共享流状态空间上的速度场，实现原则性的能力组合",
+        "在学生诱导的展开状态上进行在策略训练，避免教师与学生之间的分布不匹配",
+        "将无分类器引导作为另一个场来吸收，简化部署同时改善多能力组合"
+      ],
+      "tags": ["flow-matching", "distillation", "image-generation", "multi-capability", "unified-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27377",
+        "huggingface": "https://huggingface.co/papers/2606.27377",
+        "pdf": "https://arxiv.org/pdf/2606.27377"
+      }
+    },
+    {
+      "id": "viq",
+      "title": "ViQ：任意分辨率的文本对齐视觉量化表示",
+      "authors": ["Xumin Yu", "Zuyan Liu", "Zhenyu Yang", "Yuhao Dong", "Shengsheng Qian et al."],
+      "affiliations": ["Tencent Hunyuan", "Tsinghua University"],
+      "summary": "ViQ提出了一种视觉量化框架，在离散表示中平衡语义丰富度和细节保留，实现了使用原生分辨率输入的高效多模态训练。采用文本对齐预训练后接近端表示学习进行渐进式特征压缩。",
+      "key_findings": [
+        "两阶段量化：文本对齐预训练提供语义监督，然后近端表示学习渐进压缩特征空间",
+        "位置感知的分头量化机制实现了任意分辨率的灵活处理，无需固定网格假设",
+        "在不同基础LLM上实现20-70%的训练加速，同时保持与连续特征编码器相当的性能"
+      ],
+      "tags": ["visual-quantization", "multimodal", "discrete-representations", "efficiency", "native-resolution"],
+      "relevance": "high",
+      "engagement": {"upvotes": 36, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27313",
+        "huggingface": "https://huggingface.co/papers/2606.27313",
+        "pdf": "https://arxiv.org/pdf/2606.27313"
+      }
+    },
+    {
+      "id": "opid",
+      "title": "OPID：面向智能体强化学习的在策略技能蒸馏",
+      "authors": ["Shuo Yang", "Jinyang Wu", "Zhengxi Lu", "Yuhao Shen", "Fan Zhang et al."],
+      "affiliations": ["Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+      "summary": "OPID通过分层技能（回合级和步骤级）直接从完成的在策略轨迹中提取密集技能监督，结合关键优先路由机制。标记级自蒸馏优势与结果级奖励合并，实现稳定的策略优化。",
+      "key_findings": [
+        "分层技能提取：回合级技能捕获全局工作流，步骤级技能捕获关键决策知识",
+        "关键优先路由在关键时间步使用步骤级技能，其他情况回退到回合级指导",
+        "在ALFWorld、WebShop和基于搜索的问答上，相比纯结果RL改善了智能体性能、样本效率和鲁棒性"
+      ],
+      "tags": ["reinforcement-learning", "skill-distillation", "agentic-rl", "on-policy", "language-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 35, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26790",
+        "huggingface": "https://huggingface.co/papers/2606.26790",
+        "pdf": "https://arxiv.org/pdf/2606.26790"
+      }
+    },
+    {
+      "id": "qwen-image-agent",
+      "title": "Qwen-Image-Agent：弥合真实世界图像生成中的上下文鸿沟",
+      "authors": ["Zekai Zhang", "Jiahao Li", "Jie Zhang", "Kaiyuan Gao", "Kun Yan et al."],
+      "affiliations": ["Alibaba Group", "Peking University"],
+      "summary": "Qwen-Image-Agent引入了一个统一的智能体框架，弥合用户模糊请求与文生图模型需求之间的「上下文鸿沟」。集成规划、推理、搜索、记忆和反馈于以上下文为中心的流水线中，并推出IA-Bench基准测试。",
+      "key_findings": [
+        "将「上下文鸿沟」识别为核心生产瓶颈：用户请求通常是隐含的、不充分的，或需要当前知识",
+        "上下文感知规划识别缺失的上下文，并通过推理、搜索、记忆和反馈模块获取",
+        "在IA-Bench、Mindbench和WISE-Verified上达到最优性能，超越强基线"
+      ],
+      "tags": ["agentic-generation", "text-to-image", "context-grounding", "multimodal-agent", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 35, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26907",
+        "huggingface": "https://huggingface.co/papers/2606.26907",
+        "pdf": "https://arxiv.org/pdf/2606.26907"
+      }
+    },
+    {
+      "id": "verification-horizon",
+      "title": "验证地平线：编码智能体奖励无银弹",
+      "authors": ["Binghai Wang", "Chenlong Zhang", "Dayiheng Liu", "Jiajun Zhang", "Jiawei Chen et al."],
+      "affiliations": ["Alibaba DAMO Academy", "Chinese Academy of Sciences"],
+      "summary": "论证验证已成为编码智能体中比生成更困难的问题。每个验证器都只是人类意图的近似，创造了一个「验证地平线」，超过此地平线，任何实际的验证器都无法可靠区分正确与错误的解决方案。",
+      "key_findings": [
+        "验证比生成更容易这一经典直觉，在复杂编码任务中正在被颠覆",
+        "所有验证代理（测试、静态分析、执行）作为RL奖励使用时都受古德哈特定律影响",
+        "识别出一个「验证地平线」，限定了自动验证能保持可靠的任务复杂度上界"
+      ],
+      "tags": ["coding-agents", "verification", "reward-design", "reinforcement-learning", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 34, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26300",
+        "huggingface": "https://huggingface.co/papers/2606.26300",
+        "pdf": "https://arxiv.org/pdf/2606.26300"
+      }
+    },
+    {
+      "id": "jetspec",
+      "title": "JetSpec：通过并行树草稿突破推测解码的扩展上限",
+      "authors": ["Lanxiang Hu", "Zhaoxiang Feng", "Yulun Wu", "Haoran Yuan", "Yujie Zhao et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "JetSpec通过引入并行树草稿克服了推测解码的扩展限制。先前的基于头部的方法面临因果性-效率困境；JetSpec通过在并行生成路径条件的候选树同时保持验证正确性来绕过这一问题。",
+      "key_findings": [
+        "识别了现有基于头部的推测解码方法中的因果性-效率困境",
+        "并行树草稿在草稿标记之间无自回归依赖地生成候选树",
+        "突破扩展上限：增加草稿预算现在能带来与高接受率成正比的速度提升"
+      ],
+      "tags": ["speculative-decoding", "inference-efficiency", "llm-serving", "parallel-decoding", "tree-drafting"],
+      "relevance": "high",
+      "engagement": {"upvotes": 25, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.18394",
+        "huggingface": "https://huggingface.co/papers/2606.18394",
+        "pdf": "https://arxiv.org/pdf/2606.18394"
+      }
+    },
+    {
+      "id": "gui-vs-cli",
+      "title": "GUI与CLI：纯屏幕和技能中介计算机使用智能体的执行瓶颈",
+      "authors": ["Xiao Zhou", "Siyue Zhang", "Yilun Zhao", "Jinbiao Wei", "Tingyu Song et al."],
+      "affiliations": ["University of Illinois Urbana-Champaign", "Yale University"],
+      "summary": "引入了一个匹配的执行层基准测试，包含18个应用中的440个桌面任务，其中GUI智能体和CLI智能体接收相同的目标、状态和验证器。揭示了纯屏幕智能体与技能中介方法之间的系统性执行瓶颈。",
+      "key_findings": [
+        "CLI/技能中介智能体在复杂多步任务上大幅优于纯GUI智能体",
+        "纯屏幕智能体在长动作序列中受到视觉锚定误差的复合影响",
+        "匹配任务评估消除了来自任务难度、初始状态和验证差异的混淆因素"
+      ],
+      "tags": ["computer-use", "agent-evaluation", "gui-agents", "benchmark", "desktop-automation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.24551",
+        "huggingface": "https://huggingface.co/papers/2606.24551",
+        "pdf": "https://arxiv.org/pdf/2606.24551"
+      }
+    },
+    {
+      "id": "fast-leworldmodel",
+      "title": "Fast LeWorldModel",
+      "authors": ["Yuntian Gao", "Xiangyu Xu"],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "用动作前缀预测替换基于JEPA的视觉世界模型中的自回归潜变量展开，实现并行未来状态评估，在提高平均任务成功率的同时减少规划计算时间。",
+      "key_findings": [
+        "动作前缀预测消除了顺序状态展开，实现并行规划评估",
+        "前缀级监督迫使模型学习连续状态演化，减少累积的潜空间误差",
+        "在大幅减少规划计算时间的同时，平均成功率优于LeWM"
+      ],
+      "tags": ["world-model", "jepa", "visual-planning", "latent-prediction", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 17, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26217",
+        "huggingface": "https://huggingface.co/papers/2606.26217",
+        "pdf": "https://arxiv.org/pdf/2606.26217"
+      }
+    },
+    {
+      "id": "tool-use-rl-collapse",
+      "title": "为什么多步工具使用强化学习会崩溃以及监督信号如何修复它",
+      "authors": ["Yupu Hao", "Zhuoran Jin", "Huanxuan Liao", "Kang Liu", "Jun Zhao"],
+      "affiliations": ["Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+      "summary": "诊断了RL训练的工具使用模型中的灾难性崩溃：由于控制标记中意外的概率尖峰，性能骤降且工具调用结构失效。提出监督信号干预措施来稳定训练。",
+      "key_findings": [
+        "识别灾难性崩溃机制：特定控制标记中意外的概率尖峰破坏工具调用结构",
+        "崩溃源于RL奖励信号对工具调用学习格式的干扰，而非奖励黑客行为",
+        "监督信号（格式约束、结构保持正则化）在不牺牲探索的情况下防止崩溃"
+      ],
+      "tags": ["tool-use", "reinforcement-learning", "training-stability", "language-agents", "collapse"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26027",
+        "huggingface": "https://huggingface.co/papers/2606.26027",
+        "pdf": "https://arxiv.org/pdf/2606.26027"
+      }
+    },
+    {
+      "id": "gauntletbench",
+      "title": "闯关挑战：在陌生环境中重新评估智能体的能力",
+      "authors": ["Mykola Vysotskyi", "Runqi Lin", "Grzegorz Biziel", "Michal Zakrzewski", "Sebastian Montagna et al."],
+      "affiliations": ["Samsung R&D Institute Poland", "Samsung Research"],
+      "summary": "GauntletBench引入了一个基于网页的基准测试，用于在不熟悉的应用和更广泛的能力维度上评估智能体系统。解决了现有基准因使用流行应用而导致的饱和问题。",
+      "key_findings": [
+        "当前基准饱和是因为智能体利用了对训练中见过的流行应用的熟悉度",
+        "陌生环境揭示了最先进智能体中的系统性能力差距",
+        "涵盖导航、表单填写、推理和错误恢复的多维评估提供了更具区分度的评估"
+      ],
+      "tags": ["agent-evaluation", "benchmark", "web-agents", "generalization", "unfamiliar-environments"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.14397",
+        "huggingface": "https://huggingface.co/papers/2606.14397",
+        "pdf": "https://arxiv.org/pdf/2606.14397"
+      }
+    },
+    {
+      "id": "lisa",
+      "title": "LISA：用于视觉条件可控生成的似然分数对齐",
+      "authors": ["Yanghao Wang", "Hongxu Chen", "Jiazhen Liu", "Zhenqi He", "Rui Liu et al."],
+      "affiliations": ["Peking University", "Alibaba Group"],
+      "summary": "从基于分数的生成建模角度重新审视视觉条件可控生成中流行的双分支范式。表明主网络保留视觉先验，而侧分支提供条件特定的分数修正。",
+      "key_findings": [
+        "为双分支架构在可控生成中的有效性提供了基于分数的理论论证",
+        "似然分数对齐通过直接优化分数修正来提高侧分支的训练效率",
+        "以更少的训练步骤实现了比标准双分支训练更好的控制质量"
+      ],
+      "tags": ["controllable-generation", "score-based-models", "dual-branch", "visual-conditions", "diffusion"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27192",
+        "huggingface": "https://huggingface.co/papers/2606.27192",
+        "pdf": "https://arxiv.org/pdf/2606.27192"
+      }
+    },
+    {
+      "id": "coffeebench",
+      "title": "CoffeeBench：异构多智能体经济中的长程LLM智能体基准测试",
+      "authors": ["Issa Sugiura", "Daichi Hattori", "Kazuo Araragi", "Keita Ogawa", "Shota Onose et al."],
+      "affiliations": ["NTT Corporation", "NTT Research"],
+      "summary": "CoffeeBench在长程多智能体经济系统中评估LLM智能体，其中自主智能体需在追求独立目标的同时，在较长时期内进行通信、协商和交易。",
+      "key_findings": [
+        "多智能体经济评估揭示了单智能体基准中不可见的失败：协调崩溃、剥削性策略、市场不稳定",
+        "长程交互暴露了短程基准测试遗漏的复合决策错误",
+        "异构智能体经济创造了同质群体或自我博弈无法捕获的涌现动态"
+      ],
+      "tags": ["multi-agent", "economics", "benchmark", "long-horizon", "negotiation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.16613",
+        "huggingface": "https://huggingface.co/papers/2606.16613",
+        "pdf": "https://arxiv.org/pdf/2606.16613"
+      }
+    },
+    {
+      "id": "discretizing-reward-models",
+      "title": "奖励模型离散化",
+      "authors": ["Vijay Viswanathan", "Shiqi Wang", "Devamanyu Hazarika", "Chirag Nagpal", "Tongshuang Wu"],
+      "affiliations": ["Carnegie Mellon University", "Microsoft Research"],
+      "summary": "证明连续奖励模型分数是一个严重的弱点而非优势：许多回复聚集在几乎相同的分数附近，使得细粒度区分不可靠。将奖励模型离散化为分类判断可改善下游RL稳定性。",
+      "key_findings": [
+        "连续奖励分数制造了精度的错觉——许多回复聚集在几乎相同的值附近",
+        "离散化（分类）奖励模型减少了奖励黑客行为并改善了RL训练稳定性",
+        "连续评分的表面优势（对细粒度差异的敏感性）实际上是其在RL优化中的弱点"
+      ],
+      "tags": ["reward-models", "rlhf", "discretization", "training-stability", "alignment"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.21795",
+        "huggingface": "https://huggingface.co/papers/2606.21795",
+        "pdf": "https://arxiv.org/pdf/2606.21795"
+      }
+    },
+    {
+      "id": "co-failure-ceiling",
+      "title": "何时组合语言模型有用？67个前沿模型在路由、投票和智能体混合上的共失败上限",
+      "authors": ["Josef Chen"],
+      "affiliations": ["Independent Researcher"],
+      "summary": "证明多模型LLM系统（路由、投票、级联、智能体混合）遇到由beta决定的硬精度上限——beta是所有模型在同一查询上都失败的比率。这一共失败率，而非平均成对相关性，是约束条件。",
+      "key_findings": [
+        "任何从成员模型答案中选择的策略，精度不能超过1 - beta，其中beta是全模型共失败率",
+        "常报告的平均成对误差相关性无法识别beta——具有相同边际分布但不同联合结构的误差规律给出不同的上限",
+        "在MMLU-Pro上的67个前沿模型中，共失败上限出人意料地紧，限制了模型组合的收益"
+      ],
+      "tags": ["model-combination", "routing", "voting", "mixture-of-agents", "evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27288",
+        "huggingface": "https://huggingface.co/papers/2606.27288",
+        "pdf": "https://arxiv.org/pdf/2606.27288"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zai-org",
+      "description": "采用密集稀疏注意力（MoE-DSA）架构的大规模混合专家模型，用于文本生成和对话任务。作为强大的开源替代方案，正快速获得社区关注。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "text-generation"],
+      "metrics": {"downloads": 83589, "likes": 2595},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwen3-6-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored",
+      "organization": "HauhauCS",
+      "description": "基于Qwen3.6架构的无审查MoE视觉语言模型，总参数350亿/活跃参数30亿。今日趋势中下载量最高，超过340万次。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B",
+      "tags": ["moe", "uncensored", "vision-language", "qwen3.6"],
+      "metrics": {"downloads": 3453492, "likes": 2265},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "gemma-4-12b-coder",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5",
+      "organization": "yuxinlu1",
+      "description": "使用Fable 5和Composer 2.5训练的GGUF量化Gemma 4 12B编码微调模型。以516K下载和2400赞引领Gemma-4编码生态系统。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gemma4", "coding", "gguf", "reasoning"],
+      "metrics": {"downloads": 516333, "likes": 2400},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "30亿参数的图像特征提取模型，用于空间定位任务。近495K下载和2385赞的趋势表明在锚定和检测流水线中的强势采用。",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": ["localization", "image-features", "nvidia", "grounding"],
+      "metrics": {"downloads": 494756, "likes": 2385},
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度推出的OCR任务特征提取模型，以134K下载和1044赞快速上升趋势。专为高精度文档和场景文字识别设计。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["ocr", "feature-extraction", "document-ai", "baidu"],
+      "metrics": {"downloads": 134146, "likes": 1044},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "微博AI推出的紧凑型30亿参数推理模型，专注于数学推理，基于Qwen2架构。社区反响强烈，获得732赞。",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": ["math", "reasoning", "compact", "qwen2"],
+      "metrics": {"downloads": 54638, "likes": 732},
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5",
+      "organization": "yuxinlu1",
+      "description": "Gemma 4 12B的智能体变体，使用Fable 5和Composer 2.5针对终端/智能体工作流进行微调。与编码变体互补，具有智能体专用能力。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gemma4", "agentic", "terminal", "gguf"],
+      "metrics": {"downloads": 186663, "likes": 689},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "nemotron-3-5-asr",
+      "name": "Nemotron-3.5-ASR-Streaming-0.6B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA Nemotron 3.5系列中的轻量级6亿参数流式自动语音识别模型。专为低延迟实时语音转文本设计。",
+      "task_type": "speech-recognition",
+      "model_size": "0.6B",
+      "tags": ["asr", "streaming", "speech-recognition", "nvidia"],
+      "metrics": {"downloads": 56434, "likes": 708},
+      "source_url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b"
+    },
+    {
+      "id": "qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M",
+      "organization": "Empero AI",
+      "description": "基于Qwen3.5架构的90亿视觉语言模型，使用Claude衍生推理数据微调。提供safetensors和GGUF两种格式。",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": ["vision-language", "qwen3.5", "reasoning", "quantized"],
+      "metrics": {"downloads": 486810, "likes": 591},
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "fastcontext-4b",
+      "name": "FastContext-1.0-4B-SFT",
+      "organization": "Microsoft",
+      "description": "微软推出的40亿参数模型，专注于快速上下文处理，基于Qwen3架构构建。为智能体和检索工作流中的高效长上下文处理而设计。",
+      "task_type": "text-generation",
+      "model_size": "4B",
+      "tags": ["fast-context", "qwen3", "sft", "efficiency"],
+      "metrics": {"downloads": 5735, "likes": 355},
+      "source_url": "https://huggingface.co/microsoft/FastContext-1.0-4B-SFT"
+    },
+    {
+      "id": "qwen-agentworld",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen (Alibaba)",
+      "description": "阿里巴巴Qwen团队推出的面向智能体的MoE模型，总参数350亿/活跃参数30亿，专门用于智能体世界交互和多模态理解。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B",
+      "tags": ["agent", "moe", "qwen", "multimodal"],
+      "metrics": {"downloads": 13186, "likes": 322},
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Krea文生图模型的加速变体，使用Krea-2架构提供更快的生成速度。基于Krea-2-Raw构建。",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "diffusion", "turbo", "image-generation"],
+      "metrics": {"downloads": 8721, "likes": 285},
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "design-md",
+      "name": "google-labs-code/design.md",
+      "description": "Google Labs推出的格式规范，用于向编码智能体描述视觉设计语言。DESIGN.md为智能体提供对设计系统的持久化结构化理解，类似于README.md对项目文档的作用。",
+      "language": "TypeScript",
+      "stars": 21319,
+      "stars_today": 2407,
+      "forks": 1727,
+      "url": "https://github.com/google-labs-code/design.md",
+      "tags": ["design-system", "coding-agents", "specification", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "全球首个开源智能体视频制作系统，包含12条流水线、52个工具和500+智能体技能。将AI编码助手变成完整的视频制作工作室。",
+      "language": "Python",
+      "stars": 23676,
+      "stars_today": 1754,
+      "forks": 2634,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["video-production", "agentic", "multimodal", "creative-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "基于Claude Code的价值投资研究框架，采用多智能体对抗分析。实现了巴菲特、芒格、段永平和李录四大师的方法论。",
+      "language": "Python",
+      "stars": 3149,
+      "stars_today": 1274,
+      "forks": 466,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": ["finance", "multi-agent", "claude-code", "value-investing"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "让AI智能体能看到整个互联网。通过一个CLI零API费用读取和搜索Twitter、Reddit、YouTube、GitHub、B站、小红书。",
+      "language": "Python",
+      "stars": 42398,
+      "stars_today": 1194,
+      "forks": 3369,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agent-tooling", "web-scraping", "multi-platform", "cli"],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-website-cloner",
+      "name": "JCodesMore/ai-website-cloner-template",
+      "description": "使用AI编码智能体一条命令克隆任意网站。基于模板的方法实现快速网站复制。",
+      "language": "TypeScript",
+      "stars": 21391,
+      "stars_today": 1088,
+      "forks": 3102,
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "tags": ["web-cloning", "ai-agents", "automation", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "trek",
+      "name": "mauriceboe/TREK",
+      "description": "自托管的旅行/行程规划工具，支持实时协作、交互式地图、PWA、SSO、预算管理、打包清单等功能。",
+      "language": "TypeScript",
+      "stars": 7684,
+      "stars_today": 1060,
+      "forks": 650,
+      "url": "https://github.com/mauriceboe/TREK",
+      "tags": ["self-hosted", "travel", "collaboration", "pwa"],
+      "relevance": "low"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "将复杂文档（PDF、Office文档）转换为适用于LLM的markdown/JSON，用于智能体工作流。持续高趋势的领先文档解析工具。",
+      "language": "Python",
+      "stars": 70455,
+      "stars_today": 960,
+      "forks": 5940,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": ["document-parsing", "pdf", "agentic-workflows", "data-pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan的Claude Code配置：23个有主见的工具，分别扮演CEO、设计师、工程经理、发布经理、文档工程师和QA角色。极受欢迎的智能体工具包。",
+      "language": "TypeScript",
+      "stars": 116653,
+      "stars_today": 950,
+      "forks": 17312,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": ["claude-code", "agent-toolkit", "developer-tools", "opinionated"],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee",
+      "name": "topoteretes/cognee",
+      "description": "开源的AI智能体记忆平台。通过自托管的知识图谱引擎为智能体提供跨会话的持久长期记忆。",
+      "language": "Python",
+      "stars": 23242,
+      "stars_today": 729,
+      "forks": 2209,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": ["agent-memory", "knowledge-graph", "self-hosted", "long-term-memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "mediacrawler",
+      "name": "NanmiCoder/MediaCrawler",
+      "description": "多平台社交媒体爬虫，支持小红书、抖音、快手、B站、微博、百度贴吧和知乎。内容和评论提取。",
+      "language": "Python",
+      "stars": 53379,
+      "stars_today": 673,
+      "forks": 10979,
+      "url": "https://github.com/NanmiCoder/MediaCrawler",
+      "tags": ["web-scraping", "social-media", "data-collection", "chinese-platforms"],
+      "relevance": "medium"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM驱动的多市场股票智能分析系统，包含多源行情数据、实时新闻、决策看板、自动推送和零成本定时运行。",
+      "language": "Python",
+      "stars": 50137,
+      "stars_today": 637,
+      "forks": 43828,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["finance", "llm-application", "stock-analysis", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "casaos",
+      "name": "IceWhaleTech/CasaOS",
+      "description": "简单易用的开源个人云系统。面向家庭服务器和个人基础设施的自托管替代方案。",
+      "language": "Go",
+      "stars": 35397,
+      "stars_today": 619,
+      "forks": 2027,
+      "url": "https://github.com/IceWhaleTech/CasaOS",
+      "tags": ["self-hosted", "personal-cloud", "home-server", "docker"],
+      "relevance": "low"
+    },
+    {
+      "id": "graphify",
+      "name": "safishamsi/graphify",
+      "description": "AI编码助手技能，将任何代码文件夹、SQL模式、R脚本、shell脚本、文档、论文、图像或视频转化为可查询的知识图谱。支持Claude Code、Codex、Cursor等。",
+      "language": "Python",
+      "stars": 72619,
+      "stars_today": 474,
+      "forks": 7282,
+      "url": "https://github.com/safishamsi/graphify",
+      "tags": ["knowledge-graph", "code-understanding", "ai-assistant", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm",
+      "name": "vllm-project/vllm",
+      "description": "高吞吐量和内存高效的LLM推理和服务引擎。生产环境LLM服务的事实标准。",
+      "language": "Python",
+      "stars": 84471,
+      "stars_today": 178,
+      "forks": 18563,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["llm-serving", "inference", "high-throughput", "production"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体AI中的验证危机",
+      "description": "多篇论文聚焦于一个根本性挑战：随着AI智能体生成解决方案的能力增强，可靠地验证这些解决方案已成为更难的问题。验证地平线、奖励模型离散化和共失败上限共同暴露了当前评估范式的局限。",
+      "related_paper_ids": ["verification-horizon", "discretizing-reward-models", "co-failure-ceiling", "tool-use-rl-collapse"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "统一生成模型的能力组合",
+      "description": "DanceOPD的速度场方法和ViQ的文本对齐量化都在解决同一个挑战：在单一模型中统一多种能力且不产生破坏性干扰，标志着向真正通用的生成系统迈进。",
+      "related_paper_ids": ["danceopd", "viq", "lisa", "qwen-image-agent"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体RL：从稀疏奖励中提取密集监督",
+      "description": "OPID的分层技能蒸馏和工具使用RL崩溃诊断都在解决同一核心问题：结果级奖励不足以训练有能力的智能体。标记级监督信号和结构保持正则化正成为必要的补充。",
+      "related_paper_ids": ["opid", "tool-use-rl-collapse", "verification-horizon"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施工业化",
+      "description": "GitHub趋势揭示了从构建智能体到装备智能体的转变：design.md用于视觉上下文，graphify用于代码理解，cognee用于持久记忆，Agent-Reach用于互联网访问。这是智能体生态的「卖铲子」阶段。",
+      "related_paper_ids": ["gui-vs-cli", "gauntletbench"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "超越像素的世界建模",
+      "description": "Fast LeWorldModel和PhysiFormer将世界模型推向更高效和物理上更可靠的表示——分别是潜空间中的前缀并行规划和坐标空间中的物理模拟扩散。",
+      "related_paper_ids": ["fast-leworldmodel"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-27T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
