@@ -1,0 +1,1065 @@
+{
+  "version": "1.0",
+  "date": "2026-06-28",
+  "generated_at": "2026-06-28T14:57:00Z",
+  "summary": {
+    "headline": "智能体记忆与基础设施主导GitHub趋势；DanceOPD和Qwen-Image-Agent推进统一生成模型；验证与奖励信号设计成为智能体强化学习关键瓶颈",
+    "body": "今日AI领域呈现出**智能体基础设施的大规模建设浪潮**。GitHub趋势榜被智能体工具占据：Agent-Reach（今日1145星）为智能体提供零API费用的全网读取能力，Cognee（今日780星）通过知识图谱提供开源持久记忆，MinerU（今日749星）将复杂文档转化为LLM就绪格式。与此同时，Graphify（今日434星）将整个代码库转化为可查询的知识图谱，Google Labs的design.md（今日1541星）继续作为智能体设计感知的规范标准强势增长。\n\n**研究前沿方面**，生成能力与验证可靠性之间的张力持续加剧。验证地平线(Verification Horizon)论文认为，验证编程智能体输出已经比生成它们更难。关于工具使用强化学习崩溃的互补研究表明，朴素强化学习在多步工具使用中可能导致灾难性失败，而OPID提出了策略内技能蒸馏作为原理性解决方案。离散化奖励模型(Discretizing Reward Models)揭示，连续奖励分数虽然看似比二值信号更具信息量，实际上引入了有害噪声。\n\n**统一生成模型**取得显著进展。字节跳动的DanceOPD将文本到图像、局部编辑和全局编辑视为可组合的速度场，ViQ实现了任意分辨率的文本对齐视觉量化。模型生态系统中GLM-5.2 MoE变体、Ornith-1.0和针对智能体编程优化的Gemma-4微调版本表现活跃。",
+    "key_themes": [
+      "agent-memory-infrastructure",
+      "verification-and-reward-signals",
+      "unified-generative-models",
+      "agentic-rl-distillation",
+      "world-modeling",
+      "efficient-inference"
+    ]
+  },
+  "researcher_notes": "**智能体记忆成为新战场。** 今日GitHub趋势前列的三个仓库——Cognee、MemPalace和Memanto——都是开源AI记忆系统，各有独特方法（知识图谱、检索增强、嵌入式）。这并非巧合：随着智能体从单轮交互走向多会话部署，持久记忆成为差异化能力的关键。MemPalace飙升至56K星表明社区将记忆视为基础设施级的必要能力，而非研究层面的新奇事物。\n\n**昨日的验证主题今日更加深入。** 验证地平线论文值得与工具使用强化学习崩溃论文一起阅读：二者共同描绘了一幅画面——(1)生成复杂代码越来越容易，(2)可靠验证却越来越难，(3)强化学习训练循环本身在验证信号噪声大时可能灾难性失败。OPID的策略内技能蒸馏和离散化奖励模型论文提供了互补解决方案——分别是密集的token级监督和简化的奖励信号——但都未完全解决核心问题。\n\n**潜力之作：CoffeeBench。** 当头条论文聚焦于单智能体能力时，CoffeeBench悄然引入了一个多智能体经济基准测试，智能体需要在较长时间内进行谈判、交易和竞争。这比大多数基准测试更接近真实世界部署场景，当前LLM在其上的困难表现暗示了社交推理和长期规划方面存在显著能力差距。\n\n**Gemma-4/GLM-5.2微调生态系统正在快速成熟。** 多个GGUF量化版本的Gemma-4-12B和GLM-5.2主导模型趋势，包括编程、智能体使用和无审查应用的专门微调。yuxinlu1的Gemma-4编程变体有536K下载量和2427点赞——社区正在用算力为开放、强大且可本地运行的模型投票。\n\n**关注：Agent-Reach与「互联网之眼」模式。** Agent-Reach今日1145星标志着市场对智能体无API费用读取开放网络（Twitter、Reddit、YouTube、GitHub、哔哩哔哩、小红书）的强烈需求。结合Graphify的代码到知识图谱转换，我们正在见证能够构建和查询对代码和网络内容的结构化理解的智能体的涌现。",
+  "papers": [
+    {
+      "id": "danceopd",
+      "title": "DanceOPD：策略内生成场蒸馏",
+      "authors": [
+        "Wei Zhou",
+        "Xiongwei Zhu",
+        "Zelin Xu",
+        "Bo Dong",
+        "Lixue Gong et al."
+      ],
+      "affiliations": [
+        "ByteDance Seed",
+        "National University of Singapore"
+      ],
+      "summary": "DanceOPD提出了一种用于流匹配模型的策略内生成场蒸馏框架，将每个样本路由到一个能力场，并使用速度MSE目标进行训练。它解决了统一图像生成模型中冲突能力（文本到图像、局部编辑、全局编辑）之间的根本张力。",
+      "key_findings": [
+        "将每种能力（文本到图像、编辑、CFG）视为共享流状态空间上的速度场，实现原理性组合",
+        "在学生诱导的展开状态上进行策略内训练，避免教师与学生之间的分布不匹配",
+        "将无分类器引导作为额外的场吸收，简化部署同时改善多能力组合"
+      ],
+      "tags": [
+        "flow-matching",
+        "distillation",
+        "image-generation",
+        "multi-capability"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 64,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27377",
+        "huggingface": "https://huggingface.co/papers/2606.27377",
+        "pdf": "https://arxiv.org/pdf/2606.27377"
+      }
+    },
+    {
+      "id": "in-context-world-modeling",
+      "title": "上下文世界建模用于机器人控制",
+      "authors": [
+        "Siyin Wang",
+        "Junhao Shi",
+        "Senyu Fei",
+        "Zhaoyang Fu",
+        "Li Ji et al."
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University",
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "为视觉-语言-动作模型引入上下文世界建模，通过将系统配置作为变量进行条件化，使模型能够泛化到新的相机视角和机器人形态，而无需数据密集型微调。",
+      "key_findings": [
+        "VLA模型因隐式假设固定执行上下文而无法泛化到改变的视角或机器人形态",
+        "上下文世界建模将系统配置作为显式变量处理，消除了对数据密集型微调的需求",
+        "通过从上下文推断世界动态，实现零样本迁移到新环境"
+      ],
+      "tags": [
+        "robotics",
+        "VLA",
+        "world-modeling",
+        "generalization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26025",
+        "huggingface": "https://huggingface.co/papers/2606.26025",
+        "pdf": "https://arxiv.org/pdf/2606.26025"
+      }
+    },
+    {
+      "id": "opid",
+      "title": "OPID：用于智能体强化学习的策略内技能蒸馏",
+      "authors": [
+        "Shuo Yang",
+        "Jinyang Wu",
+        "Zhengxi Lu",
+        "Yuhao Shen",
+        "Fan Zhang et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Baidu Research"
+      ],
+      "summary": "OPID解决了智能体强化学习中稀疏轨迹级奖励与密集token级监督之间的差距。它提出策略内自蒸馏，在不依赖外部技能记忆或检索特权上下文的情况下提供密集的token级指导。",
+      "key_findings": [
+        "稀疏的基于结果的强化学习奖励对于强化或抑制哪些中间决策提供的指导不足",
+        "现有的技能条件蒸馏依赖昂贵的外部技能记忆，可能与当前状态分布不匹配",
+        "策略内蒸馏提供与智能体自身展开分布对齐的密集监督"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "distillation",
+        "agents",
+        "skill-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 40,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26790",
+        "huggingface": "https://huggingface.co/papers/2606.26790",
+        "pdf": "https://arxiv.org/pdf/2606.26790"
+      }
+    },
+    {
+      "id": "qwen-image-agent",
+      "title": "Qwen-Image-Agent：弥合真实世界图像生成中的上下文差距",
+      "authors": [
+        "Zekai Zhang",
+        "Jiahao Li",
+        "Jie Zhang",
+        "Kaiyuan Gao",
+        "Kun Yan et al."
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Tongyi Lab"
+      ],
+      "summary": "Qwen-Image-Agent解决了「上下文差距」——用户欠明确的请求与T2I模型需求之间的不匹配——通过集成规划、推理、搜索、记忆和反馈的统一智能体框架。",
+      "key_findings": [
+        "识别出「上下文差距」是真实世界T2I使用中的关键瓶颈：用户提示通常欠明确、隐含或需要最新知识",
+        "提出集成规划、推理、网络搜索、记忆和反馈循环的统一智能体框架",
+        "通过以上下文为中心的编排弥合用户意图与模型就绪提示之间的差距"
+      ],
+      "tags": [
+        "text-to-image",
+        "agents",
+        "context-gap",
+        "prompt-engineering"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 40,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26907",
+        "huggingface": "https://huggingface.co/papers/2606.26907",
+        "pdf": "https://arxiv.org/pdf/2606.26907"
+      }
+    },
+    {
+      "id": "verification-horizon",
+      "title": "验证地平线：编程智能体奖励无银弹",
+      "authors": [
+        "Binghai Wang",
+        "Chenlong Zhang",
+        "Dayiheng Liu",
+        "Jiajun Zhang",
+        "Jiawei Chen et al."
+      ],
+      "affiliations": [
+        "Alibaba DAMO Academy",
+        "Chinese Academy of Sciences"
+      ],
+      "summary": "论文认为，对于编程智能体而言，验证比生成更容易的经典直觉正在被颠覆。每个验证器都只是人类意图的代理，随着模型产生越来越复杂的解决方案，这些代理变得越来越不可靠。",
+      "key_findings": [
+        "验证存在一个「地平线」，超过该地平线没有自动验证器能可靠地区分正确和错误的解决方案",
+        "测试、静态分析和人工审查都是代理——没有一个能完全捕获编程任务背后的全部意图",
+        "随着基础模型能力增长，验证差距的扩大速度超过验证工具的改进速度"
+      ],
+      "tags": [
+        "verification",
+        "coding-agents",
+        "reward-design",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26300",
+        "huggingface": "https://huggingface.co/papers/2606.26300",
+        "pdf": "https://arxiv.org/pdf/2606.26300"
+      }
+    },
+    {
+      "id": "viq",
+      "title": "ViQ：任意分辨率的文本对齐视觉量化表示",
+      "authors": [
+        "Xumin Yu",
+        "Zuyan Liu",
+        "Zhenyu Yang",
+        "Yuhao Dong",
+        "Shengsheng Qian et al."
+      ],
+      "affiliations": [
+        "Tencent Hunyuan",
+        "University of Chinese Academy of Sciences"
+      ],
+      "summary": "ViQ解决了视觉标记化中低层细节保留与高层语义对齐之间的根本张力，实现了适用于任意分辨率的文本对齐离散视觉表示。",
+      "key_findings": [
+        "在离散视觉表示中平衡重建保真度与语义信息",
+        "实现与文本表示对齐的分辨率无关视觉标记化",
+        "通过真正统一的文本-视觉离散表示简化多模态建模"
+      ],
+      "tags": [
+        "visual-tokenization",
+        "multimodal",
+        "representation-learning",
+        "resolution-agnostic"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 37,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27313",
+        "huggingface": "https://huggingface.co/papers/2606.27313",
+        "pdf": "https://arxiv.org/pdf/2606.27313"
+      }
+    },
+    {
+      "id": "jetspec",
+      "title": "JetSpec：通过并行树草稿打破推测解码的扩展天花板",
+      "authors": [
+        "Lanxiang Hu",
+        "Zhaoxiang Feng",
+        "Yulun Wu",
+        "Haoran Yuan",
+        "Yujie Zhao et al."
+      ],
+      "affiliations": [
+        "Carnegie Mellon University",
+        "University of California, Berkeley"
+      ],
+      "summary": "JetSpec通过引入并行树草稿打破了推测解码的扩展天花板，解决了基于头的推测解码方法中的因果性-效率困境。",
+      "key_findings": [
+        "先前的推测解码方法面临扩展限制，增加草稿预算收益递减",
+        "引入并行树草稿，在增加草稿预算的同时保持高接受率",
+        "解决了限制基于头的推测解码方法的因果性-效率困境"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "inference-optimization",
+        "LLM-efficiency",
+        "tree-drafting"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.18394",
+        "huggingface": "https://huggingface.co/papers/2606.18394",
+        "pdf": "https://arxiv.org/pdf/2606.18394"
+      }
+    },
+    {
+      "id": "gui-vs-cli",
+      "title": "GUI vs. CLI：纯屏幕与技能中介计算机使用智能体中的执行瓶颈",
+      "authors": [
+        "Xiao Zhou",
+        "Siyue Zhang",
+        "Yilun Zhao",
+        "Jinbiao Wei",
+        "Tingyu Song et al."
+      ],
+      "affiliations": [
+        "University of Illinois Urbana-Champaign",
+        "Microsoft Research"
+      ],
+      "summary": "引入了一个包含440个桌面任务的匹配执行层基准测试，隔离交互模式变量，揭示在相同条件下GUI和CLI智能体方法之间的系统性差异。",
+      "key_findings": [
+        "首次将GUI与CLI交互模式从任务设计中的混杂变量中隔离出来进行控制比较",
+        "440个跨18个应用的桌面任务，两种模式使用相同目标、状态和验证器",
+        "揭示了每种交互范式特有的系统性执行瓶颈"
+      ],
+      "tags": [
+        "computer-use",
+        "agents",
+        "benchmarks",
+        "GUI",
+        "CLI"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.24551",
+        "huggingface": "https://huggingface.co/papers/2606.24551",
+        "pdf": "https://arxiv.org/pdf/2606.24551"
+      }
+    },
+    {
+      "id": "tool-use-rl-collapse",
+      "title": "多步工具使用强化学习为何崩溃以及监督信号如何修复",
+      "authors": [
+        "Yupu Hao",
+        "Zhuoran Jin",
+        "Huanxuan Liao",
+        "Kang Liu",
+        "Jun Zhao et al."
+      ],
+      "affiliations": [
+        "Chinese Academy of Sciences",
+        "Institute of Automation"
+      ],
+      "summary": "揭示了多步工具使用的强化学习训练可能导致灾难性崩溃——性能骤降且工具调用结构失败，原因是特定控制token出现意外的概率尖峰。",
+      "key_findings": [
+        "仅使用强化学习在多步工具使用任务中通常导致不稳定，有时引发灾难性崩溃",
+        "失败源于特定控制token中意外的概率尖峰，破坏了工具调用结构",
+        "监督信号通过防止工具调用行为的结构性退化来稳定训练"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "tool-use",
+        "training-stability",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26027",
+        "huggingface": "https://huggingface.co/papers/2606.26027",
+        "pdf": "https://arxiv.org/pdf/2606.26027"
+      }
+    },
+    {
+      "id": "gauntletbench",
+      "title": "突破重围：在陌生环境中重新评估智能体能力",
+      "authors": [
+        "Mykola Vysotskyi",
+        "Runqi Lin",
+        "Grzegorz Biziel",
+        "Michal Zakrzewski",
+        "Sebastian Montagna et al."
+      ],
+      "affiliations": [
+        "Samsung R&D Institute Poland",
+        "Samsung AI Center"
+      ],
+      "summary": "引入GauntletBench，一个基于网络的智能体基准测试，超越熟悉的应用和简单任务，探测现代智能体仍然失败的更广泛能力维度。",
+      "key_findings": [
+        "当前基准测试在现代智能体上已饱和，无法探测其真正局限性",
+        "GauntletBench针对不熟悉的应用和更广泛的能力维度",
+        "现代智能体在复杂、陌生的基于网络的任务上表现出显著能力差距"
+      ],
+      "tags": [
+        "benchmarks",
+        "agents",
+        "evaluation",
+        "web-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.14397",
+        "huggingface": "https://huggingface.co/papers/2606.14397",
+        "pdf": "https://arxiv.org/pdf/2606.14397"
+      }
+    },
+    {
+      "id": "fast-leworldmodel",
+      "title": "快速LeWorldModel",
+      "authors": [
+        "Yuntian Gao",
+        "Xiangyu Xu"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "提出Fast LeWorldModel，通过实现直接长期预测，克服了基于JEPA的视觉世界模型中自回归展开的计算开销和累积潜在误差。",
+      "key_findings": [
+        "LeWM中的自回归展开计算成本高昂，且随着视野增长累积潜在误差",
+        "Fast-LeWM通过绕过迭代单步转换实现直接多步预测",
+        "在大幅降低视觉规划计算成本的同时保持预测质量"
+      ],
+      "tags": [
+        "world-models",
+        "JEPA",
+        "visual-planning",
+        "efficient-inference"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26217",
+        "huggingface": "https://huggingface.co/papers/2606.26217",
+        "pdf": "https://arxiv.org/pdf/2606.26217"
+      }
+    },
+    {
+      "id": "discretizing-reward-models",
+      "title": "离散化奖励模型",
+      "authors": [
+        "Vijay Viswanathan",
+        "Shiqi Wang",
+        "Devamanyu Hazarika",
+        "Chirag Nagpal",
+        "Tongshuang Wu et al."
+      ],
+      "affiliations": [
+        "Carnegie Mellon University",
+        "Microsoft Research"
+      ],
+      "summary": "质疑连续奖励模型分数比二值信号更具信息量的假设。证明连续分数捕获的细粒度差异实际上引入了有害噪声，损害强化学习训练。",
+      "key_findings": [
+        "连续奖励分数引入有害噪声而非提供有用的细粒度信号",
+        "许多奖励模型产生的分数校准不佳——小的分数差异并不可靠地对应有意义的质量差异",
+        "离散化奖励可以改善强化学习训练稳定性和最终性能"
+      ],
+      "tags": [
+        "reward-models",
+        "RLHF",
+        "training-stability",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.21795",
+        "huggingface": "https://huggingface.co/papers/2606.21795",
+        "pdf": "https://arxiv.org/pdf/2606.21795"
+      }
+    },
+    {
+      "id": "coffeebench",
+      "title": "CoffeeBench：异构多智能体经济中的长期LLM智能体基准测试",
+      "authors": [
+        "Issa Sugiura",
+        "Daichi Hattori",
+        "Kazuo Araragi",
+        "Keita Ogawa",
+        "Shota Onose et al."
+      ],
+      "affiliations": [
+        "NTT Corporation",
+        "University of Tokyo"
+      ],
+      "summary": "引入CoffeeBench，一个用于评估LLM智能体在长期多智能体经济系统中的基准测试，要求智能体在较长时间内自主通信、谈判和交易。",
+      "key_findings": [
+        "现有基准测试关注单智能体在被动环境中的表现；真实经济系统需要多智能体交互",
+        "智能体必须在追求自身目标的同时自主通信、谈判和交易",
+        "当前LLM智能体在社交推理和长期经济规划方面表现出显著能力差距"
+      ],
+      "tags": [
+        "benchmarks",
+        "multi-agent",
+        "economic-simulation",
+        "long-horizon"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.16613",
+        "huggingface": "https://huggingface.co/papers/2606.16613",
+        "pdf": "https://arxiv.org/pdf/2606.16613"
+      }
+    },
+    {
+      "id": "kv-cache-compression",
+      "title": "用于长推理的信息感知KV缓存压缩",
+      "authors": [
+        "Jushi Kai",
+        "Zhuiri Xiao",
+        "Alexandra Birch",
+        "Zhouhan Lin et al."
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "Shanghai Jiao Tong University"
+      ],
+      "summary": "从信息论角度重新审视KV缓存压缩，表明仅依赖注意力权重会遗漏与预测不确定性和token信息量相关的互补信号。",
+      "key_findings": [
+        "现有KV缓存压缩仅依赖注意力权重估计token重要性，遗漏了信息论信号",
+        "预测不确定性和token信息量为识别重要token提供互补信号",
+        "信息感知压缩在长推理任务上优于纯注意力方法"
+      ],
+      "tags": [
+        "KV-cache",
+        "compression",
+        "efficient-inference",
+        "long-context"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.26875",
+        "huggingface": "https://huggingface.co/papers/2606.26875",
+        "pdf": "https://arxiv.org/pdf/2606.26875"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zai-org",
+      "description": "采用密集稀疏注意力（MoE-DSA）架构的大规模混合专家模型，用于文本生成和对话任务。作为强大的开源替代方案持续获得社区快速采用。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "conversational",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 98994,
+        "likes": 2683
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "专注于OCR任务的特征提取模型，支持广泛的语言和布局。以1140点赞和快速增长的下载量领跑HuggingFace趋势。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "feature-extraction",
+        "document-understanding"
+      ],
+      "metrics": {
+        "downloads": 212760,
+        "likes": 1140
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "基于Qwen3.5的90亿参数GGUF量化模型，支持100万上下文长度，针对推理任务优化。极高的下载量表明社区对本地部署的强烈需求。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "reasoning",
+        "quantized",
+        "qwen3.5"
+      ],
+      "metrics": {
+        "downloads": 712627,
+        "likes": 674
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-coder-gguf",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5-v1-GGUF",
+      "organization": "yuxinlu1",
+      "description": "使用Fable 5和Composer 2.5训练的GGUF量化Gemma-4-12B编程微调版本。以536K下载量成为社区最受欢迎的本地代码生成模型。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "coding",
+        "gemma4",
+        "local-inference"
+      ],
+      "metrics": {
+        "downloads": 536130,
+        "likes": 2427
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic-gguf",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5-v2-GGUF",
+      "organization": "yuxinlu1",
+      "description": "专为智能体和终端使用场景微调的GGUF量化Gemma-4-12B。智能体变体强调工具使用和命令执行能力。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "agentic",
+        "terminal",
+        "gemma4"
+      ],
+      "metrics": {
+        "downloads": 206828,
+        "likes": 733
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen",
+      "description": "350亿参数MoE模型（30亿活跃参数），专为多模态图文任务设计，具备Qwen团队的智能体导向能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "moe",
+        "multimodal",
+        "agents",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 18872,
+        "likes": 359
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "ornith-1-0-35b",
+      "name": "Ornith-1.0-35B",
+      "organization": "DeepReinforce AI",
+      "description": "DeepReinforce AI推出的350亿参数文本生成模型，提供全精度和GGUF量化版本。MIT许可开源模型。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "text-generation",
+        "open-source",
+        "MIT-licensed"
+      ],
+      "metrics": {
+        "downloads": 7571,
+        "likes": 163
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "快速文本到图像扩散模型，Krea-2的加速变体。与Raw变体一起构成Krea-2系列。",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 17445,
+        "likes": 311
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "Weibo AI",
+      "description": "微博AI推出的紧凑型30亿参数模型，专注于数学推理，相对于其规模具有强大的社区参与度。",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "math",
+        "reasoning",
+        "compact"
+      ],
+      "metrics": {
+        "downloads": 57521,
+        "likes": 742
+      },
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "英伟达推出的30亿参数图像特征提取模型，用于空间定位和接地任务。大规模下载量（570K）表明广泛的生产部署。",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "localization",
+        "image-feature-extraction",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 570466,
+        "likes": 2408
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "qwen3-6-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored",
+      "organization": "HauhauCS",
+      "description": "无审查Qwen3.6 MoE视觉模型。以330万下载量成为今日趋势中下载量最高的模型，表明社区对无限制开源模型的巨大需求。",
+      "task_type": "text-generation",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "uncensored",
+        "moe",
+        "vision",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 3331475,
+        "likes": 2277
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "lfm2-5-230m",
+      "name": "LFM2.5-230M",
+      "organization": "Liquid AI",
+      "description": "Liquid AI推出的超紧凑2.3亿参数模型，代表面向边缘部署的小型高效模型前沿。",
+      "task_type": "text-generation",
+      "model_size": "230M",
+      "tags": [
+        "compact",
+        "edge-deployment",
+        "liquid-architecture"
+      ],
+      "metrics": {
+        "downloads": 9791,
+        "likes": 129
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-230M"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "design-md",
+      "name": "google-labs-code/design.md",
+      "description": "Google Labs推出的为编程智能体描述视觉身份的格式规范。DESIGN.md为智能体提供对设计系统的持久结构化理解，延续昨日的强势增长。",
+      "language": "TypeScript",
+      "stars": 22373,
+      "stars_today": 1541,
+      "forks": 1787,
+      "url": "https://github.com/google-labs-code/design.md",
+      "tags": [
+        "design-system",
+        "coding-agents",
+        "specification"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "为AI智能体提供全网读取能力——Twitter、Reddit、YouTube、GitHub、哔哩哔哩、小红书——一个CLI，零API费用。今日增长最快的AI仓库。",
+      "language": "Python",
+      "stars": 43513,
+      "stars_today": 1145,
+      "forks": 3459,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agents",
+        "web-scraping",
+        "data-access",
+        "CLI"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee",
+      "name": "topoteretes/cognee",
+      "description": "开源AI记忆平台，通过自托管知识图谱引擎为智能体提供跨会话的持久长期记忆。",
+      "language": "Python",
+      "stars": 24034,
+      "stars_today": 780,
+      "forks": 2255,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": [
+        "agent-memory",
+        "knowledge-graph",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "将PDF和Office等复杂文档转化为适配智能体工作流的LLM就绪markdown/JSON格式。文档密集型AI管道的关键基础设施。",
+      "language": "Python",
+      "stars": 71043,
+      "stars_today": 749,
+      "forks": 5980,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": [
+        "document-processing",
+        "LLM-infrastructure",
+        "PDF-parsing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-website-cloner",
+      "name": "JCodesMore/ai-website-cloner-template",
+      "description": "使用AI编程智能体一键克隆任何网站。展示了编程智能体在快速原型设计和网页开发中的强大能力。",
+      "language": "TypeScript",
+      "stars": 22156,
+      "stars_today": 750,
+      "forks": 3173,
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "tags": [
+        "web-development",
+        "coding-agents",
+        "automation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "基于Claude Code的AI时代价值投资研究框架，采用多智能体对抗分析，融合巴菲特、芒格、段永平和李录方法论。",
+      "language": "Python",
+      "stars": 4188,
+      "stars_today": 685,
+      "forks": 582,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "multi-agent",
+        "claude-code",
+        "investing"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "gstack",
+      "name": "garrytan/gstack",
+      "description": "Garry Tan的Claude Code配置：23个自用工具，分别扮演CEO、设计师、工程经理、发布经理、文档工程师和QA角色。极受欢迎的智能体配置方案。",
+      "language": "TypeScript",
+      "stars": 117275,
+      "stars_today": 674,
+      "forks": 17420,
+      "url": "https://github.com/garrytan/gstack",
+      "tags": [
+        "claude-code",
+        "developer-tools",
+        "agent-configuration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ppt-master",
+      "name": "hugohe3/ppt-master",
+      "description": "AI从任意文档生成真正可编辑的PowerPoint，支持原生形状和动画、演讲者备注语音旁白及模板定制。",
+      "language": "Python",
+      "stars": 33113,
+      "stars_today": 589,
+      "forks": 2816,
+      "url": "https://github.com/hugohe3/ppt-master",
+      "tags": [
+        "document-generation",
+        "powerpoint",
+        "AI-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "graphify",
+      "name": "safishamsi/graphify",
+      "description": "AI编程助手技能，将代码、SQL模式、脚本、文档、论文、图片或视频的任意文件夹转化为可查询的知识图谱。应用代码+数据库模式+基础设施统一在一个图谱中。",
+      "language": "Python",
+      "stars": 72988,
+      "stars_today": 434,
+      "forks": 7317,
+      "url": "https://github.com/safishamsi/graphify",
+      "tags": [
+        "knowledge-graph",
+        "code-understanding",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用AI大模型一键生成高清短视频。以93K+星的持续人气展示了AI视频内容工具的持续需求。",
+      "language": "Python",
+      "stars": 93604,
+      "stars_today": 427,
+      "forks": 13559,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": [
+        "video-generation",
+        "content-creation",
+        "AI-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "opencode",
+      "name": "anomalyco/opencode",
+      "description": "开源编程智能体。以179K+星成为最大的编程智能体项目，持续稳定增长，是编程智能体领域的主要开源替代品。",
+      "language": "TypeScript",
+      "stars": 179786,
+      "stars_today": 392,
+      "forks": 22102,
+      "url": "https://github.com/anomalyco/opencode",
+      "tags": [
+        "coding-agents",
+        "open-source",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic的智能体技能公开仓库。以155K+星成为Claude Code智能体的标准技能集合。",
+      "language": "Python",
+      "stars": 155917,
+      "stars_today": 322,
+      "forks": 18383,
+      "url": "https://github.com/anthropics/skills",
+      "tags": [
+        "agent-skills",
+        "claude-code",
+        "anthropic"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "simplex-chat",
+      "name": "simplex-chat/simplex-chat",
+      "description": "首个不使用任何用户标识符的通讯网络——设计上100%隐私。今日飙升1469星，可能由新一轮隐私关注推动。",
+      "language": "Haskell",
+      "stars": 13891,
+      "stars_today": 1469,
+      "forks": 793,
+      "url": "https://github.com/simplex-chat/simplex-chat",
+      "tags": [
+        "privacy",
+        "messaging",
+        "security"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "mempalace",
+      "name": "MemPalace/mempalace",
+      "description": "自称基准测试最佳的开源AI记忆系统。56K+星表明社区将持久智能体记忆视为关键基础设施。",
+      "language": "Python",
+      "stars": 56654,
+      "stars_today": 156,
+      "forks": 7322,
+      "url": "https://github.com/MemPalace/mempalace",
+      "tags": [
+        "agent-memory",
+        "open-source",
+        "benchmarks"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体记忆与基础设施建设",
+      "description": "多个顶级趋势仓库（Cognee、MemPalace、Memanto、Agent-Reach、Graphify）专注于为智能体提供持久记忆、结构化知识和互联网访问。社区正在将智能体基础设施视为关键缺失层。",
+      "related_paper_ids": [
+        "qwen-image-agent",
+        "gui-vs-cli",
+        "gauntletbench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "验证与奖励信号危机",
+      "description": "验证地平线、工具使用强化学习崩溃和离散化奖励模型共同揭示，评估和奖励智能体行为正在变得比生成它们更难。密集监督和简化奖励信号作为部分解决方案正在涌现。",
+      "related_paper_ids": [
+        "verification-horizon",
+        "tool-use-rl-collapse",
+        "discretizing-reward-models",
+        "opid"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "统一生成模型",
+      "description": "DanceOPD、ViQ和Qwen-Image-Agent推动在单一架构中统一多种能力（文本到图像、编辑、多模态理解），通过原理性组合解决冲突能力之间的张力。",
+      "related_paper_ids": [
+        "danceopd",
+        "viq",
+        "qwen-image-agent"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "面向规划与控制的世界模型",
+      "description": "上下文世界建模、快速LeWorldModel、PhysiFormer和幻觉可预测性论文推进了将学习的世界模型用于机器人控制、视觉规划和物理仿真的前沿。",
+      "related_paper_ids": [
+        "in-context-world-modeling",
+        "fast-leworldmodel"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "开源模型生态系统加速",
+      "description": "HuggingFace模型趋势由Gemma-4、GLM-5.2、Qwen3.5/3.6和Ornith的GGUF量化版本主导——社区正在快速生产和消费针对编程、智能体任务和无审查生成等特定用例优化的本地可运行微调模型。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-28T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-28T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-28T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
