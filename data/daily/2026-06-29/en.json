@@ -1,0 +1,708 @@
+{
+  "version": "1.0",
+  "date": "2026-06-29",
+  "generated_at": "2026-06-29T14:57:00Z",
+  "summary": {
+    "headline": "Codebase knowledge graphs explode on GitHub; NVIDIA and Stanford advance physics-grounded robotics simulation; RLHF matures for image generation with Qwen-Image-2.0-RL",
+    "body": "Today's AI landscape is defined by a **surge in developer infrastructure for AI agents**. The standout GitHub trend is DeusData's codebase-memory-mcp, gaining 2,190 stars in a single day by indexing entire codebases into persistent knowledge graphs with sub-millisecond queries across 158 languages. This pairs with the continued momentum of MinerU (380 stars today) for document-to-LLM conversion, and ai-berkshire (1,445 stars today), a multi-agent value investing framework built on Claude Code. SimpleX Chat's privacy-first messaging also surged with 1,180 stars today, reflecting growing demand for private communication infrastructure.\n\n**On the research front**, robotics simulation takes center stage. NVIDIA's PhysisForcing introduces physics-informed losses for video generation that improve embodied world simulation fidelity by 22.3% on R-Bench, while NVIDIA and Stanford's SimFoundry achieves 0.911 Pearson correlation between simulation and real-world policy evaluation through automated digital twin generation. Google's Paper Assistant Tool (PAT) tackles the meta-challenge of AI-accelerated peer review, achieving 34% improvement over zero-shot on mathematical error detection.\n\n**The model ecosystem** continues its diversification wave. Ornith-1.0 from DeepReinforce AI dominates trending in both 9B and 35B variants, while GLM-5.2 MoE and its quantized derivatives maintain strong presence. Qwen expands its agent capabilities with AgentWorld-35B-A3B for environment simulation, and Krea-2 emerges as a notable text-to-image model. The community's appetite for locally-runnable, quantized models (GGUF format) remains insatiable.",
+    "key_themes": [
+      "codebase-knowledge-infrastructure",
+      "physics-grounded-robotics",
+      "rlhf-for-image-generation",
+      "agent-world-modeling",
+      "open-model-quantization",
+      "ai-assisted-peer-review"
+    ]
+  },
+  "researcher_notes": "**Codebase knowledge graphs are having their moment.** DeusData's codebase-memory-mcp gaining 2,190 stars in a single day is the clearest signal yet that developers building AI agents need structured, queryable representations of code — not just flat file reads. The MCP (Model Context Protocol) framing is significant: this positions codebase understanding as a first-class tool for LLM agents rather than a standalone IDE feature. Combined with yesterday's Graphify trending and the sustained momentum of MinerU for document processing, we're seeing the emergence of a full \"perception stack\" for code agents.\n\n**Physics-grounded simulation is NVIDIA's quiet bet.** Both PhysisForcing and SimFoundry come from NVIDIA research, and together they paint a coherent picture: (1) video generation models can serve as world simulators for robotics, but only if physically plausible, and (2) automated real-to-sim pipelines can generate training environments that predict real-world performance with >0.9 correlation. The practical implication is that the sim-to-real transfer gap — long the bottleneck in robot learning — is closing from the simulation side rather than the hardware side.\n\n**Sleeper hit: Formalizing Latent Thoughts.** This paper from Seddik and Fard at the University of British Columbia proposes four axioms (Causality, Minimality, Separability, Stability) for evaluating latent thought representations in LLMs. The finding that no model satisfies all four simultaneously — and that the failure is structural across dense, reasoning-distilled, and RL-trained families — suggests that current chain-of-thought and latent reasoning approaches may have fundamental representational limitations that scaling alone won't fix.\n\n**The AI-agent-for-finance trend continues to accelerate.** Three of today's GitHub trending repos are finance-related: ai-berkshire (value investing via Claude Code, 1,445 stars today), Vibe-Trading (personal trading agent, 492 stars today), and TradingAgents (multi-agent LLM trading, 274 stars today). The sheer volume suggests the community sees financial applications as the most tractable near-term deployment for autonomous agents — likely because markets provide clear, quantitative feedback signals.\n\n**Watch: Google's PAT and the AI review feedback loop.** Google's Paper Assistant Tool introduces a taxonomy of four progressive levels of AI-human collaboration in scientific evaluation. Deployed at STOC and ICML, it caught critical errors in submitted papers. The meta-implication is striking: if AI is generating more science, and AI is also reviewing that science, the quality control loop becomes increasingly self-referential. The 34% improvement on mathematical error detection is promising, but the broader governance question remains open.",
+  "papers": [
+    {
+      "id": "physisforcing",
+      "title": "PhysisForcing: Physics Reinforced World Simulator for Robotic Manipulation",
+      "authors": [
+        "Peiwen Zhang",
+        "Yufan Deng",
+        "Shangkun Sun",
+        "Juncheng Ma",
+        "Duomin Wang et al."
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Peking University"
+      ],
+      "summary": "PhysisForcing proposes a scalable training framework that strengthens physical consistency in video generation models for embodied world simulation by focusing supervision on physics-informative regions through joint pixel-level trajectory alignment and semantic-level relational alignment losses.",
+      "key_findings": [
+        "Improves Wan2.2-I2V-A14B and Cosmos3-Nano base models on R-Bench by 22.3% and 9.2% respectively",
+        "Raises closed-loop success rate from 16.0% to 24.0% under the WorldArena action-planner protocol",
+        "Physical instability in video generation primarily arises from object deformation and implausible spatio-temporal correlations during contact"
+      ],
+      "tags": [
+        "robotics",
+        "video-generation",
+        "world-simulation",
+        "physics-consistency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28128",
+        "huggingface": "https://huggingface.co/papers/2606.28128",
+        "pdf": "https://arxiv.org/pdf/2606.28128"
+      }
+    },
+    {
+      "id": "qwen-image-2-rl",
+      "title": "Qwen-Image-2.0-RL Technical Report",
+      "authors": [
+        "Yixian Xu",
+        "Kaiyuan Gao",
+        "Yuxiang Chen",
+        "Yilei Chen",
+        "Zecheng Tang et al."
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Qwen Team"
+      ],
+      "summary": "Qwen-Image-2.0-RL applies RLHF and on-policy distillation to improve both visual quality and instruction-following in the Qwen-Image-2.0 diffusion model, using composite reward models fine-tuned with chain-of-thought reasoning for reliable reward signals.",
+      "key_findings": [
+        "Achieves 57.84 overall score on Qwen-Image-Bench (+2.61 over base model)",
+        "Elo ratings of 1193 in text-to-image arena (+78) and 1349 in image edit arena (+93)",
+        "On-policy distillation consolidates multiple task-specialized RL policies into a single student model through trajectory-level velocity matching"
+      ],
+      "tags": [
+        "RLHF",
+        "image-generation",
+        "diffusion-models",
+        "on-policy-distillation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27608",
+        "huggingface": "https://huggingface.co/papers/2606.27608",
+        "pdf": "https://arxiv.org/pdf/2606.27608"
+      }
+    },
+    {
+      "id": "formalizing-latent-thoughts",
+      "title": "Formalizing Latent Thoughts: Four Axioms of Thought Representation in LLMs",
+      "authors": [
+        "Fahd Seddik",
+        "Fatemeh Fard"
+      ],
+      "affiliations": [
+        "University of British Columbia"
+      ],
+      "summary": "Introduces an axiomatic evaluation framework for latent thought representations in LLMs with four functional axioms (Causality, Minimality, Separability, Stability), revealing that no current model satisfies all four simultaneously and that the failure is structural across model families.",
+      "key_findings": [
+        "No candidate LLM satisfies all four axioms simultaneously across 23 reasoning tasks",
+        "Representations distinguish task types reliably but cannot distinguish between two questions within the same task",
+        "The failure is consistent across dense, reasoning-distilled, and RL-trained model families, indicating a structural gap"
+      ],
+      "tags": [
+        "LLM-evaluation",
+        "reasoning",
+        "representation-learning",
+        "thought-representation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27378",
+        "huggingface": "https://huggingface.co/papers/2606.27378",
+        "pdf": "https://arxiv.org/pdf/2606.27378"
+      }
+    },
+    {
+      "id": "google-paper-assistant",
+      "title": "Towards Automating Scientific Review with Google's Paper Assistant Tool",
+      "authors": [
+        "Rajesh Jayaram",
+        "Drew Tyler",
+        "David Woodruff",
+        "Corinna Cortes",
+        "Yossi Matias et al."
+      ],
+      "affiliations": [
+        "Google Research"
+      ],
+      "summary": "Introduces the Paper Assistant Tool (PAT), an agentic AI framework for deep scientific review and verification that proposes a four-level taxonomy of AI-human collaboration in scientific evaluation and demonstrates substantial error detection improvements.",
+      "key_findings": [
+        "Achieves 34% improvement over zero-shot recall on mathematical errors in the SPOT benchmark using inference scaling",
+        "Proposes four progressive levels of AI-human collaboration in scientific evaluation",
+        "Pilot deployments at STOC and ICML demonstrated ability to identify critical errors and suggest substantive improvements"
+      ],
+      "tags": [
+        "scientific-review",
+        "agentic-AI",
+        "peer-review",
+        "verification"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28277",
+        "huggingface": "https://huggingface.co/papers/2606.28277",
+        "pdf": "https://arxiv.org/pdf/2606.28277"
+      }
+    },
+    {
+      "id": "simfoundry",
+      "title": "SimFoundry: Modular and Automated Scene Generation for Policy Learning and Evaluation",
+      "authors": [
+        "Nadun Ranawaka",
+        "Josiah Wong",
+        "Wei-Lin Pai",
+        "Wei-Teng Chu",
+        "Tianyuan Dai et al."
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Stanford University",
+        "Georgia Institute of Technology",
+        "University of Texas at Austin"
+      ],
+      "summary": "SimFoundry introduces a modular system for zero-shot real-to-sim scene construction from video, generating digital twins and 'digital cousins' (affordance-preserving scene variations) that enable policy training with strong sim-to-real transfer.",
+      "key_findings": [
+        "Simulation evaluations predict real-world performance with mean Pearson correlation of 0.911",
+        "Policies trained with object, scene, and task cousins show 17%, 21%, and 40% success rate improvements respectively",
+        "Zero-shot transfer to challenging real tasks including multi-step manipulation, articulated object interaction, and bimanual interaction"
+      ],
+      "tags": [
+        "robotics",
+        "simulation",
+        "digital-twins",
+        "sim-to-real"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28276",
+        "huggingface": "https://huggingface.co/papers/2606.28276",
+        "pdf": "https://arxiv.org/pdf/2606.28276"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "A vision-language OCR model that achieves state-of-the-art performance across multilingual document understanding tasks, offering robust text recognition from complex visual inputs.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "OCR",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 295064,
+        "likes": 1242
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI",
+      "description": "A large-scale MoE language model with DSA (Dynamic Sparse Attention) architecture, supporting both English and Chinese with strong reasoning and generation capabilities.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "bilingual"
+      ],
+      "metrics": {
+        "downloads": 118651,
+        "likes": 2821
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "A GGUF-quantized 9B parameter model based on Qwen3.5 with 1M context window, optimized for reasoning, function calling, and multimodal agentic tasks including cybersecurity and biomedical applications.",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": [
+        "GGUF",
+        "reasoning",
+        "long-context",
+        "agentic"
+      ],
+      "metrics": {
+        "downloads": 831529,
+        "likes": 803
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "A GGUF-quantized 35B MoE model offering strong general-purpose text generation with MIT licensing, enabling local deployment of a capable open model.",
+      "task_type": "text-generation",
+      "model_size": "35B (MoE)",
+      "tags": [
+        "GGUF",
+        "MoE",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 79630,
+        "likes": 413
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen",
+      "description": "A specialized 35B MoE model trained for agent environment simulation and world modeling, enabling agents to predict and reason about environmental state changes.",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B (MoE)",
+      "tags": [
+        "agent",
+        "world-model",
+        "environment-simulation"
+      ],
+      "metrics": {
+        "downloads": 23697,
+        "likes": 400
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "A fast text-to-image diffusion model that balances generation quality with inference speed, designed for rapid creative iteration.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 27631,
+        "likes": 355
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "gemma-4-12b-coder-gguf",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "Community (yuxinlu1)",
+      "description": "A GGUF-quantized Gemma-4-12B fine-tune specialized for coding tasks with reasoning capabilities, optimized for local LLM deployment.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "GGUF",
+        "coding",
+        "reasoning",
+        "local-llm"
+      ],
+      "metrics": {
+        "downloads": 549926,
+        "likes": 2473
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek",
+      "description": "The latest iteration of DeepSeek's V4 Pro model with DSpark optimizations, representing continued advancement in the DeepSeek model family.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "DeepSeek",
+        "text-generation",
+        "FP8"
+      ],
+      "metrics": {
+        "downloads": 373,
+        "likes": 182
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "A compact 3B reasoning model fine-tuned from Qwen2.5-Coder-3B, achieving strong performance on math, code, and GPQA reasoning benchmarks despite its small size.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "reasoning",
+        "math",
+        "code",
+        "small-model"
+      ],
+      "metrics": {
+        "downloads": 59337,
+        "likes": 744
+      },
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B vision model for open-vocabulary object detection and grounding, built on EAGLE architecture for precise visual localization from natural language queries.",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": [
+        "object-detection",
+        "grounding",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 646451,
+        "likes": 2436
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "codebase-memory-mcp",
+      "name": "DeusData/codebase-memory-mcp",
+      "description": "A high-performance MCP server that indexes codebases into persistent knowledge graphs with sub-millisecond queries across 158 languages, dramatically reducing token usage for AI agent code understanding.",
+      "language": "C",
+      "stars": 19805,
+      "stars_today": 2190,
+      "forks": 1434,
+      "url": "https://github.com/DeusData/codebase-memory-mcp",
+      "tags": [
+        "MCP",
+        "knowledge-graph",
+        "code-intelligence",
+        "AI-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "An AI-era value investing research framework built on Claude Code and Codex, implementing methodologies from Buffett, Munger, Duan Yongping, and Li Lu with multi-agent adversarial analysis.",
+      "language": "Python",
+      "stars": 5428,
+      "stars_today": 1445,
+      "forks": 729,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "multi-agent",
+        "value-investing",
+        "Claude-Code"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "simplex-chat",
+      "name": "simplex-chat/simplex-chat",
+      "description": "The first messaging network operating without user identifiers, providing 100% privacy by design across iOS, Android, and desktop platforms.",
+      "language": "Haskell",
+      "stars": 15121,
+      "stars_today": 1180,
+      "forks": 867,
+      "url": "https://github.com/simplex-chat/simplex-chat",
+      "tags": [
+        "privacy",
+        "messaging",
+        "decentralized"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "free-for-dev",
+      "name": "ripienaar/free-for-dev",
+      "description": "A comprehensive curated list of SaaS, PaaS, and IaaS offerings with free tiers for developers and infrastructure engineers.",
+      "language": "HTML",
+      "stars": 125331,
+      "stars_today": 495,
+      "forks": 13173,
+      "url": "https://github.com/ripienaar/free-for-dev",
+      "tags": [
+        "developer-tools",
+        "resources",
+        "free-tier"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "A personal trading agent framework that enables AI-assisted financial trading through natural language interaction and automated strategy execution.",
+      "language": "Python",
+      "stars": 14381,
+      "stars_today": 492,
+      "forks": 2635,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "finance",
+        "trading-agent",
+        "AI-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON, serving as a critical preprocessing pipeline for agentic workflows.",
+      "language": "Python",
+      "stars": 71657,
+      "stars_today": 380,
+      "forks": 6018,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": [
+        "document-processing",
+        "LLM-tooling",
+        "data-pipeline"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "lingbot-map",
+      "name": "Robbyant/lingbot-map",
+      "description": "A feed-forward 3D foundation model for reconstructing scenes from streaming data, enabling real-time 3D understanding from video inputs.",
+      "language": "Python",
+      "stars": 8259,
+      "stars_today": 372,
+      "forks": 805,
+      "url": "https://github.com/Robbyant/lingbot-map",
+      "tags": [
+        "3D-reconstruction",
+        "foundation-model",
+        "computer-vision"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "The fastest macOS offline dictation app, performing voice-to-text conversion fully locally without cloud dependencies.",
+      "language": "Swift",
+      "stars": 3779,
+      "stars_today": 365,
+      "forks": 240,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "local-inference",
+        "macOS"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "claude-howto",
+      "name": "luongnv89/claude-howto",
+      "description": "A visual, example-driven guide to Claude Code covering basic concepts to advanced agents, with copy-paste templates for immediate productivity.",
+      "language": "Python",
+      "stars": 38819,
+      "stars_today": 312,
+      "forks": 4673,
+      "url": "https://github.com/luongnv89/claude-howto",
+      "tags": [
+        "Claude-Code",
+        "tutorials",
+        "AI-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "A multi-agent LLM financial trading framework enabling collaborative AI agents to analyze markets and execute trades.",
+      "language": "Python",
+      "stars": 89482,
+      "stars_today": 274,
+      "forks": 17274,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "finance",
+        "multi-agent",
+        "trading"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openpilot",
+      "name": "commaai/openpilot",
+      "description": "An open-source operating system for robotics that upgrades driver assistance systems on 300+ supported car models.",
+      "language": "Python",
+      "stars": 62422,
+      "stars_today": 266,
+      "forks": 11095,
+      "url": "https://github.com/commaai/openpilot",
+      "tags": [
+        "autonomous-driving",
+        "robotics",
+        "ADAS"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "system-design-101",
+      "name": "ByteByteGoHq/system-design-101",
+      "description": "Visual explanations of complex systems using simple terms, helping engineers prepare for system design interviews.",
+      "language": "",
+      "stars": 84503,
+      "stars_today": 250,
+      "forks": 9353,
+      "url": "https://github.com/ByteByteGoHq/system-design-101",
+      "tags": [
+        "system-design",
+        "education",
+        "interviews"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "An agent-powered video editing tool that enables editing videos through coding agents, extending the browser-use paradigm to multimedia content.",
+      "language": "Python",
+      "stars": 11118,
+      "stars_today": 196,
+      "forks": 1527,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "video-editing",
+        "AI-agent",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cupy",
+      "name": "cupy/cupy",
+      "description": "NumPy and SciPy for GPU, providing drop-in GPU acceleration for scientific computing and ML preprocessing workloads.",
+      "language": "Python",
+      "stars": 11538,
+      "stars_today": 174,
+      "forks": 1068,
+      "url": "https://github.com/cupy/cupy",
+      "tags": [
+        "GPU-computing",
+        "scientific-computing",
+        "NumPy"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "strix",
+      "name": "usestrix/strix",
+      "description": "Open-source AI-powered security testing tool that autonomously finds and fixes application vulnerabilities.",
+      "language": "Python",
+      "stars": 26773,
+      "stars_today": 122,
+      "forks": 2988,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "AI-agent",
+        "vulnerability-detection"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Codebase Knowledge Infrastructure",
+      "description": "MCP-based knowledge graphs and document processors are becoming the perception stack for AI code agents, with codebase-memory-mcp gaining 2,190 stars in a single day and MinerU sustaining strong momentum.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Physics-Grounded Robotics Simulation",
+      "description": "NVIDIA is pursuing a coherent strategy of physics-informed video generation (PhysisForcing) and automated real-to-sim pipelines (SimFoundry), closing the sim-to-real gap from the simulation side with >0.9 correlation to real-world performance.",
+      "related_paper_ids": [
+        "physisforcing",
+        "simfoundry"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RLHF for Image Generation",
+      "description": "Qwen-Image-2.0-RL demonstrates that RLHF and on-policy distillation can meaningfully improve diffusion model quality and instruction-following, suggesting the post-training paradigm from language models is transferring successfully to vision.",
+      "related_paper_ids": [
+        "qwen-image-2-rl"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI-Agent Financial Applications",
+      "description": "Three finance-focused repos trend simultaneously (ai-berkshire, Vibe-Trading, TradingAgents), signaling that the community sees financial markets as the most tractable near-term deployment domain for autonomous agents due to clear quantitative feedback signals.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open Model Quantization Ecosystem",
+      "description": "GGUF-quantized variants of GLM-5.2, Ornith-1.0, Gemma-4, and Qwen3.5 continue to dominate HuggingFace trending, reflecting insatiable community demand for locally-runnable, capable open models.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "LLM Reasoning Foundations",
+      "description": "The Formalizing Latent Thoughts paper reveals that no current LLM satisfies all four axioms of thought representation, suggesting fundamental structural limitations in current chain-of-thought approaches that scaling alone may not resolve.",
+      "related_paper_ids": [
+        "formalizing-latent-thoughts"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

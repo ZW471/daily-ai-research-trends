@@ -1,0 +1,708 @@
+{
+  "version": "1.0",
+  "date": "2026-06-29",
+  "generated_at": "2026-06-29T14:57:00Z",
+  "summary": {
+    "headline": "代码库知识图谱在GitHub上爆发式增长；NVIDIA与斯坦福推进物理驱动的机器人仿真；Qwen-Image-2.0-RL标志RLHF在图像生成领域成熟",
+    "body": "今日AI领域的主旋律是**AI智能体开发基础设施的激增**。GitHub最亮眼的趋势是DeusData的codebase-memory-mcp，单日斩获2,190颗星，该工具将整个代码库索引为持久化知识图谱，支持158种语言的亚毫秒级查询。与之形成呼应的是MinerU（今日380星）持续发力文档到LLM的转换，以及ai-berkshire（今日1,445星）——一个基于Claude Code构建的多智能体价值投资研究框架。SimpleX Chat的隐私优先通讯应用也以今日1,180星的增长展现了市场对私密通信基础设施的强劲需求。\n\n**研究前沿方面**，机器人仿真成为焦点。NVIDIA的PhysisForcing引入物理信息损失函数，在R-Bench上将具身世界仿真保真度提升22.3%；而NVIDIA与斯坦福联合推出的SimFoundry通过自动化数字孪生生成，实现了仿真与真实世界策略评估之间0.911的皮尔逊相关系数。Google的Paper Assistant Tool（PAT）则聚焦AI加速同行评审的元挑战，在数学错误检测上实现了34%的零样本召回率提升。\n\n**模型生态系统**持续多元化发展。DeepReinforce AI的Ornith-1.0在9B和35B版本中均主导趋势榜单，GLM-5.2 MoE及其量化衍生版保持强劲存在。Qwen通过AgentWorld-35B-A3B拓展其智能体能力以实现环境仿真，Krea-2则作为值得关注的文生图模型崭露头角。社区对本地可运行的量化模型（GGUF格式）的需求依然旺盛。",
+    "key_themes": [
+      "codebase-knowledge-infrastructure",
+      "physics-grounded-robotics",
+      "rlhf-for-image-generation",
+      "agent-world-modeling",
+      "open-model-quantization",
+      "ai-assisted-peer-review"
+    ]
+  },
+  "researcher_notes": "**代码库知识图谱正迎来高光时刻。** DeusData的codebase-memory-mcp单日获得2,190星是最明确的信号——构建AI智能体的开发者需要结构化、可查询的代码表示，而不仅仅是平面文件读取。MCP（Model Context Protocol）的框架定位意义重大：它将代码库理解定位为LLM智能体的一等工具，而非独立的IDE功能。结合昨日Graphify的趋势表现以及MinerU在文档处理方面的持续动力，我们正在见证代码智能体「感知栈」的完整形态浮现。\n\n**物理驱动仿真是NVIDIA的低调布局。** PhysisForcing和SimFoundry均来自NVIDIA研究院，二者共同描绘出一幅连贯的蓝图：（1）视频生成模型可以充当机器人的世界仿真器，但前提是物理上可信；（2）自动化的真实到仿真管线能够生成与真实世界表现相关性>0.9的训练环境。其实际意义在于，长期困扰机器人学习的仿真到真实迁移鸿沟正在从仿真端而非硬件端被弥合。\n\n**值得关注的冷门佳作：形式化潜在思维。** Seddik和Fard在不列颠哥伦比亚大学提出了四条公理（因果性、极简性、可分离性、稳定性）来评估LLM中的潜在思维表示。他们发现没有模型能同时满足所有四条公理——且这一失败在稠密模型、推理蒸馏模型和RL训练模型家族中均一致存在——这暗示当前的思维链和潜在推理方法可能存在根本性的表征局限，仅靠规模扩展无法解决。\n\n**AI金融智能体趋势持续加速。** 今日GitHub趋势中有三个金融相关仓库：ai-berkshire（基于Claude Code的价值投资，今日1,445星）、Vibe-Trading（个人交易智能体，今日492星）和TradingAgents（多智能体LLM交易框架，今日274星）。如此集中的热度表明社区认为金融应用是自主智能体最具可行性的近期部署领域——这很可能是因为市场提供了清晰、可量化的反馈信号。\n\n**关注：Google的PAT与AI评审反馈循环。** Google的Paper Assistant Tool提出了科学评估中AI与人类协作的四个渐进级别分类法。在STOC和ICML的试点部署中，它成功捕获了提交论文中的关键错误。其元层面的含义发人深省：如果AI在生产更多科学成果，而AI也在审查这些科学成果，那么质量控制循环将变得越来越自指。数学错误检测34%的改进令人鼓舞，但更广泛的治理问题仍然悬而未决。",
+  "papers": [
+    {
+      "id": "physisforcing",
+      "title": "PhysisForcing：物理增强的机器人操作世界仿真器",
+      "authors": [
+        "Peiwen Zhang",
+        "Yufan Deng",
+        "Shangkun Sun",
+        "Juncheng Ma",
+        "Duomin Wang et al."
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Peking University"
+      ],
+      "summary": "PhysisForcing提出了一种可扩展的训练框架，通过在物理信息丰富的区域聚焦监督信号，联合优化像素级轨迹对齐损失和语义级关系对齐损失，增强视频生成模型在具身世界仿真中的物理一致性。",
+      "key_findings": [
+        "在R-Bench上分别将Wan2.2-I2V-A14B和Cosmos3-Nano基础模型提升22.3%和9.2%",
+        "在WorldArena动作规划协议下将闭环成功率从16.0%提高到24.0%",
+        "视频生成中的物理不稳定性主要源于物体变形和接触过程中不合理的时空关联"
+      ],
+      "tags": [
+        "robotics",
+        "video-generation",
+        "world-simulation",
+        "physics-consistency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28128",
+        "huggingface": "https://huggingface.co/papers/2606.28128",
+        "pdf": "https://arxiv.org/pdf/2606.28128"
+      }
+    },
+    {
+      "id": "qwen-image-2-rl",
+      "title": "Qwen-Image-2.0-RL 技术报告",
+      "authors": [
+        "Yixian Xu",
+        "Kaiyuan Gao",
+        "Yuxiang Chen",
+        "Yilei Chen",
+        "Zecheng Tang et al."
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Qwen Team"
+      ],
+      "summary": "Qwen-Image-2.0-RL将RLHF和在线策略蒸馏应用于Qwen-Image-2.0扩散模型，通过使用基于思维链推理微调的复合奖励模型提供可靠的奖励信号，同时提升视觉质量和指令遵循能力。",
+      "key_findings": [
+        "在Qwen-Image-Bench上达到57.84综合评分（比基础模型高2.61）",
+        "文生图竞技场Elo评分1193（+78），图像编辑竞技场评分1349（+93）",
+        "在线策略蒸馏通过轨迹级速度匹配将多个任务专用RL策略整合到单一学生模型中"
+      ],
+      "tags": [
+        "RLHF",
+        "image-generation",
+        "diffusion-models",
+        "on-policy-distillation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27608",
+        "huggingface": "https://huggingface.co/papers/2606.27608",
+        "pdf": "https://arxiv.org/pdf/2606.27608"
+      }
+    },
+    {
+      "id": "formalizing-latent-thoughts",
+      "title": "形式化潜在思维：LLM思维表示的四条公理",
+      "authors": [
+        "Fahd Seddik",
+        "Fatemeh Fard"
+      ],
+      "affiliations": [
+        "University of British Columbia"
+      ],
+      "summary": "提出了一种针对LLM潜在思维表示的公理化评估框架，包含四条功能性公理（因果性、极简性、可分离性、稳定性），揭示了当前没有模型能同时满足所有四条公理，且这一失败在不同模型家族中具有结构性一致性。",
+      "key_findings": [
+        "在23个推理任务中，没有候选LLM能同时满足所有四条公理",
+        "表示能可靠区分任务类型，但无法区分同一任务内的两个不同问题",
+        "该失败在稠密模型、推理蒸馏模型和RL训练模型中一致存在，表明这是一个结构性缺陷"
+      ],
+      "tags": [
+        "LLM-evaluation",
+        "reasoning",
+        "representation-learning",
+        "thought-representation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27378",
+        "huggingface": "https://huggingface.co/papers/2606.27378",
+        "pdf": "https://arxiv.org/pdf/2606.27378"
+      }
+    },
+    {
+      "id": "google-paper-assistant",
+      "title": "迈向科学评审自动化：Google的Paper Assistant Tool",
+      "authors": [
+        "Rajesh Jayaram",
+        "Drew Tyler",
+        "David Woodruff",
+        "Corinna Cortes",
+        "Yossi Matias et al."
+      ],
+      "affiliations": [
+        "Google Research"
+      ],
+      "summary": "推出Paper Assistant Tool（PAT），一种用于深度科学评审和验证的智能体AI框架，提出了科学评估中AI与人类协作的四级分类法，并展示了显著的错误检测改进。",
+      "key_findings": [
+        "利用推理缩放技术在SPOT基准的数学错误检测上实现了34%的零样本召回率提升",
+        "提出科学评估中AI与人类协作的四个渐进级别",
+        "在STOC和ICML的试点部署中展示了识别关键错误和提出实质性改进建议的能力"
+      ],
+      "tags": [
+        "scientific-review",
+        "agentic-AI",
+        "peer-review",
+        "verification"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28277",
+        "huggingface": "https://huggingface.co/papers/2606.28277",
+        "pdf": "https://arxiv.org/pdf/2606.28277"
+      }
+    },
+    {
+      "id": "simfoundry",
+      "title": "SimFoundry：用于策略学习和评估的模块化自动场景生成",
+      "authors": [
+        "Nadun Ranawaka",
+        "Josiah Wong",
+        "Wei-Lin Pai",
+        "Wei-Teng Chu",
+        "Tianyuan Dai et al."
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Stanford University",
+        "Georgia Institute of Technology",
+        "University of Texas at Austin"
+      ],
+      "summary": "SimFoundry推出了一种模块化系统，可从视频进行零样本真实到仿真的场景构建，生成数字孪生和「数字表亲」（保持可供性的场景变体），实现了具有强大仿真到真实迁移能力的策略训练。",
+      "key_findings": [
+        "仿真评估预测真实世界表现的平均皮尔逊相关系数达0.911",
+        "使用物体、场景和任务表亲训练的策略分别实现17%、21%和40%的成功率提升",
+        "零样本迁移到包括多步操作、关节物体交互和双臂交互在内的高难度真实任务"
+      ],
+      "tags": [
+        "robotics",
+        "simulation",
+        "digital-twins",
+        "sim-to-real"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28276",
+        "huggingface": "https://huggingface.co/papers/2606.28276",
+        "pdf": "https://arxiv.org/pdf/2606.28276"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "一款视觉语言OCR模型，在多语言文档理解任务中达到最先进性能，从复杂视觉输入中实现稳健的文本识别。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "OCR",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 295064,
+        "likes": 1242
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI",
+      "description": "一款采用DSA（动态稀疏注意力）架构的大规模MoE语言模型，支持中英文双语，具备强大的推理和生成能力。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "bilingual"
+      ],
+      "metrics": {
+        "downloads": 118651,
+        "likes": 2821
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "基于Qwen3.5的GGUF量化9B参数模型，支持100万上下文窗口，针对推理、函数调用和多模态智能体任务（包括网络安全和生物医学应用）进行优化。",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": [
+        "GGUF",
+        "reasoning",
+        "long-context",
+        "agentic"
+      ],
+      "metrics": {
+        "downloads": 831529,
+        "likes": 803
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "GGUF量化的35B MoE模型，提供强大的通用文本生成能力，采用MIT许可，支持本地部署。",
+      "task_type": "text-generation",
+      "model_size": "35B (MoE)",
+      "tags": [
+        "GGUF",
+        "MoE",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 79630,
+        "likes": 413
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen",
+      "description": "一款专为智能体环境仿真和世界建模训练的35B MoE模型，使智能体能够预测和推理环境状态变化。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B (MoE)",
+      "tags": [
+        "agent",
+        "world-model",
+        "environment-simulation"
+      ],
+      "metrics": {
+        "downloads": 23697,
+        "likes": 400
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "一款快速文生图扩散模型，在生成质量与推理速度之间取得平衡，专为快速创意迭代而设计。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 27631,
+        "likes": 355
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "gemma-4-12b-coder-gguf",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "社区 (yuxinlu1)",
+      "description": "GGUF量化的Gemma-4-12B编程微调版本，具备推理能力，针对本地LLM部署进行优化。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "GGUF",
+        "coding",
+        "reasoning",
+        "local-llm"
+      ],
+      "metrics": {
+        "downloads": 549926,
+        "likes": 2473
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4 Pro模型的最新迭代版本，采用DSpark优化，代表DeepSeek模型系列的持续进步。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "DeepSeek",
+        "text-generation",
+        "FP8"
+      ],
+      "metrics": {
+        "downloads": 373,
+        "likes": 182
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "vibethinker-3b",
+      "name": "VibeThinker-3B",
+      "organization": "WeiboAI",
+      "description": "一款基于Qwen2.5-Coder-3B微调的紧凑型3B推理模型，尽管体积小巧，但在数学、编程和GPQA推理基准上表现出色。",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "reasoning",
+        "math",
+        "code",
+        "small-model"
+      ],
+      "metrics": {
+        "downloads": 59337,
+        "likes": 744
+      },
+      "source_url": "https://huggingface.co/WeiboAI/VibeThinker-3B"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "一款3B参数的视觉模型，用于开放词汇目标检测和定位，基于EAGLE架构实现从自然语言查询到精确视觉定位。",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": [
+        "object-detection",
+        "grounding",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 646451,
+        "likes": 2436
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "codebase-memory-mcp",
+      "name": "DeusData/codebase-memory-mcp",
+      "description": "一款高性能MCP服务器，将代码库索引为持久化知识图谱，支持158种语言的亚毫秒级查询，大幅减少AI智能体代码理解所需的Token用量。",
+      "language": "C",
+      "stars": 19805,
+      "stars_today": 2190,
+      "forks": 1434,
+      "url": "https://github.com/DeusData/codebase-memory-mcp",
+      "tags": [
+        "MCP",
+        "knowledge-graph",
+        "code-intelligence",
+        "AI-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "AI时代的价值投资研究框架，基于Claude Code和Codex构建，融合巴菲特、芒格、段永平和李录四大师方法论，支持多智能体对抗式分析。",
+      "language": "Python",
+      "stars": 5428,
+      "stars_today": 1445,
+      "forks": 729,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "multi-agent",
+        "value-investing",
+        "Claude-Code"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "simplex-chat",
+      "name": "simplex-chat/simplex-chat",
+      "description": "首个不使用任何用户标识符的通讯网络，从设计上实现100%隐私保护，支持iOS、Android和桌面平台。",
+      "language": "Haskell",
+      "stars": 15121,
+      "stars_today": 1180,
+      "forks": 867,
+      "url": "https://github.com/simplex-chat/simplex-chat",
+      "tags": [
+        "privacy",
+        "messaging",
+        "decentralized"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "free-for-dev",
+      "name": "ripienaar/free-for-dev",
+      "description": "一份全面的SaaS、PaaS和IaaS免费层级服务精选列表，面向开发者和基础设施工程师。",
+      "language": "HTML",
+      "stars": 125331,
+      "stars_today": 495,
+      "forks": 13173,
+      "url": "https://github.com/ripienaar/free-for-dev",
+      "tags": [
+        "developer-tools",
+        "resources",
+        "free-tier"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "一款个人交易智能体框架，通过自然语言交互和自动化策略执行实现AI辅助金融交易。",
+      "language": "Python",
+      "stars": 14381,
+      "stars_today": 492,
+      "forks": 2635,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "finance",
+        "trading-agent",
+        "AI-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mineru",
+      "name": "opendatalab/MinerU",
+      "description": "将PDF和Office等复杂文档转换为LLM可用的markdown/JSON格式，作为智能体工作流的关键预处理管线。",
+      "language": "Python",
+      "stars": 71657,
+      "stars_today": 380,
+      "forks": 6018,
+      "url": "https://github.com/opendatalab/MinerU",
+      "tags": [
+        "document-processing",
+        "LLM-tooling",
+        "data-pipeline"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "lingbot-map",
+      "name": "Robbyant/lingbot-map",
+      "description": "一款前馈式3D基础模型，从流式数据重建场景，实现从视频输入的实时3D理解。",
+      "language": "Python",
+      "stars": 8259,
+      "stars_today": 372,
+      "forks": 805,
+      "url": "https://github.com/Robbyant/lingbot-map",
+      "tags": [
+        "3D-reconstruction",
+        "foundation-model",
+        "computer-vision"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "最快的macOS离线听写应用，完全在本地进行语音转文字，无需云端依赖。",
+      "language": "Swift",
+      "stars": 3779,
+      "stars_today": 365,
+      "forks": 240,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "local-inference",
+        "macOS"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "claude-howto",
+      "name": "luongnv89/claude-howto",
+      "description": "一份图文并茂的Claude Code指南，从基础概念到高级智能体，附带可直接复制使用的模板。",
+      "language": "Python",
+      "stars": 38819,
+      "stars_today": 312,
+      "forks": 4673,
+      "url": "https://github.com/luongnv89/claude-howto",
+      "tags": [
+        "Claude-Code",
+        "tutorials",
+        "AI-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "多智能体LLM金融交易框架，使协作式AI智能体能够分析市场并执行交易。",
+      "language": "Python",
+      "stars": 89482,
+      "stars_today": 274,
+      "forks": 17274,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "finance",
+        "multi-agent",
+        "trading"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openpilot",
+      "name": "commaai/openpilot",
+      "description": "一款开源机器人操作系统，可升级300多款支持车型的驾驶辅助系统。",
+      "language": "Python",
+      "stars": 62422,
+      "stars_today": 266,
+      "forks": 11095,
+      "url": "https://github.com/commaai/openpilot",
+      "tags": [
+        "autonomous-driving",
+        "robotics",
+        "ADAS"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "system-design-101",
+      "name": "ByteByteGoHq/system-design-101",
+      "description": "用图文和简单术语解释复杂系统，帮助工程师准备系统设计面试。",
+      "language": "",
+      "stars": 84503,
+      "stars_today": 250,
+      "forks": 9353,
+      "url": "https://github.com/ByteByteGoHq/system-design-101",
+      "tags": [
+        "system-design",
+        "education",
+        "interviews"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "一款智能体驱动的视频编辑工具，通过编码智能体编辑视频，将browser-use范式扩展到多媒体内容。",
+      "language": "Python",
+      "stars": 11118,
+      "stars_today": 196,
+      "forks": 1527,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "video-editing",
+        "AI-agent",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cupy",
+      "name": "cupy/cupy",
+      "description": "GPU版NumPy和SciPy，为科学计算和机器学习预处理工作负载提供即插即用的GPU加速。",
+      "language": "Python",
+      "stars": 11538,
+      "stars_today": 174,
+      "forks": 1068,
+      "url": "https://github.com/cupy/cupy",
+      "tags": [
+        "GPU-computing",
+        "scientific-computing",
+        "NumPy"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "strix",
+      "name": "usestrix/strix",
+      "description": "开源AI安全测试工具，自主发现和修复应用程序漏洞。",
+      "language": "Python",
+      "stars": 26773,
+      "stars_today": 122,
+      "forks": 2988,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "AI-agent",
+        "vulnerability-detection"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "代码库知识基础设施",
+      "description": "基于MCP的知识图谱和文档处理器正在成为AI代码智能体的感知栈，codebase-memory-mcp单日获得2,190星，MinerU保持强劲增长势头。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "物理驱动的机器人仿真",
+      "description": "NVIDIA正在推进一套连贯的策略：物理信息驱动的视频生成（PhysisForcing）和自动化真实到仿真管线（SimFoundry），从仿真端弥合仿真到真实的鸿沟，与真实世界表现的相关性超过0.9。",
+      "related_paper_ids": [
+        "physisforcing",
+        "simfoundry"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "图像生成的RLHF",
+      "description": "Qwen-Image-2.0-RL证明RLHF和在线策略蒸馏可以有效提升扩散模型质量和指令遵循能力，表明语言模型的后训练范式正在成功迁移到视觉领域。",
+      "related_paper_ids": [
+        "qwen-image-2-rl"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI智能体金融应用",
+      "description": "三个金融聚焦的仓库同时登上趋势榜（ai-berkshire、Vibe-Trading、TradingAgents），表明社区认为金融市场是自主智能体最具可行性的近期部署领域，因为市场提供了清晰的量化反馈信号。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "开源模型量化生态",
+      "description": "GLM-5.2、Ornith-1.0、Gemma-4和Qwen3.5的GGUF量化版本持续主导HuggingFace趋势榜单，反映社区对本地可运行的高能力开源模型的旺盛需求。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "LLM推理基础",
+      "description": "形式化潜在思维论文揭示，当前没有LLM能同时满足思维表示的所有四条公理，暗示当前思维链方法存在根本性的结构局限，仅靠规模扩展可能无法解决。",
+      "related_paper_ids": [
+        "formalizing-latent-thoughts"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-29T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
