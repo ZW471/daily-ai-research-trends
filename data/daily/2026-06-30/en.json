@@ -1,0 +1,936 @@
+{
+  "version": "1.0",
+  "date": "2026-06-30",
+  "generated_at": "2026-06-30T14:57:00Z",
+  "summary": {
+    "headline": "AI agent infrastructure dominates GitHub with agency-agents and cognee surging; on-policy distillation advances with AsyncOPD and PHF; financial trading agents proliferate across open-source ecosystem",
+    "body": "Today's AI landscape is marked by an **explosive growth in agent infrastructure on GitHub**. The standout is agency-agents, a complete AI agency framework with specialized expert personas, gaining 1,425 stars in a single day to reach nearly 119K total. Cognee, the open-source AI memory platform for persistent long-term agent memory via knowledge graphs, surged with 868 stars today. Browser-use's video-use project (967 stars today) extends coding agents into video editing territory, while council-of-high-intelligence introduces multi-LLM deliberation with 18 AI personas.\n\n**On the research front**, on-policy distillation takes center stage with two complementary papers. AsyncOPD from KAIST establishes that asynchronous training pipelines can tolerate significant policy staleness without degrading student quality, potentially unlocking 2-3x throughput gains for LLM post-training. PHF (Privileged Hidden Flow) proposes supervising intermediate hidden states rather than just output distributions, addressing a fundamental limitation of existing distillation objectives. Process Advantage Signal Shaping (PASS) introduces a paradigm-agnostic middleware for dense process supervision in GRPO, further advancing the RL-for-reasoning pipeline.\n\n**The model ecosystem** sees continued momentum for GLM-5.2 MoE (2,942 likes), with NVIDIA releasing an NVFP4-quantized variant. The Ornith-1.0 family from DeepReinforce AI spans 9B to 397B parameters with strong community adoption. Baidu's Unlimited-OCR maintains its trending position, while DeepSeek-V4-Pro-DSpark and Qwen-AgentWorld-35B-A3B signal continued investment from major Chinese AI labs. The community's demand for GGUF-quantized, locally-runnable models remains the dominant distribution pattern.",
+    "key_themes": [
+      "on-policy-distillation-advances",
+      "agent-infrastructure-explosion",
+      "financial-trading-agents",
+      "moe-models-and-quantization",
+      "3d-reconstruction-rendering",
+      "rag-optimization"
+    ]
+  },
+  "researcher_notes": "**On-policy distillation is having a breakout day.** Two papers — AsyncOPD and PHF — tackle complementary aspects of the same problem: how to make on-policy distillation for LLM post-training both faster and better. AsyncOPD shows that staleness in asynchronous pipelines is surprisingly tolerable, which has immediate practical implications for training infrastructure. PHF goes deeper, arguing that supervising only output distributions wastes privileged information, and proposes flowing teacher knowledge through hidden states. Together, they suggest the OPD pipeline is maturing rapidly from a research curiosity into a production-ready training paradigm. Combined with PASS's work on dense process supervision for GRPO, the RL-for-reasoning stack is getting significantly more sophisticated.\n\n**Agent infrastructure is the new developer tooling.** The sheer volume of agent-related GitHub projects trending today is remarkable: agency-agents (1,425 stars today), cognee (868), video-use (967), council-of-high-intelligence (331), CLI-Anything (122), and crawl4ai (288). This isn't just one project catching fire — it's an entire category. The pattern suggests developers are moving past 'build an agent' into 'build the platform agents run on.' Cognee's knowledge-graph-based memory and agency-agents' specialized persona system represent two distinct architectural bets on what agent infrastructure should look like.\n\n**Financial trading agents are the killer app for autonomous AI.** Three projects in today's GitHub trending — ai-berkshire (1,386 stars today), Vibe-Trading (839), and TradingAgents (362) — are AI trading systems. TradingAgents-CN, the Chinese-localized version, adds another 98 stars. This is the second consecutive day with multiple finance-AI projects trending. Markets provide exactly what autonomous agents need: clear feedback signals, abundant historical data, and measurable outcomes. The risk is that this becomes the next wave of retail algo-trading hype rather than a genuine capability unlock.\n\n**Sleeper hit: Covering the Unseen for RAG.** This paper reframes RAG context selection from ranking to coverage optimization, addressing a real failure mode where top-k retrieval over-covers one semantic aspect while missing others in complex queries. The information demand coverage framework could meaningfully improve multi-hop and ambiguous question handling — the exact scenarios where current RAG systems fail most visibly.\n\n**Watch: The 3D reconstruction pipeline is maturing.** HiReFF tackles uncalibrated sparse-view human reconstruction for holographic communication, RAGA introduces ray-traced shadow casting for 3D Gaussian Splatting avatars, and lingbot-map (465 GitHub stars today) provides feed-forward 3D scene reconstruction from streaming data. The convergence of real-time rendering quality with practical deployment constraints suggests volumetric video is closer to production than many assume.",
+  "papers": [
+    {
+      "id": "asyncopd",
+      "title": "AsyncOPD: How Stale Can On-Policy Distillation Be?",
+      "authors": [
+        "Wonjun Kang",
+        "Kevin Galim",
+        "Seunghyuk Oh",
+        "Minjun Kang",
+        "Sanghyun Park"
+      ],
+      "affiliations": [
+        "KAIST"
+      ],
+      "summary": "Investigates how much policy staleness can be tolerated in asynchronous on-policy distillation pipelines for LLM post-training, establishing that decoupling rollout generation from learner updates introduces stale-policy data but can significantly improve training throughput without degrading student quality.",
+      "key_findings": [
+        "Asynchronous training pipelines can alleviate the on-policy systems bottleneck by decoupling rollout generation from learner updates",
+        "Stale-policy data from asynchronous pipelines is surprisingly tolerable, enabling significant throughput gains",
+        "Provides theoretical and empirical analysis of the staleness-quality tradeoff in on-policy distillation for LLMs"
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "LLM-training",
+        "asynchronous-training",
+        "reinforcement-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.24143",
+        "huggingface": "https://huggingface.co/papers/2606.24143",
+        "pdf": "https://arxiv.org/pdf/2606.24143"
+      }
+    },
+    {
+      "id": "phf-privileged-hidden-flow",
+      "title": "PHF: Privileged Hidden Flow for On-Policy Self-Distillation",
+      "authors": [
+        "Yuhan Li",
+        "Mingxu Zhang",
+        "Dazhong Shen"
+      ],
+      "affiliations": [
+        "University of Science and Technology of China"
+      ],
+      "summary": "Proposes supervising intermediate hidden states rather than only output distributions in on-policy self-distillation for reasoning models, allowing privileged teacher context to flow through the student's representations for improved training signal quality.",
+      "key_findings": [
+        "Existing OPSD objectives supervise only output distributions, causing privileged context to affect training only through token-level KL signals",
+        "Privileged Hidden Flow enables richer knowledge transfer by aligning intermediate representations between teacher and student",
+        "Demonstrates improved reasoning performance over standard output-only distillation objectives"
+      ],
+      "tags": [
+        "self-distillation",
+        "reasoning",
+        "LLM-training",
+        "knowledge-distillation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29340",
+        "pdf": "https://arxiv.org/pdf/2606.29340"
+      }
+    },
+    {
+      "id": "process-advantage-signal-shaping",
+      "title": "Process Advantage Signal Shaping: A Paradigm-Agnostic Middleware for Process-Supervised RL in LLM Reasoners",
+      "authors": [
+        "Chao Wang",
+        "Hongtao Tian",
+        "Tao Yang"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Introduces PASS, a paradigm-agnostic middleware layer that enables dense process supervision for Group Relative Policy Optimization (GRPO) in LLM reasoners, addressing the weak outcome reward signal problem through learned process reward models and on-policy-distillation KL signals.",
+      "key_findings": [
+        "Dense process supervision via PRMs or on-policy-distillation KL signals can densify GRPO's otherwise weak outcome reward",
+        "PASS serves as middleware compatible with multiple RL paradigms rather than requiring paradigm-specific implementations",
+        "Demonstrates improved reasoning performance through finer-grained reward signals at intermediate reasoning steps"
+      ],
+      "tags": [
+        "GRPO",
+        "process-reward-models",
+        "reinforcement-learning",
+        "LLM-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29296",
+        "pdf": "https://arxiv.org/pdf/2606.29296"
+      }
+    },
+    {
+      "id": "hierarchical-experimentalist-agents",
+      "title": "Hierarchical Experimentalist Agents",
+      "authors": [
+        "Abhranil Chandra",
+        "Sankaran Vaidyanathan",
+        "Utsav Dhanuka"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "Proposes hierarchical LLM agents that go beyond parametric knowledge, fixed data, and retrieval to conduct real-world experiments in novel domains, addressing sophisticated queries that cannot be answered through existing information sources alone.",
+      "key_findings": [
+        "Most LLM agents rely on parametric knowledge, fixed post-training data, retrieval, or search, which breaks down in novel domains",
+        "Hierarchical agent architecture enables planning and executing real-world experiments to answer queries",
+        "Demonstrates capability on sophisticated queries that cannot be resolved through existing information retrieval alone"
+      ],
+      "tags": [
+        "LLM-agents",
+        "scientific-experimentation",
+        "autonomous-agents",
+        "hierarchical-planning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29315",
+        "pdf": "https://arxiv.org/pdf/2606.29315"
+      }
+    },
+    {
+      "id": "covering-the-unseen-rag",
+      "title": "Covering the Unseen: Information Demand Coverage Optimization for Retrieval-Augmented Generation",
+      "authors": [
+        "Bingxue Zhang",
+        "Jianying Jia",
+        "Feida Zhu"
+      ],
+      "affiliations": [
+        "Singapore Management University"
+      ],
+      "summary": "Reframes RAG context selection from ranking chunks against a single query embedding to coverage optimization, addressing the failure mode where top-k selection over-covers one semantic aspect while ignoring critical information needs for complex, multi-hop, or ambiguous queries.",
+      "key_findings": [
+        "Top-k RAG selection tends to over-cover one semantic aspect while ignoring critical information needs",
+        "Information demand coverage framework provides a principled approach to diverse context selection",
+        "Significantly improves handling of multi-hop and ambiguous queries compared to standard retrieval methods"
+      ],
+      "tags": [
+        "RAG",
+        "retrieval-augmented-generation",
+        "information-retrieval",
+        "query-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29328",
+        "pdf": "https://arxiv.org/pdf/2606.29328"
+      }
+    },
+    {
+      "id": "raga-gaussian-shadows",
+      "title": "RAGA: Real Time Ray Traced Gaussian Shadow Casting for 3DGS Avatar-Scene Interaction",
+      "authors": [
+        "Aymen Mir",
+        "Riza Alp Guler",
+        "Jian Wang"
+      ],
+      "affiliations": [
+        "Meta Reality Labs"
+      ],
+      "summary": "Introduces physically plausible real-time shadow casting for 3D Gaussian Splatting avatars through ray tracing, enabling realistic avatar-scene and multi-avatar interactions without relying on binary hit tests or mesh-based shadow casting.",
+      "key_findings": [
+        "Replaces binary hit tests and mesh-based shadow casting with continuous ray-traced shadows for 3DGS",
+        "Supports multi-avatar and object-interaction scenarios within existing 3DGS scenes",
+        "Achieves real-time performance while maintaining physical plausibility of shadow rendering"
+      ],
+      "tags": [
+        "3D-gaussian-splatting",
+        "ray-tracing",
+        "avatars",
+        "real-time-rendering"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29329",
+        "pdf": "https://arxiv.org/pdf/2606.29329"
+      }
+    },
+    {
+      "id": "hireff-human-reconstruction",
+      "title": "HiReFF: High-Resolution Feedforward Human Reconstruction from Uncalibrated Sparse-View Video",
+      "authors": [
+        "Yiming Jiang",
+        "Hanzhang Tu",
+        "Wenfeng Song"
+      ],
+      "affiliations": [
+        "Beijing Jiaotong University"
+      ],
+      "summary": "Addresses uncalibrated volumetric video streaming for human reconstruction essential for holographic communication and AR/VR, achieving temporal consistency and computational efficiency from sparse-view inputs without per-scene optimization or calibrated cameras.",
+      "key_findings": [
+        "Feedforward architecture eliminates need for per-scene optimization or calibrated cameras",
+        "Achieves high-resolution reconstruction from sparse uncalibrated views with temporal consistency",
+        "Practical for real-time holographic communication and AR/VR streaming applications"
+      ],
+      "tags": [
+        "3D-reconstruction",
+        "human-reconstruction",
+        "volumetric-video",
+        "AR-VR"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29333",
+        "pdf": "https://arxiv.org/pdf/2606.29333"
+      }
+    },
+    {
+      "id": "pointer-cad-v2",
+      "title": "Pointer-CAD v2: Plan-Then-Construct CAD Generation with Dimension-Aware Parametric Precision",
+      "authors": [
+        "Dacheng Qi",
+        "Chenyu Wang",
+        "Jingwei Xu"
+      ],
+      "affiliations": [
+        "Nanjing University"
+      ],
+      "summary": "Advances LLM-based CAD generation by introducing a plan-then-construct approach with dimension-aware parametric precision, addressing the limited precision of existing sequence prediction methods for industrial manufacturing requirements.",
+      "key_findings": [
+        "LLM-based CAD generation formulated as sequence prediction achieves promising results but lacks industrial precision",
+        "Plan-then-construct paradigm separates high-level design intent from low-level parametric specification",
+        "Dimension-aware approach improves parametric precision critical for manufacturing applications"
+      ],
+      "tags": [
+        "CAD-generation",
+        "LLM-applications",
+        "manufacturing",
+        "sequence-prediction"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29301",
+        "pdf": "https://arxiv.org/pdf/2606.29301"
+      }
+    },
+    {
+      "id": "scale-erasure",
+      "title": "ScaleErasure: Inference-Time Minimal Intervention for Precise Concept Erasure in Next-Scale Autoregressive Image Generation",
+      "authors": [
+        "Cong Wang",
+        "Haiyu Wu",
+        "Zhiwei Jiang"
+      ],
+      "affiliations": [
+        "Nanjing University"
+      ],
+      "summary": "Introduces an inference-time concept erasure method for next-scale autoregressive image generation models, preventing generation of unsafe content while preserving general generative capability through minimal intervention at the scale prediction level.",
+      "key_findings": [
+        "First concept erasure method specifically designed for next-scale autoregressive image generation",
+        "Minimal intervention approach preserves general generative capability while blocking targeted concepts",
+        "Operates at inference time without requiring model retraining or fine-tuning"
+      ],
+      "tags": [
+        "safety",
+        "concept-erasure",
+        "autoregressive-generation",
+        "image-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29282",
+        "pdf": "https://arxiv.org/pdf/2606.29282"
+      }
+    },
+    {
+      "id": "reflow-marginal-distribution",
+      "title": "Beyond Trajectory Matching: Reflow with Marginal Distribution Alignment",
+      "authors": [
+        "Chen Wang",
+        "Peiran Yun",
+        "Pan Xie"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "Addresses the key challenge of efficient few-step generation in diffusion and continuous-flow models by improving reflow with marginal distribution alignment, going beyond trajectory matching to achieve better ODE discretization for deterministic sampling.",
+      "key_findings": [
+        "Standard trajectory matching in reflow does not account for marginal distribution drift during few-step sampling",
+        "Marginal distribution alignment provides a complementary objective that improves few-step generation quality",
+        "Achieves better ODE discretization with fewer steps compared to trajectory-matching-only approaches"
+      ],
+      "tags": [
+        "flow-matching",
+        "diffusion-models",
+        "few-step-generation",
+        "ODE-sampling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29287",
+        "pdf": "https://arxiv.org/pdf/2606.29287"
+      }
+    },
+    {
+      "id": "fdm-mfvt-virtual-tryon",
+      "title": "FDM-MFVT: Few-step Sampling Diffusion Model for Mask-Free Virtual Try-On",
+      "authors": [
+        "Jiaxin Liu",
+        "Xiaoye Liang",
+        "Lai Jiang"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "Proposes a few-step sampling diffusion model for mask-free image-based virtual try-on that eliminates dependency on expensive auxiliary mask prediction networks while requiring fewer sampling steps than existing diffusion-based IVTON methods.",
+      "key_findings": [
+        "Eliminates need for costly auxiliary mask prediction networks in virtual try-on",
+        "Achieves competitive quality with significantly fewer sampling steps",
+        "Introduces a new approach to large-scale mask-free paired dataset construction"
+      ],
+      "tags": [
+        "virtual-try-on",
+        "diffusion-models",
+        "mask-free",
+        "fashion-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29319",
+        "pdf": "https://arxiv.org/pdf/2606.29319"
+      }
+    },
+    {
+      "id": "deterministic-decisions-high-stakes",
+      "title": "Deterministic Decisions for High-Stakes AI: A Zero-Egress Pipeline with the Deployability of RAG and the Accuracy of Machine Learning",
+      "authors": [
+        "Craig Atkinson"
+      ],
+      "affiliations": [
+        "Independent Researcher"
+      ],
+      "summary": "Identifies intervention bias as a previously unquantified failure mode of zero-shot LLM educational advisory agents and proposes a zero-egress pipeline that combines RAG deployability with ML accuracy for high-stakes decision-making scenarios.",
+      "key_findings": [
+        "Zero-shot LLM advisory agents exhibit intervention bias: recommending action when optimal policy mandates inaction",
+        "Six-arm ablation on Open University Learning Analytics demonstrates the failure mode quantitatively",
+        "Zero-egress pipeline achieves ML-level accuracy while maintaining RAG-level deployability"
+      ],
+      "tags": [
+        "LLM-deployment",
+        "educational-AI",
+        "decision-making",
+        "intervention-bias"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29280",
+        "pdf": "https://arxiv.org/pdf/2606.29280"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI",
+      "description": "A large-scale MoE language model with Dynamic Sparse Attention (DSA) architecture, supporting multilingual text generation and conversational AI with strong community adoption and multiple quantized variants.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 133350,
+        "likes": 2942
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5",
+      "organization": "Community (yuxinlu1)",
+      "description": "A GGUF-quantized 12B coding model fine-tuned from Gemma 4 with Fable 5 and Composer 2.5 training, optimized for code generation and reasoning tasks with strong download numbers.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "coding",
+        "GGUF",
+        "gemma4",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 561577,
+        "likes": 2503
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "locate-anything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B parameter image feature extraction model for spatial localization tasks, enabling precise object and feature detection in images with high accuracy.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "spatial-localization",
+        "image-feature-extraction",
+        "NVIDIA"
+      ],
+      "metrics": {
+        "downloads": 728320,
+        "likes": 2481
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "A vision-language OCR model achieving state-of-the-art multilingual document understanding, offering robust text recognition from complex visual inputs including handwriting and structured documents.",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": [
+        "OCR",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 362945,
+        "likes": 1372
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "A GGUF-quantized 9B parameter model based on Qwen3.5 with 1M context window, optimized for reasoning, function calling, and multimodal agentic tasks.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "GGUF",
+        "quantized",
+        "qwen3.5",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 907682,
+        "likes": 951
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5",
+      "organization": "Community (yuxinlu1)",
+      "description": "A GGUF-quantized 12B agentic model fine-tuned from Gemma 4 for terminal and tool-use tasks, designed for autonomous coding and agentic workflows.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "agentic",
+        "GGUF",
+        "gemma4",
+        "terminal"
+      ],
+      "metrics": {
+        "downloads": 241409,
+        "likes": 848
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "A GGUF-quantized 35B parameter model from the Ornith family, a MoE-based multimodal model supporting text generation and image understanding tasks.",
+      "task_type": "text-generation",
+      "model_size": "35B (MoE)",
+      "tags": [
+        "GGUF",
+        "MoE",
+        "multimodal",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 123598,
+        "likes": 483
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba Qwen",
+      "description": "A 35B MoE model with 3B active parameters specialized for agent world modeling, supporting image-text-to-text tasks for environment simulation and agentic applications.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": [
+        "agent",
+        "world-modeling",
+        "MoE",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 26223,
+        "likes": 438
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "A fast text-to-image diffusion model optimized for rapid generation, built on the Krea-2-Raw base model with inference speed improvements.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 38454,
+        "likes": 393
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "The DSpark variant of DeepSeek's V4-Pro model, representing the latest in DeepSeek's large language model family with enhanced capabilities for text generation and reasoning.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 5460,
+        "likes": 214
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "ornith-1-0-397b",
+      "name": "Ornith-1.0-397B",
+      "organization": "DeepReinforce AI",
+      "description": "The flagship 397B parameter MoE model from the Ornith family, supporting multimodal image-text-to-text and text generation tasks at the largest scale in the Ornith lineup.",
+      "task_type": "image-text-to-text",
+      "model_size": "397B (MoE)",
+      "tags": [
+        "MoE",
+        "multimodal",
+        "large-scale",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1622,
+        "likes": 169
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "A complete AI agency framework with 18+ specialized expert agents, each with personality, processes, and proven deliverables — from frontend wizards to community management. Surging on GitHub as teams adopt multi-persona agent architectures.",
+      "language": "Shell",
+      "stars": 118980,
+      "stars_today": 1425,
+      "forks": 19481,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "ai-agents",
+        "multi-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "An AI-era value investing research framework built for Claude Code and Codex, combining four investment masters' methodologies with multi-agent adversarial analysis for comprehensive stock research.",
+      "language": "Python",
+      "stars": 6692,
+      "stars_today": 1386,
+      "forks": 870,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "ai-agents",
+        "investing",
+        "claude-code"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "Edit videos with coding agents — extending the browser-use paradigm to video editing, enabling AI agents to perform complex video editing tasks through natural language instructions.",
+      "language": "Python",
+      "stars": 11974,
+      "stars_today": 967,
+      "forks": 1573,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "video-editing",
+        "ai-agents",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee",
+      "name": "topoteretes/cognee",
+      "description": "Open-source AI memory platform giving agents persistent long-term memory across sessions with a self-hosted knowledge graph engine. Trending as agent memory infrastructure becomes critical for production deployments.",
+      "language": "Python",
+      "stars": 25687,
+      "stars_today": 868,
+      "forks": 2362,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": [
+        "ai-memory",
+        "knowledge-graph",
+        "agents",
+        "infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "A personal trading agent from HKU Data Science that uses LLM reasoning for financial market analysis and automated trading decisions.",
+      "language": "Python",
+      "stars": 15131,
+      "stars_today": 839,
+      "forks": 2689,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "finance",
+        "ai-agents",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "Fastest macOS offline dictation app providing fully local voice-to-text. Represents the growing trend of on-device AI inference for privacy-sensitive applications.",
+      "language": "Swift",
+      "stars": 4423,
+      "stars_today": 830,
+      "forks": 278,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "on-device-AI",
+        "macOS",
+        "privacy"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "lingbot-map",
+      "name": "Robbyant/lingbot-map",
+      "description": "A feed-forward 3D foundation model for reconstructing scenes from streaming data, enabling real-time 3D scene understanding from continuous input streams.",
+      "language": "Python",
+      "stars": 8578,
+      "stars_today": 465,
+      "forks": 834,
+      "url": "https://github.com/Robbyant/lingbot-map",
+      "tags": [
+        "3D-reconstruction",
+        "foundation-model",
+        "scene-understanding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openpilot",
+      "name": "commaai/openpilot",
+      "description": "An operating system for robotics that upgrades driver assistance systems on 300+ supported cars. Continued strong momentum in the autonomous driving open-source ecosystem.",
+      "language": "Python",
+      "stars": 62787,
+      "stars_today": 458,
+      "forks": 11111,
+      "url": "https://github.com/commaai/openpilot",
+      "tags": [
+        "autonomous-driving",
+        "robotics",
+        "ADAS"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "Multi-agent LLM financial trading framework with nearly 90K stars, representing the maturation of AI-powered trading systems from research prototypes to widely adopted tools.",
+      "language": "Python",
+      "stars": 89767,
+      "stars_today": 362,
+      "forks": 17327,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "finance",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cupy",
+      "name": "cupy/cupy",
+      "description": "NumPy and SciPy for GPU — a drop-in replacement enabling GPU-accelerated scientific computing. Trending as GPU computing infrastructure becomes essential for AI/ML workloads.",
+      "language": "Python",
+      "stars": 11840,
+      "stars_today": 352,
+      "forks": 1083,
+      "url": "https://github.com/cupy/cupy",
+      "tags": [
+        "GPU-computing",
+        "numpy",
+        "scientific-computing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "council-of-high-intelligence",
+      "name": "0xNyk/council-of-high-intelligence",
+      "description": "18 AI personas (Aristotle, Feynman, Kahneman, Torvalds) deliberate decisions across multiple LLM providers with structured multi-round deliberation and genuine model diversity.",
+      "language": "Shell",
+      "stars": 1936,
+      "stars_today": 331,
+      "forks": 202,
+      "url": "https://github.com/0xNyk/council-of-high-intelligence",
+      "tags": [
+        "multi-LLM",
+        "deliberation",
+        "decision-making"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "crawl4ai",
+      "name": "unclecode/crawl4ai",
+      "description": "Open-source LLM-friendly web crawler and scraper with 70K+ stars. Core infrastructure for RAG pipelines and AI agents that need to ingest web content.",
+      "language": "Python",
+      "stars": 70314,
+      "stars_today": 288,
+      "forks": 7204,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": [
+        "web-scraping",
+        "RAG",
+        "LLM-tools",
+        "data-ingestion"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tolaria",
+      "name": "refactoringhq/tolaria",
+      "description": "Desktop app for managing markdown knowledge bases, trending as knowledge management becomes critical infrastructure for AI-augmented workflows.",
+      "language": "TypeScript",
+      "stars": 17541,
+      "stars_today": 280,
+      "forks": 1206,
+      "url": "https://github.com/refactoringhq/tolaria",
+      "tags": [
+        "knowledge-management",
+        "markdown",
+        "desktop-app"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "Making all software agent-native through CLI interfaces, with a CLI-Hub ecosystem. Enables AI agents to control any desktop application through command-line abstractions.",
+      "language": "Python",
+      "stars": 44265,
+      "stars_today": 122,
+      "forks": 4134,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": [
+        "cli",
+        "agent-native",
+        "software-automation"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "On-Policy Distillation Maturation",
+      "description": "Multiple papers advance on-policy distillation for LLM post-training, addressing staleness tolerance (AsyncOPD), hidden-state supervision (PHF), and dense process rewards (PASS), collectively moving OPD from research to production readiness.",
+      "related_paper_ids": [
+        "asyncopd",
+        "phf-privileged-hidden-flow",
+        "process-advantage-signal-shaping"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Explosion",
+      "description": "GitHub trending is dominated by agent infrastructure projects — memory platforms, multi-persona frameworks, CLI abstractions, and web crawlers — signaling a shift from building individual agents to building the platforms agents run on.",
+      "related_paper_ids": [
+        "hierarchical-experimentalist-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI-Powered Financial Trading",
+      "description": "Multiple trading agent frameworks trending simultaneously across GitHub, with both English and Chinese ecosystems active, suggesting financial applications are the most tractable near-term deployment for autonomous AI agents.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D Reconstruction and Rendering",
+      "description": "Advances in 3DGS shadow casting, uncalibrated human reconstruction, and feed-forward scene reconstruction from streaming data indicate the volumetric video pipeline is approaching production viability.",
+      "related_paper_ids": [
+        "raga-gaussian-shadows",
+        "hireff-human-reconstruction"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MoE Models and Local Quantization",
+      "description": "GLM-5.2, Ornith-1.0, and community GGUF quantizations continue to dominate HuggingFace trending, with NVIDIA releasing NVFP4 variants and the community producing specialized coding and agentic model variants.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "RAG and Retrieval Optimization",
+      "description": "Coverage-based RAG optimization addresses real failure modes in multi-hop queries, while crawl4ai's continued momentum shows the data ingestion side of RAG is equally active in open-source development.",
+      "related_paper_ids": [
+        "covering-the-unseen-rag"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

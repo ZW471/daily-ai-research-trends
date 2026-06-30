@@ -1,0 +1,936 @@
+{
+  "version": "1.0",
+  "date": "2026-06-30",
+  "generated_at": "2026-06-30T14:57:00Z",
+  "summary": {
+    "headline": "AI智能体基础设施主导GitHub，agency-agents和cognee飙升；在策略蒸馏通过AsyncOPD和PHF取得突破；金融交易智能体在开源生态系统中大量涌现",
+    "body": "今日AI领域的核心特征是**GitHub上智能体基础设施的爆发式增长**。最突出的是agency-agents，这是一个完整的AI代理框架，包含18+个专业角色，单日新增1,425颗星，总数接近11.9万。Cognee作为开源AI记忆平台，通过知识图谱为智能体提供持久化长期记忆，今日新增868颗星。Browser-use的video-use项目（今日967颗星）将编码智能体扩展到视频编辑领域，而council-of-high-intelligence则引入了18个AI人格的多模型协商框架。\n\n**在研究前沿**，在策略蒸馏成为焦点。来自KAIST的AsyncOPD证明，异步训练管道可以在不降低学生模型质量的情况下容忍显著的策略过时性，可能为LLM后训练带来2-3倍的吞吐量提升。PHF（特权隐藏流）提出对中间隐藏状态而非仅输出分布进行监督，解决了现有蒸馏目标的根本局限性。PASS（过程优势信号塑形）引入了一种范式无关的中间件，为GRPO提供密集的过程监督，进一步推进了面向推理的强化学习流水线。\n\n**模型生态系统**方面，GLM-5.2 MoE模型持续保持强劲势头（2,942个赞），NVIDIA发布了NVFP4量化版本。DeepReinforce AI的Ornith-1.0系列涵盖9B到397B参数规模，社区采用率很高。百度的Unlimited-OCR持续热门，而DeepSeek-V4-Pro-DSpark和Qwen-AgentWorld-35B-A3B则显示中国主要AI实验室的持续投入。社区对GGUF量化、可本地运行模型的需求仍是主导分发模式。",
+    "key_themes": [
+      "on-policy-distillation-advances",
+      "agent-infrastructure-explosion",
+      "financial-trading-agents",
+      "moe-models-and-quantization",
+      "3d-reconstruction-rendering",
+      "rag-optimization"
+    ]
+  },
+  "researcher_notes": "**在策略蒸馏迎来突破性一天。** 两篇论文——AsyncOPD和PHF——分别攻克同一问题的互补方面：如何使LLM后训练的在策略蒸馏既更快又更好。AsyncOPD表明异步管道中的策略过时性出人意料地可以容忍，这对训练基础设施具有直接的实际意义。PHF更深入地论证了仅监督输出分布会浪费特权信息，并提出通过隐藏状态传递教师知识。两者结合表明，OPD管道正从研究好奇心快速成熟为生产就绪的训练范式。再加上PASS在GRPO密集过程监督方面的工作，面向推理的强化学习栈正变得显著更加复杂。\n\n**智能体基础设施成为新的开发者工具。** 今日GitHub上智能体相关项目的数量之多令人瞩目：agency-agents（今日1,425颗星）、cognee（868）、video-use（967）、council-of-high-intelligence（331）、CLI-Anything（122）和crawl4ai（288）。这不仅仅是一个项目爆火——而是整个品类的崛起。这一模式表明开发者正从「构建一个智能体」转向「构建智能体运行的平台」。Cognee基于知识图谱的记忆方案和agency-agents的专业人格系统代表了智能体基础设施应该是什么样子的两种不同架构路线。\n\n**金融交易智能体正成为自主AI的杀手级应用。** 今日GitHub热门中有三个项目——ai-berkshire（今日1,386颗星）、Vibe-Trading（839）和TradingAgents（362）——都是AI交易系统。TradingAgents-CN（中文增强版）又增加了98颗星。这是连续第二天有多个金融AI项目同时热门。市场恰好提供了自主智能体所需的一切：清晰的反馈信号、丰富的历史数据和可衡量的结果。风险在于这可能成为下一波散户算法交易炒作，而非真正的能力突破。\n\n**值得关注的冷门：RAG的信息需求覆盖优化。** 这篇论文将RAG上下文选择从排序重新定义为覆盖优化，解决了top-k检索在复杂查询中过度覆盖某一语义方面而遗漏其他方面的真实失效模式。信息需求覆盖框架可以有效改善多跳和歧义问题的处理——这恰恰是当前RAG系统最明显失败的场景。\n\n**关注：3D重建管道正在成熟。** HiReFF攻克了全息通信的未标定稀疏视角人体重建，RAGA为3D高斯溅射头像引入了光线追踪阴影投射，lingbot-map（今日465颗GitHub星）提供了从流数据进行前馈式3D场景重建。实时渲染质量与实际部署约束的趋同表明，体积视频比许多人预期的更接近生产环境。",
+  "papers": [
+    {
+      "id": "asyncopd",
+      "title": "AsyncOPD：在策略蒸馏的过时性能有多大容忍度？",
+      "authors": [
+        "Wonjun Kang",
+        "Kevin Galim",
+        "Seunghyuk Oh",
+        "Minjun Kang",
+        "Sanghyun Park"
+      ],
+      "affiliations": [
+        "KAIST"
+      ],
+      "summary": "研究了LLM后训练中异步在策略蒸馏管道能容忍多大程度的策略过时性，证明将推理生成与学习器更新解耦引入的过时数据可以在不降低学生质量的情况下显著提高训练吞吐量。",
+      "key_findings": [
+        "异步训练管道可以通过将推理生成与学习器更新解耦来缓解在策略系统瓶颈",
+        "来自异步管道的过时策略数据出人意料地可以容忍，能够实现显著的吞吐量提升",
+        "提供了LLM在策略蒸馏中过时性-质量权衡的理论和实证分析"
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "LLM-training",
+        "asynchronous-training",
+        "reinforcement-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.24143",
+        "huggingface": "https://huggingface.co/papers/2606.24143",
+        "pdf": "https://arxiv.org/pdf/2606.24143"
+      }
+    },
+    {
+      "id": "phf-privileged-hidden-flow",
+      "title": "PHF：用于在策略自蒸馏的特权隐藏流",
+      "authors": [
+        "Yuhan Li",
+        "Mingxu Zhang",
+        "Dazhong Shen"
+      ],
+      "affiliations": [
+        "University of Science and Technology of China"
+      ],
+      "summary": "提出在推理模型的在策略自蒸馏中监督中间隐藏状态而非仅输出分布，使特权教师上下文能够通过学生的表征流动，从而改善训练信号质量。",
+      "key_findings": [
+        "现有OPSD目标仅监督输出分布，导致特权上下文只能通过token级KL信号影响训练",
+        "特权隐藏流通过对齐教师和学生之间的中间表征实现更丰富的知识传递",
+        "相比标准的仅输出蒸馏目标，展示了改善的推理性能"
+      ],
+      "tags": [
+        "self-distillation",
+        "reasoning",
+        "LLM-training",
+        "knowledge-distillation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29340",
+        "pdf": "https://arxiv.org/pdf/2606.29340"
+      }
+    },
+    {
+      "id": "process-advantage-signal-shaping",
+      "title": "过程优势信号塑形：面向LLM推理器过程监督强化学习的范式无关中间件",
+      "authors": [
+        "Chao Wang",
+        "Hongtao Tian",
+        "Tao Yang"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "引入PASS，一种范式无关的中间件层，为LLM推理器中的GRPO提供密集过程监督，通过学习到的过程奖励模型和在策略蒸馏KL信号解决弱结果奖励信号问题。",
+      "key_findings": [
+        "通过PRM或在策略蒸馏KL信号的密集过程监督可以丰富GRPO原本较弱的结果奖励",
+        "PASS作为中间件兼容多种RL范式，无需范式特定的实现",
+        "通过在中间推理步骤提供更细粒度的奖励信号，展示了改善的推理性能"
+      ],
+      "tags": [
+        "GRPO",
+        "process-reward-models",
+        "reinforcement-learning",
+        "LLM-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29296",
+        "pdf": "https://arxiv.org/pdf/2606.29296"
+      }
+    },
+    {
+      "id": "hierarchical-experimentalist-agents",
+      "title": "层次化实验智能体",
+      "authors": [
+        "Abhranil Chandra",
+        "Sankaran Vaidyanathan",
+        "Utsav Dhanuka"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "提出层次化LLM智能体，超越参数化知识、固定数据和检索，在新领域中进行真实世界实验，解决无法仅通过现有信息源回答的复杂查询。",
+      "key_findings": [
+        "大多数LLM智能体依赖参数化知识、固定后训练数据、检索或搜索，这在新领域中会失效",
+        "层次化智能体架构能够规划和执行真实世界实验来回答查询",
+        "展示了在无法仅通过现有信息检索解决的复杂查询上的能力"
+      ],
+      "tags": [
+        "LLM-agents",
+        "scientific-experimentation",
+        "autonomous-agents",
+        "hierarchical-planning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29315",
+        "pdf": "https://arxiv.org/pdf/2606.29315"
+      }
+    },
+    {
+      "id": "covering-the-unseen-rag",
+      "title": "覆盖未见之处：面向检索增强生成的信息需求覆盖优化",
+      "authors": [
+        "Bingxue Zhang",
+        "Jianying Jia",
+        "Feida Zhu"
+      ],
+      "affiliations": [
+        "Singapore Management University"
+      ],
+      "summary": "将RAG上下文选择从单一查询嵌入的排序重新定义为覆盖优化，解决了top-k选择在复杂、多跳或歧义查询中过度覆盖某一语义方面而忽略关键信息需求的失效模式。",
+      "key_findings": [
+        "Top-k RAG选择倾向于过度覆盖一个语义方面，同时忽略关键信息需求",
+        "信息需求覆盖框架为多样化上下文选择提供了原则性方法",
+        "相比标准检索方法，显著改善了多跳和歧义查询的处理"
+      ],
+      "tags": [
+        "RAG",
+        "retrieval-augmented-generation",
+        "information-retrieval",
+        "query-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29328",
+        "pdf": "https://arxiv.org/pdf/2606.29328"
+      }
+    },
+    {
+      "id": "raga-gaussian-shadows",
+      "title": "RAGA：面向3DGS头像-场景交互的实时光线追踪高斯阴影投射",
+      "authors": [
+        "Aymen Mir",
+        "Riza Alp Guler",
+        "Jian Wang"
+      ],
+      "affiliations": [
+        "Meta Reality Labs"
+      ],
+      "summary": "通过光线追踪为3D高斯溅射头像引入物理上合理的实时阴影投射，支持真实的头像-场景和多头像交互，无需依赖二值命中测试或基于网格的阴影投射。",
+      "key_findings": [
+        "用连续光线追踪阴影替代二值命中测试和基于网格的阴影投射方法",
+        "支持现有3DGS场景中的多头像和物体交互场景",
+        "在保持阴影渲染物理合理性的同时实现实时性能"
+      ],
+      "tags": [
+        "3D-gaussian-splatting",
+        "ray-tracing",
+        "avatars",
+        "real-time-rendering"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29329",
+        "pdf": "https://arxiv.org/pdf/2606.29329"
+      }
+    },
+    {
+      "id": "hireff-human-reconstruction",
+      "title": "HiReFF：从未标定稀疏视角视频进行高分辨率前馈人体重建",
+      "authors": [
+        "Yiming Jiang",
+        "Hanzhang Tu",
+        "Wenfeng Song"
+      ],
+      "affiliations": [
+        "Beijing Jiaotong University"
+      ],
+      "summary": "解决全息通信和AR/VR所需的未标定体积视频流人体重建问题，在稀疏视角输入下实现时间一致性和计算效率，无需逐场景优化或标定相机。",
+      "key_findings": [
+        "前馈架构消除了对逐场景优化或标定相机的需求",
+        "从稀疏未标定视角实现具有时间一致性的高分辨率重建",
+        "适用于实时全息通信和AR/VR流式应用"
+      ],
+      "tags": [
+        "3D-reconstruction",
+        "human-reconstruction",
+        "volumetric-video",
+        "AR-VR"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29333",
+        "pdf": "https://arxiv.org/pdf/2606.29333"
+      }
+    },
+    {
+      "id": "pointer-cad-v2",
+      "title": "Pointer-CAD v2：具有维度感知参数精度的规划-构建CAD生成",
+      "authors": [
+        "Dacheng Qi",
+        "Chenyu Wang",
+        "Jingwei Xu"
+      ],
+      "affiliations": [
+        "Nanjing University"
+      ],
+      "summary": "通过引入具有维度感知参数精度的规划-构建方法推进基于LLM的CAD生成，解决现有序列预测方法在工业制造精度要求方面的局限性。",
+      "key_findings": [
+        "基于LLM的CAD生成作为序列预测取得了有前景的结果，但缺乏工业精度",
+        "规划-构建范式将高层设计意图与底层参数规格分离",
+        "维度感知方法提高了制造应用关键的参数精度"
+      ],
+      "tags": [
+        "CAD-generation",
+        "LLM-applications",
+        "manufacturing",
+        "sequence-prediction"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29301",
+        "pdf": "https://arxiv.org/pdf/2606.29301"
+      }
+    },
+    {
+      "id": "scale-erasure",
+      "title": "ScaleErasure：下一尺度自回归图像生成中精确概念擦除的推理时最小干预",
+      "authors": [
+        "Cong Wang",
+        "Haiyu Wu",
+        "Zhiwei Jiang"
+      ],
+      "affiliations": [
+        "Nanjing University"
+      ],
+      "summary": "为下一尺度自回归图像生成模型引入推理时概念擦除方法，通过在尺度预测层的最小干预防止生成不安全内容，同时保持通用生成能力。",
+      "key_findings": [
+        "首个专为下一尺度自回归图像生成设计的概念擦除方法",
+        "最小干预方法在阻止目标概念的同时保持通用生成能力",
+        "在推理时操作，无需模型重训练或微调"
+      ],
+      "tags": [
+        "safety",
+        "concept-erasure",
+        "autoregressive-generation",
+        "image-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29282",
+        "pdf": "https://arxiv.org/pdf/2606.29282"
+      }
+    },
+    {
+      "id": "reflow-marginal-distribution",
+      "title": "超越轨迹匹配：带边际分布对齐的Reflow",
+      "authors": [
+        "Chen Wang",
+        "Peiran Yun",
+        "Pan Xie"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "通过边际分布对齐改进reflow，超越轨迹匹配，解决扩散和连续流生成模型中高效少步生成的关键挑战，实现更好的ODE离散化以进行确定性采样。",
+      "key_findings": [
+        "标准reflow中的轨迹匹配未考虑少步采样时的边际分布漂移",
+        "边际分布对齐提供互补目标，改善少步生成质量",
+        "相比仅使用轨迹匹配的方法，以更少步骤实现更好的ODE离散化"
+      ],
+      "tags": [
+        "flow-matching",
+        "diffusion-models",
+        "few-step-generation",
+        "ODE-sampling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29287",
+        "pdf": "https://arxiv.org/pdf/2606.29287"
+      }
+    },
+    {
+      "id": "fdm-mfvt-virtual-tryon",
+      "title": "FDM-MFVT：面向无掩码虚拟试穿的少步采样扩散模型",
+      "authors": [
+        "Jiaxin Liu",
+        "Xiaoye Liang",
+        "Lai Jiang"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "提出面向无掩码图像虚拟试穿的少步采样扩散模型，消除对昂贵辅助掩码预测网络的依赖，同时比现有基于扩散的IVTON方法需要更少的采样步骤。",
+      "key_findings": [
+        "消除了虚拟试穿中对昂贵辅助掩码预测网络的需求",
+        "以显著更少的采样步骤达到有竞争力的质量",
+        "引入了大规模无掩码配对数据集构建的新方法"
+      ],
+      "tags": [
+        "virtual-try-on",
+        "diffusion-models",
+        "mask-free",
+        "fashion-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29319",
+        "pdf": "https://arxiv.org/pdf/2606.29319"
+      }
+    },
+    {
+      "id": "deterministic-decisions-high-stakes",
+      "title": "高风险AI的确定性决策：兼具RAG可部署性和机器学习准确性的零外泄管道",
+      "authors": [
+        "Craig Atkinson"
+      ],
+      "affiliations": [
+        "Independent Researcher"
+      ],
+      "summary": "识别了干预偏差作为零样本LLM教育咨询智能体的一种此前未量化的失效模式，并提出一种零外泄管道，在高风险决策场景中结合RAG的可部署性和ML的准确性。",
+      "key_findings": [
+        "零样本LLM咨询智能体表现出干预偏差：在最优策略要求不行动时推荐行动",
+        "在Open University学习分析上的六臂消融实验定量展示了该失效模式",
+        "零外泄管道在保持RAG级可部署性的同时实现ML级准确性"
+      ],
+      "tags": [
+        "LLM-deployment",
+        "educational-AI",
+        "decision-making",
+        "intervention-bias"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29280",
+        "pdf": "https://arxiv.org/pdf/2606.29280"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI",
+      "description": "大规模MoE语言模型，采用动态稀疏注意力（DSA）架构，支持多语言文本生成和对话AI，社区采用率高，有多个量化变体可用。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "MoE",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 133350,
+        "likes": 2942
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5",
+      "organization": "Community (yuxinlu1)",
+      "description": "基于Gemma 4的GGUF量化12B编码模型，使用Fable 5和Composer 2.5训练，针对代码生成和推理任务优化，下载量强劲。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "coding",
+        "GGUF",
+        "gemma4",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 561577,
+        "likes": 2503
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "locate-anything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "3B参数图像特征提取模型，用于空间定位任务，能够以高精度进行图像中的精确目标和特征检测。",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "spatial-localization",
+        "image-feature-extraction",
+        "NVIDIA"
+      ],
+      "metrics": {
+        "downloads": 728320,
+        "likes": 2481
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "视觉语言OCR模型，在多语言文档理解方面达到最先进水平，提供对复杂视觉输入（包括手写和结构化文档）的鲁棒文本识别。",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": [
+        "OCR",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 362945,
+        "likes": 1372
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "基于Qwen3.5的GGUF量化9B参数模型，支持100万token上下文窗口，针对推理、函数调用和多模态智能体任务优化。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "GGUF",
+        "quantized",
+        "qwen3.5",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 907682,
+        "likes": 951
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5",
+      "organization": "Community (yuxinlu1)",
+      "description": "基于Gemma 4微调的GGUF量化12B智能体模型，用于终端和工具使用任务，专为自主编码和智能体工作流设计。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "agentic",
+        "GGUF",
+        "gemma4",
+        "terminal"
+      ],
+      "metrics": {
+        "downloads": 241409,
+        "likes": 848
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "Ornith系列的GGUF量化35B参数模型，基于MoE架构的多模态模型，支持文本生成和图像理解任务。",
+      "task_type": "text-generation",
+      "model_size": "35B (MoE)",
+      "tags": [
+        "GGUF",
+        "MoE",
+        "multimodal",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 123598,
+        "likes": 483
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba Qwen",
+      "description": "35B MoE模型，活跃参数3B，专门用于智能体世界建模，支持图文到文本任务，用于环境模拟和智能体应用。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": [
+        "agent",
+        "world-modeling",
+        "MoE",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 26223,
+        "likes": 438
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "快速文本到图像扩散模型，基于Krea-2-Raw基础模型，针对推理速度进行了优化。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 38454,
+        "likes": 393
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek V4-Pro模型的DSpark变体，代表DeepSeek大语言模型系列的最新成果，具有增强的文本生成和推理能力。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 5460,
+        "likes": 214
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "ornith-1-0-397b",
+      "name": "Ornith-1.0-397B",
+      "organization": "DeepReinforce AI",
+      "description": "Ornith系列的旗舰397B参数MoE模型，支持多模态图文到文本和文本生成任务，是Ornith产品线中规模最大的模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "397B (MoE)",
+      "tags": [
+        "MoE",
+        "multimodal",
+        "large-scale",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1622,
+        "likes": 169
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "完整的AI代理框架，包含18+个专业智能体角色，每个角色具有独特个性、流程和可交付成果。随着团队采用多角色智能体架构，在GitHub上快速增长。",
+      "language": "Shell",
+      "stars": 118980,
+      "stars_today": 1425,
+      "forks": 19481,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "ai-agents",
+        "multi-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "AI时代的价值投资研究框架，基于Claude Code和Codex构建，融合巴菲特、芒格、段永平、李录四大投资大师方法论与多智能体对抗分析。",
+      "language": "Python",
+      "stars": 6692,
+      "stars_today": 1386,
+      "forks": 870,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "ai-agents",
+        "investing",
+        "claude-code"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "使用编码智能体编辑视频——将browser-use范式扩展到视频编辑，使AI智能体能够通过自然语言指令执行复杂的视频编辑任务。",
+      "language": "Python",
+      "stars": 11974,
+      "stars_today": 967,
+      "forks": 1573,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "video-editing",
+        "ai-agents",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee",
+      "name": "topoteretes/cognee",
+      "description": "开源AI记忆平台，通过自托管知识图谱引擎为智能体提供跨会话的持久化长期记忆。随着智能体记忆基础设施对生产部署变得至关重要而持续热门。",
+      "language": "Python",
+      "stars": 25687,
+      "stars_today": 868,
+      "forks": 2362,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": [
+        "ai-memory",
+        "knowledge-graph",
+        "agents",
+        "infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "来自香港大学数据科学的个人交易智能体，利用LLM推理进行金融市场分析和自动化交易决策。",
+      "language": "Python",
+      "stars": 15131,
+      "stars_today": 839,
+      "forks": 2689,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "finance",
+        "ai-agents",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "最快的macOS离线听写应用，完全本地化语音转文字。代表了隐私敏感应用中设备端AI推理的增长趋势。",
+      "language": "Swift",
+      "stars": 4423,
+      "stars_today": 830,
+      "forks": 278,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "on-device-AI",
+        "macOS",
+        "privacy"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "lingbot-map",
+      "name": "Robbyant/lingbot-map",
+      "description": "前馈式3D基础模型，从流数据重建场景，实现从连续输入流中进行实时3D场景理解。",
+      "language": "Python",
+      "stars": 8578,
+      "stars_today": 465,
+      "forks": 834,
+      "url": "https://github.com/Robbyant/lingbot-map",
+      "tags": [
+        "3D-reconstruction",
+        "foundation-model",
+        "scene-understanding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openpilot",
+      "name": "commaai/openpilot",
+      "description": "面向机器人的操作系统，可升级300+款支持车型的驾驶辅助系统。自动驾驶开源生态系统中持续保持强劲势头。",
+      "language": "Python",
+      "stars": 62787,
+      "stars_today": 458,
+      "forks": 11111,
+      "url": "https://github.com/commaai/openpilot",
+      "tags": [
+        "autonomous-driving",
+        "robotics",
+        "ADAS"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "多智能体LLM金融交易框架，拥有近9万颗星，代表AI驱动交易系统从研究原型到广泛采用工具的成熟化。",
+      "language": "Python",
+      "stars": 89767,
+      "stars_today": 362,
+      "forks": 17327,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "finance",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cupy",
+      "name": "cupy/cupy",
+      "description": "面向GPU的NumPy和SciPy替代方案——实现GPU加速科学计算的即插即用库。随着GPU计算基础设施对AI/ML工作负载变得不可或缺而持续热门。",
+      "language": "Python",
+      "stars": 11840,
+      "stars_today": 352,
+      "forks": 1083,
+      "url": "https://github.com/cupy/cupy",
+      "tags": [
+        "GPU-computing",
+        "numpy",
+        "scientific-computing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "council-of-high-intelligence",
+      "name": "0xNyk/council-of-high-intelligence",
+      "description": "18个AI人格（亚里士多德、费曼、卡尼曼、Torvalds）通过多个LLM供应商进行结构化多轮协商，实现真正的模型多样性决策。",
+      "language": "Shell",
+      "stars": 1936,
+      "stars_today": 331,
+      "forks": 202,
+      "url": "https://github.com/0xNyk/council-of-high-intelligence",
+      "tags": [
+        "multi-LLM",
+        "deliberation",
+        "decision-making"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "crawl4ai",
+      "name": "unclecode/crawl4ai",
+      "description": "开源LLM友好型网络爬虫和抓取器，拥有超过7万颗星。RAG管道和需要摄取网页内容的AI智能体的核心基础设施。",
+      "language": "Python",
+      "stars": 70314,
+      "stars_today": 288,
+      "forks": 7204,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": [
+        "web-scraping",
+        "RAG",
+        "LLM-tools",
+        "data-ingestion"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tolaria",
+      "name": "refactoringhq/tolaria",
+      "description": "管理Markdown知识库的桌面应用，随着知识管理成为AI增强工作流的关键基础设施而持续热门。",
+      "language": "TypeScript",
+      "stars": 17541,
+      "stars_today": 280,
+      "forks": 1206,
+      "url": "https://github.com/refactoringhq/tolaria",
+      "tags": [
+        "knowledge-management",
+        "markdown",
+        "desktop-app"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "通过CLI接口使所有软件成为智能体原生，配套CLI-Hub生态系统。使AI智能体能够通过命令行抽象控制任何桌面应用。",
+      "language": "Python",
+      "stars": 44265,
+      "stars_today": 122,
+      "forks": 4134,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": [
+        "cli",
+        "agent-native",
+        "software-automation"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "在策略蒸馏成熟化",
+      "description": "多篇论文推进了LLM后训练的在策略蒸馏技术，涉及过时性容忍（AsyncOPD）、隐藏状态监督（PHF）和密集过程奖励（PASS），共同推动OPD从研究走向生产就绪。",
+      "related_paper_ids": [
+        "asyncopd",
+        "phf-privileged-hidden-flow",
+        "process-advantage-signal-shaping"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施爆发",
+      "description": "GitHub热门被智能体基础设施项目主导——记忆平台、多角色框架、CLI抽象和网络爬虫——标志着从构建单个智能体向构建智能体运行平台的转变。",
+      "related_paper_ids": [
+        "hierarchical-experimentalist-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI驱动金融交易",
+      "description": "多个交易智能体框架在GitHub上同时热门，中英文生态系统都很活跃，表明金融应用是自主AI智能体最具可行性的近期部署方向。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D重建与渲染",
+      "description": "3DGS阴影投射、未标定人体重建和流数据前馈场景重建的进展表明，体积视频管道正在接近生产可行性。",
+      "related_paper_ids": [
+        "raga-gaussian-shadows",
+        "hireff-human-reconstruction"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MoE模型与本地量化",
+      "description": "GLM-5.2、Ornith-1.0和社区GGUF量化持续主导HuggingFace热门，NVIDIA发布NVFP4变体，社区产出专业编码和智能体模型变体。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "RAG与检索优化",
+      "description": "基于覆盖率的RAG优化解决了多跳查询中的真实失效模式，而crawl4ai的持续势头表明RAG数据摄取端在开源开发中同样活跃。",
+      "related_paper_ids": [
+        "covering-the-unseen-rag"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-06-30T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
