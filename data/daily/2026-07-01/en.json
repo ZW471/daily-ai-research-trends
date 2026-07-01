@@ -1,0 +1,790 @@
+{
+  "version": "1.0",
+  "date": "2026-07-01",
+  "generated_at": "2026-07-01T14:57:00Z",
+  "summary": {
+    "headline": "Agent infrastructure explosion continues with agency-agents and Agent-Reach dominating GitHub; Dockerless from ByteDance eliminates execution environments for coding agent verification; GLM-5.2 and Ornith model families surge across quantization variants",
+    "body": "Today's AI landscape is defined by the **continued dominance of agent tooling on GitHub** and a lean but impactful paper day on HuggingFace. The standout research contribution is ByteDance's Dockerless, an environment-free agentic patch verifier that eliminates the need for Docker-based execution when training coding agents — achieving parity with environment-based post-training while dramatically reducing infrastructure costs. On-policy distillation research continues its momentum from yesterday with DOPD introducing advantage-aware dual supervision to address privilege illusion, while Evolution Fine-Tuning from Minnesota NLP demonstrates that LLMs can learn cross-task optimization skills from evolutionary search trajectories.\n\n**GitHub's trending page is overwhelmingly agent-focused.** Agency-agents (1,791 stars today) continues its meteoric rise as a complete AI agency framework. Agent-Reach (1,339 stars today) provides a unified CLI for agents to read and search across Twitter, Reddit, YouTube, GitHub, and more without API fees. The AI-powered investing trend persists with ai-berkshire (969 stars today) and Vibe-Trading (721 stars today) both surging. SimpleX Chat's massive 1,235-star day highlights growing demand for privacy-first communication infrastructure.\n\n**The model ecosystem shows GLM-5.2 consolidating its position** as a leading MoE architecture with 3,061 likes and multiple quantization variants from NVIDIA and Unsloth. The Ornith-1.0 family from DeepReinforce AI spans 9B to 397B parameters with broad community uptake. Baidu's Unlimited-OCR maintains strong traction at 429K downloads, while Qwen-AgentWorld-35B-A3B signals Alibaba's push into agent-specialized models. The community's appetite for GGUF-quantized, locally-runnable models remains the dominant distribution pattern.",
+    "key_themes": [
+      "environment-free-agent-training",
+      "agent-infrastructure-platforms",
+      "on-policy-distillation",
+      "moe-model-ecosystem",
+      "ai-powered-investing",
+      "privacy-first-infrastructure"
+    ]
+  },
+  "researcher_notes": "**Dockerless is a sleeper hit with major implications.** ByteDance's paper addresses a genuine bottleneck in the coding agent training pipeline: the need to spin up per-repository Docker environments for execution-based verification. By replacing test execution with agentic repository exploration — essentially having the verifier *read and reason about* the code rather than run it — they achieve 62% on SWE-bench Verified without any execution environment. The 14.3 AUC improvement over the best open-source verifier is significant, but the real story is the fully environment-free post-training pipeline this enables. This could dramatically lower the barrier to entry for coding agent research and reduce the compute overhead of RL-based training loops. Watch for adoption in agent training frameworks like OpenHands and SWE-agent.\n\n**On-policy distillation is becoming a mature field.** DOPD's insight about 'privilege illusion' — where students learn to mimic information asymmetry rather than transferable capability — is a subtle but important contribution. Combined with yesterday's AsyncOPD and PHF papers, we're seeing rapid theoretical maturation of the OPD paradigm. The fact that DOPD works across both LLM and VLM settings suggests the approach generalizes beyond language-only tasks. The advantage-aware routing mechanism that assigns different supervision strength per token is the kind of fine-grained training signal engineering that tends to compound well.\n\n**Evolution Fine-Tuning bridges search and learning.** Minnesota NLP's EFT paper asks a compelling question: can the meta-skill of iteratively evolving solutions transfer across optimization domains? The answer appears to be yes — 10.22% average improvement on held-out tasks after training on evolutionary search trajectories. The Finch Collection dataset (156K trajectories, 371 tasks, 10 domains) is a significant research artifact. The paper's framing of EFT as a 'practice phase' for discovery agents is apt: this is essentially teaching models the heuristics of search, not domain-specific solutions.\n\n**Agent-Reach represents a new category: agent perception infrastructure.** While most agent frameworks focus on reasoning and action, Agent-Reach (1,339 stars today) addresses a different problem — giving agents reliable read access to platforms like Twitter, Reddit, YouTube, and Bilibili without API costs. The zero-API-fee approach suggests scraping or browser automation, but the category itself is interesting. As agents become more autonomous, their ability to perceive and monitor the broader internet becomes a critical capability.\n\n**Watch: The GGUF-everything trend is accelerating.** Today's trending models tell a clear story: for every notable model release (GLM-5.2, Ornith-1.0, Qwythos-9B), the community immediately produces GGUF quantizations. Unsloth's GLM-5.2-GGUF (484 likes) appeared almost simultaneously with the base model. This pattern — base model release followed by rapid community quantization — is now the default distribution mechanism for open-weight models, effectively making llama.cpp the universal inference runtime for the open-source community.",
+  "papers": [
+    {
+      "id": "dockerless",
+      "title": "Dockerless: Environment-Free Program Verifier for Coding Agents",
+      "authors": [
+        "Wenhao Zeng",
+        "Yuling Shi",
+        "Xiaodong Gu",
+        "Chao Hu",
+        "Chaofan Wang et al."
+      ],
+      "affiliations": [
+        "ByteDance"
+      ],
+      "summary": "Proposes an environment-free agentic patch verifier that evaluates code patches without executing them, using evidence gathered through agentic repository exploration. Enables a fully environment-free post-training pipeline for coding agents that matches environment-based approaches.",
+      "key_findings": [
+        "Outperforms the strongest open-source verifier by 14.3 AUC points on a verifier evaluation benchmark",
+        "Achieves 62.0%, 50.0%, and 35.2% resolve rates on SWE-bench Verified, Multilingual, and Pro respectively",
+        "Enables fully environment-free SFT trajectory filtering and RL reward computation, matching Docker-based post-training"
+      ],
+      "tags": [
+        "coding-agents",
+        "program-verification",
+        "SWE-bench",
+        "reinforcement-learning",
+        "post-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28436",
+        "huggingface": "https://huggingface.co/papers/2606.28436",
+        "pdf": "https://arxiv.org/pdf/2606.28436"
+      }
+    },
+    {
+      "id": "dopd-dual-on-policy-distillation",
+      "title": "DOPD: Dual On-policy Distillation",
+      "authors": [
+        "Xinlei Yu",
+        "Gen Li",
+        "Qingyi Si",
+        "Guibin Zhang",
+        "Yuqi Xu et al."
+      ],
+      "affiliations": [
+        "Chinese University of Hong Kong",
+        "Skywork AI"
+      ],
+      "summary": "Introduces an advantage-aware dual distillation paradigm that dynamically routes token-level supervision between privileged teacher and privileged student policies based on their advantage gap, addressing the 'privilege illusion' failure mode in on-policy distillation.",
+      "key_findings": [
+        "Identifies 'privilege illusion' — a failure mode where students conflate transferable capability gaps with information asymmetry gaps",
+        "Dynamic token-level routing assigns different supervision strength, objective, and strategy per token from either teacher or student",
+        "Consistently outperforms vanilla OPD across both LLM and VLM settings with improved stability and robustness"
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "knowledge-distillation",
+        "LLM-training",
+        "vision-language-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30626",
+        "huggingface": "https://huggingface.co/papers/2606.30626",
+        "pdf": "https://arxiv.org/pdf/2606.30626"
+      }
+    },
+    {
+      "id": "evolution-fine-tuning",
+      "title": "Evolution Fine-Tuning: Learning to Discover Across 371 Optimization Tasks",
+      "authors": [
+        "Young-Jun Lee",
+        "Seungone Kim",
+        "Minki Kang",
+        "Alistair Cheong Liang Chuen",
+        "Zerui Chen et al."
+      ],
+      "affiliations": [
+        "University of Minnesota",
+        "Minnesota NLP"
+      ],
+      "summary": "Introduces a mid-training paradigm that teaches LLMs to evolve solutions across optimization tasks by converting evolutionary search trajectories into supervision, enabling cross-task generalization for discovery agents.",
+      "key_findings": [
+        "Models trained with EFT surpass base counterparts by 10.22% on average across 22 held-out optimization tasks",
+        "Finch Collection dataset provides 156K trajectories spanning 10 domains and 371 optimization tasks",
+        "When paired with test-time RL, matches state-of-the-art on circle-packing and outperforms on the Erdos minimum-overlap problem"
+      ],
+      "tags": [
+        "evolutionary-search",
+        "optimization",
+        "meta-learning",
+        "mathematical-conjectures",
+        "mid-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29082",
+        "huggingface": "https://huggingface.co/papers/2606.29082",
+        "pdf": "https://arxiv.org/pdf/2606.29082"
+      }
+    },
+    {
+      "id": "lumos-semantic-os-layer",
+      "title": "LUMOS: A Semantic Operating-System Layer for Accessibility-Grounded AI Agents",
+      "authors": [
+        "Yogeswar Reddy Thota"
+      ],
+      "affiliations": [
+        "University of Texas at Dallas"
+      ],
+      "summary": "Introduces a semantic interaction layer between AI agents and operating systems that converts native accessibility metadata into machine-readable blueprints with stable identifiers, reducing agent dependence on screenshot-based visual interpretation.",
+      "key_findings": [
+        "Converts accessibility metadata and browser UI structures into semantic blueprints with stable identifiers, roles, and action affordances",
+        "Supports live semantic pointer grounding through OS automation APIs",
+        "Reduces token costs, visual ambiguity, and coordinate uncertainty compared to screenshot-based approaches"
+      ],
+      "tags": [
+        "computer-use-agents",
+        "accessibility",
+        "operating-systems",
+        "semantic-interfaces",
+        "agent-infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30697",
+        "huggingface": "https://huggingface.co/papers/2606.30697",
+        "pdf": "https://arxiv.org/pdf/2606.30697"
+      }
+    },
+    {
+      "id": "qval-dense-supervision",
+      "title": "QVal: Cheaply Evaluating Dense Supervision Signals for Long-Horizon LLM Agents",
+      "authors": [
+        "Sergio Hernández-Gutiérrez",
+        "Matteo Merler",
+        "Ilze Amanda Auzina",
+        "Joschka Strüber"
+      ],
+      "affiliations": [
+        "IBM Research"
+      ],
+      "summary": "Addresses the challenge of evaluating dense supervision methods for long-horizon LLM agents, where trajectories can contain hundreds of actions and outcome-only rewards provide too sparse guidance for learning intermediate action quality.",
+      "key_findings": [
+        "Long-horizon agent trajectories with hundreds of actions require dense supervision beyond outcome-only rewards",
+        "Proposes a cheap evaluation framework for comparing dense supervision signal quality",
+        "Demonstrates that appropriate dense supervision significantly improves agent performance on long-horizon tasks"
+      ],
+      "tags": [
+        "LLM-agents",
+        "dense-supervision",
+        "reinforcement-learning",
+        "long-horizon"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.32034",
+        "pdf": "https://arxiv.org/pdf/2606.32034"
+      }
+    },
+    {
+      "id": "generative-skill-composition",
+      "title": "Generative Skill Composition for LLM Agents",
+      "authors": [
+        "Xinyu Zhao",
+        "Zhen Tan",
+        "Vaishnav Tadiparthi",
+        "Nakul Agarwal"
+      ],
+      "affiliations": [
+        "Arizona State University"
+      ],
+      "summary": "Proposes generative skill composition for LLM agents, where skills encapsulate modular packages of procedural knowledge for specialized tasks like environment setup, test suite execution, and function refactoring across files.",
+      "key_findings": [
+        "Skills as modular packages of procedural knowledge improve LLM agent task solving for complex multi-step tasks",
+        "Generative composition enables dynamic combination of skills at inference time",
+        "Demonstrates effectiveness on diverse agent tasks including sandboxed environments, test suites, and code refactoring"
+      ],
+      "tags": [
+        "LLM-agents",
+        "skill-composition",
+        "modular-reasoning",
+        "code-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.32025",
+        "pdf": "https://arxiv.org/pdf/2606.32025"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "Latest generation GLM MoE architecture with dynamic sparse attention, continuing to gain strong community adoption with 3,061 likes.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "conversational",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 142547,
+        "likes": 3061
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "yuxinlu1 (Community)",
+      "description": "GGUF-quantized Gemma 4 12B fine-tuned for coding with Fable 5 and Composer 2.5, the most liked GGUF variant in today's trending with 2,531 likes.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "coding",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 575255,
+        "likes": 2531
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "Compact 3B-parameter model for image feature extraction and spatial localization, achieving strong community adoption with 2,524 likes and 800K downloads.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "nvidia",
+        "vision",
+        "localization"
+      ],
+      "metrics": {
+        "downloads": 800597,
+        "likes": 2524
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Vision-language model for comprehensive OCR capabilities, maintaining strong traction with 429K downloads and 1,497 likes.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 429056,
+        "likes": 1497
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "GGUF-quantized Qwen3.5 variant with 1M context, optimized for reasoning tasks. Leading GGUF model by downloads at 970K.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "qwen3.5",
+        "reasoning",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 970663,
+        "likes": 1057
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2-GGUF",
+      "organization": "yuxinlu1 (Community)",
+      "description": "Agentic variant of Gemma 4 12B fine-tuned for terminal and coding tasks, with 890 likes and 257K downloads.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "agentic",
+        "terminal"
+      ],
+      "metrics": {
+        "downloads": 257216,
+        "likes": 890
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "GGUF-quantized 35B parameter model from the Ornith family, with strong community uptake at 157K downloads and 550 likes.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 157418,
+        "likes": 550
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "glm-5-2-gguf",
+      "name": "GLM-5.2-GGUF",
+      "organization": "Unsloth",
+      "description": "Community GGUF quantization of GLM-5.2 MoE model for local inference, with 484 likes and 180K downloads.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "gguf",
+        "glm",
+        "moe",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 180394,
+        "likes": 484
+      },
+      "source_url": "https://huggingface.co/unsloth/GLM-5.2-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba Qwen",
+      "description": "Agent-specialized 35B MoE model with 3B active parameters, designed for multimodal agent tasks. Signals Alibaba's investment in agent-native model architectures.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "qwen",
+        "agents",
+        "moe",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 28480,
+        "likes": 466
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Turbo variant of Krea-2 image generation model optimized for faster inference in text-to-image generation.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "text-to-image",
+        "image-generation"
+      ],
+      "metrics": {
+        "downloads": 45668,
+        "likes": 421
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DSpark variant of DeepSeek-V4-Pro, continuing DeepSeek's expansion of their V4 model family with specialized variants.",
+      "task_type": "text-generation",
+      "model_size": "Large MoE",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 6939,
+        "likes": 251
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "lfm2-5-230m",
+      "name": "LFM2.5-230M",
+      "organization": "Liquid AI",
+      "description": "Compact 230M parameter model from Liquid AI's LFM2 architecture, representing the efficient small-model frontier.",
+      "task_type": "text-generation",
+      "model_size": "230M",
+      "tags": [
+        "liquid",
+        "efficient",
+        "small-model"
+      ],
+      "metrics": {
+        "downloads": 17839,
+        "likes": 169
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-230M"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "A complete AI agency framework with specialized expert agents, each with personality, processes, and proven deliverables. Continues its multi-day surge as the top agent infrastructure project on GitHub.",
+      "language": "Shell",
+      "stars": 121021,
+      "stars_today": 1791,
+      "forks": 19767,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "agents",
+        "ai-agency",
+        "framework",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "Unified CLI giving AI agents read and search access to Twitter, Reddit, YouTube, GitHub, Bilibili, and XiaoHongShu with zero API fees. Addresses the agent perception problem.",
+      "language": "Python",
+      "stars": 47148,
+      "stars_today": 1339,
+      "forks": 3738,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agents",
+        "data-access",
+        "scraping",
+        "cli"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "simplex-chat",
+      "name": "simplex-chat/simplex-chat",
+      "description": "The first messaging network operating without user identifiers — 100% private by design. Massive 1,235-star surge indicates growing demand for privacy-first communication.",
+      "language": "Haskell",
+      "stars": 17354,
+      "stars_today": 1235,
+      "forks": 1008,
+      "url": "https://github.com/simplex-chat/simplex-chat",
+      "tags": [
+        "privacy",
+        "messaging",
+        "encryption",
+        "decentralized"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "AI-era value investing research framework built for Claude Code/Codex, implementing Buffett, Munger, Duan Yongping, and Li Lu methodologies with multi-agent adversarial analysis.",
+      "language": "Python",
+      "stars": 7544,
+      "stars_today": 969,
+      "forks": 959,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "investing",
+        "multi-agent",
+        "value-investing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology with massive community adoption at 242K stars.",
+      "language": "Shell",
+      "stars": 242557,
+      "stars_today": 890,
+      "forks": 21523,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agents",
+        "developer-tools",
+        "methodology",
+        "skills-framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "free-for-dev",
+      "name": "ripienaar/free-for-dev",
+      "description": "Curated list of SaaS, PaaS, and IaaS offerings with free tiers for developers. Evergreen resource seeing renewed interest.",
+      "language": "HTML",
+      "stars": 127344,
+      "stars_today": 742,
+      "forks": 13308,
+      "url": "https://github.com/ripienaar/free-for-dev",
+      "tags": [
+        "developer-resources",
+        "free-tier",
+        "saas",
+        "infrastructure"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "Extension of the browser-use framework that enables coding agents to edit videos, expanding agent capabilities beyond text and web into multimedia.",
+      "language": "Python",
+      "stars": 12638,
+      "stars_today": 721,
+      "forks": 1608,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "agents",
+        "video-editing",
+        "browser-automation",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "Personal AI trading agent from HKU, continuing the multi-day trend of AI-powered financial trading tools gaining massive open-source traction.",
+      "language": "Python",
+      "stars": 15821,
+      "stars_today": 721,
+      "forks": 2739,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "finance",
+        "trading",
+        "agents",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "Fastest macOS dictation app with on-device speech-to-text and custom AI enhancement model. Local alternative to Wispr Flow.",
+      "language": "Swift",
+      "stars": 4946,
+      "stars_today": 588,
+      "forks": 303,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "macos",
+        "on-device",
+        "dictation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "strix",
+      "name": "usestrix/strix",
+      "description": "Open-source AI penetration testing tool for automated vulnerability discovery and remediation in applications.",
+      "language": "Python",
+      "stars": 28172,
+      "stars_today": 515,
+      "forks": 3127,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "penetration-testing",
+        "vulnerability-scanning",
+        "ai-security"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "Agent multiplexer that lives in the terminal, enabling concurrent management of multiple AI agents from a single interface.",
+      "language": "Rust",
+      "stars": 9047,
+      "stars_today": 486,
+      "forks": 544,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": [
+        "agents",
+        "terminal",
+        "multiplexer",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-agents-cli",
+      "name": "google/agents-cli",
+      "description": "Google's CLI and skills framework for turning any coding assistant into an expert at creating, evaluating, and deploying AI agents on Google Cloud.",
+      "language": "Python",
+      "stars": 4226,
+      "stars_today": 445,
+      "forks": 459,
+      "url": "https://github.com/google/agents-cli",
+      "tags": [
+        "google-cloud",
+        "agents",
+        "cli",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "omniroute",
+      "name": "diegosouzapw/OmniRoute",
+      "description": "Free AI gateway providing one endpoint to 231+ providers with token compression (15-95% savings), smart fallback, and MCP/A2A support for Claude Code, Codex, and Cursor.",
+      "language": "TypeScript",
+      "stars": 8593,
+      "stars_today": 387,
+      "forks": 1397,
+      "url": "https://github.com/diegosouzapw/OmniRoute",
+      "tags": [
+        "ai-gateway",
+        "routing",
+        "token-compression",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "astryx",
+      "name": "facebook/astryx",
+      "description": "Facebook's open-source design system that is fully customizable and agent-ready, bridging design systems with AI agent workflows.",
+      "language": "TypeScript",
+      "stars": 1816,
+      "stars_today": 364,
+      "forks": 99,
+      "url": "https://github.com/facebook/astryx",
+      "tags": [
+        "design-system",
+        "facebook",
+        "agent-ready",
+        "ui-framework"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "instatic",
+      "name": "CoreBunch/Instatic",
+      "description": "Modern self-hosted visual CMS deployable in 1 minute, part of the growing trend of simple, self-hostable developer tools.",
+      "language": "TypeScript",
+      "stars": 1556,
+      "stars_today": 351,
+      "forks": 138,
+      "url": "https://github.com/CoreBunch/Instatic",
+      "tags": [
+        "cms",
+        "self-hosted",
+        "visual-editor"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Environment-Free Agent Training",
+      "description": "Dockerless demonstrates that execution-based verification can be replaced with agentic reasoning for coding agent post-training, potentially removing a major infrastructure bottleneck in the agent training pipeline.",
+      "related_paper_ids": [
+        "dockerless"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Platforms",
+      "description": "GitHub's trending page is dominated by agent infrastructure: agency-agents (complete agency framework), Agent-Reach (perception layer), herdr (agent multiplexer), Google agents-cli, and superpowers (skills framework). The shift from 'build an agent' to 'build the platform agents run on' is accelerating.",
+      "related_paper_ids": [
+        "lumos-semantic-os-layer"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "On-Policy Distillation Maturation",
+      "description": "DOPD's advantage-aware dual supervision joins yesterday's AsyncOPD and PHF in a rapid theoretical maturation of on-policy distillation. The paradigm is moving from research curiosity to production-ready training infrastructure.",
+      "related_paper_ids": [
+        "dopd-dual-on-policy-distillation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "GGUF-First Model Distribution",
+      "description": "The dominant pattern in open-weight model distribution: every notable release (GLM-5.2, Ornith-1.0, Qwythos-9B) immediately spawns GGUF quantizations. llama.cpp has become the de facto universal inference runtime for the open-source community.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI-Powered Financial Trading",
+      "description": "Third consecutive day with multiple AI trading projects trending on GitHub. ai-berkshire (value investing with multi-agent analysis) and Vibe-Trading (personal trading agent) represent distinct approaches to autonomous financial agents.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Cross-Domain Meta-Learning for Discovery",
+      "description": "Evolution Fine-Tuning shows that optimization heuristics can transfer across domains — from GPU kernel design to mathematical conjectures — opening a new paradigm for general-purpose discovery agents.",
+      "related_paper_ids": [
+        "evolution-fine-tuning"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

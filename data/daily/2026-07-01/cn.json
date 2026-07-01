@@ -1,0 +1,790 @@
+{
+  "version": "1.0",
+  "date": "2026-07-01",
+  "generated_at": "2026-07-01T14:57:00Z",
+  "summary": {
+    "headline": "智能体基础设施持续爆发，agency-agents和Agent-Reach称霸GitHub；字节跳动Dockerless消除编码智能体验证的执行环境依赖；GLM-5.2和Ornith模型家族在量化变体中激增",
+    "body": "今日AI领域的核心特征是**智能体工具在GitHub上的持续主导地位**以及HuggingFace上少而精的论文日。最突出的研究贡献是字节跳动的Dockerless，一个无需环境的智能体补丁验证器，在训练编码智能体时完全消除了对Docker执行环境的需求——在大幅降低基础设施成本的同时，达到了与基于环境的后训练相当的效果。在策略蒸馏研究方面，DOPD引入了基于优势感知的双重监督以解决「特权幻觉」问题，而明尼苏达大学NLP组的Evolution Fine-Tuning则证明LLM可以从进化搜索轨迹中学习跨任务优化技能。\n\n**GitHub趋势页面被智能体项目全面占领。** agency-agents（今日1,791星）作为完整的AI代理框架继续其飙升态势。Agent-Reach（今日1,339星）为智能体提供了统一的CLI，可零API费用地读取和搜索Twitter、Reddit、YouTube、GitHub等平台。AI投资趋势持续升温，ai-berkshire（今日969星）和Vibe-Trading（今日721星）双双飙升。SimpleX Chat单日获1,235星，凸显了对隐私优先通信基础设施的旺盛需求。\n\n**模型生态方面，GLM-5.2正在巩固其领先地位**，作为MoE架构获得3,061个赞，NVIDIA和Unsloth提供了多种量化变体。DeepReinforce AI的Ornith-1.0家族覆盖9B到397B参数，社区采用广泛。百度的Unlimited-OCR以429K下载量保持强劲势头，Qwen-AgentWorld-35B-A3B则标志着阿里巴巴在智能体专用模型方向的布局。社区对GGUF量化、本地可运行模型的需求仍是主流分发模式。",
+    "key_themes": [
+      "environment-free-agent-training",
+      "agent-infrastructure-platforms",
+      "on-policy-distillation",
+      "moe-model-ecosystem",
+      "ai-powered-investing",
+      "privacy-first-infrastructure"
+    ]
+  },
+  "researcher_notes": "**Dockerless是一个具有重大影响的潜力之作。** 字节跳动的这篇论文解决了编码智能体训练流程中的一个真实瓶颈：需要为每个代码仓库启动Docker环境来进行基于执行的验证。通过用智能体式的仓库探索替代测试执行——本质上是让验证器*阅读和推理*代码而非运行它——他们在不使用任何执行环境的情况下在SWE-bench Verified上达到了62%。相比最强开源验证器14.3 AUC的提升固然重要，但真正的亮点是由此实现的完全无环境后训练流程。这可能大幅降低编码智能体研究的入门门槛，并减少基于RL训练循环的计算开销。关注其在OpenHands和SWE-agent等智能体训练框架中的采用情况。\n\n**策略蒸馏正在走向成熟。** DOPD关于「特权幻觉」的洞察——学生模型学会了模仿信息不对称而非可迁移能力——是一个微妙但重要的贡献。结合昨天的AsyncOPD和PHF论文，我们看到OPD范式正在经历快速的理论成熟。DOPD同时适用于LLM和VLM场景这一事实表明，该方法可以推广到纯语言任务之外。基于优势感知的路由机制为每个token分配不同的监督强度，这类细粒度的训练信号工程往往具有很好的复合效应。\n\n**Evolution Fine-Tuning架起了搜索与学习之间的桥梁。** 明尼苏达大学NLP组的EFT论文提出了一个引人注目的问题：迭代进化解决方案的元技能能否跨优化领域迁移？答案似乎是肯定的——在进化搜索轨迹上训练后，在22个保留任务上平均提升10.22%。Finch Collection数据集（156K条轨迹，371个任务，10个领域）是一个重要的研究资产。论文将EFT定位为发现智能体的「练习阶段」非常恰当：这本质上是教模型学习搜索的启发式方法，而非特定领域的解决方案。\n\n**Agent-Reach代表了一个新类别：智能体感知基础设施。** 虽然大多数智能体框架聚焦于推理和行动，Agent-Reach（今日1,339星）解决的是一个不同的问题——让智能体无需API费用即可可靠地读取Twitter、Reddit、YouTube和Bilibili等平台。零API费用的方式暗示使用了爬虫或浏览器自动化，但这个类别本身很有意思。随着智能体变得更加自主，它们感知和监控更广泛互联网的能力将成为一项关键能力。\n\n**关注：GGUF全覆盖趋势正在加速。** 今天的趋势模型清晰地说明了一个趋势：每个重要的模型发布（GLM-5.2、Ornith-1.0、Qwythos-9B），社区都会立即生产GGUF量化版本。Unsloth的GLM-5.2-GGUF（484赞）几乎与基础模型同时出现。这种模式——基础模型发布后紧跟社区快速量化——现在已成为开放权重模型的默认分发机制，llama.cpp实际上已成为开源社区的通用推理运行时。",
+  "papers": [
+    {
+      "id": "dockerless",
+      "title": "Dockerless：面向编码智能体的无环境程序验证器",
+      "authors": [
+        "Wenhao Zeng",
+        "Yuling Shi",
+        "Xiaodong Gu",
+        "Chao Hu",
+        "Chaofan Wang et al."
+      ],
+      "affiliations": [
+        "ByteDance"
+      ],
+      "summary": "提出了一种无需环境的智能体补丁验证器，通过智能体式的仓库探索收集证据来评估代码补丁的正确性，无需执行代码。为编码智能体实现了完全无环境的后训练流程，达到了与基于环境方法相当的效果。",
+      "key_findings": [
+        "在验证器评估基准上超越最强开源验证器14.3 AUC",
+        "在SWE-bench Verified、Multilingual和Pro上分别达到62.0%、50.0%和35.2%的解决率",
+        "实现完全无环境的SFT轨迹过滤和RL奖励计算，匹配基于Docker的后训练效果"
+      ],
+      "tags": [
+        "coding-agents",
+        "program-verification",
+        "SWE-bench",
+        "reinforcement-learning",
+        "post-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28436",
+        "huggingface": "https://huggingface.co/papers/2606.28436",
+        "pdf": "https://arxiv.org/pdf/2606.28436"
+      }
+    },
+    {
+      "id": "dopd-dual-on-policy-distillation",
+      "title": "DOPD：双重在策略蒸馏",
+      "authors": [
+        "Xinlei Yu",
+        "Gen Li",
+        "Qingyi Si",
+        "Guibin Zhang",
+        "Yuqi Xu et al."
+      ],
+      "affiliations": [
+        "Chinese University of Hong Kong",
+        "Skywork AI"
+      ],
+      "summary": "引入了一种基于优势感知的双重蒸馏范式，根据特权教师和特权学生策略之间的优势差距动态路由token级监督，解决了在策略蒸馏中的「特权幻觉」失败模式。",
+      "key_findings": [
+        "识别出「特权幻觉」——学生模型将可迁移能力差距与信息不对称差距相混淆的失败模式",
+        "动态token级路由为每个token分配来自教师或学生的不同监督强度、目标和策略",
+        "在LLM和VLM设置中均一致超越原始OPD，并提升了稳定性和鲁棒性"
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "knowledge-distillation",
+        "LLM-training",
+        "vision-language-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30626",
+        "huggingface": "https://huggingface.co/papers/2606.30626",
+        "pdf": "https://arxiv.org/pdf/2606.30626"
+      }
+    },
+    {
+      "id": "evolution-fine-tuning",
+      "title": "进化微调：跨371个优化任务的发现学习",
+      "authors": [
+        "Young-Jun Lee",
+        "Seungone Kim",
+        "Minki Kang",
+        "Alistair Cheong Liang Chuen",
+        "Zerui Chen et al."
+      ],
+      "affiliations": [
+        "University of Minnesota",
+        "Minnesota NLP"
+      ],
+      "summary": "引入了一种中间训练范式，通过将进化搜索轨迹转化为监督信号，教会LLM跨优化任务进化解决方案，实现发现智能体的跨任务泛化。",
+      "key_findings": [
+        "经EFT训练的模型在22个保留优化任务上平均超越基础模型10.22%",
+        "Finch Collection数据集提供156K条轨迹，覆盖10个领域和371个优化任务",
+        "结合测试时RL，在圆填充问题上匹配最先进水平，在Erdos最小重叠问题上超越基础模型"
+      ],
+      "tags": [
+        "evolutionary-search",
+        "optimization",
+        "meta-learning",
+        "mathematical-conjectures",
+        "mid-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29082",
+        "huggingface": "https://huggingface.co/papers/2606.29082",
+        "pdf": "https://arxiv.org/pdf/2606.29082"
+      }
+    },
+    {
+      "id": "lumos-semantic-os-layer",
+      "title": "LUMOS：面向可访问性的AI智能体语义操作系统层",
+      "authors": [
+        "Yogeswar Reddy Thota"
+      ],
+      "affiliations": [
+        "University of Texas at Dallas"
+      ],
+      "summary": "引入了AI智能体与操作系统之间的语义交互层，将原生可访问性元数据转换为具有稳定标识符的机器可读蓝图，减少智能体对基于截图视觉解释的依赖。",
+      "key_findings": [
+        "将可访问性元数据和浏览器UI结构转换为具有稳定标识符、角色和动作可供性的语义蓝图",
+        "通过操作系统自动化API支持实时语义指针定位",
+        "与基于截图的方法相比，减少了token成本、视觉歧义和坐标不确定性"
+      ],
+      "tags": [
+        "computer-use-agents",
+        "accessibility",
+        "operating-systems",
+        "semantic-interfaces",
+        "agent-infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30697",
+        "huggingface": "https://huggingface.co/papers/2606.30697",
+        "pdf": "https://arxiv.org/pdf/2606.30697"
+      }
+    },
+    {
+      "id": "qval-dense-supervision",
+      "title": "QVal：低成本评估长周期LLM智能体的密集监督信号",
+      "authors": [
+        "Sergio Hernández-Gutiérrez",
+        "Matteo Merler",
+        "Ilze Amanda Auzina",
+        "Joschka Strüber"
+      ],
+      "affiliations": [
+        "IBM Research"
+      ],
+      "summary": "解决了长周期LLM智能体密集监督方法评估的挑战，在包含数百个动作的轨迹中，仅基于结果的奖励提供的引导信号过于稀疏，不足以学习中间动作的质量。",
+      "key_findings": [
+        "包含数百个动作的长周期智能体轨迹需要超越仅基于结果奖励的密集监督",
+        "提出了一种低成本的评估框架来比较密集监督信号的质量",
+        "证明适当的密集监督能显著提升智能体在长周期任务上的表现"
+      ],
+      "tags": [
+        "LLM-agents",
+        "dense-supervision",
+        "reinforcement-learning",
+        "long-horizon"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.32034",
+        "pdf": "https://arxiv.org/pdf/2606.32034"
+      }
+    },
+    {
+      "id": "generative-skill-composition",
+      "title": "LLM智能体的生成式技能组合",
+      "authors": [
+        "Xinyu Zhao",
+        "Zhen Tan",
+        "Vaishnav Tadiparthi",
+        "Nakul Agarwal"
+      ],
+      "affiliations": [
+        "Arizona State University"
+      ],
+      "summary": "为LLM智能体提出生成式技能组合方法，其中技能封装了专门任务（如环境搭建、测试套件执行和跨文件函数重构）的模块化过程知识包。",
+      "key_findings": [
+        "作为模块化过程知识包的技能提升了LLM智能体处理复杂多步任务的能力",
+        "生成式组合使推理时能够动态组合技能",
+        "在包括沙箱环境、测试套件和代码重构在内的多样化智能体任务上展现了有效性"
+      ],
+      "tags": [
+        "LLM-agents",
+        "skill-composition",
+        "modular-reasoning",
+        "code-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.32025",
+        "pdf": "https://arxiv.org/pdf/2606.32025"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "最新一代GLM MoE架构，采用动态稀疏注意力机制，以3,061个赞继续保持强劲的社区采用势头。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "conversational",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 142547,
+        "likes": 3061
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "yuxinlu1（社区）",
+      "description": "基于Fable 5和Composer 2.5微调的Gemma 4 12B编码模型GGUF量化版，以2,531个赞成为今日最受欢迎的GGUF变体。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "coding",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 575255,
+        "likes": 2531
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "紧凑的3B参数模型，用于图像特征提取和空间定位，以2,524个赞和800K下载量获得强劲社区采用。",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "nvidia",
+        "vision",
+        "localization"
+      ],
+      "metrics": {
+        "downloads": 800597,
+        "likes": 2524
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "面向全面OCR能力的视觉语言模型，以429K下载量和1,497个赞保持强劲势头。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": [
+        "ocr",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 429056,
+        "likes": 1497
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "支持1M上下文的Qwen3.5变体GGUF量化版，针对推理任务优化。以970K下载量领跑GGUF模型。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "qwen3.5",
+        "reasoning",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 970663,
+        "likes": 1057
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2-GGUF",
+      "organization": "yuxinlu1（社区）",
+      "description": "面向终端和编码任务微调的Gemma 4 12B智能体变体，获得890个赞和257K下载量。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "agentic",
+        "terminal"
+      ],
+      "metrics": {
+        "downloads": 257216,
+        "likes": 890
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "Ornith家族的35B参数GGUF量化模型，以157K下载量和550个赞获得强劲社区采用。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 157418,
+        "likes": 550
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "glm-5-2-gguf",
+      "name": "GLM-5.2-GGUF",
+      "organization": "Unsloth",
+      "description": "GLM-5.2 MoE模型的社区GGUF量化版本，用于本地推理，获得484个赞和180K下载量。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "gguf",
+        "glm",
+        "moe",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 180394,
+        "likes": 484
+      },
+      "source_url": "https://huggingface.co/unsloth/GLM-5.2-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "阿里巴巴 Qwen",
+      "description": "面向智能体任务的35B MoE模型（3B活跃参数），专为多模态智能体任务设计。标志着阿里巴巴在智能体原生模型架构方向的投入。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B（3B活跃）",
+      "tags": [
+        "qwen",
+        "agents",
+        "moe",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 28480,
+        "likes": 466
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Krea-2图像生成模型的加速变体，针对文本到图像生成进行了更快的推理优化。",
+      "task_type": "text-to-image",
+      "model_size": "未知",
+      "tags": [
+        "diffusers",
+        "text-to-image",
+        "image-generation"
+      ],
+      "metrics": {
+        "downloads": 45668,
+        "likes": 421
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-V4-Pro的DSpark变体，延续了DeepSeek V4模型家族的专用变体扩展。",
+      "task_type": "text-generation",
+      "model_size": "大型MoE",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 6939,
+        "likes": 251
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "lfm2-5-230m",
+      "name": "LFM2.5-230M",
+      "organization": "Liquid AI",
+      "description": "Liquid AI LFM2架构的230M紧凑参数模型，代表了高效小模型的前沿。",
+      "task_type": "text-generation",
+      "model_size": "230M",
+      "tags": [
+        "liquid",
+        "efficient",
+        "small-model"
+      ],
+      "metrics": {
+        "downloads": 17839,
+        "likes": 169
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-230M"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "完整的AI代理框架，拥有专业化的专家智能体，每个都具有独特个性、流程和经过验证的交付物。持续多日飙升，是GitHub上排名第一的智能体基础设施项目。",
+      "language": "Shell",
+      "stars": 121021,
+      "stars_today": 1791,
+      "forks": 19767,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "agents",
+        "ai-agency",
+        "framework",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "统一CLI，让AI智能体能够零API费用地读取和搜索Twitter、Reddit、YouTube、GitHub、Bilibili和小红书。解决了智能体感知问题。",
+      "language": "Python",
+      "stars": 47148,
+      "stars_today": 1339,
+      "forks": 3738,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agents",
+        "data-access",
+        "scraping",
+        "cli"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "simplex-chat",
+      "name": "simplex-chat/simplex-chat",
+      "description": "首个无需任何用户标识符即可运行的消息网络——设计上100%隐私。单日1,235星的大幅飙升表明对隐私优先通信的旺盛需求。",
+      "language": "Haskell",
+      "stars": 17354,
+      "stars_today": 1235,
+      "forks": 1008,
+      "url": "https://github.com/simplex-chat/simplex-chat",
+      "tags": [
+        "privacy",
+        "messaging",
+        "encryption",
+        "decentralized"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ai-berkshire",
+      "name": "xbtlin/ai-berkshire",
+      "description": "基于Claude Code/Codex构建的AI时代价值投资研究框架，实现巴菲特、芒格、段永平和李录四大师方法论，配合多智能体对抗分析。",
+      "language": "Python",
+      "stars": 7544,
+      "stars_today": 969,
+      "forks": 959,
+      "url": "https://github.com/xbtlin/ai-berkshire",
+      "tags": [
+        "finance",
+        "investing",
+        "multi-agent",
+        "value-investing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架与软件开发方法论，以242K星获得大规模社区采用。",
+      "language": "Shell",
+      "stars": 242557,
+      "stars_today": 890,
+      "forks": 21523,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agents",
+        "developer-tools",
+        "methodology",
+        "skills-framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "free-for-dev",
+      "name": "ripienaar/free-for-dev",
+      "description": "精选的SaaS、PaaS和IaaS免费套餐列表，面向开发者。常青资源再次引发关注。",
+      "language": "HTML",
+      "stars": 127344,
+      "stars_today": 742,
+      "forks": 13308,
+      "url": "https://github.com/ripienaar/free-for-dev",
+      "tags": [
+        "developer-resources",
+        "free-tier",
+        "saas",
+        "infrastructure"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "browser-use框架的扩展，让编码智能体能够编辑视频，将智能体能力从文本和网页扩展到多媒体领域。",
+      "language": "Python",
+      "stars": 12638,
+      "stars_today": 721,
+      "forks": 1608,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "agents",
+        "video-editing",
+        "browser-automation",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "来自香港大学的个人AI交易智能体，延续了AI驱动的金融交易工具在开源领域获得大规模关注的多日趋势。",
+      "language": "Python",
+      "stars": 15821,
+      "stars_today": 721,
+      "forks": 2739,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "finance",
+        "trading",
+        "agents",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "最快的macOS听写应用，具备设备端语音转文字和自定义AI增强模型。Wispr Flow的本地替代方案。",
+      "language": "Swift",
+      "stars": 4946,
+      "stars_today": 588,
+      "forks": 303,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "macos",
+        "on-device",
+        "dictation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "strix",
+      "name": "usestrix/strix",
+      "description": "开源AI渗透测试工具，用于自动发现和修复应用程序漏洞。",
+      "language": "Python",
+      "stars": 28172,
+      "stars_today": 515,
+      "forks": 3127,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "penetration-testing",
+        "vulnerability-scanning",
+        "ai-security"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "终端中的智能体多路复用器，可从单一界面并发管理多个AI智能体。",
+      "language": "Rust",
+      "stars": 9047,
+      "stars_today": 486,
+      "forks": 544,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": [
+        "agents",
+        "terminal",
+        "multiplexer",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-agents-cli",
+      "name": "google/agents-cli",
+      "description": "Google的CLI和技能框架，将任何编码助手转变为在Google Cloud上创建、评估和部署AI智能体的专家。",
+      "language": "Python",
+      "stars": 4226,
+      "stars_today": 445,
+      "forks": 459,
+      "url": "https://github.com/google/agents-cli",
+      "tags": [
+        "google-cloud",
+        "agents",
+        "cli",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "omniroute",
+      "name": "diegosouzapw/OmniRoute",
+      "description": "免费AI网关，一个端点连接231+提供商，具备token压缩（节省15-95%）、智能回退和MCP/A2A支持，兼容Claude Code、Codex和Cursor。",
+      "language": "TypeScript",
+      "stars": 8593,
+      "stars_today": 387,
+      "forks": 1397,
+      "url": "https://github.com/diegosouzapw/OmniRoute",
+      "tags": [
+        "ai-gateway",
+        "routing",
+        "token-compression",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "astryx",
+      "name": "facebook/astryx",
+      "description": "Facebook的开源设计系统，完全可定制且支持智能体，将设计系统与AI智能体工作流连接。",
+      "language": "TypeScript",
+      "stars": 1816,
+      "stars_today": 364,
+      "forks": 99,
+      "url": "https://github.com/facebook/astryx",
+      "tags": [
+        "design-system",
+        "facebook",
+        "agent-ready",
+        "ui-framework"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "instatic",
+      "name": "CoreBunch/Instatic",
+      "description": "现代自托管可视化CMS，1分钟即可部署运行，属于日益增长的简单自托管开发者工具趋势。",
+      "language": "TypeScript",
+      "stars": 1556,
+      "stars_today": 351,
+      "forks": 138,
+      "url": "https://github.com/CoreBunch/Instatic",
+      "tags": [
+        "cms",
+        "self-hosted",
+        "visual-editor"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "无环境智能体训练",
+      "description": "Dockerless证明基于执行的验证可以用智能体推理来替代，用于编码智能体的后训练，有望消除智能体训练流程中的主要基础设施瓶颈。",
+      "related_paper_ids": [
+        "dockerless"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施平台",
+      "description": "GitHub趋势页面被智能体基础设施项目主导：agency-agents（完整代理框架）、Agent-Reach（感知层）、herdr（智能体多路复用器）、Google agents-cli和superpowers（技能框架）。从「构建智能体」到「构建智能体运行平台」的转变正在加速。",
+      "related_paper_ids": [
+        "lumos-semantic-os-layer"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "在策略蒸馏走向成熟",
+      "description": "DOPD的优势感知双重监督与昨天的AsyncOPD和PHF共同推动了在策略蒸馏的快速理论成熟。该范式正从研究好奇心转向可用于生产的训练基础设施。",
+      "related_paper_ids": [
+        "dopd-dual-on-policy-distillation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "GGUF优先的模型分发",
+      "description": "开放权重模型分发的主导模式：每个重要发布（GLM-5.2、Ornith-1.0、Qwythos-9B）都会立即产生GGUF量化版本。llama.cpp已成为开源社区事实上的通用推理运行时。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI驱动的金融交易",
+      "description": "连续第三天有多个AI交易项目在GitHub上趋势上升。ai-berkshire（多智能体价值投资分析）和Vibe-Trading（个人交易智能体）代表了自主金融智能体的不同方法。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "跨领域发现的元学习",
+      "description": "Evolution Fine-Tuning表明优化启发式方法可以跨领域迁移——从GPU内核设计到数学猜想——为通用发现智能体开辟了新范式。",
+      "related_paper_ids": [
+        "evolution-fine-tuning"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-01T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
