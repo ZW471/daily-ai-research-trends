@@ -1,0 +1,1059 @@
+{
+  "version": "1.0",
+  "date": "2026-07-02",
+  "generated_at": "2026-07-02T15:00:00Z",
+  "summary": {
+    "headline": "SenseTime's Orca world foundation model dominates with 178 upvotes; speculative decoding innovations from BlockPilot and Multi-Block Diffusion accelerate inference; agent infrastructure consolidates on GitHub with agency-agents crossing 123K stars",
+    "body": "Today's AI research landscape is headlined by **SenseTime and Shanghai AI Lab's Orca**, a world foundation model using Next-State-Prediction that drew massive community attention with 178 upvotes — the highest-engagement paper of the day by a wide margin. The paper proposes learning world dynamics directly in a model's latent space, representing a significant push toward general-purpose world simulators. Alongside Orca, two complementary papers on **efficient inference** stand out: BlockPilot introduces instance-adaptive policy learning for diffusion-based speculative decoding, and Multi-Block Diffusion extends block diffusion language models with inter-block parallelism, together signaling a maturing field of non-autoregressive acceleration methods.\n\nOn the **agent and distillation front**, ByteDance's Dockerless continues to gain traction (now 86 upvotes) as the environment-free verification paradigm gains broader recognition, while DOPD from CUHK/Skywork AI further refines on-policy distillation with its privilege illusion analysis. A notable cluster of papers addresses **agent memory and skill evolution**: SkillHone proposes persistent decision history for continual skill improvement, the AFTER benchmark evaluates procedural memory in LLM agents, and RL with Metacognitive Feedback teaches models uncertainty awareness through reinforcement learning.\n\n**GitHub trending remains agent-infrastructure-heavy**, with agency-agents maintaining its dominant position at 123K stars and 2,114 new stars today. New entrants include Facebook's astryx design system (agent-ready), TencentCloud's CubeSandbox for AI agent sandboxing, and the council-of-high-intelligence multi-AI deliberation framework. The model ecosystem sees continued consolidation around GLM-5.2, Ornith-1.0, and GGUF-quantized community variants, while Baidu's Unlimited-OCR surges past 630K downloads and NVIDIA's LocateAnything-3B approaches 900K.",
+    "key_themes": [
+      "world-foundation-models",
+      "speculative-decoding-innovations",
+      "agent-memory-and-skill-evolution",
+      "on-policy-distillation",
+      "agent-infrastructure-platforms",
+      "gguf-model-distribution"
+    ]
+  },
+  "researcher_notes": "**Orca is the standout paper of the day and potentially the week.** SenseTime and Shanghai AI Lab's world foundation model drew 178 upvotes — more than double the next-highest paper — suggesting the community sees Next-State-Prediction as a meaningful advance over prior world model approaches. The core idea of learning world dynamics via state prediction in latent space rather than pixel-level reconstruction aligns with a broader trend toward abstract, compact world representations. If the model generalizes across diverse physical scenarios as claimed, it could become a foundational component for robotics planning, autonomous driving simulation, and game AI. The 'world is in your mind' framing is ambitious but directionally consistent with where embodied AI research is heading.\n\n**Speculative decoding is entering a second wave of innovation.** BlockPilot's instance-adaptive approach addresses a real weakness in vanilla speculative decoding: fixed block sizes waste compute on easy tokens and bottleneck on hard ones. By learning per-instance policies for block size selection, BlockPilot essentially makes speculative decoding 'intelligent' about when to be aggressive vs. conservative. Meanwhile, Multi-Block Diffusion from Fudan extends the block diffusion paradigm with inter-block parallelism, attacking the same latency problem from a non-autoregressive angle. Together with yesterday's inference optimization papers, we are seeing a **diversification of the inference acceleration toolkit** beyond simple quantization and pruning.\n\n**Agent memory and skill acquisition are crystallizing as distinct subfields.** Three papers today tackle different aspects of this challenge: SkillHone proposes persistent decision history for continual skill evolution (learning from past mistakes), the AFTER benchmark provides systematic evaluation of procedural memory (can agents remember how to do things?), and RL with Metacognitive Feedback teaches models to express uncertainty accurately. These complement rather than compete — an ideal agent would need all three capabilities. The emergence of dedicated benchmarks like AFTER suggests the field is maturing past proof-of-concept into systematic evaluation.\n\n**The VLA knowledge retention question is important and underexplored.** The 'Does VLA Even Know the Basics?' paper (41 upvotes) asks whether Vision-Language-Action models retain fundamental visual and spatial knowledge when fine-tuned for robotic action. The Act2Answer protocol for testing this is clever — converting action tasks into question-answering to probe underlying knowledge. If VLAs are losing basic capabilities during action fine-tuning, it suggests current training pipelines may be creating capable-but-brittle robots. This has practical implications for deployment safety.\n\n**GitHub's agent infrastructure trend is consolidating rather than expanding.** While yesterday saw new entrants like Agent-Reach surge, today's trending is more about established projects maintaining momentum: agency-agents (2,114 stars today), strix (1,211), herdr (609), google/agents-cli (586). The notable new signal is **Facebook's astryx** — an agent-ready design system at 708 stars today — which suggests major tech companies are now building UI frameworks with agent consumption as a first-class use case, not an afterthought. TencentCloud's CubeSandbox (79 stars today) similarly indicates enterprise investment in secure agent execution environments.",
+  "papers": [
+    {
+      "id": "orca-world-foundation-model",
+      "title": "Orca: The World is in Your Mind",
+      "authors": [
+        "Yihao Wang",
+        "et al."
+      ],
+      "affiliations": [
+        "SenseTime",
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "Proposes a world foundation model based on Next-State-Prediction that learns world dynamics in latent space. The model aims to capture generalizable physical and spatial reasoning without pixel-level reconstruction, enabling applications in robotics, simulation, and embodied AI.",
+      "key_findings": [
+        "Next-State-Prediction paradigm learns abstract world dynamics in latent space rather than pixel-level reconstruction",
+        "Demonstrates generalization across diverse physical scenarios including object interactions and spatial reasoning",
+        "Achieves highest community engagement of the day with 178 upvotes, indicating strong perceived significance"
+      ],
+      "tags": [
+        "world-models",
+        "foundation-models",
+        "next-state-prediction",
+        "embodied-ai",
+        "simulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 178,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30534",
+        "huggingface": "https://huggingface.co/papers/2606.30534",
+        "pdf": "https://arxiv.org/pdf/2606.30534"
+      }
+    },
+    {
+      "id": "dockerless",
+      "title": "Dockerless: Environment-Free Program Verifier for Coding Agents",
+      "authors": [
+        "Wenhao Zeng",
+        "et al."
+      ],
+      "affiliations": [
+        "ByteDance"
+      ],
+      "summary": "Proposes an environment-free agentic patch verifier that evaluates code patches without executing them, using evidence gathered through agentic repository exploration. Enables a fully environment-free post-training pipeline for coding agents that matches Docker-based approaches.",
+      "key_findings": [
+        "Outperforms the strongest open-source verifier by 14.3 AUC points on a verifier evaluation benchmark",
+        "Achieves 62.0%, 50.0%, and 35.2% resolve rates on SWE-bench Verified, Multilingual, and Pro respectively",
+        "Enables fully environment-free SFT trajectory filtering and RL reward computation, matching Docker-based post-training"
+      ],
+      "tags": [
+        "coding-agents",
+        "program-verification",
+        "SWE-bench",
+        "reinforcement-learning",
+        "post-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 86,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28436",
+        "huggingface": "https://huggingface.co/papers/2606.28436",
+        "pdf": "https://arxiv.org/pdf/2606.28436"
+      }
+    },
+    {
+      "id": "dopd-dual-on-policy-distillation",
+      "title": "DOPD: Dual On-policy Distillation",
+      "authors": [
+        "Xinlei Yu",
+        "et al."
+      ],
+      "affiliations": [
+        "Chinese University of Hong Kong",
+        "Skywork AI"
+      ],
+      "summary": "Introduces an advantage-aware dual distillation paradigm that dynamically routes token-level supervision between privileged teacher and privileged student policies based on their advantage gap, addressing the 'privilege illusion' failure mode in on-policy distillation.",
+      "key_findings": [
+        "Identifies 'privilege illusion' — a failure mode where students conflate transferable capability gaps with information asymmetry",
+        "Dynamic token-level routing assigns different supervision strength, objective, and strategy per token",
+        "Consistently outperforms vanilla OPD across both LLM and VLM settings with improved stability"
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "knowledge-distillation",
+        "LLM-training",
+        "vision-language-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30626",
+        "huggingface": "https://huggingface.co/papers/2606.30626",
+        "pdf": "https://arxiv.org/pdf/2606.30626"
+      }
+    },
+    {
+      "id": "blockpilot-speculative-decoding",
+      "title": "BlockPilot: Instance-Adaptive Policy Learning for Diffusion-based Speculative Decoding",
+      "authors": [
+        "Hao Zhang",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Proposes an instance-adaptive policy learning framework that dynamically selects block sizes for diffusion-based speculative decoding, replacing fixed block sizes with learned per-instance policies that balance throughput and quality.",
+      "key_findings": [
+        "Learns per-instance policies for block size selection, making speculative decoding adaptive to input difficulty",
+        "Outperforms fixed-block-size speculative decoding on throughput-quality trade-off across multiple benchmarks",
+        "Demonstrates that aggressive block sizes benefit easy tokens while conservative sizes are needed for complex tokens"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "diffusion-models",
+        "inference-optimization",
+        "adaptive-computation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 67,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31315",
+        "huggingface": "https://huggingface.co/papers/2606.31315",
+        "pdf": "https://arxiv.org/pdf/2606.31315"
+      }
+    },
+    {
+      "id": "vla-knowledge-retention",
+      "title": "Does VLA Even Know the Basics?",
+      "authors": [
+        "Nikita Kachaev",
+        "et al."
+      ],
+      "affiliations": [
+        "AIRI",
+        "HSE University"
+      ],
+      "summary": "Investigates whether Vision-Language-Action models retain fundamental visual and spatial knowledge after fine-tuning for robotic action, introducing the Act2Answer protocol to convert action tasks into question-answering for probing underlying knowledge retention.",
+      "key_findings": [
+        "VLA models often lose basic visual and spatial knowledge during action-oriented fine-tuning",
+        "Act2Answer protocol enables systematic testing of knowledge retention by converting actions to QA format",
+        "Findings suggest current VLA training pipelines may create capable-but-brittle robotic agents"
+      ],
+      "tags": [
+        "vision-language-action",
+        "robotics",
+        "knowledge-retention",
+        "evaluation",
+        "embodied-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.19297",
+        "huggingface": "https://huggingface.co/papers/2606.19297",
+        "pdf": "https://arxiv.org/pdf/2606.19297"
+      }
+    },
+    {
+      "id": "scenes-as-objects",
+      "title": "Scenes as Objects, Not Primitives",
+      "authors": [
+        "Mijin Yoo",
+        "et al."
+      ],
+      "affiliations": [
+        "Sungkyunkwan University"
+      ],
+      "summary": "Proposes instance-structured 3D tokenization from unposed views, treating scenes as compositions of objects rather than low-level primitives. Enables structured 3D scene understanding without requiring camera pose estimation.",
+      "key_findings": [
+        "Instance-structured tokenization captures 3D scenes as object-centric representations from unposed views",
+        "Eliminates the need for camera pose estimation in 3D scene understanding pipelines",
+        "Demonstrates competitive performance on scene reconstruction and understanding benchmarks"
+      ],
+      "tags": [
+        "3d-vision",
+        "scene-understanding",
+        "object-centric",
+        "tokenization",
+        "pose-free"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 36,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29513",
+        "huggingface": "https://huggingface.co/papers/2606.29513",
+        "pdf": "https://arxiv.org/pdf/2606.29513"
+      }
+    },
+    {
+      "id": "gear-autoregressive-image-synthesis",
+      "title": "GEAR: Guided End-to-End AutoRegression for Image Synthesis",
+      "authors": [
+        "Bin Lin",
+        "et al."
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "ByteDance"
+      ],
+      "summary": "Introduces joint tokenizer-generator training for autoregressive image synthesis, where the tokenizer and generator are co-optimized end-to-end rather than trained in separate stages, improving coherence and quality of generated images.",
+      "key_findings": [
+        "Joint training of tokenizer and generator eliminates the information bottleneck of two-stage approaches",
+        "End-to-end optimization produces more coherent visual tokens aligned with the generator's capabilities",
+        "Achieves state-of-the-art results on image generation benchmarks with improved sample efficiency"
+      ],
+      "tags": [
+        "image-generation",
+        "autoregressive-models",
+        "tokenization",
+        "end-to-end-training"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 28,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.32039",
+        "huggingface": "https://huggingface.co/papers/2606.32039",
+        "pdf": "https://arxiv.org/pdf/2606.32039"
+      }
+    },
+    {
+      "id": "evolution-fine-tuning",
+      "title": "Evolution Fine-Tuning: Learning to Discover Across 371 Optimization Tasks",
+      "authors": [
+        "Young-Jun Lee",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Minnesota"
+      ],
+      "summary": "Introduces a mid-training paradigm that teaches LLMs to evolve solutions across optimization tasks by converting evolutionary search trajectories into supervision, enabling cross-task generalization for discovery agents.",
+      "key_findings": [
+        "Models trained with EFT surpass base counterparts by 10.22% on average across 22 held-out optimization tasks",
+        "Finch Collection dataset provides 156K trajectories spanning 10 domains and 371 optimization tasks",
+        "When paired with test-time RL, matches state-of-the-art on circle-packing and outperforms on Erdos minimum-overlap"
+      ],
+      "tags": [
+        "evolutionary-search",
+        "optimization",
+        "meta-learning",
+        "mid-training",
+        "discovery-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 23,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29082",
+        "huggingface": "https://huggingface.co/papers/2606.29082",
+        "pdf": "https://arxiv.org/pdf/2606.29082"
+      }
+    },
+    {
+      "id": "multi-block-diffusion-lm",
+      "title": "Multi-Block Diffusion Language Models",
+      "authors": [
+        "Yijie Jin",
+        "et al."
+      ],
+      "affiliations": [
+        "Fudan University"
+      ],
+      "summary": "Extends block diffusion language models with inter-block parallelism, enabling multiple text blocks to be generated simultaneously while maintaining coherence through learned inter-block coordination mechanisms.",
+      "key_findings": [
+        "Inter-block parallelism enables simultaneous generation of multiple text blocks for faster inference",
+        "Learned coordination mechanisms maintain coherence across parallel-generated blocks",
+        "Complements speculative decoding as an alternative non-autoregressive acceleration approach"
+      ],
+      "tags": [
+        "diffusion-models",
+        "language-models",
+        "parallel-generation",
+        "inference-optimization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29215",
+        "huggingface": "https://huggingface.co/papers/2606.29215",
+        "pdf": "https://arxiv.org/pdf/2606.29215"
+      }
+    },
+    {
+      "id": "skillhone-continual-agent-evolution",
+      "title": "SkillHone: Continual Agent Skill Evolution Through Persistent Decision History",
+      "authors": [
+        "Zhiwei Li",
+        "Yong Hu"
+      ],
+      "affiliations": [
+        "Independent Researchers"
+      ],
+      "summary": "Proposes a continual skill improvement framework for agents that leverages persistent decision history, enabling agents to learn from past successes and failures across tasks rather than starting from scratch each time.",
+      "key_findings": [
+        "Persistent decision history enables agents to accumulate and refine skills across task episodes",
+        "Continual evolution outperforms episodic approaches that discard inter-task learning signals",
+        "Framework is agent-architecture-agnostic and applicable to diverse task domains"
+      ],
+      "tags": [
+        "agent-skills",
+        "continual-learning",
+        "decision-history",
+        "skill-evolution"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.08671",
+        "huggingface": "https://huggingface.co/papers/2606.08671",
+        "pdf": "https://arxiv.org/pdf/2606.08671"
+      }
+    },
+    {
+      "id": "memlearner-video-world-models",
+      "title": "MemLearner: Learning to Query Context Memory for Video World Models",
+      "authors": [
+        "Jiwen Yu",
+        "et al."
+      ],
+      "affiliations": [
+        "Peking University",
+        "Beijing Institute for General Artificial Intelligence"
+      ],
+      "summary": "Proposes a learning-based context querying mechanism for video world models that replaces hand-crafted memory retrieval with learned attention over context memory, improving temporal consistency in video generation.",
+      "key_findings": [
+        "Learned context querying outperforms hand-crafted retrieval for video world model memory access",
+        "Improves temporal consistency and long-range coherence in video generation",
+        "Demonstrates scalability to longer video sequences through efficient memory management"
+      ],
+      "tags": [
+        "video-generation",
+        "world-models",
+        "memory-mechanisms",
+        "context-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31734",
+        "huggingface": "https://huggingface.co/papers/2606.31734",
+        "pdf": "https://arxiv.org/pdf/2606.31734"
+      }
+    },
+    {
+      "id": "rl-metacognitive-feedback",
+      "title": "RL with Metacognitive Feedback for Faithful Uncertainty Expression",
+      "authors": [
+        "Gabrielle Liu",
+        "et al."
+      ],
+      "affiliations": [
+        "Google Research",
+        "Yale University"
+      ],
+      "summary": "Teaches LLMs to express uncertainty faithfully through reinforcement learning with metacognitive feedback, enabling models to calibrate their confidence expressions based on their actual knowledge state rather than defaulting to overconfidence.",
+      "key_findings": [
+        "RL with metacognitive reward signals significantly improves calibration of LLM uncertainty expressions",
+        "Models learn to distinguish between what they know and what they are uncertain about",
+        "Approach generalizes across domains without requiring explicit uncertainty labels in training data"
+      ],
+      "tags": [
+        "uncertainty-quantification",
+        "metacognition",
+        "reinforcement-learning",
+        "calibration",
+        "LLM-safety"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.32032",
+        "huggingface": "https://huggingface.co/papers/2606.32032",
+        "pdf": "https://arxiv.org/pdf/2606.32032"
+      }
+    },
+    {
+      "id": "after-procedural-memory",
+      "title": "Managing Procedural Memory in LLM Agents (AFTER benchmark)",
+      "authors": [
+        "Julia Belikova",
+        "et al."
+      ],
+      "affiliations": [
+        "Yandex",
+        "HSE University"
+      ],
+      "summary": "Introduces the AFTER benchmark for systematically evaluating procedural memory in LLM agents — the ability to remember and correctly apply learned procedures across diverse task contexts over extended interaction histories.",
+      "key_findings": [
+        "AFTER benchmark provides standardized evaluation of procedural memory retention and application",
+        "Current LLM agents show significant degradation in procedural memory over extended interactions",
+        "Identifies key failure modes including procedure conflation, recency bias, and context interference"
+      ],
+      "tags": [
+        "LLM-agents",
+        "procedural-memory",
+        "benchmarks",
+        "evaluation",
+        "long-context"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.23127",
+        "huggingface": "https://huggingface.co/papers/2606.23127",
+        "pdf": "https://arxiv.org/pdf/2606.23127"
+      }
+    },
+    {
+      "id": "dataevolver-text-rich-image-gen",
+      "title": "DataEvolver: Self-Evolving Multi-Agent Data Construction for Text-Rich Image Generation",
+      "authors": [
+        "Siyu Yan",
+        "et al."
+      ],
+      "affiliations": [
+        "ByteDance"
+      ],
+      "summary": "Proposes a self-evolving multi-agent data construction pipeline for text-rich image generation that automatically generates, validates, and refines training data for models that render text within images.",
+      "key_findings": [
+        "Multi-agent pipeline autonomously constructs high-quality training data for text-in-image rendering",
+        "Self-evolving mechanism improves data quality iteratively without human annotation",
+        "Significantly improves text rendering accuracy in generated images compared to manually curated datasets"
+      ],
+      "tags": [
+        "image-generation",
+        "text-rendering",
+        "data-construction",
+        "multi-agent",
+        "self-evolving"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31537",
+        "huggingface": "https://huggingface.co/papers/2606.31537",
+        "pdf": "https://arxiv.org/pdf/2606.31537"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "Latest generation GLM MoE architecture continuing to consolidate its position as a leading open-weight model with 3,171 likes, the highest-liked model in today's trending.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "conversational",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 159967,
+        "likes": 3171
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+      "organization": "yuxinlu1 (Community)",
+      "description": "GGUF-quantized Gemma 4 12B fine-tuned for coding with Fable 5 and Composer 2.5, maintaining top position among community coding models at 2,553 likes and 597K downloads.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 597090,
+        "likes": 2553
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "Compact 3B-parameter model for image feature extraction and spatial localization, approaching 900K downloads with sustained community adoption at 2,547 likes.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "nvidia",
+        "vision",
+        "localization"
+      ],
+      "metrics": {
+        "downloads": 896058,
+        "likes": 2547
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Vision-language model for comprehensive OCR capabilities, surging past 630K downloads with accelerating adoption and 1,580 likes.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "vision-language",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 630246,
+        "likes": 1580
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "GGUF-quantized reasoning model with 1M context window, leading by raw downloads at over 1.1M. Strong community adoption for local reasoning workloads.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "reasoning",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 1113871,
+        "likes": 1162
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2-GGUF",
+      "organization": "yuxinlu1 (Community)",
+      "description": "Agentic variant of Gemma 4 12B fine-tuned for coding and terminal tasks, with 920 likes and 289K downloads reflecting strong demand for agent-capable local models.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "agentic",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 288741,
+        "likes": 920
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "GGUF-quantized 35B parameter model from the Ornith family, with 234K downloads and 611 likes showing broad adoption across the model size range.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 233701,
+        "likes": 611
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba Qwen",
+      "description": "Agent-specialized 35B MoE model with 3B active parameters for multimodal agent tasks. Signals Alibaba's continued investment in agent-native model architectures with 497 likes.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "qwen",
+        "agents",
+        "moe",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 34371,
+        "likes": 497
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Turbo variant of the Krea-2 image generation model optimized for faster inference in text-to-image generation, with 438 likes and 57K downloads.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "text-to-image",
+        "image-generation"
+      ],
+      "metrics": {
+        "downloads": 56953,
+        "likes": 438
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "ornith-1-0-9b-gguf",
+      "name": "Ornith-1.0-9B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "GGUF-quantized 9B parameter Ornith model for local inference, with 191K downloads and 368 likes making it the most accessible entry point to the Ornith family.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 191409,
+        "likes": 368
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B-GGUF"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DSpark variant of DeepSeek-V4-Pro, continuing DeepSeek's expansion of their V4 model family with 277 likes despite relatively modest download numbers.",
+      "task_type": "text-generation",
+      "model_size": "Large MoE",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 7629,
+        "likes": 277
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "nvidia-glm-5-2-nvfp4",
+      "name": "GLM-5.2-NVFP4",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's FP4-quantized variant of GLM-5.2, providing efficient deployment of the GLM architecture on NVIDIA hardware with 137K downloads.",
+      "task_type": "text-generation",
+      "model_size": "MoE (FP4 quantized)",
+      "tags": [
+        "nvidia",
+        "quantization",
+        "glm",
+        "fp4"
+      ],
+      "metrics": {
+        "downloads": 136933,
+        "likes": 200
+      },
+      "source_url": "https://huggingface.co/nvidia/GLM-5.2-NVFP4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "Complete AI agency framework with specialized expert agents, maintaining dominant position on GitHub trending with 2,114 new stars today and over 123K total stars.",
+      "language": "Shell",
+      "stars": 123567,
+      "stars_today": 2114,
+      "forks": 20105,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "agents",
+        "ai-agency",
+        "framework",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "strix",
+      "name": "usestrix/strix",
+      "description": "Open-source AI penetration testing tool for automated vulnerability discovery and remediation, surging with 1,211 new stars today.",
+      "language": "Python",
+      "stars": 29802,
+      "stars_today": 1211,
+      "forks": 3228,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "penetration-testing",
+        "ai-security",
+        "vulnerability-scanning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ai-for-beginners",
+      "name": "microsoft/AI-For-Beginners",
+      "description": "Microsoft's 24-lesson AI curriculum crossing 50K stars, reflecting sustained demand for structured AI education materials.",
+      "language": "Jupyter Notebook",
+      "stars": 50497,
+      "stars_today": 1096,
+      "forks": 10258,
+      "url": "https://github.com/microsoft/AI-For-Beginners",
+      "tags": [
+        "education",
+        "tutorials",
+        "microsoft",
+        "ai-fundamentals"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "omniroute",
+      "name": "diegosouzapw/OmniRoute",
+      "description": "Free AI gateway providing one endpoint to 231+ providers with token compression, smart fallback, and MCP/A2A support. Crossed 9.5K stars with 1,010 new today.",
+      "language": "TypeScript",
+      "stars": 9578,
+      "stars_today": 1010,
+      "forks": 1473,
+      "url": "https://github.com/diegosouzapw/OmniRoute",
+      "tags": [
+        "ai-gateway",
+        "routing",
+        "token-compression",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "astryx",
+      "name": "facebook/astryx",
+      "description": "Facebook's open-source design system that is fully customizable and agent-ready, signaling major tech companies building UI frameworks with AI agent consumption as a first-class use case.",
+      "language": "TypeScript",
+      "stars": 2697,
+      "stars_today": 708,
+      "forks": 140,
+      "url": "https://github.com/facebook/astryx",
+      "tags": [
+        "design-system",
+        "facebook",
+        "agent-ready",
+        "ui-framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "Personal AI trading agent from HKU continuing the multi-day trend of AI-powered financial trading tools, with 694 new stars today.",
+      "language": "Python",
+      "stars": 16593,
+      "stars_today": 694,
+      "forks": 2814,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "finance",
+        "trading",
+        "agents",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "video-use",
+      "name": "browser-use/video-use",
+      "description": "Extension of the browser-use framework enabling coding agents to edit videos, expanding agent capabilities into multimedia production workflows.",
+      "language": "Python",
+      "stars": 13245,
+      "stars_today": 693,
+      "forks": 1658,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "agents",
+        "video-editing",
+        "browser-automation",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "Agent multiplexer for concurrent management of multiple AI agents from a single terminal interface, with 609 new stars today.",
+      "language": "Rust",
+      "stars": 9638,
+      "stars_today": 609,
+      "forks": 567,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": [
+        "agents",
+        "terminal",
+        "multiplexer",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-agents-cli",
+      "name": "google/agents-cli",
+      "description": "Google's CLI and skills framework for creating, evaluating, and deploying AI agents on Google Cloud, with 586 new stars today.",
+      "language": "Python",
+      "stars": 4584,
+      "stars_today": 586,
+      "forks": 483,
+      "url": "https://github.com/google/agents-cli",
+      "tags": [
+        "google-cloud",
+        "agents",
+        "cli",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "fluidvoice",
+      "name": "altic-dev/FluidVoice",
+      "description": "Fastest macOS dictation app with on-device speech-to-text and custom AI enhancement model, providing a local alternative to cloud-based dictation.",
+      "language": "Swift",
+      "stars": 5520,
+      "stars_today": 572,
+      "forks": 332,
+      "url": "https://github.com/altic-dev/FluidVoice",
+      "tags": [
+        "speech-to-text",
+        "macos",
+        "on-device",
+        "dictation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "olmocr",
+      "name": "allenai/olmocr",
+      "description": "Allen AI's toolkit for PDF linearizing optimized for LLM consumption, maintaining strong traction at 18K stars with 334 new today.",
+      "language": "Python",
+      "stars": 18296,
+      "stars_today": 334,
+      "forks": 1506,
+      "url": "https://github.com/allenai/olmocr",
+      "tags": [
+        "ocr",
+        "pdf-processing",
+        "llm-tools",
+        "document-ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "book-to-skill",
+      "name": "virgiliojr94/book-to-skill",
+      "description": "Converts PDFs and books into Claude Code skills, enabling knowledge extraction and operationalization of reference materials for AI coding assistants.",
+      "language": "Python",
+      "stars": 7409,
+      "stars_today": 192,
+      "forks": 914,
+      "url": "https://github.com/virgiliojr94/book-to-skill",
+      "tags": [
+        "claude-code",
+        "skills",
+        "knowledge-extraction",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "council-of-high-intelligence",
+      "name": "0xNyk/council-of-high-intelligence",
+      "description": "Multi-AI persona deliberation framework where multiple AI models with distinct perspectives debate and synthesize responses, gaining 161 new stars today.",
+      "language": "Shell",
+      "stars": 2658,
+      "stars_today": 161,
+      "forks": 245,
+      "url": "https://github.com/0xNyk/council-of-high-intelligence",
+      "tags": [
+        "multi-agent",
+        "deliberation",
+        "ensemble",
+        "reasoning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cubesandbox",
+      "name": "TencentCloud/CubeSandbox",
+      "description": "Tencent Cloud's sandbox environment for secure AI agent execution, reflecting enterprise investment in controlled agent runtime infrastructure.",
+      "language": "Rust",
+      "stars": 6816,
+      "stars_today": 79,
+      "forks": 570,
+      "url": "https://github.com/TencentCloud/CubeSandbox",
+      "tags": [
+        "sandbox",
+        "agents",
+        "security",
+        "tencent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deepagents",
+      "name": "langchain-ai/deepagents",
+      "description": "LangChain's agent harness framework at 25.5K stars, providing production-grade agent orchestration and evaluation infrastructure.",
+      "language": "Python",
+      "stars": 25536,
+      "stars_today": 80,
+      "forks": 3595,
+      "url": "https://github.com/langchain-ai/deepagents",
+      "tags": [
+        "langchain",
+        "agents",
+        "orchestration",
+        "framework"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "World Foundation Models",
+      "description": "Orca's Next-State-Prediction paradigm for learning world dynamics in latent space represents a major push toward general-purpose world simulators, with massive community engagement (178 upvotes) signaling broad interest in abstract world representations for robotics, simulation, and embodied AI.",
+      "related_paper_ids": [
+        "orca-world-foundation-model",
+        "memlearner-video-world-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Inference Acceleration Beyond Quantization",
+      "description": "BlockPilot's instance-adaptive speculative decoding and Multi-Block Diffusion's inter-block parallelism represent a diversifying toolkit for inference optimization. The field is moving past simple quantization toward intelligent, adaptive acceleration strategies.",
+      "related_paper_ids": [
+        "blockpilot-speculative-decoding",
+        "multi-block-diffusion-lm"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory, Skills, and Metacognition",
+      "description": "Three complementary papers address different aspects of agent cognitive infrastructure: SkillHone (persistent skill evolution), AFTER (procedural memory benchmarking), and RL with Metacognitive Feedback (uncertainty awareness). The emergence of dedicated benchmarks signals maturation from proof-of-concept to systematic evaluation.",
+      "related_paper_ids": [
+        "skillhone-continual-agent-evolution",
+        "after-procedural-memory",
+        "rl-metacognitive-feedback"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Consolidation",
+      "description": "GitHub trending is dominated by agent infrastructure at all layers: agency-agents (orchestration), herdr (multiplexer), google agents-cli (deployment), OmniRoute (gateway), CubeSandbox (security), and astryx (agent-ready UI). The ecosystem is consolidating around production-grade tooling rather than spawning new categories.",
+      "related_paper_ids": [
+        "dockerless"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "On-Policy Distillation Refinement",
+      "description": "DOPD's advantage-aware dual supervision continues the rapid theoretical maturation of on-policy distillation, building on privilege illusion analysis to deliver more robust teacher-student training across LLM and VLM settings.",
+      "related_paper_ids": [
+        "dopd-dual-on-policy-distillation"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "GGUF-First Model Distribution",
+      "description": "The pattern of immediate GGUF quantization for every notable model release persists across Ornith-1.0, Qwythos-9B, and Gemma-4 variants. Qwythos-9B-GGUF surpassed 1.1M downloads, confirming llama.cpp as the de facto local inference runtime for open-weight models.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-02T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-02T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-02T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
