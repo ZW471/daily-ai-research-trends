@@ -1,0 +1,725 @@
+{
+  "version": "1.0",
+  "date": "2026-07-03",
+  "generated_at": "2026-07-03T15:00:00Z",
+  "summary": {
+    "headline": "Program-as-Weights提出将自然语言规范编译为本地神经制品；agency-agents飙升至12.5万星成为GitHub趋势主导；DeepReinforce AI的Ornith-1.0系列覆盖9B/35B/397B三个规模",
+    "body": "今日研究热点以**Program-as-Weights**领衔，这是哈佛大学Stuart Shieber及其合作者提出的一个雄心勃勃的方案：将自然语言函数规范编译为紧凑的、可本地执行的神经制品——本质上是用微型任务专用模型替代LLM API调用。虽然该论文目前互动量适中（4个赞），但「模糊函数编程」的概念代表了一种真正新颖的编程范式，可能重塑开发者与神经网络能力的交互方式。同日还有两篇基准测试论文：**AnyGroundBench**揭示了视觉语言模型在通用场景与专业领域视频定位之间的性能差距，**AgenticDataBench**则为基于LLM的数据科学智能体提供了首个综合评估框架。\n\n在模型方面，**DeepReinforce AI的Ornith-1.0系列**以9B、35B和397B三个参数规模同时上榜，表现强势。**ZAI的GLM-5.2**以3,256个赞持续领跑，**NVIDIA的LocateAnything-3B**突破100万次下载，证实视觉定位已成为生产级能力。GGUF量化生态仍然是社区模型的主要分发渠道，Qwythos-9B-Claude-Mythos以125万次下载位居榜首。\n\n**GitHub趋势几乎被智能体项目占据**，agency-agents单日暴涨3,032星达到12.5万，superpowers以24.4万星维持霸主地位，一批智能体技能/框架项目（ECC、claude-skills、caveman）同时上榜。AI智能体工具生态似乎正进入整合阶段，基础设施和开发者体验正成为主要差异化因素。",
+    "key_themes": [
+      "fuzzy-function-programming",
+      "agent-benchmarking",
+      "agent-skills-ecosystem",
+      "gguf-model-distribution",
+      "visual-generative-optimization",
+      "specialized-domain-evaluation"
+    ]
+  },
+  "researcher_notes": "**Program-as-Weights是今日的潜力之作。** 尽管互动数据平平（4个赞），这篇来自哈佛的论文提出了一个真正新颖的概念：一种编程范式，将自然语言规范编译为紧凑的神经制品并在本地运行。实际意义重大——无需调用GPT-4或Claude来解析格式错误的JSON或排序搜索结果，而是编译一个专门执行该任务的微型模型，完全本地化、可复现、零API成本。如果编译过程足够可靠且生成的模型确实紧凑，这可能成为软件开发工具链的标准组件。将其定位为「模糊函数编程」而非机器学习技术，这一框架设计很巧妙，有助于推广采用。\n\n**两篇基准测试论文标志着两个关键领域的成熟。** AnyGroundBench聚焦专业领域视频定位，揭示了一个令人不安的事实：在日常场景基准测试上表现良好的VLM，在面对罕见视觉概念和复杂时空动态的专业领域任务时往往失败。这对VLM在医学影像、制造检测或科学分析中的部署有直接影响。与此同时，AgenticDataBench弥补了数据科学智能体缺乏严格评估的空白——这一缺口使得许多「自主数据科学家」产品可以在没有标准化衡量的情况下宣称各种能力。\n\n**Ornith-1.0系列值得关注，是一个新兴的多模态竞争者。** DeepReinforce AI一次性推出覆盖9B、35B和397B参数的完整模型家族，全部基于Qwen 3.5架构并支持图文到文本任务。三个规模同步发布且各有GGUF变体，显示出精心策划的发布策略。35B GGUF变体已有28.4万次下载，表明社区快速采用。Ornith能否在拥挤的Qwen衍生空间中脱颖而出，将取决于其多模态能力和基准性能。\n\n**GitHub的智能体生态系统达到前所未有的密度。** 今日趋势页面基本就是一个智能体基础设施目录：agency-agents（单日3,032星）、superpowers（897）、caveman（926）、ECC（486）、career-ops（372）、codex-plugin-cc（352）。种类多样性值得注意——从完整的智能体平台到token优化技巧，从职业自动化到跨工具集成。OpenAI的codex-plugin-cc（允许从Claude Code使用Codex）代表了一个引人入胜的工具互操作时刻，而JuliusBrussee的caveman（一个token减少技能竟达8.1万星）则表明开发者体验优化可以实现大规模采用。\n\n**视觉生成的分布级奖励是一篇技术上有趣但可能不会得到应有关注的论文。** 核心洞察——图像生成RL中的样本级奖励函数导致奖励黑客、多样性崩溃和视觉异常——非常重要。提出使用分布级奖励而非逐样本奖励的解决方案在理论上优雅，可以提高微调扩散模型的质量。对于任何从事RLHF或生成系统奖励建模的人来说，这篇论文值得跟踪。",
+  "papers": [
+    {
+      "id": "program-as-weights",
+      "title": "Program-as-Weights：模糊函数的编程范式",
+      "authors": [
+        "Wentao Zhang",
+        "Liliana Hotsko",
+        "Woojeong Kim",
+        "Pengyu Nie",
+        "Stuart Shieber"
+      ],
+      "affiliations": [
+        "Harvard University"
+      ],
+      "summary": "提出模糊函数编程：将自然语言函数规范编译为紧凑的、可本地执行的神经制品。这消除了对日志告警、JSON修复或搜索排序等任务调用LLM API的需求，提供本地化、可复现性和成本节约。",
+      "key_findings": [
+        "引入「模糊函数」概念——抵抗纯规则实现但可用自然语言指定的函数",
+        "将自然语言规范编译为无需API依赖即可本地执行的紧凑神经制品",
+        "展示了包括日志重要性告警、格式错误JSON修复和基于意图的搜索排序等实际应用"
+      ],
+      "tags": [
+        "programming-paradigms",
+        "neural-compilation",
+        "fuzzy-functions",
+        "local-inference",
+        "software-engineering"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02512",
+        "huggingface": "https://huggingface.co/papers/2607.02512",
+        "pdf": "https://arxiv.org/pdf/2607.02512"
+      }
+    },
+    {
+      "id": "anygroundbench",
+      "title": "AnyGroundBench：视觉语言模型的专业领域视频定位基准",
+      "authors": [
+        "Rintaro Otsubo",
+        "Ryo Fujii",
+        "Reina Ishikawa",
+        "Taiki Kanaya",
+        "Kanta Sawafuji"
+      ],
+      "affiliations": [
+        "University of Tokyo"
+      ],
+      "summary": "引入专业领域时空视频定位（STVG）评估基准。揭示了VLM在通用日常基准测试与涉及罕见视觉概念和复杂动态的真实世界专业应用之间的关键性能差距。",
+      "key_findings": [
+        "当前VLM评估协议局限于通用基准的零样本评估，忽略了专业领域的失败模式",
+        "模型在面对罕见视觉概念和复杂时空动态时性能显著下降",
+        "证明在无限数据分布上进行穷举预训练是不可行的，领域适应至关重要"
+      ],
+      "tags": [
+        "video-grounding",
+        "vision-language-models",
+        "benchmarking",
+        "specialized-domains",
+        "spatio-temporal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02269",
+        "huggingface": "https://huggingface.co/papers/2607.02269",
+        "pdf": "https://arxiv.org/pdf/2607.02269"
+      }
+    },
+    {
+      "id": "distribution-wise-rewards",
+      "title": "通过分布级奖励优化视觉生成模型",
+      "authors": [
+        "Ruihang Li",
+        "Mengde Xu",
+        "Shuyang Gu",
+        "Leigang Qu",
+        "Fuli Feng"
+      ],
+      "affiliations": [
+        "University of Science and Technology of China"
+      ],
+      "summary": "提出使用分布级奖励而非传统样本级奖励函数来微调视觉生成模型的框架，解决了导致图像多样性下降和视觉异常的奖励黑客问题。",
+      "key_findings": [
+        "视觉生成RL中的样本级奖励函数频繁导致奖励黑客、多样性损失和视觉伪影",
+        "分布级奖励评估与真实世界数据分布的对齐，而非评估单个样本",
+        "在保持图像多样性和质量的同时实现了更好的数据分布对齐"
+      ],
+      "tags": [
+        "visual-generation",
+        "reward-modeling",
+        "reinforcement-learning",
+        "diffusion-models",
+        "reward-hacking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02291",
+        "huggingface": "https://huggingface.co/papers/2607.02291",
+        "pdf": "https://arxiv.org/pdf/2607.02291"
+      }
+    },
+    {
+      "id": "agentic-data-bench",
+      "title": "AgenticDataBench：数据智能体综合基准",
+      "authors": [
+        "Zhaoyan Sun",
+        "Shan Zhong",
+        "Daizhou Wen",
+        "Jiaxing Han",
+        "Guoliang Li"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "引入覆盖完整数据科学工作流的综合基准，用于评估基于LLM的数据科学智能体。弥补了自动化数据密集型任务的智能体缺乏严格评估框架的空白。",
+      "key_findings": [
+        "首个覆盖LLM数据智能体全谱系数据科学工作流的综合基准",
+        "揭示当前数据智能体在处理异构原始数据和复杂分析任务方面的重大差距",
+        "提供标准化评估框架，实现不同数据智能体架构间的公平比较"
+      ],
+      "tags": [
+        "data-science",
+        "benchmarking",
+        "LLM-agents",
+        "automation",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01647",
+        "huggingface": "https://huggingface.co/papers/2607.01647",
+        "pdf": "https://arxiv.org/pdf/2607.01647"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "30亿参数的视觉定位模型，下载量突破100万次，展示了跨领域图像目标和特征定位的生产级能力。",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "visual-grounding",
+        "image-feature-extraction",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1006831,
+        "likes": 2573
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "empero-qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "基于Qwen 3.5架构的GGUF量化社区模型，具备推理能力。以125万次下载领跑下载榜，展示了GGUF作为社区分发格式的主导地位。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "quantized",
+        "qwen3.5",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 1250562,
+        "likes": 1256
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度的OCR特征提取模型，以75.8万次下载和1,653个赞保持强劲增长态势。",
+      "task_type": "feature-extraction",
+      "model_size": "N/A",
+      "tags": [
+        "ocr",
+        "feature-extraction",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 758489,
+        "likes": 1653
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "zai-glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "ZAI",
+      "description": "采用GLM MoE-DSA架构的对话文本生成模型。以3,256个赞领先社区互动，尽管下载量适中，表明性能质量较高。",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "glm",
+        "moe",
+        "conversational",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 176154,
+        "likes": 3256
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5-v1-GGUF",
+      "organization": "社区 (yuxinlu1)",
+      "description": "基于Fable 5和Composer 2.5微调的GGUF量化Gemma 4编码模型，优化用于代码生成和推理任务。61.4万次下载反映出开发者的强劲采用。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "coding",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 614069,
+        "likes": 2573
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen (Alibaba)",
+      "description": "350亿参数MoE模型，30亿活跃参数，专为智能体和多模态任务设计。是Qwen不断扩展的智能体专用模型线的一部分。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "qwen",
+        "moe",
+        "agents",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 39448,
+        "likes": 511
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "Ornith系列的GGUF量化35B多模态模型，基于Qwen 3.5 MoE架构。作为完整9B/35B/397B模型家族发布的一部分。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "gguf",
+        "ornith",
+        "multimodal",
+        "qwen3.5-moe"
+      ],
+      "metrics": {
+        "downloads": 284585,
+        "likes": 658
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic-fable5",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5-v2-GGUF",
+      "organization": "社区 (yuxinlu1)",
+      "description": "Gemma 4的智能体变体，优化用于终端编码智能体工作流。31.4万次下载和963个赞，在使用本地智能体设置的开发者中广受欢迎。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "agentic",
+        "terminal",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 314374,
+        "likes": 963
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4的Pro-DSpark变体，采用deepseek_v4架构进行文本生成。早期采用阶段达8K下载但社区兴趣显著，有303个赞。",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "deepseek-v4"
+      ],
+      "metrics": {
+        "downloads": 8184,
+        "likes": 303
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Krea的快速文生图模型，一个为快速图像生成而设计的涡轮变体。6.9万次下载和462个赞表明其在创意AI领域的采用正在增长。",
+      "task_type": "text-to-image",
+      "model_size": "N/A",
+      "tags": [
+        "text-to-image",
+        "diffusers",
+        "turbo",
+        "creative-ai"
+      ],
+      "metrics": {
+        "downloads": 69788,
+        "likes": 462
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "ornith-1-0-397b",
+      "name": "Ornith-1.0-397B",
+      "organization": "DeepReinforce AI",
+      "description": "Ornith系列的旗舰3970亿参数多模态模型，基于Qwen 3.5 MoE架构。作为家族中最大的模型，已有7.3K次下载且关注度持续增长。",
+      "task_type": "image-text-to-text",
+      "model_size": "397B",
+      "tags": [
+        "ornith",
+        "multimodal",
+        "qwen3.5-moe",
+        "large-scale"
+      ],
+      "metrics": {
+        "downloads": 7358,
+        "likes": 196
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "基于Qwen 3.5 MoE架构构建的面向智能体的多模态模型。早期阶段有1.5K次下载但182个赞，定位于智能体工作流任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": [
+        "agents",
+        "multimodal",
+        "qwen3.5-moe"
+      ],
+      "metrics": {
+        "downloads": 1533,
+        "likes": 182
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "完整的AI代理平台，提供从前端开发到社区管理的专业智能体。单日暴涨3,032星——GitHub趋势最高单日增长——达到12.5万总星数。",
+      "language": "Shell",
+      "stars": 125571,
+      "stars_today": 3032,
+      "forks": 20375,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "ai-agents",
+        "agency",
+        "multi-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "usestrix-strix",
+      "name": "usestrix/strix",
+      "description": "开源AI渗透测试工具，用于发现和修复应用漏洞。以单日2,137星强势趋势，达到3.2万总星数。",
+      "language": "Python",
+      "stars": 32352,
+      "stars_today": 2137,
+      "forks": 3383,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "ai-pentesting",
+        "vulnerability-detection"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "来自港大数据科学实验室的个人AI交易智能体。在学术支持下单日增长939星，达到1.7万总星数。",
+      "language": "Python",
+      "stars": 17372,
+      "stars_today": 939,
+      "forks": 2886,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "ai-agents",
+        "finance",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架和软件开发方法论。以24.4万星的霸主地位和单日897新星维持主导，作为智能体驱动开发的参考实现。",
+      "language": "Shell",
+      "stars": 244490,
+      "stars_today": 897,
+      "forks": 21689,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "dev-methodology",
+        "framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "caveman",
+      "name": "JuliusBrussee/caveman",
+      "description": "Claude Code技能，通过简化通信模式减少65%的token用量。单日增长926星达8.1万总星，展示了对智能体效率工具的巨大需求。",
+      "language": "JavaScript",
+      "stars": 81069,
+      "stars_today": 926,
+      "forks": 4534,
+      "url": "https://github.com/JuliusBrussee/caveman",
+      "tags": [
+        "token-optimization",
+        "claude-code",
+        "agent-skills",
+        "efficiency"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Nous Research的个人AI智能体，随用户一起成长。20.8万星，单日新增829星，是GitHub上最高星数的智能体项目之一。",
+      "language": "Python",
+      "stars": 208075,
+      "stars_today": 829,
+      "forks": 37860,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "personal-agent",
+        "nous-research",
+        "adaptive-ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-video-use",
+      "name": "browser-use/video-use",
+      "description": "由编码智能体驱动的视频编辑，将browser-use生态扩展到多媒体领域。1.38万星，单日新增554星。",
+      "language": "Python",
+      "stars": 13837,
+      "stars_today": 554,
+      "forks": 1695,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "video-editing",
+        "coding-agents",
+        "browser-use",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc",
+      "name": "affaan-m/ECC",
+      "description": "智能体运行环境性能优化系统，涵盖技能、本能、记忆、安全和研究优先开发。22.5万星，单日新增486星。",
+      "language": "JavaScript",
+      "stars": 225221,
+      "stars_today": 486,
+      "forks": 34460,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-harness",
+        "optimization",
+        "developer-tools",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "career-ops",
+      "name": "santifer/career-ops",
+      "description": "基于Claude Code构建的AI驱动求职系统，具有14种技能模式、Go仪表盘和PDF生成功能。5.7万星，单日新增372星。",
+      "language": "JavaScript",
+      "stars": 57881,
+      "stars_today": 372,
+      "forks": 11394,
+      "url": "https://github.com/santifer/career-ops",
+      "tags": [
+        "job-search",
+        "claude-code",
+        "automation",
+        "career"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "codex-plugin-cc",
+      "name": "openai/codex-plugin-cc",
+      "description": "OpenAI官方插件，允许从Claude Code使用Codex进行代码审查和任务委托。跨公司工具互操作性的典型案例。2.26万星，单日新增352星。",
+      "language": "JavaScript",
+      "stars": 22660,
+      "stars_today": 352,
+      "forks": 1378,
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "tags": [
+        "openai",
+        "codex",
+        "claude-code",
+        "interoperability"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic的智能编码工具，驻留于终端，理解代码库，通过自然语言命令帮助更快编码。13.5万星，单日新增202星。",
+      "language": "Python",
+      "stars": 135530,
+      "stars_today": 202,
+      "forks": 21841,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": [
+        "agentic-coding",
+        "cli",
+        "anthropic",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use",
+      "name": "browser-use/browser-use",
+      "description": "让网站对AI智能体可访问，实现在线任务自动化。成熟项目达10.2万星，单日新增205星。",
+      "language": "Python",
+      "stars": 102245,
+      "stars_today": 205,
+      "forks": 11339,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": [
+        "browser-automation",
+        "ai-agents",
+        "web-scraping"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow",
+      "name": "langflow-ai/langflow",
+      "description": "构建和部署AI智能体及工作流的强大工具。作为最高星数AI工具之一达15万星，单日新增117星。",
+      "language": "Python",
+      "stars": 150767,
+      "stars_today": 117,
+      "forks": 9397,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": [
+        "workflow-builder",
+        "ai-agents",
+        "no-code",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-agents-cli",
+      "name": "google/agents-cli",
+      "description": "Google的CLI和技能工具，将编码助手变成在Google Cloud上创建、评估和部署AI智能体的专家。4,663星，单日新增115星。",
+      "language": "Python",
+      "stars": 4663,
+      "stars_today": 115,
+      "forks": 499,
+      "url": "https://github.com/google/agents-cli",
+      "tags": [
+        "google-cloud",
+        "agents",
+        "cli",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "name": "ChromeDevTools/chrome-devtools-mcp",
+      "description": "通过MCP协议为编码智能体集成Chrome开发者工具。使AI智能体能够与浏览器开发者工具交互。4.5万星，单日新增104星。",
+      "language": "TypeScript",
+      "stars": 45108,
+      "stars_today": 104,
+      "forks": 2935,
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "tags": [
+        "devtools",
+        "mcp",
+        "browser",
+        "agent-tools"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "模糊函数编程",
+      "description": "Program-as-Weights引入了将自然语言函数规范编译为紧凑神经制品的概念，将神经计算定位为一等编程原语而非外部API依赖。",
+      "related_paper_ids": [
+        "program-as-weights"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基准测试成熟化",
+      "description": "AnyGroundBench和AgenticDataBench共同表明AI社区正从概念验证式的智能体演示转向严格的标准化评估，这通常是能力快速提升的前兆。",
+      "related_paper_ids": [
+        "anygroundbench",
+        "agentic-data-bench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能生态爆发",
+      "description": "GitHub趋势被智能体基础设施项目压倒性主导——技能框架、运行环境优化器、跨工具插件——表明智能体开发者体验层正在整合为成熟的生态系统。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "GGUF成为社区分发标准",
+      "description": "GGUF量化模型继续主导HuggingFace趋势，Qwythos、Ornith和Gemma变体均以GGUF格式分发。该格式已成为本地模型部署的事实标准。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "多模态模型家族发布",
+      "description": "DeepReinforce AI同时在9B、35B和397B规模发布Ornith-1.0，代表了发布完整模型家族而非单个检查点的成熟模式。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "分布级奖励优化",
+      "description": "从样本级奖励转向分布级奖励用于视觉生成，解决了根本性的奖励黑客问题，对所有生成模态的RLHF都有启示意义。",
+      "related_paper_ids": [
+        "distribution-wise-rewards"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

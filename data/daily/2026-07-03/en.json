@@ -1,0 +1,725 @@
+{
+  "version": "1.0",
+  "date": "2026-07-03",
+  "generated_at": "2026-07-03T15:00:00Z",
+  "summary": {
+    "headline": "Program-as-Weights proposes compiling natural-language specs into local neural artifacts; agency-agents explodes to 125K stars as agent skills ecosystem dominates GitHub trending; Ornith-1.0 family from DeepReinforce AI saturates model charts across 9B/35B/397B tiers",
+    "body": "Today's research landscape is led by **Program-as-Weights**, an ambitious proposal from Harvard's Stuart Shieber and collaborators to compile natural-language function specifications into compact, locally-executable neural artifacts — essentially replacing LLM API calls with tiny task-specific models. While the paper has modest engagement so far (4 upvotes), the concept of 'fuzzy-function programming' represents a genuinely novel programming paradigm that could reshape how developers interact with neural capabilities. The day also sees two benchmark papers: **AnyGroundBench** exposes the gap between VLM performance on general vs. specialized-domain video grounding, and **AgenticDataBench** provides the first comprehensive evaluation framework for LLM-based data science agents.\n\nOn the model front, the **Ornith-1.0 family from DeepReinforce AI** dominates with entries at 9B, 35B, and 397B parameter scales, all trending simultaneously. **GLM-5.2** from ZAI continues its strong showing with 3,256 likes, while **NVIDIA's LocateAnything-3B** crosses 1M downloads, confirming visual grounding as a production-ready capability. The GGUF quantization ecosystem remains the primary distribution channel for community models, with Qwythos-9B-Claude-Mythos leading at 1.25M downloads.\n\n**GitHub trending is overwhelmingly agent-focused**, with agency-agents gaining 3,032 stars in a single day to reach 125K, superpowers maintaining its dominant 244K-star position, and a cluster of agent skills/harness projects (ECC, claude-skills, caveman) all trending simultaneously. The AI agent tooling space appears to be entering a consolidation phase where infrastructure and developer experience are becoming the primary differentiators.",
+    "key_themes": [
+      "fuzzy-function-programming",
+      "agent-benchmarking",
+      "agent-skills-ecosystem",
+      "gguf-model-distribution",
+      "visual-generative-optimization",
+      "specialized-domain-evaluation"
+    ]
+  },
+  "researcher_notes": "**Program-as-Weights is the sleeper hit of the day.** Despite modest engagement numbers (4 upvotes), this paper from Harvard proposes something genuinely novel: a programming paradigm where natural-language specifications are compiled into compact neural artifacts that run locally. The practical implications are significant — instead of calling GPT-4 or Claude to parse a malformed JSON or rank search results, you compile a tiny model that does exactly that task, with full locality, reproducibility, and no API costs. If the compilation process can be made reliable and the resulting models are genuinely compact, this could become a standard part of the software development toolkit. The framing as 'fuzzy-function programming' is clever and may help adoption by positioning it as a programming concept rather than an ML technique.\n\n**The benchmarking papers signal maturation in two critical areas.** AnyGroundBench's focus on specialized-domain video grounding exposes an uncomfortable truth: VLMs that perform well on daily-life benchmarks often fail on domain-specific tasks with rare visual concepts and complex spatiotemporal dynamics. This has direct implications for deploying VLMs in medical imaging, manufacturing inspection, or scientific analysis. Meanwhile, AgenticDataBench addresses the lack of rigorous evaluation for data science agents — a gap that has allowed many 'autonomous data scientist' products to make claims without standardized measurement.\n\n**The Ornith-1.0 family deserves attention as an emerging multimodal contender.** DeepReinforce AI has launched a full model family spanning 9B, 35B, and 397B parameters, all based on Qwen 3.5 architectures and supporting image-text-to-text tasks. The simultaneous release across three scales with GGUF variants for each suggests a well-planned launch strategy. The 35B GGUF variant already has 284K downloads, indicating rapid community adoption. Whether Ornith can differentiate from the crowded Qwen-derivative space will depend on its multimodal capabilities and benchmark performance.\n\n**GitHub's agent ecosystem is reaching unprecedented density.** Today's trending page is essentially a catalog of agent infrastructure: agency-agents (3,032 stars today), superpowers (897), caveman (926), ECC (486), career-ops (372), codex-plugin-cc (352). The diversity is notable — from complete agency platforms to token-optimization tricks, from career automation to cross-tool integration. The emergence of OpenAI's codex-plugin-cc (allowing Codex use from Claude Code) represents a fascinating moment of tool interoperability, while JuliusBrussee's caveman (81K stars for a token reduction skill) shows that developer experience optimizations can achieve massive adoption.\n\n**Distribution-wise rewards for visual generation is a technically interesting paper that may not get the attention it deserves.** The core insight — that sample-wise reward functions in RL for image generation lead to reward hacking, diversity collapse, and visual anomalies — is important. The proposed fix of using distribution-level rewards rather than per-sample rewards is theoretically elegant and could improve the quality of fine-tuned diffusion models. This paper is worth tracking for anyone working on RLHF or reward modeling for generative systems.",
+  "papers": [
+    {
+      "id": "program-as-weights",
+      "title": "Program-as-Weights: A Programming Paradigm for Fuzzy Functions",
+      "authors": [
+        "Wentao Zhang",
+        "Liliana Hotsko",
+        "Woojeong Kim",
+        "Pengyu Nie",
+        "Stuart Shieber"
+      ],
+      "affiliations": [
+        "Harvard University"
+      ],
+      "summary": "Proposes fuzzy-function programming: compiling natural-language function specifications into compact, locally-executable neural artifacts. This eliminates the need for LLM API calls for tasks like log alerting, JSON repair, or search ranking, providing locality, reproducibility, and cost savings.",
+      "key_findings": [
+        "Introduces the 'fuzzy-function' concept — functions that resist clean rule-based implementation but can be specified in natural language",
+        "Compiles natural-language specs into compact neural artifacts that execute locally without API dependencies",
+        "Demonstrates practical applications including log line importance alerting, malformed JSON repair, and intent-based search ranking"
+      ],
+      "tags": [
+        "programming-paradigms",
+        "neural-compilation",
+        "fuzzy-functions",
+        "local-inference",
+        "software-engineering"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02512",
+        "huggingface": "https://huggingface.co/papers/2607.02512",
+        "pdf": "https://arxiv.org/pdf/2607.02512"
+      }
+    },
+    {
+      "id": "anygroundbench",
+      "title": "AnyGroundBench: A Specialized-Domain Benchmark for Video Grounding in Vision-Language Models",
+      "authors": [
+        "Rintaro Otsubo",
+        "Ryo Fujii",
+        "Reina Ishikawa",
+        "Taiki Kanaya",
+        "Kanta Sawafuji"
+      ],
+      "affiliations": [
+        "University of Tokyo"
+      ],
+      "summary": "Introduces a benchmark for evaluating spatio-temporal video grounding (STVG) in specialized domains. Exposes the critical disconnect between VLM performance on general daily-life benchmarks and real-world specialized applications involving rare visual concepts and complex dynamics.",
+      "key_findings": [
+        "Current VLM evaluation protocols are confined to zero-shot assessments on general benchmarks, missing specialized-domain failures",
+        "Models encounter significant performance drops when facing rare visual concepts and complex spatio-temporal dynamics",
+        "Demonstrates that exhaustive pre-training across infinite distributions is infeasible, making domain adaptation essential"
+      ],
+      "tags": [
+        "video-grounding",
+        "vision-language-models",
+        "benchmarking",
+        "specialized-domains",
+        "spatio-temporal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02269",
+        "huggingface": "https://huggingface.co/papers/2607.02269",
+        "pdf": "https://arxiv.org/pdf/2607.02269"
+      }
+    },
+    {
+      "id": "distribution-wise-rewards",
+      "title": "Optimizing Visual Generative Models via Distribution-wise Rewards",
+      "authors": [
+        "Ruihang Li",
+        "Mengde Xu",
+        "Shuyang Gu",
+        "Leigang Qu",
+        "Fuli Feng"
+      ],
+      "affiliations": [
+        "University of Science and Technology of China"
+      ],
+      "summary": "Presents a framework for fine-tuning visual generative models using distribution-wise rewards instead of conventional sample-wise reward functions, addressing reward hacking that degrades image diversity and introduces visual anomalies.",
+      "key_findings": [
+        "Sample-wise reward functions in RL for visual generation frequently cause reward hacking, diversity loss, and visual artifacts",
+        "Distribution-wise rewards evaluate alignment with real-world data distributions rather than individual samples",
+        "Achieves better alignment with data distributions while maintaining image diversity and quality"
+      ],
+      "tags": [
+        "visual-generation",
+        "reward-modeling",
+        "reinforcement-learning",
+        "diffusion-models",
+        "reward-hacking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02291",
+        "huggingface": "https://huggingface.co/papers/2607.02291",
+        "pdf": "https://arxiv.org/pdf/2607.02291"
+      }
+    },
+    {
+      "id": "agentic-data-bench",
+      "title": "AgenticDataBench: A Comprehensive Benchmark for Data Agents",
+      "authors": [
+        "Zhaoyan Sun",
+        "Shan Zhong",
+        "Daizhou Wen",
+        "Jiaxing Han",
+        "Guoliang Li"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Introduces a comprehensive benchmark for evaluating LLM-based data science agents across the full data science workflow. Addresses the lack of rigorous evaluation frameworks for agents that automate data-intensive tasks.",
+      "key_findings": [
+        "First comprehensive benchmark covering the full spectrum of data science workflows for LLM-based agents",
+        "Reveals significant gaps in current data agents' ability to handle heterogeneous raw data and complex analytical tasks",
+        "Provides standardized evaluation enabling fair comparison across different data agent architectures"
+      ],
+      "tags": [
+        "data-science",
+        "benchmarking",
+        "LLM-agents",
+        "automation",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01647",
+        "huggingface": "https://huggingface.co/papers/2607.01647",
+        "pdf": "https://arxiv.org/pdf/2607.01647"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B-parameter visual grounding model that has crossed 1M downloads, demonstrating production-ready capability for locating objects and features in images across diverse domains.",
+      "task_type": "image-feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "visual-grounding",
+        "image-feature-extraction",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1006831,
+        "likes": 2573
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "empero-qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI",
+      "description": "GGUF-quantized community model based on Qwen 3.5 architecture with reasoning capabilities. Leads the download charts at 1.25M downloads, demonstrating the dominance of GGUF as the community distribution format.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "quantized",
+        "qwen3.5",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 1250562,
+        "likes": 1256
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's feature extraction model for OCR tasks, continuing its strong adoption trajectory with 758K downloads and 1,653 likes.",
+      "task_type": "feature-extraction",
+      "model_size": "N/A",
+      "tags": [
+        "ocr",
+        "feature-extraction",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 758489,
+        "likes": 1653
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "zai-glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "ZAI",
+      "description": "A conversational text generation model using the GLM MoE-DSA architecture. Leads in community engagement with 3,256 likes despite moderate downloads, suggesting high-quality performance.",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "glm",
+        "moe",
+        "conversational",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 176154,
+        "likes": 3256
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-coder-fable5",
+      "name": "Gemma-4-12B-Coder-Fable5-Composer2.5-v1-GGUF",
+      "organization": "Community (yuxinlu1)",
+      "description": "GGUF-quantized Gemma 4 coding model fine-tuned with Fable 5 and Composer 2.5, optimized for code generation and reasoning tasks. 614K downloads reflect strong developer adoption.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "coding",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 614069,
+        "likes": 2573
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Qwen (Alibaba)",
+      "description": "A 35B-parameter MoE model with 3B active parameters, designed for agent and multimodal tasks. Part of Qwen's expanding agent-focused model line.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (3B active)",
+      "tags": [
+        "qwen",
+        "moe",
+        "agents",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 39448,
+        "likes": 511
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "GGUF-quantized 35B multimodal model from the Ornith family, based on Qwen 3.5 MoE architecture. Part of a full 9B/35B/397B model family launch.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "gguf",
+        "ornith",
+        "multimodal",
+        "qwen3.5-moe"
+      ],
+      "metrics": {
+        "downloads": 284585,
+        "likes": 658
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic-fable5",
+      "name": "Gemma-4-12B-Agentic-Fable5-Composer2.5-v2-GGUF",
+      "organization": "Community (yuxinlu1)",
+      "description": "Agentic variant of Gemma 4 optimized for terminal-based coding agent workflows. 314K downloads with 963 likes, popular among developers using local agent setups.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "agentic",
+        "terminal",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 314374,
+        "likes": 963
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek",
+      "description": "The Pro-DSpark variant of DeepSeek V4, featuring the deepseek_v4 architecture for text generation. Early-stage adoption at 8K downloads but significant community interest with 303 likes.",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "deepseek",
+        "text-generation",
+        "deepseek-v4"
+      ],
+      "metrics": {
+        "downloads": 8184,
+        "likes": 303
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Fast text-to-image model from Krea, a turbo variant designed for rapid image generation. 69K downloads with 462 likes indicate growing adoption in the creative AI space.",
+      "task_type": "text-to-image",
+      "model_size": "N/A",
+      "tags": [
+        "text-to-image",
+        "diffusers",
+        "turbo",
+        "creative-ai"
+      ],
+      "metrics": {
+        "downloads": 69788,
+        "likes": 462
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "ornith-1-0-397b",
+      "name": "Ornith-1.0-397B",
+      "organization": "DeepReinforce AI",
+      "description": "The flagship 397B parameter multimodal model in the Ornith family, based on Qwen 3.5 MoE architecture. The largest model in the family with 7.3K downloads and growing interest.",
+      "task_type": "image-text-to-text",
+      "model_size": "397B",
+      "tags": [
+        "ornith",
+        "multimodal",
+        "qwen3.5-moe",
+        "large-scale"
+      ],
+      "metrics": {
+        "downloads": 7358,
+        "likes": 196
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "An agent-focused multimodal model built on Qwen 3.5 MoE architecture. Early-stage with 1.5K downloads but 182 likes, positioned for agent workflow tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": [
+        "agents",
+        "multimodal",
+        "qwen3.5-moe"
+      ],
+      "metrics": {
+        "downloads": 1533,
+        "likes": 182
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "A complete AI agency platform offering specialized agents from frontend development to community management. Gained 3,032 stars today — the highest single-day gain on GitHub trending — reaching 125K total stars.",
+      "language": "Shell",
+      "stars": 125571,
+      "stars_today": 3032,
+      "forks": 20375,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "ai-agents",
+        "agency",
+        "multi-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "usestrix-strix",
+      "name": "usestrix/strix",
+      "description": "Open-source AI penetration testing tool for finding and fixing application vulnerabilities. Trending strongly at 2,137 stars today, reaching 32K total stars.",
+      "language": "Python",
+      "stars": 32352,
+      "stars_today": 2137,
+      "forks": 3383,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "security",
+        "ai-pentesting",
+        "vulnerability-detection"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "Personal AI trading agent from HKU Data Science lab. Gained 939 stars today with strong academic backing, reaching 17K total stars.",
+      "language": "Python",
+      "stars": 17372,
+      "stars_today": 939,
+      "forks": 2886,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "ai-agents",
+        "finance",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "Agentic skills framework and software development methodology. Maintains dominant 244K-star position with 897 new stars today, serving as the reference implementation for agent-driven development.",
+      "language": "Shell",
+      "stars": 244490,
+      "stars_today": 897,
+      "forks": 21689,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "dev-methodology",
+        "framework"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "caveman",
+      "name": "JuliusBrussee/caveman",
+      "description": "Claude Code skill that reduces token usage by 65% through simplified communication patterns. Gained 926 stars today to reach 81K total, demonstrating massive demand for agent efficiency tooling.",
+      "language": "JavaScript",
+      "stars": 81069,
+      "stars_today": 926,
+      "forks": 4534,
+      "url": "https://github.com/JuliusBrussee/caveman",
+      "tags": [
+        "token-optimization",
+        "claude-code",
+        "agent-skills",
+        "efficiency"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Personal AI agent from Nous Research that grows with the user. 208K stars with 829 new today, one of the most-starred agent projects on GitHub.",
+      "language": "Python",
+      "stars": 208075,
+      "stars_today": 829,
+      "forks": 37860,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "personal-agent",
+        "nous-research",
+        "adaptive-ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-video-use",
+      "name": "browser-use/video-use",
+      "description": "Video editing powered by coding agents, extending the browser-use ecosystem to multimedia. 13.8K stars with 554 new today.",
+      "language": "Python",
+      "stars": 13837,
+      "stars_today": 554,
+      "forks": 1695,
+      "url": "https://github.com/browser-use/video-use",
+      "tags": [
+        "video-editing",
+        "coding-agents",
+        "browser-use",
+        "multimedia"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc",
+      "name": "affaan-m/ECC",
+      "description": "Agent harness performance optimization system covering skills, instincts, memory, security, and research-first development. 225K stars with 486 new today.",
+      "language": "JavaScript",
+      "stars": 225221,
+      "stars_today": 486,
+      "forks": 34460,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-harness",
+        "optimization",
+        "developer-tools",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "career-ops",
+      "name": "santifer/career-ops",
+      "description": "AI-powered job search system built on Claude Code with 14 skill modes, Go dashboard, and PDF generation. 57K stars with 372 new today.",
+      "language": "JavaScript",
+      "stars": 57881,
+      "stars_today": 372,
+      "forks": 11394,
+      "url": "https://github.com/santifer/career-ops",
+      "tags": [
+        "job-search",
+        "claude-code",
+        "automation",
+        "career"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "codex-plugin-cc",
+      "name": "openai/codex-plugin-cc",
+      "description": "Official OpenAI plugin enabling Codex use from Claude Code for code review and task delegation. Notable for cross-company tool interoperability. 22.6K stars with 352 new today.",
+      "language": "JavaScript",
+      "stars": 22660,
+      "stars_today": 352,
+      "forks": 1378,
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "tags": [
+        "openai",
+        "codex",
+        "claude-code",
+        "interoperability"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic's agentic coding tool that lives in the terminal, understands codebases, and helps code faster through natural language commands. 135K stars with 202 new today.",
+      "language": "Python",
+      "stars": 135530,
+      "stars_today": 202,
+      "forks": 21841,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": [
+        "agentic-coding",
+        "cli",
+        "anthropic",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use",
+      "name": "browser-use/browser-use",
+      "description": "Makes websites accessible for AI agents, enabling online task automation. Established project at 102K stars with 205 new today.",
+      "language": "Python",
+      "stars": 102245,
+      "stars_today": 205,
+      "forks": 11339,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": [
+        "browser-automation",
+        "ai-agents",
+        "web-scraping"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow",
+      "name": "langflow-ai/langflow",
+      "description": "Powerful tool for building and deploying AI-powered agents and workflows. One of the most-starred AI tools at 150K stars with 117 new today.",
+      "language": "Python",
+      "stars": 150767,
+      "stars_today": 117,
+      "forks": 9397,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": [
+        "workflow-builder",
+        "ai-agents",
+        "no-code",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-agents-cli",
+      "name": "google/agents-cli",
+      "description": "Google's CLI and skills for turning coding assistants into experts at creating, evaluating, and deploying AI agents on Google Cloud. 4.6K stars with 115 new today.",
+      "language": "Python",
+      "stars": 4663,
+      "stars_today": 115,
+      "forks": 499,
+      "url": "https://github.com/google/agents-cli",
+      "tags": [
+        "google-cloud",
+        "agents",
+        "cli",
+        "deployment"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "name": "ChromeDevTools/chrome-devtools-mcp",
+      "description": "Chrome DevTools integration for coding agents via MCP protocol. Enables AI agents to interact with browser developer tools. 45K stars with 104 new today.",
+      "language": "TypeScript",
+      "stars": 45108,
+      "stars_today": 104,
+      "forks": 2935,
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "tags": [
+        "devtools",
+        "mcp",
+        "browser",
+        "agent-tools"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Fuzzy Function Programming",
+      "description": "Program-as-Weights introduces the concept of compiling natural-language function specifications into compact neural artifacts, positioning neural computation as a first-class programming primitive rather than an external API dependency.",
+      "related_paper_ids": [
+        "program-as-weights"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Benchmarking Maturation",
+      "description": "Both AnyGroundBench and AgenticDataBench signal that the AI community is moving from proof-of-concept agent demonstrations to rigorous, standardized evaluation, which typically precedes rapid capability improvement.",
+      "related_paper_ids": [
+        "anygroundbench",
+        "agentic-data-bench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skills Ecosystem Explosion",
+      "description": "GitHub trending is overwhelmingly dominated by agent infrastructure projects — skills frameworks, harness optimizers, cross-tool plugins — suggesting the agent developer experience layer is consolidating into a mature ecosystem.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "GGUF as Community Distribution Standard",
+      "description": "GGUF-quantized models continue to dominate HuggingFace trending, with Qwythos, Ornith, and Gemma variants all distributed in GGUF format. The format has become the de facto standard for local model deployment.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Multimodal Model Family Launches",
+      "description": "DeepReinforce AI's simultaneous launch of Ornith-1.0 across 9B, 35B, and 397B scales represents the maturing pattern of releasing complete model families rather than individual checkpoints.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Distribution-Level Reward Optimization",
+      "description": "Moving beyond sample-wise to distribution-wise rewards for visual generation addresses fundamental reward hacking issues, with implications for RLHF across all generative modalities.",
+      "related_paper_ids": [
+        "distribution-wise-rewards"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-03T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
