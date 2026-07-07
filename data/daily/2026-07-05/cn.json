@@ -1,0 +1,1094 @@
+{
+  "version": "1.0",
+  "date": "2026-07-05",
+  "generated_at": "2026-07-05T23:00:00Z",
+  "summary": {
+    "headline": "Program-as-Weights将自然语言规范编译为可本地执行的神经制品，以107个赞登顶HF Papers；智能体记忆研究（AgenticSTS、AutoMem、SkillCoach、DuoMem）趋于一致，将记忆视为可训练的有界技能，而非不断膨胀的上下文；混合注意力与流匹配相关工作推动长上下文与扩散模型效率提升；GitHub趋势榜则被Claude Code／智能体技能（agent-skills）仓库的病毒式浪潮所主导。",
+    "body": "7月5日这一周期（HF Papers数据反映的是7月3日周末的补充结果）以**Program-as-Weights**为核心——这是一支哈佛大学附属团队提出的新范式，它将模糊的、以自然语言描述的功能编译为紧凑的神经网络权重，使其在本地运行，而非在推理时调用LLM API，直接针对将LLM当作胶水代码所带来的成本、延迟和可复现性问题。紧随其后的是一组将智能体记忆重新定义为一等可训练能力的论文：AgenticSTS提出了一种基于类型化检索而非不断增长的记录的有界记忆合约；AutoMem将文件系统操作提升为模型学会管理的记忆动作；DuoMem将程序性记忆蒸馏到可在设备端运行的学生模型中；SkillCoach则引入了用于技能使用评估的自我进化评分标准（rubric）。这些论文共同表明，该领域正从「把一切都塞进上下文」转向结构化、可评估、且往往可蒸馏的记忆系统。\n\n第二组论文聚焦于智能体的评估基础设施：EvoPolicyGym将自主策略进化与开放式软件工程区分开来；AgenticDataBench为数据科学智能体提供基准测试；PACE提出了一种廉价的代理指标，用于替代SWE-Bench、GAIA等昂贵的智能体基准；DiscoBench则研究搜索智能体应在何时提出澄清性问题，而非盲目猜测。在架构与生成方面，《Morphing into Hybrid Attention Models》探讨了在将Transformer转换为混合线性注意力模型时，哪些层应保留全注意力；Multi-Resolution Flow Matching通过分阶段采样实现了无需训练即可获得5倍以上的扩散加速；WorldDirector则将语义运动编排与像素渲染解耦，用于构建可控的视频世界模型。\n\n在模型发布方面，智谱的GLM-5.2、百度的Unlimited-OCR、腾讯的Hy3（混元）、NVIDIA的Qwen3.6-27B-NVFP4量化版本与LocateAnything-3B、DeepSeek的V4-Pro-DSpark，以及阿里巴巴通义千问（Qwen）的AgentWorld-35B-A3B均呈现出强劲的趋势活跃度，反映出中国实验室持续快速迭代，同时NVIDIA的量化工具链也在同步演进。GitHub趋势榜则明显被非论文信号所主导：一波Claude Code与智能体技能（agent-skills）相关仓库（claude-skills、agent-skills、taste-skill、system_prompts_leaks、codex-plugin-cc）录得本周期内最大的单日star增长，表明围绕编程智能体的工具链与提示词／技能生态系统，其发展速度已经超过了底层模型发布本身。",
+    "key_themes": [
+      "agent-memory-as-trainable-skill",
+      "fuzzy-function-neural-compilation",
+      "agentic-benchmark-proxies",
+      "hybrid-attention-efficiency",
+      "diffusion-and-visual-generation-efficiency",
+      "claude-code-agent-skills-ecosystem"
+    ]
+  },
+  "researcher_notes": "本周期在概念上最有趣的成果是**Program-as-Weights**，它将「模糊函数」编程——即日志告警、JSON修复、基于意图的排序等难以用简洁规则实现的任务——重新定义为一个编译目标，而非推理时的LLM调用。通过将自然语言规范编译为紧凑的、可本地执行的神经制品，作者们直接针对将每一个模糊决策都外包给托管LLM API所带来的本地性、可复现性和成本问题。这与提示工程或蒸馏有着本质上的不同：它将神经网络视为类似于编译后二进制文件的制品，如果这一思路能够推广到论文基准任务之外的场景，那么它对边缘部署和可审计性的意义将非常重大。\n\n四篇独立论文——**AgenticSTS**、**AutoMem**、**DuoMem**和**SkillCoach**——呈现出一个引人注目的共同模式：它们都将记忆视为一种有界的、结构化的、且通常可训练的技能，而非无限增长的追加式日志。AgenticSTS的核心洞见是，记忆是「一份关于未来每个决策被允许看到什么的合约」，它以类型化检索取代了朴素的上下文拼接，解决了长时间跨度智能体中一个真实存在的失败模式——一旦各个记忆组件的信号被混杂进一个杂乱的提示词中，就再也无法单独分离出来。AutoMem则更进一步，将文件系统操作提升为模型自身学会运用的一等记忆动作，这一思路直接借鉴了认知科学中「元记忆」（metamemory）的概念。DuoMem面向设备端记忆智能体的双空间蒸馏则是这一思路在实践层面的镜像：它探讨的问题是，一旦大型教师模型习得了程序性记忆能力，这种能力如何才能在压缩到资源受限的学生模型后依然存活。综合来看，这些工作勾勒出一个正在兴起的子领域——智能体记忆工程——它正从零散的上下文窗口技巧，走向有原则、可评估的记忆架构。\n\n在评估方法上，**PACE**提出用一小组廉价的非智能体能力测试来预测昂贵的智能体基准（SWE-Bench、GAIA）表现，这是对一个真实瓶颈的务实回应：完整的智能体评估可能耗费数千美元并需要数天时间。如果这类代理指标在评估新模型家族、面对分布偏移时依然成立，它们将能显著降低智能体研究迭代的成本。这与EvoPolicyGym致力于将自主策略进化从通用软件工程进展中清晰剥离出来、以及DiscoBench聚焦于深度搜索智能体的澄清性提问行为，形成了互补——这三篇论文共同指向一种日益成熟的共识：当今的智能体基准将过多能力混合成单一的标量分数，该领域需要更锐利、更细分的度量工具，才能让进一步扩大智能体训练规模所投入的算力真正物有所值。\n\n在架构方面，《Morphing into Hybrid Attention Models》探讨了一个确实尚未被充分研究的设计问题：现有的Transformer到混合注意力的转换方法在选择哪些层保留全注意力时，依赖的是孤立看待每层重要性的启发式方法（固定模式、逐层评分），而忽略了各层之间的相互依赖关系。这类问题虽不起眼，却至关重要——它决定了混合／线性注意力所能带来的长上下文效率提升是否会被白白浪费。与Multi-Resolution Flow Matching无需训练的分阶段采样扩散加速方法（宣称在不重新训练的情况下实现5倍以上加速）相呼应，本周期效率类论文的共同主线是：从现有的预训练模型中榨取更多吞吐量，而非从零训练新模型——这是对前沿预训练成本不断攀升的一种合理回应。\n\n最后，本周期的**GitHub趋势**信号本身就值得特别指出：claude-skills、agent-skills、taste-skill和system_prompts_leaks等仓库录得了本周期内最大的单日star增长（每日600至1,458颗star），远超任何单篇论文或单个模型的互动量。这表明，围绕编程智能体工具链的社区层——技能、插件、泄露的系统提示词，以及herdr、gastown这类智能体多路复用工具——目前是一个比论文发表或模型发布更快演进、也更受关注的领域，值得作为独立于研究文献之外的一条趋势单独追踪。",
+  "papers": [
+    {
+      "id": "program-as-weights",
+      "title": "Program-as-Weights：模糊函数的编程范式",
+      "authors": [
+        "Wentao Zhang",
+        "Liliana Hotsko",
+        "Woojeong Kim",
+        "Pengyu Nie",
+        "Stuart Shieber et al."
+      ],
+      "affiliations": [
+        "Harvard University"
+      ],
+      "summary": "该论文提出模糊函数编程，将日志告警、JSON修复等任务的自然语言规范编译为紧凑的、可本地执行的神经制品，而非在推理时调用LLM API，从而解决了将托管LLM当作临时胶水代码所带来的本地性、可复现性和成本问题。",
+      "key_findings": [
+        "提出Program-as-Weights方法，将自然语言函数规范编译为可本地执行的小型神经制品",
+        "针对当前依赖LLM API处理的日常模糊编程任务（日志告警、格式错误的JSON修复、基于意图的排序）",
+        "旨在相较于托管LLM推理，保持本地性和可复现性，并降低单次调用成本"
+      ],
+      "tags": [
+        "program-synthesis",
+        "llm-compilation",
+        "efficiency",
+        "fuzzy-functions"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 107,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02512",
+        "huggingface": "https://huggingface.co/papers/2607.02512",
+        "pdf": "https://arxiv.org/pdf/2607.02512"
+      }
+    },
+    {
+      "id": "agenticsts-bounded-memory",
+      "title": "AgenticSTS：面向长时间跨度LLM智能体的有界记忆测试平台",
+      "authors": [
+        "Xiangchen Cheng",
+        "Yunwei Jiang",
+        "Jianwen Sun",
+        "Zizhen Li",
+        "Chuanhao Li et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "AgenticSTS为长时间跨度的LLM智能体构建了一种有界记忆合约：每一个决策都基于由类型化检索重新组装的全新提示词做出，而非依赖不断追加的原始观测与工具调用记录。该测试平台能够单独分离出各个记忆组件的影响，而这些影响在朴素的追加式上下文中原本是混杂在一起、难以区分的。",
+      "key_findings": [
+        "提出以类型化检索取代原始上下文拼接的有界记忆合约",
+        "证明朴素的追加式记忆会使各个记忆组件的影响难以单独分离",
+        "提供了一个具备完整埋点的测试平台，用于研究长时间跨度智能体的记忆设计选择"
+      ],
+      "tags": [
+        "agent-memory",
+        "long-horizon-agents",
+        "llm-agents",
+        "benchmark"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02255",
+        "huggingface": "https://huggingface.co/papers/2607.02255",
+        "pdf": "https://arxiv.org/pdf/2607.02255"
+      }
+    },
+    {
+      "id": "evopolicygym",
+      "title": "EvoPolicyGym：在交互式环境中评估自主策略进化",
+      "authors": [
+        "Zhilin Wang",
+        "Han Song",
+        "Runzhe Zhan",
+        "Jusen Du",
+        "Jiacheng Chen et al."
+      ],
+      "affiliations": [
+        "Shanghai Artificial Intelligence Laboratory"
+      ],
+      "summary": "EvoPolicyGym引入了「自主策略进化」这一受控评估场景：在固定的交互预算下，由一个作为执行框架的模型智能体反复编辑一份可执行策略，从而将这项能力与开放式软件工程基准区分开来。该基准建立在紧凑的交互式强化学习环境之上。",
+      "key_findings": [
+        "将「自主策略进化」定义为智能体的一种独立、受控的评估场景",
+        "将策略编辑能力与通用软件工程基准得分区分开来",
+        "基于紧凑的交互式强化学习环境构建，用于反复评估策略编辑能力"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "reinforcement-learning",
+        "benchmark",
+        "autonomous-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02440",
+        "huggingface": "https://huggingface.co/papers/2607.02440",
+        "pdf": "https://arxiv.org/pdf/2607.02440"
+      }
+    },
+    {
+      "id": "morphing-hybrid-attention",
+      "title": "Morphing into Hybrid Attention Models（转化为混合注意力模型）",
+      "authors": [
+        "Disen Lan",
+        "Jianbin Zheng",
+        "Yuxi Ren",
+        "Xin Xia",
+        "Xuanda Wang et al."
+      ],
+      "affiliations": [
+        "ByteDance Seed"
+      ],
+      "summary": "该论文研究在将Transformer转换为混合全注意力与线性注意力的混合注意力模型（以提升长上下文效率）时，哪些层应当保留全注意力。论文指出，现有的启发式层选择方法孤立地看待各层的重要性，忽略了层与层之间的相互依赖关系。",
+      "key_findings": [
+        "表明Transformer到混合模型的转换质量高度依赖于哪些层保留了全注意力",
+        "批评现有的启发式／固定模式及逐层评分选择方法忽略了层间的相互依赖",
+        "提出一种在转换过程中考虑层间交互的选择方法"
+      ],
+      "tags": [
+        "hybrid-attention",
+        "linear-attention",
+        "long-context",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30562",
+        "huggingface": "https://huggingface.co/papers/2606.30562",
+        "pdf": "https://arxiv.org/pdf/2606.30562"
+      }
+    },
+    {
+      "id": "multi-resolution-flow-matching",
+      "title": "Multi-Resolution Flow Matching：通过分阶段采样实现无需训练的扩散加速",
+      "authors": [
+        "Xingyu Zheng",
+        "Xianglong Liu",
+        "Yifu Ding",
+        "Weilun Feng",
+        "Junqing Lin et al."
+      ],
+      "affiliations": [
+        "Beihang University"
+      ],
+      "summary": "该论文提出了一种无需训练、与硬件无关的多分辨率生成策略，适用于文生图扩散模型：通过跨分辨率的分阶段采样，在无需任何重新训练的情况下实现5倍以上的加速。论文还分析并解决了以往多分辨率方法中因潜空间上采样和局部区域选择性修改而产生的伪影问题。",
+      "key_findings": [
+        "在无需任何训练的情况下，为文生图扩散模型实现5倍以上的推理加速",
+        "指出以往多分辨率方法中由潜空间上采样和局部区域选择性编辑所导致的质量问题",
+        "提出分阶段采样作为一种与硬件无关的加速策略，可兼容现有的预训练扩散模型"
+      ],
+      "tags": [
+        "diffusion-models",
+        "flow-matching",
+        "inference-acceleration",
+        "text-to-image"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01642",
+        "huggingface": "https://huggingface.co/papers/2607.01642",
+        "pdf": "https://arxiv.org/pdf/2607.01642"
+      }
+    },
+    {
+      "id": "agenticdatabench",
+      "title": "AgenticDataBench：面向数据智能体的综合基准",
+      "authors": [
+        "Zhaoyan Sun",
+        "Shan Zhong",
+        "Daizhou Wen",
+        "Jiaxing Han",
+        "Guoliang Li et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "AgenticDataBench解决了目前缺乏严格基准来评估基于LLM的数据智能体这一问题——这些智能体正用于自动化数据科学工作流，以减轻数据科学家繁重的人工劳动。该基准为从异构原始数据到洞见的自动化流程提供了全面的评估覆盖。",
+      "key_findings": [
+        "指出目前针对基于LLM的数据科学自动化智能体缺乏全面基准的空白",
+        "覆盖了与真实数据科学实践相关的、从异构原始数据到洞见的工作流",
+        "旨在实现对数据智能体自动化质量的严格、可扩展评估"
+      ],
+      "tags": [
+        "data-agents",
+        "benchmark",
+        "data-science-automation",
+        "llm-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01647",
+        "huggingface": "https://huggingface.co/papers/2607.01647",
+        "pdf": "https://arxiv.org/pdf/2607.01647"
+      }
+    },
+    {
+      "id": "worlddirector",
+      "title": "WorldDirector：构建具有持久动态记忆的可控世界模拟器",
+      "authors": [
+        "Hanlin Wang",
+        "Hao Ouyang",
+        "Qiuyu Wang",
+        "Wen Wang",
+        "Qingyan Bai et al."
+      ],
+      "affiliations": [
+        "Alibaba Group"
+      ],
+      "summary": "WorldDirector是一个可控的视频世界模型框架，具备持久的动态物体记忆和不受限的视角探索能力，将语义运动编排与像素级视觉生成解耦。它使用一个LLM来协调3D轨迹和摄像机运动，且这一协调独立于连续的视觉观测。",
+      "key_findings": [
+        "将语义运动编排与像素渲染解耦，区别于以往两者纠缠在一起的世界模型",
+        "使用LLM协调3D物体轨迹和摄像机运动",
+        "支持持久的动态物体记忆和不受限的视角探索，且无需连续的视觉观测"
+      ],
+      "tags": [
+        "world-models",
+        "video-generation",
+        "controllable-generation",
+        "3d-simulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 26,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02517",
+        "huggingface": "https://huggingface.co/papers/2607.02517",
+        "pdf": "https://arxiv.org/pdf/2607.02517"
+      }
+    },
+    {
+      "id": "breaking-failure-cascades",
+      "title": "打破失败级联：面向医学多模态推理的步骤感知强化学习",
+      "authors": [
+        "Junha Jung",
+        "Minbyul Jeong",
+        "Suhyeon Lim",
+        "Sungwook Jung",
+        "Jaehoon Yun et al."
+      ],
+      "affiliations": [
+        "KAIST"
+      ],
+      "summary": "该论文表明，早期推理失败所引发的级联错误是医学多模态推理中预测错误的主要原因之一，而当前的后训练流程主要依赖以结果为中心、仅关注最终答案正确性的信号。论文提出步骤感知的强化学习方法，在整个推理过程中而非仅在最终答案上进行信用分配。",
+      "key_findings": [
+        "指出早期推理失败引发的级联是临床预测错误的一个主要来源",
+        "批评以结果为中心的后训练方式在医学多模态大模型推理中信用分配过于稀疏",
+        "引入步骤感知的强化学习，直接优化推理过程本身"
+      ],
+      "tags": [
+        "medical-ai",
+        "multimodal-reasoning",
+        "reinforcement-learning",
+        "clinical-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 20,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31825",
+        "huggingface": "https://huggingface.co/papers/2606.31825",
+        "pdf": "https://arxiv.org/pdf/2606.31825"
+      }
+    },
+    {
+      "id": "skillcoach",
+      "title": "SkillCoach：用于评估和提升智能体技能使用能力的自我进化评分标准",
+      "authors": [
+        "Jiayin Zhu",
+        "Kelong Mao",
+        "Yudong Guo",
+        "Dengbo He",
+        "Sulong Xu et al."
+      ],
+      "affiliations": [
+        "Renmin University of China"
+      ],
+      "summary": "SkillCoach针对的问题是：仅凭最终验证结果来判断成功与否，粒度过于粗糙，难以评估或训练LLM智能体在存在多个重叠技能库（这些技能库编码了标准操作流程、工具工作流和验证例程）情况下的可靠技能使用能力。论文引入了自我进化的评分标准，能够检测出干扰性技能的错误选择、步骤遗漏以及工作流组合错误。",
+      "key_findings": [
+        "表明粗粒度的最终验证成功信号无法区分真正良好的技能使用与侥幸的试错",
+        "引入自我进化的评分标准，用于更细粒度地评估智能体的技能使用",
+        "针对干扰性技能选择、步骤遗漏和工作流组合错误等失败模式"
+      ],
+      "tags": [
+        "agent-skills",
+        "evaluation-rubrics",
+        "llm-agents",
+        "tool-use"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01874",
+        "huggingface": "https://huggingface.co/papers/2607.01874",
+        "pdf": "https://arxiv.org/pdf/2607.01874"
+      }
+    },
+    {
+      "id": "automem",
+      "title": "AutoMem：将记忆作为认知技能进行自动化学习",
+      "authors": [
+        "Shengguang Wu",
+        "Hao Zhu",
+        "Yuhui Zhang",
+        "Xiaohan Wang",
+        "Serena Yeung-Levy et al."
+      ],
+      "affiliations": [
+        "Stanford University"
+      ],
+      "summary": "AutoMem将LLM的记忆管理视为一种可训练的技能（元记忆），将文件系统操作提升为与任务动作并列的一等记忆动作，使模型自行决定如何编码、检索和组织自身的知识。这项记忆技能沿着提示词／模式结构以及习得的动作策略两个维度不断提升。",
+      "key_findings": [
+        "将记忆管理定义为一种可训练的认知技能（元记忆），而非固定的机制",
+        "将文件系统操作提升为由模型自身控制的一等记忆动作",
+        "沿两个维度提升记忆能力：支持性结构（提示词、模式）和习得的动作策略"
+      ],
+      "tags": [
+        "agent-memory",
+        "metamemory",
+        "llm-agents",
+        "self-supervision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01224",
+        "huggingface": "https://huggingface.co/papers/2607.01224",
+        "pdf": "https://arxiv.org/pdf/2607.01224"
+      }
+    },
+    {
+      "id": "logit-contribution-scoring",
+      "title": "Logit贡献评分识别非字面检索注意力头",
+      "authors": [
+        "Aryo Pradipta Gema",
+        "Beatrice Alex",
+        "Pasquale Minervini et al."
+      ],
+      "affiliations": [
+        "University of Edinburgh"
+      ],
+      "summary": "该论文提出logit贡献评分方法，用于识别那些根据上下文片段的含义综合生成答案、而非逐字复制token的注意力头，弥补了现有字面复制检测器的一个盲点。这对于理解长上下文模型的行为具有重要意义，因为在这类模型中，综合性生成而非逐字检索才是常态。",
+      "key_findings": [
+        "表明现有的检索头检测器会漏检那些进行综合性生成、而非逐字复制上下文的注意力头",
+        "提出基于注意力头通过输出值投影所「写入」的内容（而非仅关注它所「注意」的内容）的logit贡献评分方法",
+        "提升了对LLM长上下文综合性生成行为的可解释性"
+      ],
+      "tags": [
+        "interpretability",
+        "attention-heads",
+        "long-context",
+        "mechanistic-interpretability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01002",
+        "huggingface": "https://huggingface.co/papers/2607.01002",
+        "pdf": "https://arxiv.org/pdf/2607.01002"
+      }
+    },
+    {
+      "id": "distribution-wise-rewards-visual-generation",
+      "title": "通过分布级奖励优化视觉生成模型",
+      "authors": [
+        "Ruihang Li",
+        "Mengde Xu",
+        "Shuyang Gu",
+        "Leigang Qu",
+        "Fuli Feng et al."
+      ],
+      "affiliations": [
+        "Microsoft Research Asia"
+      ],
+      "summary": "该论文提出使用分布级奖励而非传统的样本级奖励来微调视觉生成模型，因为样本级奖励常常导致奖励作弊（reward hacking），降低图像多样性并引入视觉异常。分布级奖励能让生成输出与真实世界数据分布整体上更好地对齐。",
+      "key_findings": [
+        "表明用于视觉生成的样本级强化学习奖励函数常常导致奖励作弊和多样性下降",
+        "提出分布级奖励，依据与完整真实世界数据分布的对齐程度进行评估",
+        "相较于样本级奖励微调，展现出更高的生成质量和多样性"
+      ],
+      "tags": [
+        "visual-generation",
+        "reinforcement-learning",
+        "reward-hacking",
+        "diffusion-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02291",
+        "huggingface": "https://huggingface.co/papers/2607.02291",
+        "pdf": "https://arxiv.org/pdf/2607.02291"
+      }
+    },
+    {
+      "id": "pace-agentic-proxy",
+      "title": "PACE：智能体能力评估的代理指标",
+      "authors": [
+        "Yueqi Song",
+        "Lintang Sutawika",
+        "Jiarui Liu",
+        "Lindia Tjuatja",
+        "Jiayi Geng et al."
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "PACE研究了SWE-Bench、GAIA等昂贵智能体基准（单次评估可能耗费数千美元并需要数天时间）的表现，能否通过一组精心挑选的廉价非智能体能力测试来准确预测。这为在模型开发过程中追踪智能体能力进展提供了一种低成本的代理指标。",
+      "key_findings": [
+        "完整的智能体基准评估可能耗费数千美元，并需要数天时间才能完成",
+        "提出一组精选的非智能体测试，作为智能体基准表现的廉价代理指标",
+        "旨在实现更快速、更低成本的迭代周期，以追踪智能体能力的提升"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "benchmark-proxy",
+        "llm-agents",
+        "swe-bench"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02032",
+        "huggingface": "https://huggingface.co/papers/2607.02032",
+        "pdf": "https://arxiv.org/pdf/2607.02032"
+      }
+    },
+    {
+      "id": "discobench-clarification",
+      "title": "搜索智能体何时应该提问：面向澄清感知深度搜索的DiscoBench",
+      "authors": [
+        "Yiling Tao",
+        "Shihan Deng",
+        "Meiling Tao",
+        "Pengzhi Wei",
+        "Zhichao Hu et al."
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "DiscoBench针对的是现有搜索智能体基准（假设用户查询完整且明确）与真实世界深度搜索场景（查询往往含糊、信息不全，甚至存在事实错误）之间的差距。它评估搜索智能体能否识别歧义并提出澄清性问题，而不是让错误沿着多步推理链条不断传播。",
+      "key_findings": [
+        "表明现有的深度搜索基准不切实际地假设用户查询是完整且明确的",
+        "引入DiscoBench，用于评估在查询含糊或错误情况下的澄清性提问行为",
+        "证明歧义会沿着多步搜索推理链条传播并不断累积"
+      ],
+      "tags": [
+        "search-agents",
+        "clarification",
+        "benchmark",
+        "llm-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27669",
+        "huggingface": "https://huggingface.co/papers/2606.27669",
+        "pdf": "https://arxiv.org/pdf/2606.27669"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (Z.ai)",
+      "description": "智谱GLM系列的大型文本生成与对话模型，采用带有动态稀疏注意力（glm_moe_dsa）的混合专家（MoE）架构。",
+      "task_type": "text-generation",
+      "model_size": "MoE (size unspecified)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "glm_moe_dsa",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 231218,
+        "likes": 3532
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度推出的面向OCR的特征提取模型，专为大规模文档与文本识别任务设计。",
+      "task_type": "feature-extraction",
+      "model_size": "unspecified",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "unlimited-ocr",
+        "feature-extraction",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 1070230,
+        "likes": 1794
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent (Hunyuan)",
+      "description": "腾讯混元系列最新的文本生成模型，尽管下载量尚处于早期阶段，但点赞数快速攀升。",
+      "task_type": "text-generation",
+      "model_size": "unspecified",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "hy_v3",
+        "text-generation",
+        "hunyuan"
+      ],
+      "metrics": {
+        "downloads": 2,
+        "likes": 336
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "Shanghai Artificial Intelligence Laboratory (InternScience)",
+      "description": "基于Qwen3.5-MoE骨干网络构建的混合专家图文到文本智能体模型，面向多模态智能体工作流。",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 8766,
+        "likes": 345
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "nvidia-qwen3-6-27b-nvfp4",
+      "name": "Qwen3.6-27B-NVFP4",
+      "organization": "NVIDIA",
+      "description": "使用NVIDIA Model Optimizer工具链生产的Qwen3.6-27B NVFP4量化版本，面向高效的低精度推理。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "Model Optimizer",
+        "safetensors",
+        "qwen3_5",
+        "nvidia",
+        "ModelOpt"
+      ],
+      "metrics": {
+        "downloads": 430676,
+        "likes": 290
+      },
+      "source_url": "https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "DeepReinforce AI旗下Ornith系列的35B GGUF量化文本生成模型，以MIT许可证发布，适用于本地或端点部署。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "transformers",
+        "gguf",
+        "text-generation",
+        "license:mit",
+        "endpoints_compatible"
+      ],
+      "metrics": {
+        "downloads": 436780,
+        "likes": 759
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "tabfm-1.0.0-pytorch",
+      "organization": "Google",
+      "description": "谷歌推出的表格基础模型，支持零样本表格回归，属于面向结构化／表格数据的新兴基础模型系列。",
+      "task_type": "tabular-regression",
+      "model_size": "unspecified",
+      "tags": [
+        "tabfm",
+        "safetensors",
+        "tabular",
+        "tabular-regression",
+        "zero-shot"
+      ],
+      "metrics": {
+        "downloads": 7036,
+        "likes": 257
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek的V4-Pro文本生成模型的DSpark变体，其架构与训练方法可参考相关的arXiv论文。",
+      "task_type": "text-generation",
+      "model_size": "unspecified",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation",
+        "arxiv:2606.19348"
+      ],
+      "metrics": {
+        "downloads": 14276,
+        "likes": 409
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA推出的30亿参数特征提取模型，面向通用视觉／空间定位任务，下载量呈现出非常高的趋势增长。",
+      "task_type": "feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "locateanything",
+        "feature-extraction",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1340559,
+        "likes": 2635
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "mistral-leanstral-1-5",
+      "name": "Leanstral-1.5-119B-A6B",
+      "organization": "Mistral AI",
+      "description": "基于Mistral的Leanstral-2603基础模型微调而成的稀疏混合专家模型（总参数119B，激活约6B），已打包适配vLLM服务。",
+      "task_type": "text-generation",
+      "model_size": "119B-A6B (MoE)",
+      "tags": [
+        "vllm",
+        "base_model:mistralai/Leanstral-2603",
+        "base_model:finetune:mistralai/Leanstral-2603",
+        "license:apache-2.0",
+        "region:us"
+      ],
+      "metrics": {
+        "downloads": 106,
+        "likes": 143
+      },
+      "source_url": "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "从Krea-2-Raw蒸馏而来的快速文生图扩散模型，支持turbo（少步数）生成。",
+      "task_type": "text-to-image",
+      "model_size": "unspecified",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "text-to-image",
+        "en",
+        "base_model:krea/Krea-2-Raw"
+      ],
+      "metrics": {
+        "downloads": 109470,
+        "likes": 529
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "qwen-agentworld-35b-a3b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba (Qwen)",
+      "description": "阿里巴巴通义千问（Qwen）团队推出的混合专家图文到文本模型，专为智能体式、世界模型风格的多模态任务打造。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 57835,
+        "likes": 556
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "karpathy-nanogpt",
+      "name": "karpathy/nanoGPT",
+      "description": "用于训练和微调中等规模GPT模型的最简单、最快速仓库，是一个长期存在的基础参考实现。",
+      "language": "Python",
+      "stars": 60850,
+      "stars_today": 91,
+      "forks": 10463,
+      "url": "https://github.com/karpathy/nanoGPT",
+      "tags": [
+        "gpt-training",
+        "education",
+        "pytorch"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "面向金融交易的多智能体LLM框架，协调多个专业化的智能体角色完成市场分析与决策。",
+      "language": "Python",
+      "stars": 91391,
+      "stars_today": 322,
+      "forks": 17666,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "multi-agent",
+        "finance",
+        "llm-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "alirezarezvani-claude-skills",
+      "name": "alirezarezvani/claude-skills",
+      "description": "一个大型的Claude Code技能、智能体技能与插件合集，覆盖多个编程智能体在工程、产品、研究和业务运营等场景下的应用。",
+      "language": "Python",
+      "stars": 21186,
+      "stars_today": 610,
+      "forks": 2843,
+      "url": "https://github.com/alirezarezvani/claude-skills",
+      "tags": [
+        "claude-code",
+        "agent-skills",
+        "plugins"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mvanhorn-last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "一个AI智能体技能，可跨Reddit、X、YouTube、Hacker News、Polymarket及全网研究任意主题，并综合生成有据可查的摘要。",
+      "language": "Python",
+      "stars": 49799,
+      "stars_today": 458,
+      "forks": 4147,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": [
+        "agent-skills",
+        "research-automation",
+        "web-search"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "面向AI编程智能体的生产级工程技能集合，作为更广泛的智能体技能生态系统的一部分正在快速增长。",
+      "language": "JavaScript",
+      "stars": 70895,
+      "stars_today": 1112,
+      "forks": 7677,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents",
+        "developer-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "asgeirtj-system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "从Anthropic Claude、OpenAI ChatGPT／Codex、Google Gemini、xAI Grok等多个编程助手中提取的系统提示词合集，定期更新。",
+      "language": "JavaScript",
+      "stars": 51631,
+      "stars_today": 1378,
+      "forks": 8412,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": [
+        "system-prompts",
+        "llm-transparency",
+        "prompt-engineering"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "leonxlnx-taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "一个Claude Code技能，为AI智能体赋予「好品味」，旨在防止其生成乏味、千篇一律的输出。",
+      "language": "JavaScript",
+      "stars": 59020,
+      "stars_today": 1458,
+      "forks": 4019,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": [
+        "agent-skills",
+        "claude-code",
+        "output-quality"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openai-codex-plugin-cc",
+      "name": "openai/codex-plugin-cc",
+      "description": "一个插件，使Codex可以在Claude Code内部被调用，用于代码审查或任务委托，从而打通两大编程智能体生态系统。",
+      "language": "JavaScript",
+      "stars": 26305,
+      "stars_today": 906,
+      "forks": 1577,
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "tags": [
+        "codex",
+        "claude-code",
+        "coding-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl-firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "一个可大规模搜索、抓取并与网络交互的API，被广泛用作LLM智能体和RAG流程的数据摄取后端。",
+      "language": "TypeScript",
+      "stars": 146326,
+      "stars_today": 867,
+      "forks": 8418,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": [
+        "web-scraping",
+        "rag",
+        "agent-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-qlib",
+      "name": "microsoft/qlib",
+      "description": "一个面向AI的量化投资平台，支持监督学习、市场动态建模和强化学习，并与微软的RD-Agent集成以实现自动化研发。",
+      "language": "Python",
+      "stars": 45836,
+      "stars_today": 125,
+      "forks": 7303,
+      "url": "https://github.com/microsoft/qlib",
+      "tags": [
+        "quant-finance",
+        "reinforcement-learning",
+        "ml-platform"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "gastownhall-gastown",
+      "name": "gastownhall/gastown",
+      "description": "一个多智能体工作空间管理器，用于在共享环境中协调多个编程智能体。",
+      "language": "Go",
+      "stars": 16712,
+      "stars_today": 291,
+      "forks": 1540,
+      "url": "https://github.com/gastownhall/gastown",
+      "tags": [
+        "multi-agent",
+        "agent-orchestration",
+        "developer-tooling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ogulcancelik-herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "一个驻留在终端中的智能体多路复用工具，让开发者能够管理和协调多个编程智能体会话。",
+      "language": "Rust",
+      "stars": 12912,
+      "stars_today": 779,
+      "forks": 748,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": [
+        "agent-orchestration",
+        "terminal-tooling",
+        "coding-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-zvec",
+      "name": "alibaba/zvec",
+      "description": "一个轻量级、极速的进程内向量数据库，可作为RAG和智能体记忆系统的嵌入式检索后端。",
+      "language": "C++",
+      "stars": 13538,
+      "stars_today": 382,
+      "forks": 826,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": [
+        "vector-database",
+        "rag",
+        "embeddings"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "zackriya-solutions-meetily",
+      "name": "Zackriya-Solutions/meetily",
+      "description": "一个隐私优先、完全本地化的AI会议助手，具备快速的Parakeet／Whisper实时转录、说话人分离，以及基于Ollama的摘要生成能力。",
+      "language": "Rust",
+      "stars": 19469,
+      "stars_today": 2494,
+      "forks": 1971,
+      "url": "https://github.com/Zackriya-Solutions/meetily",
+      "tags": [
+        "speech-to-text",
+        "on-device-ai",
+        "meeting-assistant"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-financial-services",
+      "name": "anthropics/financial-services",
+      "description": "Anthropic提供的参考资源与工具，用于将Claude应用于金融服务场景。",
+      "language": "Python",
+      "stars": 33183,
+      "stars_today": 105,
+      "forks": 4855,
+      "url": "https://github.com/anthropics/financial-services",
+      "tags": [
+        "claude",
+        "finance",
+        "industry-solutions"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体记忆作为可训练技能",
+      "description": "多篇论文将LLM智能体的记忆管理重新定义为一种有界的、结构化的、可训练的能力，而非无限增长的追加式上下文，涵盖类型化检索、元记忆和设备端蒸馏等方向。",
+      "related_paper_ids": [
+        "agenticsts-bounded-memory",
+        "automem",
+        "skillcoach"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "模糊函数的神经编译",
+      "description": "一种新范式直接将自然语言的函数规范编译为紧凑的、可本地执行的神经网络权重，使日常模糊编程任务不再依赖逐次调用托管LLM API。",
+      "related_paper_ids": [
+        "program-as-weights"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基准代理指标与更精细的评估",
+      "description": "多篇论文对粗粒度、高成本的智能体基准提出质疑，提出了更廉价的代理指标、对特定能力更清晰的隔离方式，以及澄清感知的评估方法，以更准确地衡量智能体的真实能力。",
+      "related_paper_ids": [
+        "pace-agentic-proxy",
+        "evopolicygym",
+        "agenticdatabench",
+        "discobench-clarification"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "混合注意力与长上下文效率",
+      "description": "关于将Transformer转换为混合全注意力／线性注意力模型、以及解读非字面检索注意力头的研究，共同指向更高效、更易理解的长上下文推理。",
+      "related_paper_ids": [
+        "morphing-hybrid-attention",
+        "logit-contribution-scoring"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "高效且奖励对齐的视觉生成",
+      "description": "无需训练的加速技术与分布级奖励微调，持续推动扩散模型和视频世界模型朝着更快、更可靠、对齐效果更好的生成方向发展。",
+      "related_paper_ids": [
+        "multi-resolution-flow-matching",
+        "distribution-wise-rewards-visual-generation",
+        "worlddirector"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code／智能体技能生态系统的爆发式增长",
+      "description": "GitHub趋势榜被Claude Code及通用智能体技能工具仓库的病毒式浪潮所主导，这些仓库录得了本周期内最大的单日star增长，其热度已超过论文和模型本身的互动量。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://www.alphaxiv.org",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

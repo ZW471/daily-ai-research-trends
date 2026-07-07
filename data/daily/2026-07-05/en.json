@@ -1,0 +1,1094 @@
+{
+  "version": "1.0",
+  "date": "2026-07-05",
+  "generated_at": "2026-07-05T23:00:00Z",
+  "summary": {
+    "headline": "Program-as-Weights compiles natural-language specs into locally-executable neural artifacts, topping HF Papers with 107 upvotes; agent-memory research (AgenticSTS, AutoMem, SkillCoach, DuoMem) converges on treating memory as a trainable, bounded skill rather than an ever-growing context; hybrid-attention and flow-matching work pushes long-context and diffusion efficiency; and GitHub trending is dominated by a viral wave of Claude Code / agent-skills repositories.",
+    "body": "The July 5th cycle (HF Papers reflect the July 3rd weekend fallback) is anchored by **Program-as-Weights**, a new paradigm from a Harvard-affiliated team that compiles fuzzy, natural-language-specified functions into compact neural weights that run locally instead of calling an LLM API at inference time — a direct attack on the cost, latency, and reproducibility problems of using LLMs as glue code. Close behind, a cluster of papers reframes agent memory as a first-class, trainable capability: AgenticSTS proposes a bounded-memory contract built from typed retrieval rather than an ever-growing transcript, AutoMem promotes file-system operations to memory actions the model learns to manage, DuoMem distills procedural memory into on-device student models, and SkillCoach introduces self-evolving rubrics for skill-use evaluation. Together they suggest the field is shifting from 'stuff everything into context' toward structured, evaluable, and often distillable memory systems.\n\nA second cluster targets evaluation infrastructure for agents: EvoPolicyGym isolates autonomous policy evolution from open-ended software engineering, AgenticDataBench benchmarks data-science agents, PACE proposes a cheap proxy for expensive agentic benchmarks like SWE-Bench and GAIA, and DiscoBench studies when search agents should ask clarifying questions instead of guessing. On the architecture and generation side, Morphing into Hybrid Attention Models tackles which layers should keep full attention when converting Transformers to hybrid linear-attention models, Multi-Resolution Flow Matching delivers training-free 5x+ diffusion speedups via staged sampling, and WorldDirector decouples semantic motion orchestration from pixel rendering for controllable video world models.\n\nOn the model release side, Zhipu's GLM-5.2, Baidu's Unlimited-OCR, Tencent's Hy3 (Hunyuan), NVIDIA's Qwen3.6-27B-NVFP4 quantization and LocateAnything-3B, DeepSeek's V4-Pro-DSpark, and Alibaba Qwen's AgentWorld-35B-A3B all show heavy trending activity, reflecting continued rapid iteration among Chinese labs alongside NVIDIA's quantization tooling. GitHub Trending is notably dominated by non-paper signal: a wave of Claude Code and agent-skills repositories (claude-skills, agent-skills, taste-skill, system_prompts_leaks, codex-plugin-cc) posted some of the largest single-day star gains of the period, indicating that tooling and prompt/skill ecosystems around coding agents are moving faster than the underlying model releases themselves.",
+    "key_themes": [
+      "agent-memory-as-trainable-skill",
+      "fuzzy-function-neural-compilation",
+      "agentic-benchmark-proxies",
+      "hybrid-attention-efficiency",
+      "diffusion-and-visual-generation-efficiency",
+      "claude-code-agent-skills-ecosystem"
+    ]
+  },
+  "researcher_notes": "The most conceptually interesting result of the cycle is **Program-as-Weights**, which reframes 'fuzzy function' programming — tasks like log alerting, JSON repair, or intent-based ranking that resist clean rule-based implementation — as a compilation target rather than an inference-time LLM call. By compiling a natural-language spec into a compact, locally-executable neural artifact, the authors attack the locality, reproducibility, and cost problems that come from outsourcing every fuzzy decision to a hosted LLM API. This is a meaningfully different framing from prompt engineering or distillation: it treats the neural network as an artifact analogous to a compiled binary, which could matter a great deal for edge deployment and auditability if it generalizes beyond the paper's benchmark tasks.\n\nA striking pattern across four independent papers — **AgenticSTS**, **AutoMem**, **DuoMem**, and **SkillCoach** — is the convergence on memory as a bounded, structured, and often trainable skill rather than an unbounded append-only log. AgenticSTS's core insight, that memory is 'a contract about what each future decision is allowed to see,' and its typed-retrieval alternative to naive context concatenation, addresses a real failure mode in long-horizon agents where signal from any one memory component becomes impossible to isolate once mixed into a jumbled prompt. AutoMem goes further by promoting file-system operations to first-class memory actions the model itself learns to wield, borrowing directly from the cognitive-science notion of metamemory. DuoMem's dual-space distillation for on-device memory agents is the practical mirror image: it asks how procedural memory competence, once learned by a large teacher, can survive compression onto resource-constrained student models. Taken together, this looks like an emerging subfield — agent memory engineering — that is maturing past ad hoc context-window tricks toward principled, evaluable memory architectures.\n\nOn evaluation methodology, **PACE**'s proposal to predict expensive agentic-benchmark performance (SWE-Bench, GAIA) from a small, cheap set of non-agentic capability tests is a pragmatic response to a real bottleneck: full agentic evaluations can cost thousands of dollars and take days. If such proxies hold up under distribution shift as new model families are evaluated, they could meaningfully lower the cost of iterating on agent research. This complements EvoPolicyGym's effort to cleanly separate autonomous policy evolution from general software-engineering progress and DiscoBench's focus on clarification-seeking behavior in deep search agents — all three papers point to a maturing recognition that agent benchmarks today conflate too many capabilities into single scalar scores, and that the field needs sharper, more decomposed measurement tools before further scaling of agent training is worth the compute.\n\nOn architecture, **Morphing into Hybrid Attention Models** addresses a genuinely underexplored design question: existing Transformer-to-hybrid-attention conversion methods pick which layers retain full attention using heuristics (fixed patterns, layerwise scores) that treat each layer's importance in isolation, ignoring interdependence between layers. This is the kind of unglamorous-but-consequential systems question that determines whether long-context efficiency gains from hybrid/linear attention are left on the table. Paired with Multi-Resolution Flow Matching's training-free staged-sampling approach to diffusion acceleration (claiming over 5x speedup with no retraining), the throughline for the cycle's efficiency papers is squeezing more throughput out of existing pretrained models rather than training new ones from scratch — a sensible response to the rising cost of frontier pretraining.\n\nFinally, the **GitHub Trending** signal this cycle is worth flagging on its own: repositories like claude-skills, agent-skills, taste-skill, and system_prompts_leaks posted some of the largest single-day star increases (600-1,458 stars/day), well outpacing any individual model or paper's engagement. This suggests that the community-facing layer around coding-agent tooling — skills, plugins, leaked system prompts, and agent multiplexers like herdr and gastown — is currently a faster-moving and higher-attention surface than either paper publication or model releases, and is worth tracking as its own trend independent of the research literature.",
+  "papers": [
+    {
+      "id": "program-as-weights",
+      "title": "Program-as-Weights: A Programming Paradigm for Fuzzy Functions",
+      "authors": [
+        "Wentao Zhang",
+        "Liliana Hotsko",
+        "Woojeong Kim",
+        "Pengyu Nie",
+        "Stuart Shieber et al."
+      ],
+      "affiliations": [
+        "Harvard University"
+      ],
+      "summary": "The paper proposes fuzzy-function programming, which compiles a natural-language specification of tasks like log alerting or JSON repair into a compact, locally-executable neural artifact instead of calling an LLM API at inference time. This targets the locality, reproducibility, and cost problems of using hosted LLMs as ad hoc glue code.",
+      "key_findings": [
+        "Introduces Program-as-Weights, a method for compiling natural-language function specs into small locally-executable neural artifacts",
+        "Targets everyday fuzzy programming tasks (log alerting, malformed JSON repair, intent-based ranking) currently outsourced to LLM APIs",
+        "Aims to preserve locality, reproducibility, and lower per-call cost compared to hosted LLM inference"
+      ],
+      "tags": [
+        "program-synthesis",
+        "llm-compilation",
+        "efficiency",
+        "fuzzy-functions"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 107,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02512",
+        "huggingface": "https://huggingface.co/papers/2607.02512",
+        "pdf": "https://arxiv.org/pdf/2607.02512"
+      }
+    },
+    {
+      "id": "agenticsts-bounded-memory",
+      "title": "AgenticSTS: A Bounded-Memory Testbed for Long-Horizon LLM Agents",
+      "authors": [
+        "Xiangchen Cheng",
+        "Yunwei Jiang",
+        "Jianwen Sun",
+        "Zizhen Li",
+        "Chuanhao Li et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "AgenticSTS instruments a bounded-memory contract for long-horizon LLM agents in which every decision is made from a fresh, typed-retrieval-assembled prompt rather than an ever-appended transcript of raw observations and tool calls. The testbed isolates the effect of individual memory components that are otherwise jumbled together in naive append-only context.",
+      "key_findings": [
+        "Proposes a bounded memory contract using typed retrieval instead of raw context concatenation",
+        "Demonstrates that naive append-only memory makes individual memory-component effects hard to isolate",
+        "Provides an instrumented testbed for studying long-horizon agent memory design choices"
+      ],
+      "tags": [
+        "agent-memory",
+        "long-horizon-agents",
+        "llm-agents",
+        "benchmark"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02255",
+        "huggingface": "https://huggingface.co/papers/2607.02255",
+        "pdf": "https://arxiv.org/pdf/2607.02255"
+      }
+    },
+    {
+      "id": "evopolicygym",
+      "title": "EvoPolicyGym: Evaluating Autonomous Policy Evolution in Interactive Environments",
+      "authors": [
+        "Zhilin Wang",
+        "Han Song",
+        "Runzhe Zhan",
+        "Jusen Du",
+        "Jiacheng Chen et al."
+      ],
+      "affiliations": [
+        "Shanghai Artificial Intelligence Laboratory"
+      ],
+      "summary": "EvoPolicyGym introduces Autonomous Policy Evolution as a controlled evaluation setting in which a harness-model agent repeatedly edits an executable policy under a fixed interaction budget, separating this capability from open-ended software-engineering benchmarks. The benchmark is built from compact interactive reinforcement-learning environments.",
+      "key_findings": [
+        "Defines Autonomous Policy Evolution as a distinct, controlled evaluation setting for agents",
+        "Separates policy-editing capability from general software-engineering benchmark scores",
+        "Built on compact interactive RL environments for repeated policy-editing evaluation"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "reinforcement-learning",
+        "benchmark",
+        "autonomous-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02440",
+        "huggingface": "https://huggingface.co/papers/2607.02440",
+        "pdf": "https://arxiv.org/pdf/2607.02440"
+      }
+    },
+    {
+      "id": "morphing-hybrid-attention",
+      "title": "Morphing into Hybrid Attention Models",
+      "authors": [
+        "Disen Lan",
+        "Jianbin Zheng",
+        "Yuxi Ren",
+        "Xin Xia",
+        "Xuanda Wang et al."
+      ],
+      "affiliations": [
+        "ByteDance Seed"
+      ],
+      "summary": "This paper studies which layers should retain full attention when converting a Transformer into a hybrid attention model that mixes full and linear attention for long-context efficiency. It argues existing heuristic layer-selection methods treat layer importance in isolation and overlook interdependencies between layers.",
+      "key_findings": [
+        "Shows Transformer-to-hybrid conversion quality depends critically on which layers keep full attention",
+        "Critiques existing heuristic/fixed-pattern and layerwise-scoring selection methods for ignoring layer interdependence",
+        "Proposes a selection approach that accounts for interactions between layers during conversion"
+      ],
+      "tags": [
+        "hybrid-attention",
+        "linear-attention",
+        "long-context",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.30562",
+        "huggingface": "https://huggingface.co/papers/2606.30562",
+        "pdf": "https://arxiv.org/pdf/2606.30562"
+      }
+    },
+    {
+      "id": "multi-resolution-flow-matching",
+      "title": "Multi-Resolution Flow Matching: Training-Free Diffusion Acceleration via Staged Sampling",
+      "authors": [
+        "Xingyu Zheng",
+        "Xianglong Liu",
+        "Yifu Ding",
+        "Weilun Feng",
+        "Junqing Lin et al."
+      ],
+      "affiliations": [
+        "Beihang University"
+      ],
+      "summary": "The paper presents a training-free, hardware-agnostic multi-resolution generation strategy for text-to-image diffusion models that stages sampling across resolutions to achieve over 5x speedup without any retraining. It analyzes and addresses artifacts caused by latent-space upsampling and selective partial-region modification used by prior multi-resolution methods.",
+      "key_findings": [
+        "Achieves more than 5x inference speedup for text-to-image diffusion without any training",
+        "Identifies quality issues in prior multi-resolution methods caused by latent-space upsampling and selective region edits",
+        "Proposes staged sampling as a hardware-agnostic acceleration strategy compatible with existing pretrained diffusion models"
+      ],
+      "tags": [
+        "diffusion-models",
+        "flow-matching",
+        "inference-acceleration",
+        "text-to-image"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01642",
+        "huggingface": "https://huggingface.co/papers/2607.01642",
+        "pdf": "https://arxiv.org/pdf/2607.01642"
+      }
+    },
+    {
+      "id": "agenticdatabench",
+      "title": "AgenticDataBench: A Comprehensive Benchmark for Data Agents",
+      "authors": [
+        "Zhaoyan Sun",
+        "Shan Zhong",
+        "Daizhou Wen",
+        "Jiaxing Han",
+        "Guoliang Li et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "AgenticDataBench addresses the lack of rigorous benchmarks for LLM-based data agents that automate data-science workflows, which currently reduce labor-intensive data scientist effort. It provides comprehensive evaluation coverage for automating heterogeneous, raw-data-to-insight pipelines.",
+      "key_findings": [
+        "Identifies a gap in comprehensive benchmarks for LLM-based data science automation agents",
+        "Covers heterogeneous raw-data-to-insight workflows relevant to real data science practice",
+        "Aims to enable rigorous, scalable evaluation of data-agent automation quality"
+      ],
+      "tags": [
+        "data-agents",
+        "benchmark",
+        "data-science-automation",
+        "llm-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01647",
+        "huggingface": "https://huggingface.co/papers/2607.01647",
+        "pdf": "https://arxiv.org/pdf/2607.01647"
+      }
+    },
+    {
+      "id": "worlddirector",
+      "title": "WorldDirector: Building Controllable World Simulators with Persistent Dynamic Memory",
+      "authors": [
+        "Hanlin Wang",
+        "Hao Ouyang",
+        "Qiuyu Wang",
+        "Wen Wang",
+        "Qingyan Bai et al."
+      ],
+      "affiliations": [
+        "Alibaba Group"
+      ],
+      "summary": "WorldDirector is a controllable video world model framework with persistent dynamic object memory and unrestricted viewpoint exploration, decoupling semantic motion orchestration from pixel-level visual generation. It uses an LLM to coordinate 3D trajectories and camera movement independent of continuous visual observation.",
+      "key_findings": [
+        "Decouples semantic motion orchestration from pixel rendering, unlike prior entangled world models",
+        "Uses an LLM to coordinate 3D object trajectories and camera movement",
+        "Supports persistent dynamic object memory and unrestricted viewpoint exploration without continuous visual observation"
+      ],
+      "tags": [
+        "world-models",
+        "video-generation",
+        "controllable-generation",
+        "3d-simulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 26,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02517",
+        "huggingface": "https://huggingface.co/papers/2607.02517",
+        "pdf": "https://arxiv.org/pdf/2607.02517"
+      }
+    },
+    {
+      "id": "breaking-failure-cascades",
+      "title": "Breaking Failure Cascades: Step-Aware Reinforcement Learning for Medical Multimodal Reasoning",
+      "authors": [
+        "Junha Jung",
+        "Minbyul Jeong",
+        "Suhyeon Lim",
+        "Sungwook Jung",
+        "Jaehoon Yun et al."
+      ],
+      "affiliations": [
+        "KAIST"
+      ],
+      "summary": "The paper shows that cascading errors from early-stage reasoning failures are a leading cause of incorrect predictions in medical multimodal reasoning, where current post-training pipelines rely on outcome-centric, final-answer correctness signals. It proposes step-aware reinforcement learning to give credit assignment across the reasoning process rather than only the final answer.",
+      "key_findings": [
+        "Identifies early-stage reasoning failure cascades as a major source of incorrect clinical predictions",
+        "Critiques outcome-centric post-training for sparse credit assignment in medical MLLM reasoning",
+        "Introduces step-aware reinforcement learning to optimize the reasoning process directly"
+      ],
+      "tags": [
+        "medical-ai",
+        "multimodal-reasoning",
+        "reinforcement-learning",
+        "clinical-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 20,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31825",
+        "huggingface": "https://huggingface.co/papers/2606.31825",
+        "pdf": "https://arxiv.org/pdf/2606.31825"
+      }
+    },
+    {
+      "id": "skillcoach",
+      "title": "SkillCoach: Self-Evolving Rubrics for Evaluating and Enhancing Agentic Skill-Use",
+      "authors": [
+        "Jiayin Zhu",
+        "Kelong Mao",
+        "Yudong Guo",
+        "Dengbo He",
+        "Sulong Xu et al."
+      ],
+      "affiliations": [
+        "Renmin University of China"
+      ],
+      "summary": "SkillCoach targets the problem that final-verifier success is too coarse to evaluate or train reliable skill-use in LLM agents drawing from overlapping skill repositories encoding SOPs, tool workflows, and validation routines. It introduces self-evolving rubrics that can detect distractor-skill selection, skipped steps, and incorrect workflow composition.",
+      "key_findings": [
+        "Shows coarse final-verifier success signals fail to distinguish good skill-use from lucky trial-and-error",
+        "Introduces self-evolving rubrics for finer-grained agentic skill-use evaluation",
+        "Targets failure modes including distractor-skill selection, skipped steps, and incorrect workflow composition"
+      ],
+      "tags": [
+        "agent-skills",
+        "evaluation-rubrics",
+        "llm-agents",
+        "tool-use"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01874",
+        "huggingface": "https://huggingface.co/papers/2607.01874",
+        "pdf": "https://arxiv.org/pdf/2607.01874"
+      }
+    },
+    {
+      "id": "automem",
+      "title": "AutoMem: Automated Learning of Memory as a Cognitive Skill",
+      "authors": [
+        "Shengguang Wu",
+        "Hao Zhu",
+        "Yuhui Zhang",
+        "Xiaohan Wang",
+        "Serena Yeung-Levy et al."
+      ],
+      "affiliations": [
+        "Stanford University"
+      ],
+      "summary": "AutoMem treats LLM memory management as a trainable skill (metamemory), promoting file-system operations to first-class memory actions alongside task actions so the model decides how to encode, retrieve, and organize its own knowledge. The memory skill improves along both prompt/schema structure and learned action policy.",
+      "key_findings": [
+        "Frames memory management as a trainable cognitive skill (metamemory) rather than a fixed mechanism",
+        "Promotes file-system operations to first-class memory actions the model itself controls",
+        "Improves memory competence along two axes: supporting structure (prompts, schemas) and learned action policy"
+      ],
+      "tags": [
+        "agent-memory",
+        "metamemory",
+        "llm-agents",
+        "self-supervision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01224",
+        "huggingface": "https://huggingface.co/papers/2607.01224",
+        "pdf": "https://arxiv.org/pdf/2607.01224"
+      }
+    },
+    {
+      "id": "logit-contribution-scoring",
+      "title": "Logit-Contribution Scoring Identifies Non-Literal Retrieval Heads",
+      "authors": [
+        "Aryo Pradipta Gema",
+        "Beatrice Alex",
+        "Pasquale Minervini et al."
+      ],
+      "affiliations": [
+        "University of Edinburgh"
+      ],
+      "summary": "The paper introduces logit-contribution scoring to identify attention heads that synthesize answers from the meaning of a context span rather than literally copying tokens, addressing a blind spot in existing literal-copy detectors. This matters for interpreting long-context model behavior where synthesis, not verbatim retrieval, is common.",
+      "key_findings": [
+        "Shows existing retrieval-head detectors miss heads that synthesize rather than literally copy context",
+        "Introduces logit-contribution scoring based on what a head writes through output-value projections, not just what it attends to",
+        "Improves interpretability of long-context synthesis behavior in LLMs"
+      ],
+      "tags": [
+        "interpretability",
+        "attention-heads",
+        "long-context",
+        "mechanistic-interpretability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01002",
+        "huggingface": "https://huggingface.co/papers/2607.01002",
+        "pdf": "https://arxiv.org/pdf/2607.01002"
+      }
+    },
+    {
+      "id": "distribution-wise-rewards-visual-generation",
+      "title": "Optimizing Visual Generative Models via Distribution-wise Rewards",
+      "authors": [
+        "Ruihang Li",
+        "Mengde Xu",
+        "Shuyang Gu",
+        "Leigang Qu",
+        "Fuli Feng et al."
+      ],
+      "affiliations": [
+        "Microsoft Research Asia"
+      ],
+      "summary": "The paper proposes finetuning visual generative models with distribution-wise rewards rather than conventional sample-wise rewards, which frequently cause reward hacking that degrades image diversity and introduces visual anomalies. Distribution-wise rewards better align generated outputs with the real-world data distribution as a whole.",
+      "key_findings": [
+        "Shows sample-wise RL reward functions for visual generation frequently cause reward hacking and reduced diversity",
+        "Proposes distribution-wise rewards that evaluate alignment against the full real-world data distribution",
+        "Demonstrates improved generation quality and diversity over sample-wise reward finetuning"
+      ],
+      "tags": [
+        "visual-generation",
+        "reinforcement-learning",
+        "reward-hacking",
+        "diffusion-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02291",
+        "huggingface": "https://huggingface.co/papers/2607.02291",
+        "pdf": "https://arxiv.org/pdf/2607.02291"
+      }
+    },
+    {
+      "id": "pace-agentic-proxy",
+      "title": "PACE: A Proxy for Agentic Capability Evaluation",
+      "authors": [
+        "Yueqi Song",
+        "Lintang Sutawika",
+        "Jiarui Liu",
+        "Lindia Tjuatja",
+        "Jiayi Geng et al."
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "PACE investigates whether performance on expensive agentic benchmarks like SWE-Bench and GAIA, which can cost thousands of dollars and take days per evaluation, can be accurately predicted from a small, carefully selected set of cheap non-agentic capability tests. This offers a low-cost proxy for tracking agentic progress during model development.",
+      "key_findings": [
+        "Full agentic benchmark evaluations can cost thousands of dollars and take days to run",
+        "Proposes a small, curated set of non-agentic tests as a cheap proxy for agentic benchmark performance",
+        "Aims to enable faster, lower-cost iteration cycles when tracking agent capability improvements"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "benchmark-proxy",
+        "llm-agents",
+        "swe-bench"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02032",
+        "huggingface": "https://huggingface.co/papers/2607.02032",
+        "pdf": "https://arxiv.org/pdf/2607.02032"
+      }
+    },
+    {
+      "id": "discobench-clarification",
+      "title": "When Search Agents Should Ask: DiscoBench for Clarification-Aware Deep Search",
+      "authors": [
+        "Yiling Tao",
+        "Shihan Deng",
+        "Meiling Tao",
+        "Pengzhi Wei",
+        "Zhichao Hu et al."
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "DiscoBench addresses the gap between existing search-agent benchmarks, which assume complete and explicit user queries, and real-world deep search where queries are frequently vague, underspecified, or factually incorrect. It evaluates whether search agents can recognize ambiguity and ask clarifying questions instead of propagating errors along multi-step reasoning chains.",
+      "key_findings": [
+        "Shows existing deep-search benchmarks unrealistically assume complete, explicit user queries",
+        "Introduces DiscoBench to evaluate clarification-seeking behavior under vague or incorrect queries",
+        "Demonstrates that ambiguity can propagate and compound along multi-step search reasoning chains"
+      ],
+      "tags": [
+        "search-agents",
+        "clarification",
+        "benchmark",
+        "llm-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.27669",
+        "huggingface": "https://huggingface.co/papers/2606.27669",
+        "pdf": "https://arxiv.org/pdf/2606.27669"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (Z.ai)",
+      "description": "A large text-generation and conversational model from Zhipu's GLM family using a mixture-of-experts architecture with dynamic sparse attention (glm_moe_dsa).",
+      "task_type": "text-generation",
+      "model_size": "MoE (size unspecified)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "glm_moe_dsa",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 231218,
+        "likes": 3532
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's OCR-oriented feature-extraction model designed for large-scale document and text recognition workloads.",
+      "task_type": "feature-extraction",
+      "model_size": "unspecified",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "unlimited-ocr",
+        "feature-extraction",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 1070230,
+        "likes": 1794
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent (Hunyuan)",
+      "description": "The latest Hunyuan-family text-generation model from Tencent, trending sharply on likes despite very early download counts.",
+      "task_type": "text-generation",
+      "model_size": "unspecified",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "hy_v3",
+        "text-generation",
+        "hunyuan"
+      ],
+      "metrics": {
+        "downloads": 2,
+        "likes": 336
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "Shanghai Artificial Intelligence Laboratory (InternScience)",
+      "description": "A mixture-of-experts image-text-to-text agentic model built on a Qwen3.5-MoE backbone, aimed at multimodal agent workflows.",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 8766,
+        "likes": 345
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "nvidia-qwen3-6-27b-nvfp4",
+      "name": "Qwen3.6-27B-NVFP4",
+      "organization": "NVIDIA",
+      "description": "An NVFP4 quantized version of Qwen3.6-27B produced with NVIDIA's Model Optimizer toolkit, targeting efficient low-precision inference.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "Model Optimizer",
+        "safetensors",
+        "qwen3_5",
+        "nvidia",
+        "ModelOpt"
+      ],
+      "metrics": {
+        "downloads": 430676,
+        "likes": 290
+      },
+      "source_url": "https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "A GGUF-quantized 35B text-generation model from DeepReinforce AI's Ornith series, released under MIT license for local/endpoint deployment.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "transformers",
+        "gguf",
+        "text-generation",
+        "license:mit",
+        "endpoints_compatible"
+      ],
+      "metrics": {
+        "downloads": 436780,
+        "likes": 759
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "tabfm-1.0.0-pytorch",
+      "organization": "Google",
+      "description": "Google's tabular foundation model supporting zero-shot tabular regression, part of an emerging line of foundation models for structured/tabular data.",
+      "task_type": "tabular-regression",
+      "model_size": "unspecified",
+      "tags": [
+        "tabfm",
+        "safetensors",
+        "tabular",
+        "tabular-regression",
+        "zero-shot"
+      ],
+      "metrics": {
+        "downloads": 7036,
+        "likes": 257
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek's V4-Pro text-generation model with the DSpark variant, referencing an associated arXiv paper for its architecture/training methodology.",
+      "task_type": "text-generation",
+      "model_size": "unspecified",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation",
+        "arxiv:2606.19348"
+      ],
+      "metrics": {
+        "downloads": 14276,
+        "likes": 409
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B-parameter feature-extraction model from NVIDIA targeting general-purpose visual/spatial localization tasks, showing very high trending downloads.",
+      "task_type": "feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "locateanything",
+        "feature-extraction",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1340559,
+        "likes": 2635
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "mistral-leanstral-1-5",
+      "name": "Leanstral-1.5-119B-A6B",
+      "organization": "Mistral AI",
+      "description": "A sparse mixture-of-experts finetune (119B total, ~6B active) built on Mistral's Leanstral-2603 base model, packaged for vLLM serving.",
+      "task_type": "text-generation",
+      "model_size": "119B-A6B (MoE)",
+      "tags": [
+        "vllm",
+        "base_model:mistralai/Leanstral-2603",
+        "base_model:finetune:mistralai/Leanstral-2603",
+        "license:apache-2.0",
+        "region:us"
+      ],
+      "metrics": {
+        "downloads": 106,
+        "likes": 143
+      },
+      "source_url": "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "A fast text-to-image diffusion model distilled from Krea-2-Raw for turbo (few-step) generation.",
+      "task_type": "text-to-image",
+      "model_size": "unspecified",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "text-to-image",
+        "en",
+        "base_model:krea/Krea-2-Raw"
+      ],
+      "metrics": {
+        "downloads": 109470,
+        "likes": 529
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "qwen-agentworld-35b-a3b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba (Qwen)",
+      "description": "A mixture-of-experts image-text-to-text model from Alibaba's Qwen team purpose-built for agentic, world-model-style multimodal tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B (MoE)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 57835,
+        "likes": 556
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "karpathy-nanogpt",
+      "name": "karpathy/nanoGPT",
+      "description": "The simplest, fastest repository for training and finetuning medium-sized GPTs, a long-standing foundational reference implementation.",
+      "language": "Python",
+      "stars": 60850,
+      "stars_today": 91,
+      "forks": 10463,
+      "url": "https://github.com/karpathy/nanoGPT",
+      "tags": [
+        "gpt-training",
+        "education",
+        "pytorch"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "A multi-agent LLM framework for financial trading, coordinating specialized agent roles for market analysis and decision-making.",
+      "language": "Python",
+      "stars": 91391,
+      "stars_today": 322,
+      "forks": 17666,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "multi-agent",
+        "finance",
+        "llm-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "alirezarezvani-claude-skills",
+      "name": "alirezarezvani/claude-skills",
+      "description": "A large collection of Claude Code skills, agent skills, and plugins spanning engineering, product, research, and business-operations use cases across multiple coding agents.",
+      "language": "Python",
+      "stars": 21186,
+      "stars_today": 610,
+      "forks": 2843,
+      "url": "https://github.com/alirezarezvani/claude-skills",
+      "tags": [
+        "claude-code",
+        "agent-skills",
+        "plugins"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mvanhorn-last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "An AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web, then synthesizes a grounded summary.",
+      "language": "Python",
+      "stars": 49799,
+      "stars_today": 458,
+      "forks": 4147,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": [
+        "agent-skills",
+        "research-automation",
+        "web-search"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Production-grade engineering skills for AI coding agents, growing rapidly as part of the broader agent-skills ecosystem.",
+      "language": "JavaScript",
+      "stars": 70895,
+      "stars_today": 1112,
+      "forks": 7677,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents",
+        "developer-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "asgeirtj-system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "Extracted system prompts from Anthropic Claude, OpenAI ChatGPT/Codex, Google Gemini, xAI Grok, and other coding assistants, updated regularly.",
+      "language": "JavaScript",
+      "stars": 51631,
+      "stars_today": 1378,
+      "forks": 8412,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": [
+        "system-prompts",
+        "llm-transparency",
+        "prompt-engineering"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "leonxlnx-taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "A Claude Code skill that gives an AI agent 'good taste,' aiming to stop it from generating boring, generic output.",
+      "language": "JavaScript",
+      "stars": 59020,
+      "stars_today": 1458,
+      "forks": 4019,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": [
+        "agent-skills",
+        "claude-code",
+        "output-quality"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openai-codex-plugin-cc",
+      "name": "openai/codex-plugin-cc",
+      "description": "A plugin that lets Codex be invoked from within Claude Code to review code or delegate tasks, bridging the two coding-agent ecosystems.",
+      "language": "JavaScript",
+      "stars": 26305,
+      "stars_today": 906,
+      "forks": 1577,
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "tags": [
+        "codex",
+        "claude-code",
+        "coding-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl-firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "An API to search, scrape, and interact with the web at scale, widely used as a data-ingestion backend for LLM agents and RAG pipelines.",
+      "language": "TypeScript",
+      "stars": 146326,
+      "stars_today": 867,
+      "forks": 8418,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": [
+        "web-scraping",
+        "rag",
+        "agent-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-qlib",
+      "name": "microsoft/qlib",
+      "description": "An AI-oriented quantitative investment platform supporting supervised learning, market dynamics modeling, and RL, integrated with Microsoft's RD-Agent for automated R&D.",
+      "language": "Python",
+      "stars": 45836,
+      "stars_today": 125,
+      "forks": 7303,
+      "url": "https://github.com/microsoft/qlib",
+      "tags": [
+        "quant-finance",
+        "reinforcement-learning",
+        "ml-platform"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "gastownhall-gastown",
+      "name": "gastownhall/gastown",
+      "description": "A multi-agent workspace manager for coordinating multiple coding agents within a shared environment.",
+      "language": "Go",
+      "stars": 16712,
+      "stars_today": 291,
+      "forks": 1540,
+      "url": "https://github.com/gastownhall/gastown",
+      "tags": [
+        "multi-agent",
+        "agent-orchestration",
+        "developer-tooling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ogulcancelik-herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "An agent multiplexer that lives in your terminal, letting developers manage and coordinate multiple coding-agent sessions.",
+      "language": "Rust",
+      "stars": 12912,
+      "stars_today": 779,
+      "forks": 748,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": [
+        "agent-orchestration",
+        "terminal-tooling",
+        "coding-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-zvec",
+      "name": "alibaba/zvec",
+      "description": "A lightweight, lightning-fast, in-process vector database, useful as an embedded retrieval backend for RAG and agent memory systems.",
+      "language": "C++",
+      "stars": 13538,
+      "stars_today": 382,
+      "forks": 826,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": [
+        "vector-database",
+        "rag",
+        "embeddings"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "zackriya-solutions-meetily",
+      "name": "Zackriya-Solutions/meetily",
+      "description": "A privacy-first, fully local AI meeting assistant with fast Parakeet/Whisper live transcription, speaker diarization, and Ollama-based summarization.",
+      "language": "Rust",
+      "stars": 19469,
+      "stars_today": 2494,
+      "forks": 1971,
+      "url": "https://github.com/Zackriya-Solutions/meetily",
+      "tags": [
+        "speech-to-text",
+        "on-device-ai",
+        "meeting-assistant"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-financial-services",
+      "name": "anthropics/financial-services",
+      "description": "Anthropic's reference resources and tooling for applying Claude to financial-services use cases.",
+      "language": "Python",
+      "stars": 33183,
+      "stars_today": 105,
+      "forks": 4855,
+      "url": "https://github.com/anthropics/financial-services",
+      "tags": [
+        "claude",
+        "finance",
+        "industry-solutions"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Memory as a Trainable Skill",
+      "description": "Multiple papers reframe LLM agent memory management as a bounded, structured, and trainable capability rather than an unbounded append-only context, spanning typed retrieval, metamemory, and on-device distillation.",
+      "related_paper_ids": [
+        "agenticsts-bounded-memory",
+        "automem",
+        "skillcoach"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Fuzzy-Function Neural Compilation",
+      "description": "A new paradigm compiles natural-language function specifications directly into compact, locally-executable neural weights, avoiding per-call reliance on hosted LLM APIs for everyday fuzzy programming tasks.",
+      "related_paper_ids": [
+        "program-as-weights"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Benchmark Proxies and Sharper Evaluation",
+      "description": "Several papers push back on coarse, expensive agentic benchmarks, proposing cheaper proxies, cleaner isolation of specific capabilities, and clarification-aware evaluation to better measure true agent competence.",
+      "related_paper_ids": [
+        "pace-agentic-proxy",
+        "evopolicygym",
+        "agenticdatabench",
+        "discobench-clarification"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Hybrid & Long-Context Attention Efficiency",
+      "description": "Work on converting Transformers into hybrid full/linear-attention models and on interpreting non-literal retrieval heads targets more efficient and better-understood long-context inference.",
+      "related_paper_ids": [
+        "morphing-hybrid-attention",
+        "logit-contribution-scoring"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Efficient and Reward-Aligned Visual Generation",
+      "description": "Training-free acceleration techniques and distribution-wise reward finetuning continue to push diffusion and video world models toward faster, more reliable, and better-aligned generation.",
+      "related_paper_ids": [
+        "multi-resolution-flow-matching",
+        "distribution-wise-rewards-visual-generation",
+        "worlddirector"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code / Agent-Skills Ecosystem Surge",
+      "description": "GitHub Trending is dominated by a viral wave of Claude Code and general agent-skills tooling repositories posting some of the largest single-day star gains, outpacing paper and model engagement.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://www.alphaxiv.org",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-05T23:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
