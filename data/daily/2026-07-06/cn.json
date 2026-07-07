@@ -1,0 +1,1044 @@
+{
+  "version": "1.0",
+  "date": "2026-07-06",
+  "generated_at": "2026-07-06T23:00:00Z",
+  "summary": {
+    "headline": "LLM强化学习训练稳定性成为焦点：一篇获142赞的论文揭示了训练-推理不一致问题；具身智能推理运行时与VLA闭环控制迅速成熟；扩散Transformer量化走向数据无关化；智能体红队测试框架兴起，为快速增长的MCP/智能体生态保驾护航；GLM-5.2、DeepSeek-V4-Pro与Qwen3.6在拥挤的前沿开源模型竞赛中领跑；Claude Code技能与智能体工具类仓库主导GitHub热门榜单。",
+    "body": "当日热度最高的论文（142赞）探讨了LLM强化学习中一个微妙却影响深远的失效模式：即便参数已同步，训练引擎与推理引擎之间的不一致仍会导致轨迹概率出现偏差，从而破坏RL后训练的稳定性。这一让RL后训练更稳健、更可复现的主题，随着越来越多实验室将推理模型推向RLHF/RLVR流水线，其重要性很可能持续上升。与此同时，具身智能在系统工程层面持续快速成熟：一个面向视觉-语言-动作（VLA）与世界-动作模型的可移植C++推理运行时，解决了机器人端部署技术栈碎片化的问题；另一篇论文则提出了一种轻量级的检测-纠正机制，使VLA策略能够在接触密集型操作过程中动态调整动作视野，而不是盲目地执行开环动作块。\n\n在效率方面，OrbitQuant提出了一种面向扩散Transformer的数据无关训练后量化方案，无需针对每个新检查点或模态重新校准——这是降低图像/视频生成部署成本的重要一步。以数据为中心的VLM研究也在推进：DataComp-VLM提供了一个大规模基准和6万亿token语料库，用于系统性研究视觉-语言数据集的构建方法。随着智能体生态规模不断扩大，安全性正成为日益突出的关注点：AI-Infra-Guard提出了一个统一的多层级红队测试框架，涵盖基础设施、协议/工具（包括MCP）、智能体行为和模型层，反映出人们日益意识到智能体AI的攻击面正在超越防御工具的发展速度。\n\n在模型方面，GLM-5.2、DeepSeek-V4-Pro-DSpark、Qwen3.6系列、Mistral的Leanstral MoE以及腾讯的混元Hy3表明，开源权重前沿竞赛依然异常激烈，各方在原始能力与推理高效格式（GGUF、NVFP4）上均投入巨大。值得注意的是，谷歌的TabFM显示出人们对表格基础模型这一独特零样本模态日益增长的兴趣。GitHub热门榜单被Claude Code/智能体技能生态（claude-skills、awesome-claude-code、agent-skills、awesome-claude-skills）以及以金融为核心的多智能体框架（TradingAgents、qlib）彻底占据，这凸显出智能体工具与量化/金融应用正成为开发者关注度争夺的主战场。",
+    "key_themes": [
+      "rl-training-inference-mismatch-&-post-training-stability",
+      "embodied-ai-systems-engineering-&-closed-loop-control",
+      "efficient-generative-model-inference-(quantization-&-data-centric-methods)",
+      "agent-&-mcp-security---red-teaming",
+      "open-weight-frontier-model-race-&-efficient-quantized-variants",
+      "claude-code---agent-skills-tooling-ecosystem-growth"
+    ]
+  },
+  "researcher_notes": "**训练-推理不一致正悄然成为LLM强化学习中最重要的开放性问题之一。** 当日的头条论文重新定义了一个众所周知却鲜少被深入研究的现象——LLM训练引擎与独立、更快的推理引擎之间的数值/概率偏差——将其视为RL不稳定和崩溃的“真正”根源，而不是当作可被平均掉的噪声来处理。论文提出的解决方案将优化重点放在单调递增的“推理”策略而非名义上的训练策略，这一概念上的清晰重构可能会影响下一代RLHF/RLVR流水线的工程设计，尤其是在各实验室不断推动与训练代码架构解耦的超大规模推理服务栈（vLLM、SGLang等）的背景下。\n\n**具身智能正从算法研究转向系统工程。** 今天的两篇论文——Embodied.cpp和VLA-Corrector——都聚焦于“部署”层面的差距，而非提出新的模型架构。Embodied.cpp的定位——一个统一VLA与世界-动作模型推理、可跨异构机器人硬件运行的可移植运行时——与llama.cpp在LLM领域走过的路径如出一辙：一旦模型能力相对于部署摩擦趋于平稳，社区的关注点就会转向运行时工程。VLA-Corrector的检测-纠正机制针对动作视野的自适应调整，是对“先预测后盲目执行”这一动作分块策略弱点的一次务实修补，这类轻量级、可组合的模块很可能会被现有VLA技术栈迅速采纳，而无需重新训练。\n\n**效率与数据为中心的研究依然是基础性、不显眼但高杠杆的领域。** OrbitQuant针对扩散Transformer的数据无关量化方案解决了一个真实的生产痛点（每个检查点/模态的重新校准成本），如果该方法在视频生成负载下依然成立，将有望大幅降低快速增长的文生视频/文生图领域的推理成本（今天Krea-2-Turbo的热门状态也印证了这一点）。DataComp-VLM延续了DataComp系列的努力，致力于让数据集构建成为一门严谨、可基准测试的科学，而非经验之谈——这是整个VLM子领域悄然而重要的基础设施建设。\n\n**智能体安全工具正是对智能体生态快速增长的直接回应。** AI-Infra-Guard的多层级红队测试框架（基础设施、MCP/工具协议、智能体行为、模型）本身在单项技术上并无太多新意，但作为一个信号却颇具意义：随着GitHub热门榜单上Claude Code技能、插件生态与多智能体框架（claude-skills、awesome-claude-code、agent-skills、TradingAgents、herdr、gastown）呈爆发式增长，防御性/安全工具明显在加速追赶，而针对MCP的威胁建模正在成为一个独立的子领域。\n\n**开源权重模型竞赛没有放缓的迹象，效率格式发布的数量甚至超过了单纯的能力宣称。** GLM-5.2、DeepSeek-V4-Pro-DSpark、多个Qwen3.6变体（27B NVFP4、35B-A3B GGUF/无审查版本）以及Mistral的Leanstral-119B-A6B MoE同时登上热门榜单，再加上下载量常常超过官方发布版本的社区量化/蒸馏改版（Qwythos、Ornith），提醒我们社区微调与量化工作仍是推动真实模型使用量的一个庞大却研究不足的因素。",
+  "papers": [
+    {
+      "id": "mirage-training-inference-mismatch-rl",
+      "title": "The Mirage of Optimizing Training Policies: Monotonic Inference Policies as the Real Objective for LLM Reinforcement Learning",
+      "authors": [
+        "Jing Liang",
+        "Hongyao Tang",
+        "Yi Ma",
+        "Yancheng He",
+        "Weixun Wang"
+      ],
+      "affiliations": [
+        "Tianjin University",
+        "Ant Group"
+      ],
+      "summary": "该论文认为，训练-推理不一致——即便参数已同步，独立的训练与推理引擎仍会产生不一致的轨迹概率——是LLM中RL后训练不稳定的根本原因之一。论文提出应将优化目标重新定义为单调递增的推理策略，而非名义上的训练策略，从而稳定RL微调过程。",
+      "key_findings": [
+        "即便模型参数已同步，训练-推理概率不一致依然存在，这破坏了标准RL策略优化的基本假设",
+        "优化名义训练策略是一个“幻象”目标；真正的优化目标应是单调改进的推理策略",
+        "这一重构为构建更稳定、更不易崩溃的LLM RL后训练流水线提供了一条路径"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "llm-post-training",
+        "rl-stability",
+        "training-inference-mismatch"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 142,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29526",
+        "huggingface": "https://huggingface.co/papers/2606.29526",
+        "pdf": "https://arxiv.org/pdf/2606.29526"
+      }
+    },
+    {
+      "id": "embodied-cpp-portable-inference-runtime",
+      "title": "Embodied.cpp: A Portable Inference Runtime of Embodied AI Models on Heterogeneous Robots",
+      "authors": [
+        "Ling Xu",
+        "Chuyu Han",
+        "Borui Li",
+        "Hao Wu",
+        "Shiqi Jiang"
+      ],
+      "affiliations": [
+        "Microsoft Research Asia"
+      ],
+      "summary": "Embodied.cpp是一个专为部署在异构边缘机器人上的视觉-语言-动作（VLA）与世界-动作模型（WAM）设计的可移植推理运行时，旨在解决模型专属Python技术栈的碎片化问题，以及闭环机器人控制中多速率、延迟优先的严苛需求。",
+      "key_findings": [
+        "现有的服务运行时是为请求-响应型负载优化的，无法满足具身智能多速率闭环控制对延迟的要求",
+        "统一的C++运行时可以在异构机器人硬件上同时支持VLA与世界-动作模型两大模型家族",
+        "该方案优先考虑批大小为1、延迟优先的推理，而非吞吐量，其设计理念与llama.cpp式的可移植运行时如出一辙"
+      ],
+      "tags": [
+        "embodied-ai",
+        "vla",
+        "inference-runtime",
+        "robotics",
+        "edge-deployment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 37,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02501",
+        "huggingface": "https://huggingface.co/papers/2607.02501",
+        "pdf": "https://arxiv.org/pdf/2607.02501"
+      }
+    },
+    {
+      "id": "orbitquant-data-agnostic-diffusion-quantization",
+      "title": "OrbitQuant: Data-Agnostic Quantization for Image and Video Diffusion Transformers",
+      "authors": [
+        "Donghyun Lee",
+        "Jitesh Chavan",
+        "Duy Nguyen",
+        "Sam Huang",
+        "Liming Jiang"
+      ],
+      "affiliations": [
+        "Adobe Research"
+      ],
+      "summary": "OrbitQuant提出了一种面向扩散Transformer（DiT）的数据无关权重-激活训练后量化方法，通过绕开传统的范围估计方式，无需针对每个检查点单独校准，从而降低图像与视频生成的推理成本。",
+      "key_findings": [
+        "DiT的激活值会随时间步、提示词和引导分支发生显著偏移，这使得基于校准的传统PTQ方法失效",
+        "数据无关的量化方案无需为每个新检查点或模态重新拟合校准数据",
+        "该方法同时适用于图像和视频扩散Transformer，能够跨模态泛化而无需重新调优"
+      ],
+      "tags": [
+        "diffusion-transformers",
+        "quantization",
+        "efficient-inference",
+        "video-generation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 28,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02461",
+        "huggingface": "https://huggingface.co/papers/2607.02461",
+        "pdf": "https://arxiv.org/pdf/2607.02461"
+      }
+    },
+    {
+      "id": "vla-corrector-adaptive-action-horizon",
+      "title": "VLA-Corrector: Lightweight Detect-and-Correct Inference for Adaptive Action Horizon",
+      "authors": [
+        "Yi Pan",
+        "Miao Pan",
+        "Qi Lu",
+        "Jiaming Huang",
+        "Man Zhang"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "VLA-Corrector为视觉-语言-动作策略增加了一个轻量级的检测-纠正推理层，为开环动作块执行恢复闭环响应能力，使接触密集型操作任务能够容忍局部扰动而无需完全重新规划。",
+      "key_findings": [
+        "固定视野的动作分块牺牲了闭环响应能力，导致误差在接触密集型物理交互过程中被放大",
+        "一个轻量级的检测-纠正模块可以自适应地缩短或延长动作视野，而无需重新训练基础VLA策略",
+        "该方法在保留动作分块效率优势的同时，恢复了对局部扰动的响应能力"
+      ],
+      "tags": [
+        "vision-language-action",
+        "robot-manipulation",
+        "closed-loop-control",
+        "embodied-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 23,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01804",
+        "huggingface": "https://huggingface.co/papers/2607.01804",
+        "pdf": "https://arxiv.org/pdf/2607.01804"
+      }
+    },
+    {
+      "id": "datacomp-vlm-vision-language-datasets",
+      "title": "DataComp-VLM: Improved Open Datasets for Vision-Language Models",
+      "authors": [
+        "Matteo Farina",
+        "Vishaal Udandarao",
+        "Thao Nguyen",
+        "Selim Kuzucu",
+        "Maximilian Böther"
+      ],
+      "affiliations": [
+        "University of Tübingen"
+      ],
+      "summary": "DataComp-VLM（DCVLM）是一个用于VLM训练可控数据实验的基准，它将160个涵盖图文对、多模态交错、纯文本和指令微调数据的数据集整合为一个6万亿token的语料库，从而使数据集构建研究系统化。",
+      "key_findings": [
+        "社区此前缺乏系统性基准来评估VLM数据构建策略",
+        "DCVLM将四类数据下的160个数据集整合为一个统一的6万亿token语料库，用于可控实验",
+        "该基准使VLM训练中不同数据构建策略之间的比较能够做到可复现、公平对照"
+      ],
+      "tags": [
+        "vision-language-models",
+        "dataset-curation",
+        "benchmark",
+        "data-centric-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28551",
+        "huggingface": "https://huggingface.co/papers/2606.28551",
+        "pdf": "https://arxiv.org/pdf/2606.28551"
+      }
+    },
+    {
+      "id": "ai-infra-guard-multi-layer-agent-red-teaming",
+      "title": "Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming",
+      "authors": [
+        "Yong Yang",
+        "Xing Zheng",
+        "Huiyu Wu",
+        "Huangsheng Cheng",
+        "Xiaorong Shi"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "AI-Infra-Guard是一个开源红队测试框架，将AI智能体安全测试组织为四个层级——基础设施、协议/工具（包括MCP）、智能体行为和模型——反映出安全工具的发展尚未跟上开源AI智能体基础设施快速增长的步伐。",
+      "key_findings": [
+        "AI智能体的攻击面分布在基础设施、协议/工具（如MCP）、智能体行为和模型这四个层级",
+        "现有的任何单一检测范式都无法覆盖全部四个层级，这促使研究者提出统一的多层级红队测试框架",
+        "该框架以开源工具形式发布，有助于缩小智能体基础设施增长与现有安全防御能力之间的差距"
+      ],
+      "tags": [
+        "ai-security",
+        "red-teaming",
+        "agent-safety",
+        "mcp"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31227",
+        "huggingface": "https://huggingface.co/papers/2606.31227",
+        "pdf": "https://arxiv.org/pdf/2606.31227"
+      }
+    },
+    {
+      "id": "measuring-gap-human-llm-research-ideas",
+      "title": "Measuring the Gap Between Human and LLM Research Ideas",
+      "authors": [
+        "Ziyu Chen",
+        "Yilun Zhao",
+        "Arman Cohan"
+      ],
+      "affiliations": [
+        "Yale University"
+      ],
+      "summary": "该研究构建了一个大规模评估框架，通过反向推导每篇人类论文核心想法可能受到启发的先前工作，将LLM生成的研究想法与真实的人类研究想法进行比较，超越了单纯的新颖性/可行性打分，转向一种有据可依的距离度量方式。",
+      "key_findings": [
+        "现有的构思评估方法孤立地评判想法本身（新颖性、可行性、偏好），而非衡量其与真实人类想法之间的距离",
+        "一种反向推导流程可以还原出很可能启发了每篇人类论文核心想法的密切相关先前工作",
+        "随后可将LLM生成的想法与这一有据可依的人类想法参照集进行比较，从而刻画人类与LLM之间的构思差距"
+      ],
+      "tags": [
+        "llm-for-science",
+        "research-ideation",
+        "evaluation",
+        "creativity"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01233",
+        "huggingface": "https://huggingface.co/papers/2607.01233",
+        "pdf": "https://arxiv.org/pdf/2607.01233"
+      }
+    },
+    {
+      "id": "multattnattrib-training-free-multimodal-attribution",
+      "title": "MultAttnAttrib: Training-Free Multimodal Attribution in Long Document Question Answering",
+      "authors": [
+        "Dang Quang Thien Tran",
+        "Quang V. Dang",
+        "Vinamra Tyagi",
+        "Sai Soorya Rao Veeravalli",
+        "Trang Nguyen"
+      ],
+      "affiliations": [
+        "VinAI Research"
+      ],
+      "summary": "MultAttnAttrib是一种无需训练的方法，用于在多模态长文档问答中将生成的答案追溯到源证据，它利用模型的预填充（prefill）过程、特定注意力头以及校准阈值来定位支持性证据，而无需额外训练。",
+      "key_findings": [
+        "尽管基于证据的问答助手日益普及，多模态答案溯源相较于单模态（纯文本）溯源的研究依然远远不足",
+        "从模型预填充过程中选取的特定注意力头，结合校准阈值，可以在无需任何额外训练的情况下定位源证据",
+        "这种无需训练的设计使该方法能够广泛应用于现有的多模态文档问答系统"
+      ],
+      "tags": [
+        "attribution",
+        "multimodal-qa",
+        "interpretability",
+        "document-understanding"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01420",
+        "huggingface": "https://huggingface.co/papers/2607.01420",
+        "pdf": "https://arxiv.org/pdf/2607.01420"
+      }
+    },
+    {
+      "id": "geo-anchored-cloud-removal-gacr",
+      "title": "Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment",
+      "authors": [
+        "Ziyao Wang",
+        "Maonan Wang",
+        "Yucheng He",
+        "Xianping Ma",
+        "Ziyi Wang"
+      ],
+      "affiliations": [
+        "Wuhan University"
+      ],
+      "summary": "GACR（地理锚定去云，Geo-Anchored Cloud Removal）是一个用于光学遥感去云的统一框架，同时优化视觉真实感与下游解译质量，解决了会使分割、变化检测等任务性能下降的语义漂移问题。",
+      "key_findings": [
+        "以往的去云方法只优化视觉真实感，却忽视了下游分析性能，从而导致语义漂移",
+        "一种基于观测锚定残差流并结合地理上下文对齐的方法，能同时保持重建保真度与下游任务的实用性",
+        "该框架明确评估了其对语义分割和变化检测性能的影响，而不仅仅是图像质量"
+      ],
+      "tags": [
+        "remote-sensing",
+        "cloud-removal",
+        "image-restoration",
+        "geospatial-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02471",
+        "huggingface": "https://huggingface.co/papers/2607.02471",
+        "pdf": "https://arxiv.org/pdf/2607.02471"
+      }
+    },
+    {
+      "id": "age-adaptive-masking-graph-embedding",
+      "title": "AGE: Adaptive-masking for Graph Embedding in Graph Retrieval-Augmented Generation",
+      "authors": [
+        "Bao Long Nguyen Huu",
+        "Atsushi Hashimoto"
+      ],
+      "affiliations": [
+        "OMRON SINIC X"
+      ],
+      "summary": "AGE（图嵌入自适应掩码，Adaptive-masking for Graph Embedding）通过一种基于Transformer的自适应掩码方法，更好地将图结构嵌入与冻结LLM的文本潜在空间对齐，从而改进GraphRAG，减少图-文表示之间的失配。",
+      "key_findings": [
+        "GraphRAG存在基于图和基于文本的潜在特征之间的失配问题，对于冻结的LLM尤为明显",
+        "图嵌入过程中引入自适应掩码机制可以提升与冻结LLM表示的兼容性",
+        "该方法提升了GraphRAG在不微调基础LLM的情况下利用结构化外部知识的能力"
+      ],
+      "tags": [
+        "graph-rag",
+        "retrieval-augmented-generation",
+        "graph-embedding",
+        "knowledge-graphs"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00052",
+        "huggingface": "https://huggingface.co/papers/2607.00052",
+        "pdf": "https://arxiv.org/pdf/2607.00052"
+      }
+    },
+    {
+      "id": "anybokeh-physics-guided-bokeh-editing",
+      "title": "AnyBokeh: Physics-Guided Any-to-Any Bokeh Editing with Optical Fingerprint Transfer",
+      "authors": [
+        "Xinyu Hou",
+        "Xiaoming Li",
+        "Zongsheng Yue",
+        "Chen Change Loy"
+      ],
+      "affiliations": [
+        "Nanyang Technological University"
+      ],
+      "summary": "AnyBokeh能够直接对在任意对焦和光圈设置下拍摄的图像进行拍摄后虚化（bokeh）编辑，通过物理引导的光学指纹迁移，避免了丢弃有用的模糊线索或引入重建伪影的问题，这与假设输入图像为全对焦图像的传统流程不同。",
+      "key_findings": [
+        "现有的虚化编辑器假设输入图像是全对焦图像，或需要先重建出全对焦图像，这会丢弃有用的模糊线索并引入伪影",
+        "AnyBokeh在物理景深原理的指导下直接迁移一种“光学指纹”，实现任意到任意的虚化编辑",
+        "该方法能够处理任意的源图像对焦/光圈设置，而无需先重建出全对焦的中间图像"
+      ],
+      "tags": [
+        "computational-photography",
+        "bokeh-editing",
+        "image-editing",
+        "depth-of-field"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31959",
+        "huggingface": "https://huggingface.co/papers/2606.31959",
+        "pdf": "https://arxiv.org/pdf/2606.31959"
+      }
+    },
+    {
+      "id": "teaching-llms-recommend-defer-epilepsy-care",
+      "title": "Teaching LLMs to Recommend and Defer in Underrepresented Epilepsy Care",
+      "authors": [
+        "Shreyas Rajesh",
+        "Kartik Sharma",
+        "Tonmoy Monsoor",
+        "Mehmet Yigit Turali",
+        "Richard Idro"
+      ],
+      "affiliations": [
+        "Georgia Institute of Technology",
+        "Makerere University"
+      ],
+      "summary": "该研究评估了基于LLM的决策支持系统，用于根据乌干达儿童癫痫护理中纵向的非结构化门诊记录预测抗癫痫药物方案，重点关注在当地专业资源稀缺的情况下，模型应何时给出建议、何时转交专科医生。",
+      "key_findings": [
+        "在资源受限的环境中，癫痫专科医生的专业知识十分稀缺，这推动了基于LLM的一线决策支持需求",
+        "标准提示方法在纵向非结构化门诊记录上与医生处方达到了不容忽视的一致性",
+        "神经科医生的评审强调，在模棱两可或高风险情况下，教会模型“转交”而非“给出建议”至关重要"
+      ],
+      "tags": [
+        "clinical-ai",
+        "llm-deferral",
+        "global-health",
+        "medical-nlp"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31036",
+        "huggingface": "https://huggingface.co/papers/2606.31036",
+        "pdf": "https://arxiv.org/pdf/2606.31036"
+      }
+    },
+    {
+      "id": "generated-contents-enrichment",
+      "title": "Generated Contents Enrichment",
+      "authors": [
+        "Mahdi Naseri",
+        "Jiayan Qiu",
+        "Zhou Wang"
+      ],
+      "affiliations": [
+        "University of Waterloo"
+      ],
+      "summary": "该论文研究了生成内容增强（Generated Contents Enrichment，GCE），这是一种条件图像生成任务：先通过一个显式的、可检验的场景表示对稀疏场景描述进行增强，随后再渲染为语义上更丰富的视觉内容。",
+      "key_findings": [
+        "传统图像生成系统是在生成器内部隐式地添加内容，而非将其构造为可检验的中间结构",
+        "GCE在稀疏场景描述与最终渲染之间引入了一个显式的场景表示阶段",
+        "这一显式中间结构提升了生成过程中所添加内容的可解释性和可控性"
+      ],
+      "tags": [
+        "image-generation",
+        "scene-representation",
+        "controllable-generation"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2405.03650",
+        "huggingface": "https://huggingface.co/papers/2405.03650",
+        "pdf": "https://arxiv.org/pdf/2405.03650"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (Z.ai)",
+      "description": "GLM MoE系列中的一款大型对话文本生成模型，作为智谱AI前沿开源权重阵容的一员，提供了更新的推理与对话能力。",
+      "task_type": "text-generation",
+      "model_size": "MoE (DSA architecture)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "glm_moe_dsa",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 231218,
+        "likes": 3532
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度推出的一款特征提取OCR模型，专为高吞吐量的文档和文本识别设计，在热门模型中展现出极高的下载量。",
+      "task_type": "feature-extraction",
+      "model_size": "not disclosed",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "unlimited-ocr",
+        "feature-extraction",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 1070230,
+        "likes": 1794
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3 (Hunyuan)",
+      "organization": "Tencent",
+      "description": "腾讯混元（Hunyuan）模型家族的一款新文本生成模型，尽管下载量目前还很少，但社区点赞数迅速积累，表明这是一个仍在快速扩大采用的全新发布版本。",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "hy_v3",
+        "text-generation",
+        "hunyuan"
+      ],
+      "metrics": {
+        "downloads": 2,
+        "likes": 336
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek推出的V4 Pro文本生成模型的DSpark变体，延续了DeepSeek-V系列在高效大规模MoE推理模型方面的推进，并附有相应的arXiv技术报告。",
+      "task_type": "text-generation",
+      "model_size": "large MoE",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation",
+        "arxiv:2606.19348"
+      ],
+      "metrics": {
+        "downloads": 14276,
+        "likes": 409
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "nvidia-qwen3-6-27b-nvfp4",
+      "name": "Qwen3.6-27B-NVFP4",
+      "organization": "NVIDIA",
+      "description": "Qwen3.6-27B的NVFP4量化版本，使用NVIDIA的Model Optimizer工具包进行优化，以便在NVIDIA硬件上实现高效的低精度推理。",
+      "task_type": "text-generation",
+      "model_size": "27B (NVFP4 quantized)",
+      "tags": [
+        "Model Optimizer",
+        "safetensors",
+        "qwen3_5",
+        "nvidia",
+        "ModelOpt"
+      ],
+      "metrics": {
+        "downloads": 430676,
+        "likes": 290
+      },
+      "source_url": "https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA推出的一款紧凑型3B特征提取模型，专注于开放词汇的定位/接地任务，在同尺寸模型中展现出强劲的下载量和点赞数。",
+      "task_type": "feature-extraction",
+      "model_size": "3B",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "locateanything",
+        "feature-extraction",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1340559,
+        "likes": 2635
+      },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "TabFM 1.0.0",
+      "organization": "Google",
+      "description": "一个支持零样本表格回归的表格基础模型，体现了将基础模型方法论应用于文本和视觉之外的结构化/表格数据这一日益增长的趋势。",
+      "task_type": "tabular-regression",
+      "model_size": "not disclosed",
+      "tags": [
+        "tabfm",
+        "safetensors",
+        "tabular",
+        "tabular-regression",
+        "zero-shot"
+      ],
+      "metrics": {
+        "downloads": 7036,
+        "likes": 257
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "mistralai-leanstral-119b",
+      "name": "Leanstral-1.5-119B-A6B",
+      "organization": "Mistral AI",
+      "description": "一款大型稀疏混合专家（MoE）模型（总参数119B，约6B激活参数），基于Mistral的Leanstral基座模型微调而来，针对vLLM部署进行了优化，采用Apache-2.0许可证发布。",
+      "task_type": "text-generation",
+      "model_size": "119B (A6B active, MoE)",
+      "tags": [
+        "vllm",
+        "base_model:mistralai/Leanstral-2603",
+        "base_model:finetune:mistralai/Leanstral-2603",
+        "license:apache-2.0",
+        "region:us"
+      ],
+      "metrics": {
+        "downloads": 106,
+        "likes": 143
+      },
+      "source_url": "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "一款从Krea-2-Raw蒸馏而来的快速文生图扩散模型，旨在实现低延迟、高质量的图像生成。",
+      "task_type": "text-to-image",
+      "model_size": "not disclosed",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "text-to-image",
+        "en",
+        "base_model:krea/Krea-2-Raw"
+      ],
+      "metrics": {
+        "downloads": 109470,
+        "likes": 529
+      },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "qwen-agentworld-35b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba (Qwen team)",
+      "description": "Qwen团队推出的一款图文到文本混合专家（MoE）模型，专为结合视觉与语言理解的智能体、世界建模类任务而打造。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (A3B active, MoE)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 57835,
+        "likes": 556
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "InternScience推出的一款图文到文本混合专家（MoE）模型，面向智能体式多模态推理任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 8766,
+        "likes": 345
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "ornith-1-0-35b",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "DeepReinforce AI推出的一款GGUF量化35B文本生成模型，以MIT许可证发布，支持端点兼容的高效部署。",
+      "task_type": "text-generation",
+      "model_size": "35B (GGUF quantized)",
+      "tags": [
+        "transformers",
+        "gguf",
+        "text-generation",
+        "license:mit",
+        "endpoints_compatible"
+      ],
+      "metrics": {
+        "downloads": 436780,
+        "likes": 759
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "claude-skills",
+      "name": "alirezarezvani/claude-skills",
+      "description": "一个大型精选合集，收录了345个Claude Code技能、智能体和插件，涵盖工程、市场营销、研究和业务运营等使用场景。",
+      "language": "Python",
+      "stars": 21186,
+      "stars_today": 610,
+      "forks": 2843,
+      "url": "https://github.com/alirezarezvani/claude-skills",
+      "tags": [
+        "claude-code",
+        "agent-skills",
+        "plugins"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "一个AI智能体技能，可在Reddit、X、YouTube、HN、Polymarket和网络上研究任意主题，并综合生成有据可依的摘要。",
+      "language": "Python",
+      "stars": 49799,
+      "stars_today": 458,
+      "forks": 4147,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": [
+        "ai-agents",
+        "research-automation",
+        "claude-skills"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-video",
+      "name": "bradautomates/claude-video",
+      "description": "赋予Claude观看任意视频的能力，通过下载、提取帧、转录，并将内容提供给模型来实现。",
+      "language": "Python",
+      "stars": 4286,
+      "stars_today": 427,
+      "forks": 607,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": [
+        "multimodal-ai",
+        "claude",
+        "video-understanding"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "一个多智能体LLM金融交易框架，协调多个专职智能体完成市场分析和交易决策。",
+      "language": "Python",
+      "stars": 91391,
+      "stars_today": 322,
+      "forks": 17666,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "multi-agent",
+        "llm-finance",
+        "trading"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "free-llm-api-resources",
+      "name": "cheahjs/free-llm-api-resources",
+      "description": "一份持续维护的、可通过API访问的免费LLM推理资源清单，被广泛用于开发者的LLM原型开发。",
+      "language": "Python",
+      "stars": 25903,
+      "stars_today": 419,
+      "forks": 2686,
+      "url": "https://github.com/cheahjs/free-llm-api-resources",
+      "tags": [
+        "llm-apis",
+        "developer-resources"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nanogpt",
+      "name": "karpathy/nanoGPT",
+      "description": "用于训练和微调中等规模GPT模型最简单、最快的代码库之一，是一份基础性的教育与研究参考资料。",
+      "language": "Python",
+      "stars": 60850,
+      "stars_today": 91,
+      "forks": 10463,
+      "url": "https://github.com/karpathy/nanoGPT",
+      "tags": [
+        "gpt",
+        "llm-training",
+        "education"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-claude-code",
+      "name": "hesreallyhim/awesome-claude-code",
+      "description": "一个精选的Claude Code资源合集，包括技能、智能体、状态栏、开发者工具和插件。",
+      "language": "Python",
+      "stars": 48733,
+      "stars_today": 506,
+      "forks": 4261,
+      "url": "https://github.com/hesreallyhim/awesome-claude-code",
+      "tags": [
+        "claude-code",
+        "awesome-list",
+        "developer-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "antigravity-sdk-python",
+      "name": "google-antigravity/antigravity-sdk-python",
+      "description": "一个用于构建AI智能体的Python库，充分利用谷歌Antigravity智能体平台的能力。",
+      "language": "Python",
+      "stars": 2269,
+      "stars_today": 32,
+      "forks": 821,
+      "url": "https://github.com/google-antigravity/antigravity-sdk-python",
+      "tags": [
+        "google",
+        "agent-sdk",
+        "ai-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-financial-services",
+      "name": "anthropics/financial-services",
+      "description": "Anthropic官方的资源与工具仓库，用于将Claude应用于金融服务场景。",
+      "language": "Python",
+      "stars": 33183,
+      "stars_today": 105,
+      "forks": 4855,
+      "url": "https://github.com/anthropics/financial-services",
+      "tags": [
+        "anthropic",
+        "finance",
+        "llm-applications"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-claude-skills",
+      "name": "ComposioHQ/awesome-claude-skills",
+      "description": "一份精选的Claude Skills资源与工具清单，用于定制Claude AI工作流。",
+      "language": "Python",
+      "stars": 67015,
+      "stars_today": 104,
+      "forks": 7493,
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "tags": [
+        "claude-skills",
+        "awesome-list"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "qlib",
+      "name": "microsoft/qlib",
+      "description": "一个面向AI的量化投资平台，支持监督学习、市场动态建模以及强化学习，覆盖从研究到生产的量化工作流，现已与RD-Agent集成以实现研发自动化。",
+      "language": "Python",
+      "stars": 45836,
+      "stars_today": 125,
+      "forks": 7303,
+      "url": "https://github.com/microsoft/qlib",
+      "tags": [
+        "quant-finance",
+        "reinforcement-learning",
+        "ml-platform"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "一份定期更新的合集，收录了从Claude、ChatGPT、Gemini、Grok及各类编程助手等主流AI产品中提取出的系统提示词。",
+      "language": "JavaScript",
+      "stars": 51631,
+      "stars_today": 1378,
+      "forks": 8412,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": [
+        "system-prompts",
+        "llm-transparency",
+        "prompt-engineering"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "为AI编程智能体设计的生产级工程技能，旨在提升可靠性和代码质量。",
+      "language": "JavaScript",
+      "stars": 70895,
+      "stars_today": 1112,
+      "forks": 7677,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "ai-coding-agents",
+        "agent-skills",
+        "developer-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "一个用于大规模搜索、抓取和与网络交互的API，被广泛用作LLM智能体和RAG流水线的数据获取后端。",
+      "language": "TypeScript",
+      "stars": 146327,
+      "stars_today": 867,
+      "forks": 8418,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": [
+        "web-scraping",
+        "agent-tooling",
+        "rag"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "zvec",
+      "name": "alibaba/zvec",
+      "description": "一个轻量级、速度极快的进程内向量数据库，适用于RAG和智能体应用中基于嵌入的检索。",
+      "language": "C++",
+      "stars": 13538,
+      "stars_today": 382,
+      "forks": 826,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": [
+        "vector-database",
+        "rag",
+        "embeddings"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "RL训练-推理不一致与后训练稳定性",
+      "description": "针对LLM RL后训练脆弱性的研究，尤其聚焦训练与推理引擎之间破坏优化过程稳定性的概率偏差问题。",
+      "related_paper_ids": [
+        "mirage-training-inference-mismatch-rl"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "具身智能系统工程与闭环控制",
+      "description": "研究重心从新的VLA/世界-动作模型架构转向面向部署的系统性工作：可移植推理运行时以及用于闭环机器人控制的轻量级纠正机制。",
+      "related_paper_ids": [
+        "embodied-cpp-portable-inference-runtime",
+        "vla-corrector-adaptive-action-horizon"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效生成模型推理（量化与数据为中心的方法）",
+      "description": "通过数据无关量化和严谨的数据集构建基准，使扩散Transformer和VLM的训练与部署更廉价、更系统化的相关工作。",
+      "related_paper_ids": [
+        "orbitquant-data-agnostic-diffusion-quantization",
+        "datacomp-vlm-vision-language-datasets"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "智能体与MCP安全/红队测试",
+      "description": "随着智能体生态规模扩张速度超过防御工具的发展，用于系统性地对AI智能体技术栈（涵盖基础设施、协议、行为和模型层）进行红队测试的新兴框架。",
+      "related_paper_ids": [
+        "ai-infra-guard-multi-layer-agent-red-teaming"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "开源权重前沿模型竞赛与高效量化变体",
+      "description": "GLM-5.2、DeepSeek-V4-Pro、多个Qwen3.6变体、Mistral Leanstral和腾讯Hy3同时登上热门榜单，再加上一波GGUF/NVFP4量化的社区发布版本，其下载量常常超过官方版本。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code/智能体技能工具生态增长",
+      "description": "GitHub热门榜单被Claude Code技能、插件合集以及面向金融与研究的多智能体框架所主导，标志着智能体开发者工具正成为一个主要的增长领域。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-06T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-06T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-06T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-06T23:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-06T23:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
