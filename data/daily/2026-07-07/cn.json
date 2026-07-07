@@ -1,0 +1,666 @@
+{
+  "version": "1.0",
+  "date": "2026-07-07",
+  "generated_at": "2026-07-07T23:00:00Z",
+  "summary": {
+    "headline": "LLM强化学习中的训练-推理不一致问题以142个赞成为今日头条；具身智能获得统一的C++推理运行时和闭环VLA校正；扩散Transformer量化与VLM数据整理推动效率研究向前发展；GitHub趋势被Claude Code技能、智能体多路复用器和AI红队工具占据",
+    "body": "周一的论文队列较为清淡，因此今日综述主要取材于7月6日的存量论文，并补充了两篇7月7日的新投稿。今日焦点是**The Mirage of Optimizing Training Policies**（142个赞），该论文将LLM强化学习后训练的核心重新定义为单调的*推理*策略而非训练策略本身——这是对训练-推理概率不一致问题的一个微妙但影响深远的修正，该问题即使在参数同步的情况下也会导致不稳定。具身智能领域产出了两项互补贡献：**Embodied.cpp**，一个便携式推理运行时，终于为视觉-语言-动作模型和世界-动作模型提供了面向异构机器人的批量为1、闭环优先的服务栈；以及**VLA-Corrector**，一个轻量级的检测-校正层，在不牺牲效率增益的前提下为开环动作分块策略恢复了反应性。\n\n效率与数据整理研究同样表现突出。**OrbitQuant**为扩散Transformer提供了数据无关的后训练量化方法，绕开了当前DiT量化器所需的昂贵逐检查点校准。**DataComp-VLM**将DataComp方法论扩展到视觉-语言模型预训练领域，汇集了160个数据集、6万亿token的基准语料库，用于系统性的数据整理实验。在元研究方面，两篇最新投稿——**ResearchStudio-Idea**（一套基于ML会议成果构建的、有证据支撑的构思技能套件）和**Measuring the Gap Between Human and LLM Research Ideas**——都在追问LLM究竟能在多大程度上真正开展科学研究，而**Mastermind**基于策略的仓库级漏洞复现方法则进一步强化了这一主题。\n\n在模型方面，**GLM-5.2**（Z.ai）凭借其全新的MoE-with-DSA架构以3,532个赞领跑社区互动，而**HauhauCS的无审查版Qwen3.6-35B-A3B** GGUF量化版本则斩获290万次下载。NVIDIA的**LocateAnything-3B**和百度的**Unlimited-OCR**均表明，视觉定位与OCR基础模型正在向生产级特征提取器趋同。GitHub趋势榜依旧被Claude Code与智能体工具生态所主导——**claude-skills**、**agent-skills**、**codex-plugin-cc**以及**system_prompts_leaks**共同表明开发者正竞相构建、整理并逆向工程这一新兴的智能体技能层，与此同时一波AI安全工具（**AI-Infra-Guard**、**Mastermind**、系统提示词泄露）也在兴起，标志着对智能体基础设施的红队测试已成为研究与开源领域的头等优先事项。",
+    "key_themes": [
+      "training-inference-consistency-in-rl",
+      "embodied-ai-inference-runtimes",
+      "diffusion-transformer-quantization",
+      "vlm-data-curation",
+      "llm-research-ideation",
+      "agent-skill-ecosystem-and-red-teaming"
+    ]
+  },
+  "researcher_notes": "**训练-推理不一致论文无疑是今日头条，且当之无愧。**以142个赞的成绩，它远超本批次中的其他所有论文。其核心洞见——LLM强化学习后训练使用独立的推理引擎与训练引擎，二者对相同轨迹给出的概率即使在参数同步的情况下也会出现分歧——解释了许多从业者观察到却很少能干净诊断出的失败模式：明明超参数看似正确，RL训练却仍会失稳或崩溃。该论文主张真正的优化目标是*单调推理策略*而非名义上的训练策略，从而将整整一类RLHF/RLVR工程bug重新定义为一个根本性的目标不一致问题，而非实现细节问题。这对任何使用解耦服务栈（用vLLM/SGLang做rollout，用独立训练器计算梯度）运行大规模RL后训练的人都有直接影响——而如今这几乎是所有人的做法。\n\n**具身智能基础设施终于获得了系统层面的关注，而不再只是新模型的堆砌。**Embodied.cpp和VLA-Corrector从不同角度攻击同一个底层问题：当今的VLA和世界-动作模型被困在Python请求-响应服务栈中，无法匹配机器人实际所需的多速率、闭环、批量为1的延迟特性。Embodied.cpp给出的答案是一个便携式运行时；VLA-Corrector给出的答案则是在现有开环动作分块策略上加装一个轻量级校正层，在不放弃分块执行效率的前提下恢复反应性。两者共同表明，具身智能领域正在进入其“系统成熟期”——正如LLM服务在2023年前后经历vLLM带来的转变一样——正在部署机器人策略的团队应密切关注这两项工作。\n\n**今日悄然浮现出一个连贯的元研究集群。**ResearchStudio-Idea、Measuring the Gap Between Human and LLM Research Ideas，以及（带有安全色彩的变体）Mastermind的策略导向漏洞复现，三者探讨的是同一个问题：LLM能否真正完成专家推理的“第一英里”——将问题置于已有工作背景中、选定策略、并与现有方案做出区分——而不只是执行别人指定好的计划？ResearchStudio-Idea的Paper-Search技能，以及耶鲁团队逆向工程出的“启发该想法的已有工作”评估框架，是将同一差距具体化的两次独立尝试。两篇7月7日投稿的低赞数很可能只是反映了它们的新颖性而非质量较低；待社区讨论跟上后，这两篇论文都值得重新审视。\n\n**OrbitQuant和DataComp-VLM代表了不那么光鲜却杠杆效应很高的效率工作。**无需为每个检查点重新拟合校准数据的数据无关量化方法，直接降低了部署新扩散Transformer检查点的运营成本——鉴于当前图像/视频DiT检查点的迭代速度之快，这是一个实实在在的痛点。DataComp-VLM为受控的VLM数据整理实验提供的160个数据集、6万亿token语料库，填补了一个真正的基准测试空白；在此之前，关于VLM预训练数据整理的说法大多是各实验室各自为政的轶事性发现，缺乏共享的比较基础。\n\n**GitHub趋势榜证实，智能体技能层与AI红队测试如今已成为密不可分的优先事项。**claude-skills（2.1万星，今日+610）、agent-skills（7.1万星，今日+1,112）和codex-plugin-cc（今日+906，可在Claude Code内部调用Codex）表明，整个生态正在跨供应商地收敛到一个共享的“技能”抽象层上。与此同时，system_prompts_leaks（今日+1,378）以及论文端的AI-Infra-Guard和Mastermind投稿表明，随着智能体基础设施的普及，对其攻击面——模型、协议/工具层（MCP）以及智能体行为——的审视也在同步增加。预计这条“智能体红队测试”线索将与其所针对的技能生态系统同步持续增长。",
+  "papers": [
+    {
+      "id": "mirage-training-policies-rl",
+      "title": "训练策略优化的幻象：单调推理策略才是LLM强化学习的真正目标",
+      "authors": ["Jing Liang", "Hongyao Tang", "Yi Ma", "Yancheng He", "Weixun Wang et al."],
+      "affiliations": ["Tianjin University"],
+      "summary": "指出训练-推理不一致——即LLM的推理引擎与训练引擎在参数同步的情况下，仍对相同轨迹给出不同概率——是RL后训练不稳定和崩溃的根本原因之一。主张该领域应优化单调推理策略，而非名义上的训练策略。",
+      "key_findings": [
+        "训练-推理引擎不一致会导致即使模型参数相同，轨迹概率也不一致",
+        "将RL后训练的真正目标重新定义为单调推理策略，而非训练策略",
+        "解释了一类此前被归咎于超参数或实现问题的RL不稳定与崩溃故障"
+      ],
+      "tags": ["reinforcement-learning", "llm-post-training", "training-inference-mismatch", "rlhf", "stability"],
+      "relevance": "high",
+      "engagement": { "upvotes": 142, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29526",
+        "huggingface": "https://huggingface.co/papers/2606.29526",
+        "pdf": "https://arxiv.org/pdf/2606.29526"
+      }
+    },
+    {
+      "id": "embodied-cpp",
+      "title": "Embodied.cpp：面向异构机器人的具身AI模型便携式推理运行时",
+      "authors": ["Ling Xu", "Chuyu Han", "Borui Li", "Hao Wu", "Shiqi Jiang et al."],
+      "affiliations": ["Microsoft Research Asia"],
+      "summary": "介绍了一个专为视觉-语言-动作（VLA）模型和世界-动作模型（WAM）打造的便携式推理运行时，解决了请求-响应服务栈与具身AI在异构边缘机器人上对多速率、闭环、批量为1延迟需求之间的不匹配问题。",
+      "key_findings": [
+        "现有推理运行时是为请求-响应式服务设计的，无法满足具身部署的要求",
+        "在闭环控制中提供多速率执行，并采用以延迟优先的批量为1推理",
+        "面向异构机器人硬件的部署可移植性，避免了特定模型的Python技术栈"
+      ],
+      "tags": ["embodied-ai", "inference-runtime", "vision-language-action", "robotics", "systems"],
+      "relevance": "high",
+      "engagement": { "upvotes": 37, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02501",
+        "huggingface": "https://huggingface.co/papers/2607.02501",
+        "pdf": "https://arxiv.org/pdf/2607.02501"
+      }
+    },
+    {
+      "id": "orbitquant",
+      "title": "OrbitQuant：面向图像与视频扩散Transformer的数据无关量化方法",
+      "authors": ["Donghyun Lee", "Jitesh Chavan", "Duy Nguyen", "Sam Huang", "Liming Jiang et al."],
+      "affiliations": ["Adobe Research"],
+      "summary": "提出了一种面向扩散Transformer的数据无关权重-激活量化器，绕开了逐检查点的校准重新拟合，解决了困扰以往后训练量化方法的、跨时间步、提示词和引导分支的激活偏移问题。",
+      "key_findings": [
+        "无需为每个新的DiT检查点或模态重新拟合校准数据",
+        "无需重新估计范围即可处理扩散时间步和引导分支之间的激活分布偏移",
+        "同时针对图像和视频扩散Transformer的推理成本降低"
+      ],
+      "tags": ["quantization", "diffusion-transformers", "efficient-inference", "image-generation", "video-generation"],
+      "relevance": "high",
+      "engagement": { "upvotes": 28, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02461",
+        "huggingface": "https://huggingface.co/papers/2607.02461",
+        "pdf": "https://arxiv.org/pdf/2607.02461"
+      }
+    },
+    {
+      "id": "vla-corrector",
+      "title": "VLA-Corrector：面向自适应动作视界的轻量级检测-校正推理",
+      "authors": ["Yi Pan", "Miao Pan", "Qi Lu", "Jiaming Huang", "Man Zhang et al."],
+      "affiliations": ["Shanghai AI Laboratory"],
+      "summary": "提出了一种轻量级检测-校正机制，为使用固定视界动作分块的视觉-语言-动作策略恢复闭环反应性，解决了在接触密集型操作中对局部扰动响应能力丧失的问题。",
+      "key_findings": [
+        "指出固定动作视界分块会牺牲接触密集型物理交互中的闭环反应性",
+        "引入检测-校正推理，可在无需完全重新规划的情况下自适应调整动作视界",
+        "在恢复对扰动响应能力的同时，保留了开环动作分块的效率优势"
+      ],
+      "tags": ["vision-language-action", "robot-manipulation", "closed-loop-control", "embodied-ai", "adaptive-inference"],
+      "relevance": "high",
+      "engagement": { "upvotes": 23, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01804",
+        "huggingface": "https://huggingface.co/papers/2607.01804",
+        "pdf": "https://arxiv.org/pdf/2607.01804"
+      }
+    },
+    {
+      "id": "datacomp-vlm",
+      "title": "DataComp-VLM：面向视觉-语言模型的改进型开放数据集",
+      "authors": ["Matteo Farina", "Vishaal Udandarao", "Thao Nguyen", "Selim Kuzucu", "Maximilian Böther et al."],
+      "affiliations": ["University of Tübingen"],
+      "summary": "将DataComp方法论扩展到视觉-语言模型预训练领域，汇集了160个数据集——涵盖图文对、多模态交错文档、纯文本以及指令微调数据——构建成一个6万亿token的语料库，用于系统性的数据整理基准测试。",
+      "key_findings": [
+        "推出DCVLM，这是首个用于受控、以数据为中心的VLM训练实验的系统性基准",
+        "汇集了跨越四种数据类型的160个数据集，构成约6万亿token的语料库",
+        "为比较数据整理策略提供了共享基础，此前这些策略仅在各实验室内部以轶事性方式评估"
+      ],
+      "tags": ["vision-language-models", "data-curation", "benchmarking", "pretraining-datasets", "multimodal"],
+      "relevance": "high",
+      "engagement": { "upvotes": 21, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28551",
+        "huggingface": "https://huggingface.co/papers/2606.28551",
+        "pdf": "https://arxiv.org/pdf/2606.28551"
+      }
+    },
+    {
+      "id": "ai-infra-guard",
+      "title": "保护AI智能体：面向多层智能体红队测试的统一框架",
+      "authors": ["Yong Yang", "Xing Zheng", "Huiyu Wu", "Huangsheng Cheng", "Xiaorong Shi et al."],
+      "affiliations": ["Tencent"],
+      "summary": "提出了AI-Infra-Guard，一个开源红队测试框架，其构建基于这样的观察：AI智能体的攻击面分层分布在基础设施、协议/工具（包括MCP）、智能体行为和模型等各个层面，而现有的任何单一检测范式都无法覆盖全部层面。",
+      "key_findings": [
+        "将AI智能体的攻击面映射到四个不同层面：基础设施、协议/工具、智能体行为和模型",
+        "认为开源AI基础设施的增长速度已经超过了现有安全工具的发展",
+        "发布了一个覆盖完整智能体技术栈（包括MCP生态系统）的开源统一红队测试框架"
+      ],
+      "tags": ["ai-security", "red-teaming", "agent-safety", "mcp", "open-source"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31227",
+        "huggingface": "https://huggingface.co/papers/2606.31227",
+        "pdf": "https://arxiv.org/pdf/2606.31227"
+      }
+    },
+    {
+      "id": "human-llm-research-idea-gap",
+      "title": "衡量人类与LLM研究构思之间的差距",
+      "authors": ["Ziyu Chen", "Yilun Zhao", "Arman Cohan"],
+      "affiliations": ["Yale University"],
+      "summary": "构建了一个大规模评估框架，通过逆向工程还原出一组高质量人类论文中每个想法很可能受到启发的密切相关已有工作，然后据此衡量LLM生成的想法与这一重建出的人类构思过程之间的差距。",
+      "key_findings": [
+        "超越了新颖性/可行性打分，直接量化LLM与人类研究构思之间的差距",
+        "为每篇人类论文逆向工程出可能的启发性已有工作，作为一种基础信号",
+        "提供了一个可复用的框架，用于将LLM构思与重建的人类推理链进行基准比较"
+      ],
+      "tags": ["research-ideation", "llm-evaluation", "scientific-discovery", "benchmarking", "creativity"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 6, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01233",
+        "huggingface": "https://huggingface.co/papers/2607.01233",
+        "pdf": "https://arxiv.org/pdf/2607.01233"
+      }
+    },
+    {
+      "id": "research-studio-idea",
+      "title": "ResearchStudio-Idea：源自ML会议成果、有证据支撑的研究构思技能套件",
+      "authors": ["Qihao Zhao", "Yangyu Huang", "Yalun Dai", "Lingao Xiao", "Jianjun Gao et al."],
+      "affiliations": ["Microsoft Research Asia"],
+      "summary": "提出了一套可复用的技能套件，覆盖研究构思的“第一英里”——文献支撑、瓶颈识别、与已有工作的差异化以及风险评估——其中包括一个独立的多源Paper-Search工具，该套件是从ML会议成果中观察到的模式中提炼而成的。",
+      "key_findings": [
+        "将研究构思定义为不仅仅是生成候选方向，还需要文献支撑、瓶颈识别、差异化和风险评估",
+        "推出Paper-Search，一个用于为构思提供支撑的独立多源文献检索技能",
+        "该技能套件的设计源自对实际ML会议发表成果中观察到的模式的提炼"
+      ],
+      "tags": ["research-ideation", "llm-agents", "literature-search", "skill-suites", "scientific-discovery"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.04439",
+        "huggingface": "https://huggingface.co/papers/2607.04439",
+        "pdf": "https://arxiv.org/pdf/2607.04439"
+      }
+    },
+    {
+      "id": "mastermind-vulnerability-reproduction",
+      "title": "Mastermind：面向仓库级漏洞复现的策略导向学习",
+      "authors": ["Mingzhe Du", "Luu Anh Tuan", "Tianyi Wu", "Renyang Liu", "Zhijiang Guo et al."],
+      "affiliations": ["Nanyang Technological University"],
+      "summary": "主张仓库级漏洞复现智能体的失败主要源于选择了错误的策略，而非执行正确方法时表现不佳，并提出应直接学习策略本身，而非学习完整的动作轨迹。",
+      "key_findings": [
+        "仓库级漏洞复现需要检查代码库、推断输入语法、构建概念验证并验证修复方案",
+        "知道正确策略的LLM智能体通常都能执行成功，但大多数失败源于策略选择而非执行环节",
+        "提出应将策略层面的学习作为正确的训练信号，而非模仿整个动作轨迹"
+      ],
+      "tags": ["vulnerability-reproduction", "llm-agents", "software-security", "strategy-learning", "repository-scale-tasks"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01764",
+        "huggingface": "https://huggingface.co/papers/2607.01764",
+        "pdf": "https://arxiv.org/pdf/2607.01764"
+      }
+    },
+    {
+      "id": "multattnattrib",
+      "title": "MultAttnAttrib：面向长文档问答的免训练多模态归因方法",
+      "authors": ["Dang Quang Thien Tran", "Quang V. Dang", "Vinamra Tyagi", "Sai Soorya Rao Veeravalli", "Trang Nguyen et al."],
+      "affiliations": ["VinAI Research"],
+      "summary": "提出了一种面向有依据支撑的多模态问答系统的免训练归因生成方法，利用模型的预填充过程、选定的注意力头以及校准阈值，在长文档中定位生成答案的来源证据。",
+      "key_findings": [
+        "将归因研究从研究充分的单模态场景扩展到研究不足的多模态场景",
+        "无需额外训练，而是依赖预填充过程的注意力信号和校准阈值",
+        "针对长篇多模态文档问答中生成答案的证据定位，以支持用户信任与安全"
+      ],
+      "tags": ["attribution", "multimodal-qa", "training-free", "interpretability", "document-understanding"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01420",
+        "huggingface": "https://huggingface.co/papers/2607.01420",
+        "pdf": "https://arxiv.org/pdf/2607.01420"
+      }
+    },
+    {
+      "id": "geo-anchored-cloud-removal",
+      "title": "面向解译任务的云层去除：基于观测锚定残差流与地理上下文对齐",
+      "authors": ["Ziyao Wang", "Maonan Wang", "Yucheng He", "Xianping Ma", "Ziyi Wang et al."],
+      "affiliations": ["Wuhan University"],
+      "summary": "提出了地理锚定云层去除（GACR），一个统一的遥感云层去除框架，联合优化视觉重建与下游可解译性，解决了以往方法给分割和变化检测等任务带来的语义漂移问题。",
+      "key_findings": [
+        "表明现有云层去除方法以牺牲下游分析准确性为代价优先追求视觉真实感",
+        "引入基于观测锚定的残差流与地理上下文对齐，以保持语义保真度",
+        "同时兼顾忠实重建与可靠的下游解译任务，如分割和变化检测"
+      ],
+      "tags": ["remote-sensing", "cloud-removal", "image-restoration", "semantic-segmentation", "geospatial-ai"],
+      "relevance": "low",
+      "engagement": { "upvotes": 4, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02471",
+        "huggingface": "https://huggingface.co/papers/2607.02471",
+        "pdf": "https://arxiv.org/pdf/2607.02471"
+      }
+    },
+    {
+      "id": "age-graph-embedding",
+      "title": "AGE：图检索增强生成中面向图嵌入的自适应掩码方法",
+      "authors": ["Bao Long Nguyen Huu", "Atsushi Hashimoto"],
+      "affiliations": ["OMRON SINIC X"],
+      "summary": "提出了面向图嵌入的自适应掩码方法（AGE），采用基于Transformer的方法，减少在使用冻结LLM的GraphRAG中，图结构特征与基于文本的潜在特征之间的不对齐问题。",
+      "key_findings": [
+        "针对GraphRAG中基于图和基于文本的潜在表示之间的不对齐问题",
+        "在基于Transformer的图嵌入方法中提出了一种自适应掩码机制",
+        "专门解决下游LLM被冻结时的兼容性难题"
+      ],
+      "tags": ["graph-rag", "graph-embedding", "retrieval-augmented-generation", "knowledge-graphs", "representation-learning"],
+      "relevance": "low",
+      "engagement": { "upvotes": 3, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00052",
+        "huggingface": "https://huggingface.co/papers/2607.00052",
+        "pdf": "https://arxiv.org/pdf/2607.00052"
+      }
+    },
+    {
+      "id": "anybokeh",
+      "title": "AnyBokeh：基于物理引导与光学指纹迁移的任意到任意虚化编辑",
+      "authors": ["Xinyu Hou", "Xiaoming Li", "Zongsheng Yue", "Chen Change Loy"],
+      "affiliations": ["Nanyang Technological University"],
+      "summary": "提出了一种物理引导的虚化（bokeh）编辑方法，能够处理在任意对焦和光圈设置下拍摄的图像，避免了那些假定或先恢复全焦输入的流程中常见的伪影传播和模糊线索丢失问题。",
+      "key_findings": [
+        "直接对具有任意源对焦和光圈设置的图像进行拍摄后虚化编辑，而不局限于全焦输入",
+        "引入光学指纹迁移，以保留真实的源模糊线索而非将其丢弃",
+        "避免了先恢复全焦图像的虚化编辑流程中常见的重建伪影传播问题"
+      ],
+      "tags": ["computational-photography", "bokeh-editing", "image-editing", "depth-of-field", "generative-vision"],
+      "relevance": "low",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31959",
+        "huggingface": "https://huggingface.co/papers/2606.31959",
+        "pdf": "https://arxiv.org/pdf/2606.31959"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Z.ai (Zhipu AI)",
+      "description": "一个基于混合专家（MoE）架构、采用动态稀疏注意力（DSA）的大型对话式文本生成模型，在今日热门发布中社区互动量领先。",
+      "task_type": "text-generation",
+      "model_size": "MoE（glm_moe_dsa架构）",
+      "tags": ["transformers", "safetensors", "glm_moe_dsa", "text-generation", "conversational"],
+      "metrics": { "downloads": 231218, "likes": 3532 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwen3-6-35b-uncensored-hauhaucs",
+      "name": "Qwen3.6-35B-A3B-Uncensored-Aggressive",
+      "organization": "HauhauCS (community)",
+      "description": "Qwen3.6 35B-A3B混合专家视觉-语言模型的无审查、激进微调版GGUF量化模型，因适合大规模本地/离线部署而广受欢迎。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B MoE",
+      "tags": ["gguf", "uncensored", "qwen3.6", "moe", "vision"],
+      "metrics": { "downloads": 2910241, "likes": 2529 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "一个30亿参数的视觉定位/特征提取模型，用于定位自然语言描述的任意物体或区域，体现了NVIDIA在生产级空间定位方向的持续投入。",
+      "task_type": "feature-extraction (visual grounding)",
+      "model_size": "3B",
+      "tags": ["transformers", "safetensors", "locateanything", "feature-extraction", "nvidia"],
+      "metrics": { "downloads": 1340559, "likes": 2635 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "一个通用OCR基础模型，以特征提取骨干网络的形式对外提供，旨在实现大规模、无限制的文档与场景文字识别。",
+      "task_type": "feature-extraction (OCR)",
+      "model_size": "未披露",
+      "tags": ["transformers", "safetensors", "unlimited-ocr", "feature-extraction", "baidu"],
+      "metrics": { "downloads": 1070230, "likes": 1795 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M (GGUF)",
+      "organization": "empero-ai (community)",
+      "description": "一个基于Qwen3.5构建的量化GGUF推理微调合并模型，提供100万token上下文变体，针对通过llama.cpp进行本地推理做了优化。",
+      "task_type": "text-generation (reasoning)",
+      "model_size": "9B",
+      "tags": ["gguf", "llama.cpp", "quantized", "qwen3.5", "reasoning"],
+      "metrics": { "downloads": 1617508, "likes": 1642 },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic-fable5-composer",
+      "name": "Gemma-4-12B Agentic Fable5 Composer 2.5",
+      "organization": "Independent / community (yuxinlu1)",
+      "description": "Gemma 4 12B的社区微调版本，专注于智能体编程和终端驱动工作流，以GGUF量化格式发布。",
+      "task_type": "text-generation (agentic coding)",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "coding", "agentic", "terminal"],
+      "metrics": { "downloads": 370884, "likes": 1051 },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B (GGUF)",
+      "organization": "DeepReinforce AI",
+      "description": "一个以MIT许可证发布的350亿参数文本生成模型，提供兼容endpoints的GGUF构建版本，是DeepReinforce AI旗下Ornith模型家族的一部分。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": ["transformers", "gguf", "text-generation", "license:mit", "endpoints_compatible"],
+      "metrics": { "downloads": 436780, "likes": 759 },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b-a3b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba (Qwen team)",
+      "description": "一个专用的智能体混合专家模型，处理图文到文本任务，标志着阿里巴巴正转向专门构建的智能体模型架构，而非将通用对话模型改造用于智能体场景。",
+      "task_type": "image-text-to-text (agentic)",
+      "model_size": "35B-A3B MoE",
+      "tags": ["transformers", "safetensors", "qwen3_5_moe", "image-text-to-text", "qwen"],
+      "metrics": { "downloads": 57835, "likes": 556 },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea AI",
+      "description": "一个从Krea-2-Raw蒸馏而来的快速文本到图像扩散模型，用于实现低延迟、高质量的图像生成。",
+      "task_type": "text-to-image",
+      "model_size": "未披露",
+      "tags": ["diffusers", "safetensors", "text-to-image", "en", "base_model:krea/Krea-2-Raw"],
+      "metrics": { "downloads": 109470, "likes": 529 },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek V4系列中的一个文本生成模型，附有配套的arXiv技术报告，延续了DeepSeek在前沿开放模型发布上的快速迭代节奏。",
+      "task_type": "text-generation",
+      "model_size": "未披露",
+      "tags": ["transformers", "safetensors", "deepseek_v4", "text-generation", "arxiv:2606.19348"],
+      "metrics": { "downloads": 14276, "likes": 409 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "hy3-hunyuan",
+      "name": "Hy3 (Hunyuan)",
+      "organization": "Tencent",
+      "description": "腾讯混元（Hunyuan）系列中新发布的一个文本生成模型；极低的下载量反映出这是一个早期访问版本或刚发布不久、尚在积累关注度的模型。",
+      "task_type": "text-generation",
+      "model_size": "未披露",
+      "tags": ["transformers", "safetensors", "hy_v3", "text-generation", "hunyuan"],
+      "metrics": { "downloads": 2, "likes": 336 },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "leanstral-1-5-119b-a6b",
+      "name": "Leanstral-1.5-119B-A6B",
+      "organization": "Mistral AI",
+      "description": "一个大型混合专家文本生成模型，基于Mistral的Leanstral-2603基座微调而成，以Apache-2.0许可证发布，并附带兼容vLLM的服务配置。",
+      "task_type": "text-generation",
+      "model_size": "119B-A6B MoE",
+      "tags": ["vllm", "base_model:mistralai/Leanstral-2603", "base_model:finetune:mistralai/Leanstral-2603", "license:apache-2.0", "region:us"],
+      "metrics": { "downloads": 106, "likes": 143 },
+      "source_url": "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "zackriya-solutions-meetily",
+      "name": "Zackriya-Solutions/meetily",
+      "description": "一款隐私优先的AI会议助手，提供快4倍的Parakeet/Whisper实时转录、说话人分离以及基于本地Ollama的摘要生成，使用Rust构建，实现100%端上处理。",
+      "language": "Rust",
+      "stars": 19469,
+      "stars_today": 2494,
+      "forks": 1971,
+      "url": "https://github.com/Zackriya-Solutions/meetily",
+      "tags": ["speech-to-text", "meeting-ai", "local-inference", "diarization", "whisper"],
+      "relevance": "medium"
+    },
+    {
+      "id": "leonxlnx-taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "一个Claude Code/智能体技能，通过编码审美与品味启发式规则，引导AI生成的内容远离乏味、千篇一律的“糊弄产出”。",
+      "language": "JavaScript",
+      "stars": 59022,
+      "stars_today": 1458,
+      "forks": 4019,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["agent-skills", "claude-code", "prompt-engineering", "ai-tooling"],
+      "relevance": "medium"
+    },
+    {
+      "id": "asgeirtj-system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "一个定期更新的合集，收录了从Claude、ChatGPT、Gemini、Grok、Cursor、Copilot、Perplexity等主流AI助手中提取出的系统提示词。",
+      "language": "JavaScript",
+      "stars": 51631,
+      "stars_today": 1378,
+      "forks": 8412,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": ["system-prompts", "llm-transparency", "prompt-engineering", "ai-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "一个面向AI编程智能体的生产级工程技能合集，涵盖测试、代码评审以及软件工程最佳实践。",
+      "language": "JavaScript",
+      "stars": 70896,
+      "stars_today": 1112,
+      "forks": 7677,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agents", "software-engineering", "ai-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "openai-codex-plugin-cc",
+      "name": "openai/codex-plugin-cc",
+      "description": "OpenAI官方插件，让开发者能够在Claude Code内部调用Codex进行代码评审或任务委派，标志着一个值得关注的跨供应商智能体互操作性时刻。",
+      "language": "JavaScript",
+      "stars": 26306,
+      "stars_today": 906,
+      "forks": 1577,
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "tags": ["claude-code", "codex", "cross-vendor-interop", "agent-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl-firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "一个用于大规模搜索、抓取和与网页交互的API，被广泛用作RAG和智能体网页浏览流程的数据摄取基础设施。",
+      "language": "TypeScript",
+      "stars": 146327,
+      "stars_today": 867,
+      "forks": 8418,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": ["web-scraping", "rag-infrastructure", "agent-tooling", "api"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ogulcancelik-herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "一个基于终端的智能体多路复用器，用于协调和切换多个并发运行的AI编程智能体。",
+      "language": "Rust",
+      "stars": 12913,
+      "stars_today": 779,
+      "forks": 748,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": ["agent-orchestration", "terminal-tooling", "multi-agent"],
+      "relevance": "medium"
+    },
+    {
+      "id": "alirezarezvani-claude-skills",
+      "name": "alirezarezvani/claude-skills",
+      "description": "一个精心整理的大型库，收录330多个Claude Code技能、70多个自定义命令和30多个智能体，覆盖工程、研究、产品和业务运营等工作流，且可跨多种编程智能体移植使用。",
+      "language": "Python",
+      "stars": 21186,
+      "stars_today": 610,
+      "forks": 2843,
+      "url": "https://github.com/alirezarezvani/claude-skills",
+      "tags": ["claude-code", "agent-skills", "developer-tooling", "plugins"],
+      "relevance": "high"
+    },
+    {
+      "id": "steipete-codexbar",
+      "name": "steipete/CodexBar",
+      "description": "一个macOS菜单栏工具，无需登录即可显示OpenAI Codex和Claude Code的使用统计数据。",
+      "language": "Swift",
+      "stars": 16749,
+      "stars_today": 598,
+      "forks": 1375,
+      "url": "https://github.com/steipete/CodexBar",
+      "tags": ["developer-tooling", "claude-code", "codex", "usage-monitoring"],
+      "relevance": "low"
+    },
+    {
+      "id": "hesreallyhim-awesome-claude-code",
+      "name": "hesreallyhim/awesome-claude-code",
+      "description": "一个精选的Claude Code资源合集，包括技能、智能体、状态栏、开发者工具和插件。",
+      "language": "Python",
+      "stars": 48733,
+      "stars_today": 506,
+      "forks": 4261,
+      "url": "https://github.com/hesreallyhim/awesome-claude-code",
+      "tags": ["claude-code", "curated-list", "agent-tooling", "developer-tooling"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ruvnet-ruview",
+      "name": "ruvnet/RuView",
+      "description": "将普通WiFi信号转化为实时空间智能、生命体征监测和存在检测能力，全程无需任何摄像头或视频输入。",
+      "language": "Rust",
+      "stars": 77562,
+      "stars_today": 470,
+      "forks": 10416,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["sensing", "signal-processing", "ambient-ai", "privacy-preserving"],
+      "relevance": "low"
+    },
+    {
+      "id": "bradautomates-claude-video",
+      "name": "bradautomates/claude-video",
+      "description": "赋予Claude“观看”任意视频的能力：一个/watch技能，负责下载视频、提取帧、转录音频，并将整合后的上下文交给Claude。",
+      "language": "Python",
+      "stars": 4286,
+      "stars_today": 427,
+      "forks": 607,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["claude", "multimodal", "video-understanding", "agent-skills"],
+      "relevance": "medium"
+    },
+    {
+      "id": "mvanhorn-last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "一个AI智能体技能，可跨Reddit、X、YouTube、Hacker News、Polymarket以及更广泛的网络研究任意主题，然后综合生成一份有依据、附引用的摘要。",
+      "language": "Python",
+      "stars": 49799,
+      "stars_today": 458,
+      "forks": 4147,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research-automation", "web-search", "synthesis"],
+      "relevance": "medium"
+    },
+    {
+      "id": "cheahjs-free-llm-api-resources",
+      "name": "cheahjs/free-llm-api-resources",
+      "description": "一份持续维护的免费LLM推理资源清单，可通过API访问，被开发者广泛用于在无需初始成本的情况下构建AI应用原型。",
+      "language": "Python",
+      "stars": 25903,
+      "stars_today": 419,
+      "forks": 2686,
+      "url": "https://github.com/cheahjs/free-llm-api-resources",
+      "tags": ["llm-apis", "curated-list", "developer-resources"],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-zvec",
+      "name": "alibaba/zvec",
+      "description": "一个轻量级、闪电般快速的进程内向量数据库，专为RAG和AI应用流程中的嵌入存储与相似性搜索而设计。",
+      "language": "C++",
+      "stars": 13538,
+      "stars_today": 382,
+      "forks": 826,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": ["vector-database", "rag-infrastructure", "embeddings", "in-process-db"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "LLM强化学习中的训练-推理一致性",
+      "description": "围绕训练引擎与推理引擎概率之间的不一致，重新定义LLM强化学习后训练稳定性问题的研究，主张单调推理策略才是真正的优化目标。",
+      "related_paper_ids": ["mirage-training-policies-rl"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "具身AI推理运行时",
+      "description": "系统层面的工作，为视觉-语言-动作模型和世界-动作模型带来闭环、多速率、批量为1的服务基础设施，并辅以轻量级校正层以恢复反应性。",
+      "related_paper_ids": ["embodied-cpp", "vla-corrector"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "扩散Transformer量化",
+      "description": "面向迭代速度日益加快的图像与视频扩散Transformer模型的数据无关后训练量化方法，避免了昂贵的逐检查点校准。",
+      "related_paper_ids": ["orbitquant"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "视觉-语言模型数据整理",
+      "description": "用于评估视觉-语言模型预训练所用数据整理策略的系统性基准和大规模开放语料库。",
+      "related_paper_ids": ["datacomp-vlm"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "LLM研究构思与元科学",
+      "description": "评估并构建相关工具，考察LLM能否像专家研究者那样为研究问题提供依据支撑、做出差异化并选择策略。",
+      "related_paper_ids": ["research-studio-idea", "human-llm-research-idea-gap"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能生态系统与红队测试",
+      "description": "跨供应商智能体技能工具（Claude Code、Codex）的快速增长，与针对智能体基础设施、协议和行为的红队测试研究及开源工具浪潮相互呼应。",
+      "related_paper_ids": ["ai-infra-guard", "mastermind-vulnerability-reproduction"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

@@ -1,0 +1,666 @@
+{
+  "version": "1.0",
+  "date": "2026-07-07",
+  "generated_at": "2026-07-07T23:00:00Z",
+  "summary": {
+    "headline": "Training-inference mismatch in LLM RL becomes the day's dominant story at 142 upvotes; embodied AI gets a unified C++ inference runtime and closed-loop VLA correction; diffusion transformer quantization and VLM data curation push efficiency research forward; GitHub trending is saturated with Claude Code skills, agent multiplexers, and AI red-teaming tools",
+    "body": "Monday's paper queue was thin, so today's review draws mostly from July 6th's backlog supplemented by two fresh July 7th submissions. The standout is **The Mirage of Optimizing Training Policies** (142 upvotes), which reframes LLM RL post-training around monotonic *inference* policies rather than the training policy itself — a subtle but consequential fix for the training-inference probability mismatch that causes instability even with synchronized weights. Embodied AI produced two complementary contributions: **Embodied.cpp**, a portable inference runtime that finally gives vision-language-action and world-action models a batch-1, closed-loop-first serving stack for heterogeneous robots, and **VLA-Corrector**, a lightweight detect-and-correct layer that restores reactivity to open-loop action-chunk policies without discarding their efficiency gains.\n\nEfficiency and data curation research also featured prominently. **OrbitQuant** offers data-agnostic post-training quantization for diffusion transformers, sidestepping the costly per-checkpoint calibration that today's DiT quantizers require. **DataComp-VLM** extends the DataComp methodology to vision-language model pretraining, assembling a 6T-token, 160-dataset benchmark corpus for systematic data-curation experiments. On the meta-research side, the two newest submissions — **ResearchStudio-Idea** (an evidence-grounded ideation skill suite built from ML conference outcomes) and **Measuring the Gap Between Human and LLM Research Ideas** — both interrogate how well LLMs can actually do science, a theme reinforced by **Mastermind**'s strategy-grounded approach to repository-scale vulnerability reproduction.\n\nOn the model front, **GLM-5.2** (Z.ai) leads community engagement with 3,532 likes on its new MoE-with-DSA architecture, while **HauhauCS's uncensored Qwen3.6-35B-A3B** GGUF quantization racked up 2.9M downloads. NVIDIA's **LocateAnything-3B** and Baidu's **Unlimited-OCR** both show visual grounding and OCR foundation models are converging toward production-grade feature extractors. GitHub trending remains dominated by the Claude Code and agent-tooling ecosystem — **claude-skills**, **agent-skills**, **codex-plugin-cc**, and **system_prompts_leaks** collectively show developers racing to build, curate, and reverse-engineer the emerging agent-skill layer, alongside a parallel wave of AI security tooling (**AI-Infra-Guard**, **Mastermind**, system prompt leaks) signaling that red-teaming agentic infrastructure is now a first-class research and open-source priority.",
+    "key_themes": [
+      "training-inference-consistency-in-rl",
+      "embodied-ai-inference-runtimes",
+      "diffusion-transformer-quantization",
+      "vlm-data-curation",
+      "llm-research-ideation",
+      "agent-skill-ecosystem-and-red-teaming"
+    ]
+  },
+  "researcher_notes": "**The training-inference mismatch paper is the clear headline, and deservedly so.** At 142 upvotes it dwarfs everything else in this batch. The core insight — that LLM RL post-training uses separate inference and training engines whose probabilities diverge for identical trajectories even under synchronized parameters — explains a failure mode many practitioners have observed but rarely diagnosed cleanly: RL runs that destabilize or collapse despite seemingly correct hyperparameters. By arguing that the *monotonic inference policy*, not the nominal training policy, is the real optimization target, the paper reframes a whole class of RLHF/RLVR engineering bugs as a fundamental objective-mismatch problem rather than an implementation detail. This has immediate implications for anyone running large-scale RL post-training with decoupled serving stacks (vLLM/SGLang for rollout, a separate trainer for gradients) — which by now is nearly everyone.\n\n**Embodied AI infrastructure is finally getting systems-level attention, not just new models.** Embodied.cpp and VLA-Corrector attack the same underlying problem from different angles: today's VLA and world-action models are trapped in Python request-response serving stacks that don't match the multi-rate, closed-loop, batch-1 latency profile robots actually need. Embodied.cpp's answer is a portable runtime; VLA-Corrector's is a lightweight correction layer bolted onto existing open-loop action-chunk policies to restore reactivity without abandoning the efficiency of chunked execution. Together they suggest the embodied AI field is entering its \"systems maturity\" phase — the same transition LLM serving went through with vLLM circa 2023 — and teams shipping robot policies should watch both closely.\n\n**A quiet but coherent meta-research cluster emerged today.** ResearchStudio-Idea, Measuring the Gap Between Human and LLM Research Ideas, and (in a security-flavored variant) Mastermind's strategy-grounded vulnerability reproduction all probe the same question: can LLMs actually do the *first mile* of expert reasoning — grounding a problem in prior work, choosing a strategy, and differentiating from existing solutions — rather than just executing a plan someone else specified? ResearchStudio-Idea's Paper-Search skill and the Yale group's reverse-engineered \"prior works that inspired this idea\" evaluation framework are two independent attempts to operationalize the same gap. Low upvotes on the two July 7th submissions likely just reflect their newness rather than lower quality; both are worth revisiting once community discussion catches up.\n\n**OrbitQuant and DataComp-VLM represent unglamorous but high-leverage efficiency work.** Data-agnostic quantization that doesn't require re-fitting calibration data per checkpoint directly reduces the operational cost of deploying new diffusion transformer checkpoints — a real pain point given how fast image/video DiT checkpoints are currently churning. DataComp-VLM's 160-dataset, 6T-token corpus for controlled VLM data-curation experiments fills a genuine benchmarking gap; until now, data-curation claims for VLM pretraining have been largely anecdotal per-lab findings without a shared comparison substrate.\n\n**GitHub trending confirms the agent-skill layer and AI red-teaming are now inseparable priorities.** claude-skills (21K stars, +610 today), agent-skills (71K stars, +1,112 today), and codex-plugin-cc (+906 today, enabling Codex from inside Claude Code) show the ecosystem converging on a shared \"skills\" abstraction across vendors. At the same time, system_prompts_leaks (+1,378 today) and the paper-side AI-Infra-Guard and Mastermind submissions show that as agent infrastructure spreads, so does scrutiny of its attack surface — model, protocol/tool layer (MCP), and agent behavior alike. Expect this red-teaming-for-agents thread to keep growing in lockstep with the skill ecosystem it targets.",
+  "papers": [
+    {
+      "id": "mirage-training-policies-rl",
+      "title": "The Mirage of Optimizing Training Policies: Monotonic Inference Policies as the Real Objective for LLM Reinforcement Learning",
+      "authors": ["Jing Liang", "Hongyao Tang", "Yi Ma", "Yancheng He", "Weixun Wang et al."],
+      "affiliations": ["Tianjin University"],
+      "summary": "Identifies training-inference mismatch — divergent probabilities for identical trajectories between an LLM's inference and training engines despite synchronized parameters — as a root cause of RL post-training instability and collapse. Argues the field should optimize the monotonic inference policy rather than the nominal training policy.",
+      "key_findings": [
+        "Training-inference engine mismatch causes inconsistent trajectory probabilities even with identical model parameters",
+        "Reframes the real RL post-training objective as the monotonic inference policy, not the training policy",
+        "Explains a class of RL instability and collapse failures previously attributed to hyperparameter or implementation issues"
+      ],
+      "tags": ["reinforcement-learning", "llm-post-training", "training-inference-mismatch", "rlhf", "stability"],
+      "relevance": "high",
+      "engagement": { "upvotes": 142, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.29526",
+        "huggingface": "https://huggingface.co/papers/2606.29526",
+        "pdf": "https://arxiv.org/pdf/2606.29526"
+      }
+    },
+    {
+      "id": "embodied-cpp",
+      "title": "Embodied.cpp: A Portable Inference Runtime of Embodied AI Models on Heterogeneous Robots",
+      "authors": ["Ling Xu", "Chuyu Han", "Borui Li", "Hao Wu", "Shiqi Jiang et al."],
+      "affiliations": ["Microsoft Research Asia"],
+      "summary": "Introduces a portable inference runtime purpose-built for vision-language-action (VLA) and world-action models (WAMs), addressing the mismatch between request-response serving stacks and embodied AI's need for multi-rate, closed-loop, batch-1 latency on heterogeneous edge robots.",
+      "key_findings": [
+        "Existing inference runtimes are designed for request-response serving and fail the embodied deployment contract",
+        "Provides multi-rate execution inside closed-loop control with latency-first batch-1 inference",
+        "Targets deployment portability across heterogeneous robot hardware, avoiding model-specific Python stacks"
+      ],
+      "tags": ["embodied-ai", "inference-runtime", "vision-language-action", "robotics", "systems"],
+      "relevance": "high",
+      "engagement": { "upvotes": 37, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02501",
+        "huggingface": "https://huggingface.co/papers/2607.02501",
+        "pdf": "https://arxiv.org/pdf/2607.02501"
+      }
+    },
+    {
+      "id": "orbitquant",
+      "title": "OrbitQuant: Data-Agnostic Quantization for Image and Video Diffusion Transformers",
+      "authors": ["Donghyun Lee", "Jitesh Chavan", "Duy Nguyen", "Sam Huang", "Liming Jiang et al."],
+      "affiliations": ["Adobe Research"],
+      "summary": "Presents a data-agnostic weight-activation quantizer for diffusion transformers that bypasses per-checkpoint calibration re-fitting, addressing the activation shift across timesteps, prompts, and guidance branches that plagues prior post-training quantization methods.",
+      "key_findings": [
+        "Removes the need to re-fit calibration data for every new DiT checkpoint or modality",
+        "Handles activation distribution shifts across diffusion timesteps and guidance branches without range re-estimation",
+        "Targets both image and video diffusion transformer inference cost reduction"
+      ],
+      "tags": ["quantization", "diffusion-transformers", "efficient-inference", "image-generation", "video-generation"],
+      "relevance": "high",
+      "engagement": { "upvotes": 28, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02461",
+        "huggingface": "https://huggingface.co/papers/2607.02461",
+        "pdf": "https://arxiv.org/pdf/2607.02461"
+      }
+    },
+    {
+      "id": "vla-corrector",
+      "title": "VLA-Corrector: Lightweight Detect-and-Correct Inference for Adaptive Action Horizon",
+      "authors": ["Yi Pan", "Miao Pan", "Qi Lu", "Jiaming Huang", "Man Zhang et al."],
+      "affiliations": ["Shanghai AI Laboratory"],
+      "summary": "Proposes a lightweight detect-and-correct mechanism that restores closed-loop reactivity to vision-language-action policies using fixed-horizon action chunks, addressing the loss of responsiveness to local perturbations in contact-rich manipulation.",
+      "key_findings": [
+        "Identifies that fixed action-horizon chunking sacrifices closed-loop reactivity in contact-rich physical interaction",
+        "Introduces detect-and-correct inference to adaptively adjust the action horizon without a full re-plan",
+        "Preserves the efficiency benefits of open-loop action chunking while restoring responsiveness to perturbations"
+      ],
+      "tags": ["vision-language-action", "robot-manipulation", "closed-loop-control", "embodied-ai", "adaptive-inference"],
+      "relevance": "high",
+      "engagement": { "upvotes": 23, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01804",
+        "huggingface": "https://huggingface.co/papers/2607.01804",
+        "pdf": "https://arxiv.org/pdf/2607.01804"
+      }
+    },
+    {
+      "id": "datacomp-vlm",
+      "title": "DataComp-VLM: Improved Open Datasets for Vision-Language Models",
+      "authors": ["Matteo Farina", "Vishaal Udandarao", "Thao Nguyen", "Selim Kuzucu", "Maximilian Böther et al."],
+      "affiliations": ["University of Tübingen"],
+      "summary": "Extends the DataComp methodology to vision-language model pretraining, assembling 160 datasets across image-caption pairs, multimodal interleaved documents, text-only, and instruction-tuning data into a 6T-token corpus for systematic data-curation benchmarking.",
+      "key_findings": [
+        "Introduces DCVLM, the first systematic benchmark for controlled data-centric VLM training experiments",
+        "Aggregates 160 datasets spanning four data types into a ~6T-token corpus",
+        "Provides a shared substrate for comparing data-curation strategies that were previously evaluated only anecdotally per lab"
+      ],
+      "tags": ["vision-language-models", "data-curation", "benchmarking", "pretraining-datasets", "multimodal"],
+      "relevance": "high",
+      "engagement": { "upvotes": 21, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.28551",
+        "huggingface": "https://huggingface.co/papers/2606.28551",
+        "pdf": "https://arxiv.org/pdf/2606.28551"
+      }
+    },
+    {
+      "id": "ai-infra-guard",
+      "title": "Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming",
+      "authors": ["Yong Yang", "Xing Zheng", "Huiyu Wu", "Huangsheng Cheng", "Xiaorong Shi et al."],
+      "affiliations": ["Tencent"],
+      "summary": "Presents AI-Infra-Guard, an open-source red-teaming framework organized around the observation that an AI agent's attack surface is stratified across infrastructure, protocol/tool (including MCP), agent behavior, and model layers, none of which is covered by a single existing detection paradigm.",
+      "key_findings": [
+        "Maps the AI agent attack surface across four distinct layers: infrastructure, protocol/tool, agent behavior, and model",
+        "Argues open-source AI infrastructure growth has outpaced available security tooling",
+        "Releases an open-source unified red-teaming framework spanning the full agent stack, including the MCP ecosystem"
+      ],
+      "tags": ["ai-security", "red-teaming", "agent-safety", "mcp", "open-source"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31227",
+        "huggingface": "https://huggingface.co/papers/2606.31227",
+        "pdf": "https://arxiv.org/pdf/2606.31227"
+      }
+    },
+    {
+      "id": "human-llm-research-idea-gap",
+      "title": "Measuring the Gap Between Human and LLM Research Ideas",
+      "authors": ["Ziyu Chen", "Yilun Zhao", "Arman Cohan"],
+      "affiliations": ["Yale University"],
+      "summary": "Builds a large-scale evaluation framework that reverse-engineers the closely related prior works likely to have inspired each idea in a set of high-quality human papers, then measures how far LLM-generated ideas fall from that reconstructed human ideation process.",
+      "key_findings": [
+        "Moves beyond novelty/feasibility scoring to directly quantify the gap between LLM and human research ideation",
+        "Reverse-engineers likely inspirational prior works for each human paper as a grounding signal",
+        "Provides a reusable framework for benchmarking LLM ideation against reconstructed human reasoning chains"
+      ],
+      "tags": ["research-ideation", "llm-evaluation", "scientific-discovery", "benchmarking", "creativity"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 6, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01233",
+        "huggingface": "https://huggingface.co/papers/2607.01233",
+        "pdf": "https://arxiv.org/pdf/2607.01233"
+      }
+    },
+    {
+      "id": "research-studio-idea",
+      "title": "ResearchStudio-Idea: An Evidence-Grounded Research-Ideation Skill Suite from ML Conference Outcomes",
+      "authors": ["Qihao Zhao", "Yangyu Huang", "Yalun Dai", "Lingao Xiao", "Jianjun Gao et al."],
+      "affiliations": ["Microsoft Research Asia"],
+      "summary": "Presents a reusable skill suite covering the 'first mile' of research ideation — literature grounding, bottleneck identification, differentiation from existing work, and risk evaluation — including a standalone multi-source Paper-Search tool, distilled from patterns observed in ML conference outcomes.",
+      "key_findings": [
+        "Frames research ideation as requiring more than candidate-direction generation: grounding, bottleneck ID, differentiation, and risk assessment",
+        "Introduces Paper-Search, a standalone multi-source literature retrieval skill for idea grounding",
+        "Derives the skill suite's design from patterns observed across actual ML conference publication outcomes"
+      ],
+      "tags": ["research-ideation", "llm-agents", "literature-search", "skill-suites", "scientific-discovery"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.04439",
+        "huggingface": "https://huggingface.co/papers/2607.04439",
+        "pdf": "https://arxiv.org/pdf/2607.04439"
+      }
+    },
+    {
+      "id": "mastermind-vulnerability-reproduction",
+      "title": "Mastermind: Strategy-grounded Learning for Repository-Scale Vulnerability Reproduction",
+      "authors": ["Mingzhe Du", "Luu Anh Tuan", "Tianyi Wu", "Renyang Liu", "Zhijiang Guo et al."],
+      "affiliations": ["Nanyang Technological University"],
+      "summary": "Argues that repository-scale vulnerability reproduction agents fail primarily by choosing the wrong strategy rather than by executing a correct approach poorly, and proposes learning strategy directly rather than the full action trajectory.",
+      "key_findings": [
+        "Repository-level vulnerability reproduction requires inspecting a codebase, inferring input grammar, constructing a proof-of-concept, and verifying the fix",
+        "LLM agents that know the correct strategy can usually execute it, but most failures stem from strategy selection, not execution",
+        "Proposes learning at the strategy level as the right training signal rather than imitating entire action trajectories"
+      ],
+      "tags": ["vulnerability-reproduction", "llm-agents", "software-security", "strategy-learning", "repository-scale-tasks"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01764",
+        "huggingface": "https://huggingface.co/papers/2607.01764",
+        "pdf": "https://arxiv.org/pdf/2607.01764"
+      }
+    },
+    {
+      "id": "multattnattrib",
+      "title": "MultAttnAttrib: Training-Free Multimodal Attribution in Long Document Question Answering",
+      "authors": ["Dang Quang Thien Tran", "Quang V. Dang", "Vinamra Tyagi", "Sai Soorya Rao Veeravalli", "Trang Nguyen et al."],
+      "affiliations": ["VinAI Research"],
+      "summary": "Introduces a training-free attribution-generation method for grounded multimodal QA systems that uses a model's prefill pass, selected attention heads, and calibrated thresholds to locate the source evidence for a generated answer within a long document.",
+      "key_findings": [
+        "Extends attribution research from the well-studied unimodal setting into the under-researched multimodal case",
+        "Requires no additional training, relying instead on prefill-pass attention signals and calibrated thresholds",
+        "Targets evidence localization for generated answers in long, multimodal document QA to support user trust and safety"
+      ],
+      "tags": ["attribution", "multimodal-qa", "training-free", "interpretability", "document-understanding"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.01420",
+        "huggingface": "https://huggingface.co/papers/2607.01420",
+        "pdf": "https://arxiv.org/pdf/2607.01420"
+      }
+    },
+    {
+      "id": "geo-anchored-cloud-removal",
+      "title": "Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment",
+      "authors": ["Ziyao Wang", "Maonan Wang", "Yucheng He", "Xianping Ma", "Ziyi Wang et al."],
+      "affiliations": ["Wuhan University"],
+      "summary": "Proposes Geo-Anchored Cloud Removal (GACR), a unified remote-sensing cloud-removal framework that jointly optimizes visual reconstruction and downstream interpretability, addressing the semantic drift that prior methods introduce into tasks like segmentation and change detection.",
+      "key_findings": [
+        "Shows existing cloud-removal methods prioritize visual realism at the expense of downstream analytical accuracy",
+        "Introduces observation-anchored residual flow with geo-contextual alignment to preserve semantic fidelity",
+        "Jointly targets faithful reconstruction and reliable downstream interpretation tasks such as segmentation and change detection"
+      ],
+      "tags": ["remote-sensing", "cloud-removal", "image-restoration", "semantic-segmentation", "geospatial-ai"],
+      "relevance": "low",
+      "engagement": { "upvotes": 4, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02471",
+        "huggingface": "https://huggingface.co/papers/2607.02471",
+        "pdf": "https://arxiv.org/pdf/2607.02471"
+      }
+    },
+    {
+      "id": "age-graph-embedding",
+      "title": "AGE: Adaptive-masking for Graph Embedding in Graph Retrieval-Augmented Generation",
+      "authors": ["Bao Long Nguyen Huu", "Atsushi Hashimoto"],
+      "affiliations": ["OMRON SINIC X"],
+      "summary": "Introduces Adaptive-masking for Graph Embedding (AGE), which employs a transformer-based approach to reduce the misalignment between graph-structured and text-based latent features when using GraphRAG with frozen LLMs.",
+      "key_findings": [
+        "Targets the misalignment between graph-based and text-based latent representations in GraphRAG",
+        "Proposes an adaptive-masking mechanism within a transformer-based graph embedding approach",
+        "Specifically addresses compatibility challenges when the downstream LLM is frozen"
+      ],
+      "tags": ["graph-rag", "graph-embedding", "retrieval-augmented-generation", "knowledge-graphs", "representation-learning"],
+      "relevance": "low",
+      "engagement": { "upvotes": 3, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00052",
+        "huggingface": "https://huggingface.co/papers/2607.00052",
+        "pdf": "https://arxiv.org/pdf/2607.00052"
+      }
+    },
+    {
+      "id": "anybokeh",
+      "title": "AnyBokeh: Physics-Guided Any-to-Any Bokeh Editing with Optical Fingerprint Transfer",
+      "authors": ["Xinyu Hou", "Xiaoming Li", "Zongsheng Yue", "Chen Change Loy"],
+      "affiliations": ["Nanyang Technological University"],
+      "summary": "Presents a physics-guided bokeh editing method that handles images captured under arbitrary focus and aperture settings, avoiding the artifact propagation and blur-cue discarding of pipelines that assume or first recover an all-in-focus input.",
+      "key_findings": [
+        "Handles post-capture bokeh editing directly from images with arbitrary source focus and aperture, not just all-in-focus inputs",
+        "Introduces optical fingerprint transfer to preserve genuine source blur cues instead of discarding them",
+        "Avoids reconstruction-artifact propagation common in all-in-focus-first bokeh editing pipelines"
+      ],
+      "tags": ["computational-photography", "bokeh-editing", "image-editing", "depth-of-field", "generative-vision"],
+      "relevance": "low",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.31959",
+        "huggingface": "https://huggingface.co/papers/2606.31959",
+        "pdf": "https://arxiv.org/pdf/2606.31959"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Z.ai (Zhipu AI)",
+      "description": "A large conversational text-generation model built on a mixture-of-experts architecture with dynamic sparse attention (DSA), leading community engagement among today's trending releases.",
+      "task_type": "text-generation",
+      "model_size": "MoE (glm_moe_dsa architecture)",
+      "tags": ["transformers", "safetensors", "glm_moe_dsa", "text-generation", "conversational"],
+      "metrics": { "downloads": 231218, "likes": 3532 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwen3-6-35b-uncensored-hauhaucs",
+      "name": "Qwen3.6-35B-A3B-Uncensored-Aggressive",
+      "organization": "HauhauCS (community)",
+      "description": "An uncensored, aggressively fine-tuned GGUF quantization of Qwen3.6's 35B-A3B mixture-of-experts vision-language model, popular for high-volume local/offline deployment.",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B MoE",
+      "tags": ["gguf", "uncensored", "qwen3.6", "moe", "vision"],
+      "metrics": { "downloads": 2910241, "likes": 2529 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "A 3B-parameter visual grounding / feature-extraction model for locating arbitrary objects or regions described in natural language, reflecting NVIDIA's continued push into production-ready spatial grounding.",
+      "task_type": "feature-extraction (visual grounding)",
+      "model_size": "3B",
+      "tags": ["transformers", "safetensors", "locateanything", "feature-extraction", "nvidia"],
+      "metrics": { "downloads": 1340559, "likes": 2635 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "A general-purpose OCR foundation model exposed as a feature-extraction backbone, aimed at unrestricted document and scene text recognition at scale.",
+      "task_type": "feature-extraction (OCR)",
+      "model_size": "not disclosed",
+      "tags": ["transformers", "safetensors", "unlimited-ocr", "feature-extraction", "baidu"],
+      "metrics": { "downloads": 1070230, "likes": 1795 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M (GGUF)",
+      "organization": "empero-ai (community)",
+      "description": "A quantized GGUF reasoning-tuned merge built on Qwen3.5 with a 1M-token context variant, optimized for local inference via llama.cpp.",
+      "task_type": "text-generation (reasoning)",
+      "model_size": "9B",
+      "tags": ["gguf", "llama.cpp", "quantized", "qwen3.5", "reasoning"],
+      "metrics": { "downloads": 1617508, "likes": 1642 },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic-fable5-composer",
+      "name": "Gemma-4-12B Agentic Fable5 Composer 2.5",
+      "organization": "Independent / community (yuxinlu1)",
+      "description": "A community fine-tune of Gemma 4 12B specialized for agentic coding and terminal-driven workflows, distributed as a GGUF quantization.",
+      "task_type": "text-generation (agentic coding)",
+      "model_size": "12B",
+      "tags": ["gguf", "gemma4", "coding", "agentic", "terminal"],
+      "metrics": { "downloads": 370884, "likes": 1051 },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-0-35b-gguf",
+      "name": "Ornith-1.0-35B (GGUF)",
+      "organization": "DeepReinforce AI",
+      "description": "A 35B text-generation model released under an MIT license with an endpoints-compatible GGUF build, part of DeepReinforce AI's Ornith model family.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": ["transformers", "gguf", "text-generation", "license:mit", "endpoints_compatible"],
+      "metrics": { "downloads": 436780, "likes": 759 },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "qwen-agentworld-35b-a3b",
+      "name": "Qwen-AgentWorld-35B-A3B",
+      "organization": "Alibaba (Qwen team)",
+      "description": "A dedicated agentic mixture-of-experts model handling image-text-to-text tasks, signaling Alibaba's push toward purpose-built agentic model architectures rather than general chat models repurposed for agent use.",
+      "task_type": "image-text-to-text (agentic)",
+      "model_size": "35B-A3B MoE",
+      "tags": ["transformers", "safetensors", "qwen3_5_moe", "image-text-to-text", "qwen"],
+      "metrics": { "downloads": 57835, "likes": 556 },
+      "source_url": "https://huggingface.co/Qwen/Qwen-AgentWorld-35B-A3B"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea AI",
+      "description": "A fast text-to-image diffusion model distilled from Krea-2-Raw for low-latency high-quality image generation.",
+      "task_type": "text-to-image",
+      "model_size": "not disclosed",
+      "tags": ["diffusers", "safetensors", "text-to-image", "en", "base_model:krea/Krea-2-Raw"],
+      "metrics": { "downloads": 109470, "likes": 529 },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek AI",
+      "description": "A text-generation model in DeepSeek's V4 line referencing an accompanying arXiv technical report, continuing DeepSeek's rapid iteration on frontier open model releases.",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": ["transformers", "safetensors", "deepseek_v4", "text-generation", "arxiv:2606.19348"],
+      "metrics": { "downloads": 14276, "likes": 409 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "hy3-hunyuan",
+      "name": "Hy3 (Hunyuan)",
+      "organization": "Tencent",
+      "description": "A newly released text-generation model in Tencent's Hunyuan family; very low download count reflects an early-access or just-published release still gaining traction.",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": ["transformers", "safetensors", "hy_v3", "text-generation", "hunyuan"],
+      "metrics": { "downloads": 2, "likes": 336 },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "leanstral-1-5-119b-a6b",
+      "name": "Leanstral-1.5-119B-A6B",
+      "organization": "Mistral AI",
+      "description": "A large mixture-of-experts text-generation model fine-tuned from Mistral's Leanstral-2603 base, distributed with vLLM-compatible serving configuration under an Apache-2.0 license.",
+      "task_type": "text-generation",
+      "model_size": "119B-A6B MoE",
+      "tags": ["vllm", "base_model:mistralai/Leanstral-2603", "base_model:finetune:mistralai/Leanstral-2603", "license:apache-2.0", "region:us"],
+      "metrics": { "downloads": 106, "likes": 143 },
+      "source_url": "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "zackriya-solutions-meetily",
+      "name": "Zackriya-Solutions/meetily",
+      "description": "Privacy-first AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and local Ollama summarization, built on Rust with 100% on-device processing.",
+      "language": "Rust",
+      "stars": 19469,
+      "stars_today": 2494,
+      "forks": 1971,
+      "url": "https://github.com/Zackriya-Solutions/meetily",
+      "tags": ["speech-to-text", "meeting-ai", "local-inference", "diarization", "whisper"],
+      "relevance": "medium"
+    },
+    {
+      "id": "leonxlnx-taste-skill",
+      "name": "Leonxlnx/taste-skill",
+      "description": "A Claude Code / agent skill that steers AI-generated output away from boring, generic 'slop' by encoding aesthetic and taste heuristics.",
+      "language": "JavaScript",
+      "stars": 59022,
+      "stars_today": 1458,
+      "forks": 4019,
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "tags": ["agent-skills", "claude-code", "prompt-engineering", "ai-tooling"],
+      "relevance": "medium"
+    },
+    {
+      "id": "asgeirtj-system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "A regularly-updated collection of extracted system prompts from Claude, ChatGPT, Gemini, Grok, Cursor, Copilot, Perplexity, and other major AI assistants.",
+      "language": "JavaScript",
+      "stars": 51631,
+      "stars_today": 1378,
+      "forks": 8412,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": ["system-prompts", "llm-transparency", "prompt-engineering", "ai-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "A collection of production-grade engineering skills for AI coding agents, covering testing, code review, and software-engineering best practices.",
+      "language": "JavaScript",
+      "stars": 70896,
+      "stars_today": 1112,
+      "forks": 7677,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agents", "software-engineering", "ai-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "openai-codex-plugin-cc",
+      "name": "openai/codex-plugin-cc",
+      "description": "An official OpenAI plugin that lets developers invoke Codex from within Claude Code to review code or delegate tasks, marking a notable cross-vendor agent interoperability moment.",
+      "language": "JavaScript",
+      "stars": 26306,
+      "stars_today": 906,
+      "forks": 1577,
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "tags": ["claude-code", "codex", "cross-vendor-interop", "agent-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl-firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "An API for searching, scraping, and interacting with the web at scale, widely used as ingestion infrastructure for RAG and agentic web-browsing pipelines.",
+      "language": "TypeScript",
+      "stars": 146327,
+      "stars_today": 867,
+      "forks": 8418,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": ["web-scraping", "rag-infrastructure", "agent-tooling", "api"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ogulcancelik-herdr",
+      "name": "ogulcancelik/herdr",
+      "description": "A terminal-based agent multiplexer for coordinating and switching between multiple concurrent AI coding agents.",
+      "language": "Rust",
+      "stars": 12913,
+      "stars_today": 779,
+      "forks": 748,
+      "url": "https://github.com/ogulcancelik/herdr",
+      "tags": ["agent-orchestration", "terminal-tooling", "multi-agent"],
+      "relevance": "medium"
+    },
+    {
+      "id": "alirezarezvani-claude-skills",
+      "name": "alirezarezvani/claude-skills",
+      "description": "A large curated library of 330+ Claude Code skills, 70+ custom commands, and 30+ agents spanning engineering, research, product, and business-operations workflows, portable across multiple coding agents.",
+      "language": "Python",
+      "stars": 21186,
+      "stars_today": 610,
+      "forks": 2843,
+      "url": "https://github.com/alirezarezvani/claude-skills",
+      "tags": ["claude-code", "agent-skills", "developer-tooling", "plugins"],
+      "relevance": "high"
+    },
+    {
+      "id": "steipete-codexbar",
+      "name": "steipete/CodexBar",
+      "description": "A macOS menu bar utility that shows usage stats for OpenAI Codex and Claude Code without requiring login.",
+      "language": "Swift",
+      "stars": 16749,
+      "stars_today": 598,
+      "forks": 1375,
+      "url": "https://github.com/steipete/CodexBar",
+      "tags": ["developer-tooling", "claude-code", "codex", "usage-monitoring"],
+      "relevance": "low"
+    },
+    {
+      "id": "hesreallyhim-awesome-claude-code",
+      "name": "hesreallyhim/awesome-claude-code",
+      "description": "A curated collection of resources for Claude Code, including skills, agents, status lines, developer tooling, and plugins.",
+      "language": "Python",
+      "stars": 48733,
+      "stars_today": 506,
+      "forks": 4261,
+      "url": "https://github.com/hesreallyhim/awesome-claude-code",
+      "tags": ["claude-code", "curated-list", "agent-tooling", "developer-tooling"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ruvnet-ruview",
+      "name": "ruvnet/RuView",
+      "description": "Turns commodity WiFi signals into real-time spatial intelligence, vital-sign monitoring, and presence detection without any camera or video input.",
+      "language": "Rust",
+      "stars": 77562,
+      "stars_today": 470,
+      "forks": 10416,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["sensing", "signal-processing", "ambient-ai", "privacy-preserving"],
+      "relevance": "low"
+    },
+    {
+      "id": "bradautomates-claude-video",
+      "name": "bradautomates/claude-video",
+      "description": "Gives Claude the ability to 'watch' any video: a /watch skill that downloads, extracts frames, transcribes audio, and hands the combined context to Claude.",
+      "language": "Python",
+      "stars": 4286,
+      "stars_today": 427,
+      "forks": 607,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["claude", "multimodal", "video-understanding", "agent-skills"],
+      "relevance": "medium"
+    },
+    {
+      "id": "mvanhorn-last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "An AI agent skill that researches any topic across Reddit, X, YouTube, Hacker News, Polymarket, and the broader web, then synthesizes a grounded, cited summary.",
+      "language": "Python",
+      "stars": 49799,
+      "stars_today": 458,
+      "forks": 4147,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research-automation", "web-search", "synthesis"],
+      "relevance": "medium"
+    },
+    {
+      "id": "cheahjs-free-llm-api-resources",
+      "name": "cheahjs/free-llm-api-resources",
+      "description": "A maintained list of free LLM inference resources accessible via API, widely used by developers prototyping AI applications without initial cost.",
+      "language": "Python",
+      "stars": 25903,
+      "stars_today": 419,
+      "forks": 2686,
+      "url": "https://github.com/cheahjs/free-llm-api-resources",
+      "tags": ["llm-apis", "curated-list", "developer-resources"],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-zvec",
+      "name": "alibaba/zvec",
+      "description": "A lightweight, lightning-fast, in-process vector database designed for embedding storage and similarity search in RAG and AI application pipelines.",
+      "language": "C++",
+      "stars": 13538,
+      "stars_today": 382,
+      "forks": 826,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": ["vector-database", "rag-infrastructure", "embeddings", "in-process-db"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Training-Inference Consistency in LLM RL",
+      "description": "Research reframing LLM RL post-training stability around the mismatch between training and inference engine probabilities, arguing the monotonic inference policy is the true optimization target.",
+      "related_paper_ids": ["mirage-training-policies-rl"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Embodied AI Inference Runtimes",
+      "description": "Systems-level work bringing closed-loop, multi-rate, batch-1 serving infrastructure to vision-language-action and world-action models, plus lightweight correction layers for reactivity.",
+      "related_paper_ids": ["embodied-cpp", "vla-corrector"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Diffusion Transformer Quantization",
+      "description": "Data-agnostic post-training quantization methods that avoid costly per-checkpoint calibration for increasingly fast-iterating image and video diffusion transformer models.",
+      "related_paper_ids": ["orbitquant"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Vision-Language Model Data Curation",
+      "description": "Systematic benchmarks and large-scale open corpora for evaluating data-curation strategies used to pretrain vision-language models.",
+      "related_paper_ids": ["datacomp-vlm"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "LLM Research Ideation and Meta-Science",
+      "description": "Work evaluating and building tooling for whether LLMs can ground, differentiate, and select strategies for research problems the way expert human researchers do.",
+      "related_paper_ids": ["research-studio-idea", "human-llm-research-idea-gap"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skill Ecosystem and Red-Teaming",
+      "description": "Rapid growth of cross-vendor agent-skill tooling (Claude Code, Codex) paired with a parallel wave of research and open-source tools for red-teaming agent infrastructure, protocols, and behavior.",
+      "related_paper_ids": ["ai-infra-guard", "mastermind-vulnerability-reproduction"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-07T23:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
