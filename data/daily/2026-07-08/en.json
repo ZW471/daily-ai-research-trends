@@ -1,0 +1,831 @@
+{
+  "version": "1.0",
+  "date": "2026-07-08",
+  "generated_at": "2026-07-08T15:00:00Z",
+  "summary": {
+    "headline": "World models get a formal definition and roadmap; KV cache compression sees two new cross-layer depth-factorization approaches; 3D scene unification via pixel-space diffusion (PixWorld, ECCV 2026) advances the generation-reconstruction frontier; GitHub trending remains dominated by agent-skill and red-teaming tooling",
+    "body": "Tuesday's arXiv submissions reflect a maturing mid-year research calendar. The most conceptually ambitious contribution is **A Definition and Roadmap for World Models** (2607.06401), which attempts to unify the sprawling world-models literature under a single formal framework distinguishing physical world models from mental world models, and mapping research gaps across fidelity, interaction, planning, and stochasticity. It joins a broader world-model cluster that includes **From World Models to World Action Models** (2607.00836), a robotics-focused tutorial that categorizes four paradigms for connecting predicted futures to executable robot actions.\n\nEfficiency research continues at high volume. Two complementary KV cache compression papers—**DepthWeave-KV** (2607.06523) and **FreqDepthKV** (2607.06519)—both attack the cross-layer factorization problem from different angles: DepthWeave-KV uses adaptive cross-layer factorization while FreqDepthKV leverages frequency-guided depth sharing. Together they reinforce a clear trend: researchers are mining the depth dimension of transformer stacks as the next frontier after attention-based eviction and quantization. A third efficiency contribution, **DepthBench-KV** / MosaicKV (2607.00760), proposes a dynamic two-dimensional compression scheme for production long-context serving.\n\nOn the vision side, **PixWorld** (2607.05373, ECCV 2026) proposes a unified pixel-space diffusion approach that simultaneously addresses 3D scene generation and reconstruction—removing the information bottleneck of latent-space VAE encoders by supervising directly on rendered pixel outputs. This addresses a persistent critique of latent diffusion 3D methods and won an ECCV acceptance.\n\nAgent and LLM safety research continues with **DT-Guard** (2607.06326), which trains LLM safety guardrails from intent-driven supervision without requiring the model to surface explicit reasoning, and **Doomed from the Start** (2607.06503), which develops early-termination probes for LLM agent episodes using recall-controlled cascade classifiers. Both reflect the field's push to make agent systems more reliably safe without sacrificing capability. On the frontier-model side, the open-weight ecosystem remains active: **DeepSeek V4.1 Flash** took the top trending HuggingFace slot, Chinese open-weight models now hold five of the top ten download positions, and the Qwen3 / GLM-5.2 family continues to dominate agentic coding evaluations. GitHub trending is again saturated with Claude Code skill repositories, agent multiplexers, and AI red-teaming infrastructure—a signal that the agent-skill layer is consolidating around a handful of interoperable tool standards.",
+    "key_themes": [
+      "world-model-formalization",
+      "kv-cache-depth-compression",
+      "3d-generation-reconstruction-unification",
+      "llm-agent-safety-efficiency",
+      "open-weight-frontier-models",
+      "agent-skill-ecosystem"
+    ]
+  },
+  "researcher_notes": "**The world models definition paper matters more than its engagement numbers suggest.** The AI field has been using 'world model' to mean at least four different things (learned dynamics model, video prediction model, mental simulator, environment model for RL). A formal taxonomy that separates physical from mental world models and maps the research gaps is exactly the kind of conceptual hygiene that prevents a decade of siloed parallel work. Watch citation velocity over the next quarter.\n\n**The KV cache depth-compression cluster is becoming a coherent research direction.** DepthWeave-KV and FreqDepthKV appearing on the same day is not coincidence—both are responses to the same observation (MiniCache, 2024) that KV cache entries become increasingly similar across layers at depth, and that cross-layer compression is underexplored relative to within-layer eviction. The frequency-guided approach in FreqDepthKV is particularly interesting because it borrows signal processing intuitions to identify which depth slices carry high-frequency (task-relevant) information. Expect more entries in this cluster.\n\n**PixWorld's ECCV acceptance validates the pixel-space-supervision hypothesis for 3D.** The prior dominant paradigm—define diffusion in latent space, decode to 3D—has a known failure mode: the VAE encoder introduces information loss that prevents direct optimization of 3D fidelity. PixWorld's result shows this can be fixed by pushing the supervision signal all the way to rendered pixels. The technique generalizes across reconstruction and generation, which is the more important result—it means a single model can handle both tasks without architectural surgery.\n\n**Agent safety is bifurcating into two tracks: guardrails and episode control.** DT-Guard targets the guardrail layer (what the model is allowed to output), while Doomed from the Start targets the episode layer (whether a running agent episode should be terminated early). These are complementary: guardrails prevent single bad outputs, episode control prevents an agent from investing compute in a trajectory that is already doomed to fail or violate policy. Both are necessary for production agent deployment. Neither is sufficient alone.\n\n**Chinese open-weight model velocity continues to accelerate.** Five of ten top-download HuggingFace model slots held by Chinese labs (DeepSeek, Qwen, GLM families) is structurally significant. The open-weight race is no longer a US-led phenomenon, and the practical implication for practitioners is that the best freely-available model for a given task is increasingly likely to come from a non-Anthropic/OpenAI/Google lab.",
+  "papers": [
+    {
+      "id": "world-models-definition-roadmap",
+      "title": "A Definition and Roadmap for World Models",
+      "authors": [
+        "Chen et al."
+      ],
+      "affiliations": [],
+      "summary": "Proposes a formal definition and research roadmap for world models, distinguishing physical world models (objective external dynamics simulators) from mental world models (internal cognition, intention, and reasoning representations), and mapping open research gaps across fidelity, interaction, planning, and stochasticity.",
+      "key_findings": [
+        "Formal taxonomy separates physical from mental world models, resolving conflicting usages in the literature",
+        "Identifies four research axes—fidelity, interaction, planning, stochasticity—as the primary gaps in current world model work",
+        "Provides a structured roadmap connecting world models to downstream applications in embodied AI, robotics, and scientific simulation"
+      ],
+      "tags": [
+        "world-models",
+        "survey",
+        "embodied-ai",
+        "model-based-rl",
+        "taxonomy"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06401",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06401"
+      }
+    },
+    {
+      "id": "world-models-to-action-tutorial",
+      "title": "From World Models to World Action Models: A Concise Tutorial for Robotics",
+      "authors": [],
+      "affiliations": [],
+      "summary": "A concise robotics-focused tutorial that categorizes four paradigms for connecting predicted futures with executable robot actions: imagine-then-execute, video-feature-conditioned action prediction, joint video-action modeling, and auxiliary video prediction for policy learning.",
+      "key_findings": [
+        "Introduces the world action model concept as the bridge between world model prediction and robot control",
+        "Surveys four paradigms for grounding world model predictions in executable actions",
+        "Compares observation-space vs. state-space world models on visual fidelity, spatial structure, physical interpretability, and control usability"
+      ],
+      "tags": [
+        "world-models",
+        "robotics",
+        "vision-language-action",
+        "tutorial",
+        "embodied-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00836",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.00836"
+      }
+    },
+    {
+      "id": "depthweave-kv",
+      "title": "DepthWeave-KV: Adaptive Cross-Layer KV Cache Factorization for Long-Context LLM Inference",
+      "authors": [
+        "Cordoba et al."
+      ],
+      "affiliations": [],
+      "summary": "Proposes adaptive cross-layer factorization of the key-value cache in large language models, exploiting the increasing inter-layer similarity of KV representations at depth to reduce memory and compute during long-context inference.",
+      "key_findings": [
+        "KV cache entries grow increasingly similar across adjacent transformer layers, especially at depth—enabling aggressive cross-layer compression",
+        "Adaptive factorization dynamically allocates compression ratios per layer based on measured similarity",
+        "Achieves strong memory reduction on long-context benchmarks without significant quality degradation"
+      ],
+      "tags": [
+        "kv-cache",
+        "long-context",
+        "inference-efficiency",
+        "llm",
+        "compression"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06523",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06523"
+      }
+    },
+    {
+      "id": "freqdepthkv",
+      "title": "FreqDepthKV: Frequency-Guided Depth-Aware KV Cache Compression for Robust Long-Context Inference",
+      "authors": [
+        "Córdoba et al."
+      ],
+      "affiliations": [],
+      "summary": "Applies frequency-domain analysis to guide cross-layer KV cache sharing in transformer models, identifying which depth layers carry high-frequency (task-relevant) information and preserving those while aggressively compressing low-frequency layers.",
+      "key_findings": [
+        "Frequency-guided analysis provides a principled criterion for which depth layers to compress vs. preserve",
+        "Complementary to attention-eviction schemes—targets the depth axis rather than the sequence axis",
+        "Robust across different context lengths and model families"
+      ],
+      "tags": [
+        "kv-cache",
+        "long-context",
+        "inference-efficiency",
+        "frequency-domain",
+        "llm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06519",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06519"
+      }
+    },
+    {
+      "id": "pixworld-3d-diffusion",
+      "title": "PixWorld: Unifying 3D Scene Generation and Reconstruction in Pixel Space",
+      "authors": [
+        "Sensen Gao",
+        "Zhaoqing Wang",
+        "Qihang Cao",
+        "Dongdong Yu",
+        "Changhu Wang",
+        "Jia-Wang Bian"
+      ],
+      "affiliations": [],
+      "summary": "Reformulates both 3D scene generation and reconstruction under a unified pixel-space diffusion paradigm, removing the latent VAE encoder bottleneck by supervising the diffusion objective directly on rendered images rather than latent features, enabling direct optimization of 3D fidelity for both tasks.",
+      "key_findings": [
+        "Pixel-space supervision removes the information bottleneck introduced by pretrained VAE/RAE encoders in latent diffusion approaches",
+        "A single model jointly handles 3D reconstruction and generation—no task-specific architectural surgery required",
+        "Accepted at ECCV 2026; validates direct image-level supervision as a superior 3D learning signal"
+      ],
+      "tags": [
+        "3d-generation",
+        "3d-reconstruction",
+        "diffusion-models",
+        "pixel-space",
+        "eccv-2026"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.05373",
+        "huggingface": "https://huggingface.co/papers/2607.05373",
+        "pdf": "https://arxiv.org/pdf/2607.05373"
+      }
+    },
+    {
+      "id": "dt-guard-llm-safety",
+      "title": "DT-Guard: Intent-Driven Training for LLM Safety Guardrails Without Explicit Reasoning",
+      "authors": [
+        "Liu et al."
+      ],
+      "affiliations": [],
+      "summary": "Introduces a training methodology for LLM safety guardrails that uses intent-driven supervision signals rather than requiring the model to produce explicit chain-of-thought safety reasoning, achieving guardrail effectiveness while reducing inference overhead.",
+      "key_findings": [
+        "Intent-driven training signal avoids the brittleness of explicit safety reasoning chains",
+        "Guardrails trained without CoT are harder to jailbreak via reasoning-manipulation attacks",
+        "Method is model-agnostic and compatible with standard RLHF fine-tuning pipelines"
+      ],
+      "tags": [
+        "llm-safety",
+        "guardrails",
+        "alignment",
+        "jailbreak-robustness",
+        "fine-tuning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06326",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06326"
+      }
+    },
+    {
+      "id": "doomed-from-start-agent-termination",
+      "title": "Doomed from the Start: Early Termination for LLM Agent Episodes via Recall-Controlled Probe Cascades",
+      "authors": [
+        "Ruan et al."
+      ],
+      "affiliations": [],
+      "summary": "Develops a cascade of lightweight probe classifiers that predict whether a running LLM agent episode will fail or violate policy before it completes, enabling early termination to save compute and prevent policy violations from accumulating.",
+      "key_findings": [
+        "Recall-controlled cascade architecture trades precision for high recall at early layers—catching most bad episodes early",
+        "Episode termination probes generalize across agent tasks and model sizes",
+        "Significant compute savings on long-horizon agent benchmarks with minimal impact on good-episode completion rate"
+      ],
+      "tags": [
+        "llm-agents",
+        "safety",
+        "episode-control",
+        "efficiency",
+        "early-termination"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06503",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06503"
+      }
+    },
+    {
+      "id": "mosaickv-long-context",
+      "title": "MosaicKV: Serving Long-Context LLM with Dynamic Two-D KV Cache Compression",
+      "authors": [],
+      "affiliations": [],
+      "summary": "Proposes a two-dimensional (sequence × depth) dynamic KV cache compression scheme for production long-context LLM serving, adaptively allocating compression budget across both the token sequence and transformer layer dimensions.",
+      "key_findings": [
+        "Two-dimensional compression captures complementary redundancies in both sequence and depth axes",
+        "Dynamic budget allocation outperforms fixed-ratio approaches across varied context lengths",
+        "Targets production serving scenarios with strict latency requirements"
+      ],
+      "tags": [
+        "kv-cache",
+        "long-context",
+        "inference-serving",
+        "llm-efficiency",
+        "compression"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00760",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.00760"
+      }
+    },
+    {
+      "id": "danus-math-reasoning-agents",
+      "title": "Danus: Fact-Graph Memory for Mathematical Reasoning Agents",
+      "authors": [
+        "Liu et al."
+      ],
+      "affiliations": [],
+      "summary": "Orchestrates mathematical reasoning agents using structured fact-graph memory, enabling agents to track intermediate proof states, avoid redundant computation, and perform multi-hop reasoning across complex problems.",
+      "key_findings": [
+        "Fact-graph memory structure explicitly tracks deduced facts and their dependencies across reasoning steps",
+        "Outperforms flat-context baselines on multi-step math benchmarks",
+        "Agent orchestration via fact graphs reduces hallucination of intermediate steps"
+      ],
+      "tags": [
+        "mathematical-reasoning",
+        "agents",
+        "memory",
+        "graph-structured-memory",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06447",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06447"
+      }
+    },
+    {
+      "id": "large-cancer-assistant",
+      "title": "The Large Cancer Assistant (LCA): Orchestrating Clinical Decision Support in Oncology",
+      "authors": [
+        "Marrakchi",
+        "Matei"
+      ],
+      "affiliations": [],
+      "summary": "Presents a framework for orchestrating multi-model clinical decision support systems in oncology, designed to work across different AI model architectures and integrate structured clinical knowledge with LLM-based reasoning.",
+      "key_findings": [
+        "Modular orchestration allows different backbone models to be swapped without redesigning the clinical workflow",
+        "Evaluation on oncology decision tasks shows improved consistency over single-model approaches",
+        "Architecture separates knowledge retrieval from reasoning and generation"
+      ],
+      "tags": [
+        "clinical-ai",
+        "oncology",
+        "multi-agent",
+        "healthcare",
+        "llm-orchestration"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06531",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06531"
+      }
+    },
+    {
+      "id": "explainer-declarative-ml-explanations",
+      "title": "ExplAIner: A Declarative Query Language for Explaining Classification Models",
+      "authors": [
+        "Arenas",
+        "Barceló",
+        "Bustamante",
+        "Caraball",
+        "Schild",
+        "Subercaseaux"
+      ],
+      "affiliations": [],
+      "summary": "Proposes a declarative query language for specifying and computing explanations of classification model predictions, enabling users to express explanation requirements formally rather than relying on heuristic post-hoc methods.",
+      "key_findings": [
+        "Declarative query language allows precise specification of explanation properties (e.g., contrastive, counterfactual, feature-importance)",
+        "Query evaluation is shown to be tractable for common model families",
+        "Unifies several ad-hoc explanation approaches under a single formal framework"
+      ],
+      "tags": [
+        "explainability",
+        "interpretability",
+        "classification",
+        "formal-methods",
+        "query-language"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06407",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06407"
+      }
+    },
+    {
+      "id": "orbitquant-diffusion-quantization",
+      "title": "OrbitQuant: Data-Agnostic Quantization for Image and Video Diffusion Transformers",
+      "authors": [],
+      "affiliations": [],
+      "summary": "Proposes data-agnostic post-training quantization for diffusion transformers by quantizing in a normalized, rotated basis (randomized permuted block-Hadamard rotation) where activations concentrate around a fixed marginal regardless of timestep or prompt, eliminating per-checkpoint calibration.",
+      "key_findings": [
+        "RPBH rotation concentrates activations to a known marginal, enabling a single Lloyd-Max codebook to serve all timesteps and prompts",
+        "Transfers from image to video DiTs with no per-modality tuning",
+        "Sets state of the art for PTQ on FLUX.1, Z-Image-Turbo, Wan 2.1, and CogVideoX; pushes image DiT PTQ to W2A4",
+        "Accepted at ECCV 2026"
+      ],
+      "tags": [
+        "quantization",
+        "diffusion-transformers",
+        "post-training-quantization",
+        "image-generation",
+        "video-generation",
+        "eccv-2026"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02461",
+        "huggingface": "https://huggingface.co/papers/2607.02461",
+        "pdf": "https://arxiv.org/pdf/2607.02461"
+      }
+    },
+    {
+      "id": "embodied-cpp-runtime",
+      "title": "Embodied.cpp: A Portable Inference Runtime of Embodied AI Models on Heterogeneous Robots",
+      "authors": [],
+      "affiliations": [
+        "SEU-PAISys"
+      ],
+      "summary": "A portable C++ inference runtime for embodied AI models that organizes execution into five modular layers (input adapters, sequence builders, backbone execution, head plugins, deployment adapters), supporting multi-rate closed-loop control, latency-first batch-1 inference, and deployment across heterogeneous CPU/GPU/NPU hardware.",
+      "key_findings": [
+        "Addresses the mismatch between request-response serving runtimes and the multi-rate, closed-loop requirements of embodied deployment",
+        "VLA deployments achieve 100% and 91% task success rates on two benchmarks",
+        "WAM benchmark block memory reduced from 312.2 MiB to 88.1 MiB",
+        "Runs on GGUF weights across heterogeneous devices"
+      ],
+      "tags": [
+        "embodied-ai",
+        "inference-runtime",
+        "robotics",
+        "vision-language-action",
+        "edge-deployment",
+        "cpp"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02501",
+        "huggingface": "https://huggingface.co/papers/2607.02501",
+        "pdf": "https://arxiv.org/pdf/2607.02501",
+        "github": "https://github.com/SEU-PAISys/Embodied.cpp"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "Fast inference variant of DeepSeek V4.1, taking the top trending HuggingFace download slot within one week of release. Optimized for low-latency agentic and coding workloads.",
+      "task_type": "text-generation",
+      "model_size": null,
+      "tags": [
+        "llm",
+        "coding",
+        "fast-inference",
+        "open-weight",
+        "chinese-lab"
+      ],
+      "metrics": {},
+      "source_url": "https://huggingface.co/models?sort=trending"
+    },
+    {
+      "id": "qwen3-235b-a22b",
+      "name": "Qwen3-235B-A22B",
+      "organization": "Qwen / Alibaba",
+      "description": "Top open-weight model for reasoning and math (GPQA Diamond 77.2%, AIME '24 85.7%). MoE architecture with 235B total / 22B active parameters. Apache 2.0 license.",
+      "task_type": "text-generation",
+      "model_size": "235B",
+      "tags": [
+        "llm",
+        "reasoning",
+        "math",
+        "moe",
+        "open-weight",
+        "apache-2.0"
+      ],
+      "metrics": {
+        "GPQA Diamond": "77.2%",
+        "AIME 2024": "85.7%"
+      },
+      "source_url": "https://huggingface.co/Qwen"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Z.ai (Zhipu AI)",
+      "description": "Latest GLM family model featuring a Mixture-of-Experts architecture with Dynamic Sparse Attention. Community engagement leader with 3,532 likes. Strong performance on coding and agent benchmarks.",
+      "task_type": "text-generation",
+      "model_size": null,
+      "tags": [
+        "llm",
+        "moe",
+        "coding",
+        "agents",
+        "chinese-lab",
+        "open-weight"
+      ],
+      "metrics": {},
+      "source_url": "https://huggingface.co/THUDM"
+    },
+    {
+      "id": "kimi-k2-6",
+      "name": "Kimi K2.6",
+      "organization": "Moonshot AI",
+      "description": "Top-ranked model for coding and long-horizon agent workflows. Recommended alongside GLM-5.1 for agentic tasks requiring multi-step planning and code execution.",
+      "task_type": "text-generation",
+      "model_size": null,
+      "tags": [
+        "llm",
+        "coding",
+        "agents",
+        "chinese-lab",
+        "open-weight"
+      ],
+      "metrics": {},
+      "source_url": "https://huggingface.co/moonshotai"
+    },
+    {
+      "id": "smoldocling-256m",
+      "name": "SmolDocling-256M-preview",
+      "organization": "IBM Research / HuggingFace",
+      "description": "Ultra-compact 256M parameter vision-language model for end-to-end document conversion. Generates DocTags markup capturing all page elements with location. Converts a page in 0.35s at 0.489 GB VRAM on A100.",
+      "task_type": "document-understanding",
+      "model_size": "256M",
+      "tags": [
+        "vision-language",
+        "document-ai",
+        "compact",
+        "ocr",
+        "open-weight"
+      ],
+      "metrics": {
+        "latency_per_page": "0.35s",
+        "vram": "0.489 GB"
+      },
+      "source_url": "https://huggingface.co/docling-project/SmolDocling-256M-preview"
+    },
+    {
+      "id": "yolo26",
+      "name": "YOLO26",
+      "organization": "YOLO Community",
+      "description": "Latest YOLO family real-time detection model with NMS-free end-to-end inference, ProgLoss, Small-Target-Aware Label Assignment, and MuSGD optimizer. Multi-task: detection, segmentation, pose estimation, oriented detection. Achieves 40.9–57.5 mAP on COCO at 1.7–11.8 ms T4 latency.",
+      "task_type": "object-detection",
+      "model_size": null,
+      "tags": [
+        "object-detection",
+        "real-time",
+        "nms-free",
+        "multi-task",
+        "edge-deployment"
+      ],
+      "metrics": {
+        "COCO mAP": "40.9-57.5",
+        "T4 latency ms": "1.7-11.8"
+      },
+      "source_url": "https://arxiv.org/abs/2601.12882"
+    },
+    {
+      "id": "ollama-local",
+      "name": "Ollama (framework)",
+      "organization": "Ollama",
+      "description": "Lightweight Go framework for running LLMs locally. Crossed 165k GitHub stars. Supports Llama, Mistral, Gemma, DeepSeek, and more with an OpenAI-compatible API.",
+      "task_type": "llm-serving",
+      "model_size": null,
+      "tags": [
+        "local-inference",
+        "open-source",
+        "llm-serving",
+        "privacy-first"
+      ],
+      "metrics": {
+        "github_stars": "165k+"
+      },
+      "source_url": "https://github.com/ollama/ollama"
+    },
+    {
+      "id": "openclaw-agent",
+      "name": "OpenClaw",
+      "organization": "OpenClaw Community",
+      "description": "Personal AI assistant running entirely on local devices, connecting AI models to 50+ integrations (WhatsApp, Telegram, Slack, Discord, Signal, iMessage). Fastest-growing open-source AI project of 2026, now at 210k+ GitHub stars.",
+      "task_type": "ai-agent",
+      "model_size": null,
+      "tags": [
+        "ai-agent",
+        "local-first",
+        "integrations",
+        "privacy",
+        "open-source"
+      ],
+      "metrics": {
+        "github_stars": "210k+"
+      },
+      "source_url": "https://github.com/openclaw/openclaw"
+    },
+    {
+      "id": "vllm-serving",
+      "name": "vLLM (v0.9+)",
+      "organization": "vLLM Community",
+      "description": "Production LLM serving framework now with expanded hardware support: AMD, Intel Arc, and TPU in addition to NVIDIA GPUs. OpenAI-compatible API for straightforward cloud-to-self-hosted migration.",
+      "task_type": "llm-serving",
+      "model_size": null,
+      "tags": [
+        "llm-serving",
+        "inference",
+        "open-source",
+        "multi-hardware"
+      ],
+      "metrics": {},
+      "source_url": "https://github.com/vllm-project/vllm"
+    },
+    {
+      "id": "comfyui-workflow",
+      "name": "ComfyUI",
+      "organization": "ComfyUI Community",
+      "description": "Node-based visual workflow system for image generation pipelines. Crossed 106k GitHub stars. Gives practitioners granular control over every step of diffusion generation.",
+      "task_type": "image-generation",
+      "model_size": null,
+      "tags": [
+        "image-generation",
+        "workflow",
+        "node-based",
+        "open-source",
+        "diffusion"
+      ],
+      "metrics": {
+        "github_stars": "106k+"
+      },
+      "source_url": "https://github.com/comfyanonymous/ComfyUI"
+    },
+    {
+      "id": "browser-use-agent",
+      "name": "browser-use",
+      "organization": "browser-use",
+      "description": "Gives AI agents the ability to interact with websites like humans—clicking, typing, navigating. Hit 86k stars. Pairs with frontier LLMs for web automation tasks previously requiring human interaction.",
+      "task_type": "ai-agent",
+      "model_size": null,
+      "tags": [
+        "web-automation",
+        "ai-agent",
+        "browser",
+        "open-source"
+      ],
+      "metrics": {
+        "github_stars": "86k+"
+      },
+      "source_url": "https://github.com/browser-use/browser-use"
+    },
+    {
+      "id": "qwen3-uncensored-gguf",
+      "name": "Qwen3.6-35B-A3B GGUF (uncensored)",
+      "organization": "HauhauCS (community quantization)",
+      "description": "Community-quantized GGUF of Qwen3.6's 35B MoE with 3B active parameters. Accumulated 2.9M downloads—highest in the community quantization category this week.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "llm",
+        "gguf",
+        "quantized",
+        "moe",
+        "community"
+      ],
+      "metrics": {
+        "downloads": "2.9M"
+      },
+      "source_url": "https://huggingface.co/HauhauCS"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-repo",
+      "name": "openclaw/openclaw",
+      "description": "Local-first personal AI assistant with 50+ integrations across messaging platforms. Fastest-growing AI project of 2026.",
+      "language": "TypeScript",
+      "stars": 210000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": ["ai-agent", "local-first", "integrations"],
+      "relevance": "high"
+    },
+    {
+      "id": "embodied-cpp-repo",
+      "name": "SEU-PAISys/Embodied.cpp",
+      "description": "Portable C++ inference runtime for embodied AI / VLA models on heterogeneous robots. Multi-rate, closed-loop, batch-1 serving.",
+      "language": "C++",
+      "stars": null,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/SEU-PAISys/Embodied.cpp",
+      "tags": ["embodied-ai", "inference-runtime", "robotics", "cpp"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-repo",
+      "name": "ollama/ollama",
+      "description": "Local LLM inference framework supporting Llama, Mistral, Gemma, DeepSeek and more. Crossed 165k stars.",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["llm-serving", "local", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui-repo",
+      "name": "comfyanonymous/ComfyUI",
+      "description": "Node-based diffusion pipeline UI with granular control over every generation step. 106k+ stars.",
+      "language": "Python",
+      "stars": 106000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/comfyanonymous/ComfyUI",
+      "tags": ["image-generation", "diffusion", "workflow"],
+      "relevance": "medium"
+    },
+    {
+      "id": "browser-use-repo",
+      "name": "browser-use/browser-use",
+      "description": "AI agent web automation—clicks, types, navigates like a human. 86k stars. Primary tool for web-UI-facing agent tasks.",
+      "language": "Python",
+      "stars": 86000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["web-automation", "ai-agent", "browser"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-repo",
+      "name": "vllm-project/vllm",
+      "description": "High-throughput LLM serving with PagedAttention. Extended hardware support to AMD/Intel/TPU; OpenAI-compatible API.",
+      "language": "Python",
+      "stars": null,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["llm-serving", "inference", "multi-hardware"],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow-repo",
+      "name": "langflow-ai/langflow",
+      "description": "Low-code drag-and-drop platform for designing AI agent pipelines and RAG workflows. Enables domain experts without ML backgrounds to build sophisticated AI applications.",
+      "language": "Python",
+      "stars": null,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": ["agent-pipeline", "low-code", "rag", "workflow"],
+      "relevance": "medium"
+    },
+    {
+      "id": "awesome-ai-agents-2026",
+      "name": "caramaschiHG/awesome-ai-agents-2026",
+      "description": "Comprehensive curated list of 300+ AI agents, frameworks, and tools in 2026 across 20+ categories. Updated monthly.",
+      "language": null,
+      "stars": null,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/caramaschiHG/awesome-ai-agents-2026",
+      "tags": ["curated-list", "ai-agents", "frameworks"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "World Model Formalization",
+      "description": "Convergent effort to give 'world model' a rigorous formal definition distinguishing physical (external dynamics) from mental (internal cognition) models, mapping research gaps across fidelity, interaction, planning, and stochasticity.",
+      "related_paper_ids": ["world-models-definition-roadmap", "world-models-to-action-tutorial"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "KV Cache Depth-Axis Compression",
+      "description": "Emerging cluster of papers exploiting increasing cross-layer similarity of KV representations at transformer depth to enable aggressive compression beyond what attention-eviction and quantization can achieve.",
+      "related_paper_ids": ["depthweave-kv", "freqdepthkv", "mosaickv-long-context"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D Generation-Reconstruction Unification",
+      "description": "Paradigm shift toward single models that jointly handle 3D generation and reconstruction via pixel-space supervision, removing the latent encoder bottleneck of prior latent diffusion 3D approaches.",
+      "related_paper_ids": ["pixworld-3d-diffusion"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Agent Safety: Guardrails and Episode Control",
+      "description": "Two complementary safety tracks maturing in parallel—intent-driven guardrail training (DT-Guard) and episode-level early termination via probe cascades (Doomed from the Start)—reflecting production agent deployment requirements.",
+      "related_paper_ids": ["dt-guard-llm-safety", "doomed-from-start-agent-termination"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Chinese Open-Weight Model Dominance",
+      "description": "Chinese labs now hold five of ten top-download HuggingFace slots; DeepSeek, Qwen, GLM, Kimi families collectively lead on coding, agentic, and reasoning benchmarks.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Agent Skill and Tooling Ecosystem",
+      "description": "GitHub trending saturated with Claude Code skill repositories, agent multiplexers, and AI red-teaming infrastructure—the agent-skill layer is consolidating around interoperable tool standards.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv cs.LG",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "partial"
+    }
+  ]
+}

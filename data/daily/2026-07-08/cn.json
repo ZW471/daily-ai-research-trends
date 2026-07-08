@@ -1,0 +1,396 @@
+{
+  "version": "1.0",
+  "date": "2026-07-08",
+  "generated_at": "2026-07-08T15:00:00Z",
+  "summary": {
+    "headline": "世界模型正式获得定义与路线图；KV缓存压缩出现两项新的跨层深度分解方法；PixWorld通过像素空间扩散统一3D生成与重建（ECCV 2026入选）；GitHub热榜继续被智能体技能与红队测试工具主导",
+    "body": "周二的arXiv提交反映出年中研究日程的成熟态势。概念上最具野心的贡献是**《世界模型的定义与路线图》**（2607.06401），它尝试在统一的正式框架下整合纷繁的世界模型文献——将物理世界模型（客观外部动态模拟器）与心理世界模型（内部认知、意图与推理表征）明确区分，并绘制了跨保真度、交互、规划和随机性四个维度的研究空白地图。与之呼应的还有**《从世界模型到世界动作模型》**（2607.00836）——一篇面向机器人学的简明教程，归纳了将预测未来与可执行机器人动作相连接的四种范式。\n\n效率研究持续高产。**DepthWeave-KV**（2607.06523）和**FreqDepthKV**（2607.06519）同日出现，分别从不同角度攻克跨层分解问题：前者采用自适应跨层因子分解，后者借助频率引导的深度共享。二者共同强化了一个清晰趋势：研究者正在将Transformer堆栈的深度维度作为继基于注意力的驱逐和量化之后的下一个压缩前沿。第三篇效率论文MosaicKV（2607.00760）则提出了用于生产环境长上下文推理服务的动态二维压缩方案。\n\n视觉方面，**PixWorld**（2607.05373，ECCV 2026入选）提出了一种统一的像素空间扩散方法，同时解决3D场景生成和重建问题——通过在渲染后的像素输出上直接施加监督，消除了潜空间VAE编码器的信息瓶颈。**DT-Guard**（2607.06326）引入了一种无需模型生成显式推理链的意图驱动LLM安全护栏训练方法；**Doomed from the Start**（2607.06503）利用召回率可控的级联探针分类器为LLM智能体会话开发了提前终止机制。前沿开源模型方面，**DeepSeek V4.1 Flash**登顶HuggingFace下载热榜，中国实验室出品的模型目前占据前十名中的五席，Qwen3 / GLM-5.2系列持续主导智能编程评测榜单。GitHub热榜再度被Claude Code技能仓库、智能体多路复用器与AI红队基础设施占据——这一信号表明智能体技能层正围绕少数可互操作的工具标准快速收敛。",
+    "key_themes": [
+      "世界模型形式化",
+      "KV缓存深度轴压缩",
+      "3D生成与重建统一",
+      "LLM智能体安全：护栏与会话控制",
+      "中国开源模型主导",
+      "智能体技能生态系统"
+    ]
+  },
+  "researcher_notes": "**《世界模型定义》论文的重要性远超其当前关注度。** AI领域长期以来用"世界模型"指代至少四种不同含义（学习动态模型、视频预测模型、心理模拟器、强化学习环境模型）。将物理与心理世界模型加以正式区分、并绘制研究空白的分类体系，正是防止十年内各自为政的平行研究的概念卫生举措。请关注未来一季度的引用速度。\n\n**KV缓存深度压缩集群正在形成连贯的研究方向。** DepthWeave-KV和FreqDepthKV同日出现并非偶然——两者都回应了同一观察（MiniCache，2024年）：KV缓存条目在深度相邻的Transformer层之间相似性递增，而跨层压缩相对于层内驱逐而言尚未得到充分探索。FreqDepthKV借鉴信号处理直觉识别哪些深度切片携带高频（任务相关）信息，这一做法尤为值得关注。预计该方向将持续涌现新论文。\n\n**PixWorld的ECCV入选验证了3D像素空间监督假说。** 此前主流范式——在潜空间定义扩散、解码为3D——有一个已知的失效模式：VAE编码器引入信息损失，阻止了对3D保真度的直接优化。PixWorld的结果表明，将监督信号一路推进到渲染像素可以修复这一问题。更重要的是，该技术跨重建和生成双任务泛化——单一模型无需架构改动即可处理两类任务。\n\n**智能体安全正沿两条轨道分叉演进：护栏与会话控制。** DT-Guard针对护栏层（模型允许输出什么），Doomed from the Start针对会话层（正在运行的智能体会话是否应提前终止）。两者互为补充：护栏防止单次不良输出，会话控制则防止智能体在一条已注定失败或违反策略的轨迹上浪费算力。二者对于生产环境的智能体部署都不可或缺，单独任何一者都不够充分。\n\n**中国开源模型的迭代速度持续加快。** HuggingFace前十下载席位中有五席来自中国实验室（DeepSeek、Qwen、GLM系列）具有结构性意义。开源权重竞争已不再是美国主导的现象，其实际含义是：给定任务下最优的可免费使用模型，越来越可能来自Anthropic/OpenAI/Google以外的实验室。",
+  "papers": [
+    {
+      "id": "world-models-definition-roadmap",
+      "title": "世界模型的定义与路线图",
+      "authors": ["Chen et al."],
+      "affiliations": [],
+      "summary": "提出世界模型的正式定义与研究路线图，区分物理世界模型（客观外部动态模拟器）与心理世界模型（内部认知、意图与推理表征），并绘制跨保真度、交互、规划和随机性四个维度的研究空白地图。",
+      "key_findings": [
+        "正式分类将物理与心理世界模型加以区分，解决文献中的概念混用问题",
+        "识别保真度、交互、规划、随机性四个研究轴作为当前世界模型工作的主要空白",
+        "提供连接世界模型与具身AI、机器人、科学仿真下游应用的结构化路线图"
+      ],
+      "tags": ["世界模型", "综述", "具身AI", "基于模型的强化学习", "分类体系"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06401",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06401"
+      }
+    },
+    {
+      "id": "world-models-to-action-tutorial",
+      "title": "从世界模型到世界动作模型：机器人学简明教程",
+      "authors": [],
+      "affiliations": [],
+      "summary": "面向机器人学的简明教程，归纳了将预测未来与可执行机器人动作相连接的四种范式：想象后执行、视频特征条件动作预测、视频-动作联合建模、辅助视频预测策略学习。",
+      "key_findings": [
+        "引入世界动作模型概念，作为世界模型预测与机器人控制之间的桥梁",
+        "调研四种将世界模型预测落地为可执行动作的范式",
+        "在视觉保真度、空间结构、物理可解释性和控制可用性上对比观测空间与状态空间世界模型的权衡"
+      ],
+      "tags": ["世界模型", "机器人", "视觉-语言-动作", "教程", "具身AI"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00836",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.00836"
+      }
+    },
+    {
+      "id": "depthweave-kv",
+      "title": "DepthWeave-KV：用于长上下文LLM推理的自适应跨层KV缓存因子分解",
+      "authors": ["Cordoba et al."],
+      "affiliations": [],
+      "summary": "提出针对大语言模型键值缓存的自适应跨层因子分解方案，利用深层处KV表征跨相邻Transformer层的相似性递增特性，降低长上下文推理的内存与计算开销。",
+      "key_findings": [
+        "KV缓存条目在相邻Transformer层之间（尤其在深层）的相似性递增，可支持激进的跨层压缩",
+        "自适应因子分解根据测量的相似性动态分配每层压缩比",
+        "在长上下文基准上实现显著内存节省而质量损失较小"
+      ],
+      "tags": ["KV缓存", "长上下文", "推理效率", "大语言模型", "压缩"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06523",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06523"
+      }
+    },
+    {
+      "id": "freqdepthkv",
+      "title": "FreqDepthKV：频率引导的深度感知KV缓存压缩",
+      "authors": ["Córdoba et al."],
+      "affiliations": [],
+      "summary": "将频域分析应用于指导Transformer模型中的跨层KV缓存共享，识别哪些深度层携带高频（任务相关）信息并予以保留，同时对低频层进行激进压缩。",
+      "key_findings": [
+        "频率引导分析为应压缩与应保留的深度层提供有原则性的判断标准",
+        "与基于注意力的驱逐方案互补——针对深度轴而非序列轴",
+        "在不同上下文长度和模型系列上具有鲁棒性"
+      ],
+      "tags": ["KV缓存", "长上下文", "推理效率", "频域", "大语言模型"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06519",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06519"
+      }
+    },
+    {
+      "id": "pixworld-3d-diffusion",
+      "title": "PixWorld：在像素空间统一3D场景生成与重建",
+      "authors": ["Sensen Gao", "Zhaoqing Wang", "Qihang Cao", "Dongdong Yu", "Changhu Wang", "Jia-Wang Bian"],
+      "affiliations": [],
+      "summary": "在统一的像素空间扩散范式下同时处理3D场景生成与重建，通过在渲染图像上直接施加扩散监督目标，消除潜空间VAE/RAE编码器带来的信息瓶颈，实现对3D保真度的直接优化。",
+      "key_findings": [
+        "像素空间监督消除了潜扩散方法中预训练VAE/RAE编码器引入的信息瓶颈",
+        "单一模型同时处理3D重建与生成，无需任务特定的架构改动",
+        "ECCV 2026入选；验证了直接图像级监督作为3D学习信号的优越性"
+      ],
+      "tags": ["3D生成", "3D重建", "扩散模型", "像素空间", "ECCV-2026"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.05373",
+        "huggingface": "https://huggingface.co/papers/2607.05373",
+        "pdf": "https://arxiv.org/pdf/2607.05373"
+      }
+    },
+    {
+      "id": "dt-guard-llm-safety",
+      "title": "DT-Guard：无需显式推理的意图驱动LLM安全护栏训练",
+      "authors": ["Liu et al."],
+      "affiliations": [],
+      "summary": "提出一种利用意图驱动监督信号训练LLM安全护栏的方法，无需模型生成显式思维链安全推理，在保持护栏效果的同时降低推理开销。",
+      "key_findings": [
+        "意图驱动训练信号避免了显式安全推理链的脆弱性",
+        "无CoT训练的护栏更难通过推理操纵攻击实现越狱",
+        "方法与模型无关，兼容标准RLHF微调流水线"
+      ],
+      "tags": ["LLM安全", "护栏", "对齐", "越狱鲁棒性", "微调"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06326",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06326"
+      }
+    },
+    {
+      "id": "doomed-from-start-agent-termination",
+      "title": "开局已定：基于召回率可控探针级联的LLM智能体会话提前终止",
+      "authors": ["Ruan et al."],
+      "affiliations": [],
+      "summary": "开发一组轻量级探针分类器级联，在LLM智能体会话完成之前预测其是否将失败或违反策略，从而实现提前终止以节省算力并防止策略违规的积累。",
+      "key_findings": [
+        "召回率可控的级联架构在早期层以高召回率为代价交换精度——尽早捕捉大多数不良会话",
+        "会话终止探针在不同智能体任务和模型规模上具有泛化性",
+        "在长时域智能体基准上实现显著算力节省，对正常会话完成率影响极小"
+      ],
+      "tags": ["LLM智能体", "安全", "会话控制", "效率", "提前终止"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06503",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.06503"
+      }
+    },
+    {
+      "id": "mosaickv-long-context",
+      "title": "MosaicKV：面向生产长上下文LLM推理服务的动态二维KV缓存压缩",
+      "authors": [],
+      "affiliations": [],
+      "summary": "提出一种二维（序列 × 深度）动态KV缓存压缩方案，在序列和Transformer层深度两个维度上自适应分配压缩预算，面向生产长上下文LLM推理服务。",
+      "key_findings": [
+        "二维压缩捕获序列轴和深度轴上的互补冗余",
+        "动态预算分配在不同上下文长度上优于固定比例方法",
+        "针对严格延迟要求的生产服务场景"
+      ],
+      "tags": ["KV缓存", "长上下文", "推理服务", "LLM效率", "压缩"],
+      "relevance": "medium",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.00760",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2607.00760"
+      }
+    },
+    {
+      "id": "orbitquant-diffusion-quantization",
+      "title": "OrbitQuant：面向图像与视频扩散Transformer的数据无关量化",
+      "authors": [],
+      "affiliations": [],
+      "summary": "通过在归一化旋转基（随机置换块哈达玛旋转）中进行量化，提出面向扩散Transformer的数据无关训练后量化，使激活值集中在固定边际分布附近，与时间步和提示无关，从而消除逐检查点标定。",
+      "key_findings": [
+        "RPBH旋转使激活集中到已知边际，使单一Lloyd-Max码本可服务所有时间步和提示",
+        "从图像到视频DiT无需逐模态调整即可迁移",
+        "在FLUX.1、Z-Image-Turbo、Wan 2.1、CogVideoX上创PTQ新SOTA；将图像DiT PTQ推进至W2A4",
+        "ECCV 2026入选"
+      ],
+      "tags": ["量化", "扩散Transformer", "训练后量化", "图像生成", "视频生成", "ECCV-2026"],
+      "relevance": "high",
+      "engagement": {"upvotes": null, "comments": null},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.02461",
+        "huggingface": "https://huggingface.co/papers/2607.02461",
+        "pdf": "https://arxiv.org/pdf/2607.02461"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4.1快速推理变体，发布一周内即登顶HuggingFace下载热榜。针对低延迟智能体和编程任务优化。",
+      "task_type": "文本生成",
+      "model_size": null,
+      "tags": ["大语言模型", "编程", "快速推理", "开源权重", "中国实验室"],
+      "metrics": {},
+      "source_url": "https://huggingface.co/models?sort=trending"
+    },
+    {
+      "id": "qwen3-235b-a22b",
+      "name": "Qwen3-235B-A22B",
+      "organization": "通义千问 / 阿里巴巴",
+      "description": "推理与数学能力最强的开源权重模型（GPQA Diamond 77.2%，AIME '24 85.7%）。MoE架构，235B总参数/22B激活参数。Apache 2.0许可证。",
+      "task_type": "文本生成",
+      "model_size": "235B",
+      "tags": ["大语言模型", "推理", "数学", "MoE", "开源权重", "Apache-2.0"],
+      "metrics": {"GPQA Diamond": "77.2%", "AIME 2024": "85.7%"},
+      "source_url": "https://huggingface.co/Qwen"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "智谱AI（Z.ai）",
+      "description": "最新GLM系列模型，采用动态稀疏注意力（DSA）的混合专家架构。社区互动领先，点赞数3532。在编程和智能体评测上表现强劲。",
+      "task_type": "文本生成",
+      "model_size": null,
+      "tags": ["大语言模型", "MoE", "编程", "智能体", "中国实验室", "开源权重"],
+      "metrics": {},
+      "source_url": "https://huggingface.co/THUDM"
+    },
+    {
+      "id": "smoldocling-256m",
+      "name": "SmolDocling-256M-preview",
+      "organization": "IBM Research / HuggingFace",
+      "description": "面向端到端文档转换的超紧凑256M参数视觉语言模型。生成捕获所有页面元素及位置的DocTags标记格式。在A100上每页转换仅需0.35秒，显存占用0.489 GB。",
+      "task_type": "文档理解",
+      "model_size": "256M",
+      "tags": ["视觉语言", "文档AI", "紧凑模型", "OCR", "开源权重"],
+      "metrics": {"每页延迟": "0.35s", "显存": "0.489 GB"},
+      "source_url": "https://huggingface.co/docling-project/SmolDocling-256M-preview"
+    },
+    {
+      "id": "yolo26",
+      "name": "YOLO26",
+      "organization": "YOLO社区",
+      "description": "最新YOLO系列实时检测模型，具备无NMS端到端推理、ProgLoss、小目标感知标签分配（STAL）和MuSGD优化器。多任务：目标检测、实例分割、姿态估计、旋转框检测。COCO mAP 40.9–57.5，T4延迟1.7–11.8 ms。",
+      "task_type": "目标检测",
+      "model_size": null,
+      "tags": ["目标检测", "实时", "无NMS", "多任务", "边缘部署"],
+      "metrics": {"COCO mAP": "40.9-57.5", "T4延迟(ms)": "1.7-11.8"},
+      "source_url": "https://arxiv.org/abs/2601.12882"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-repo",
+      "name": "openclaw/openclaw",
+      "description": "本地优先个人AI助手，支持50+消息平台集成。2026年GitHub增长最快的AI项目。",
+      "language": "TypeScript",
+      "stars": 210000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": ["AI智能体", "本地优先", "集成"],
+      "relevance": "high"
+    },
+    {
+      "id": "embodied-cpp-repo",
+      "name": "SEU-PAISys/Embodied.cpp",
+      "description": "面向异构机器人上具身AI/VLA模型的可移植C++推理运行时。多频率、闭环、batch-1服务架构。",
+      "language": "C++",
+      "stars": null,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/SEU-PAISys/Embodied.cpp",
+      "tags": ["具身AI", "推理运行时", "机器人", "C++"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-repo",
+      "name": "ollama/ollama",
+      "description": "本地LLM推理框架，支持Llama、Mistral、Gemma、DeepSeek等。突破165k星。",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["LLM服务", "本地", "开源"],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-repo",
+      "name": "browser-use/browser-use",
+      "description": "AI智能体网页自动化——像人类一样点击、输入、导航。86k星。智能体面向Web-UI任务的首选工具。",
+      "language": "Python",
+      "stars": 86000,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["网页自动化", "AI智能体", "浏览器"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-repo",
+      "name": "vllm-project/vllm",
+      "description": "基于PagedAttention的高吞吐量LLM服务框架。扩展AMD/Intel/TPU硬件支持；提供OpenAI兼容API。",
+      "language": "Python",
+      "stars": null,
+      "stars_today": null,
+      "forks": null,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["LLM服务", "推理", "多硬件"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "世界模型形式化",
+      "description": "聚合性工作尝试为"世界模型"赋予严格正式定义，区分物理（外部动态）与心理（内部认知）模型，绘制跨保真度、交互、规划和随机性四个维度的研究空白。",
+      "related_paper_ids": ["world-models-definition-roadmap", "world-models-to-action-tutorial"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "KV缓存深度轴压缩",
+      "description": "新兴论文集群利用Transformer深度处KV表征跨层相似性递增的特性，实现超越注意力驱逐和量化的激进压缩。",
+      "related_paper_ids": ["depthweave-kv", "freqdepthkv", "mosaickv-long-context"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D生成与重建统一",
+      "description": "朝向通过像素空间监督同时处理3D生成和重建的单一模型范式转变，消除此前潜扩散3D方法的编码器瓶颈。",
+      "related_paper_ids": ["pixworld-3d-diffusion"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM智能体安全：护栏与会话控制",
+      "description": "意图驱动护栏训练（DT-Guard）与基于探针级联的会话级提前终止（Doomed from the Start）两条互补安全轨道并行成熟，反映生产智能体部署需求。",
+      "related_paper_ids": ["dt-guard-llm-safety", "doomed-from-start-agent-termination"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "中国开源模型主导",
+      "description": "中国实验室占据HuggingFace前十下载席位中的五席；DeepSeek、Qwen、GLM、Kimi系列在编程、智能体、推理评测上整体领先。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "智能体技能生态系统",
+      "description": "GitHub热榜被Claude Code技能仓库、智能体多路复用器与AI红队基础设施饱和——智能体技能层正围绕可互操作的工具标准快速收敛。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace热门模型",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv cs.LG",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-08T15:00:00Z",
+      "status": "partial"
+    }
+  ]
+}
