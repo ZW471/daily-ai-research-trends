@@ -1,0 +1,687 @@
+{
+  "version": "1.0",
+  "date": "2026-07-09",
+  "generated_at": "2026-07-09T15:00:00Z",
+  "summary": {
+    "headline": "Agent技能生态系统在GitHub全面爆发，涵盖技能库、优化器和安全扫描器；LingBot-World 2.0的无限交互视界和MoE视频预训练推动具身智能发展；RL后训练研究走向成熟，实现GRPO信号恢复和跨模型竞争训练",
+    "body": "周三的AI领域格局由Agent工具层的结构性转变主导。GitHub趋势榜被Agent技能基础设施占据：**Graphify**（今日856星）将代码库转化为可查询知识图谱，**OfficeCLI**（今日1,717星）赋予AI Agent原生的Office文档操作能力，微软的**SkillOpt**引入文本空间优化，为冻结LLM Agent训练可复用的自然语言技能，NVIDIA的**SkillSpector**则专门为Agent技能提供安全扫描。同时，**superpowers**（今日1,116星）和**agent-skills**（今日1,297星）继续巩固技能共享生态系统。这已不再是趋势，而是技能市场的基础设施形成。\n\n研究方面，来自同一实验室的两篇LingBot论文推动具身智能进步。**LingBot-World 2.0**通过因果预训练范式实现无限交互视界的同时保持720p/60fps质量，而**LingBot-Video**采用混合专家架构（MoE）进行专为具身智能而非内容创作设计的视频预训练。arXiv提交显示出强劲的RL后训练集群：**Agon**引入跨模型竞争RL，对推理轨迹而非仅最终答案进行评分；**Max Out GRPO Signal**通过自适应轨迹前缀控制解决了困难推理问题上的零梯度问题；另一篇论文证明RL后训练能构建真正的组合推理策略，而不仅仅是放大已有能力。\n\n模型生态持续多元化。GLM-5.2以3,668点赞领跑，NVIDIA的LocateAnything-3B以140万下载量领先，Qwen 3.6变体在多种量化格式中扩散（NVFP4、GGUF、无审查版），Mistral的Leanstral-1.5带来119B的MoE架构。Google的TabFM为表格数据引入基础模型——一个历史上被忽视的模态。中国实验室继续占据下载榜多数位置。",
+    "key_themes": [
+      "agent-skills-infrastructure",
+      "embodied-ai-world-models",
+      "rl-post-training-advances",
+      "model-ecosystem-diversification",
+      "ai-agent-security-governance",
+      "llm-efficiency-linearization"
+    ]
+  },
+  "researcher_notes": "**Agent技能层正从零散集合转向真正的基础设施。** SkillOpt（训练技能）、SkillSpector（审计技能）、SkillCenter（arXiv上的技能库论文）以及多个技能共享仓库同时出现在趋势榜上，这表明社区已经隐式认同「技能」作为Agent能力组合的基本单元。这一点意义重大，因为它意味着Agent能力正变得模块化、可交易，且——关键地——可审计。安全工具（SkillSpector）与技能扩散同步出现是一个健康信号；过去的平台转型中，安全工具通常滞后12-18个月。\n\n**LingBot-World 2.0的真正突破是无限交互视界，而非视觉质量。** 世界模型的视觉逼真度已经接近极限一段时间了，但有限的交互视界一直是具身AI应用的实际瓶颈。通过因果预训练范式在无限视界上实现一致质量——同时蒸馏出足以驱动720p/60fps的实时变体——一次性解决了两个关键部署约束。两篇论文（世界模型和MoE视频预训练）来自同一实验室，表明这是一次面向生产级具身AI基础设施的协调推进。\n\n**GRPO信号恢复论文共同解决了一个根本性的训练缺口。** 标准GRPO在模型最难的问题上产生零梯度（当所有rollout都失败时，组内相对优势消失）。Max Out GRPO Signal的自适应轨迹前缀控制确保每个问题都能贡献学习信号，无论难度如何。结合Agon通过跨模型竞争评分推理轨迹（而非二元答案检查）的方法，RL后训练工具箱已经足够成熟，能够处理全难度范围而不发生奖励黑客攻击。\n\n**TabFM是一个潜力股。** 表格数据的基础模型一直是一个持续的空白——Transformer革命改变了文本、代码、图像和视频，但表格数据仍由梯度提升树主导。Google的tabfm-1.0具备零样本能力并进入趋势榜，表明社区认识到这一空白终于得到解决。关注企业采用信号。\n\n**WiFi感知范式（RuView）值得AI社区关注。** 以79K星和今日799星的表现，RuView将普通WiFi信号转化为空间智能和生命体征监测而无需摄像头，代表了一种新颖的感知模态，可以为具身AI和健康监测管道提供数据。无摄像头的隐私保护特性使其可以部署在摄像系统面临监管障碍的场景中。",
+  "papers": [
+    {
+      "id": "lingbot-world-2-infinity",
+      "title": "无限世界与多功能交互",
+      "authors": ["Zelin Gao", "Qiuyu Wang", "Jiapeng Zhu", "Jingye Chen", "Zichen Liu et al."],
+      "affiliations": ["Ant Group", "Zhejiang University"],
+      "summary": "提出LingBot-World 2.0，一个通过因果预训练范式实现无限交互视界并保持一致输出质量的先进交互式世界模型，其蒸馏的实时变体可驱动720p/60fps视频流。",
+      "key_findings": [
+        "通过因果预训练实现无限交互视界，消除了先前世界模型的固定长度生成瓶颈",
+        "蒸馏的实时变体保持足够速度，可实现720p/60fps交互式视频生成",
+        "相比原始LingBot-World引入四项重大升级，包括视觉质量和交互多样性改进"
+      ],
+      "tags": ["world-models", "embodied-ai", "video-generation", "interactive-simulation", "real-time"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07534",
+        "huggingface": "https://huggingface.co/papers/2607.07534",
+        "pdf": "https://arxiv.org/pdf/2607.07534"
+      }
+    },
+    {
+      "id": "lingbot-video-moe",
+      "title": "面向具身智能的混合专家视频预训练扩展",
+      "authors": ["Shuailei Ma", "Jiaqi Liao", "Xinyang Wang", "Jingjing Wang", "Chaoran Feng et al."],
+      "affiliations": ["Ant Group", "Zhejiang University"],
+      "summary": "引入LingBot-Video，一个基于DiT的视频预训练范式，采用混合专家架构，专为具身智能设计，优先考虑计算效率和物理真实性而非视觉保真度。",
+      "key_findings": [
+        "MoE架构取代密集Transformer进行视频预训练，提高计算效率同时保持物理真实性",
+        "明确为具身智能而非内容创作设计，解决现有视频生成模型的领域不匹配问题",
+        "证明优先考虑物理真实性而非视觉保真度能产生更好的下游具身AI性能"
+      ],
+      "tags": ["video-pretraining", "mixture-of-experts", "embodied-ai", "dit", "robotics"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07675",
+        "huggingface": "https://huggingface.co/papers/2607.07675",
+        "pdf": "https://arxiv.org/pdf/2607.07675"
+      }
+    },
+    {
+      "id": "agon-competitive-rl",
+      "title": "Agon：基于隐式对手评分的跨模型竞争强化学习推理训练",
+      "authors": ["Azwar Abdulsalam", "Nishil Patel", "Andrew Saxe"],
+      "affiliations": ["University College London", "Gatsby Computational Neuroscience Unit"],
+      "summary": "提出一个竞争性RL训练框架，模型相互评分推理轨迹而非依赖二元最终答案验证，解决了GRPO类方法仅检查结果的局限性。",
+      "key_findings": [
+        "跨模型竞争性推理轨迹评分产生比仅验证最终答案更丰富的训练信号",
+        "隐式对手评分避免了对显式奖励模型的需求，同时仍能评估推理质量",
+        "模型间的竞争动态提升了困难问题上的推理深度"
+      ],
+      "tags": ["reinforcement-learning", "reasoning", "grpo", "competitive-training", "llm-post-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07690",
+        "pdf": "https://arxiv.org/pdf/2607.07690"
+      }
+    },
+    {
+      "id": "max-out-grpo-signal",
+      "title": "最大化GRPO信号：面向困难推理问题的自适应轨迹前缀控制",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Tsinghua University"],
+      "summary": "解决GRPO训练中的零梯度问题——当所有rollout都失败时困难问题不贡献学习信号——通过自适应控制轨迹前缀确保每个问题都产生有用的梯度。",
+      "key_findings": [
+        "识别出GRPO在模型最难的问题上当所有rollout失败时产生零梯度",
+        "自适应轨迹前缀控制确保每个问题无论难度如何都能贡献学习信号",
+        "在困难推理基准测试上实现性能提升且不发生奖励黑客攻击"
+      ],
+      "tags": ["grpo", "reinforcement-learning", "reasoning", "training-efficiency", "llm-post-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07674",
+        "pdf": "https://arxiv.org/pdf/2607.07674"
+      }
+    },
+    {
+      "id": "rl-compositional-reasoning",
+      "title": "RL后训练构建组合推理策略",
+      "authors": ["Azwar Abdulsalam", "Nishil Patel", "Andrew Saxe"],
+      "affiliations": ["University College London", "Gatsby Computational Neuroscience Unit"],
+      "summary": "证明RL后训练不仅仅是放大基础模型中潜在的原始技能，而是能将它们组合成真正新颖的高级推理策略，在完全可观测环境中进行研究。",
+      "key_findings": [
+        "RL后训练将原始技能组合成新颖的高级策略，而非简单放大",
+        "组合推理通过训练动态涌现，而非预编码在基础模型中",
+        "完全可观测实验设置为真正的策略组合提供了清晰证据"
+      ],
+      "tags": ["reinforcement-learning", "reasoning", "compositionality", "llm-post-training", "emergent-behavior"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07646",
+        "pdf": "https://arxiv.org/pdf/2607.07646"
+      }
+    },
+    {
+      "id": "institutional-red-teaming",
+      "title": "制度性红队测试：部署规则（而非仅模型）因果性地塑造多Agent AI安全",
+      "authors": ["Mubarak Raji et al."],
+      "affiliations": ["University of Illinois Urbana-Champaign"],
+      "summary": "引入制度性红队测试，一种测试多Agent AI系统中部署规则而非模型能力的评估方法，证明规则独立于Agent属性因果性地塑造安全结果。",
+      "key_findings": [
+        "部署规则（而非仅模型属性）因果性地塑造多Agent系统的安全结果",
+        "固定Agent、目标和任务状态，仅改变一条规则，实现因果归因",
+        "制度层面的干预可比模型层面的干预更有效地保障多Agent安全"
+      ],
+      "tags": ["ai-safety", "red-teaming", "multi-agent", "governance", "deployment-rules"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07695",
+        "pdf": "https://arxiv.org/pdf/2607.07695"
+      }
+    },
+    {
+      "id": "co-lmlm-limited-memory",
+      "title": "Co-LMLM：连续查询有限记忆语言模型",
+      "authors": ["Unknown et al."],
+      "affiliations": ["ETH Zurich"],
+      "summary": "将有限记忆语言模型扩展为支持连续查询，在预训练期间将事实知识外化到知识库中，在生成时动态获取而非记忆在权重中。",
+      "key_findings": [
+        "连续查询扩展实现动态知识获取而非一次性检索",
+        "外化事实知识降低参数需求的同时保持生成质量",
+        "知识库更新可立即反映而无需模型重训练"
+      ],
+      "tags": ["knowledge-externalization", "retrieval-augmented", "llm-efficiency", "language-models", "memory"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07707",
+        "pdf": "https://arxiv.org/pdf/2607.07707"
+      }
+    },
+    {
+      "id": "transformer-linearization",
+      "title": "走向线性的关键：分析驱动的Transformer线性化",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Google DeepMind"],
+      "summary": "通过系统分析后验线性化管道中哪些组件重要，提供一个分析驱动的框架来解决因果自注意力在长上下文推理中的二次代价问题。",
+      "key_findings": [
+        "系统分析识别出哪些线性化管道组件对质量保持贡献最大",
+        "分析驱动方法在长上下文基准测试上优于临时性线性化方法",
+        "为将二次注意力Transformer转换为线性时间推理提供实用指导"
+      ],
+      "tags": ["transformer-efficiency", "linear-attention", "long-context", "inference", "linearization"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07706",
+        "pdf": "https://arxiv.org/pdf/2607.07706"
+      }
+    },
+    {
+      "id": "skillcenter-skill-library",
+      "title": "SkillCenter：面向自主AI Agent的大规模源码溯源技能库",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "提出一个大规模、源码溯源的技能库，为自主AI Agent提供操作知识，使输出不仅可执行，而且正确、安全且可维护。",
+      "key_findings": [
+        "源码溯源技能提供可验证的操作知识而非无根据的启发式规则",
+        "大规模技能库覆盖执行、安全和维护多个维度",
+        "将技能溯源到源码文档实现自动验证和更新"
+      ],
+      "tags": ["ai-agents", "skill-library", "autonomous-agents", "grounded-knowledge", "agent-infrastructure"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07676",
+        "pdf": "https://arxiv.org/pdf/2607.07676"
+      }
+    },
+    {
+      "id": "recursive-self-improvement",
+      "title": "AI中的递归自我改进：从有界自我优化到自主研究循环",
+      "authors": ["Mingguang Chen", "Licheng Wang", "Bo Qu"],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "综述参与自身改进的AI系统——从输出修正和工具适配到自生成训练数据和自主研究循环——分析对安全和治理的影响。",
+      "key_findings": [
+        "绘制从有界自我优化到开放式自主研究循环的完整光谱",
+        "识别自我改进层级之间的关键安全边界及其逐步升级的风险画像",
+        "论证递归自我改进治理需要超越当前对齐方法的新框架"
+      ],
+      "tags": ["recursive-self-improvement", "ai-safety", "autonomous-research", "alignment", "governance"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07663",
+        "pdf": "https://arxiv.org/pdf/2607.07663"
+      }
+    },
+    {
+      "id": "diffusion-rlhf-timestep-weighting",
+      "title": "面向高样本效率扩散RLHF的选择性时间步加权和基于优势的回放",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Stanford University"],
+      "summary": "提出选择性时间步加权和基于优势的回放，以改善扩散模型RLHF的样本效率，解决限制生成图像模型RLHF采用的高样本成本问题。",
+      "key_findings": [
+        "选择性时间步加权将RLHF信号聚焦在信息量最大的扩散步骤上",
+        "基于优势的回放优先选择高信号训练样本以减少总样本需求",
+        "组合方法在保持对齐质量的同时显著提高样本效率"
+      ],
+      "tags": ["diffusion-models", "rlhf", "sample-efficiency", "image-generation", "alignment"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07693",
+        "pdf": "https://arxiv.org/pdf/2607.07693"
+      }
+    },
+    {
+      "id": "rope-frequency-analysis",
+      "title": "数据如何塑造RoPE频率使用：从位置尺度匹配到长度泛化",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Meta AI"],
+      "summary": "研究训练后Transformer中RoPE高度不均匀频率使用模式的决定因素，将位置尺度匹配与模型泛化到超出训练长度的能力相联系。",
+      "key_findings": [
+        "RoPE频率使用由数据分布的位置结构塑造，而非仅由架构选择决定",
+        "位置尺度匹配解释了训练中哪些频率被使用或被忽略",
+        "理解频率使用模式为长度泛化提供了有原则的方法"
+      ],
+      "tags": ["rope", "positional-encoding", "length-generalization", "transformers", "long-context"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07678",
+        "pdf": "https://arxiv.org/pdf/2607.07678"
+      }
+    },
+    {
+      "id": "future-confidence-distillation",
+      "title": "大型语言模型中的未来置信度蒸馏",
+      "authors": ["Sahil Kale"],
+      "affiliations": ["University of Toronto"],
+      "summary": "引入面向LLM可靠置信度估计的未来置信度蒸馏，使检索、工具使用和自适应计算等下游决策能够基于校准的不确定性信号。",
+      "key_findings": [
+        "未来置信度蒸馏产生比标准方法更好校准的不确定性估计",
+        "为检索、工具使用和自适应计算提供置信度感知的下游系统",
+        "基于蒸馏的方法避免了基于采样的校准方法的计算开销"
+      ],
+      "tags": ["confidence-estimation", "calibration", "llm", "uncertainty", "distillation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07626",
+        "pdf": "https://arxiv.org/pdf/2607.07626"
+      }
+    },
+    {
+      "id": "pals-layerwise-sparsity",
+      "title": "PALS：面向LLM剪枝的百分位感知逐层稀疏性",
+      "authors": ["Yazdan Jamshidi", "Alexey Shvets"],
+      "affiliations": ["University of Alberta"],
+      "summary": "提出面向LLM剪枝的百分位感知逐层稀疏性分配，用自适应的每层比率替代统一稀疏比率，尊重已知的层重要性差异。",
+      "key_findings": [
+        "层自适应稀疏性分配在Transformer各层上显著优于统一稀疏性",
+        "基于百分位的重要性评分提供了确定每层压缩率的稳健启发式",
+        "作为即插即用的稀疏性分配策略，与现有剪枝方法（Wanda、SparseGPT）兼容"
+      ],
+      "tags": ["pruning", "sparsity", "llm-efficiency", "model-compression", "inference"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07557",
+        "pdf": "https://arxiv.org/pdf/2607.07557"
+      }
+    },
+    {
+      "id": "noisy-traces-agent-optimization",
+      "title": "从嘈杂轨迹到根因：面向Agent优化的结构化轨迹分析与因果提取",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Microsoft Research"],
+      "summary": "引入结构化轨迹分析来优化长视界Agent，使LLM优化器能够通过从嘈杂执行轨迹中提取因果结构来诊断Agent故障并改进策略。",
+      "key_findings": [
+        "结构化轨迹分析从嘈杂的Agent执行轨迹中提取因果故障模式",
+        "因果提取实现针对性策略改进，而非端到端微调",
+        "在长视界Agent任务上优于基于反思的优化机制"
+      ],
+      "tags": ["agent-optimization", "trajectory-analysis", "causal-inference", "llm-agents", "debugging"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07702",
+        "pdf": "https://arxiv.org/pdf/2607.07702"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "ZAI（智谱AI）",
+      "description": "智谱AI GLM系列的大规模MoE语言模型，采用稀疏混合专家架构，以强劲的社区参与度和广泛的对话能力领跑趋势榜。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "glm", "chinese-nlp"],
+      "metrics": { "downloads": 281584, "likes": 3668 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA推出的紧凑3B参数特征提取模型，用于空间定位任务，以140万下载量和2,667点赞领跑下载榜。",
+      "task_type": "feature-extraction",
+      "model_size": "3B",
+      "tags": ["feature-extraction", "localization", "nvidia", "spatial"],
+      "metrics": { "downloads": 1424958, "likes": 2667 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "qwen3-6-35b-a3b-uncensored",
+      "name": "Qwen3.6-35B-A3B 无审查版",
+      "organization": "HauhauCS（社区）",
+      "description": "社区驱动的Qwen 3.6无审查变体，总参数35B/活跃参数3B的MoE配置，具备视觉能力和GGUF量化，适合本地部署。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B MoE",
+      "tags": ["qwen3.6", "moe", "uncensored", "vision", "gguf"],
+      "metrics": { "downloads": 2823988, "likes": 2573 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu（百度）",
+      "description": "百度推出的大规模OCR模型，实现广泛的文档理解和文本提取能力，下载量突破100万，实际应用采用强劲。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["ocr", "document-understanding", "baidu", "text-extraction"],
+      "metrics": { "downloads": 1084945, "likes": 1873 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI（社区）",
+      "description": "GGUF量化的9B模型，融合Qwen 3.5架构与Claude启发训练，支持100万上下文窗口和强大推理能力，适合本地部署。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "qwen3.5", "reasoning", "quantized", "long-context"],
+      "metrics": { "downloads": 1683711, "likes": 1857 },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "Gemma-4-12B Agentic GGUF",
+      "organization": "社区 (yuxinlu1)",
+      "description": "Google Gemma 4 12B的Agent变体，针对编码和终端Agent任务进行微调，采用GGUF量化实现高效本地推理。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gemma4", "agentic", "coding", "terminal", "gguf"],
+      "metrics": { "downloads": 384383, "likes": 1098 },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-35b",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "35B参数GGUF格式文本生成模型，以MIT许可证吸引商业部署，实现显著下载量。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": ["text-generation", "gguf", "mit-license", "35b"],
+      "metrics": { "downloads": 502663, "likes": 800 },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Krea图像生成模型的加速变体，为文本到图像任务提供更快的推理速度，基于Krea-2基础架构构建。",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "diffusion", "turbo", "image-generation"],
+      "metrics": { "downloads": 123729, "likes": 555 },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3（混元3）",
+      "organization": "Tencent（腾讯）",
+      "description": "腾讯第三代混元语言模型进入趋势榜，社区兴趣浓厚，具备文本生成的新架构改进。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["hunyuan", "tencent", "text-generation", "chinese-nlp"],
+      "metrics": { "downloads": 121, "likes": 564 },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek（深度求索）",
+      "description": "DeepSeek V4 Pro的DSpark优化变体，延续DeepSeek家族在竞争性开源前沿模型领域的推进。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["deepseek", "frontier-model", "text-generation"],
+      "metrics": { "downloads": 15538, "likes": 439 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "基于Qwen 3.5 MoE架构的多模态Agent模型，设计用于图像-文本到文本任务，具备Agent化能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": ["agents", "moe", "multimodal", "qwen3.5"],
+      "metrics": { "downloads": 14723, "likes": 400 },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "tabfm-1-0",
+      "name": "TabFM 1.0",
+      "organization": "Google",
+      "description": "Google推出的表格数据基础模型，具备零样本能力，填补了基础模型时代结构化/表格数据这一长期被忽视模态的空白。",
+      "task_type": "tabular-regression",
+      "model_size": "Unknown",
+      "tags": ["tabular", "zero-shot", "foundation-model", "regression", "google"],
+      "metrics": { "downloads": 9458, "likes": 313 },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "officecli",
+      "name": "iOfficeAI/OfficeCLI",
+      "description": "首款专为AI Agent构建的Office套件，可读取、编辑和自动化Word、Excel和PowerPoint文件。单一二进制文件，无需安装Office——这是Agent基础设施的关键组件，使文档操作无需依赖人类GUI。",
+      "language": "C#",
+      "stars": 11964,
+      "stars_today": 1717,
+      "forks": 812,
+      "url": "https://github.com/iOfficeAI/OfficeCLI",
+      "tags": ["ai-agents", "office-automation", "document-processing", "cli"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "面向AI编程Agent的生产级工程技能集。一个精选的可复用技能集合，代表着Agent能力共享向标准化、可组合单元的整合。",
+      "language": "JavaScript",
+      "stars": 74220,
+      "stars_today": 1297,
+      "forks": 8004,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agents", "developer-tools", "skills-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "一个Agent技能框架和软件开发方法论，已成为Agent技能结构化、分发和组合方式的参考实现。",
+      "language": "Shell",
+      "stars": 249875,
+      "stars_today": 1116,
+      "forks": 22171,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "skills-framework", "software-development", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "从主要AI提供商（包括Claude、GPT、Gemini等）提取的系统提示词。频繁更新的集合，同时作为透明度资源和红队测试参考。",
+      "language": "JavaScript",
+      "stars": 54249,
+      "stars_today": 1218,
+      "forks": 8830,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": ["system-prompts", "ai-transparency", "red-teaming", "llm-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "将任何代码、SQL、脚本、文档和媒体文件夹转化为可查询知识图谱——在一张图中统一应用代码、数据库模式和基础设施，用于AI辅助理解。",
+      "language": "Python",
+      "stars": 80505,
+      "stars_today": 856,
+      "forks": 7924,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": ["knowledge-graph", "code-understanding", "ai-tools", "developer-productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-video",
+      "name": "bradautomates/claude-video",
+      "description": "赋予Claude观看任何视频的能力——通过下载、提取帧和转录，然后将所有上下文交给Claude进行分析。将LLM能力扩展到视频理解领域。",
+      "language": "Python",
+      "stars": 6088,
+      "stars_today": 951,
+      "forks": 725,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["video-understanding", "claude", "multimodal", "media-processing"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruview",
+      "name": "ruvnet/RuView",
+      "description": "将普通WiFi信号转化为实时空间智能、生命体征监测和存在检测，无需任何摄像头硬件——一种用Rust构建的新型隐私保护感知方案。",
+      "language": "Rust",
+      "stars": 79169,
+      "stars_today": 799,
+      "forks": 10651,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["wifi-sensing", "spatial-intelligence", "privacy-preserving", "iot"],
+      "relevance": "medium"
+    },
+    {
+      "id": "pocket-tts",
+      "name": "kyutai-labs/pocket-tts",
+      "description": "Kyutai Labs推出的TTS系统，设计为完全在CPU上运行，使语音合成在资源受限设备上无需GPU即可使用。",
+      "language": "Python",
+      "stars": 6628,
+      "stars_today": 655,
+      "forks": 677,
+      "url": "https://github.com/kyutai-labs/pocket-tts",
+      "tags": ["text-to-speech", "cpu-inference", "edge-ai", "speech-synthesis"],
+      "relevance": "high"
+    },
+    {
+      "id": "cubesandbox",
+      "name": "TencentCloud/CubeSandbox",
+      "description": "面向AI Agent的即时、并发、安全且轻量级沙盒环境，为Agent代码执行和工具使用提供隔离执行上下文。",
+      "language": "Rust",
+      "stars": 8954,
+      "stars_today": 564,
+      "forks": 737,
+      "url": "https://github.com/TencentCloud/CubeSandbox",
+      "tags": ["sandbox", "ai-agents", "security", "code-execution"],
+      "relevance": "high"
+    },
+    {
+      "id": "zvec",
+      "name": "alibaba/zvec",
+      "description": "阿里巴巴推出的轻量级、极速进程内向量数据库，为需要低延迟相似性搜索的AI应用优化嵌入检索。",
+      "language": "C++",
+      "stars": 14434,
+      "stars_today": 395,
+      "forks": 890,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": ["vector-database", "embeddings", "similarity-search", "in-process"],
+      "relevance": "high"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "AI Agent技能，可在Reddit、X、YouTube、HN、Polymarket和网络上研究任何主题，然后综合过去30天活动的有据摘要。",
+      "language": "Python",
+      "stars": 50784,
+      "stars_today": 352,
+      "forks": 4240,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research-automation", "web-scraping", "synthesis"],
+      "relevance": "high"
+    },
+    {
+      "id": "tencentdb-agent-memory",
+      "name": "TencentCloud/TencentDB-Agent-Memory",
+      "description": "通过4层渐进式管道为AI Agent提供完全本地的长期记忆系统，零外部API依赖——解决Agent架构中的持久记忆问题。",
+      "language": "TypeScript",
+      "stars": 7689,
+      "stars_today": 318,
+      "forks": 711,
+      "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
+      "tags": ["agent-memory", "long-term-memory", "local-first", "ai-infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "skillopt",
+      "name": "microsoft/SkillOpt",
+      "description": "文本空间优化器，通过轨迹驱动编辑和验证门控更新为冻结LLM Agent训练可复用的自然语言技能，产出可部署的best_skill.md工件。",
+      "language": "Python",
+      "stars": 11725,
+      "stars_today": 275,
+      "forks": 1082,
+      "url": "https://github.com/microsoft/SkillOpt",
+      "tags": ["skill-optimization", "llm-agents", "text-optimization", "agent-training"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic官方的Agent编程工具，驻留在终端中，理解代码库，通过自然语言命令帮助开发。",
+      "language": "Python",
+      "stars": 136913,
+      "stars_today": 215,
+      "forks": 21998,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["coding-agent", "cli", "development-tools", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "skillspector",
+      "name": "NVIDIA/SkillSpector",
+      "description": "NVIDIA推出的安全扫描器，检测AI Agent技能中的漏洞、恶意模式和安全风险——新兴Agent安全基础设施的关键组件。",
+      "language": "Python",
+      "stars": 12508,
+      "stars_today": 168,
+      "forks": 1029,
+      "url": "https://github.com/NVIDIA/SkillSpector",
+      "tags": ["security", "agent-skills", "vulnerability-scanning", "nvidia"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent技能基础设施形成",
+      "description": "Agent生态系统正围绕「技能」作为Agent能力的基本单元结晶化，技能库（SkillCenter、superpowers、agent-skills）、技能优化器（SkillOpt）、技能安全扫描器（SkillSpector）和技能共享平台同步涌现——标志着Agent技能市场的基础设施正在形成。",
+      "related_paper_ids": ["skillcenter-skill-library", "noisy-traces-agent-optimization"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "具身AI世界模型扩展",
+      "description": "来自同一实验室的两篇协调论文将具身AI世界模型推向生产可行性：通过因果预训练实现无限交互视界，以及优先考虑物理真实性而非视觉保真度的MoE视频预训练，同时解决了视界和效率两大瓶颈。",
+      "related_paper_ids": ["lingbot-world-2-infinity", "lingbot-video-moe"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RL后训练走向成熟",
+      "description": "多篇论文将RL后训练推进到简单GRPO之外：解决困难问题上的零梯度问题、引入跨模型竞争性推理轨迹评分、证明真正的组合策略涌现——共同使RL后训练在全难度范围内可行。",
+      "related_paper_ids": ["agon-competitive-rl", "max-out-grpo-signal", "rl-compositional-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Agent安全与治理",
+      "description": "制度性红队测试将安全评估从模型属性转向部署规则，递归自我改进分析绘制从有界优化到自主研究循环的风险光谱——两者都反映了该领域认识到Agent安全需要系统级而非仅模型级的干预。",
+      "related_paper_ids": ["institutional-red-teaming", "recursive-self-improvement"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM效率：超越注意力机制",
+      "description": "效率研究从KV缓存压缩扩展到Transformer线性化、逐层自适应剪枝和外化知识模型，表明该领域正在系统性地攻克推理成本面的每个维度，而非仅优化单一瓶颈。",
+      "related_paper_ids": ["transformer-linearization", "pals-layerwise-sparsity", "co-lmlm-limited-memory"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

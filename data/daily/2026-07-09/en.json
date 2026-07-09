@@ -1,0 +1,687 @@
+{
+  "version": "1.0",
+  "date": "2026-07-09",
+  "generated_at": "2026-07-09T15:00:00Z",
+  "summary": {
+    "headline": "Agent skills ecosystem explodes across GitHub with skill libraries, optimizers, and security scanners; embodied AI advances with LingBot-World 2.0's infinite-horizon interactive worlds and MoE video pretraining; RL post-training research matures with GRPO signal recovery and competitive cross-model training",
+    "body": "Wednesday's landscape is dominated by a tectonic shift in the AI agent tooling layer. GitHub trending is saturated with agent-skill infrastructure: **Graphify** (856 stars today) turns codebases into queryable knowledge graphs, **OfficeCLI** (1,717 stars today) gives AI agents native Office document manipulation, Microsoft's **SkillOpt** introduces text-space optimization that trains reusable natural-language skills for frozen LLM agents, and NVIDIA's **SkillSpector** provides security scanning specifically for agent skills. Meanwhile, **superpowers** (1,116 stars today) and **agent-skills** (1,297 stars today) continue to consolidate the skill-sharing ecosystem. This is no longer a trend—it is infrastructure formation for a skills marketplace.\n\nOn the research front, two LingBot papers from the same lab push embodied AI forward. **LingBot-World 2.0** achieves unbounded interaction horizons while maintaining 720p/60fps quality through a causal pretraining paradigm, while **LingBot-Video** adopts Mixture-of-Experts for video pretraining tailored to embodied intelligence rather than content creation. ArXiv submissions show a strong RL post-training cluster: **Agon** introduces competitive cross-model RL that grades reasoning traces rather than just final answers, **Max Out GRPO Signal** solves the zero-gradient problem on hard reasoning problems via adaptive trace prefix control, and a separate paper demonstrates that RL post-training can build genuinely compositional reasoning strategies rather than merely amplifying existing ones.\n\nThe model landscape continues its diversification. GLM-5.2 leads with 3,668 likes, NVIDIA's LocateAnything-3B dominates downloads at 1.4M, Qwen 3.6 variants proliferate across quantization formats (NVFP4, GGUF, uncensored), and Mistral's Leanstral-1.5 brings a 119B MoE architecture to the sparse-expert conversation. Google's TabFM introduces foundation models for tabular data—a historically underserved modality. Chinese labs continue to hold the majority of top-download positions.",
+    "key_themes": [
+      "agent-skills-infrastructure",
+      "embodied-ai-world-models",
+      "rl-post-training-advances",
+      "model-ecosystem-diversification",
+      "ai-agent-security-governance",
+      "llm-efficiency-linearization"
+    ]
+  },
+  "researcher_notes": "**The agent-skill layer is transitioning from ad-hoc collections to genuine infrastructure.** The simultaneous trending of SkillOpt (trains skills), SkillSpector (audits skills), SkillCenter (arXiv paper on grounded skill libraries), and multiple skill-sharing repos signals that the community has implicitly agreed on a 'skill' as the unit of agent capability composition. This matters because it means agent capabilities are becoming modular, tradeable, and—critically—auditable. The security angle (SkillSpector) arriving simultaneously with the skill proliferation is a healthy sign; past platform shifts typically saw security tooling lag by 12-18 months.\n\n**LingBot-World 2.0's unbounded interaction horizon is the real advance, not the visual quality.** World models have been approaching photorealism for a while, but bounded interaction horizons have been the practical bottleneck for embodied AI applications. Achieving consistent quality across unbounded horizons through a causal pretraining paradigm—while simultaneously distilling a real-time variant fast enough for 720p/60fps—addresses two critical deployment constraints at once. The fact that both the world model and the MoE video pretraining paper come from the same lab suggests a coordinated push toward production-ready embodied AI infrastructure.\n\n**The GRPO signal recovery papers collectively solve a fundamental training gap.** Standard GRPO produces zero gradients on a model's hardest problems (when no rollout succeeds, group-relative advantages vanish). Max Out GRPO Signal's adaptive trace prefix control ensures every problem contributes learning signal regardless of difficulty. Combined with Agon's approach of grading reasoning traces via cross-model competition rather than binary answer checking, the RL post-training toolbox is becoming sophisticated enough to handle the full difficulty spectrum without reward hacking.\n\n**TabFM is a sleeper hit.** Foundation models for tabular data have been a persistent gap—the transformer revolution transformed text, code, images, and video, but tabular data remained dominated by gradient-boosted trees. Google's tabfm-1.0.0 with zero-shot capabilities entering the trending list suggests the community recognizes this gap is finally being addressed. Watch for enterprise adoption signals.\n\n**The WiFi-as-sensor paradigm (RuView) deserves attention from the AI community.** At 79K stars and 799 stars today, RuView's approach of turning commodity WiFi signals into spatial intelligence and vital sign monitoring without cameras represents a novel sensing modality that could feed into embodied AI and health monitoring pipelines. The privacy-preserving aspect (no video) makes it deployable in contexts where camera-based systems face regulatory barriers.",
+  "papers": [
+    {
+      "id": "lingbot-world-2-infinity",
+      "title": "Infinite Worlds with Versatile Interactions",
+      "authors": ["Zelin Gao", "Qiuyu Wang", "Jiapeng Zhu", "Jingye Chen", "Zichen Liu et al."],
+      "affiliations": ["Ant Group", "Zhejiang University"],
+      "summary": "Presents LingBot-World 2.0, an advanced interactive world model achieving unbounded interaction horizons while maintaining consistent output quality through a causal pretraining paradigm, with a distilled real-time variant driving 720p video at 60 fps.",
+      "key_findings": [
+        "Achieves unbounded interaction horizon through causal pretraining, removing the fixed-length generation bottleneck of prior world models",
+        "Distilled real-time variant maintains sufficient speed for 720p/60fps interactive video generation",
+        "Introduces four distinct upgrades over the original LingBot-World including improved visual quality and interaction versatility"
+      ],
+      "tags": ["world-models", "embodied-ai", "video-generation", "interactive-simulation", "real-time"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07534",
+        "huggingface": "https://huggingface.co/papers/2607.07534",
+        "pdf": "https://arxiv.org/pdf/2607.07534"
+      }
+    },
+    {
+      "id": "lingbot-video-moe",
+      "title": "Scaling Mixture-of-Experts Video Pretraining for Embodied Intelligence",
+      "authors": ["Shuailei Ma", "Jiaqi Liao", "Xinyang Wang", "Jingjing Wang", "Chaoran Feng et al."],
+      "affiliations": ["Ant Group", "Zhejiang University"],
+      "summary": "Introduces LingBot-Video, a DiT-based video pretraining paradigm using Mixture-of-Experts architecture specifically tailored for embodied intelligence, prioritizing computational efficiency and physical realism over visual fidelity.",
+      "key_findings": [
+        "MoE architecture replaces dense transformers for video pretraining, improving computational efficiency while maintaining physical realism",
+        "Explicitly designed for embodied intelligence rather than content creation, addressing the domain mismatch in existing video generative models",
+        "Demonstrates that prioritizing physical realism over visual fidelity produces better downstream embodied AI performance"
+      ],
+      "tags": ["video-pretraining", "mixture-of-experts", "embodied-ai", "dit", "robotics"],
+      "relevance": "high",
+      "engagement": { "upvotes": 1, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07675",
+        "huggingface": "https://huggingface.co/papers/2607.07675",
+        "pdf": "https://arxiv.org/pdf/2607.07675"
+      }
+    },
+    {
+      "id": "agon-competitive-rl",
+      "title": "Agon: Competitive Cross-Model RL with Implicit Rival Grading of Reasoning",
+      "authors": ["Azwar Abdulsalam", "Nishil Patel", "Andrew Saxe"],
+      "affiliations": ["University College London", "Gatsby Computational Neuroscience Unit"],
+      "summary": "Proposes a competitive RL training framework where models grade each other's reasoning traces rather than relying on binary final-answer verification, addressing the limitation that GRPO-style methods only check outcomes.",
+      "key_findings": [
+        "Cross-model competitive grading of reasoning traces produces richer training signal than final-answer-only verification",
+        "Implicit rival grading avoids the need for explicit reward models while still evaluating reasoning quality",
+        "Demonstrates that competitive dynamics between models improve reasoning depth on hard problems"
+      ],
+      "tags": ["reinforcement-learning", "reasoning", "grpo", "competitive-training", "llm-post-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07690",
+        "pdf": "https://arxiv.org/pdf/2607.07690"
+      }
+    },
+    {
+      "id": "max-out-grpo-signal",
+      "title": "Max Out GRPO Signal: Adaptive Trace Prefix Control for Hard Reasoning Problems",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Tsinghua University"],
+      "summary": "Solves the zero-gradient problem in GRPO training where hard problems contribute no learning signal when all rollouts fail, by adaptively controlling trace prefixes to ensure every problem generates useful gradients.",
+      "key_findings": [
+        "Identifies that GRPO produces zero gradients on a model's hardest problems when no rollout succeeds",
+        "Adaptive trace prefix control ensures every problem contributes learning signal regardless of difficulty",
+        "Achieves improved performance on hard reasoning benchmarks without reward hacking"
+      ],
+      "tags": ["grpo", "reinforcement-learning", "reasoning", "training-efficiency", "llm-post-training"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07674",
+        "pdf": "https://arxiv.org/pdf/2607.07674"
+      }
+    },
+    {
+      "id": "rl-compositional-reasoning",
+      "title": "RL Post-Training Builds Compositional Reasoning Strategies",
+      "authors": ["Azwar Abdulsalam", "Nishil Patel", "Andrew Saxe"],
+      "affiliations": ["University College London", "Gatsby Computational Neuroscience Unit"],
+      "summary": "Demonstrates that RL post-training does not merely amplify primitive skills latent in base models, but can compose them into genuinely new higher-level reasoning strategies, studied in a fully observable setting.",
+      "key_findings": [
+        "RL post-training composes primitive skills into novel higher-level strategies, not just amplification",
+        "Compositional reasoning emerges through training dynamics rather than being pre-encoded in the base model",
+        "Fully observable experimental setup provides clean evidence for genuine strategy composition"
+      ],
+      "tags": ["reinforcement-learning", "reasoning", "compositionality", "llm-post-training", "emergent-behavior"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07646",
+        "pdf": "https://arxiv.org/pdf/2607.07646"
+      }
+    },
+    {
+      "id": "institutional-red-teaming",
+      "title": "Institutional Red-Teaming: Deployment Rules, Not Just Models, Causally Shape Multi-Agent AI Safety",
+      "authors": ["Mubarak Raji et al."],
+      "affiliations": ["University of Illinois Urbana-Champaign"],
+      "summary": "Introduces institutional red-teaming, an evaluation methodology that tests deployment rules rather than model capabilities in multi-agent AI systems, demonstrating that rules causally shape safety outcomes independently of agent properties.",
+      "key_findings": [
+        "Deployment rules (not just model properties) causally shape safety outcomes in multi-agent systems",
+        "Holding agents, objectives, and task state fixed while varying only one rule enables causal attribution",
+        "Institutional-level interventions can be more effective than model-level interventions for multi-agent safety"
+      ],
+      "tags": ["ai-safety", "red-teaming", "multi-agent", "governance", "deployment-rules"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07695",
+        "pdf": "https://arxiv.org/pdf/2607.07695"
+      }
+    },
+    {
+      "id": "co-lmlm-limited-memory",
+      "title": "Co-LMLM: Continuous-Query Limited Memory Language Models",
+      "authors": ["Unknown et al."],
+      "affiliations": ["ETH Zurich"],
+      "summary": "Extends limited memory language models to support continuous queries, externalizing factual knowledge to a knowledge base during pretraining and fetching it dynamically during generation rather than memorizing in weights.",
+      "key_findings": [
+        "Continuous-query extension enables dynamic knowledge fetching rather than one-shot retrieval",
+        "Externalizing factual knowledge reduces parameter requirements while maintaining generation quality",
+        "Knowledge base updates can be reflected immediately without model retraining"
+      ],
+      "tags": ["knowledge-externalization", "retrieval-augmented", "llm-efficiency", "language-models", "memory"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07707",
+        "pdf": "https://arxiv.org/pdf/2607.07707"
+      }
+    },
+    {
+      "id": "transformer-linearization",
+      "title": "The Key to Going Linear: Analysis-Driven Transformer Linearization",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Google DeepMind"],
+      "summary": "Addresses the quadratic cost of causal self-attention for long-context inference by systematically analyzing which components of post-hoc linearization pipelines matter, providing an analysis-driven framework for transformer linearization.",
+      "key_findings": [
+        "Systematic analysis identifies which linearization pipeline components contribute most to quality retention",
+        "Analysis-driven approach outperforms ad-hoc linearization methods on long-context benchmarks",
+        "Provides practical guidance for converting quadratic-attention transformers to linear-time inference"
+      ],
+      "tags": ["transformer-efficiency", "linear-attention", "long-context", "inference", "linearization"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07706",
+        "pdf": "https://arxiv.org/pdf/2607.07706"
+      }
+    },
+    {
+      "id": "skillcenter-skill-library",
+      "title": "SkillCenter: A Large-Scale Source-Grounded Skill Library for Autonomous AI Agents",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "Proposes a large-scale, source-grounded skill library that provides autonomous AI agents with operational knowledge to make outputs not just executable but correct, secure, and maintainable.",
+      "key_findings": [
+        "Source-grounded skills provide verifiable operational knowledge rather than ungrounded heuristics",
+        "Large-scale library covers skills across execution, security, and maintenance dimensions",
+        "Grounding skills in source documentation enables automatic validation and updates"
+      ],
+      "tags": ["ai-agents", "skill-library", "autonomous-agents", "grounded-knowledge", "agent-infrastructure"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07676",
+        "pdf": "https://arxiv.org/pdf/2607.07676"
+      }
+    },
+    {
+      "id": "recursive-self-improvement",
+      "title": "Recursive Self-Improvement in AI: From Bounded Self-Refinement to Autonomous Research Loops",
+      "authors": ["Mingguang Chen", "Licheng Wang", "Bo Qu"],
+      "affiliations": ["Shanghai Jiao Tong University"],
+      "summary": "Surveys the landscape of AI systems that participate in their own improvement—from output revision and harness adaptation to self-generated training data and autonomous research loops—analyzing implications for safety and governance.",
+      "key_findings": [
+        "Maps a spectrum from bounded self-refinement to open-ended autonomous research loops",
+        "Identifies key safety boundaries between self-improvement levels with escalating risk profiles",
+        "Argues that recursive self-improvement governance requires new frameworks beyond current alignment approaches"
+      ],
+      "tags": ["recursive-self-improvement", "ai-safety", "autonomous-research", "alignment", "governance"],
+      "relevance": "high",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07663",
+        "pdf": "https://arxiv.org/pdf/2607.07663"
+      }
+    },
+    {
+      "id": "diffusion-rlhf-timestep-weighting",
+      "title": "Selective Timestep Weighting and Advantage-Based Replay for Sample-Efficient Diffusion RLHF",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Stanford University"],
+      "summary": "Proposes selective timestep weighting and advantage-based replay to improve sample efficiency of RLHF for diffusion models, addressing the high sample cost that has limited RLHF adoption for generative image models.",
+      "key_findings": [
+        "Selective timestep weighting focuses RLHF signal on the most informative diffusion steps",
+        "Advantage-based replay prioritizes high-signal training samples to reduce total sample requirements",
+        "Combined approach significantly improves sample efficiency while maintaining alignment quality"
+      ],
+      "tags": ["diffusion-models", "rlhf", "sample-efficiency", "image-generation", "alignment"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07693",
+        "pdf": "https://arxiv.org/pdf/2607.07693"
+      }
+    },
+    {
+      "id": "rope-frequency-analysis",
+      "title": "How Data Shapes RoPE Frequency Usage: From Positional Scale Matching to Length Generalization",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Meta AI"],
+      "summary": "Studies what determines the highly non-uniform frequency usage pattern in trained transformers with RoPE, connecting positional scale matching to the model's ability to generalize to longer contexts than seen during training.",
+      "key_findings": [
+        "RoPE frequency usage is shaped by the data distribution's positional structure, not just architectural choices",
+        "Positional scale matching explains which frequencies are used vs. ignored during training",
+        "Understanding frequency usage patterns informs principled approaches to length generalization"
+      ],
+      "tags": ["rope", "positional-encoding", "length-generalization", "transformers", "long-context"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07678",
+        "pdf": "https://arxiv.org/pdf/2607.07678"
+      }
+    },
+    {
+      "id": "future-confidence-distillation",
+      "title": "Future Confidence Distillation in Large Language Models",
+      "authors": ["Sahil Kale"],
+      "affiliations": ["University of Toronto"],
+      "summary": "Introduces future confidence distillation for reliable confidence estimation in LLMs, enabling downstream decisions such as retrieval, tool use, and adaptive computation to be informed by calibrated uncertainty signals.",
+      "key_findings": [
+        "Future confidence distillation produces better-calibrated uncertainty estimates than standard approaches",
+        "Enables confidence-aware downstream systems for retrieval, tool use, and adaptive computation",
+        "Distillation-based approach avoids the computational overhead of sampling-based calibration methods"
+      ],
+      "tags": ["confidence-estimation", "calibration", "llm", "uncertainty", "distillation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07626",
+        "pdf": "https://arxiv.org/pdf/2607.07626"
+      }
+    },
+    {
+      "id": "pals-layerwise-sparsity",
+      "title": "PALS: Percentile-Aware Layerwise Sparsity for LLM Pruning",
+      "authors": ["Yazdan Jamshidi", "Alexey Shvets"],
+      "affiliations": ["University of Alberta"],
+      "summary": "Proposes percentile-aware layerwise sparsity allocation for LLM pruning, replacing uniform sparsity ratios with adaptive per-layer ratios that respect known variation in layer importance.",
+      "key_findings": [
+        "Layer-adaptive sparsity allocation significantly outperforms uniform sparsity across transformer layers",
+        "Percentile-based importance scoring provides a robust heuristic for determining per-layer compression",
+        "Compatible with existing pruning methods (Wanda, SparseGPT) as a drop-in sparsity allocation strategy"
+      ],
+      "tags": ["pruning", "sparsity", "llm-efficiency", "model-compression", "inference"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07557",
+        "pdf": "https://arxiv.org/pdf/2607.07557"
+      }
+    },
+    {
+      "id": "noisy-traces-agent-optimization",
+      "title": "From Noisy Traces to Root Causes: Structural Trajectory Analysis and Causal Extraction for Agent Optimization",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Microsoft Research"],
+      "summary": "Introduces structural trajectory analysis for optimizing long-horizon agents, enabling an LLM optimizer to diagnose agent failures and improve policies by extracting causal structure from noisy execution traces.",
+      "key_findings": [
+        "Structural trajectory analysis extracts causal failure patterns from noisy agent execution traces",
+        "Causal extraction enables targeted policy improvements rather than end-to-end fine-tuning",
+        "Outperforms reflection-based optimization mechanisms on long-horizon agent tasks"
+      ],
+      "tags": ["agent-optimization", "trajectory-analysis", "causal-inference", "llm-agents", "debugging"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 0, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07702",
+        "pdf": "https://arxiv.org/pdf/2607.07702"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "ZAI (Zhipu AI)",
+      "description": "Large-scale MoE language model from Zhipu AI's GLM family with sparse mixture-of-experts architecture, leading the trending charts with strong community engagement and broad conversational capabilities.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "glm", "chinese-nlp"],
+      "metrics": { "downloads": 281584, "likes": 3668 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "Compact 3B feature extraction model from NVIDIA for spatial localization tasks, leading download charts with 1.4M downloads and strong community engagement at 2,667 likes.",
+      "task_type": "feature-extraction",
+      "model_size": "3B",
+      "tags": ["feature-extraction", "localization", "nvidia", "spatial"],
+      "metrics": { "downloads": 1424958, "likes": 2667 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "qwen3-6-35b-a3b-uncensored",
+      "name": "Qwen3.6-35B-A3B Uncensored",
+      "organization": "HauhauCS (Community)",
+      "description": "Community-driven uncensored variant of Qwen 3.6 with 35B total / 3B active parameters in MoE configuration, featuring vision capabilities and GGUF quantization for local deployment.",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B MoE",
+      "tags": ["qwen3.6", "moe", "uncensored", "vision", "gguf"],
+      "metrics": { "downloads": 2823988, "likes": 2573 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Large-scale OCR model from Baidu achieving broad document understanding and text extraction, surpassing 1M downloads with strong real-world adoption.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["ocr", "document-understanding", "baidu", "text-extraction"],
+      "metrics": { "downloads": 1084945, "likes": 1873 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwythos-9b-gguf",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "Empero AI (Community)",
+      "description": "GGUF-quantized 9B model merging Qwen 3.5 architecture with Claude-inspired training, featuring 1M context window and strong reasoning capabilities for local deployment.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "qwen3.5", "reasoning", "quantized", "long-context"],
+      "metrics": { "downloads": 1683711, "likes": 1857 },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "Gemma-4-12B Agentic GGUF",
+      "organization": "Community (yuxinlu1)",
+      "description": "Agentic variant of Google's Gemma 4 12B model, fine-tuned for coding and terminal-based agent tasks with GGUF quantization for efficient local inference.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gemma4", "agentic", "coding", "terminal", "gguf"],
+      "metrics": { "downloads": 384383, "likes": 1098 },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "ornith-1-35b",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "35B parameter text generation model in GGUF format, achieving significant download volume with MIT licensing making it attractive for commercial deployments.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": ["text-generation", "gguf", "mit-license", "35b"],
+      "metrics": { "downloads": 502663, "likes": 800 },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "krea-2-turbo",
+      "name": "Krea-2-Turbo",
+      "organization": "Krea",
+      "description": "Turbo variant of Krea's image generation model offering faster inference for text-to-image tasks, built on the Krea-2 base architecture.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "diffusion", "turbo", "image-generation"],
+      "metrics": { "downloads": 123729, "likes": 555 },
+      "source_url": "https://huggingface.co/krea/Krea-2-Turbo"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3 (Hunyuan 3)",
+      "organization": "Tencent",
+      "description": "Tencent's third-generation Hunyuan language model entering the trending charts with strong community interest, featuring new architecture improvements for text generation.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["hunyuan", "tencent", "text-generation", "chinese-nlp"],
+      "metrics": { "downloads": 121, "likes": 564 },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "deepseek-v4-pro-dspark",
+      "name": "DeepSeek-V4-Pro-DSpark",
+      "organization": "DeepSeek",
+      "description": "DeepSeek's V4 Pro variant with DSpark optimization, continuing the DeepSeek family's push into competitive open-weight frontier models.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["deepseek", "frontier-model", "text-generation"],
+      "metrics": { "downloads": 15538, "likes": 439 },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-DSpark"
+    },
+    {
+      "id": "agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "Multimodal MoE agent model based on Qwen 3.5 MoE architecture, designed for image-text-to-text tasks with agentic capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": ["agents", "moe", "multimodal", "qwen3.5"],
+      "metrics": { "downloads": 14723, "likes": 400 },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "tabfm-1-0",
+      "name": "TabFM 1.0",
+      "organization": "Google",
+      "description": "Google's foundation model for tabular data with zero-shot capabilities, addressing the historically underserved modality of structured/tabular data in the foundation model era.",
+      "task_type": "tabular-regression",
+      "model_size": "Unknown",
+      "tags": ["tabular", "zero-shot", "foundation-model", "regression", "google"],
+      "metrics": { "downloads": 9458, "likes": 313 },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "officecli",
+      "name": "iOfficeAI/OfficeCLI",
+      "description": "The first Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Single binary, no Office installation required—a key piece of agent infrastructure enabling document manipulation without human GUI dependencies.",
+      "language": "C#",
+      "stars": 11964,
+      "stars_today": 1717,
+      "forks": 812,
+      "url": "https://github.com/iOfficeAI/OfficeCLI",
+      "tags": ["ai-agents", "office-automation", "document-processing", "cli"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Production-grade engineering skills for AI coding agents. A curated collection of reusable skills that represents the consolidation of agent capability sharing into standardized, composable units.",
+      "language": "JavaScript",
+      "stars": 74220,
+      "stars_today": 1297,
+      "forks": 8004,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agents", "developer-tools", "skills-framework"],
+      "relevance": "high"
+    },
+    {
+      "id": "superpowers",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology that has become a reference implementation for how agent skills should be structured, distributed, and composed.",
+      "language": "Shell",
+      "stars": 249875,
+      "stars_today": 1116,
+      "forks": 22171,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "skills-framework", "software-development", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "system-prompts-leaks",
+      "name": "asgeirtj/system_prompts_leaks",
+      "description": "Extracted system prompts from major AI providers including Claude, GPT, Gemini, and more. Frequently updated collection serving as both a transparency resource and a red-teaming reference.",
+      "language": "JavaScript",
+      "stars": 54249,
+      "stars_today": 1218,
+      "forks": 8830,
+      "url": "https://github.com/asgeirtj/system_prompts_leaks",
+      "tags": ["system-prompts", "ai-transparency", "red-teaming", "llm-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "Turns any folder of code, SQL schemas, scripts, docs, and media into a queryable knowledge graph—unifying application code, database schema, and infrastructure in one graph for AI-assisted understanding.",
+      "language": "Python",
+      "stars": 80505,
+      "stars_today": 856,
+      "forks": 7924,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": ["knowledge-graph", "code-understanding", "ai-tools", "developer-productivity"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-video",
+      "name": "bradautomates/claude-video",
+      "description": "Gives Claude the ability to watch any video by downloading, extracting frames, and transcribing—then handing all context to Claude for analysis. Extends LLM capabilities to video understanding.",
+      "language": "Python",
+      "stars": 6088,
+      "stars_today": 951,
+      "forks": 725,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["video-understanding", "claude", "multimodal", "media-processing"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruview",
+      "name": "ruvnet/RuView",
+      "description": "Turns commodity WiFi signals into real-time spatial intelligence, vital sign monitoring, and presence detection without any camera hardware—a novel privacy-preserving sensing approach built in Rust.",
+      "language": "Rust",
+      "stars": 79169,
+      "stars_today": 799,
+      "forks": 10651,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["wifi-sensing", "spatial-intelligence", "privacy-preserving", "iot"],
+      "relevance": "medium"
+    },
+    {
+      "id": "pocket-tts",
+      "name": "kyutai-labs/pocket-tts",
+      "description": "A TTS system from Kyutai Labs designed to run entirely on CPU, making speech synthesis accessible on resource-constrained devices without GPU requirements.",
+      "language": "Python",
+      "stars": 6628,
+      "stars_today": 655,
+      "forks": 677,
+      "url": "https://github.com/kyutai-labs/pocket-tts",
+      "tags": ["text-to-speech", "cpu-inference", "edge-ai", "speech-synthesis"],
+      "relevance": "high"
+    },
+    {
+      "id": "cubesandbox",
+      "name": "TencentCloud/CubeSandbox",
+      "description": "Instant, concurrent, secure, and lightweight sandbox environment for AI agents, providing isolated execution contexts for agent code execution and tool use.",
+      "language": "Rust",
+      "stars": 8954,
+      "stars_today": 564,
+      "forks": 737,
+      "url": "https://github.com/TencentCloud/CubeSandbox",
+      "tags": ["sandbox", "ai-agents", "security", "code-execution"],
+      "relevance": "high"
+    },
+    {
+      "id": "zvec",
+      "name": "alibaba/zvec",
+      "description": "A lightweight, lightning-fast, in-process vector database from Alibaba optimized for embedding-based retrieval in AI applications requiring low-latency similarity search.",
+      "language": "C++",
+      "stars": 14434,
+      "stars_today": 395,
+      "forks": 890,
+      "url": "https://github.com/alibaba/zvec",
+      "tags": ["vector-database", "embeddings", "similarity-search", "in-process"],
+      "relevance": "high"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web, then synthesizes a grounded summary of the last 30 days of activity.",
+      "language": "Python",
+      "stars": 50784,
+      "stars_today": 352,
+      "forks": 4240,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research-automation", "web-scraping", "synthesis"],
+      "relevance": "high"
+    },
+    {
+      "id": "tencentdb-agent-memory",
+      "name": "TencentCloud/TencentDB-Agent-Memory",
+      "description": "Fully local long-term memory system for AI agents via a 4-tier progressive pipeline, with zero external API dependencies—addressing the persistent memory problem in agent architectures.",
+      "language": "TypeScript",
+      "stars": 7689,
+      "stars_today": 318,
+      "forks": 711,
+      "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
+      "tags": ["agent-memory", "long-term-memory", "local-first", "ai-infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "skillopt",
+      "name": "microsoft/SkillOpt",
+      "description": "Text-space optimizer that trains reusable natural-language skills for frozen LLM agents through trajectory-driven edits and validation-gated updates, producing deployable best_skill.md artifacts.",
+      "language": "Python",
+      "stars": 11725,
+      "stars_today": 275,
+      "forks": 1082,
+      "url": "https://github.com/microsoft/SkillOpt",
+      "tags": ["skill-optimization", "llm-agents", "text-optimization", "agent-training"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic's official agentic coding tool that lives in the terminal, understanding codebases and helping with development through natural language commands.",
+      "language": "Python",
+      "stars": 136913,
+      "stars_today": 215,
+      "forks": 21998,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["coding-agent", "cli", "development-tools", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "skillspector",
+      "name": "NVIDIA/SkillSpector",
+      "description": "Security scanner from NVIDIA that detects vulnerabilities, malicious patterns, and security risks in AI agent skills—a critical piece of the emerging agent security infrastructure.",
+      "language": "Python",
+      "stars": 12508,
+      "stars_today": 168,
+      "forks": 1029,
+      "url": "https://github.com/NVIDIA/SkillSpector",
+      "tags": ["security", "agent-skills", "vulnerability-scanning", "nvidia"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Skills Infrastructure Formation",
+      "description": "The agent ecosystem is crystallizing around 'skills' as the fundamental unit of agent capability, with simultaneous emergence of skill libraries (SkillCenter, superpowers, agent-skills), skill optimizers (SkillOpt), skill security scanners (SkillSpector), and skill-sharing platforms—signaling infrastructure formation for an agent skills marketplace.",
+      "related_paper_ids": ["skillcenter-skill-library", "noisy-traces-agent-optimization"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Embodied AI World Model Scaling",
+      "description": "Two coordinated papers from the same lab push embodied AI world models toward production viability: unbounded interaction horizons via causal pretraining and MoE video pretraining that prioritizes physical realism over visual fidelity, addressing both the horizon and efficiency bottlenecks.",
+      "related_paper_ids": ["lingbot-world-2-infinity", "lingbot-video-moe"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RL Post-Training Maturation",
+      "description": "Multiple papers advance RL post-training beyond simple GRPO: solving the zero-gradient problem on hard problems, introducing competitive cross-model grading of reasoning traces, and demonstrating genuine compositional strategy emergence—collectively making RL post-training viable across the full difficulty spectrum.",
+      "related_paper_ids": ["agon-competitive-rl", "max-out-grpo-signal", "rl-compositional-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Agent Safety and Governance",
+      "description": "Institutional red-teaming shifts safety evaluation from model properties to deployment rules, while recursive self-improvement analysis maps the risk spectrum from bounded refinement to autonomous research loops—both reflecting the field's recognition that agent safety requires system-level, not just model-level, interventions.",
+      "related_paper_ids": ["institutional-red-teaming", "recursive-self-improvement"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Efficiency: Beyond Attention",
+      "description": "Efficiency research expands beyond KV cache compression to transformer linearization, layerwise-adaptive pruning, and externalized knowledge models, suggesting the field is systematically attacking every dimension of the inference cost surface rather than optimizing a single bottleneck.",
+      "related_paper_ids": ["transformer-linearization", "pals-layerwise-sparsity", "co-lmlm-limited-memory"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-09T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
