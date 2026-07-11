@@ -1,0 +1,633 @@
+{
+  "version": "1.0",
+  "date": "2026-07-10",
+  "generated_at": "2026-07-10T15:00:00Z",
+  "summary": {
+    "headline": "Vidu S1实现42 FPS实时交互式视频生成并支持语音控制；AI智能体技能生态系统持续整合，skills、superpowers和治理工具主导GitHub趋势；线性注意力架构获得系统性比较研究",
+    "body": "周四的AI领域聚焦于交互式视频生成的突破。**Vidu S1**（108票赞）推出了实时语音控制视频生成，在消费级GPU上实现540p/42fps，结合TurboDiffusion和TurboServe实现无质量退化的无限长度生成。与此同时，**CineMobile**通过高效扩散Transformer将电影级镜头运动生成带到移动设备，**OpenCoF**则将视频生成模型重新用作推理引擎，通过帧链（Chain-of-Frame）推理实现。视频生成技术正快速从研究演示走向部署就绪系统。\n\n智能体生态系统延续了周三的基础设施建设势头。GitHub趋势再次被智能体技能仓库主导：**superpowers**（+1,013 stars）、**agent-skills**（+1,116 stars）和**skills**（+1,712 stars）巩固了技能共享范式，而**微软智能体治理工具包**应对OWASP Agentic Top 10安全关切，**TencentDB Agent Memory**解决长期记忆缺口。在研究方面，**UniClawBench**提出首个主动式智能体通用基准测试，**Remember When It Matters**引入主动式记忆智能体，以主动干预取代被动检索，解决长周期任务中的行为状态衰减问题。\n\n模型格局持续多元化：**GLM-5.2**以3,786个赞领先，**Qwen 3.6变体**在不同量化格式中持续扩散，**NVIDIA LocateAnything-3B**以140万次下载主导视觉定位领域，**腾讯Hy3**作为新的MoE文本生成模型进入趋势榜。Mistral的**Leanstral-1.5-119B-A6B**和**DeepSeek-V4-Flash**延续了以效率为核心的大模型趋势。",
+    "key_themes": [
+      "real-time-video-generation",
+      "agent-skills-ecosystem",
+      "video-understanding-evaluation",
+      "long-context-efficiency",
+      "ai-for-science",
+      "linear-attention-architectures"
+    ]
+  },
+  "researcher_notes": "**Vidu S1代表了交互式视频生成的部署拐点。** 消费级GPU上42 FPS才是真正的亮点——此前的交互式视频系统需要数据中心硬件，使消费者应用场景不切实际。语音控制与实时生成的结合打开了一个新的产品品类（实时AI控制的虚拟形象、交互式叙事、实时游戏过场动画），这些此前受限于硬件成本。其无限长度生成且不产生漂移或失真的能力，解决了困扰长视频生成的时间一致性问题。\n\n**Video-Oasis的评估反思揭示了一场衡量危机。** 该论文以43票赞引起共鸣，其批评切中要害：当前Video-LLM基准测试混淆了视觉感知、语言推理和知识先验，使得无法将性能提升归因于实际的视频理解能力。这与NLP基准测试（GLUE/SuperGLUE）在社区开发探针方法论之前面临的同一衡量问题如出一辙。预计这将催化一波诊断性基准测试的出现，将视频理解分解为可测试的子能力。\n\n**智能体技能生态系统的形成速度超出预期。** 连续第二天，智能体技能仓库主导GitHub趋势。今天的关键信号是微软的智能体治理工具包覆盖了所有10项OWASP Agentic Top 10风险——这意味着安全工具与能力爆发*同步*到来，而非滞后。结合TencentDB的智能体记忆解决方案和UniClawBench的通用智能体基准测试，生态系统正在同时构建能力（技能）、基础设施（记忆、模板）、评估（基准测试）和安全（治理）。四大支柱的协调成熟是罕见的，暗示着真正的企业就绪而非炒作驱动的采用。\n\n**线性注意力的比较研究是一个整合信号。** 在统一符号下对DeltaNet、Gated DeltaNet、Kimi Delta Attention和Gated DeltaNet-2的系统比较表明，线性注意力领域已经成熟到可以进行正面比较，而不只是孤立的提案论文。跨层路由扩展暗示了下一个前沿：根据token的位置和内容动态将其路由到不同处理策略的注意力机制。\n\n**IdeaGene-Bench是AI for Science的潜力之作。** 将科学思想表示为可继承的基因组并基准测试谱系推理是一种概念上新颖的框架，可能重塑我们评估AI科学推理的方式。它不是测试AI能否回答关于论文的问题，而是测试它能否追踪思想的智识DNA——这种能力更接近人类研究者思考其领域的实际方式。",
+  "papers": [
+    {
+      "id": "vidu-s1-real-time-video",
+      "title": "Vidu S1：实时交互式视频生成模型",
+      "authors": ["Jintao Zhang", "Kai Jiang", "Jintao Chen", "Xu Wang", "Yang Luo et al."],
+      "affiliations": ["Tsinghua University", "Shengshu Technology"],
+      "summary": "推出Vidu S1，一个支持语音控制数字角色的实时交互式视频生成模型，在消费级GPU上使用TurboDiffusion和TurboServe架构实现540p/42fps的无限长度生成。",
+      "key_findings": [
+        "通过TurboDiffusion和TurboServe在消费级GPU上实现高达42 FPS的实时视频生成",
+        "支持无模糊、无漂移、无视觉失真的无限长度生成",
+        "实现语音控制的数字角色，支持真人、动漫和宠物的自定义图像上传"
+      ],
+      "tags": ["video-generation", "real-time", "interactive", "diffusion", "voice-control"],
+      "relevance": "high",
+      "engagement": { "upvotes": 108, "comments": 6 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.03118",
+        "huggingface": "https://huggingface.co/papers/2607.03118",
+        "pdf": "https://arxiv.org/pdf/2607.03118"
+      }
+    },
+    {
+      "id": "video-oasis-evaluation",
+      "title": "Video-Oasis：重新思考视频理解的评估",
+      "authors": ["Geuntaek Lim", "Sungjune Park", "Jaeyun Lee", "Inwoong Lee", "Taeoh Kim"],
+      "affiliations": ["NAVER AI Lab", "KAIST"],
+      "summary": "重新审视视频理解的评估标准，指出当前基准测试混淆了视觉感知、语言推理和知识先验，难以将Video-LLM的性能归因于真正的视频理解能力。",
+      "key_findings": [
+        "当前Video-LLM基准测试未能将视觉感知与语言推理和知识先验分离",
+        "提出了在高级推理基准测试涌现中被忽视的共享评估标准",
+        "证明许多基准测试的性能提升来源于语言先验而非真正的视频理解"
+      ],
+      "tags": ["video-understanding", "evaluation", "benchmark", "video-llm", "perception"],
+      "relevance": "high",
+      "engagement": { "upvotes": 43, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.29616",
+        "huggingface": "https://huggingface.co/papers/2603.29616",
+        "pdf": "https://arxiv.org/pdf/2603.29616"
+      }
+    },
+    {
+      "id": "object-driven-shortcuts-car",
+      "title": "为什么我打不开抽屉？缓解零样本组合动作识别中的目标驱动捷径",
+      "authors": ["Geo Ahn", "Inwoong Lee", "Taeoh Kim", "Minho Shim", "Dongyoon Wee"],
+      "affiliations": ["NAVER AI Lab", "Seoul National University"],
+      "summary": "解决零样本组合动作识别中的关键失效模式——模型通过目标驱动的捷径预测动词而非依赖时序证据，提出诊断指标和缓解策略。",
+      "key_findings": [
+        "发现模型依赖目标类别标签而非时间运动证据来预测动词",
+        "稀疏的组合监督和动词-目标学习不对称促进了捷径学习",
+        "提出的诊断指标揭示了现有方法中目标驱动捷径的程度"
+      ],
+      "tags": ["action-recognition", "zero-shot", "compositional-learning", "shortcuts", "video"],
+      "relevance": "high",
+      "engagement": { "upvotes": 42, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2601.16211",
+        "huggingface": "https://huggingface.co/papers/2601.16211",
+        "pdf": "https://arxiv.org/pdf/2601.16211"
+      }
+    },
+    {
+      "id": "uniclawbench-proactive-agents",
+      "title": "UniClawBench：主动式智能体在真实世界任务上的通用基准测试",
+      "authors": ["Zhekai Chen", "Chengqi Duan", "Kaiyue Sun", "Bohao Li", "Yuqing Wang"],
+      "affiliations": ["Peking University", "Beijing Academy of Artificial Intelligence"],
+      "summary": "提出主动式智能体的通用基准测试，通过引入能力分解的任务分类法来解决现有沙盒化、单轮评估范式的局限性，支持真实世界智能体评估。",
+      "key_findings": [
+        "现有基准测试在同一任务类别中混合了多种模型能力，模糊了优劣势",
+        "引入能力分解分类法，将规划、工具使用和交互能力分离",
+        "支持真实世界环境中的多轮评估，而非沙盒模拟"
+      ],
+      "tags": ["agents", "benchmark", "proactive-agents", "evaluation", "real-world"],
+      "relevance": "high",
+      "engagement": { "upvotes": 22, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08768",
+        "huggingface": "https://huggingface.co/papers/2607.08768",
+        "pdf": "https://arxiv.org/pdf/2607.08768"
+      }
+    },
+    {
+      "id": "ideagene-bench-lineage",
+      "title": "思想有基因组：科学谱系推理与基于谱系的创意生成基准测试",
+      "authors": ["Yifan Zhou", "Qihao Yang", "Yan Li", "Donggang Li", "Xiru Hu"],
+      "affiliations": ["University of Illinois Urbana-Champaign", "Tsinghua University"],
+      "summary": "提出IdeaGene-Bench，一个科学谱系推理基准测试，将论文表示为最小可继承单元，测试AI能否追踪科学思想的智识继承结构。",
+      "key_findings": [
+        "将科学思想表示为具有可继承机制、局限性和重组的基因组",
+        "基准测试同时评估谱系推理（追踪思想继承）和基于谱系的创意生成",
+        "揭示当前LLM在细粒度谱系归属方面存在困难，尽管其具有较强的总结能力"
+      ],
+      "tags": ["ai-for-science", "benchmark", "scientific-reasoning", "idea-generation", "knowledge-graphs"],
+      "relevance": "high",
+      "engagement": { "upvotes": 22, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08758",
+        "huggingface": "https://huggingface.co/papers/2607.08758",
+        "pdf": "https://arxiv.org/pdf/2607.08758"
+      }
+    },
+    {
+      "id": "longe2v-event-video",
+      "title": "LongE2V：基于视频扩散模型的长时域事件相机视频重建、预测和帧插值",
+      "authors": ["Cheng-De Fan", "Chun-Wei Tuan Mu", "Chen-Wei Chang", "Chin-Yang Lin", "Kun-Ru Wu"],
+      "affiliations": ["National Tsing Hua University", "National Yang Ming Chiao Tung University"],
+      "summary": "提出LongE2V，利用预训练视频扩散先验进行事件相机视频重建、预测和帧插值，通过自回归滚动重叠和跨片段注意力实现长期稳定性。",
+      "key_findings": [
+        "利用预训练视频扩散先验进行事件相机任务，实现高数据效率",
+        "自回归滚动重叠实现长时域时间一致性",
+        "跨片段注意力在保持感知质量的同时维持长序列的一致性"
+      ],
+      "tags": ["event-cameras", "video-reconstruction", "diffusion-models", "frame-interpolation", "temporal-consistency"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 19, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08770",
+        "huggingface": "https://huggingface.co/papers/2607.08770",
+        "pdf": "https://arxiv.org/pdf/2607.08770"
+      }
+    },
+    {
+      "id": "canvas360-panoramic",
+      "title": "通过几何感知预训练增强上下文全景生成",
+      "authors": ["Haoran Feng", "Ruiyang Zhang", "Longyi Zhang", "Dizhe Zhang", "Lu Qi"],
+      "affiliations": ["HKUST", "The University of Hong Kong"],
+      "summary": "提出Canvas360，一个结合几何感知预训练和任务特定微调的两阶段上下文全景生成框架，在Canvas360Dataset的100万高质量配对全景样本上训练。",
+      "key_findings": [
+        "Canvas360Dataset提供100万高质量配对全景样本，覆盖风格迁移、修复、外绘和编辑",
+        "几何感知预训练解决了全景特定训练数据缺乏的问题",
+        "两阶段框架在多种上下文全景生成场景中具有泛化能力"
+      ],
+      "tags": ["panoramic-generation", "geometric-pretraining", "image-generation", "in-context-learning", "dataset"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 14, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08765",
+        "huggingface": "https://huggingface.co/papers/2607.08765",
+        "pdf": "https://arxiv.org/pdf/2607.08765"
+      }
+    },
+    {
+      "id": "druggen-2-drug-discovery",
+      "title": "DrugGen 2：用于增强药物发现的疾病感知语言模型",
+      "authors": ["Ali Motahharynia", "Mohammadreza Ghaffarzadeh-Esfahani", "Mahsa Sheikholeslami", "Navid Mazrouei", "Matin Irajpour"],
+      "affiliations": ["Isfahan University of Medical Sciences", "Isfahan University of Technology"],
+      "summary": "推出DrugGen-2，一个以疾病本体论和靶标蛋白序列为条件设计小分子的生成模型，填补了大多数药物设计方法忽视疾病背景的空白。",
+      "key_findings": [
+        "首个以疾病本体论和靶标蛋白序列为双重条件的分子生成模型",
+        "在精心构建的疾病-靶标-分子三元组上微调GPT-2，捕获疾病特异性治疗关系",
+        "相比疾病无关的基线模型，生成的分子具有更高的预测结合亲和力和药物相似性"
+      ],
+      "tags": ["drug-discovery", "molecular-generation", "disease-aware", "language-model", "computational-chemistry"],
+      "relevance": "high",
+      "engagement": { "upvotes": 12, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08404",
+        "huggingface": "https://huggingface.co/papers/2607.08404",
+        "pdf": "https://arxiv.org/pdf/2607.08404"
+      }
+    },
+    {
+      "id": "jet-long-context-extension",
+      "title": "Jet-Long：基于动态双焦RoPE的高效长上下文扩展",
+      "authors": ["Haozhan Tang", "Zerui Wang", "Yuxian Gu", "Song Han", "Han Cai"],
+      "affiliations": ["MIT", "NVIDIA"],
+      "summary": "提出动态双焦RoPE用于零样本上下文扩展，动态调整缩放因子以在扩展长上下文的同时保持短上下文保真度，解决现有方法中固定因子的权衡问题。",
+      "key_findings": [
+        "动态双焦缩放在扩展上下文窗口10倍以上的同时保持短上下文性能",
+        "零样本方法无需微调，可立即部署于现有检查点",
+        "在短上下文和长上下文基准测试中均优于固定因子方法（YaRN、NTK-aware）"
+      ],
+      "tags": ["long-context", "rope", "context-extension", "efficiency", "llm-inference"],
+      "relevance": "high",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07740",
+        "huggingface": "https://huggingface.co/papers/2607.07740",
+        "pdf": "https://arxiv.org/pdf/2607.07740"
+      }
+    },
+    {
+      "id": "cinemobile-on-device-video",
+      "title": "CineMobile：面向电影级镜头运动生成的端侧图像到视频扩散",
+      "authors": ["Xuyao Huang", "Zelai Deng", "Xu Wang", "Xizhong Xiao", "Zhijie Deng"],
+      "affiliations": ["Shanghai Jiao Tong University", "Kuaishou Technology"],
+      "summary": "提出CineMobile用于高效端侧图像到视频生成，针对子弹时间、推拉变焦和慢动作等电影级镜头效果，弥合DiT视频生成质量与移动端部署约束之间的差距。",
+      "key_findings": [
+        "实现移动端子弹时间、推拉变焦和慢动作等电影效果的视频生成",
+        "通过架构级和推理级优化降低移动端DiT的计算开销",
+        "在显著减少参数量和计算量的情况下保持与全规模DiT模型相当的视觉质量"
+      ],
+      "tags": ["mobile-ai", "video-generation", "on-device", "diffusion-transformers", "cinematic"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.03803",
+        "huggingface": "https://huggingface.co/papers/2607.03803",
+        "pdf": "https://arxiv.org/pdf/2607.03803"
+      }
+    },
+    {
+      "id": "opencof-reasoning-video",
+      "title": "OpenCoF：通过视频生成学习推理",
+      "authors": ["Xinyan Chen", "Ziyu Guo", "Renrui Zhang", "Dongzhi Jiang", "Hongsheng Li"],
+      "affiliations": ["The Chinese University of Hong Kong", "Shanghai AI Laboratory"],
+      "summary": "提出帧链（CoF）推理，使推理通过时间上连接的视频帧展开，引入专门的训练数据和架构设计，开辟了文本链推理（CoT）之外的视频推理新路径。",
+      "key_findings": [
+        "通过时间连接的视频帧进行推理提供了与文本链推理不同的路径",
+        "现有视频生成器缺乏CoF推理所需的多样化监督和专门设计",
+        "专门构建的训练和架构显著提高了视觉空间领域的推理准确性"
+      ],
+      "tags": ["reasoning", "video-generation", "chain-of-frame", "visual-reasoning", "diffusion"],
+      "relevance": "high",
+      "engagement": { "upvotes": 6, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08763",
+        "huggingface": "https://huggingface.co/papers/2607.08763",
+        "pdf": "https://arxiv.org/pdf/2607.08763"
+      }
+    },
+    {
+      "id": "linear-attention-comparative",
+      "title": "线性注意力架构：机制、权衡与跨层路由",
+      "authors": ["Tommaso Cerruti", "Tim Rieder", "George Rowlands", "Lingfeng Jin", "Imanol Schlag"],
+      "affiliations": ["IDSIA", "University of Lugano", "ETH Zurich"],
+      "summary": "首次在统一的循环记忆符号下，对softmax注意力与四种近期线性注意力架构（DeltaNet、Gated DeltaNet、Kimi Delta Attention和Gated DeltaNet-2）进行系统比较。",
+      "key_findings": [
+        "统一的循环记忆符号揭示了各架构在表达能力、记忆衰减和写入控制方面的差异",
+        "引入跨层路由作为扩展，可动态将token路由到不同的注意力策略",
+        "识别了四种架构在计算效率和表达能力之间的具体权衡"
+      ],
+      "tags": ["linear-attention", "efficiency", "transformers", "recurrent-models", "architecture-comparison"],
+      "relevance": "high",
+      "engagement": { "upvotes": 5, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07953",
+        "huggingface": "https://huggingface.co/papers/2607.07953",
+        "pdf": "https://arxiv.org/pdf/2607.07953"
+      }
+    },
+    {
+      "id": "proactive-memory-agent",
+      "title": "在关键时刻记忆：面向长周期智能体的主动式记忆代理",
+      "authors": ["Yifan Wu", "Lizhu Zhang", "Yuhang Zhou", "Mingyi Wang", "Bo Peng"],
+      "affiliations": ["Microsoft Research", "Peking University"],
+      "summary": "将记忆研究为主动干预机制而非被动检索，识别出「行为状态衰减」作为关键失效模式，并提出主动式记忆代理来解决长周期任务中的这一问题。",
+      "key_findings": [
+        "识别出「行为状态衰减」——随着轨迹增长，决策相关状态被淹没的失效模式",
+        "主动式记忆代理主动浮现和干预相关上下文，而非等待检索查询",
+        "相比被动记忆方法，在长周期任务上展示了显著的性能提升"
+      ],
+      "tags": ["agents", "memory", "long-horizon", "proactive-systems", "behavioral-state"],
+      "relevance": "high",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08716",
+        "huggingface": "https://huggingface.co/papers/2607.08716",
+        "pdf": "https://arxiv.org/pdf/2607.08716"
+      }
+    },
+    {
+      "id": "up-asymmetric-optimization",
+      "title": "UP：打破探索-稳定性困境的无界正向非对称优化",
+      "authors": ["Chongyu Fan", "Pengfei Liu", "Jingjia Huang", "Sijia Liu", "Yi Lin"],
+      "affiliations": ["Shanghai Jiao Tong University", "Michigan State University"],
+      "summary": "提出无界正向非对称优化以打破LLM中基于重要性采样的强化学习的探索-稳定性困境，允许对高质量轨迹进行无限制的正向更新同时保持稳定性。",
+      "key_findings": [
+        "标准裁剪机制过于严格地约束策略更新，限制了对有益轨迹的探索",
+        "无界正向非对称性允许对高质量轨迹进行大幅更新，同时防止灾难性不稳定",
+        "在复杂推理任务上相比PPO和GRPO基线实现了更好的样本效率"
+      ],
+      "tags": ["reinforcement-learning", "llm-post-training", "optimization", "exploration", "importance-sampling"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 2, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06987",
+        "huggingface": "https://huggingface.co/papers/2607.06987",
+        "pdf": "https://arxiv.org/pdf/2607.06987"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (ZAI)",
+      "description": "支持中英双语的大规模MoE语言模型，采用密集-稀疏架构，是GLM系列的重要架构升级。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "bilingual", "conversational"],
+      "metrics": { "downloads": 392655, "likes": 3786 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "nvidia-locateanything-3b",
+      "name": "LocateAnything-3B",
+      "organization": "NVIDIA",
+      "description": "用于开放词汇目标检测和定位的视觉语言模型，基于EAGLE架构构建，拥有30亿参数，支持基于文本的空间查询。",
+      "task_type": "feature-extraction",
+      "model_size": "3B",
+      "tags": ["vision", "object-detection", "grounding", "eagle"],
+      "metrics": { "downloads": 1456269, "likes": 2701 },
+      "source_url": "https://huggingface.co/nvidia/LocateAnything-3B"
+    },
+    {
+      "id": "qwen3-6-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-Aggressive",
+      "organization": "HauhauCS",
+      "description": "去审查且激进微调的Qwen 3.6 MoE变体，总参数350亿，活跃参数30亿，支持视觉和多模态输入，提供GGUF格式。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B",
+      "tags": ["gguf", "uncensored", "moe", "multimodal", "vision"],
+      "metrics": { "downloads": 2660170, "likes": 2623 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M",
+      "organization": "Empero AI",
+      "description": "GGUF量化的90亿参数模型，支持100万token上下文窗口，具备推理、函数调用、多模态视觉以及网络安全和生物医学领域的专业能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": ["gguf", "reasoning", "long-context", "multimodal", "agentic"],
+      "metrics": { "downloads": 1909705, "likes": 1977 },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "支持无限长度文档识别的视觉语言OCR模型，覆盖多种语言，结合特征提取与图文理解。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["ocr", "vision-language", "multilingual", "document-understanding"],
+      "metrics": { "downloads": 1319683, "likes": 1921 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "ornith-1-0-35b",
+      "name": "Ornith-1.0-35B",
+      "organization": "DeepReinforce AI",
+      "description": "350亿参数的文本生成模型，以GGUF格式分发，针对高效推理优化，采用MIT许可证。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": ["gguf", "text-generation", "open-weights"],
+      "metrics": { "downloads": 1085554, "likes": 835 },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "腾讯混元V3 MoE文本生成模型，是混元系列的最新版本，具有改进的架构和训练。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["hunyuan", "moe", "conversational"],
+      "metrics": { "downloads": 6923, "likes": 666 },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "基于Qwen 3.5架构的智能体视觉语言MoE模型，专为智能体任务设计，具备工具使用和视觉理解能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": ["agentic", "vlm", "moe", "tool-use", "vision"],
+      "metrics": { "downloads": 25772, "likes": 472 },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "TabFM 1.0.0",
+      "organization": "Google",
+      "description": "面向表格数据的基础模型，支持零样本和上下文学习，可用于结构化数据的回归和分类任务。",
+      "task_type": "tabular-regression",
+      "model_size": "unknown",
+      "tags": ["tabular", "foundation-model", "zero-shot", "in-context-learning"],
+      "metrics": { "downloads": 18626, "likes": 345 },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "gemma-4-agentic",
+      "name": "Gemma-4-12B Agentic",
+      "organization": "Community (yuxinlu1)",
+      "description": "GGUF量化的Gemma 4 12B模型，针对智能体编码和终端使用微调，增强了推理和工具使用能力。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "agentic", "coding", "tool-use", "reasoning"],
+      "metrics": { "downloads": 427668, "likes": 1134 },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "thinkingcap-qwen3-6",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "BottleCap AI",
+      "description": "基于Qwen 3.6 27B的token高效思考模型，在保持质量的同时优化推理过程以减少token开销。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["efficient-thinking", "token-efficient", "qwen3.6", "reasoning"],
+      "metrics": { "downloads": 3699, "likes": 212 },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "精选的AI编码智能体生产级工程技能集合，直接来自开发者的.claude目录，代表了不断增长的智能体能力技能共享生态系统。",
+      "language": "Shell",
+      "stars": 164694,
+      "stars_today": 1712,
+      "forks": 14171,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agent-skills", "claude-code", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "面向AI编码智能体的生产级工程技能，专注于最佳实践和跨常见开发任务的健壮实现。",
+      "language": "JavaScript",
+      "stars": 76847,
+      "stars_today": 1116,
+      "forks": 8253,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "engineering", "best-practices"],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "一个有效的智能体技能框架和软件开发方法论，为AI辅助开发工作流提供结构化方法。",
+      "language": "Shell",
+      "stars": 251813,
+      "stars_today": 1013,
+      "forks": 22471,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-framework", "skills", "development-methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "desktopcommander-mcp",
+      "name": "wonderwhy-er/DesktopCommanderMCP",
+      "description": "为Claude提供终端控制、文件系统搜索和基于差异的文件编辑能力的MCP服务器，实现更深层的智能体-操作系统集成。",
+      "language": "TypeScript",
+      "stars": 7328,
+      "stars_today": 328,
+      "forks": 933,
+      "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+      "tags": ["mcp", "claude", "terminal", "agent-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "AI智能体技能，可在Reddit、X、YouTube、Hacker News、Polymarket和网络上研究任何话题，然后综合过去30天的基于事实的总结。",
+      "language": "Python",
+      "stars": 51480,
+      "stars_today": 277,
+      "forks": 4442,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research", "web-scraping", "summarization"],
+      "relevance": "high"
+    },
+    {
+      "id": "roboflow-supervision",
+      "name": "roboflow/supervision",
+      "description": "可复用的计算机视觉工具库，用于构建检测、分割和跟踪管线，提供跨多种模型后端的简洁API。",
+      "language": "Python",
+      "stars": 47773,
+      "stars_today": 225,
+      "forks": 4446,
+      "url": "https://github.com/roboflow/supervision",
+      "tags": ["computer-vision", "detection", "segmentation", "tracking"],
+      "relevance": "high"
+    },
+    {
+      "id": "hf-speech-to-speech",
+      "name": "huggingface/speech-to-speech",
+      "description": "使用开源模型构建本地语音智能体的框架，在本地硬件上实现实时语音到语音交互。",
+      "language": "Python",
+      "stars": 6015,
+      "stars_today": 187,
+      "forks": 841,
+      "url": "https://github.com/huggingface/speech-to-speech",
+      "tags": ["voice-agents", "speech", "open-source", "local-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "ms-agent-governance",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "AI智能体治理工具包，提供策略执行、零信任身份认证、执行沙箱化和可靠性工程，覆盖全部10项OWASP Agentic Top 10风险。",
+      "language": "Python",
+      "stars": 4803,
+      "stars_today": 78,
+      "forks": 841,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-security", "governance", "owasp", "zero-trust"],
+      "relevance": "high"
+    },
+    {
+      "id": "tencentdb-agent-memory",
+      "name": "TencentCloud/TencentDB-Agent-Memory",
+      "description": "通过四层渐进式管线为AI智能体提供完全本地化的长期记忆，零外部API依赖，支持持久化智能体状态管理。",
+      "language": "TypeScript",
+      "stars": 8253,
+      "stars_today": 123,
+      "forks": 760,
+      "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
+      "tags": ["agent-memory", "long-term-memory", "local-first", "database"],
+      "relevance": "high"
+    },
+    {
+      "id": "lmcache",
+      "name": "LMCache/LMCache",
+      "description": "面向LLM服务的最快KV缓存层，支持高效的前缀缓存和上下文复用，实现高吞吐量推理。",
+      "language": "Python",
+      "stars": 10397,
+      "stars_today": 101,
+      "forks": 1534,
+      "url": "https://github.com/LMCache/LMCache",
+      "tags": ["llm-serving", "kv-cache", "inference-optimization", "efficiency"],
+      "relevance": "high"
+    },
+    {
+      "id": "agentscope",
+      "name": "agentscope-ai/agentscope",
+      "description": "用于构建和运行透明、可理解、可信赖的AI智能体的框架，具有强大的可观测性和调试能力。",
+      "language": "Python",
+      "stars": 27744,
+      "stars_today": 77,
+      "forks": 3168,
+      "url": "https://github.com/agentscope-ai/agentscope",
+      "tags": ["agent-framework", "observability", "trust", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-templates",
+      "name": "davila7/claude-code-templates",
+      "description": "用于配置和监控Claude Code实例的CLI工具，提供常见开发工作流的预构建模板。",
+      "language": "Python",
+      "stars": 28778,
+      "stars_today": 118,
+      "forks": 3163,
+      "url": "https://github.com/davila7/claude-code-templates",
+      "tags": ["claude-code", "templates", "developer-tools", "cli"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "实时视频生成走向消费级",
+      "description": "多篇论文推动视频生成向实时、消费级硬件部署发展：Vidu S1在消费级GPU上实现42fps，CineMobile瞄准移动设备，OpenCoF将生成重新用作推理原语。",
+      "related_paper_ids": ["vidu-s1-real-time-video", "cinemobile-on-device-video", "opencof-reasoning-video", "longe2v-event-video"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能生态系统基础设施",
+      "description": "GitHub趋势持续被智能体技能仓库、治理工具包和记忆系统主导，标志着智能体基础设施从临时脚本向可组合、可审计、企业就绪组件的成熟转变。",
+      "related_paper_ids": ["uniclawbench-proactive-agents", "proactive-memory-agent"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "评估方法论反思",
+      "description": "多篇论文挑战现有基准测试范式：Video-Oasis指出视频基准测试混淆了感知与推理，UniClawBench提出能力分解的智能体评估，IdeaGene-Bench测试谱系推理而非总结。",
+      "related_paper_ids": ["video-oasis-evaluation", "uniclawbench-proactive-agents", "ideagene-bench-lineage"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "长上下文与高效注意力",
+      "description": "Jet-Long的动态双焦RoPE和线性注意力比较研究反映了持续投资于使Transformer在长序列上更高效，这由智能体和RAG部署需求驱动。",
+      "related_paper_ids": ["jet-long-context-extension", "linear-attention-comparative"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI赋能科学发现",
+      "description": "DrugGen-2引入疾病感知分子生成，IdeaGene-Bench基准测试科学谱系推理，显示AI for Science正从工具增强扩展到关于科学继承的概念性推理。",
+      "related_paper_ids": ["druggen-2-drug-discovery", "ideagene-bench-lineage"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-10T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-10T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-10T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-10T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-10T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
