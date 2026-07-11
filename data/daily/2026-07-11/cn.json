@@ -1,0 +1,497 @@
+{
+  "version": "1.0",
+  "date": "2026-07-11",
+  "generated_at": "2026-07-11T08:00:00Z",
+  "summary": {
+    "headline": "ICML 2026首尔闭幕：扩散语言模型排序与"对齐即审查工具"摘得最佳论文；Grok 4.5以60%更低成本挑战Opus级别模型；arXiv揭示超级权重微调悖论与潜在记忆宫殿控制推理框架",
+    "body": "ICML 2026今日在首尔圆满落幕，本届会议收到23,918份投稿，接受6,362篇论文。两篇杰出论文奖分别颁给：**《灵活性陷阱》**（倪赞林等，清华大学）——挑战扩散语言模型中任意词序有益的假设，为当前掩码扩散语言模型浪潮提供了直接反驳；以及**《扩散模型与对数凹分布的高精度采样》**（范晨、Chewi、Daskalakis、Rakhlin）——为基于分数的采样算法提供了严格的收敛性保证。\n\n最佳立场论文奖授予**《对齐社区正在无意间构建审查员工具包》**（Sarah Ball、Phil Hackemann），论文指出RLHF、DPO等对齐工具从结构上与大规模政治审查所需的工具完全相同——这是近年来ICML上最犀利的AI治理论断。时间检验奖授予Mnih等人2016年的A3C论文，异步并行强化学习的基础地位由此获得正式认可。\n\n在大模型发布方面，**Grok 4.5**（xAI，7月8日发布）是本周最重要的模型。DeepSWE 1.0得分62%，优于Opus 4.8（55.75%）但落后于Fable 5（66.1%），定价$2/$6每百万token（比Opus 4.8便宜超60%），每次智能指数任务平均仅消耗14K输出token，远低于Opus 4.8的67K，实际每任务成本降低约10倍。\n\narXiv方面，**《LLM中的超级权重与选择性训练的失败》**（Subramanian等，AWS）是今日最具反直觉性的发现：单独训练被认定为"关键重要"的100-8,192个超级权重参数，反而使模型准确率下降至随机猜测水平。失败源于坐标定向而非稀疏性本身——在相同层中随机选取等量参数效果更好。覆盖0.16%参数的LoRA明显优于所有超级权重定向方法。**SLORR**（González-Martínez & Liu）以低于8%的训练开销实现无状态、架构保持的低秩正则化。**潜在记忆宫殿**（朱春宁等，UW/谷歌DeepMind）将控制策略中的推理形式化为潜在空间中的自回归变分推断，在机器人控制和仿真基准中实现自适应测试时计算分配与可解释推理轨迹。",
+    "key_themes": [
+      "icml-2026总结",
+      "扩散语言模型",
+      "AI对齐治理",
+      "参数重要性与微调",
+      "模型压缩",
+      "潜在推理控制",
+      "grok-4-5发布"
+    ]
+  },
+  "researcher_notes": "**ICML 2026最佳论文揭示扩散语言模型研究拐点。**《灵活性陷阱》的重要性在于它迫使研究界精确核算：任意顺序的泛化性以可量化的样本质量和一致性为代价。该论文恰逢其时——此前MDLM、MD4、SEDD等变体大量涌现，却缺乏对"任意顺序到底带来什么"的严格分析。预计将催生一批顺序约束扩散语言模型的跟进工作。\n\n**《对齐即审查工具包》是2026年最具影响力的立场论文。** Ball和Hackemann的论证结构严密：RLHF、DPO和宪法AI等对齐方法在技术上与大规模无感知内容压制所需工具完全相同。双重用途向量并非假设——工具已经存在、已经开源、且比检测方法更易部署。AI安全社区需要认真思考对齐与审查能否从设计层面而非仅凭意图加以区分。\n\n**超级权重论文对PEFT实践者有直接影响。** 发现"重要性≠可训练性"使一类基于重要性分数定向稀疏微调方法（参数选择性训练、基于重要性的梯度更新）被证伪，这些方法已在实际生产中部署。LoRA在0.16%参数覆盖下的比较结果是关键数字：更新整个注意力矩阵的结构化分解，以大幅优势击败基于重要性的参数选择。这将加速从重要性参数选择向结构感知分解方式的转变。\n\n**Grok 4.5重置了Opus级别工作的成本性能前沿。** 14K对67K的token效率差距并非基准测试的人工产物，而是反映了Grok 4.5积极的思维链压缩策略。对于高吞吐量推理场景（批量SWE、研究流水线、智能体循环），4倍token效率加上60%更低的每token定价意味着每任务成本约为Opus 4.8的1/10，是2026年最显著的成本下降事件。\n\n**潜在记忆宫殿是机器人与长视野智能体领域的潜力之作。** 将控制形式化为结构化潜在空间中的变分推断，弥合了符号推理（可解释但脆弱）与黑盒策略网络（能力强但不透明）之间的鸿沟。可变长度动作分词器（LMP-tok）尤为值得关注——它表明动作抽象的合适粒度应从数据中发现，而非由任务设计者固定，这与分层RL的洞察一致，且完全可微、与语言模型兼容。",
+  "papers": [
+    {
+      "id": "flexibility-trap-diffusion-lm",
+      "title": "灵活性陷阱：重新思考扩散语言模型中任意顺序的价值",
+      "authors": [
+        "倪赞林",
+        "王沈之",
+        "岳阳",
+        "于天宇",
+        "赵维林",
+        "花业国",
+        "陈天一",
+        "宋君",
+        "余程",
+        "郑波",
+        "黄高"
+      ],
+      "affiliations": [
+        "清华大学"
+      ],
+      "summary": "质疑扩散语言模型中任意词序生成有益的假设，从实证和理论上证明受约束的生成顺序在牺牲灵活性的代价下可恢复样本质量损失。",
+      "key_findings": [
+        "扩散语言模型中的任意顺序生成带来可量化的质量损失，未能通过灵活性收益加以弥补",
+        "顺序约束变体在标准基准上实现更高样本质量和一致性",
+        "对掩码扩散语言模型架构（MDLM、MD4、SEDD变体）有直接设计指导意义"
+      ],
+      "tags": [
+        "扩散语言模型",
+        "生成顺序",
+        "icml-2026",
+        "最佳论文"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "award": "ICML 2026 最佳论文"
+      },
+      "sources": {
+        "venue": "ICML 2026（首尔）",
+        "icml_awards": "https://blog.icml.cc/2026/07/05/announcing-the-icml-2026-awards/"
+      }
+    },
+    {
+      "id": "alignment-censors-toolkit",
+      "title": "立场：对齐社区正在无意间构建审查员工具包",
+      "authors": [
+        "Sarah Ball",
+        "Phil Hackemann"
+      ],
+      "affiliations": [
+        "MCML"
+      ],
+      "summary": "论证RLHF、DPO和宪法AI等对齐方法在结构上与大规模政治审查工具等价，是设计层面的双重用途而非偶然，呼吁对齐社区在研究和部署决策中明确考量这一问题。",
+      "key_findings": [
+        "对齐工具（RLHF、DPO、CAI）在功能上与大规模压制政治表达所需方法相同",
+        "双重用途风险已作为已部署开源工具现实存在，而非未来假设能力",
+        "对齐与审查可能无法在设计层面区分，只能依赖意图区分"
+      ],
+      "tags": [
+        "AI对齐",
+        "AI治理",
+        "审查",
+        "双重用途",
+        "icml-2026",
+        "立场论文",
+        "最佳立场论文"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "award": "ICML 2026 最佳立场论文"
+      },
+      "sources": {
+        "venue": "ICML 2026（首尔）",
+        "icml_awards": "https://blog.icml.cc/2026/07/05/announcing-the-icml-2026-awards/"
+      }
+    },
+    {
+      "id": "super-weights-llm-fine-tuning",
+      "title": "大语言模型中的超级权重与选择性训练的失败",
+      "authors": [
+        "Shreyas Subramanian",
+        "Adewale Akinfaderin",
+        "Akarsha Sehwag"
+      ],
+      "affiliations": [
+        "AWS AI Labs"
+      ],
+      "summary": "证明仅训练LLM中的"超级权重"（100–8,192个被认定为关键重要的参数）会使准确率崩溃至随机猜测水平，而覆盖0.16%参数的LoRA则表现出色，揭示参数重要性不等于参数可训练性。",
+      "key_findings": [
+        "仅训练超级权重坐标使OLMo模型准确率下降至随机猜测水平",
+        "失败源于坐标定向而非稀疏性：同层内随机选取等量参数效果更好",
+        "0.16%参数覆盖的LoRA优于所有超级权重定向方法",
+        "有效微调需要结构化的层级分解，而非基于重要性的参数选择"
+      ],
+      "tags": [
+        "微调",
+        "PEFT",
+        "LoRA",
+        "参数重要性",
+        "稀疏训练",
+        "大语言模型"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08733",
+        "pdf": "https://arxiv.org/pdf/2607.08733"
+      }
+    },
+    {
+      "id": "slorr-low-rank-regularization",
+      "title": "SLORR：简单高效的训练中低秩正则化",
+      "authors": [
+        "David González-Martínez",
+        "Shiwei Liu"
+      ],
+      "affiliations": [
+        "埃克塞特大学"
+      ],
+      "summary": "提出无状态、架构保持的训练中低秩正则化框架，使用GPU友好的Hoyer稀疏性和核范数近似，在560M参数语言模型上训练开销低于1%，使模型具备更强的后续压缩性。",
+      "key_findings": [
+        "避免大矩阵SVD，使用具有理论保证的GPU友好近似",
+        "语言模型训练开销低于8%，大规模Transformer低于1%",
+        "在ResNet-50、ViT-ImageNet和135M/560M语言模型预训练上验证有效"
+      ],
+      "tags": [
+        "模型压缩",
+        "低秩",
+        "正则化",
+        "高效训练",
+        "剪枝"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08754",
+        "pdf": "https://arxiv.org/pdf/2607.08754"
+      }
+    },
+    {
+      "id": "latent-memory-palace-control",
+      "title": "潜在记忆宫殿：将控制推理形式化为自回归变分推断",
+      "authors": [
+        "Chuning Zhu",
+        "Eva Xu",
+        "Jose Barreiros",
+        "Krishnan Srinivasan",
+        "Paarth Shah",
+        "Abhishek Gupta"
+      ],
+      "affiliations": [
+        "华盛顿大学",
+        "谷歌DeepMind"
+      ],
+      "summary": "将连续控制策略中的推理形式化为结构化潜在空间中的自回归变分推断，实现自适应测试时计算分配和可解释推理轨迹。引入LMP-π（推理策略）和LMP-tok（可变长度动作分词器），在机器人控制和仿真基准中表现出色。",
+      "key_findings": [
+        "将控制推理表述为潜在空间变分推断，实现可解释的自适应推理",
+        "LMP-tok可变长度动作分词器提升下游自回归策略性能",
+        "弥合符号推理可解释性与神经策略能力之间的鸿沟"
+      ],
+      "tags": [
+        "机器人控制",
+        "推理",
+        "变分推断",
+        "潜在空间",
+        "测试时计算"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08724",
+        "pdf": "https://arxiv.org/pdf/2607.08724"
+      }
+    },
+    {
+      "id": "relaxed-speculative-decoding",
+      "title": "免训练松弛推测解码的实践研究",
+      "authors": [
+        "Guoxuan Xia",
+        "Luka Ribar",
+        "Paul Balanca"
+      ],
+      "affiliations": [
+        "帝国理工学院",
+        "Graphcore"
+      ],
+      "summary": "对放宽标准分布保证以换取速度的免训练松弛推测解码方法进行全面基准测试和统一框架整合，发现松弛需要大量评估开销，且效果高度依赖辅助起草模型质量。",
+      "key_findings": [
+        "统一框架涵盖现有免训练松弛推测解码方法",
+        "松弛在实践中需要大量评估开销，并非"免费"加速",
+        "性能强烈依赖辅助起草模型的能力水平"
+      ],
+      "tags": [
+        "推测解码",
+        "推理效率",
+        "大语言模型",
+        "采样"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "comments": null
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08690",
+        "pdf": "https://arxiv.org/pdf/2607.08690"
+      }
+    },
+    {
+      "id": "high-accuracy-sampling-diffusion",
+      "title": "扩散模型与对数凹分布的高精度采样",
+      "authors": [
+        "Fan Chen",
+        "Sinho Chewi",
+        "Constantinos Daskalakis",
+        "Alexander Rakhlin"
+      ],
+      "affiliations": [
+        "MIT",
+        "UC Berkeley"
+      ],
+      "summary": "为扩散模型和对数凹分布的基于分数的采样提供严格收敛性保证，从理论上支撑图像和视频生成中广泛部署的采样算法。",
+      "key_findings": [
+        "基于分数采样算法的严格收敛性保证",
+        "结果推广至扩散模型之外的一般对数凹分布",
+        "弥合广泛部署采样方法的理论与实践差距"
+      ],
+      "tags": [
+        "扩散模型",
+        "采样理论",
+        "收敛性",
+        "分数匹配",
+        "icml-2026",
+        "最佳论文"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": null,
+        "award": "ICML 2026 最佳论文"
+      },
+      "sources": {
+        "venue": "ICML 2026（首尔）",
+        "icml_awards": "https://blog.icml.cc/2026/07/05/announcing-the-icml-2026-awards/"
+      }
+    },
+    {
+      "id": "obfuscation-atlas-rlvr-honesty",
+      "title": "混淆图谱：利用欺骗探针定位RLVR中诚实行为的涌现位置",
+      "authors": [
+        "Mohammad Taufeeque",
+        "Stefan Heimersheim",
+        "Adam Gleave",
+        "Chris Cundy"
+      ],
+      "affiliations": [
+        "ARC Evals",
+        "FAR AI"
+      ],
+      "summary": "使用欺骗探针定位RLVR训练中诚实行为的涌现位置，发现诚实行为集中于特定层和注意力头，而非分布式，为定向可解释性和对齐干预提供了支撑。",
+      "key_findings": [
+        "RLVR训练模型中的诚实行为集中于特定层和注意力头",
+        "欺骗探针在训练过程中成功识别混淆电路",
+        "支持在已识别电路位置进行定向对齐干预"
+      ],
+      "tags": [
+        "可解释性",
+        "对齐",
+        "RLVR",
+        "诚实性",
+        "机制可解释性",
+        "icml-2026",
+        "荣誉提名"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": null,
+        "award": "ICML 2026 最佳论文荣誉提名"
+      },
+      "sources": {
+        "venue": "ICML 2026（首尔）",
+        "icml_awards": "https://blog.icml.cc/2026/07/05/announcing-the-icml-2026-awards/"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "grok-4-5",
+      "name": "Grok 4.5",
+      "organization": "xAI",
+      "description": "接近前沿的推理模型，定位为比Opus 4.8和GPT-5.5更快、更token高效的替代方案。DeepSWE 1.0得分62%，定价$2/$6每百万token，每次智能指数任务平均消耗14K输出token（Opus 4.8为67K）。",
+      "task_type": "文本生成",
+      "model_size": "未披露",
+      "tags": [
+        "推理",
+        "编程",
+        "智能体",
+        "高效",
+        "前沿"
+      ],
+      "metrics": {
+        "downloads": null,
+        "likes": null,
+        "deepswe_1_0": 62.0,
+        "price_input_per_mtok": 2.0,
+        "price_output_per_mtok": 6.0
+      },
+      "source_url": "https://x.ai/news/grok-4-5"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "智谱AI (Z.ai)",
+      "description": "753B MoE开源权重语言模型，支持100万token上下文窗口，MIT许可证。每token约激活40B参数。在多个长视野工程基准上超越GPT-5.5，是首个被从业者认为接近前沿的开源权重模型。",
+      "task_type": "文本生成",
+      "model_size": "753B（MoE，约40B激活参数）",
+      "tags": [
+        "混合专家",
+        "开源权重",
+        "长上下文",
+        "双语",
+        "前沿"
+      ],
+      "metrics": {
+        "downloads": 392655,
+        "likes": 3786,
+        "context_window": 1000000
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "腾讯",
+      "description": "腾讯新推出的MoE文本生成模型，进入HuggingFace趋势榜。公开细节有限。",
+      "task_type": "文本生成",
+      "model_size": "MoE",
+      "tags": [
+        "混合专家",
+        "文本生成",
+        "腾讯"
+      ],
+      "metrics": {
+        "downloads": 6923,
+        "likes": 666
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "百度",
+      "description": "百度光学字符识别模型，131万次下载，显示出高实际部署量。",
+      "task_type": "图像文字识别",
+      "model_size": "未披露",
+      "tags": [
+        "OCR",
+        "视觉",
+        "多模态",
+        "百度"
+      ],
+      "metrics": {
+        "downloads": 1319683,
+        "likes": 1921
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "mistral-leanstral-119b",
+      "name": "Leanstral-1.5-119B-A6B",
+      "organization": "Mistral AI",
+      "description": "Mistral新推出的119B MoE模型，6B激活参数，延续效率优先的大模型趋势。",
+      "task_type": "文本生成",
+      "model_size": "119B MoE（6B激活）",
+      "tags": [
+        "混合专家",
+        "高效",
+        "Mistral",
+        "前沿"
+      ],
+      "metrics": {
+        "downloads": 315,
+        "likes": 184
+      },
+      "source_url": "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B"
+    },
+    {
+      "id": "google-tabfm-pytorch",
+      "name": "tabfm-1.0.0-pytorch",
+      "organization": "Google",
+      "description": "谷歌用于表格分类任务的表格基础模型，1.8万次下载，345赞，进入趋势榜。",
+      "task_type": "表格分类",
+      "model_size": "未披露",
+      "tags": [
+        "表格数据",
+        "基础模型",
+        "分类",
+        "谷歌"
+      ],
+      "metrics": {
+        "downloads": 18626,
+        "likes": 345
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "InternScience专为智能体推理设计的模型，2.5万次下载，472赞。",
+      "task_type": "文本生成",
+      "model_size": "未披露",
+      "tags": [
+        "智能体",
+        "推理",
+        "文本生成"
+      ],
+      "metrics": {
+        "downloads": 25772,
+        "likes": 472
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    }
+  ],
+  "trending_repos": [],
+  "themes": [
+    {
+      "name": "ICML 2026闭幕：扩散语言模型顺序与"对齐即审查"摘得最高荣誉",
+      "description": "ICML 2026（首尔，7月6-11日，23,918份投稿）落幕，最佳论文奖颁给了对任意顺序扩散语言模型的批判和一篇认为AI对齐工具从结构上等同于审查基础设施的立场论文——两项成果均挑战了社区主流假设。",
+      "related_paper_ids": [
+        "flexibility-trap-diffusion-lm",
+        "alignment-censors-toolkit",
+        "high-accuracy-sampling-diffusion",
+        "obfuscation-atlas-rlvr-honesty"
+      ],
+      "trend_signal": "peak"
+    },
+    {
+      "name": "微调范式转变：重要性≠可训练性",
+      "description": "超级权重发现使一类基于重要性分数定向稀疏微调方法被证伪，进一步强化了LoRA等结构化层级分解才是正确抽象的观点。结合SLORR的训练中可压缩性框架，本周正在重塑PEFT基础。",
+      "related_paper_ids": [
+        "super-weights-llm-fine-tuning",
+        "slorr-low-rank-regularization"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "成本性能前沿重置：Grok 4.5与前沿模型竞争格局",
+      "description": "Grok 4.5以4倍token效率加60%更低单价，使每SWE任务实际成本约为Opus 4.8的1/10。GLM-5.2同时确立了首个开源权重前沿级模型地位。Opus级别智能的成本曲线正在快速下降。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "控制推理：潜在空间桥接策略与语言模型",
+      "description": "潜在记忆宫殿将控制推理重新表述为变分推断，将语言模型式自回归推理与机器人策略学习连接起来。结合上周的智能体记忆论文，结构化潜在推理作为具身AI统一框架的研究脉络正在成形。",
+      "related_paper_ids": [
+        "latent-memory-palace-control"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    "HuggingFace每日论文（2026-07-11——当日论文尚未发布，使用arXiv新投稿）",
+    "HuggingFace趋势模型",
+    "arXiv cs.LG最新投稿",
+    "ICML 2026官方博客——奖项公告",
+    "xAI Grok 4.5发布——x.ai/news/grok-4-5",
+    "GLM-5.2报道——interconnects.ai, latent.space"
+  ]
+}
