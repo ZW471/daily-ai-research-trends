@@ -1,0 +1,1097 @@
+{
+  "version": "1.0",
+  "date": "2026-07-12",
+  "generated_at": "2026-07-12T14:57:00Z",
+  "summary": {
+    "headline": "Weekend lull on arXiv but HuggingFace's Vidu S1 (117 upvotes) pushes real-time voice-controlled video generation to consumer GPUs, while NAVER's Video-Oasis and RCORE papers both expose shortcut learning in video benchmarks; GitHub trending is dominated by a Claude Code tooling surge led by DesktopCommanderMCP",
+    "body": "Saturday is typically quiet for new arXiv submissions and HuggingFace's Daily Papers feed did not refresh for July 12, so today's research signal is carried over from Friday's (July 10) trending set, and AlphaXiv remains unreachable (404) over the weekend as usual. Even with the fallback window, the slate is unusually coherent. **Vidu S1** (Tsinghua University / Shengshu AI, 117 upvotes) is the clear standout: a real-time, voice-controllable interactive video generation model built on TurboDiffusion and TurboServe that renders infinite-length 540p video at up to 42 FPS on ordinary consumer GPUs — a meaningful step toward video generation as a live, steerable medium rather than a batch rendering process. It sits alongside a cluster of adjacent real-time and on-device video work: **LongE2V** (NYCU) for event-camera video reconstruction, **CineMobile** (SJTU) for on-device cinematic camera motion, and **ARDY** (NVIDIA/ETH Zurich) for interactive 3D human motion generation, suggesting the video generation research agenda is pivoting hard from offline quality maximization toward latency and interactivity.\n\nA second, equally strong thread is benchmark self-criticism. **Video-Oasis** (NAVER, 50 upvotes) audits existing video-understanding benchmarks and finds 55% of samples are solvable without visual input or temporal context at all — after filtering shortcuts, state-of-the-art Video-LLMs perform only marginally above random guessing on what remains. The companion paper **\"Why Can't I Open My Drawer?\"** (NAVER/Kyung Hee University, 47 upvotes) documents the same shortcut-learning failure mode in compositional action recognition, where models predict verbs from object priors instead of temporal evidence. Together with **IdeaGene-Bench** (SJTU, 30 upvotes — the strongest LLM scores only 27.3% exact accuracy on scientific lineage reasoning) and **UniClawBench** (HKU, 26 upvotes — a live-Docker, multi-agent benchmark for proactive real-world agents), the day's papers form a consistent message: benchmark saturation numbers across video, action, science-reasoning, and agentic tasks are substantially inflated by shortcuts and static evaluation designs.\n\nOn the infrastructure side, **Jet-Long** (NVIDIA, 14 upvotes) introduces a tuning-free dynamic bifocal RoPE that adapts its rescaling factor to sequence length in real time, hitting 1.39x FA2 throughput on H100 while beating RULER baselines by up to 4.79pp — a genuinely deployable long-context extension method with no retraining required. ETH Zurich's **Linear Attention Architectures** survey (9 upvotes) unifies DeltaNet, Gated DeltaNet, and Kimi Delta Attention under a common recurrent-memory notation, useful groundwork as linear-attention variants proliferate. Meta's **proactive memory agent** paper (9 upvotes) names and addresses \"behavioral state decay\" — the failure of long-horizon agents to keep decision-relevant facts alive in context — with a dedicated memory-writing agent rather than passive retrieval.\n\nOn HuggingFace's trending models, the standout signal is less about frontier capability and more about community remixing: **Qwen3.6-35B-A3B-Uncensored** (HauhauCS, 2.6M downloads, 2,652 likes) and **Qwythos-9B-Claude-Mythos** (empero-ai, 1.9M downloads, 2,015 likes) are both community fine-tunes/quantizations riding on top of frontier open-weight releases, alongside continued strength for **GLM-5.2** (421K downloads, 3,833 likes) and **Baidu's Unlimited-OCR** (1.38M downloads). GitHub trending, meanwhile, is almost entirely about the Claude Code ecosystem: **wonderwhy-er/DesktopCommanderMCP** exploded to 909 stars in a single day, joined by **claude-code-templates** (+232), **anthropics/claude-code** itself (+157), **free-claude-code** (+117), and **google-labs-code/stitch-skills** (+340), a new Agent Skills library for the Stitch MCP server compatible with Claude Code, Antigravity, Gemini CLI, and Cursor — evidence that agent tooling and skill-packaging standards are consolidating fast around the MCP/Skills pattern.",
+    "key_themes": [
+      "real-time-interactive-video-generation",
+      "benchmark-shortcut-auditing",
+      "long-context-efficient-attention",
+      "agentic-memory-proactive-agents",
+      "ai-for-science-drug-discovery",
+      "claude-code-ecosystem-tooling-surge"
+    ]
+  },
+  "researcher_notes": "**Vidu S1 is a signal that video generation is entering its \"live medium\" phase.** The headline number isn't the FPS (42 on consumer GPUs is impressive but not unprecedented) — it's the combination of voice-driven mid-generation control, infinite-length output without drift, and consumer-hardware deployment via the TurboDiffusion/TurboServe stack. Paired with CineMobile's on-device cinematic motion work and ARDY's real-time interactive human motion generation, there's a clear convergence: the video generation research community has largely solved single-shot quality and is now racing to solve latency and steerability. Expect the next wave of papers to focus on interaction protocols (voice, sketch, gesture) rather than raw FID/FVD improvements.\n\n**The shortcut-learning double-header from NAVER deserves attention beyond its citation count.** Video-Oasis's finding that 55% of existing video-understanding benchmark samples are solvable without any visual input is a serious indictment of the benchmark-driven progress narrative in Video-LLMs — it means a meaningful fraction of reported SOTA gains over the past two years may reflect language-prior fitting rather than visual understanding. The companion RCORE paper shows the same failure mode in compositional action recognition (object-driven shortcuts over temporal verb evidence). Seeing both papers from overlapping NAVER/Korean-university author lists on the same day suggests a deliberate, coordinated push to reset evaluation standards in video AI — worth tracking as a research program rather than two isolated papers.\n\n**Jet-Long is the most immediately practical infrastructure paper in the set.** Tuning-free, hyperparameter-resilient, and shown to generalize to hybrid architectures like Jet-Nemotron without retraining, it targets exactly the pain point that agentic and RAG workloads hit today: accumulated tool traces and reasoning chains that blow past the pretraining context window. A dynamic (rather than fixed) RoPE rescaling factor that exactly recovers short-context behavior while extrapolating cleanly at long context is a meaningfully better design than the single-factor NTK/YaRN-style methods it's benchmarked against, and the near-zero inference overhead (le4% at every length, fused into one CuTe kernel) removes the usual excuse for not adopting context-extension tricks in production.\n\n**Behavioral state decay is a useful name for a problem every agent builder has hit informally.** Meta's framing — that long-horizon agent failures are often not reasoning failures but retrieval failures, where task requirements and prior diagnoses get buried or evicted from context — reinforces the shift toward active memory-writing agents (a separate process deciding what's worth remembering) over passive retrieval-on-demand architectures. Combined with UniClawBench's finding that base-model capability and agent-framework design jointly determine real-world performance, the emerging consensus is that agent benchmarking needs to disentangle model capability from scaffolding quality — something most current leaderboards still conflate.\n\n**The GitHub trending list is arguably the most concrete data point of the day.** DesktopCommanderMCP going from a modest repo to 909 stars in 24 hours, alongside three other Claude Code-adjacent repos in the top 15, plus a brand-new Agent Skills library (stitch-skills) explicitly designed for cross-tool compatibility (Claude Code, Antigravity, Gemini CLI, Cursor), indicates the MCP + Agent Skills combination is becoming the de facto packaging format for agent capabilities in mid-2026 — a standardization trend that's easy to miss in paper-only trend tracking but shows up unmistakably in developer adoption signals.",
+  "papers": [
+    {
+      "id": "vidu-s1-real-time-video-generation",
+      "title": "Vidu S1: A Real-Time Interactive Video Generation Model",
+      "authors": [
+        "Jintao Zhang",
+        "Kai Jiang",
+        "Jintao Chen",
+        "Xu Wang",
+        "Yang Luo",
+        "Yuji Wang",
+        "Dechuang Chen",
+        "Jungang Li",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Shengshu AI"
+      ],
+      "summary": "Introduces Vidu S1, a real-time interactive video generation model that supports voice control of digital characters and infinite-length video generation without blurring or drift. Built on TurboDiffusion and TurboServe, it outputs 540p video at up to 42 FPS on consumer GPUs.",
+      "key_findings": [
+        "Supports voice-driven mid-generation control of digital characters built from user-uploaded images of people, anime, or pets",
+        "Achieves infinite-length real-time generation without blurring, drift, or visual distortion",
+        "Runs at up to 42 FPS at 540p on regular consumer GPUs, achieving best-in-class results across all reported metrics"
+      ],
+      "tags": [
+        "video-generation",
+        "real-time",
+        "diffusion",
+        "voice-control",
+        "interactive-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 117,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.03118",
+        "huggingface": "https://huggingface.co/papers/2607.03118",
+        "pdf": "https://arxiv.org/pdf/2607.03118"
+      }
+    },
+    {
+      "id": "video-oasis-benchmark-audit",
+      "title": "Video-Oasis: Rethinking Evaluation of Video Understanding",
+      "authors": [
+        "Geuntaek Lim",
+        "Sungjune Park",
+        "Jaeyun Lee",
+        "Inwoong Lee",
+        "Taeoh Kim",
+        "Dongyoon Wee",
+        "Minho Shim",
+        "Yukyung Choi"
+      ],
+      "affiliations": [
+        "NAVER",
+        "Sejong University"
+      ],
+      "summary": "Introduces a diagnostic suite that audits existing video-understanding benchmarks and finds 55% of samples are solvable without visual input or temporal context. After filtering these shortcuts, state-of-the-art Video-LLMs perform only marginally above random guessing on the remaining video-native challenges.",
+      "key_findings": [
+        "55% of samples across popular video-understanding benchmarks are solvable without any visual or temporal evidence",
+        "After shortcut filtering, SOTA Video-LLMs perform only marginally above random guessing on remaining video-native items",
+        "Distilled challenge set is used as a testbed to identify which algorithmic design choices actually improve robust video understanding"
+      ],
+      "tags": [
+        "video-understanding",
+        "benchmark-evaluation",
+        "video-llm",
+        "shortcut-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 50,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.29616",
+        "huggingface": "https://huggingface.co/papers/2603.29616",
+        "pdf": "https://arxiv.org/pdf/2603.29616"
+      }
+    },
+    {
+      "id": "rcore-compositional-action-shortcuts",
+      "title": "Why Can't I Open My Drawer? Mitigating Object-Driven Shortcuts in Zero-Shot Compositional Action Recognition",
+      "authors": [
+        "Geo Ahn",
+        "Inwoong Lee",
+        "Taeoh Kim",
+        "Minho Shim",
+        "Dongyoon Wee",
+        "Jinwoo Choi"
+      ],
+      "affiliations": [
+        "NAVER",
+        "Kyung Hee University"
+      ],
+      "summary": "Identifies that zero-shot compositional action recognition models predict verbs via object-driven shortcuts rather than temporal evidence, and introduces RCORE — co-occurrence prior regularization plus temporal order regularization — to reduce this failure mode and improve generalization to unseen verb-object compositions.",
+      "key_findings": [
+        "Sparse compositional supervision and verb-object learning asymmetry promote object-driven shortcut learning in existing models",
+        "Co-occurrence Prior Regularization treats frequent co-occurrence patterns as hard negatives to force reliance on temporal evidence",
+        "RCORE reduces shortcut diagnostics and improves compositional generalization on Sth-com and EK100-com benchmarks"
+      ],
+      "tags": [
+        "action-recognition",
+        "compositional-generalization",
+        "shortcut-learning",
+        "zero-shot"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2601.16211",
+        "huggingface": "https://huggingface.co/papers/2601.16211",
+        "pdf": "https://arxiv.org/pdf/2601.16211"
+      }
+    },
+    {
+      "id": "ideagene-bench-scientific-lineage",
+      "title": "Ideas Have Genomes: Benchmarking Scientific Lineage Reasoning and Lineage-Grounded Idea Generation",
+      "authors": [
+        "Yifan Zhou",
+        "Qihao Yang",
+        "Yan Li",
+        "Donggang Li",
+        "Xiru Hu",
+        "Hokin Deng",
+        "Ziyang Gong",
+        "Xue Yang",
+        "et al."
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University"
+      ],
+      "summary": "Introduces IdeaGene-Bench, a benchmark representing scientific papers as 'Idea Genome' objects to test whether AI systems can follow the inheritance structure of scientific ideas — reasoning about mutation, repair, and recombination of prior work rather than generating in a vacuum.",
+      "key_findings": [
+        "Benchmark contains 1,961 golden lineage traces, 1,085 curated Idea Genome objects, and 920 GenomeDiff records across 10 scientific domains",
+        "The strongest of 14 evaluated LLM-based scientists reaches only 27.3% exact accuracy on closed-form lineage reasoning",
+        "Structured lineage context reshuffles system rankings rather than uniformly helping every model, exposing a compositional bottleneck"
+      ],
+      "tags": [
+        "scientific-reasoning",
+        "benchmark",
+        "idea-generation",
+        "llm-evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 30,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08758",
+        "huggingface": "https://huggingface.co/papers/2607.08758",
+        "pdf": "https://arxiv.org/pdf/2607.08758"
+      }
+    },
+    {
+      "id": "longe2v-event-video-diffusion",
+      "title": "LongE2V: Long-Horizon Event-based Video Reconstruction, Prediction, and Frame Interpolation with Video Diffusion Models",
+      "authors": [
+        "Cheng-De Fan",
+        "Chun-Wei Tuan Mu",
+        "Chen-Wei Chang",
+        "Chin-Yang Lin",
+        "Kun-Ru Wu",
+        "Yu-Chee Tseng",
+        "Yu-Lun Liu"
+      ],
+      "affiliations": [
+        "National Yang Ming Chiao Tung University"
+      ],
+      "summary": "Proposes LongE2V, which leverages pre-trained video diffusion priors to jointly handle event-based video reconstruction, prediction, and frame interpolation from sparse event-camera streams, introducing autoregressive unrolling and adaptive context switching to prevent temporal drift over long sequences.",
+      "key_findings": [
+        "Fine-tuning a foundational video diffusion model on event data achieves high data efficiency and superior perceptual quality over regression baselines",
+        "Autoregressive Unrolling and Adaptive Context Switching mitigate temporal drift across extremely long sequences",
+        "Outperforms state-of-the-art methods on all three tasks (reconstruction, prediction, interpolation) with strong zero-shot generalization"
+      ],
+      "tags": [
+        "video-diffusion",
+        "event-cameras",
+        "video-reconstruction",
+        "frame-interpolation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 26,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08770",
+        "huggingface": "https://huggingface.co/papers/2607.08770",
+        "pdf": "https://arxiv.org/pdf/2607.08770"
+      }
+    },
+    {
+      "id": "uniclawbench-proactive-agents",
+      "title": "UniClawBench: A Universal Benchmark for Proactive Agents on Real-World Tasks",
+      "authors": [
+        "Zhekai Chen",
+        "Chengqi Duan",
+        "Kaiyue Sun",
+        "Bohao Li",
+        "Yuqing Wang",
+        "Manyuan Zhang",
+        "Xihui Liu"
+      ],
+      "affiliations": [
+        "The University of Hong Kong"
+      ],
+      "summary": "Introduces UniClawBench, a capability-driven benchmark for evaluating proactive LLM/MLLM agents on 400 bilingual real-world tasks in live Docker containers, using a closed-loop evaluation with executor, hidden supervisor, and user agents to disentangle base-model capability from agent-framework design.",
+      "key_findings": [
+        "Built around five foundational capabilities: Skill Usage, Exploration, Long-Context Reasoning, Multimodal Understanding, and Cross-Platform Coordination",
+        "Evaluates agents live in Docker containers with step-by-step completion checkpoints rather than static pre-recorded answers",
+        "Base model capabilities and agent framework design jointly, not independently, determine real-world task performance"
+      ],
+      "tags": [
+        "agent-benchmark",
+        "proactive-agents",
+        "real-world-tasks",
+        "multi-turn-evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 26,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08768",
+        "huggingface": "https://huggingface.co/papers/2607.08768",
+        "pdf": "https://arxiv.org/pdf/2607.08768"
+      }
+    },
+    {
+      "id": "canvas360-panoramic-generation",
+      "title": "Enhancing In-context Panoramic Generation via Geometric-aware Pretraining",
+      "authors": [
+        "Haoran Feng",
+        "Ruiyang Zhang",
+        "Longyi Zhang",
+        "Dizhe Zhang",
+        "Lu Qi"
+      ],
+      "affiliations": [
+        "Insta360"
+      ],
+      "summary": "Presents Canvas360, a two-stage in-context panoramic generation framework combining geometry-aware pretraining with task-specific fine-tuning, backed by a new 1M-sample paired panorama dataset covering style transfer, inpainting, outpainting, and editing.",
+      "key_findings": [
+        "Canvas360Dataset provides 1M high-quality paired panoramic samples for diverse in-context generation supervision",
+        "Parallel depth generation, velocity circular padding, and similarity loss regularization improve geometric consistency and global coherence",
+        "Unified token-level concatenation framework supports diverse downstream tasks, surpassing prior methods in task coverage and flexibility"
+      ],
+      "tags": [
+        "panoramic-generation",
+        "image-generation",
+        "geometry-aware-pretraining"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08765",
+        "huggingface": "https://huggingface.co/papers/2607.08765",
+        "pdf": "https://arxiv.org/pdf/2607.08765"
+      }
+    },
+    {
+      "id": "druggen-2-disease-aware-drug-discovery",
+      "title": "DrugGen 2: A disease-aware language model for enhancing drug discovery",
+      "authors": [
+        "Ali Motahharynia",
+        "Mohammadreza Ghaffarzadeh-Esfahani",
+        "Mahsa Sheikholeslami",
+        "Navid Mazrouei",
+        "Matin Irajpour",
+        "Yousof Gheisari",
+        "Hajar Sirous"
+      ],
+      "affiliations": [
+        "Isfahan University of Medical Sciences"
+      ],
+      "summary": "Introduces DrugGen-2, a GPT-2-based generative model fine-tuned with supervised learning and GRPO reinforcement learning to design small molecules conditioned jointly on disease ontology and target protein sequences, outperforming prior DrugGPT and DrugGen baselines on diabetic nephropathy targets.",
+      "key_findings": [
+        "Disease-conditioned generation outperforms target-only baselines on uniqueness, structural similarity to approved drugs, and predicted binding affinity",
+        "GRPO-based reinforcement learning stage optimizes for chemical validity, novelty, diversity, and binding affinity jointly",
+        "Molecular docking identifies candidate ligands with predicted affinities exceeding reference drugs like enalapril for ACE targets"
+      ],
+      "tags": [
+        "drug-discovery",
+        "generative-chemistry",
+        "reinforcement-learning",
+        "grpo"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08404",
+        "huggingface": "https://huggingface.co/papers/2607.08404",
+        "pdf": "https://arxiv.org/pdf/2607.08404"
+      }
+    },
+    {
+      "id": "jet-long-dynamic-bifocal-rope",
+      "title": "Jet-Long: Efficient Long-Context Extension with Dynamic Bifocal RoPE",
+      "authors": [
+        "Haozhan Tang",
+        "Zerui Wang",
+        "Yuxian Gu",
+        "Song Han",
+        "Han Cai"
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "MIT"
+      ],
+      "summary": "Proposes Jet-Long, a tuning-free zero-shot long-context extension method that pairs a local RoPE-faithful window with a long-range window whose rescaling factor adapts dynamically to sequence length, recovering exact base-model behavior at short inputs while extrapolating cleanly at long ones.",
+      "key_findings": [
+        "Fused into a single CuTe kernel, achieves up to 1.39x FA2 throughput on H100 with le4% single-batch generation overhead at every length",
+        "On Qwen3-1.7B/4B/8B up to 128K context, beats the strongest baseline on RULER by +4.79/+2.18/+2.03pp respectively",
+        "Generalizes to hybrid attention architectures like Jet-Nemotron for further long-context gains without any retraining"
+      ],
+      "tags": [
+        "long-context",
+        "rope",
+        "inference-efficiency",
+        "llm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 14,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07740",
+        "huggingface": "https://huggingface.co/papers/2607.07740",
+        "pdf": "https://arxiv.org/pdf/2607.07740"
+      }
+    },
+    {
+      "id": "opencof-chain-of-frame-reasoning",
+      "title": "OpenCoF: Learning to Reason Through Video Generation",
+      "authors": [
+        "Xinyan Chen",
+        "Ziyu Guo",
+        "Renrui Zhang",
+        "Dongzhi Jiang",
+        "Hongsheng Li"
+      ],
+      "affiliations": [
+        "ByteDance Seed",
+        "The Chinese University of Hong Kong"
+      ],
+      "summary": "Explores Chain-of-Frame (CoF) reasoning, where a video generation model unfolds logical reasoning through temporally connected frames rather than textual Chain-of-Thought, addressing the lack of dedicated training supervision for reasoning-oriented video generation.",
+      "key_findings": [
+        "Frames the video-generation process itself as a reasoning medium distinct from text-based Chain-of-Thought",
+        "Identifies that existing video generators lack diverse supervision and architectural support for CoF-style reasoning",
+        "Introduces training design tailored to reasoning-through-generation rather than pure visual fidelity objectives"
+      ],
+      "tags": [
+        "video-generation",
+        "reasoning",
+        "chain-of-frame"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08763",
+        "huggingface": "https://huggingface.co/papers/2607.08763",
+        "pdf": "https://arxiv.org/pdf/2607.08763"
+      }
+    },
+    {
+      "id": "cinemobile-on-device-video-diffusion",
+      "title": "CineMobile: On-Device Image-to-Video Diffusion for Cinematic Camera Motion Generation",
+      "authors": [
+        "Xuyao Huang",
+        "Zelai Deng",
+        "Xu Wang",
+        "Xizhong Xiao",
+        "Zhijie Deng"
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University"
+      ],
+      "summary": "Proposes CineMobile, a lightweight image-to-video diffusion transformer that brings cinematic camera-motion effects such as bullet time, dolly zoom, and slow motion to mobile devices, addressing the compute overhead that normally makes DiT-based video generation impractical on-device.",
+      "key_findings": [
+        "Targets mobile deployment of cinematic motion effects that are normally restricted to large server-side diffusion transformers",
+        "Reduces multi-step iterative denoising overhead to make on-device inference computationally feasible",
+        "Demonstrates efficient generation of specific cinematic camera motions (bullet time, dolly zoom, slow motion) on mobile hardware"
+      ],
+      "tags": [
+        "on-device-ai",
+        "video-generation",
+        "diffusion-transformers",
+        "mobile"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.03803",
+        "huggingface": "https://huggingface.co/papers/2607.03803",
+        "pdf": "https://arxiv.org/pdf/2607.03803"
+      }
+    },
+    {
+      "id": "proactive-memory-agent-behavioral-state-decay",
+      "title": "Remember When It Matters: Proactive Memory Agent for Long-Horizon Agents",
+      "authors": [
+        "Yifan Wu",
+        "Lizhu Zhang",
+        "Yuhang Zhou",
+        "Mingyi Wang",
+        "Bo Peng"
+      ],
+      "affiliations": [
+        "Meta Research"
+      ],
+      "summary": "Names and addresses 'behavioral state decay' — the failure mode where decision-relevant state (task requirements, prior attempts, open subgoals) is buried or evicted from context during long-horizon agent trajectories — by introducing memory as an active intervention mechanism via a separate memory-writing agent rather than passive retrieval.",
+      "key_findings": [
+        "As trajectories grow, decision-relevant state becomes buried in or pushed beyond the context window, failing to influence agent decisions",
+        "A dedicated memory agent actively surfaces relevant state rather than relying on passive retrieval-on-demand",
+        "Framing memory as active intervention rather than passive storage improves long-horizon agent task completion"
+      ],
+      "tags": [
+        "agent-memory",
+        "long-horizon-agents",
+        "llm-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08716",
+        "huggingface": "https://huggingface.co/papers/2607.08716",
+        "pdf": "https://arxiv.org/pdf/2607.08716"
+      }
+    },
+    {
+      "id": "linear-attention-architectures-survey",
+      "title": "Linear Attention Architectures: Mechanisms, Trade-offs, and Cross-Layer Routing",
+      "authors": [
+        "Tommaso Cerruti",
+        "Tim Rieder",
+        "George Rowlands",
+        "Lingfeng Jin",
+        "Imanol Schlag"
+      ],
+      "affiliations": [
+        "ETH Zurich"
+      ],
+      "summary": "Presents a comparative study of softmax attention against four recurrent linear-attention architectures (DeltaNet, Gated DeltaNet, Kimi Delta Attention, Gated DeltaNet-2), expressing them in a common recurrent-memory notation to make explicit how they differ in expressivity, memory decay, and erase/write control.",
+      "key_findings": [
+        "Unifies DeltaNet, Gated DeltaNet, Kimi Delta Attention, and Gated DeltaNet-2 under a shared recurrent-memory formalism",
+        "Makes explicit the expressivity and memory-decay trade-offs that differentiate linear-attention variants from softmax attention",
+        "Provides groundwork for cross-layer routing strategies that mix linear and full attention mechanisms"
+      ],
+      "tags": [
+        "linear-attention",
+        "efficient-transformers",
+        "architecture-comparison"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07953",
+        "huggingface": "https://huggingface.co/papers/2607.07953",
+        "pdf": "https://arxiv.org/pdf/2607.07953"
+      }
+    },
+    {
+      "id": "ardy-autoregressive-diffusion-motion",
+      "title": "ARDY: Autoregressive Diffusion with Hybrid Representation for Interactive Human Motion Generation",
+      "authors": [
+        "Kaifeng Zhao",
+        "Mathis Petrovich",
+        "Haotian Zhang",
+        "Tingwu Wang",
+        "Siyu Tang"
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "ETH Zurich"
+      ],
+      "summary": "Proposes ARDY, an autoregressive diffusion model with hybrid representation for real-time, interactive 3D human motion generation, aiming to combine the controllability of offline text-and-kinematics-conditioned methods with the inference speed needed for interactive animation, simulation, and robotics.",
+      "key_findings": [
+        "Addresses the speed-vs-controllability trade-off between offline precise-control motion methods and online real-time synthesis methods",
+        "Hybrid representation supports complex text semantics and long-horizon goals despite limited context windows",
+        "Targets real-time deployment scenarios in animation, simulation, and humanoid robotics"
+      ],
+      "tags": [
+        "human-motion-generation",
+        "autoregressive-diffusion",
+        "real-time",
+        "robotics"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08741",
+        "huggingface": "https://huggingface.co/papers/2607.08741",
+        "pdf": "https://arxiv.org/pdf/2607.08741"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-6-35b-uncensored-hauhaucs",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (community)",
+      "description": "Uncensored GGUF fine-tune/quantization of Qwen3.6-35B-A3B MoE with vision support, the single highest-download trending model of the day at 2.6M downloads, reflecting strong community demand for de-restricted open-weight variants.",
+      "task_type": "text-generation",
+      "model_size": "35B MoE (A3B active)",
+      "tags": [
+        "gguf",
+        "uncensored",
+        "moe",
+        "vision",
+        "community-finetune"
+      ],
+      "metrics": {
+        "downloads": 2641936,
+        "likes": 2652
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai (community)",
+      "description": "Community GGUF quantization built on Qwen3.5 with a 1M-token context claim, blending reasoning-oriented fine-tuning with roleplay/creative-writing tuning. Second-highest download count of the day at 1.94M.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "llama.cpp",
+        "quantized",
+        "qwen3.5",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 1944961,
+        "likes": 2015
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Image-to-text OCR foundation model from Baidu with 1.38M downloads, indicating heavy production deployment for document and scene-text recognition pipelines.",
+      "task_type": "image-text-to-text",
+      "model_size": "undisclosed",
+      "tags": [
+        "ocr",
+        "vision",
+        "multimodal",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 1380690,
+        "likes": 1931
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "ornith-1-0-35b",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "DeepReinforce AI",
+      "description": "MIT-licensed 35B text-generation model in GGUF format from DeepReinforce AI, with strong community traction (1.2M downloads, 851 likes) suggesting adoption as an efficient local-inference alternative to larger frontier models.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "mit-license",
+        "endpoints-compatible"
+      ],
+      "metrics": {
+        "downloads": 1216495,
+        "likes": 851
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Z.ai (Zhipu AI)",
+      "description": "Open-weights MoE conversational language model continuing to hold the top likes count among frontier-class trending models (3,833 likes) with strong ongoing download volume (421K), reinforcing its position as the leading open frontier-adjacent model.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "open-weights",
+        "conversational",
+        "frontier"
+      ],
+      "metrics": {
+        "downloads": 421270,
+        "likes": 3833
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "gemma-4-12b-agentic-composer",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+      "organization": "yuxinlu1 (community)",
+      "description": "Community agentic fine-tune of Gemma 4 12B specialized for coding and terminal use, distilled with Fable 5-style composer training. High engagement (436K downloads, 1,150 likes) reflects demand for small, locally-runnable coding agents.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "gguf",
+        "gemma4",
+        "coding",
+        "agentic",
+        "terminal"
+      ],
+      "metrics": {
+        "downloads": 436530,
+        "likes": 1150
+      },
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "New Hunyuan-family MoE text-generation model from Tencent, freshly entering HuggingFace trending with 697 likes on modest early download volume, suggesting an early-access frontier open-weight release.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "text-generation",
+        "hunyuan",
+        "tencent"
+      ],
+      "metrics": {
+        "downloads": 8210,
+        "likes": 697
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "qwen-fixed-chat-templates",
+      "name": "Qwen-Fixed-Chat-Templates",
+      "organization": "froggeric (community)",
+      "description": "A zero-download-count, high-like community resource providing corrected Jinja chat templates for the Qwen3.5 family, aimed at fixing MLX/llama.cpp tokenization and formatting bugs affecting local inference pipelines.",
+      "task_type": "other",
+      "model_size": "n/a",
+      "tags": [
+        "mlx",
+        "jinja",
+        "chat-template",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 852
+      },
+      "source_url": "https://huggingface.co/froggeric/Qwen-Fixed-Chat-Templates"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "Qwen3.5-MoE-based image-text-to-text agentic reasoning model from InternScience for multi-step agent tasks, with steady trending traction (28K downloads, 495 likes).",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": [
+        "agentic",
+        "reasoning",
+        "moe",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 28141,
+        "likes": 495
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "google-tabfm-pytorch",
+      "name": "tabfm-1.0.0-pytorch",
+      "organization": "Google",
+      "description": "Google's tabular foundation model for zero-shot tabular classification and regression, entering trending with 20K downloads and 348 likes as tabular foundation models continue gaining research and applied interest.",
+      "task_type": "tabular-classification",
+      "model_size": "undisclosed",
+      "tags": [
+        "tabular",
+        "foundation-model",
+        "zero-shot",
+        "google"
+      ],
+      "metrics": {
+        "downloads": 20110,
+        "likes": 348
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "deepseek-v4-flash-gguf",
+      "name": "DeepSeek-V4-Flash-GGUF",
+      "organization": "unsloth (community, based on DeepSeek)",
+      "description": "Unsloth's GGUF quantization of DeepSeek's V4-Flash variant, providing accessible local-inference deployment of DeepSeek's efficient frontier-adjacent model line.",
+      "task_type": "text-generation",
+      "model_size": "undisclosed",
+      "tags": [
+        "gguf",
+        "deepseek",
+        "unsloth",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 38922,
+        "likes": 140
+      },
+      "source_url": "https://huggingface.co/unsloth/DeepSeek-V4-Flash-GGUF"
+    },
+    {
+      "id": "nvidia-nemotron-puzzle-75b",
+      "name": "NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4",
+      "organization": "NVIDIA",
+      "description": "NVFP4-quantized 75B Nemotron-H hybrid model from NVIDIA's Nemotron Labs 'Puzzle' architecture-search line, optimized for efficient inference at scale (30K downloads, 106 likes).",
+      "task_type": "text-generation",
+      "model_size": "75B (A9B active)",
+      "tags": [
+        "nvidia",
+        "nemotron",
+        "nvfp4",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 30418,
+        "likes": 106
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "desktopcommandermcp",
+      "name": "wonderwhy-er/DesktopCommanderMCP",
+      "description": "MCP server for Claude that gives it terminal control, file system search, and diff-based file editing capabilities.",
+      "language": "TypeScript",
+      "stars": 7786,
+      "stars_today": 909,
+      "forks": 966,
+      "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+      "tags": [
+        "mcp",
+        "claude",
+        "agent-tooling",
+        "terminal-control"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "Curated collection of 100+ AI agent and RAG applications that can be cloned, customized, and shipped directly.",
+      "language": "Python",
+      "stars": 118026,
+      "stars_today": 549,
+      "forks": 17535,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": [
+        "llm-apps",
+        "rag",
+        "agents",
+        "awesome-list"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "stitch-skills",
+      "name": "google-labs-code/stitch-skills",
+      "description": "A library of Agent Skills for the Stitch MCP server, following the Agent Skills open standard for compatibility with coding agents like Antigravity, Gemini CLI, Claude Code, and Cursor.",
+      "language": "TypeScript",
+      "stars": 7079,
+      "stars_today": 340,
+      "forks": 944,
+      "url": "https://github.com/google-labs-code/stitch-skills",
+      "tags": [
+        "agent-skills",
+        "mcp",
+        "coding-agents",
+        "google-labs"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-templates",
+      "name": "davila7/claude-code-templates",
+      "description": "CLI tool for configuring and monitoring Claude Code, providing templates and workflows for agentic coding setups.",
+      "language": "Python",
+      "stars": 29033,
+      "stars_today": 232,
+      "forks": 3185,
+      "url": "https://github.com/davila7/claude-code-templates",
+      "tags": [
+        "claude-code",
+        "cli",
+        "agent-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openmanus",
+      "name": "FoundationAgents/OpenManus",
+      "description": "Open-source general-purpose agent framework aiming to replicate Manus-style autonomous agent capabilities on open infrastructure.",
+      "language": "Python",
+      "stars": 57177,
+      "stars_today": 226,
+      "forks": 9953,
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "tags": [
+        "agents",
+        "autonomous-agents",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic's agentic coding tool that lives in the terminal, understands codebases, and helps developers code faster through natural-language commands.",
+      "language": "Python",
+      "stars": 137465,
+      "stars_today": 157,
+      "forks": 22202,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": [
+        "claude-code",
+        "agentic-coding",
+        "anthropic"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow",
+      "name": "langflow-ai/langflow",
+      "description": "Visual builder for constructing and deploying AI-powered agents and multi-step workflows.",
+      "language": "Python",
+      "stars": 151706,
+      "stars_today": 117,
+      "forks": 9655,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": [
+        "agents",
+        "workflow-builder",
+        "low-code"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "free-claude-code",
+      "name": "Alishahryar1/free-claude-code",
+      "description": "Tooling to use Claude Code and Codex for free in the terminal, VSCode extension, and Discord, with voice support similar to OpenClaw.",
+      "language": "Python",
+      "stars": 39662,
+      "stars_today": 117,
+      "forks": 6475,
+      "url": "https://github.com/Alishahryar1/free-claude-code",
+      "tags": [
+        "claude-code",
+        "codex",
+        "agent-tooling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "One-click AI-generated short video creation pipeline using large language models for scripting and assembly.",
+      "language": "Python",
+      "stars": 96850,
+      "stars_today": 123,
+      "forks": 14284,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": [
+        "video-generation",
+        "llm-pipeline",
+        "content-automation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pixelle-video",
+      "name": "ATH-MaaS/Pixelle-Video",
+      "description": "Fully automated AI short-video generation engine covering scripting, voice, and visual assembly.",
+      "language": "Python",
+      "stars": 25116,
+      "stars_today": 115,
+      "forks": 3613,
+      "url": "https://github.com/ATH-MaaS/Pixelle-Video",
+      "tags": [
+        "video-generation",
+        "automation",
+        "content-creation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "speech-to-speech",
+      "name": "huggingface/speech-to-speech",
+      "description": "Build local voice agents entirely with open-source models, covering ASR, LLM response generation, and TTS in a single local pipeline.",
+      "language": "Python",
+      "stars": 6078,
+      "stars_today": 94,
+      "forks": 857,
+      "url": "https://github.com/huggingface/speech-to-speech",
+      "tags": [
+        "voice-agents",
+        "speech-to-speech",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openviking",
+      "name": "volcengine/OpenViking",
+      "description": "Self-evolving context database for AI agents that unifies agent memory, knowledge RAG, and reusable skills.",
+      "language": "Python",
+      "stars": 26594,
+      "stars_today": 35,
+      "forks": 2082,
+      "url": "https://github.com/volcengine/OpenViking",
+      "tags": [
+        "agent-memory",
+        "rag",
+        "context-database"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "AI agent governance toolkit covering policy enforcement, zero-trust identity, execution sandboxing, and reliability engineering, addressing all 10 items of the OWASP Agentic Top 10.",
+      "language": "Python",
+      "stars": 4824,
+      "stars_today": 30,
+      "forks": 847,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": [
+        "agent-governance",
+        "security",
+        "owasp",
+        "microsoft"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "codex-lb",
+      "name": "Soju06/codex-lb",
+      "description": "Codex/ChatGPT multi-account load balancer and proxy with usage tracking, dashboard, and OpenCode-compatible endpoints.",
+      "language": "Python",
+      "stars": 2261,
+      "stars_today": 22,
+      "forks": 353,
+      "url": "https://github.com/Soju06/codex-lb",
+      "tags": [
+        "codex",
+        "load-balancer",
+        "proxy",
+        "agent-tooling"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Real-Time and Interactive Generative Video Reaches Production Quality",
+      "description": "Vidu S1's voice-controllable, infinite-length 42 FPS video generation on consumer GPUs anchors a broader cluster of real-time/on-device video and motion work (LongE2V, CineMobile, ARDY), signaling the field's pivot from offline quality maximization to latency and interactivity.",
+      "related_paper_ids": [
+        "vidu-s1-real-time-video-generation",
+        "longe2v-event-video-diffusion",
+        "cinemobile-on-device-video-diffusion",
+        "ardy-autoregressive-diffusion-motion"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Benchmark Auditing Exposes Shortcut Learning Across Modalities",
+      "description": "Video-Oasis and the compositional-action-recognition paper both document that current benchmarks are dominated by exploitable shortcuts (object priors, visual-input-free items), while IdeaGene-Bench and UniClawBench show equally sobering low ceilings on scientific-reasoning and real-world agent tasks once evaluation is made rigorous.",
+      "related_paper_ids": [
+        "video-oasis-benchmark-audit",
+        "rcore-compositional-action-shortcuts",
+        "ideagene-bench-scientific-lineage",
+        "uniclawbench-proactive-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Context and Efficient Attention Mechanisms Mature",
+      "description": "Jet-Long's tuning-free dynamic bifocal RoPE and ETH Zurich's unifying survey of linear-attention architectures (DeltaNet family, Kimi Delta Attention) both push toward deployable, near-zero-overhead long-context solutions for production LLM serving.",
+      "related_paper_ids": [
+        "jet-long-dynamic-bifocal-rope",
+        "linear-attention-architectures-survey"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Agentic Memory and Proactive Task Execution",
+      "description": "Meta's 'behavioral state decay' framing and UniClawBench's capability-driven real-world evaluation both target the same underlying problem: long-horizon agents losing track of decision-relevant state, and the need to disentangle base-model capability from agent scaffolding when measuring progress.",
+      "related_paper_ids": [
+        "proactive-memory-agent-behavioral-state-decay",
+        "uniclawbench-proactive-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI for Science: Disease-Aware Drug Design",
+      "description": "DrugGen-2's disease-ontology-conditioned molecule generation via GRPO reinforcement learning continues the trend of grounding generative chemistry models in richer biological context rather than target-only conditioning.",
+      "related_paper_ids": [
+        "druggen-2-disease-aware-drug-discovery"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code Ecosystem Tooling Surge on GitHub Trending",
+      "description": "Nearly half of today's AI-relevant GitHub trending repos are Claude Code or MCP/Agent-Skills adjacent (DesktopCommanderMCP, claude-code-templates, claude-code, free-claude-code, stitch-skills), with DesktopCommanderMCP's 909-star day signaling rapid consolidation around MCP and Agent Skills as the standard agent-capability packaging format.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://www.alphaxiv.org/",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv cs.LG / cs.CV / cs.AI recent submissions",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "partial"
+    }
+  ]
+}

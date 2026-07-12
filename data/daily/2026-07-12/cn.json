@@ -1,0 +1,600 @@
+{
+  "version": "1.0",
+  "date": "2026-07-12",
+  "generated_at": "2026-07-12T14:57:00Z",
+  "summary": {
+    "headline": "Vidu S1实现42 FPS语音控制实时交互式视频生成；IdeaGene-Bench为科学谱系推理建立形式化基准；DesktopCommanderMCP单日飙升909星标，MCP工具生态进入主流采用阶段",
+    "body": "本周末HuggingFace热门论文以**视频生成与理解**进展为主导。**Vidu S1**（深束科技/清华大学，117票赞同）实现了消费级GPU上42 FPS的实时交互式视频生成，支持语音控制数字角色——这是迈向流式AI角色的重要一步。**Video-Oasis**（NAVER AI Lab，50票赞同）挑战现有Video-LLM基准，将视觉感知能力从语言推理中分离评估，提出该领域一直缺乏的共享评估标准。**IdeaGene-Bench**（清华/UIUC，30票赞同）引入科学谱系推理的新框架——将科学想法视为类似生物基因组的可遗传结构——对AI辅助研究发现具有直接意义。\n\n模型方面，**GLM-5.2** MoE模型（智谱AI，3,833赞）和**百度/Unlimited-OCR**（1,931赞，130万下载）继续主导热门榜单。GGUF量化生态蓬勃发展，多个模型下载量超百万（Qwythos-9B达194万下载，Qwen3.6-35B-Uncensored达264万下载），表明本地推理已不再是小众用例。Google的**TabFM**表格基础模型以强劲的早期参与度悄然入场，暗示结构化数据ML可能迎来范式转变。\n\nGitHub趋势揭示了**MCP与智能体工具的爆发**：DesktopCommanderMCP（日增909星）、stitch-skills（日增340星）和claude-code-templates（日增232星）反映了围绕AI编码智能体的生态正在快速成熟。awesome-llm-apps合集日增549星，表明主流开发者对部署AI智能体应用的兴趣已达新高峰。",
+    "key_themes": [
+      "real-time-video-generation",
+      "video-understanding-evaluation",
+      "scientific-reasoning-benchmarks",
+      "mcp-agent-tooling-ecosystem",
+      "local-inference-quantization",
+      "long-context-extension"
+    ]
+  },
+  "researcher_notes": "**Vidu S1是首个令人信服的实时交互式视频生成系统。** 消费级GPU上540p/42 FPS不仅是基准数字——而是部署阈值。此前的视频生成模型以批处理模式运行，延迟数秒；Vidu S1的TurboDiffusion和TurboServe架构实现了对语音输入做出响应的流式生成。实际意义立竿见影：能在用户已有的硬件上运行、以自然语言控制的实时AI生成视频角色。自定义图像上传（真人、动漫、宠物）与语音控制的组合，为一篇研究论文创造了极为完整的产品化表面。\n\n**IdeaGene-Bench的「想法拥有基因组」框架既大胆又实用。** 通过将论文分解为最小可遗传单元（机制、修复的局限性、重组），该基准为AI系统能否推理科学继承关系创建了可操作的评估方式。这很重要，因为当前AI研究助手基于表面相似性（引用图、关键词重叠）而非结构性谱系运作。如果模型能学会追溯论文B中的哪个机制修复了论文A的哪个局限，AI生成研究假设的质量将从关联性根本转变为机制性。\n\n**MCP生态正在到达拐点。** DesktopCommanderMCP单日获得909星——超过趋势榜上任何其他仓库——标志着模型上下文协议已从早期采用者的好奇心跨越到主流开发者基础设施。结合google-labs-code/stitch-skills（兼容多个编码智能体的技能库，日增340星），我们正在见证一个可互操作的智能体工具生态系统的形成。微软的agent-governance-toolkit（日增30星，覆盖所有OWASP Agentic Top 10）表明治理层正在同步形成——对于如此年轻的生态系统来说，这是不寻常的成熟度。\n\n**GGUF量化经济值得关注。** 前20名热门模型中有5个是GGUF量化版本，其中3个下载量超过百万。这不是爱好者的趋势——而是一个替代部署经济体，模型创建者、量化者和终端用户形成了完全绕过API提供商的供应链。Qwen3.6-35B-Uncensored拥有264万下载表明，对无安全限制的本地运行模型存在巨大需求。该生态是自我强化的：更多下载驱动更多量化变体，进而驱动更多下载。\n\n**Jet-Long的动态双焦RoPE是长上下文部署问题的潜力股。** 大多数零样本上下文扩展方法选择单一缩放因子，在短上下文和长上下文性能之间产生权衡。Jet-Long的动态方法——根据实际输入长度自适应调整有效窗口——解决了同一模型检查点需要同时处理4K和128K输入而不降低质量的部署困境。对于工具痕迹不可预测地积累的智能体工作流来说，这比标题性的上下文窗口扩展更具实际重要性。",
+  "papers": [
+    {
+      "id": "vidu-s1-realtime-video",
+      "title": "Vidu S1: 实时交互式视频生成模型",
+      "authors": ["Jintao Zhang", "Kai Jiang", "Jintao Chen", "Xu Wang", "Yang Luo et al."],
+      "affiliations": ["Shengshu Technology", "Tsinghua University"],
+      "summary": "提出实时交互式视频生成模型，支持在消费级GPU上以42 FPS进行语音控制数字角色。基于TurboDiffusion和TurboServe架构，支持无模糊、无漂移的无限长度生成，并可上传自定义真人、动漫和宠物图像。",
+      "key_findings": [
+        "在消费级GPU上实现540p分辨率、最高42 FPS的实时视频生成",
+        "支持无模糊、无漂移、无视觉失真的无限长度生成",
+        "实现语音控制的交互式视频内容生成，支持自定义角色图像"
+      ],
+      "tags": ["video-generation", "real-time", "diffusion", "interactive", "voice-control"],
+      "relevance": "high",
+      "engagement": {"upvotes": 117, "comments": 7},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.03118",
+        "pdf": "https://arxiv.org/pdf/2607.03118"
+      }
+    },
+    {
+      "id": "video-oasis-evaluation",
+      "title": "Video-Oasis: 重新思考视频理解评估",
+      "authors": ["Geuntaek Lim", "Sungjune Park", "Jaeyun Lee", "Inwoong Lee", "Taeoh Kim"],
+      "affiliations": ["NAVER AI Lab", "Seoul National University"],
+      "summary": "重新审视视频理解的评估标准，解决难以判定Video-LLM基准表现源自视觉感知、语言推理还是知识先验的问题。提出现有基准忽视的共享评估准则。",
+      "key_findings": [
+        "现有视频理解基准将视觉感知与语言推理和知识先验混为一谈",
+        "提出隔离真正视频理解能力的诊断标准",
+        "为更严格的Video-LLM评估提供框架"
+      ],
+      "tags": ["video-understanding", "evaluation", "benchmark", "video-llm"],
+      "relevance": "high",
+      "engagement": {"upvotes": 50, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.29616",
+        "pdf": "https://arxiv.org/pdf/2603.29616"
+      }
+    },
+    {
+      "id": "object-driven-shortcuts-action-recognition",
+      "title": "为什么我打不开抽屉？缓解零样本组合动作识别中的物体驱动捷径",
+      "authors": ["Geo Ahn", "Inwoong Lee", "Taeoh Kim", "Minho Shim", "Dongyoon Wee"],
+      "affiliations": ["NAVER AI Lab", "Seoul National University"],
+      "summary": "解决零样本组合动作识别中的关键失败模式：模型通过物体驱动捷径预测动词，而非依赖时序证据。针对稀疏组合监督和动词-物体学习不对称性提出诊断指标和缓解策略。",
+      "key_findings": [
+        "模型利用物体类别标签作为动词预测捷径，而非学习时序动作特征",
+        "稀疏组合监督和动词-物体学习不对称性助长捷径学习",
+        "所提诊断指标可量化并缓解物体驱动捷径"
+      ],
+      "tags": ["action-recognition", "zero-shot", "compositionality", "shortcut-learning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 47, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2601.16211",
+        "pdf": "https://arxiv.org/pdf/2601.16211"
+      }
+    },
+    {
+      "id": "ideagene-bench-scientific-lineage",
+      "title": "想法拥有基因组：科学谱系推理与谱系驱动想法生成的基准测试",
+      "authors": ["Yifan Zhou", "Qihao Yang", "Yan Li", "Donggang Li", "Xiru Hu"],
+      "affiliations": ["Tsinghua University", "University of Illinois Urbana-Champaign"],
+      "summary": "提出IdeaGene-Bench，一个将科学想法视为类似生物基因组可遗传结构的科学谱系推理基准。将论文分解为最小可遗传单元，评估AI系统能否追踪科学继承并生成基于谱系的假设。",
+      "key_findings": [
+        "科学想法可分解为类似基因组元素的最小可遗传单元",
+        "当前AI系统在超越表面引用相似性的结构性谱系推理方面存在困难",
+        "基于谱系的想法生成产生的假设质量高于关联性方法"
+      ],
+      "tags": ["scientific-reasoning", "benchmark", "idea-generation", "lineage", "ai-for-science"],
+      "relevance": "high",
+      "engagement": {"upvotes": 30, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08758",
+        "pdf": "https://arxiv.org/pdf/2607.08758"
+      }
+    },
+    {
+      "id": "longe2v-event-video-reconstruction",
+      "title": "LongE2V: 基于视频扩散模型的长时间事件视频重建、预测与帧插值",
+      "authors": ["Cheng-De Fan", "Chun-Wei Tuan Mu", "Chen-Wei Chang", "Chin-Yang Lin", "Kun-Ru Wu"],
+      "affiliations": ["National Tsing Hua University"],
+      "summary": "利用预训练视频扩散先验联合处理事件相机的视频重建、预测和帧插值。引入自回归时序引导实现回归方法和现有生成模型缺乏的长期稳定性。",
+      "key_findings": [
+        "预训练视频扩散先验为事件相机视频重建提供更优的感知质量",
+        "自回归时序引导在长序列中保持长期一致性",
+        "统一框架同时处理重建、预测和插值"
+      ],
+      "tags": ["event-cameras", "video-reconstruction", "diffusion", "frame-interpolation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 26, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08770",
+        "pdf": "https://arxiv.org/pdf/2607.08770"
+      }
+    },
+    {
+      "id": "uniclawbench-proactive-agents",
+      "title": "UniClawBench: 真实世界任务中主动智能体的通用基准",
+      "authors": ["Zhekai Chen", "Chengqi Duan", "Kaiyue Sun", "Bohao Li", "Yuqing Wang"],
+      "affiliations": ["Peking University", "Microsoft Research"],
+      "summary": "解决现有智能体基准依赖沙盒环境和单轮评估的局限。提出通用基准，在任务类别内分离模型能力，评估操作日常工具的主动智能体。",
+      "key_findings": [
+        "现有基准在单一任务类别中混合多种模型能力，遮蔽了针对特定能力的评估",
+        "真实世界（非沙盒）环境中的多轮评估揭示单轮设置中不可见的智能体失败模式",
+        "能力分解分类法使主动智能体子系统的定向改进成为可能"
+      ],
+      "tags": ["agents", "benchmark", "evaluation", "proactive-agents", "multi-turn"],
+      "relevance": "high",
+      "engagement": {"upvotes": 26, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08768",
+        "pdf": "https://arxiv.org/pdf/2607.08768"
+      }
+    },
+    {
+      "id": "druggen-2-disease-aware",
+      "title": "DrugGen 2: 增强药物发现的疾病感知语言模型",
+      "authors": ["Ali Motahharynia", "Mohammadreza Ghaffarzadeh-Esfahani", "Mahsa Sheikholeslami", "Navid Mazrouei", "Matin Irajpour"],
+      "affiliations": ["Isfahan University of Medical Sciences"],
+      "summary": "引入同时以疾病本体和靶点蛋白序列为条件设计小分子的生成模型，填补现有计算药物设计忽略疾病上下文的空白。在精选的疾病-靶点-分子关系数据上微调GPT-2。",
+      "key_findings": [
+        "疾病条件生成产生的分子预测结合亲和力高于仅基于靶点的方法",
+        "疾病本体上下文捕获仅蛋白序列遗漏的治疗相关靶点行为",
+        "微调GPT-2架构在分子有效性和新颖性指标上达到竞争水平"
+      ],
+      "tags": ["drug-discovery", "generative-model", "disease-context", "molecular-generation", "ai-for-science"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 16, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08404",
+        "pdf": "https://arxiv.org/pdf/2607.08404"
+      }
+    },
+    {
+      "id": "jet-long-dynamic-bifocal-rope",
+      "title": "Jet-Long: 基于动态双焦RoPE的高效长上下文扩展",
+      "authors": ["Haozhan Tang", "Zerui Wang", "Yuxian Gu", "Song Han", "Han Cai"],
+      "affiliations": ["MIT", "NVIDIA"],
+      "summary": "提出动态双焦RoPE用于零样本长上下文扩展，解决现有方法固定单一缩放因子导致短上下文保真度与扩展范围二选一的困境。根据输入长度动态自适应调整有效位置窗口。",
+      "key_findings": [
+        "现有方法的固定缩放因子迫使短上下文质量与长上下文能力之间进行权衡",
+        "动态双焦方法在推理时根据实际输入长度自适应位置编码",
+        "无需重新训练即可同时实现短上下文保持和长上下文扩展"
+      ],
+      "tags": ["long-context", "rope", "positional-encoding", "llm", "inference"],
+      "relevance": "high",
+      "engagement": {"upvotes": 14, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07740",
+        "pdf": "https://arxiv.org/pdf/2607.07740"
+      }
+    },
+    {
+      "id": "opencof-reasoning-video-generation",
+      "title": "OpenCoF: 通过视频生成学习推理",
+      "authors": ["Xinyan Chen", "Ziyu Guo", "Renrui Zhang", "Dongzhi Jiang", "Hongsheng Li"],
+      "affiliations": ["Chinese University of Hong Kong", "Shanghai AI Laboratory"],
+      "summary": "提出帧链（Chain-of-Frame）推理，通过时序连接的视频帧作为区别于文本思维链的独特推理路径。解决现有视频生成器缺乏针对推理任务的多样化监督和专门设计的问题。",
+      "key_findings": [
+        "视频生成通过时序连接帧提供区别于文本思维链的推理模态",
+        "现有视频生成器缺乏推理任务所需的训练数据多样性和架构设计",
+        "帧链推理实现了纯文本方法难以完成的空间和物理推理"
+      ],
+      "tags": ["reasoning", "video-generation", "chain-of-frame", "multimodal"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08763",
+        "pdf": "https://arxiv.org/pdf/2607.08763"
+      }
+    },
+    {
+      "id": "proactive-memory-agent",
+      "title": "在关键时刻记忆：面向长时间跨度智能体的主动记忆代理",
+      "authors": ["Yifan Wu", "Lizhu Zhang", "Yuhang Zhou", "Mingyi Wang", "Bo Peng"],
+      "affiliations": ["Zhejiang University", "Microsoft Research"],
+      "summary": "解决长时间跨度智能体中的「行为状态衰减」问题——决策相关状态在扩展的上下文窗口中被埋没。提出将记忆作为主动干预机制，通过独立记忆代理主动呈现相关状态。",
+      "key_findings": [
+        "长时间跨度智能体随着相关信息被埋没在上下文中而遭受行为状态衰减",
+        "主动记忆干预在保持决策质量方面优于被动检索",
+        "独立记忆代理架构实现对任务需求、环境事实和开放子目标的定向呈现"
+      ],
+      "tags": ["agents", "memory", "long-horizon", "context-management", "proactive"],
+      "relevance": "high",
+      "engagement": {"upvotes": 9, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08716",
+        "pdf": "https://arxiv.org/pdf/2607.08716"
+      }
+    },
+    {
+      "id": "linear-attention-architectures",
+      "title": "线性注意力架构：机制、权衡与跨层路由",
+      "authors": ["Tommaso Cerruti", "Tim Rieder", "George Rowlands", "Lingfeng Jin", "Imanol Schlag"],
+      "affiliations": ["ETH Zurich", "IDSIA"],
+      "summary": "对softmax注意力和四种循环线性注意力架构（DeltaNet、Gated DeltaNet、Kimi Delta Attention、Gated DeltaNet-2）进行比较研究，以统一的循环记忆符号表达其在表达能力、记忆衰减和写入控制上的差异。",
+      "key_findings": [
+        "统一的循环记忆符号揭示线性注意力变体在表达能力和记忆管理上的差异",
+        "跨层路由实现的信息共享部分补偿了逐层记忆限制",
+        "计算效率与召回质量之间的权衡在各架构间系统性变化"
+      ],
+      "tags": ["linear-attention", "efficient-transformers", "recurrent-memory", "architecture"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 9, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07953",
+        "pdf": "https://arxiv.org/pdf/2607.07953"
+      }
+    },
+    {
+      "id": "canvas360-panoramic-generation",
+      "title": "通过几何感知预训练增强上下文全景生成",
+      "authors": ["Haoran Feng", "Ruiyang Zhang", "Longyi Zhang", "Dizhe Zhang", "Lu Qi"],
+      "affiliations": ["Westlake University", "Zhejiang University"],
+      "summary": "提出Canvas360，一个结合几何感知预训练与任务特定微调的两阶段上下文全景生成框架。引入包含100万高质量配对全景样本的Canvas360Dataset，覆盖风格迁移、修复、扩展和编辑等多样生成场景。",
+      "key_findings": [
+        "几何感知预训练显著提升全景生成质量，优于直接微调",
+        "100万配对全景数据集实现跨风格迁移、修复、扩展和编辑的有效监督",
+        "两阶段方法在多样的上下文全景任务中具有泛化性"
+      ],
+      "tags": ["panoramic-generation", "geometry-aware", "pretraining", "dataset"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 17, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08765",
+        "pdf": "https://arxiv.org/pdf/2607.08765"
+      }
+    },
+    {
+      "id": "up-unbounded-positive-optimization",
+      "title": "UP: 突破探索-稳定性困境的无界正向非对称优化",
+      "authors": ["Chongyu Fan", "Pengfei Liu", "Jingjia Huang", "Sijia Liu", "Yi Lin"],
+      "affiliations": ["Shanghai Jiao Tong University", "Michigan State University"],
+      "summary": "解决LLM推理增强中强化学习的探索-稳定性困境。提出无界正向非对称优化，允许对正样本进行激进探索同时通过非对称裁剪维持训练稳定性。",
+      "key_findings": [
+        "标准重要性采样裁剪约束策略更新预算并限制探索",
+        "非对称处理实现无界正向更新同时维持稳定性保证",
+        "在LLM后训练的复杂推理基准上超越标准PPO/GRPO"
+      ],
+      "tags": ["reinforcement-learning", "llm-post-training", "reasoning", "optimization", "exploration"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06987",
+        "pdf": "https://arxiv.org/pdf/2607.06987"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "ZhipuAI",
+      "description": "大规模混合专家语言模型，具有动态稀疏注意力，通过选择性专家路由实现高效推理下的强大文本生成性能。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "text-generation", "conversational", "glm"],
+      "metrics": {"downloads": 421270, "likes": 3833},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "qwen3-6-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "Qwen3.6-35B MoE模型的无审查GGUF量化版本，3B活跃参数，优化用于无限制生成，具备视觉能力。",
+      "task_type": "text-generation",
+      "model_size": "35B (3B active)",
+      "tags": ["gguf", "uncensored", "moe", "vision", "qwen3.6"],
+      "metrics": {"downloads": 2641936, "likes": 2652},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "基于Qwen3.5的推理模型GGUF量化版本，优化用于llama.cpp推理，具有强大的推理能力。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "reasoning", "quantized", "qwen3.5"],
+      "metrics": {"downloads": 1944961, "likes": 2015},
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "高性能OCR模型，支持无限文档类型和布局，专为从图像和文档中进行生产级文本提取设计。",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": ["ocr", "feature-extraction", "document-understanding", "baidu"],
+      "metrics": {"downloads": 1380690, "likes": 1931},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "ornith-1-0-35b",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "deepreinforce-ai",
+      "description": "35B参数文本生成模型的GGUF格式，采用MIT许可证，适合广泛部署的高质量文本生成。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": ["gguf", "text-generation", "open-source"],
+      "metrics": {"downloads": 1216495, "likes": 851},
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "腾讯混元3模型，基于transformer的文本生成模型，属于混元系列，具有强大的多语言和对话能力。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["hunyuan", "text-generation", "tencent"],
+      "metrics": {"downloads": 8210, "likes": 697},
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "基于Qwen3.5架构的多模态MoE模型，专为图文到文本生成和智能体应用设计，具有强大的视觉理解能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": ["moe", "multimodal", "agentic", "qwen3.5"],
+      "metrics": {"downloads": 28141, "likes": 495},
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "TabFM-1.0.0",
+      "organization": "Google",
+      "description": "表格基础模型，用于零样本表格回归和分类，无需任务特定微调即可对结构化数据进行预测。",
+      "task_type": "tabular-regression",
+      "model_size": "unknown",
+      "tags": ["tabular", "zero-shot", "foundation-model", "structured-data"],
+      "metrics": {"downloads": 20110, "likes": 348},
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "gemma-4-12b-agentic",
+      "name": "gemma-4-12B-agentic-fable5-composer2.5-v2",
+      "organization": "yuxinlu1",
+      "description": "Gemma 4 12B模型，针对智能体和终端使用场景微调，优化用于编码工作流，以GGUF量化支持本地部署。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["gguf", "agentic", "coding", "terminal", "gemma4"],
+      "metrics": {"downloads": 436530, "likes": 1150},
+      "source_url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF"
+    },
+    {
+      "id": "qwen-fixed-chat-templates",
+      "name": "Qwen-Fixed-Chat-Templates",
+      "organization": "froggeric",
+      "description": "Qwen3.5模型的修正Jinja聊天模板集合，修复官方MLX转换中的模板问题以确保正确格式化。",
+      "task_type": "chat-template",
+      "model_size": "N/A",
+      "tags": ["mlx", "jinja", "chat-template", "qwen3.5"],
+      "metrics": {"downloads": 0, "likes": 852},
+      "source_url": "https://huggingface.co/froggeric/Qwen-Fixed-Chat-Templates"
+    },
+    {
+      "id": "nvidia-nemotron-audex",
+      "name": "Nemotron-Labs-Audex-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA Nemotron Labs音频专家模型，总参数30B活跃参数3B，专为语音和音频处理任务设计。",
+      "task_type": "audio",
+      "model_size": "30B (3B active)",
+      "tags": ["nvidia", "audio", "nemotron", "moe"],
+      "metrics": {"downloads": 743, "likes": 120},
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Labs-Audex-30B-A3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "desktop-commander-mcp",
+      "name": "wonderwhy-er/DesktopCommanderMCP",
+      "description": "为Claude提供终端控制、文件系统搜索和基于diff的文件编辑能力的MCP服务器。爆发式增长表明开发者对MCP工具的强烈需求。",
+      "language": "TypeScript",
+      "stars": 7786,
+      "stars_today": 909,
+      "forks": 966,
+      "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+      "tags": ["mcp", "claude", "terminal", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "100+可以克隆、自定义和部署的AI智能体与RAG应用集合。涵盖多个框架和使用场景的精选示例。",
+      "language": "Python",
+      "stars": 118026,
+      "stars_today": 549,
+      "forks": 17535,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": ["llm", "agents", "rag", "collection", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "stitch-skills",
+      "name": "google-labs-code/stitch-skills",
+      "description": "遵循开放Agent Skills标准的智能体技能库，通过Stitch MCP服务器兼容Antigravity、Gemini CLI、Claude Code和Cursor等多种编码智能体。",
+      "language": "TypeScript",
+      "stars": 7079,
+      "stars_today": 340,
+      "forks": 944,
+      "url": "https://github.com/google-labs-code/stitch-skills",
+      "tags": ["agent-skills", "mcp", "interoperability", "coding-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-code-templates",
+      "name": "davila7/claude-code-templates",
+      "description": "用于配置和监控Claude Code的CLI工具，提供适用于各类项目类型和工作流的模板和最佳实践。",
+      "language": "Python",
+      "stars": 29033,
+      "stars_today": 232,
+      "forks": 3185,
+      "url": "https://github.com/davila7/claude-code-templates",
+      "tags": ["claude-code", "configuration", "templates", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "openmanus",
+      "name": "FoundationAgents/OpenManus",
+      "description": "拥有57K+星标的开源智能体框架，提供模块化智能体架构用于带工具使用的多步骤任务完成。",
+      "language": "Python",
+      "stars": 57177,
+      "stars_today": 226,
+      "forks": 9953,
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "tags": ["agents", "open-source", "multi-step", "tool-use"],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow",
+      "name": "langflow-ai/langflow",
+      "description": "拥有151K+星标的可视化AI智能体和工作流构建与部署工具，是最受欢迎的智能体开发平台之一。",
+      "language": "Python",
+      "stars": 151706,
+      "stars_today": 117,
+      "forks": 9655,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": ["agents", "workflows", "low-code", "visual-builder"],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropics-claude-code",
+      "name": "anthropics/claude-code",
+      "description": "Anthropic官方智能体编码工具，驻留在终端中，理解代码库并通过自然语言命令帮助执行任务。",
+      "language": "Python",
+      "stars": 137465,
+      "stars_today": 157,
+      "forks": 22202,
+      "url": "https://github.com/anthropics/claude-code",
+      "tags": ["agentic-coding", "cli", "anthropic", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用AI大模型一键生成高清短视频的工具，实现视频内容创作的端到端自动化。",
+      "language": "Python",
+      "stars": 96850,
+      "stars_today": 123,
+      "forks": 14284,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "ai-content", "automation", "llm"],
+      "relevance": "medium"
+    },
+    {
+      "id": "pixelle-video",
+      "name": "ATH-MaaS/Pixelle-Video",
+      "description": "AI全自动短视频引擎，端到端处理脚本编写、场景生成和视频合成。",
+      "language": "Python",
+      "stars": 25116,
+      "stars_today": 115,
+      "forks": 3613,
+      "url": "https://github.com/ATH-MaaS/Pixelle-Video",
+      "tags": ["video-generation", "automation", "ai-content"],
+      "relevance": "medium"
+    },
+    {
+      "id": "speech-to-speech",
+      "name": "huggingface/speech-to-speech",
+      "description": "使用开源模型构建本地语音智能体的框架，支持实时语音到语音交互管道。",
+      "language": "Python",
+      "stars": 6078,
+      "stars_today": 94,
+      "forks": 857,
+      "url": "https://github.com/huggingface/speech-to-speech",
+      "tags": ["voice-agents", "speech", "open-source", "huggingface"],
+      "relevance": "high"
+    },
+    {
+      "id": "openviking",
+      "name": "volcengine/OpenViking",
+      "description": "面向AI智能体的自进化上下文数据库，将智能体记忆、知识RAG和技能统一到单一连贯系统中。",
+      "language": "Python",
+      "stars": 26594,
+      "stars_today": 35,
+      "forks": 2082,
+      "url": "https://github.com/volcengine/OpenViking",
+      "tags": ["agent-memory", "rag", "context-database", "skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "面向自主AI智能体的策略执行、零信任身份、执行沙盒和可靠性工程，覆盖所有OWASP Agentic Top 10。",
+      "language": "Python",
+      "stars": 4824,
+      "stars_today": 30,
+      "forks": 847,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": ["agent-security", "governance", "owasp", "zero-trust"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "实时视频生成走向成熟",
+      "description": "多篇论文将视频生成推向语音控制的实时交互、设备端部署和基于事件的重建，推动该领域从批处理生成迈向流式应用。",
+      "related_paper_ids": ["vidu-s1-realtime-video", "longe2v-event-video-reconstruction", "opencof-reasoning-video-generation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MCP与智能体工具生态整合",
+      "description": "MCP服务器、智能体技能库和治理工具的爆发式增长表明智能体工具生态正在达到主流开发者采用，互操作性标准正在涌现。",
+      "related_paper_ids": ["uniclawbench-proactive-agents", "proactive-memory-agent"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "科学推理与评估严谨性",
+      "description": "新基准挑战现有评估范式——IdeaGene-Bench用于科学谱系、Video-Oasis用于视频理解、UniClawBench用于主动智能体——反映出对衡量正确能力的成熟关注。",
+      "related_paper_ids": ["ideagene-bench-scientific-lineage", "video-oasis-evaluation", "uniclawbench-proactive-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "本地推理与量化经济",
+      "description": "GGUF量化模型主导HuggingFace下载量，多个模型超过百万下载，创建了完全绕过云API提供商的平行部署生态系统。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "长上下文与高效注意力",
+      "description": "Jet-Long的动态双焦RoPE和线性注意力架构的比较研究解决了可变长度输入在不降低质量情况下实际部署的挑战。",
+      "related_paper_ids": ["jet-long-dynamic-bifocal-rope", "linear-attention-architectures"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-12T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
