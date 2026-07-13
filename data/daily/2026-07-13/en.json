@@ -1,0 +1,949 @@
+{
+  "version": "1.0",
+  "date": "2026-07-13",
+  "generated_at": "2026-07-13T14:57:00Z",
+  "summary": {
+    "headline": "Video generation models reframed as general-purpose vision learners (GenCeptional); sovereign German-English MoE hybrid Mamba-Transformer Soofi S 30B-A3B matches dense 14-27B models; Destructive Command Guard explodes to 444 stars/day as agent safety tooling surges",
+    "body": "Sunday's HuggingFace Daily Papers feed is slim (4 papers) as the weekend publication lull continues, but the papers that did surface are architecturally significant. **GenCeptional** (University of Toronto / Wayve / Google DeepMind) makes the case that large-scale text-to-video generation is the right pre-training paradigm for general-purpose computer vision, arguing that video models provide the spatiotemporal priors, vision-language alignment, and scalability that single-image foundation models lack. This is a bold thesis paper that could reshape how vision pre-training is designed. **Soofi S 30B-A3B** (the Soofi-Team, backed by German sovereign AI efforts) is a hybrid Mamba-Transformer MoE that activates only 3B of 30B parameters per token, achieving near-constant inference cache as context grows and matching dense 14-27B models on aggregate benchmarks while being pretrained on 27 trillion tokens with deliberately up-weighted German — a meaningful signal for non-English sovereign model development. **Self-Guided Test-Time Training** (Apple / University of Waterloo) addresses the persistent problem that long-context LLMs degrade in accuracy as input grows, proposing instance-specific TTT that treats the test context as a training example.\n\nOn HuggingFace's trending models, Tencent's **Hy3** (724 likes, 8.6K downloads) marks a new entry in the Hunyuan family, while the community remixing trend continues unabated: **Qwythos-9B-Claude-Mythos** (empero-ai, 2.0M downloads, 2,047 likes) and **Qwen3.6-35B-A3B-Uncensored** (HauhauCS, 2.6M downloads, 2,677 likes) remain atop the charts as community fine-tunes of frontier open-weight releases. **GLM-5.2** (zai-org, 441K downloads, 3,857 likes) continues strong, and **Baidu's Unlimited-OCR** (1.4M downloads, 1,943 likes) has established itself as a breakout OCR model. New entrants include **InternScience Agents-A1** (510 likes), a Qwen3.5-MoE-based agentic model, and **NVIDIA Nemotron-Labs-Audex-30B-A3B** and **Nemotron-Labs-3-Puzzle-75B-A9B**, signaling NVIDIA's push into open-weight MoE model releases.\n\nGitHub trending tells the strongest story of the day: **Destructive Command Guard** (dcg), a Rust tool for blocking dangerous git and shell commands from AI agents, exploded to 444 stars in a single day — a direct response to the growing anxiety about agentic coding tools executing destructive operations. The broader Claude Code ecosystem remains dominant: **anthropics/claude-cookbooks** (+459 stars/day), **DesktopCommanderMCP** (+210), **claude-code-templates** (+274), and **awesome-claude-skills** (+60) all trending. **pgrust** (Postgres rewritten in Rust, passing 100% regression tests, +518 stars/day) is the most technically audacious non-AI repo on the list. Trading agents (**Vibe-Trading** at 768 stars/day, **ai-hedge-fund**) continue their multi-week trending streak.",
+    "key_themes": [
+      "video-generation-as-vision-pretraining",
+      "sovereign-multilingual-moe-models",
+      "long-context-test-time-training",
+      "agent-safety-destructive-command-guards",
+      "community-model-remixing-quantization",
+      "claude-code-ecosystem-consolidation"
+    ]
+  },
+  "researcher_notes": "**GenCeptional is a thesis paper, not an incremental result, and that makes it more interesting.** The claim that video generation is the right pre-training substrate for general-purpose vision is a direct challenge to the dominant paradigm of image-text contrastive pre-training (CLIP-style) and masked image modeling (MAE-style). The argument rests on three pillars: video provides temporal priors that images lack, generation forces learning of causal structure rather than just discriminative features, and text-to-video alignment is a richer supervision signal than text-to-image. If this thesis holds up, it implies that the billions invested in image-only vision foundation models may have been building on the wrong base representation. The paper comes from a strong author list spanning University of Toronto, Wayve, and Google DeepMind, which gives it credibility, but the key question is whether the computational cost of video generation pre-training (vastly higher than image pre-training) can be justified by downstream task improvements. Watch for follow-up benchmarks that test GenCeptional-style pre-training against CLIP/SigLIP on standard vision tasks.\n\n**Soofi S 30B-A3B is the most significant sovereign model release since the UAE's Falcon series.** The hybrid Mamba-Transformer architecture is technically interesting — activating only 3B of 30B parameters per token while keeping inference cache near-constant as context grows is exactly the efficiency profile that enterprise deployments need. But the real story is the deliberate German language up-weighting in a 27-trillion-token pretraining run, backed by what appears to be a German government-adjacent sovereign AI initiative. This is the second generation of European sovereign models (after France's Mistral and the EU's OpenGPT-X), and the fact that it matches dense 14-27B models on aggregate benchmarks while being dramatically cheaper to serve makes a concrete business case for sovereign model investment. The MoE+Mamba hybrid design is also forward-looking — as context lengths continue to grow, the near-constant cache property becomes increasingly valuable.\n\n**The Destructive Command Guard explosion is arguably the most important signal of the day.** 444 GitHub stars in a single day for a Rust-based command blocker tells you exactly where the AI agent ecosystem is in its maturity curve: adoption has outpaced safety tooling, and developers are actively seeking guardrails. This isn't a research paper about alignment — it's a practical tool that blocks `rm -rf`, `git push --force`, and similar destructive commands from being executed by AI agents. The fact that it's written in Rust (for reliability) and trending alongside multiple Claude Code ecosystem repos suggests that the MCP/Skills/Agent tooling stack is now mature enough that the primary bottleneck has shifted from capability to safety. Expect to see more agent-safety tooling repos trending in the coming weeks.\n\n**The arXiv feed, while Sunday-sparse, shows two quietly important threads.** First, auction-based task allocation for LLM agents (Agora) — instead of static API routing, using auction mechanisms to dynamically allocate tasks to the most suitable expert model — is an underexplored direction that could matter as multi-model agent orchestration becomes standard. Second, the TrustX Agent Risk Classification Framework (ARC) for risk-tiering internal agentic AI systems is exactly the kind of governance infrastructure that enterprises need but rarely build until regulators force them to. Both papers are early-stage but worth tracking.\n\n**On the model side, the NVIDIA double-entry (Audex-30B-A3B and Puzzle-75B-A9B) is noteworthy.** NVIDIA has historically been a compute provider, not a model publisher. The Nemotron-Labs releases suggest a strategic shift toward providing both the hardware and the models optimized for that hardware — a vertical integration play that mirrors what Apple did with its silicon and its on-device models. The MoE architectures (30B with 3B active, 75B with 9B active) are explicitly designed for NVIDIA's inference stack, which creates a flywheel: models optimized for NVIDIA GPUs make NVIDIA GPUs more valuable, which drives more model development on NVIDIA GPUs.",
+  "papers": [
+    {
+      "id": "genceptional-video-generation-vision-learners",
+      "title": "Video Generation Models are General-Purpose Vision Learners",
+      "authors": [
+        "Letian Wang",
+        "Chuhan Zhang",
+        "Rishabh Kabra",
+        "Jasper Uijlings",
+        "Steven Waslander",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Toronto",
+        "Wayve",
+        "Google DeepMind"
+      ],
+      "summary": "Argues that large-scale text-to-video generation is a strong pre-training paradigm for general-purpose computer vision, providing spatiotemporal priors, vision-language alignment, and scalability that image-only pre-training lacks. Introduces GenCeptional, a framework that repurposes video generation models as vision foundation models.",
+      "key_findings": [
+        "Video generation pre-training provides spatiotemporal priors, vision-language alignment, and scalability required for general visual intelligence",
+        "GenCeptional repurposes video generation models for downstream vision tasks, challenging the dominance of image-text contrastive pre-training",
+        "The framework demonstrates that generative video models can serve as general-purpose vision learners across multiple tasks"
+      ],
+      "tags": [
+        "video-generation",
+        "vision-pretraining",
+        "foundation-models",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09024",
+        "huggingface": "https://huggingface.co/papers/2607.09024",
+        "pdf": "https://arxiv.org/pdf/2607.09024"
+      }
+    },
+    {
+      "id": "self-guided-ttt-long-context",
+      "title": "Self-Guided Test-Time Training for Long-Context LLMs",
+      "authors": [
+        "Xinyu Zhu",
+        "Zhe Xu",
+        "Xiaohan Wei",
+        "Yunchen Pu",
+        "Fei Tian"
+      ],
+      "affiliations": [
+        "Apple",
+        "University of Waterloo"
+      ],
+      "summary": "Proposes self-guided test-time training (TTT) to improve long-context utilization in LLMs. Treats the test context as a training example for instance-specific parameter updates, addressing the accuracy degradation that occurs as input length grows.",
+      "key_findings": [
+        "Long-context LLMs degrade in accuracy as input length grows despite having sufficient context window capacity",
+        "Test-time training treats the test context as an instance-specific training example, enabling parameter adaptation for each input",
+        "Self-guided TTT improves evidence identification and utilization without requiring retraining the base model"
+      ],
+      "tags": [
+        "long-context",
+        "test-time-training",
+        "llm",
+        "context-utilization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09415",
+        "huggingface": "https://huggingface.co/papers/2607.09415",
+        "pdf": "https://arxiv.org/pdf/2607.09415"
+      }
+    },
+    {
+      "id": "soofi-sovereign-german-english-moe",
+      "title": "A Sovereign, Open-Source Foundation Model for German and English",
+      "authors": [
+        "The Soofi-Team",
+        "Benedikt Droste",
+        "David Fitzek",
+        "Ruben Härle",
+        "Lukas Helff"
+      ],
+      "affiliations": [
+        "Soofi-Team",
+        "German Sovereign AI Initiative"
+      ],
+      "summary": "Presents Soofi S 30B-A3B, a sovereign open-source MoE hybrid Mamba-Transformer model for German and English that activates only 3B of 30B parameters per token. Pretrained on 27 trillion tokens with deliberately up-weighted German, it matches dense 14-27B models on aggregate benchmarks while maintaining near-constant inference cache as context grows.",
+      "key_findings": [
+        "Hybrid Mamba-Transformer MoE design activates only 3B of 30B parameters per token with near-constant inference cache",
+        "Matches dense 14-27B models on aggregate benchmarks despite being an MoE with significantly lower active parameters",
+        "Pretrained on 27 trillion tokens with deliberately up-weighted German data for sovereign language coverage"
+      ],
+      "tags": [
+        "moe",
+        "mamba",
+        "sovereign-ai",
+        "multilingual",
+        "german",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09424",
+        "huggingface": "https://huggingface.co/papers/2607.09424",
+        "pdf": "https://arxiv.org/pdf/2607.09424"
+      }
+    },
+    {
+      "id": "scalable-visual-pretraining-language",
+      "title": "Scalable Visual Pretraining for Language Intelligence",
+      "authors": [
+        "Yiming Zhang",
+        "Zhonghan Zhao",
+        "Wenwei Zhang",
+        "Haiteng Zhao",
+        "Tianyang Lin"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory",
+        "The Chinese University of Hong Kong"
+      ],
+      "summary": "Addresses the gap in foundation model pre-training where visual representations (figures, equations, page layouts) are discarded in favor of plain text. Proposes a scalable visual pretraining approach that preserves rich visual cues from documents and web pages for language model training.",
+      "key_findings": [
+        "Current pretraining approaches discard visual cues by converting visually rich sources to plain text, losing significant information",
+        "Visual representations carry rich information that cannot be faithfully captured by text alone",
+        "Scalable visual pretraining preserves document layout, figures, and typeset equations for improved language intelligence"
+      ],
+      "tags": [
+        "visual-pretraining",
+        "multimodal",
+        "document-understanding",
+        "foundation-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09657",
+        "huggingface": "https://huggingface.co/papers/2607.09657",
+        "pdf": "https://arxiv.org/pdf/2607.09657"
+      }
+    },
+    {
+      "id": "panoworld-panoramic-generation",
+      "title": "PanoWorld: Real-World Panoramic Generation",
+      "authors": [
+        "Haoyuan Li",
+        "Dizhe Zhang",
+        "Yuemei Zhou"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Addresses long-range memory in panoramic world models by exploiting the rotation-equivariant property of omnidirectional representations. Enables real-world panoramic generation with improved temporal coherence.",
+      "key_findings": [
+        "Exploits rotation-equivariant property of omnidirectional representations for panoramic world models",
+        "Addresses the challenge of long-range memory in panoramic video generation",
+        "Rotation can be treated as a natural symmetry to improve temporal coherence"
+      ],
+      "tags": [
+        "panoramic-generation",
+        "world-models",
+        "3d-vision",
+        "equivariance"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09661",
+        "huggingface": "https://huggingface.co/papers/2607.09661",
+        "pdf": "https://arxiv.org/pdf/2607.09661"
+      }
+    },
+    {
+      "id": "agora-auction-llm-agent-reasoning",
+      "title": "Agora: Enhancing LLM Agent Reasoning Via Auction-Based Task Allocation",
+      "authors": [
+        "Kaiji Zhou",
+        "Ales Leonardis",
+        "Yue Feng"
+      ],
+      "affiliations": [
+        "University of Birmingham"
+      ],
+      "summary": "Proposes an auction-based mechanism for dynamically allocating tasks to the most suitable expert model in multi-model LLM agent systems, replacing static API-based routing with market-style bidding to improve reasoning quality and resource allocation.",
+      "key_findings": [
+        "Existing multi-agent frameworks use static API routing, missing opportunities for dynamic expert model selection",
+        "Auction mechanisms enable competitive task allocation where expert models bid based on competence and cost",
+        "Dynamic allocation improves overall reasoning quality compared to fixed routing strategies"
+      ],
+      "tags": [
+        "multi-agent",
+        "task-allocation",
+        "auction-mechanism",
+        "llm-reasoning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09600",
+        "huggingface": "https://huggingface.co/papers/2607.09600",
+        "pdf": "https://arxiv.org/pdf/2607.09600"
+      }
+    },
+    {
+      "id": "trustx-arc-agent-risk-classification",
+      "title": "TrustX Agent Risk Classification Framework (ARC): Risk-Tiering Internally Created Agentic AI Systems",
+      "authors": [
+        "Hannah M. Liu",
+        "Rhea Saxena",
+        "Shiv Asthana"
+      ],
+      "affiliations": [
+        "TrustX"
+      ],
+      "summary": "Introduces ARC, a framework for classifying and governing the risk levels of agentic AI systems in enterprise and public-sector deployments. Addresses the gap between the rapid proliferation of agentic systems and existing general-purpose AI risk frameworks.",
+      "key_findings": [
+        "General-purpose AI risk frameworks are insufficient for classifying agentic AI systems that act autonomously",
+        "ARC provides a structured risk-tiering methodology for internal agentic AI deployments",
+        "Framework addresses the governance gap as agentic AI proliferation outpaces regulatory capacity"
+      ],
+      "tags": [
+        "ai-safety",
+        "governance",
+        "agentic-ai",
+        "risk-management",
+        "enterprise"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09586",
+        "huggingface": "https://huggingface.co/papers/2607.09586",
+        "pdf": "https://arxiv.org/pdf/2607.09586"
+      }
+    },
+    {
+      "id": "phinn-eeg-dream-classification",
+      "title": "PHINN-EEG: Topological Time-Series Analysis of Dream-State EEG",
+      "authors": [
+        "Ren Takahashi",
+        "Emre Yusuf",
+        "Jayabrata Bhaduri"
+      ],
+      "affiliations": [
+        "University of Tokyo",
+        "MIT"
+      ],
+      "summary": "Applies topological data analysis (persistent homology via dynamic Betti curves) to dream-state EEG classification, moving beyond power spectral density and statistical moment features. Includes a neural signal synthesis component conditioned on topological features.",
+      "key_findings": [
+        "Dynamic Betti curves from persistent homology outperform traditional PSD features for dream content classification",
+        "Topology-conditioned neural signal synthesis enables generation of realistic dream-state EEG",
+        "Combines topological time-series analysis with deep learning for improved neuroscience applications"
+      ],
+      "tags": [
+        "neuroscience",
+        "topological-data-analysis",
+        "eeg",
+        "dream-classification"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09662",
+        "huggingface": "https://huggingface.co/papers/2607.09662",
+        "pdf": "https://arxiv.org/pdf/2607.09662"
+      }
+    },
+    {
+      "id": "vlm-error-evolution-decade",
+      "title": "Evolution of Accuracy and Visual-Cognitive Errors in a Decade of Vision-Language AI Models",
+      "authors": [
+        "Shravan Murlidaran",
+        "Miguel P. Eckstein"
+      ],
+      "affiliations": [
+        "UC Santa Barbara"
+      ],
+      "summary": "Evaluates the evolution of visual-cognitive errors across a decade of vision-language models, finding that while accuracy has improved dramatically, certain error types persist even in modern VLMs, especially in complex scenes beyond standard MS-COCO evaluations.",
+      "key_findings": [
+        "Most VLM evaluations use simple scenes (MS-COCO) that do not showcase complex human interactions",
+        "Visual-cognitive error patterns persist across model generations despite overall accuracy improvements",
+        "Complex scene understanding remains a meaningful gap in modern vision-language models"
+      ],
+      "tags": [
+        "vision-language-models",
+        "error-analysis",
+        "evaluation",
+        "visual-reasoning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09654",
+        "huggingface": "https://huggingface.co/papers/2607.09654",
+        "pdf": "https://arxiv.org/pdf/2607.09654"
+      }
+    },
+    {
+      "id": "wan-dancer-music-dance-generation",
+      "title": "Wan-Dancer: A Hierarchical Framework for Minute-scale Coherent Music-to-Dance Generation",
+      "authors": [
+        "Mingyang Huang",
+        "Peng Zhang",
+        "Li Hu"
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Zhejiang University"
+      ],
+      "summary": "Addresses the challenge of generating long-duration, high-definition, rhythmically synchronized dance videos from music, overcoming temporal constraints of current diffusion-based video generation through a hierarchical framework.",
+      "key_findings": [
+        "Hierarchical framework enables minute-scale coherent dance video generation from music input",
+        "Overcomes temporal constraints that limit current diffusion models to short video clips",
+        "Maintains rhythmic synchronization and visual quality over extended generation durations"
+      ],
+      "tags": [
+        "music-to-dance",
+        "video-generation",
+        "diffusion-models",
+        "long-duration"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09581",
+        "huggingface": "https://huggingface.co/papers/2607.09581",
+        "pdf": "https://arxiv.org/pdf/2607.09581"
+      }
+    },
+    {
+      "id": "pac-act-robot-manipulation",
+      "title": "PAC-ACT: Post-training Actor-Critic for Action Chunking Transformers",
+      "authors": [
+        "Yujie Pang",
+        "Zudong Li"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Addresses the gap between vision-language-action models' broad generalization and the precision requirements of industrial contact manipulation. Proposes a post-training actor-critic method for Action Chunking Transformers to improve reliability under pose perturbations and contact-force constraints.",
+      "key_findings": [
+        "Vision-language-action models lack the precision needed for contact-rich industrial manipulation tasks",
+        "Post-training actor-critic fine-tuning improves reliability under pose perturbations and contact-force constraints",
+        "Method is compatible with existing Action Chunking Transformer architectures without requiring retraining"
+      ],
+      "tags": [
+        "robotics",
+        "manipulation",
+        "reinforcement-learning",
+        "action-chunking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09590",
+        "huggingface": "https://huggingface.co/papers/2607.09590",
+        "pdf": "https://arxiv.org/pdf/2607.09590"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "Tencent's latest Hunyuan model, a new entry in the Hunyuan family for text generation with transformer-based architecture.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "hunyuan",
+        "text-generation",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 8655,
+        "likes": 724
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "empero-ai-qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "Community quantized GGUF of a Qwen3.5-based model, fine-tuned and optimized for reasoning tasks. One of the most downloaded community fine-tunes on the platform.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "quantized",
+        "reasoning",
+        "qwen3.5"
+      ],
+      "metrics": {
+        "downloads": 1967677,
+        "likes": 2047
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "zai-org-glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "zai-org",
+      "description": "Latest GLM model with MoE and Dynamic Sparse Attention architecture for text generation and conversational AI. Continues to be one of the most liked models on the platform.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "glm",
+        "moe",
+        "dynamic-sparse-attention",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 441413,
+        "likes": 3857
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "bottlecapai-thinkingcap-qwen3-6-27b",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "bottlecapai",
+      "description": "A Qwen3.6-based multimodal model (image-text-to-text) optimized for reasoning and thinking tasks at the 27B parameter scale.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "qwen3.6",
+        "multimodal",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 4463,
+        "likes": 266
+      },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "An agentic multimodal model built on Qwen3.5-MoE architecture, designed for agent-based tasks with image-text-to-text capabilities.",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": [
+        "agentic",
+        "moe",
+        "multimodal",
+        "qwen3.5"
+      ],
+      "metrics": {
+        "downloads": 29038,
+        "likes": 510
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's breakout OCR model based on a feature-extraction architecture, achieving massive adoption for document and text recognition tasks.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "document-understanding",
+        "feature-extraction"
+      ],
+      "metrics": {
+        "downloads": 1430656,
+        "likes": 1943
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "hauhaucs-qwen3-6-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "Community uncensored GGUF quantization of Qwen3.6-35B MoE vision model, one of the most downloaded community fine-tunes with 2.6M downloads.",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B",
+      "tags": [
+        "uncensored",
+        "qwen3.6",
+        "moe",
+        "vision",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 2596384,
+        "likes": 2677
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "nvidia-nemotron-labs-audex",
+      "name": "Nemotron-Labs-Audex-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's Nemotron-Labs audio-enabled model at 30B parameters with 3B active (MoE), marking NVIDIA's push into open-weight model releases.",
+      "task_type": "text-generation",
+      "model_size": "30B-A3B",
+      "tags": [
+        "nvidia",
+        "nemotron",
+        "moe",
+        "audio"
+      ],
+      "metrics": {
+        "downloads": 901,
+        "likes": 131
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Labs-Audex-30B-A3B"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "TabFM 1.0.0",
+      "organization": "Google",
+      "description": "Google's tabular foundation model for tabular regression and zero-shot inference on structured data, bringing foundation model capabilities to traditional ML tabular tasks.",
+      "task_type": "tabular-regression",
+      "model_size": "Unknown",
+      "tags": [
+        "tabular",
+        "zero-shot",
+        "foundation-model",
+        "regression"
+      ],
+      "metrics": {
+        "downloads": 20973,
+        "likes": 357
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "deepreinforce-ornith",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "deepreinforce-ai",
+      "description": "A 35B parameter text generation model with 1.3M downloads, available in GGUF format for local deployment via llama.cpp.",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "text-generation",
+        "gguf",
+        "local-deployment"
+      ],
+      "metrics": {
+        "downloads": 1347036,
+        "likes": 855
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "meituan-longcat-2",
+      "name": "LongCat-2.0",
+      "organization": "Meituan",
+      "description": "Meituan's second-generation LongCat model for text generation and conversational AI, focused on long-context processing.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "long-context",
+        "conversational",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1767,
+        "likes": 182
+      },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-2.0"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "An AI-powered personal trading agent system from HKU, combining LLM reasoning with financial market data for automated trading strategies. Exploded to 20K+ stars, indicating massive interest in AI-driven finance tooling.",
+      "language": "Python",
+      "stars": 20621,
+      "stars_today": 768,
+      "forks": 3602,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "ai-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropics-claude-cookbooks",
+      "name": "anthropics/claude-cookbooks",
+      "description": "Anthropic's official collection of notebooks and recipes for Claude, showcasing practical patterns for building with Claude's API including tool use, multi-turn workflows, and agent architectures.",
+      "language": "Jupyter Notebook",
+      "stars": 48451,
+      "stars_today": 459,
+      "forks": 5734,
+      "url": "https://github.com/anthropics/claude-cookbooks",
+      "tags": [
+        "claude",
+        "llm",
+        "tutorials",
+        "agent-patterns"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "destructive-command-guard",
+      "name": "Dicklesworthstone/destructive_command_guard",
+      "description": "A Rust-based safety tool that blocks dangerous git and shell commands from being executed by AI agents — rm -rf, git push --force, and similar destructive operations. Exploded to 444 stars/day as agent safety concerns grow.",
+      "language": "Rust",
+      "stars": 2979,
+      "stars_today": 444,
+      "forks": 109,
+      "url": "https://github.com/Dicklesworthstone/destructive_command_guard",
+      "tags": [
+        "agent-safety",
+        "cli",
+        "rust",
+        "devtools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "malisper-pgrust",
+      "name": "malisper/pgrust",
+      "description": "Postgres rewritten in Rust, now passing 100% of the Postgres regression tests. A technically audacious project demonstrating Rust's viability for systems-level database reimplementation.",
+      "language": "Rust",
+      "stars": 2496,
+      "stars_today": 518,
+      "forks": 68,
+      "url": "https://github.com/malisper/pgrust",
+      "tags": [
+        "database",
+        "rust",
+        "postgres",
+        "systems-programming"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "shubhamsaboo-awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "Curated collection of 100+ runnable AI agent and RAG applications. A practical resource for developers building LLM-powered applications with clone-and-customize examples.",
+      "language": "Python",
+      "stars": 118621,
+      "stars_today": 408,
+      "forks": 17638,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": [
+        "llm",
+        "ai-agents",
+        "rag",
+        "awesome-list"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "home-assistant-core",
+      "name": "home-assistant/core",
+      "description": "Open source home automation platform emphasizing local control and privacy. Continues as one of the most active open-source projects with growing AI integration capabilities.",
+      "language": "Python",
+      "stars": 89091,
+      "stars_today": 400,
+      "forks": 38086,
+      "url": "https://github.com/home-assistant/core",
+      "tags": [
+        "home-automation",
+        "iot",
+        "privacy",
+        "smart-home"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "davila7-claude-code-templates",
+      "name": "davila7/claude-code-templates",
+      "description": "CLI tool for configuring and monitoring Claude Code, providing templates and configurations for Claude Code workflows and agent setups.",
+      "language": "Python",
+      "stars": 29254,
+      "stars_today": 274,
+      "forks": 3204,
+      "url": "https://github.com/davila7/claude-code-templates",
+      "tags": [
+        "claude-code",
+        "cli",
+        "templates",
+        "agent-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "wonderwhy-er-desktopmcp",
+      "name": "wonderwhy-er/DesktopCommanderMCP",
+      "description": "MCP server for Claude that provides terminal control, file system search, and diff-based file editing capabilities. Continues its multi-day trending streak as a core Claude Code ecosystem tool.",
+      "language": "TypeScript",
+      "stars": 8008,
+      "stars_today": 210,
+      "forks": 985,
+      "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+      "tags": [
+        "mcp",
+        "claude-code",
+        "terminal",
+        "file-editing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "Comfy-Org/ComfyUI",
+      "description": "The most powerful and modular diffusion model GUI, API, and backend with a graph/nodes interface. Continues as the dominant open-source tool for diffusion model workflows.",
+      "language": "Python",
+      "stars": 120492,
+      "stars_today": 125,
+      "forks": 14180,
+      "url": "https://github.com/Comfy-Org/ComfyUI",
+      "tags": [
+        "diffusion",
+        "gui",
+        "image-generation",
+        "workflow"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "composiohq-awesome-claude-skills",
+      "name": "ComposioHQ/awesome-claude-skills",
+      "description": "Curated list of Claude Skills, resources, and tools for customizing Claude AI workflows. Part of the growing Claude Code skill-packaging ecosystem.",
+      "language": "Python",
+      "stars": 67545,
+      "stars_today": 60,
+      "forks": 7617,
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "tags": [
+        "claude-code",
+        "skills",
+        "agent-tooling",
+        "awesome-list"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "virattt-ai-hedge-fund",
+      "name": "virattt/ai-hedge-fund",
+      "description": "An AI hedge fund team implementation using LLM agents for investment research and portfolio management. Continues multi-week trending alongside Vibe-Trading.",
+      "language": "Python",
+      "stars": 61425,
+      "stars_today": 115,
+      "forks": 10858,
+      "url": "https://github.com/virattt/ai-hedge-fund",
+      "tags": [
+        "finance",
+        "ai-agent",
+        "hedge-fund",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "project-nomad",
+      "name": "Crosstalk-Solutions/project-nomad",
+      "description": "A self-contained offline survival computer with critical tools, knowledge, and AI for emergency preparedness. Demonstrates growing interest in offline/edge AI deployment scenarios.",
+      "language": "TypeScript",
+      "stars": 33824,
+      "stars_today": 125,
+      "forks": 3392,
+      "url": "https://github.com/Crosstalk-Solutions/project-nomad",
+      "tags": [
+        "offline-ai",
+        "edge-computing",
+        "survival",
+        "tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "foundationagents-openmanus",
+      "name": "FoundationAgents/OpenManus",
+      "description": "Open-source AI agent framework from FoundationAgents. Continues steady trending with 57K+ stars as one of the leading open-source agent platforms.",
+      "language": "Python",
+      "stars": 57276,
+      "stars_today": 101,
+      "forks": 9964,
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "tags": [
+        "ai-agent",
+        "framework",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-trellis-2",
+      "name": "microsoft/TRELLIS.2",
+      "description": "Microsoft's native and compact structured latents for 3D generation, enabling high-quality 3D asset creation from text and images.",
+      "language": "Python",
+      "stars": 8708,
+      "stars_today": 22,
+      "forks": 1076,
+      "url": "https://github.com/microsoft/TRELLIS.2",
+      "tags": [
+        "3d-generation",
+        "structured-latents",
+        "microsoft"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pydantic-ai",
+      "name": "pydantic/pydantic-ai",
+      "description": "AI agent framework built the Pydantic way, emphasizing type safety and structured outputs for building reliable AI agent applications.",
+      "language": "Python",
+      "stars": 18456,
+      "stars_today": 42,
+      "forks": 2349,
+      "url": "https://github.com/pydantic/pydantic-ai",
+      "tags": [
+        "ai-agent",
+        "pydantic",
+        "type-safety",
+        "framework"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Video Generation as Vision Foundation",
+      "description": "A thesis-level shift arguing that video generation pre-training — not image-text contrastive learning or masked image modeling — is the right substrate for general-purpose computer vision. GenCeptional and the Scalable Visual Pretraining paper both challenge the dominant image-only pre-training paradigm.",
+      "related_paper_ids": [
+        "genceptional-video-generation-vision-learners",
+        "scalable-visual-pretraining-language",
+        "panoworld-panoramic-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Sovereign and Multilingual MoE Models",
+      "description": "The emergence of government-backed or region-specific open-source foundation models with MoE architectures for cost-efficient serving. Soofi S (German), alongside the continuing strength of GLM-5.2 and various Qwen derivatives, shows that non-English sovereign AI is becoming architecturally sophisticated.",
+      "related_paper_ids": [
+        "soofi-sovereign-german-english-moe"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Safety and Governance Tooling",
+      "description": "As AI agent adoption outpaces safety infrastructure, both practical tools (Destructive Command Guard) and governance frameworks (TrustX ARC) are emerging. The explosive GitHub adoption of DCG signals that the agent ecosystem has matured past capability-first into safety-aware deployment.",
+      "related_paper_ids": [
+        "trustx-arc-agent-risk-classification",
+        "agora-auction-llm-agent-reasoning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Context Efficiency and Adaptation",
+      "description": "Test-time training, MoE architectures with near-constant cache, and long-context model releases (LongCat-2.0) all point to the continued push to make long-context processing both efficient and reliable, moving beyond simple context window extension.",
+      "related_paper_ids": [
+        "self-guided-ttt-long-context",
+        "soofi-sovereign-german-english-moe"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code Ecosystem Consolidation",
+      "description": "Multiple Claude Code-adjacent repos trending simultaneously — cookbooks, templates, skills, MCP servers, and safety tools — indicates the Claude Code/MCP/Skills ecosystem is consolidating into a de facto standard for agent development tooling.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}

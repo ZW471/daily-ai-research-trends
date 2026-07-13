@@ -1,0 +1,949 @@
+{
+  "version": "1.0",
+  "date": "2026-07-13",
+  "generated_at": "2026-07-13T14:57:00Z",
+  "summary": {
+    "headline": "视频生成模型被重新定义为通用视觉学习器 (GenCeptional)；德国主权开源MoE混合Mamba-Transformer模型Soofi S 30B-A3B 匹配14-27B稠密模型；Destructive Command Guard日增444星，Agent安全工具爆发",
+    "body": "周日的HuggingFace每日论文更新较少（4篇），延续了周末发表低潮，但上线的论文在架构层面具有重要意义。**GenCeptional**（多伦多大学/Wayve/Google DeepMind）提出大规模文本到视频生成是通用计算机视觉的正确预训练范式，认为视频模型能提供单图像基础模型所缺乏的时空先验、视觉-语言对齐和可扩展性。这是一篇大胆的论题性论文，可能重塑视觉预训练的设计方式。**Soofi S 30B-A3B**（Soofi-Team，由德国主权AI项目支持）是一个混合Mamba-Transformer MoE模型，每个token仅激活30B参数中的3B，在上下文增长时保持近乎恒定的推理缓存，在27万亿token上预训练并刻意提高德语权重，在聚合基准上匹配14-27B稠密模型——这对非英语主权模型开发具有重要意义。**Self-Guided Test-Time Training**（Apple/滑铁卢大学）解决了长上下文LLM随输入增长而准确率下降的持续问题。\n\n在HuggingFace热门模型方面，腾讯的**Hy3**（724赞，8.6K下载）标志着混元家族的新成员，社区微调热潮持续：**Qwythos-9B-Claude-Mythos**（empero-ai，200万下载，2,047赞）和**Qwen3.6-35B-A3B-Uncensored**（HauhauCS，260万下载，2,677赞）继续位居榜首。**GLM-5.2**（zai-org，44.1万下载，3,857赞）保持强势，**百度Unlimited-OCR**（140万下载，1,943赞）已确立为突破性OCR模型。新上榜的包括**InternScience Agents-A1**（510赞），基于Qwen3.5-MoE的Agent模型，以及**NVIDIA Nemotron-Labs-Audex-30B-A3B**和**Nemotron-Labs-3-Puzzle-75B-A9B**，表明NVIDIA正在推进开源MoE模型发布。\n\nGitHub趋势讲述了当天最强的故事：**Destructive Command Guard**（dcg），一个用Rust编写的工具，用于阻止AI Agent执行危险的git和shell命令，单日暴涨444星——直接回应了人们对Agent编码工具执行破坏性操作日益增长的担忧。更广泛的Claude Code生态系统继续主导：**anthropics/claude-cookbooks**（+459星/天）、**DesktopCommanderMCP**（+210）、**claude-code-templates**（+274）和**awesome-claude-skills**（+60）均在热门榜上。**pgrust**（用Rust重写Postgres，通过100%回归测试，+518星/天）是榜单上技术最大胆的非AI项目。交易Agent（**Vibe-Trading** 768星/天、**ai-hedge-fund**）延续了数周的热门趋势。",
+    "key_themes": [
+      "video-generation-as-vision-pretraining",
+      "sovereign-multilingual-moe-models",
+      "long-context-test-time-training",
+      "agent-safety-destructive-command-guards",
+      "community-model-remixing-quantization",
+      "claude-code-ecosystem-consolidation"
+    ]
+  },
+  "researcher_notes": "**GenCeptional是一篇论题性论文，而非增量成果，这正是它更有趣之处。** 视频生成是通用视觉正确预训练基底的论断，直接挑战了当前主导的图像-文本对比预训练（CLIP风格）和掩码图像建模（MAE风格）范式。论证建立在三个支柱之上：视频提供图像缺乏的时序先验，生成任务迫使学习因果结构而非仅判别特征，文本到视频对齐比文本到图像提供更丰富的监督信号。如果这一论题成立，意味着数十亿投入的纯图像视觉基础模型可能建立在错误的基础表示上。该论文来自多伦多大学、Wayve和Google DeepMind的强力作者阵容，赋予其可信度，但关键问题是视频生成预训练的计算成本（远高于图像预训练）能否通过下游任务改进来证明其合理性。关注后续在标准视觉任务上对比GenCeptional风格预训练与CLIP/SigLIP的基准测试。\n\n**Soofi S 30B-A3B是自阿联酋Falcon系列以来最重要的主权模型发布。** 混合Mamba-Transformer架构在技术上很有趣——每个token仅激活30B中的3B参数，同时在上下文增长时保持近乎恒定的推理缓存，正是企业部署所需的效率特征。但真正的故事是在27万亿token预训练中刻意提高德语权重，背后似乎是德国政府相关的主权AI倡议。这是欧洲主权模型的第二代（继法国Mistral和欧盟OpenGPT-X之后），在聚合基准上匹配14-27B稠密模型、同时服务成本大幅降低的事实，为主权模型投资提供了具体的商业论证。MoE+Mamba混合设计也具有前瞻性——随着上下文长度持续增长，近乎恒定缓存的特性变得越来越有价值。\n\n**Destructive Command Guard的爆发可以说是当天最重要的信号。** 一个基于Rust的命令拦截工具单日获得444颗GitHub星，准确告诉你AI Agent生态系统在成熟度曲线上的位置：采用速度已超过安全工具的发展速度，开发者正在积极寻求护栏。这不是一篇关于对齐的研究论文——而是一个实用工具，阻止`rm -rf`、`git push --force`等破坏性命令被AI Agent执行。它用Rust编写（为了可靠性）并与多个Claude Code生态系统项目一同热门，表明MCP/Skills/Agent工具栈现已足够成熟，主要瓶颈已从能力转向安全。预计未来几周将看到更多Agent安全工具项目上榜。\n\n**arXiv的周日稀疏更新中，有两个值得关注的低调但重要的方向。** 首先，基于拍卖的LLM Agent任务分配（Agora）——使用拍卖机制动态将任务分配给最合适的专家模型，而非静态API路由——是一个被低估的方向，随着多模型Agent编排成为标准，可能变得重要。其次，TrustX Agent风险分类框架（ARC）用于对内部Agent AI系统进行风险分层，正是企业需要但在监管要求之前很少构建的治理基础设施。两篇论文都处于早期阶段但值得跟踪。\n\n**在模型方面，NVIDIA双入围（Audex-30B-A3B和Puzzle-75B-A9B）值得关注。** NVIDIA历史上一直是计算提供商，而非模型发布者。Nemotron-Labs的发布暗示着向同时提供硬件和针对该硬件优化的模型的战略转变——这是一种垂直整合策略，类似于Apple对其芯片和设备端模型所做的。MoE架构（30B中3B活跃，75B中9B活跃）明确为NVIDIA推理栈设计，创造了一个飞轮效应：为NVIDIA GPU优化的模型使NVIDIA GPU更有价值，进而推动更多在NVIDIA GPU上的模型开发。",
+  "papers": [
+    {
+      "id": "genceptional-video-generation-vision-learners",
+      "title": "视频生成模型是通用视觉学习器",
+      "authors": [
+        "Letian Wang",
+        "Chuhan Zhang",
+        "Rishabh Kabra",
+        "Jasper Uijlings",
+        "Steven Waslander",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Toronto",
+        "Wayve",
+        "Google DeepMind"
+      ],
+      "summary": "提出大规模文本到视频生成是通用计算机视觉的强预训练范式，提供图像预训练所缺乏的时空先验、视觉-语言对齐和可扩展性。引入GenCeptional框架，将视频生成模型重新用作视觉基础模型。",
+      "key_findings": [
+        "视频生成预训练提供通用视觉智能所需的时空先验、视觉-语言对齐和可扩展性",
+        "GenCeptional将视频生成模型重新用于下游视觉任务，挑战图像-文本对比预训练的主导地位",
+        "该框架展示生成式视频模型可作为跨多任务的通用视觉学习器"
+      ],
+      "tags": [
+        "video-generation",
+        "vision-pretraining",
+        "foundation-models",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09024",
+        "huggingface": "https://huggingface.co/papers/2607.09024",
+        "pdf": "https://arxiv.org/pdf/2607.09024"
+      }
+    },
+    {
+      "id": "self-guided-ttt-long-context",
+      "title": "长上下文LLM的自引导测试时训练",
+      "authors": [
+        "Xinyu Zhu",
+        "Zhe Xu",
+        "Xiaohan Wei",
+        "Yunchen Pu",
+        "Fei Tian"
+      ],
+      "affiliations": [
+        "Apple",
+        "University of Waterloo"
+      ],
+      "summary": "提出自引导测试时训练（TTT）以改善LLM的长上下文利用。将测试上下文视为特定实例的训练样本进行参数更新，解决输入长度增长时准确率下降的问题。",
+      "key_findings": [
+        "长上下文LLM在输入长度增长时准确率下降，尽管上下文窗口容量足够",
+        "测试时训练将测试上下文作为特定实例的训练样本，实现每个输入的参数适应",
+        "自引导TTT无需重新训练基础模型即可改善证据识别和利用"
+      ],
+      "tags": [
+        "long-context",
+        "test-time-training",
+        "llm",
+        "context-utilization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09415",
+        "huggingface": "https://huggingface.co/papers/2607.09415",
+        "pdf": "https://arxiv.org/pdf/2607.09415"
+      }
+    },
+    {
+      "id": "soofi-sovereign-german-english-moe",
+      "title": "面向德语和英语的主权开源基础模型",
+      "authors": [
+        "The Soofi-Team",
+        "Benedikt Droste",
+        "David Fitzek",
+        "Ruben Härle",
+        "Lukas Helff"
+      ],
+      "affiliations": [
+        "Soofi-Team",
+        "German Sovereign AI Initiative"
+      ],
+      "summary": "发布Soofi S 30B-A3B，一个面向德语和英语的主权开源MoE混合Mamba-Transformer模型，每个token仅激活30B参数中的3B。在27万亿token上预训练并刻意提高德语权重，在聚合基准上匹配14-27B稠密模型，同时在上下文增长时保持近乎恒定的推理缓存。",
+      "key_findings": [
+        "混合Mamba-Transformer MoE设计每个token仅激活30B中的3B参数，推理缓存近乎恒定",
+        "尽管活跃参数显著降低，仍在聚合基准上匹配14-27B稠密模型",
+        "在27万亿token上预训练，刻意提高德语数据权重以实现主权语言覆盖"
+      ],
+      "tags": [
+        "moe",
+        "mamba",
+        "sovereign-ai",
+        "multilingual",
+        "german",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09424",
+        "huggingface": "https://huggingface.co/papers/2607.09424",
+        "pdf": "https://arxiv.org/pdf/2607.09424"
+      }
+    },
+    {
+      "id": "scalable-visual-pretraining-language",
+      "title": "面向语言智能的可扩展视觉预训练",
+      "authors": [
+        "Yiming Zhang",
+        "Zhonghan Zhao",
+        "Wenwei Zhang",
+        "Haiteng Zhao",
+        "Tianyang Lin"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory",
+        "The Chinese University of Hong Kong"
+      ],
+      "summary": "解决基础模型预训练中视觉表示（图表、公式、页面布局）被丢弃的问题。提出可扩展的视觉预训练方法，为语言模型训练保留文档和网页中丰富的视觉线索。",
+      "key_findings": [
+        "当前预训练方法将视觉丰富的来源转换为纯文本，丢失了大量信息",
+        "视觉表示承载的丰富信息无法仅通过文本忠实捕获",
+        "可扩展视觉预训练保留文档布局、图表和排版公式以提升语言智能"
+      ],
+      "tags": [
+        "visual-pretraining",
+        "multimodal",
+        "document-understanding",
+        "foundation-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09657",
+        "huggingface": "https://huggingface.co/papers/2607.09657",
+        "pdf": "https://arxiv.org/pdf/2607.09657"
+      }
+    },
+    {
+      "id": "panoworld-panoramic-generation",
+      "title": "PanoWorld：真实世界全景生成",
+      "authors": [
+        "Haoyuan Li",
+        "Dizhe Zhang",
+        "Yuemei Zhou"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "利用全向表示的旋转等变性解决全景世界模型中的长程记忆问题，实现具有改进时间一致性的真实世界全景生成。",
+      "key_findings": [
+        "利用全向表示的旋转等变性用于全景世界模型",
+        "解决全景视频生成中的长程记忆挑战",
+        "旋转可被视为提高时间一致性的自然对称性"
+      ],
+      "tags": [
+        "panoramic-generation",
+        "world-models",
+        "3d-vision",
+        "equivariance"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09661",
+        "huggingface": "https://huggingface.co/papers/2607.09661",
+        "pdf": "https://arxiv.org/pdf/2607.09661"
+      }
+    },
+    {
+      "id": "agora-auction-llm-agent-reasoning",
+      "title": "Agora：通过基于拍卖的任务分配增强LLM Agent推理",
+      "authors": [
+        "Kaiji Zhou",
+        "Ales Leonardis",
+        "Yue Feng"
+      ],
+      "affiliations": [
+        "University of Birmingham"
+      ],
+      "summary": "提出基于拍卖的机制，在多模型LLM Agent系统中动态将任务分配给最合适的专家模型，用市场化竞标取代静态API路由，以提升推理质量和资源分配。",
+      "key_findings": [
+        "现有多Agent框架使用静态API路由，错失动态专家模型选择的机会",
+        "拍卖机制实现竞争性任务分配，专家模型基于能力和成本竞标",
+        "动态分配相比固定路由策略提升整体推理质量"
+      ],
+      "tags": [
+        "multi-agent",
+        "task-allocation",
+        "auction-mechanism",
+        "llm-reasoning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09600",
+        "huggingface": "https://huggingface.co/papers/2607.09600",
+        "pdf": "https://arxiv.org/pdf/2607.09600"
+      }
+    },
+    {
+      "id": "trustx-arc-agent-risk-classification",
+      "title": "TrustX Agent风险分类框架（ARC）：内部创建的Agent AI系统风险分层",
+      "authors": [
+        "Hannah M. Liu",
+        "Rhea Saxena",
+        "Shiv Asthana"
+      ],
+      "affiliations": [
+        "TrustX"
+      ],
+      "summary": "引入ARC框架，用于对企业和公共部门部署中Agent AI系统的风险等级进行分类和治理。解决Agent系统快速扩散与现有通用AI风险框架之间的差距。",
+      "key_findings": [
+        "通用AI风险框架不足以对自主行动的Agent AI系统进行分类",
+        "ARC为内部Agent AI部署提供结构化的风险分层方法",
+        "该框架解决了Agent AI扩散速度超越监管能力的治理差距"
+      ],
+      "tags": [
+        "ai-safety",
+        "governance",
+        "agentic-ai",
+        "risk-management",
+        "enterprise"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09586",
+        "huggingface": "https://huggingface.co/papers/2607.09586",
+        "pdf": "https://arxiv.org/pdf/2607.09586"
+      }
+    },
+    {
+      "id": "phinn-eeg-dream-classification",
+      "title": "PHINN-EEG：梦境状态脑电图的拓扑时间序列分析",
+      "authors": [
+        "Ren Takahashi",
+        "Emre Yusuf",
+        "Jayabrata Bhaduri"
+      ],
+      "affiliations": [
+        "University of Tokyo",
+        "MIT"
+      ],
+      "summary": "将拓扑数据分析（通过动态Betti曲线的持久同调）应用于梦境状态脑电图分类，超越功率谱密度和统计矩特征。包含基于拓扑特征条件的神经信号合成组件。",
+      "key_findings": [
+        "持久同调的动态Betti曲线在梦境内容分类上优于传统PSD特征",
+        "拓扑条件神经信号合成能够生成逼真的梦境状态脑电图",
+        "结合拓扑时间序列分析与深度学习改善神经科学应用"
+      ],
+      "tags": [
+        "neuroscience",
+        "topological-data-analysis",
+        "eeg",
+        "dream-classification"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09662",
+        "huggingface": "https://huggingface.co/papers/2607.09662",
+        "pdf": "https://arxiv.org/pdf/2607.09662"
+      }
+    },
+    {
+      "id": "vlm-error-evolution-decade",
+      "title": "十年视觉-语言AI模型的准确率与视觉-认知错误演变",
+      "authors": [
+        "Shravan Murlidaran",
+        "Miguel P. Eckstein"
+      ],
+      "affiliations": [
+        "UC Santa Barbara"
+      ],
+      "summary": "评估十年来视觉-语言模型中视觉-认知错误的演变，发现虽然准确率显著提升，但某些错误类型在现代VLM中持续存在，特别是在超出标准MS-COCO评估的复杂场景中。",
+      "key_findings": [
+        "大多数VLM评估使用简单场景（MS-COCO），未能展示复杂的人类交互",
+        "视觉-认知错误模式在模型代际间持续存在，尽管整体准确率已改善",
+        "复杂场景理解仍是现代视觉-语言模型的显著差距"
+      ],
+      "tags": [
+        "vision-language-models",
+        "error-analysis",
+        "evaluation",
+        "visual-reasoning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09654",
+        "huggingface": "https://huggingface.co/papers/2607.09654",
+        "pdf": "https://arxiv.org/pdf/2607.09654"
+      }
+    },
+    {
+      "id": "wan-dancer-music-dance-generation",
+      "title": "Wan-Dancer：分钟级连贯音乐到舞蹈生成的层级框架",
+      "authors": [
+        "Mingyang Huang",
+        "Peng Zhang",
+        "Li Hu"
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Zhejiang University"
+      ],
+      "summary": "解决从音乐生成长时高清、节奏同步舞蹈视频的挑战，通过层级框架克服当前扩散视频生成的时间限制。",
+      "key_findings": [
+        "层级框架实现从音乐输入生成分钟级连贯舞蹈视频",
+        "克服限制当前扩散模型只能生成短视频片段的时间约束",
+        "在延长生成时长内保持节奏同步和视觉质量"
+      ],
+      "tags": [
+        "music-to-dance",
+        "video-generation",
+        "diffusion-models",
+        "long-duration"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09581",
+        "huggingface": "https://huggingface.co/papers/2607.09581",
+        "pdf": "https://arxiv.org/pdf/2607.09581"
+      }
+    },
+    {
+      "id": "pac-act-robot-manipulation",
+      "title": "PAC-ACT：动作分块Transformer的后训练Actor-Critic",
+      "authors": [
+        "Yujie Pang",
+        "Zudong Li"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "解决视觉-语言-动作模型的广泛泛化能力与工业接触操作精度需求之间的差距。提出对动作分块Transformer的后训练actor-critic方法，以提高在姿态扰动和接触力约束下的可靠性。",
+      "key_findings": [
+        "视觉-语言-动作模型缺乏接触密集型工业操作任务所需的精度",
+        "后训练actor-critic微调在姿态扰动和接触力约束下提高可靠性",
+        "方法兼容现有动作分块Transformer架构，无需重新训练"
+      ],
+      "tags": [
+        "robotics",
+        "manipulation",
+        "reinforcement-learning",
+        "action-chunking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09590",
+        "huggingface": "https://huggingface.co/papers/2607.09590",
+        "pdf": "https://arxiv.org/pdf/2607.09590"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "腾讯最新的混元模型，混元家族的新成员，基于Transformer架构的文本生成模型。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "hunyuan",
+        "text-generation",
+        "transformers"
+      ],
+      "metrics": {
+        "downloads": 8655,
+        "likes": 724
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "empero-ai-qwythos-9b",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "基于Qwen3.5的社区量化GGUF模型，针对推理任务进行微调优化，是平台上下载量最高的社区微调之一。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "gguf",
+        "quantized",
+        "reasoning",
+        "qwen3.5"
+      ],
+      "metrics": {
+        "downloads": 1967677,
+        "likes": 2047
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "zai-org-glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "zai-org",
+      "description": "最新GLM模型，采用MoE和动态稀疏注意力架构，用于文本生成和对话AI，持续位居平台最受欢迎模型之列。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "glm",
+        "moe",
+        "dynamic-sparse-attention",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 441413,
+        "likes": 3857
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "bottlecapai-thinkingcap-qwen3-6-27b",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "bottlecapai",
+      "description": "基于Qwen3.6的多模态模型（图像-文本到文本），在27B参数规模上优化推理和思考任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "qwen3.6",
+        "multimodal",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 4463,
+        "likes": 266
+      },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "基于Qwen3.5-MoE架构构建的Agent多模态模型，专为基于Agent的任务设计，具有图像-文本到文本能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE",
+      "tags": [
+        "agentic",
+        "moe",
+        "multimodal",
+        "qwen3.5"
+      ],
+      "metrics": {
+        "downloads": 29038,
+        "likes": 510
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度的突破性OCR模型，基于特征提取架构，在文档和文本识别任务中获得大规模采用。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "document-understanding",
+        "feature-extraction"
+      ],
+      "metrics": {
+        "downloads": 1430656,
+        "likes": 1943
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "hauhaucs-qwen3-6-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS",
+      "description": "Qwen3.6-35B MoE视觉模型的社区无审查GGUF量化版本，以260万下载成为最受欢迎的社区微调之一。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B",
+      "tags": [
+        "uncensored",
+        "qwen3.6",
+        "moe",
+        "vision",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 2596384,
+        "likes": 2677
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "nvidia-nemotron-labs-audex",
+      "name": "Nemotron-Labs-Audex-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA的Nemotron-Labs音频增强模型，30B参数中3B活跃（MoE），标志着NVIDIA向开源模型发布的推进。",
+      "task_type": "text-generation",
+      "model_size": "30B-A3B",
+      "tags": [
+        "nvidia",
+        "nemotron",
+        "moe",
+        "audio"
+      ],
+      "metrics": {
+        "downloads": 901,
+        "likes": 131
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Labs-Audex-30B-A3B"
+    },
+    {
+      "id": "google-tabfm",
+      "name": "TabFM 1.0.0",
+      "organization": "Google",
+      "description": "Google的表格基础模型，用于表格回归和结构化数据的零样本推理，将基础模型能力带入传统ML表格任务。",
+      "task_type": "tabular-regression",
+      "model_size": "Unknown",
+      "tags": [
+        "tabular",
+        "zero-shot",
+        "foundation-model",
+        "regression"
+      ],
+      "metrics": {
+        "downloads": 20973,
+        "likes": 357
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "deepreinforce-ornith",
+      "name": "Ornith-1.0-35B-GGUF",
+      "organization": "deepreinforce-ai",
+      "description": "35B参数文本生成模型，130万下载，以GGUF格式通过llama.cpp进行本地部署。",
+      "task_type": "text-generation",
+      "model_size": "35B",
+      "tags": [
+        "text-generation",
+        "gguf",
+        "local-deployment"
+      ],
+      "metrics": {
+        "downloads": 1347036,
+        "likes": 855
+      },
+      "source_url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF"
+    },
+    {
+      "id": "meituan-longcat-2",
+      "name": "LongCat-2.0",
+      "organization": "Meituan",
+      "description": "美团第二代LongCat模型，用于文本生成和对话AI，专注于长上下文处理。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "long-context",
+        "conversational",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1767,
+        "likes": 182
+      },
+      "source_url": "https://huggingface.co/meituan-longcat/LongCat-2.0"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "香港大学的AI驱动个人交易Agent系统，结合LLM推理与金融市场数据进行自动化交易策略。爆发至20K+星，表明AI驱动金融工具的巨大兴趣。",
+      "language": "Python",
+      "stars": 20621,
+      "stars_today": 768,
+      "forks": 3602,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "ai-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropics-claude-cookbooks",
+      "name": "anthropics/claude-cookbooks",
+      "description": "Anthropic官方Claude笔记本和实践示例集合，展示构建Claude API的实用模式，包括工具使用、多轮工作流和Agent架构。",
+      "language": "Jupyter Notebook",
+      "stars": 48451,
+      "stars_today": 459,
+      "forks": 5734,
+      "url": "https://github.com/anthropics/claude-cookbooks",
+      "tags": [
+        "claude",
+        "llm",
+        "tutorials",
+        "agent-patterns"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "destructive-command-guard",
+      "name": "Dicklesworthstone/destructive_command_guard",
+      "description": "基于Rust的安全工具，阻止AI Agent执行危险的git和shell命令——rm -rf、git push --force等破坏性操作。随着Agent安全关注度增长，单日暴涨444星。",
+      "language": "Rust",
+      "stars": 2979,
+      "stars_today": 444,
+      "forks": 109,
+      "url": "https://github.com/Dicklesworthstone/destructive_command_guard",
+      "tags": [
+        "agent-safety",
+        "cli",
+        "rust",
+        "devtools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "malisper-pgrust",
+      "name": "malisper/pgrust",
+      "description": "用Rust重写的Postgres，已通过100%的Postgres回归测试。一个技术上大胆的项目，展示了Rust在系统级数据库重新实现中的可行性。",
+      "language": "Rust",
+      "stars": 2496,
+      "stars_today": 518,
+      "forks": 68,
+      "url": "https://github.com/malisper/pgrust",
+      "tags": [
+        "database",
+        "rust",
+        "postgres",
+        "systems-programming"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "shubhamsaboo-awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "精选的100+可运行AI Agent和RAG应用集合。为构建LLM驱动应用的开发者提供克隆即用的实用资源。",
+      "language": "Python",
+      "stars": 118621,
+      "stars_today": 408,
+      "forks": 17638,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": [
+        "llm",
+        "ai-agents",
+        "rag",
+        "awesome-list"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "home-assistant-core",
+      "name": "home-assistant/core",
+      "description": "开源家庭自动化平台，强调本地控制和隐私。作为最活跃的开源项目之一，AI集成能力持续增长。",
+      "language": "Python",
+      "stars": 89091,
+      "stars_today": 400,
+      "forks": 38086,
+      "url": "https://github.com/home-assistant/core",
+      "tags": [
+        "home-automation",
+        "iot",
+        "privacy",
+        "smart-home"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "davila7-claude-code-templates",
+      "name": "davila7/claude-code-templates",
+      "description": "用于配置和监控Claude Code的CLI工具，为Claude Code工作流和Agent设置提供模板和配置。",
+      "language": "Python",
+      "stars": 29254,
+      "stars_today": 274,
+      "forks": 3204,
+      "url": "https://github.com/davila7/claude-code-templates",
+      "tags": [
+        "claude-code",
+        "cli",
+        "templates",
+        "agent-tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "wonderwhy-er-desktopmcp",
+      "name": "wonderwhy-er/DesktopCommanderMCP",
+      "description": "为Claude提供终端控制、文件系统搜索和基于diff的文件编辑功能的MCP服务器。作为核心Claude Code生态系统工具，延续多日热门趋势。",
+      "language": "TypeScript",
+      "stars": 8008,
+      "stars_today": 210,
+      "forks": 985,
+      "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+      "tags": [
+        "mcp",
+        "claude-code",
+        "terminal",
+        "file-editing"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "Comfy-Org/ComfyUI",
+      "description": "最强大和模块化的扩散模型GUI、API和后端，具有图形/节点界面。继续作为扩散模型工作流的主导开源工具。",
+      "language": "Python",
+      "stars": 120492,
+      "stars_today": 125,
+      "forks": 14180,
+      "url": "https://github.com/Comfy-Org/ComfyUI",
+      "tags": [
+        "diffusion",
+        "gui",
+        "image-generation",
+        "workflow"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "composiohq-awesome-claude-skills",
+      "name": "ComposioHQ/awesome-claude-skills",
+      "description": "精选的Claude Skills、资源和工具列表，用于定制Claude AI工作流。Claude Code技能包装生态系统的组成部分。",
+      "language": "Python",
+      "stars": 67545,
+      "stars_today": 60,
+      "forks": 7617,
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "tags": [
+        "claude-code",
+        "skills",
+        "agent-tooling",
+        "awesome-list"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "virattt-ai-hedge-fund",
+      "name": "virattt/ai-hedge-fund",
+      "description": "使用LLM Agent进行投资研究和投资组合管理的AI对冲基金团队实现。与Vibe-Trading一起延续数周热门趋势。",
+      "language": "Python",
+      "stars": 61425,
+      "stars_today": 115,
+      "forks": 10858,
+      "url": "https://github.com/virattt/ai-hedge-fund",
+      "tags": [
+        "finance",
+        "ai-agent",
+        "hedge-fund",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "project-nomad",
+      "name": "Crosstalk-Solutions/project-nomad",
+      "description": "自包含离线生存计算机，配备关键工具、知识和AI用于应急准备。展示了对离线/边缘AI部署场景日益增长的兴趣。",
+      "language": "TypeScript",
+      "stars": 33824,
+      "stars_today": 125,
+      "forks": 3392,
+      "url": "https://github.com/Crosstalk-Solutions/project-nomad",
+      "tags": [
+        "offline-ai",
+        "edge-computing",
+        "survival",
+        "tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "foundationagents-openmanus",
+      "name": "FoundationAgents/OpenManus",
+      "description": "FoundationAgents的开源AI Agent框架。以57K+星稳定热门，作为领先的开源Agent平台之一。",
+      "language": "Python",
+      "stars": 57276,
+      "stars_today": 101,
+      "forks": 9964,
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "tags": [
+        "ai-agent",
+        "framework",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-trellis-2",
+      "name": "microsoft/TRELLIS.2",
+      "description": "微软的原生紧凑结构化潜在表示用于3D生成，支持从文本和图像创建高质量3D资产。",
+      "language": "Python",
+      "stars": 8708,
+      "stars_today": 22,
+      "forks": 1076,
+      "url": "https://github.com/microsoft/TRELLIS.2",
+      "tags": [
+        "3d-generation",
+        "structured-latents",
+        "microsoft"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pydantic-ai",
+      "name": "pydantic/pydantic-ai",
+      "description": "以Pydantic方式构建的AI Agent框架，强调类型安全和结构化输出，用于构建可靠的AI Agent应用。",
+      "language": "Python",
+      "stars": 18456,
+      "stars_today": 42,
+      "forks": 2349,
+      "url": "https://github.com/pydantic/pydantic-ai",
+      "tags": [
+        "ai-agent",
+        "pydantic",
+        "type-safety",
+        "framework"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "视频生成作为视觉基础",
+      "description": "一个论题级别的转变，认为视频生成预训练——而非图像-文本对比学习或掩码图像建模——是通用计算机视觉的正确基底。GenCeptional和可扩展视觉预训练论文都挑战了主导的纯图像预训练范式。",
+      "related_paper_ids": [
+        "genceptional-video-generation-vision-learners",
+        "scalable-visual-pretraining-language",
+        "panoworld-panoramic-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "主权和多语言MoE模型",
+      "description": "政府支持或区域特定的开源基础模型的出现，采用MoE架构实现高效服务。Soofi S（德语），加上GLM-5.2和各种Qwen衍生模型的持续强势，表明非英语主权AI在架构上正变得成熟。",
+      "related_paper_ids": [
+        "soofi-sovereign-german-english-moe"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent安全与治理工具",
+      "description": "随着AI Agent采用速度超过安全基础设施，实用工具（Destructive Command Guard）和治理框架（TrustX ARC）正在涌现。DCG的GitHub爆发式增长信号表明Agent生态系统已经超越了能力优先阶段，进入安全意识部署阶段。",
+      "related_paper_ids": [
+        "trustx-arc-agent-risk-classification",
+        "agora-auction-llm-agent-reasoning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "长上下文效率与适应",
+      "description": "测试时训练、具有近乎恒定缓存的MoE架构和长上下文模型发布（LongCat-2.0）都指向持续推进长上下文处理既高效又可靠的目标，超越简单的上下文窗口扩展。",
+      "related_paper_ids": [
+        "self-guided-ttt-long-context",
+        "soofi-sovereign-german-english-moe"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Claude Code生态系统整合",
+      "description": "多个Claude Code相关项目同时热门——cookbooks、模板、技能、MCP服务器和安全工具——表明Claude Code/MCP/Skills生态系统正在整合为Agent开发工具的事实标准。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-13T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
