@@ -1,0 +1,1062 @@
+{
+  "version": "1.0",
+  "date": "2026-07-14",
+  "generated_at": "2026-07-14T02:15:00Z",
+  "summary": {
+    "headline": "智能体评测体系成熟化——Long-Horizon-Terminal-Bench发布；视频优先与像素空间方法双向挑战视觉预训练范式；LLM微调中的记忆-泛化差距被正式化；AI交易Agent工具持续主导GitHub趋势",
+    "body": "周一的HuggingFace每日论文返回14篇（来自2026-07-13的回退，因为周一论文尚未发布），涵盖智能体评测、视觉预训练、LLM微调和密集预测等领域。**Long-Horizon-Terminal-Bench**（LHTB）是本日操作相关性最高的论文：它引入了46项跨9个类别的长时域终端任务，采用密集奖励评分而非二元最终结果评分，直接解决了导致当前Agent基准不可靠的稀疏奖励问题。这是Agent评测生态系统的基础设施工作。\n\n**面向语言智能的可扩展视觉预训练**认为，当前LLM预训练通过将文档和网页转换为纯文本而丢弃了丰富的视觉线索，并提出在预训练期间纳入视觉表示。结合**从RGB生成到密集场读出**论文（提出像素空间密集预测优于潜在空间方法），周一传递了一个清晰信号：社区正在重新审视预训练和推理管道中的视觉信息瓶颈。\n\n**从机制理解LLM微调中记忆知识为何无法泛化**将LLM微调中的'知-用差距'正式化——这是从业者熟知的痛点，现在获得了严格的机制处理。论文表明LLM能快速记忆新事实，但无法在下游推理中应用它们，并识别出记忆与泛化之间的准确率差距和时序滞后。\n\n**信任域策略蒸馏（TOP-D）**通过有原则的信任域框架解决了在策略蒸馏的不稳定性，包含形式化全局收敛分析——理论性强，但对任何进行教师LLM策略蒸馏的人都有实用价值。\n\n在HuggingFace热门模型方面，**腾讯Hy3**（趋势分381，755赞）以新的混元系列MoE文本生成模型登顶榜单。**NVIDIA Nemotron-Labs-Audex-30B-A3B**（趋势分139）是新上榜者——一个支持语音识别、翻译和文本转语音的30B音频语言模型，采用非商业许可，标志着NVIDIA进军开源权重音频语言建模领域。**Google的TabFM-1.0.0**（362赞）是具有零样本分类能力的表格基础模型，与文本/图像相比是相对未开发的前沿。**InternScience Agents-A1**（526赞）是基于Qwen3.5-MoE的Agent VLM，在多模态Agent用例上趋势上升。\n\nGitHub趋势显示AI驱动的交易Agent主导市场：**Vibe-Trading**（今日+1,153星，现共21,827颗），**ai-hedge-fund**（+330），**TradingAgents**（+245），以及**TradingAgents-astock**（A股市场适配版，+179）。**Graphify**（今日+1,095星）——一个将代码转化为可查询知识图谱的AI编码助手技能——持续强势。**OpenCut**（今日+1,229星）是本周增速最快的非AI项目，是开源的CapCut视频编辑替代品。**awesome-llm-apps**（+996星）累计达11.9万颗星。",
+    "key_themes": [
+      "long-horizon-agent-benchmarking",
+      "visual-pretraining-reinvention",
+      "llm-knowledge-memorization-vs-generalization",
+      "audio-language-modeling-open-weights",
+      "tabular-foundation-models",
+      "trading-agent-tools-github-surge"
+    ]
+  },
+  "researcher_notes": "**LHTB是评测基础设施论文，而非能力论文。** 其贡献在于基准设计（密集奖励，46个任务，9个类别）而非新模型。如果你在构建Agent评测，值得收藏——二元最终结果评分长期以来饱受批评，LHTB是一次修复尝试。\n\n**视觉预训练集群（3篇论文）在架构层面意义重大。**《可扩展视觉预训练》和《从RGB生成到密集场读出》从不同角度挑战现状。前者认为将视觉丰富的文档转换为纯文本丢失了信息；后者认为通过潜在空间方法进行密集预测是次优的。结合昨日的GenCeptional（视频作为视觉预训练），这是连续3天的论文集群，都在质疑同一假设：以文本为中心或以图像为中心的预训练已经足够。\n\n**知-用差距论文与从业者高度相关。** 任何做过RAG或知识注入微调的人都见过这种失败模式。论文的机制框架和'空间渗透动力学'干预技术是新颖的；现象本身是熟悉的。\n\n**NVIDIA Audex采用非商业许可**——使用前注意许可证。音频语言建模在开源权重生态系统中确实服务不足，因此即使有许可证限制，这也是值得关注的。",
+  "papers": [
+    {
+      "id": "long-horizon-terminal-bench",
+      "title": "Long-Horizon-Terminal-Bench：用密集奖励评分测试Agent在长时域终端任务上的极限",
+      "authors": [
+        "Zongxia Li",
+        "Zhongzhi Li",
+        "Yucheng Shi",
+        "Ruhan Wang",
+        "Junyao Yang"
+      ],
+      "affiliations": [
+        "Multi-institutional"
+      ],
+      "summary": "引入LHTB，一个跨9个类别的46项长时域终端任务Agent基准，采用密集奖励评分（非二元最终结果）。解决现有Agent基准中遮蔽部分进展和中间能力的稀疏奖励问题。",
+      "key_findings": [
+        "现有终端基准聚焦于仅通过最终结果评估的简单短任务，产生稀疏奖励信号",
+        "跨9个类别的46项长时域任务通过密集评分捕获中间进展和部分解决方案",
+        "密集奖励评分对多步骤终端任务的Agent能力提供更完整的图景"
+      ],
+      "tags": [
+        "agent-eval",
+        "benchmarking",
+        "terminal-tasks",
+        "reward-design"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08964",
+        "huggingface": "https://huggingface.co/papers/2607.08964",
+        "pdf": "https://arxiv.org/pdf/2607.08964"
+      }
+    },
+    {
+      "id": "scalable-visual-pretraining-language",
+      "title": "面向语言智能的可扩展视觉预训练",
+      "authors": [
+        "Yiming Zhang",
+        "Zhonghan Zhao",
+        "Wenwei Zhang",
+        "Haiteng Zhao",
+        "Tianyang Lin"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "认为LLM预训练通过将文档和网页转换为纯文本而丢弃了丰富的视觉线索，并提出在预训练期间纳入视觉表示——图形、排版方程、页面布局——以提升语言智能。",
+      "key_findings": [
+        "当前预训练将视觉丰富的来源转换为纯文本，丢弃图形、方程和布局信息",
+        "视觉表示承载纯文本无法忠实捕获的丰富信息",
+        "可扩展视觉预训练通过保留真实世界文档中的多模态线索改善语言智能"
+      ],
+      "tags": [
+        "pretraining",
+        "multimodal",
+        "visual-learning",
+        "llm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09657",
+        "huggingface": "https://huggingface.co/papers/2607.09657",
+        "pdf": "https://arxiv.org/pdf/2607.09657"
+      }
+    },
+    {
+      "id": "genceptional-video-generation-vision-learners",
+      "title": "视频生成模型是通用视觉学习器",
+      "authors": [
+        "Letian Wang",
+        "Chuhan Zhang",
+        "Rishabh Kabra",
+        "Jasper Uijlings",
+        "Steven Waslander",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Toronto",
+        "Wayve",
+        "Google DeepMind"
+      ],
+      "summary": "认为大规模文本到视频生成是通用计算机视觉的强预训练范式，提供图像预训练所缺乏的时空先验、视觉-语言对齐和可扩展性。引入GenCeptional框架，将视频生成模型重新用作视觉基础模型。",
+      "key_findings": [
+        "视频生成预训练提供通用视觉智能所需的时空先验和视觉-语言对齐",
+        "GenCeptional将视频生成模型重新用于下游视觉任务，挑战图像-文本对比预训练的主导地位",
+        "该框架跨多项视觉任务推广，证明生成式视频模型可作为通用视觉学习器"
+      ],
+      "tags": [
+        "video-generation",
+        "vision-pretraining",
+        "foundation-models",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09024",
+        "huggingface": "https://huggingface.co/papers/2607.09024",
+        "pdf": "https://arxiv.org/pdf/2607.09024"
+      }
+    },
+    {
+      "id": "kronq-llm-quantization-kronecker",
+      "title": "KronQ：通过Kronecker因子化Hessian进行LLM量化",
+      "authors": [
+        "Donghyun Lee",
+        "Yuhang Li",
+        "Ruokai Yin",
+        "Priyadarshini Panda"
+      ],
+      "affiliations": [
+        "Yale University"
+      ],
+      "summary": "提出KronQ，一个后训练量化（PTQ）框架，挑战GPTQ等方法中所有输出通道对量化误差贡献相同的假设。通过Kronecker因子化Hessian近似将梯度协方差引入量化管道。",
+      "key_findings": [
+        "现有PTQ方法（GPTQ）假设输出通道贡献均匀，忽略梯度协方差",
+        "KronQ使用Kronecker因子化Hessian以更准确的量化目标纳入梯度协方差",
+        "通过有原则的二阶近似实现更好的PTQ质量"
+      ],
+      "tags": [
+        "quantization",
+        "llm",
+        "post-training",
+        "compression"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07964",
+        "huggingface": "https://huggingface.co/papers/2607.07964",
+        "pdf": "https://arxiv.org/pdf/2607.07964"
+      }
+    },
+    {
+      "id": "trust-region-policy-distillation",
+      "title": "信任域策略蒸馏",
+      "authors": [
+        "Zhengpeng Xie",
+        "Li Lyna Zhang",
+        "Zeke Xie",
+        "Mao Yang"
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "提出TOP-D（信任域策略蒸馏），通过动态构建近端教师将不稳定的在策略蒸馏转化为稳定的训练范式，并控制梯度方差。提供形式化全局收敛分析和单调改进保证。",
+      "key_findings": [
+        "在策略蒸馏（OPD）出了名的不稳定，方差高；TOP-D提供有原则的稳定化",
+        "动态近端教师构建以理论保证固有地控制梯度方差",
+        "具有单调改进保证的形式化全局收敛分析"
+      ],
+      "tags": [
+        "policy-distillation",
+        "rlhf",
+        "training-stability",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.04751",
+        "huggingface": "https://huggingface.co/papers/2607.04751",
+        "pdf": "https://arxiv.org/pdf/2607.04751"
+      }
+    },
+    {
+      "id": "pixel-space-dense-prediction-t2i",
+      "title": "从RGB生成到密集场读出：使用文本到图像模型进行像素空间密集预测",
+      "authors": [
+        "Zanyi Wang",
+        "Xin Lin",
+        "Haodong Li",
+        "Dengyang Jiang",
+        "Yijiang Li"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "认为现有使用VAE潜在空间进行密集预测（深度、法线、alpha遮罩）的方法继承了生成输出接口问题。提出直接使用文本到图像模型进行像素空间密集预测。",
+      "key_findings": [
+        "潜在空间密集预测方法继承VAE生成接口的伪影",
+        "像素空间直接读出避免了生成到判别的不匹配",
+        "在深度、法线、分割等任务上实现改进的密集预测质量"
+      ],
+      "tags": [
+        "dense-prediction",
+        "diffusion-models",
+        "computer-vision",
+        "depth-estimation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06553",
+        "huggingface": "https://huggingface.co/papers/2607.06553",
+        "pdf": "https://arxiv.org/pdf/2607.06553"
+      }
+    },
+    {
+      "id": "knowing-using-gap-llm-finetuning",
+      "title": "从机制角度理解大型语言模型微调中记忆知识无法泛化的原因",
+      "authors": [
+        "Lu Dai",
+        "Ziyang Rao",
+        "Yili Wang",
+        "Hanqing Wang",
+        "Hao Liu"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "将LLM微调中的'知-用差距'正式化：模型能快速记忆新事实，但无法在下游推理中使用它们。使用空间渗透动力学分析理解注入的知识如何在模型层中传播（或未能传播）。",
+      "key_findings": [
+        "LLM表现出知-用差距：记忆的事实不会自动转移到推理任务",
+        "记忆和泛化之间存在准确率差距和时序滞后",
+        "空间渗透动力学干预揭示知识如何无法跨层传播"
+      ],
+      "tags": [
+        "finetuning",
+        "knowledge-injection",
+        "mechanistic-interpretability",
+        "llm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08393",
+        "huggingface": "https://huggingface.co/papers/2607.08393",
+        "pdf": "https://arxiv.org/pdf/2607.08393"
+      }
+    },
+    {
+      "id": "panoworld-panoramic-generation",
+      "title": "PanoWorld：真实世界全景生成",
+      "authors": [
+        "Haoyuan Li",
+        "Dizhe Zhang",
+        "Yuemei Zhou",
+        "Xiangkai Zhang",
+        "Haoran Feng"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "通过利用全向表示的旋转等变性来解决全景世界模型中的长距离记忆问题。PanoWorld使用密集全景射线条件（DPRC）和几何感知记忆增强来简化相机轨迹。",
+      "key_findings": [
+        "全向表示中的旋转等变性简化了相机轨迹建模",
+        "DPRC实现当前动作和长距离记忆的固定航向轨迹建模",
+        "展示改进的全景世界模型一致性"
+      ],
+      "tags": [
+        "world-models",
+        "panoramic",
+        "video-generation",
+        "3d"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09661",
+        "huggingface": "https://huggingface.co/papers/2607.09661",
+        "pdf": "https://arxiv.org/pdf/2607.09661"
+      }
+    },
+    {
+      "id": "self-guided-ttt-long-context",
+      "title": "长上下文LLM的自引导测试时训练",
+      "authors": [
+        "Xinyu Zhu",
+        "Zhe Xu",
+        "Xiaohan Wei",
+        "Yunchen Pu",
+        "Fei Tian"
+      ],
+      "affiliations": [
+        "Apple",
+        "University of Waterloo"
+      ],
+      "summary": "提出自引导测试时训练（TTT）以改善长上下文LLM准确率，即使扩展了上下文窗口，准确率也会随输入长度增长而下降。在推理时将测试上下文作为实例特定参数更新的训练样本。",
+      "key_findings": [
+        "尽管扩展了上下文窗口，长上下文准确率仍随输入长度下降",
+        "TTT将测试上下文作为实例特定适应的训练样本",
+        "自引导方法通过从上下文本身生成监督来避免需要标注样本"
+      ],
+      "tags": [
+        "long-context",
+        "test-time-training",
+        "llm",
+        "inference"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09415",
+        "huggingface": "https://huggingface.co/papers/2607.09415",
+        "pdf": "https://arxiv.org/pdf/2607.09415"
+      }
+    },
+    {
+      "id": "flow-erd-traffic-simulation",
+      "title": "Flow-ERD：用于多样化交通仿真的智能体类型感知流匹配与熵正则化蒸馏",
+      "authors": [
+        "Seulbin Hwang",
+        "Kiyoung Om",
+        "Daejung Kim",
+        "Jinhan Lee"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "引入Flow-ERD用于真实且多样化的交通仿真，结合智能体类型感知流匹配（AFM）和熵正则化蒸馏。针对自动驾驶社区，该社区的基准优化真实性但对多样性探索不足。",
+      "key_findings": [
+        "现有交通仿真基准奖励真实性但忽视多样性",
+        "AFM将流匹配的多模态表达性与类型特定的运动学执行相结合",
+        "熵正则化蒸馏确保多样但真实的多智能体仿真"
+      ],
+      "tags": [
+        "autonomous-driving",
+        "traffic-simulation",
+        "flow-matching",
+        "multi-agent"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06957",
+        "huggingface": "https://huggingface.co/papers/2607.06957",
+        "pdf": "https://arxiv.org/pdf/2607.06957"
+      }
+    },
+    {
+      "id": "medpmc-medical-multimodal-foundation",
+      "title": "MedPMC：用于基础模型的高保真医学多模态数据扩展系统框架",
+      "authors": [
+        "Hyunjae Kim",
+        "Dain Kim",
+        "Pan Xiao",
+        "Serina S. Applebaum",
+        "Younjoon Chung"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "引入MedPMC，一个从PubMed Central（PMC）提取高保真多模态医学数据以训练医学基础模型的自动化、可持续更新框架，解决可用临床数据与当前PMC衍生资源之间的差距。",
+      "key_findings": [
+        "现有PMC衍生医学数据集在保真度、可重现性和临床验证方面存在局限",
+        "MedPMC提供大规模自动提取专家撰写的图像-文本医学数据",
+        "可持续更新的管道支持追踪新医学文献"
+      ],
+      "tags": [
+        "medical-ai",
+        "multimodal",
+        "dataset",
+        "foundation-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07673",
+        "huggingface": "https://huggingface.co/papers/2607.07673",
+        "pdf": "https://arxiv.org/pdf/2607.07673"
+      }
+    },
+    {
+      "id": "soofi-german-english-moe-mamba",
+      "title": "德语和英语的主权开源基础模型",
+      "authors": [
+        "The Soofi-Team",
+        "Benedikt Droste",
+        "David Fitzek",
+        "Ruben Härle",
+        "Lukas Helff"
+      ],
+      "affiliations": [
+        "Soofi-Team (German sovereign AI)"
+      ],
+      "summary": "提出Soofi S 30B-A3B，一个面向德语和英语的主权开源MoE混合Mamba-Transformer基础模型。每个token仅激活30B参数中的3B，上下文增长时推理缓存近乎恒定。在约27万亿token上预训练并刻意提高德语权重。",
+      "key_findings": [
+        "混合Mamba-Transformer MoE，30B参数，每token激活3B，近恒定推理缓存",
+        "在约27万亿token上预训练，刻意提高德语权重以实现主权多语言能力",
+        "在长上下文部署上具有显著吞吐量优势的情况下，聚合基准与14-27B稠密模型相当"
+      ],
+      "tags": [
+        "moe",
+        "mamba",
+        "multilingual",
+        "sovereign-ai",
+        "german"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09424",
+        "huggingface": "https://huggingface.co/papers/2607.09424",
+        "pdf": "https://arxiv.org/pdf/2607.09424"
+      }
+    },
+    {
+      "id": "spam-phone-segmentation-recognition",
+      "title": "通过音韵激活映射进行音素分割与识别",
+      "authors": [
+        "Shikhar Bharadwaj",
+        "Kwanghee Choi",
+        "Stephen McIntosh",
+        "Chin-Jou Li",
+        "Eunjung Yeo"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "提出SPAM（音韵激活映射）利用自监督语音模型中的潜在音素结构进行联合音素分割和识别，将S3M表示映射到浊音性和鼻音性等音韵特征激活向量。",
+      "key_findings": [
+        "音素结构已隐含于自监督语音模型表示中",
+        "SPAM将S3M帧映射到音韵特征向量，同时用于分割和识别",
+        "无需特定任务架构即可在两项任务上实现竞争性表现"
+      ],
+      "tags": [
+        "speech",
+        "phonology",
+        "self-supervised",
+        "segmentation"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09020",
+        "huggingface": "https://huggingface.co/papers/2607.09020",
+        "pdf": "https://arxiv.org/pdf/2607.09020"
+      }
+    },
+    {
+      "id": "vasemuseum-greek-pottery-vlm",
+      "title": "VaseMuseum：古希腊陶器数字智能博物馆",
+      "authors": [
+        "Jiazi Wang",
+        "Nonghai Zhang",
+        "Qiushi Xie",
+        "Zeyu Zhang",
+        "Yufeng Chen"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "提出VaseMuseum，一个VLM驱动的古希腊陶器交互式数字博物馆，将精细的2D/3D视觉证据与专业策展知识相结合，使用基于RAG的检索解决开放式解读问题。",
+      "key_findings": [
+        "VLM支持交互式数字博物馆体验，但需要在专业领域知识中建立基础",
+        "基于RAG的检索将视觉证据与策展专业知识相结合，实现可靠的文物探索",
+        "展示在具有精细视觉区分的文化遗产领域的适用性"
+      ],
+      "tags": [
+        "vlm",
+        "cultural-heritage",
+        "rag",
+        "multimodal"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06374",
+        "huggingface": "https://huggingface.co/papers/2607.06374",
+        "pdf": "https://arxiv.org/pdf/2607.06374"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "腾讯最新的混元系列MoE文字生成模型（hy_v3架构）。以755赞和381趋势分位居榜首，尽管目前公开文档有限，但显示出强劲的社区兴趣。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "hunyuan",
+        "moe",
+        "text-generation",
+        "tencent"
+      ],
+      "metrics": {
+        "downloads": 9157,
+        "likes": 755
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "empero-ai-qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "基于Qwen3.5的社区微调9B模型的GGUF量化版本，支持1M上下文、视觉、推理和函数调用。200万+下载量和2,086赞表明它是使用最广泛的社区模型之一。",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": [
+        "qwen3.5",
+        "gguf",
+        "reasoning",
+        "long-context",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1985221,
+        "likes": 2086
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "zai-org-glm-5.2",
+      "name": "GLM-5.2",
+      "organization": "zai-org (Zhipu AI)",
+      "description": "智谱AI的GLM-5.2，采用MoE-DSA架构的文本生成模型，3,902赞和46.5万下载量。强大的双语（英语/中文）能力，MIT许可证。HuggingFace上获赞最多的模型之一。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "glm",
+        "moe",
+        "bilingual",
+        "mit-license"
+      ],
+      "metrics": {
+        "downloads": 464914,
+        "likes": 3902
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "bottlecapai-thinkingcap-qwen3-6-27b",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "bottlecapai",
+      "description": "Qwen/Qwen3.6-27B的Token高效思维微调版，专为降低Token开销的高效推理设计。311赞，4.9K下载量。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "qwen3.6",
+        "efficient-thinking",
+        "token-efficient",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 4909,
+        "likes": 311
+      },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "基于Qwen3.5-MoE架构的Agent视觉语言模型（VLM），专为多模态Agent任务设计。526赞，29.8K下载量，附论文参考 arxiv:2606.30616。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "agentic",
+        "vlm",
+        "moe",
+        "qwen3.5",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 29801,
+        "likes": 526
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度的高性能多语言OCR模型，150万下载量，1,963赞。论文参考 arxiv:2606.23050，MIT许可证。已确立为首选开源OCR基础模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "vision-language",
+        "multilingual",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 1506937,
+        "likes": 1963
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "nvidia-nemotron-labs-audex-30b",
+      "name": "Nemotron-Labs-Audex-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA的30B音频语言模型，激活参数3B，支持语音识别、翻译、文本转音频和通用推理。非商业许可证。arxiv:2607.05196。代表NVIDIA进军开源权重音频语言建模领域。",
+      "task_type": "text-generation",
+      "model_size": "30B (3B active)",
+      "tags": [
+        "audio",
+        "speech-recognition",
+        "text-to-speech",
+        "moe",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1058,
+        "likes": 143
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Labs-Audex-30B-A3B"
+    },
+    {
+      "id": "nvidia-nemotron-3-puzzle-75b",
+      "name": "NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4",
+      "organization": "NVIDIA",
+      "description": "NVIDIA的75B潜在MoE谜题模型，NVFP4量化，激活参数9B。支持英/法/西/意/德/日/中文的多语言文本生成模型，38.8K下载量。",
+      "task_type": "text-generation",
+      "model_size": "75B (9B active)",
+      "tags": [
+        "moe",
+        "nvidia",
+        "multilingual",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 38775,
+        "likes": 114
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4"
+    },
+    {
+      "id": "google-tabfm-1-0-0",
+      "name": "tabfm-1.0.0-pytorch",
+      "organization": "Google",
+      "description": "谷歌的表格基础模型，支持零样本分类和表格数据的上下文学习。362赞，21.6K下载量。专门为表格/结构化数据设计的基础模型的罕见案例。",
+      "task_type": "tabular-classification",
+      "model_size": "Unknown",
+      "tags": [
+        "tabular",
+        "zero-shot",
+        "in-context-learning",
+        "foundation-model"
+      ],
+      "metrics": {
+        "downloads": 21590,
+        "likes": 362
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "openmoss-transcribe-diarize",
+      "name": "MOSS-Transcribe-Diarize",
+      "organization": "OpenMOSS-Team",
+      "description": "用于长篇多语言语音转录的音频文本模型，支持说话人分离和时间戳级别ASR。162赞，39.5K下载量。arxiv:2601.01554。支持英语和中文。",
+      "task_type": "audio-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "speech",
+        "diarization",
+        "asr",
+        "multilingual",
+        "long-form"
+      ],
+      "metrics": {
+        "downloads": 39509,
+        "likes": 162
+      },
+      "source_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Transcribe-Diarize"
+    },
+    {
+      "id": "unsloth-deepseek-v4-flash-gguf",
+      "name": "DeepSeek-V4-Flash-GGUF",
+      "organization": "unsloth",
+      "description": "Unsloth的DeepSeek-V4-Flash GGUF量化版本，包含imatrix变体。49.4K下载量，162赞。MIT许可证。arxiv:2606.19348。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "deepseek",
+        "gguf",
+        "quantized",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 49423,
+        "likes": 162
+      },
+      "source_url": "https://huggingface.co/unsloth/DeepSeek-V4-Flash-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "港大AI驱动个人交易Agent系统，结合LLM推理与金融市场数据。现达21,827颗星，今日+1,153——在AI交易Agent类别中持续数周登上趋势榜。",
+      "language": "Python",
+      "stars": 21827,
+      "stars_today": 1153,
+      "forks": 3758,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "ai-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "用于Claude Code、Codex、Cursor等AI编码助手技能的工具，可将代码文件夹、SQL架构、脚本、文档和视频转化为可查询的知识图谱。今日+1,095星，累计84,832颗。",
+      "language": "Python",
+      "stars": 84832,
+      "stars_today": 1095,
+      "forks": 8349,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": [
+        "knowledge-graph",
+        "ai-coding",
+        "claude-code",
+        "rag"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "opencut-app-opencut",
+      "name": "OpenCut-app/OpenCut",
+      "description": "开源的CapCut视频编辑替代品。TypeScript。今日+1,229星，累计66,665颗——今日趋势榜增速最快的非AI项目。",
+      "language": "TypeScript",
+      "stars": 66665,
+      "stars_today": 1229,
+      "forks": 7007,
+      "url": "https://github.com/OpenCut-app/OpenCut",
+      "tags": [
+        "video-editing",
+        "open-source",
+        "capcut-alternative"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "shubhamsaboo-awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "精选100+款可克隆运行的AI Agent和RAG应用。现达119,705颗星，今日+996。",
+      "language": "Python",
+      "stars": 119705,
+      "stars_today": 996,
+      "forks": 17747,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": [
+        "llm",
+        "ai-agent",
+        "rag",
+        "apps"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "github-spec-kit",
+      "name": "github/spec-kit",
+      "description": "GitHub的规范驱动开发工具包，适用于AI编码工作流。今日+543星，累计120,648颗。",
+      "language": "Python",
+      "stars": 120648,
+      "stars_today": 543,
+      "forks": 10697,
+      "url": "https://github.com/github/spec-kit",
+      "tags": [
+        "ai-coding",
+        "spec-driven",
+        "github"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "多Agent LLM金融交易框架。现达92,834颗星，今日+245。",
+      "language": "Python",
+      "stars": 92834,
+      "stars_today": 245,
+      "forks": 17932,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "llm",
+        "finance"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "virattt-ai-hedge-fund",
+      "name": "virattt/ai-hedge-fund",
+      "description": "使用多Agent LLM推理进行投资决策的AI对冲基金团队。61,620颗星，今日+330。",
+      "language": "Python",
+      "stars": 61620,
+      "stars_today": 330,
+      "forks": 10885,
+      "url": "https://github.com/virattt/ai-hedge-fund",
+      "tags": [
+        "finance",
+        "ai-agent",
+        "hedge-fund",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "foundationagents-openmanus",
+      "name": "FoundationAgents/OpenManus",
+      "description": "开源通用Agent框架（'纯粹开放的土地'）。57,382颗星，今日+126。",
+      "language": "Python",
+      "stars": 57382,
+      "stars_today": 126,
+      "forks": 9974,
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "tags": [
+        "agent-framework",
+        "open-source",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nutlope-hallmark",
+      "name": "Nutlope/hallmark",
+      "description": "用于Claude Code、Cursor和Codex的反AI低质内容设计技能。今日+794星，累计5,221颗——AI生成UI质量的快速上升工具。",
+      "language": "CSS",
+      "stars": 5221,
+      "stars_today": 794,
+      "forks": 276,
+      "url": "https://github.com/Nutlope/hallmark",
+      "tags": [
+        "claude-code",
+        "ai-coding",
+        "design",
+        "quality"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "prefecthq-prefect",
+      "name": "PrefectHQ/prefect",
+      "description": "用于弹性数据管道的Python工作流编排框架。23,329颗星，今日+254。",
+      "language": "Python",
+      "stars": 23329,
+      "stars_today": 254,
+      "forks": 2404,
+      "url": "https://github.com/PrefectHQ/prefect",
+      "tags": [
+        "workflow",
+        "data-pipeline",
+        "orchestration"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "simonlin1212-tradingagents-astock",
+      "name": "simonlin1212/TradingAgents-astock",
+      "description": "基于TradingAgents深度改造的A股多Agent投研框架，配备7位AI分析师进行多空辩论。今日+179星。",
+      "language": "Python",
+      "stars": 2150,
+      "stars_today": 179,
+      "forks": 581,
+      "url": "https://github.com/simonlin1212/TradingAgents-astock",
+      "tags": [
+        "trading",
+        "china-stocks",
+        "multi-agent",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "practical-tutorials-project-based-learning",
+      "name": "practical-tutorials/project-based-learning",
+      "description": "精选项目驱动编程教程列表。273,193颗星，今日+179。",
+      "language": "Python",
+      "stars": 273193,
+      "stars_today": 179,
+      "forks": 35239,
+      "url": "https://github.com/practical-tutorials/project-based-learning",
+      "tags": [
+        "learning",
+        "tutorials",
+        "programming"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "public-apis-public-apis",
+      "name": "public-apis/public-apis",
+      "description": "免费API集合列表。449,757颗星，今日+359。常驻趋势榜固定项目。",
+      "language": "Python",
+      "stars": 449757,
+      "stars_today": 359,
+      "forks": 49425,
+      "url": "https://github.com/public-apis/public-apis",
+      "tags": [
+        "apis",
+        "resources"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "coreyhaines31-marketingskills",
+      "name": "coreyhaines31/marketingskills",
+      "description": "用于Claude Code和AI Agent的营销技能，涵盖CRO、文案撰写、SEO、分析和增长工程。今日+299星，累计38,634颗。",
+      "language": "JavaScript",
+      "stars": 38634,
+      "stars_today": 299,
+      "forks": 6171,
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "tags": [
+        "claude-code",
+        "marketing",
+        "ai-agent",
+        "skills"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "3b1b-manim",
+      "name": "3b1b/manim",
+      "description": "3Blue1Brown视频使用的数学动画引擎。88,492颗星，今日+133。",
+      "language": "Python",
+      "stars": 88492,
+      "stars_today": 133,
+      "forks": 7379,
+      "url": "https://github.com/3b1b/manim",
+      "tags": [
+        "animation",
+        "math",
+        "education"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "重新审视视觉预训练",
+      "description": "两天内三篇论文挑战以文本为中心和以图像为中心的预训练假设。GenCeptional（视频作为预训练）、可扩展视觉预训练（文档中的视觉线索）和像素空间密集预测都认为，该领域在训练和推理管道中丢弃了有价值的非文本信息。",
+      "related_paper_ids": [
+        "genceptional-video-generation-vision-learners",
+        "scalable-visual-pretraining-language",
+        "pixel-space-dense-prediction-t2i"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体评测基础设施",
+      "description": "Long-Horizon-Terminal-Bench代表成熟的评测生态系统：从二元最终结果评分转向捕获中间进展的密集奖励信号。表明Agent基准工具层正在变得更加复杂。",
+      "related_paper_ids": [
+        "long-horizon-terminal-bench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM知识记忆与泛化",
+      "description": "知-用差距论文以机制严格性将从业者熟知的问题正式化：在微调期间记忆新事实的LLM无法在推理中使用它们。与RAG、知识注入和微调工作流相关。",
+      "related_paper_ids": [
+        "knowing-using-gap-llm-finetuning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI交易Agent生态系统",
+      "description": "Vibe-Trading、ai-hedge-fund、TradingAgents和TradingAgents-astock都进入GitHub前10。这是持续数周的趋势：LLM驱动的金融Agent正在吸引超乎寻常的社区关注，可能受易于入门和令人向往的用例驱动。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "开源权重音频语言模型崛起",
+      "description": "NVIDIA Nemotron-Labs-Audex-30B-A3B和OpenMOSS MOSS-Transcribe-Diarize都进入趋势榜，表明开源权重音频语言建模竞争日益激烈——这个领域此前一直被专有系统主导。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "fallback_to_2026-07-13"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=trending",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv Recent",
+      "url": "https://arxiv.org/search/",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "error_404"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "ok"
+    }
+  ]
+}

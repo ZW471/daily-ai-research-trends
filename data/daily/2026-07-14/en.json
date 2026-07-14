@@ -1,0 +1,1062 @@
+{
+  "version": "1.0",
+  "date": "2026-07-14",
+  "generated_at": "2026-07-14T02:15:00Z",
+  "summary": {
+    "headline": "Agent benchmarks mature with Long-Horizon-Terminal-Bench; visual pretraining challenged by video-first and pixel-space approaches; knowledge-using gap in LLM finetuning exposed; trading agent tools continue GitHub domination",
+    "body": "Monday's HuggingFace Daily Papers feed returns 14 papers (from Sunday's 2026-07-13 fallback, as Monday papers haven't been published yet), spanning agent evaluation, visual pretraining, LLM finetuning, and dense prediction. **Long-Horizon-Terminal-Bench** (LHTB) from a multi-institutional team is the most operationally relevant paper: it introduces 46 long-horizon terminal tasks across 9 categories with dense reward-based grading instead of binary final-outcome scoring, directly addressing the sparse reward problem that makes current agent benchmarks unreliable. This is infrastructure work for the agent eval ecosystem.\n\n**Scalable Visual Pretraining for Language Intelligence** argues that current LLM pretraining discards rich visual cues in documents and web pages by converting them to plain text, and proposes incorporating visual representations during pretraining. Combined with the **From RGB Generation to Dense Field Readout** paper (which proposes pixel-space dense prediction over latent-space approaches), Monday carries a clear signal: the community is revisiting the visual information bottleneck in both pretraining and inference pipelines.\n\n**Towards Mechanistically Understanding Why Memorized Knowledge Fails to Generalize** formalizes the 'Knowing-Using Gap' in LLM finetuning — a well-known practitioner pain point now given rigorous mechanistic treatment. The paper shows LLMs can quickly memorize new facts yet fail to deploy them in downstream reasoning, identifying an accuracy gap and temporal lag between memorization and generalization.\n\n**Trust Region Policy Distillation (TOP-D)** addresses On-Policy Distillation instability with a principled trust-region framework, including a formal global convergence analysis — theory-heavy but practically valuable for anyone doing policy distillation from teacher LLMs.\n\nOn HuggingFace trending models, **Tencent Hy3** (trending score 381, 755 likes) tops the chart as a new Hunyuan-family MoE text-generation model. **Nvidia Nemotron-Labs-Audex-30B-A3B** (trending score 139) is new to the list — a 30B audio-language model with speech recognition, translation, and text-to-speech capabilities under a non-commercial license, signaling NVIDIA's push into open-weight audio-language modeling. **Google's TabFM-1.0.0** (362 likes) is a tabular foundation model with zero-shot classification capabilities, a relatively underexplored frontier compared to text/image. **InternScience Agents-A1** (526 likes) is an agentic VLM built on Qwen3.5-MoE, trending for multimodal agent use cases.\n\nGitHub trending shows AI-powered trading agents dominating: **Vibe-Trading** (+1,153 stars today, now 21,827 total), **ai-hedge-fund** (+330), **TradingAgents** (+245), and **TradingAgents-astock** (A-share market adaptation, +179). **Graphify** (+1,095 stars today) — an AI coding assistant skill that turns code into a queryable knowledge graph — continues strong. **OpenCut** (+1,229 stars today) is the week's fastest-rising non-AI repo, an open-source CapCut video editor alternative. **awesome-llm-apps** (+996 stars) reaches 119K total.",
+    "key_themes": [
+      "long-horizon-agent-benchmarking",
+      "visual-pretraining-reinvention",
+      "llm-knowledge-memorization-vs-generalization",
+      "audio-language-modeling-open-weights",
+      "tabular-foundation-models",
+      "trading-agent-tools-github-surge"
+    ]
+  },
+  "researcher_notes": "**LHTB is an eval infrastructure paper, not a capability paper.** Its contribution is the benchmark design (dense rewards, 46 tasks, 9 categories) rather than a new model. Worth bookmarking if you're building agent evals — binary final-outcome scoring has been a longstanding criticism and LHTB is an attempt to fix it.\n\n**The visual pretraining cluster (3 papers) is architecturally significant.** 'Scalable Visual Pretraining' and 'From RGB Generation to Dense Field Readout' both challenge the status quo from different angles. The former argues that converting visually-rich documents to plain text throws away information; the latter argues that dense prediction via latent-space approaches is suboptimal. Combined with yesterday's GenCeptional (video-as-vision-pretraining), this is a 3-day cluster of papers all poking at the same assumption: that text-centric or image-centric pre-training is sufficient.\n\n**The Knowing-Using Gap paper is practitioner-relevant.** Anyone who has done RAG or knowledge-injection finetuning has seen this failure mode. The paper's mechanistic framing and 'spatial permeation dynamics' intervention technique is novel; the phenomenon is familiar.\n\n**Nvidia Audex is under non-commercial license** — watch the license before building on it. Audio-language modeling is genuinely underserved in the open-weight ecosystem, so this is notable even with the license restriction.",
+  "papers": [
+    {
+      "id": "long-horizon-terminal-bench",
+      "title": "Long-Horizon-Terminal-Bench: Testing the Limits of Agents on Long-Horizon Terminal Tasks with Dense Reward-Based Grading",
+      "authors": [
+        "Zongxia Li",
+        "Zhongzhi Li",
+        "Yucheng Shi",
+        "Ruhan Wang",
+        "Junyao Yang"
+      ],
+      "affiliations": [
+        "Multi-institutional"
+      ],
+      "summary": "Introduces LHTB, a terminal agent benchmark of 46 long-horizon tasks across 9 categories evaluated with dense reward-based grading (not binary final-outcome). Addresses the sparse reward problem in existing agent benchmarks that obscures partial progress and intermediate capability.",
+      "key_findings": [
+        "Existing terminal benchmarks focus on simple, short problems evaluated only by final outcome, yielding sparse reward signals",
+        "46 long-horizon tasks spanning 9 categories with dense grading capture intermediate progress and partial solutions",
+        "Dense reward grading provides a more complete picture of agent capability on multi-step terminal tasks"
+      ],
+      "tags": [
+        "agent-eval",
+        "benchmarking",
+        "terminal-tasks",
+        "reward-design"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08964",
+        "huggingface": "https://huggingface.co/papers/2607.08964",
+        "pdf": "https://arxiv.org/pdf/2607.08964"
+      }
+    },
+    {
+      "id": "scalable-visual-pretraining-language",
+      "title": "Scalable Visual Pretraining for Language Intelligence",
+      "authors": [
+        "Yiming Zhang",
+        "Zhonghan Zhao",
+        "Wenwei Zhang",
+        "Haiteng Zhao",
+        "Tianyang Lin"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Argues that LLM pretraining discards rich visual cues from documents and web pages by converting them to plain text, and proposes incorporating visual representations — figures, typeset equations, page layouts — during pretraining to improve language intelligence.",
+      "key_findings": [
+        "Current pretraining converts visually-rich sources to plain text, discarding figures, equations, and layout information",
+        "Visual representations carry rich information that text alone cannot capture faithfully",
+        "Scalable visual pretraining improves language intelligence by preserving multimodal cues present in real-world documents"
+      ],
+      "tags": [
+        "pretraining",
+        "multimodal",
+        "visual-learning",
+        "llm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09657",
+        "huggingface": "https://huggingface.co/papers/2607.09657",
+        "pdf": "https://arxiv.org/pdf/2607.09657"
+      }
+    },
+    {
+      "id": "genceptional-video-generation-vision-learners",
+      "title": "Video Generation Models are General-Purpose Vision Learners",
+      "authors": [
+        "Letian Wang",
+        "Chuhan Zhang",
+        "Rishabh Kabra",
+        "Jasper Uijlings",
+        "Steven Waslander",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Toronto",
+        "Wayve",
+        "Google DeepMind"
+      ],
+      "summary": "Contends that large-scale text-to-video generation is a strong pre-training paradigm for general-purpose computer vision, providing spatiotemporal priors, vision-language alignment, and scalability. Introduces GenCeptional, a framework repurposing video generation models as vision foundation models.",
+      "key_findings": [
+        "Video generation pre-training provides spatiotemporal priors and vision-language alignment that image-only pretraining lacks",
+        "GenCeptional repurposes video generation models for downstream vision tasks",
+        "The framework generalizes across multiple vision tasks, challenging dominance of image-text contrastive pre-training"
+      ],
+      "tags": [
+        "video-generation",
+        "vision-pretraining",
+        "foundation-models",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09024",
+        "huggingface": "https://huggingface.co/papers/2607.09024",
+        "pdf": "https://arxiv.org/pdf/2607.09024"
+      }
+    },
+    {
+      "id": "kronq-llm-quantization-kronecker",
+      "title": "KronQ: LLM Quantization via Kronecker-Factored Hessian",
+      "authors": [
+        "Donghyun Lee",
+        "Yuhang Li",
+        "Ruokai Yin",
+        "Priyadarshini Panda"
+      ],
+      "affiliations": [
+        "Yale University"
+      ],
+      "summary": "Proposes KronQ, a post-training quantization (PTQ) framework that challenges the assumption in GPTQ and similar methods that all output channels contribute equally to quantization error. Introduces gradient covariance into the quantization pipeline via Kronecker-factored Hessian approximation.",
+      "key_findings": [
+        "Existing PTQ methods (GPTQ) assume uniform output channel contribution, ignoring gradient covariance",
+        "KronQ uses Kronecker-factored Hessian to incorporate gradient covariance for more accurate quantization objectives",
+        "Achieves better PTQ quality with principled second-order approximation"
+      ],
+      "tags": [
+        "quantization",
+        "llm",
+        "post-training",
+        "compression"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07964",
+        "huggingface": "https://huggingface.co/papers/2607.07964",
+        "pdf": "https://arxiv.org/pdf/2607.07964"
+      }
+    },
+    {
+      "id": "trust-region-policy-distillation",
+      "title": "Trust Region Policy Distillation",
+      "authors": [
+        "Zhengpeng Xie",
+        "Li Lyna Zhang",
+        "Zeke Xie",
+        "Mao Yang"
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "Presents TOP-D (Trust Region Policy Distillation), which transforms unstable On-Policy Distillation into a stable training paradigm by dynamically constructing a proximal teacher and controlling gradient variance. Provides formal global convergence analysis and monotonic improvement guarantees.",
+      "key_findings": [
+        "On-Policy Distillation (OPD) is notoriously unstable with high variance; TOP-D provides principled stabilization",
+        "Dynamic proximal teacher construction inherently controls gradient variance with theoretical guarantees",
+        "Formal global convergence analysis with monotonic improvement guarantee"
+      ],
+      "tags": [
+        "policy-distillation",
+        "rlhf",
+        "training-stability",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.04751",
+        "huggingface": "https://huggingface.co/papers/2607.04751",
+        "pdf": "https://arxiv.org/pdf/2607.04751"
+      }
+    },
+    {
+      "id": "pixel-space-dense-prediction-t2i",
+      "title": "From RGB Generation to Dense Field Readout: Pixel-Space Dense Prediction with Text-to-Image Models",
+      "authors": [
+        "Zanyi Wang",
+        "Xin Lin",
+        "Haodong Li",
+        "Dengyang Jiang",
+        "Yijiang Li"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Argues that existing approaches using VAE latent spaces for dense prediction (depth, normals, alpha mattes) inherit generative output interface problems. Proposes direct pixel-space dense prediction with text-to-image models instead.",
+      "key_findings": [
+        "Latent-space dense prediction approaches inherit VAE generative interface artifacts",
+        "Pixel-space direct readout avoids the generative-to-discriminative mismatch",
+        "Achieves improved dense prediction quality across depth, normals, segmentation, and other tasks"
+      ],
+      "tags": [
+        "dense-prediction",
+        "diffusion-models",
+        "computer-vision",
+        "depth-estimation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06553",
+        "huggingface": "https://huggingface.co/papers/2607.06553",
+        "pdf": "https://arxiv.org/pdf/2607.06553"
+      }
+    },
+    {
+      "id": "knowing-using-gap-llm-finetuning",
+      "title": "Towards Mechanistically Understanding Why Memorized Knowledge Fails to Generalize in Large Language Model Finetuning",
+      "authors": [
+        "Lu Dai",
+        "Ziyang Rao",
+        "Yili Wang",
+        "Hanqing Wang",
+        "Hao Liu"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Formalizes the 'Knowing-Using Gap' in LLM finetuning: models can memorize new facts quickly but fail to use them in downstream reasoning. Uses spatial permeation dynamics analysis to understand how injected knowledge propagates (or fails to propagate) through model layers.",
+      "key_findings": [
+        "LLMs exhibit a Knowing-Using Gap: memorized facts don't automatically transfer to reasoning tasks",
+        "An accuracy gap and temporal lag exists between memorization and generalization",
+        "Spatial permeation dynamics intervention reveals how knowledge fails to spread across layers"
+      ],
+      "tags": [
+        "finetuning",
+        "knowledge-injection",
+        "mechanistic-interpretability",
+        "llm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08393",
+        "huggingface": "https://huggingface.co/papers/2607.08393",
+        "pdf": "https://arxiv.org/pdf/2607.08393"
+      }
+    },
+    {
+      "id": "panoworld-panoramic-generation",
+      "title": "PanoWorld: Real-World Panoramic Generation",
+      "authors": [
+        "Haoyuan Li",
+        "Dizhe Zhang",
+        "Yuemei Zhou",
+        "Xiangkai Zhang",
+        "Haoran Feng"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Addresses long-range memory in panoramic world models by exploiting rotation-equivariant properties of omnidirectional representations. PanoWorld uses Dense Panoramic Ray-Conditioning (DPRC) and Geometry-aware Memory Augmentation to simplify camera trajectories.",
+      "key_findings": [
+        "Rotation equivariance in omnidirectional representations simplifies camera trajectory modeling",
+        "DPRC enables fixed-heading trajectory modeling for both current-action and long-range memory",
+        "Demonstrates improved panoramic world model consistency"
+      ],
+      "tags": [
+        "world-models",
+        "panoramic",
+        "video-generation",
+        "3d"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09661",
+        "huggingface": "https://huggingface.co/papers/2607.09661",
+        "pdf": "https://arxiv.org/pdf/2607.09661"
+      }
+    },
+    {
+      "id": "self-guided-ttt-long-context",
+      "title": "Self-Guided Test-Time Training for Long-Context LLMs",
+      "authors": [
+        "Xinyu Zhu",
+        "Zhe Xu",
+        "Xiaohan Wei",
+        "Yunchen Pu",
+        "Fei Tian"
+      ],
+      "affiliations": [
+        "Apple",
+        "University of Waterloo"
+      ],
+      "summary": "Proposes Self-Guided Test-Time Training (TTT) to improve long-context LLM accuracy, which degrades as input length grows even with extended context windows. Treats the test context as a training example for instance-specific parameter updates at inference time.",
+      "key_findings": [
+        "Long-context accuracy degrades with input length despite extended context windows",
+        "TTT treats the test context as a training example for instance-specific adaptation",
+        "Self-guided approach avoids requiring labeled examples by generating supervision from the context itself"
+      ],
+      "tags": [
+        "long-context",
+        "test-time-training",
+        "llm",
+        "inference"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09415",
+        "huggingface": "https://huggingface.co/papers/2607.09415",
+        "pdf": "https://arxiv.org/pdf/2607.09415"
+      }
+    },
+    {
+      "id": "flow-erd-traffic-simulation",
+      "title": "Flow-ERD: Agent-type Aware Flow Matching with Entropy-Regularized Distillation for Diverse Traffic Simulation",
+      "authors": [
+        "Seulbin Hwang",
+        "Kiyoung Om",
+        "Daejung Kim",
+        "Jinhan Lee"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Introduces Flow-ERD for realistic and diverse traffic simulation, combining Agent-Type Aware Flow Matching (AFM) with entropy-regularized distillation. Targets the autonomous driving community where benchmarks optimize for realism but underexplore diversity.",
+      "key_findings": [
+        "Existing traffic simulation benchmarks reward realism but ignore diversity",
+        "AFM couples flow matching's multi-modal expressiveness with type-specific kinematic execution",
+        "Entropy-regularized distillation ensures diverse yet realistic multi-agent simulation"
+      ],
+      "tags": [
+        "autonomous-driving",
+        "traffic-simulation",
+        "flow-matching",
+        "multi-agent"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06957",
+        "huggingface": "https://huggingface.co/papers/2607.06957",
+        "pdf": "https://arxiv.org/pdf/2607.06957"
+      }
+    },
+    {
+      "id": "medpmc-medical-multimodal-foundation",
+      "title": "MedPMC: A Systematic Framework for Scaling High-Fidelity Medical Multimodal Data for Foundation Models",
+      "authors": [
+        "Hyunjae Kim",
+        "Dain Kim",
+        "Pan Xiao",
+        "Serina S. Applebaum",
+        "Younjoon Chung"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Introduces MedPMC, an automated, continuously updatable framework for extracting high-fidelity multimodal medical data from PubMed Central (PMC) to train medical foundation models, addressing the gap between available clinical data and current PMC-derived resources.",
+      "key_findings": [
+        "Existing PMC-derived medical datasets are limited in fidelity, reproducibility, and clinical validation",
+        "MedPMC provides automated extraction of expert-authored image-text medical data at scale",
+        "Continuously updatable pipeline enables tracking of new medical literature"
+      ],
+      "tags": [
+        "medical-ai",
+        "multimodal",
+        "dataset",
+        "foundation-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.07673",
+        "huggingface": "https://huggingface.co/papers/2607.07673",
+        "pdf": "https://arxiv.org/pdf/2607.07673"
+      }
+    },
+    {
+      "id": "soofi-german-english-moe-mamba",
+      "title": "A Sovereign, Open-Source Foundation Model for German and English",
+      "authors": [
+        "The Soofi-Team",
+        "Benedikt Droste",
+        "David Fitzek",
+        "Ruben Härle",
+        "Lukas Helff"
+      ],
+      "affiliations": [
+        "Soofi-Team (German sovereign AI)"
+      ],
+      "summary": "Presents Soofi S 30B-A3B, a sovereign open-source MoE hybrid Mamba-Transformer for German and English. Activates only 3B of 30B parameters per token with near-constant inference cache as context grows. Pretrained on ~27 trillion tokens with deliberately up-weighted German.",
+      "key_findings": [
+        "Hybrid Mamba-Transformer MoE with 30B parameters, 3B active per token, near-constant inference cache",
+        "Pretrained on ~27 trillion tokens with deliberately up-weighted German for sovereign multilingual capability",
+        "Matches dense 14-27B models on aggregate benchmarks with significant throughput advantage for long-context deployment"
+      ],
+      "tags": [
+        "moe",
+        "mamba",
+        "multilingual",
+        "sovereign-ai",
+        "german"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09424",
+        "huggingface": "https://huggingface.co/papers/2607.09424",
+        "pdf": "https://arxiv.org/pdf/2607.09424"
+      }
+    },
+    {
+      "id": "spam-phone-segmentation-recognition",
+      "title": "Phone Segmentation and Recognition through Phonological Activation Mapping",
+      "authors": [
+        "Shikhar Bharadwaj",
+        "Kwanghee Choi",
+        "Stephen McIntosh",
+        "Chin-Jou Li",
+        "Eunjung Yeo"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Proposes SPAM (Phonological Activation Mapping) to leverage latent phonetic structure in self-supervised speech models for joint phone segmentation and recognition, mapping S3M representations to phonological feature activations like voicing and nasality.",
+      "key_findings": [
+        "Phonetic structure is already latent in self-supervised speech model representations",
+        "SPAM maps S3M frames to phonological feature vectors for both segmentation and recognition jointly",
+        "Achieves competitive performance on both tasks without task-specific architectures"
+      ],
+      "tags": [
+        "speech",
+        "phonology",
+        "self-supervised",
+        "segmentation"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.09020",
+        "huggingface": "https://huggingface.co/papers/2607.09020",
+        "pdf": "https://arxiv.org/pdf/2607.09020"
+      }
+    },
+    {
+      "id": "vasemuseum-greek-pottery-vlm",
+      "title": "VaseMuseum: Digital Intelligent Museum for Ancient Greek Pottery",
+      "authors": [
+        "Jiazi Wang",
+        "Nonghai Zhang",
+        "Qiushi Xie",
+        "Zeyu Zhang",
+        "Yufeng Chen"
+      ],
+      "affiliations": [
+        "Multiple Institutions"
+      ],
+      "summary": "Presents VaseMuseum, a VLM-powered interactive digital museum for ancient Greek pottery that grounds fine-grained 2D/3D visual evidence in specialized curatorial knowledge, addressing open-ended interpretation with RAG-based retrieval.",
+      "key_findings": [
+        "VLMs enable interactive digital museum experiences but require grounding in specialized domain knowledge",
+        "RAG-based retrieval grounds visual evidence in curatorial expertise for reliable artifact exploration",
+        "Demonstrates applicability to cultural heritage domains with fine-grained visual differentiation"
+      ],
+      "tags": [
+        "vlm",
+        "cultural-heritage",
+        "rag",
+        "multimodal"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.06374",
+        "huggingface": "https://huggingface.co/papers/2607.06374",
+        "pdf": "https://arxiv.org/pdf/2607.06374"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tencent-hy3",
+      "name": "Hy3",
+      "organization": "Tencent",
+      "description": "Tencent's new Hunyuan-family MoE text-generation model (hy_v3 architecture). Tops trending with 755 likes and a trending score of 381, signaling strong community interest despite limited public documentation so far.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "hunyuan",
+        "moe",
+        "text-generation",
+        "tencent"
+      ],
+      "metrics": {
+        "downloads": 9157,
+        "likes": 755
+      },
+      "source_url": "https://huggingface.co/tencent/Hy3"
+    },
+    {
+      "id": "empero-ai-qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai",
+      "description": "GGUF quantization of a 9B Qwen3.5-based community fine-tune with 1M context, vision, reasoning, and function-calling. 2M+ downloads and 2,086 likes indicate it's one of the most-used community models.",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": [
+        "qwen3.5",
+        "gguf",
+        "reasoning",
+        "long-context",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1985221,
+        "likes": 2086
+      },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "zai-org-glm-5.2",
+      "name": "GLM-5.2",
+      "organization": "zai-org (Zhipu AI)",
+      "description": "GLM-5.2 from Zhipu AI, a MoE-DSA architecture text-generation model with 3,902 likes and 465K downloads. Strong bilingual (EN/ZH) capability with MIT license. One of the most-liked models on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "glm",
+        "moe",
+        "bilingual",
+        "mit-license"
+      ],
+      "metrics": {
+        "downloads": 464914,
+        "likes": 3902
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "bottlecapai-thinkingcap-qwen3-6-27b",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "bottlecapai",
+      "description": "A token-efficient thinking fine-tune of Qwen/Qwen3.6-27B, designed for efficient reasoning with reduced token overhead. 311 likes with 4.9K downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "qwen3.6",
+        "efficient-thinking",
+        "token-efficient",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 4909,
+        "likes": 311
+      },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    },
+    {
+      "id": "internscience-agents-a1",
+      "name": "Agents-A1",
+      "organization": "InternScience",
+      "description": "An agentic VLM (vision-language model) built on Qwen3.5-MoE architecture, designed for multimodal agentic tasks. 526 likes and 29.8K downloads, with paper reference arxiv:2606.30616.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "agentic",
+        "vlm",
+        "moe",
+        "qwen3.5",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 29801,
+        "likes": 526
+      },
+      "source_url": "https://huggingface.co/InternScience/Agents-A1"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "Baidu's high-performance multilingual OCR model with 1.5M downloads and 1,963 likes. Paper reference arxiv:2606.23050. MIT licensed. Established as the go-to open OCR foundation model.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "vision-language",
+        "multilingual",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 1506937,
+        "likes": 1963
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "nvidia-nemotron-labs-audex-30b",
+      "name": "Nemotron-Labs-Audex-30B-A3B",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's 30B audio-language model with 3B active parameters, supporting speech recognition, translation, text-to-audio, and general reasoning. Non-commercial license. arxiv:2607.05196. Represents NVIDIA's entry into open-weight audio-language modeling.",
+      "task_type": "text-generation",
+      "model_size": "30B (3B active)",
+      "tags": [
+        "audio",
+        "speech-recognition",
+        "text-to-speech",
+        "moe",
+        "nvidia"
+      ],
+      "metrics": {
+        "downloads": 1058,
+        "likes": 143
+      },
+      "source_url": "https://huggingface.co/nvidia/Nemotron-Labs-Audex-30B-A3B"
+    },
+    {
+      "id": "nvidia-nemotron-3-puzzle-75b",
+      "name": "NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's 75B latent-MoE puzzle model in NVFP4 quantization with 9B active parameters. Multilingual (EN/FR/ES/IT/DE/JA/ZH) text-generation model with 38.8K downloads.",
+      "task_type": "text-generation",
+      "model_size": "75B (9B active)",
+      "tags": [
+        "moe",
+        "nvidia",
+        "multilingual",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 38775,
+        "likes": 114
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4"
+    },
+    {
+      "id": "google-tabfm-1-0-0",
+      "name": "tabfm-1.0.0-pytorch",
+      "organization": "Google",
+      "description": "Google's tabular foundation model with zero-shot classification and in-context learning for tabular data. 362 likes, 21.6K downloads. Rare instance of a foundation model specifically designed for tabular/structured data.",
+      "task_type": "tabular-classification",
+      "model_size": "Unknown",
+      "tags": [
+        "tabular",
+        "zero-shot",
+        "in-context-learning",
+        "foundation-model"
+      ],
+      "metrics": {
+        "downloads": 21590,
+        "likes": 362
+      },
+      "source_url": "https://huggingface.co/google/tabfm-1.0.0-pytorch"
+    },
+    {
+      "id": "openmoss-transcribe-diarize",
+      "name": "MOSS-Transcribe-Diarize",
+      "organization": "OpenMOSS-Team",
+      "description": "An audio-text-to-text model for long-form multilingual speech transcription with speaker diarization and timestamp-level ASR. 162 likes, 39.5K downloads. arxiv:2601.01554. Supports EN and ZH.",
+      "task_type": "audio-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "speech",
+        "diarization",
+        "asr",
+        "multilingual",
+        "long-form"
+      ],
+      "metrics": {
+        "downloads": 39509,
+        "likes": 162
+      },
+      "source_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Transcribe-Diarize"
+    },
+    {
+      "id": "unsloth-deepseek-v4-flash-gguf",
+      "name": "DeepSeek-V4-Flash-GGUF",
+      "organization": "unsloth",
+      "description": "Unsloth quantization of DeepSeek-V4-Flash in GGUF format with imatrix variants. 49.4K downloads, 162 likes. MIT licensed. arxiv:2606.19348.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "deepseek",
+        "gguf",
+        "quantized",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 49423,
+        "likes": 162
+      },
+      "source_url": "https://huggingface.co/unsloth/DeepSeek-V4-Flash-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "AI-powered personal trading agent from HKU combining LLM reasoning with financial market data. Now at 21.8K stars with +1,153 today — sustained multi-week trending in the AI trading agent category.",
+      "language": "Python",
+      "stars": 21827,
+      "stars_today": 1153,
+      "forks": 3758,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "ai-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "AI coding assistant skill for Claude Code, Codex, Cursor, and others that turns code folders, SQL schemas, scripts, docs, and videos into queryable knowledge graphs. +1,095 stars today at 84.8K total.",
+      "language": "Python",
+      "stars": 84832,
+      "stars_today": 1095,
+      "forks": 8349,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": [
+        "knowledge-graph",
+        "ai-coding",
+        "claude-code",
+        "rag"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "opencut-app-opencut",
+      "name": "OpenCut-app/OpenCut",
+      "description": "Open-source CapCut alternative for video editing. TypeScript. +1,229 stars today at 66.7K total — fastest non-AI repo on trending today.",
+      "language": "TypeScript",
+      "stars": 66665,
+      "stars_today": 1229,
+      "forks": 7007,
+      "url": "https://github.com/OpenCut-app/OpenCut",
+      "tags": [
+        "video-editing",
+        "open-source",
+        "capcut-alternative"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "shubhamsaboo-awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "Curated 100+ AI Agent and RAG apps you can clone and run. At 119.7K stars with +996 today.",
+      "language": "Python",
+      "stars": 119705,
+      "stars_today": 996,
+      "forks": 17747,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": [
+        "llm",
+        "ai-agent",
+        "rag",
+        "apps"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "github-spec-kit",
+      "name": "github/spec-kit",
+      "description": "GitHub's Spec-Driven Development toolkit for AI coding workflows. +543 stars today at 120.6K total.",
+      "language": "Python",
+      "stars": 120648,
+      "stars_today": 543,
+      "forks": 10697,
+      "url": "https://github.com/github/spec-kit",
+      "tags": [
+        "ai-coding",
+        "spec-driven",
+        "github"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "Multi-agent LLM financial trading framework. At 92.8K stars with +245 today.",
+      "language": "Python",
+      "stars": 92834,
+      "stars_today": 245,
+      "forks": 17932,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "llm",
+        "finance"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "virattt-ai-hedge-fund",
+      "name": "virattt/ai-hedge-fund",
+      "description": "AI Hedge Fund team using multi-agent LLM reasoning for investment decisions. 61.6K stars, +330 today.",
+      "language": "Python",
+      "stars": 61620,
+      "stars_today": 330,
+      "forks": 10885,
+      "url": "https://github.com/virattt/ai-hedge-fund",
+      "tags": [
+        "finance",
+        "ai-agent",
+        "hedge-fund",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "foundationagents-openmanus",
+      "name": "FoundationAgents/OpenManus",
+      "description": "Open-source general agent framework ('purely open ground'). 57.4K stars, +126 today.",
+      "language": "Python",
+      "stars": 57382,
+      "stars_today": 126,
+      "forks": 9974,
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "tags": [
+        "agent-framework",
+        "open-source",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nutlope-hallmark",
+      "name": "Nutlope/hallmark",
+      "description": "Anti-AI-slop design skill for Claude Code, Cursor, and Codex. +794 stars today at 5.2K total — fast-rising tooling for AI-generated UI quality.",
+      "language": "CSS",
+      "stars": 5221,
+      "stars_today": 794,
+      "forks": 276,
+      "url": "https://github.com/Nutlope/hallmark",
+      "tags": [
+        "claude-code",
+        "ai-coding",
+        "design",
+        "quality"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "prefecthq-prefect",
+      "name": "PrefectHQ/prefect",
+      "description": "Python workflow orchestration framework for resilient data pipelines. 23.3K stars, +254 today.",
+      "language": "Python",
+      "stars": 23329,
+      "stars_today": 254,
+      "forks": 2404,
+      "url": "https://github.com/PrefectHQ/prefect",
+      "tags": [
+        "workflow",
+        "data-pipeline",
+        "orchestration"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "simonlin1212-tradingagents-astock",
+      "name": "simonlin1212/TradingAgents-astock",
+      "description": "A-share (Chinese stock market) multi-agent investment research framework adapted from TradingAgents, with 7 AI analysts doing bull/bear debates. +179 stars today.",
+      "language": "Python",
+      "stars": 2150,
+      "stars_today": 179,
+      "forks": 581,
+      "url": "https://github.com/simonlin1212/TradingAgents-astock",
+      "tags": [
+        "trading",
+        "china-stocks",
+        "multi-agent",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "practical-tutorials-project-based-learning",
+      "name": "practical-tutorials/project-based-learning",
+      "description": "Curated list of project-based programming tutorials. 273.2K stars, +179 today.",
+      "language": "Python",
+      "stars": 273193,
+      "stars_today": 179,
+      "forks": 35239,
+      "url": "https://github.com/practical-tutorials/project-based-learning",
+      "tags": [
+        "learning",
+        "tutorials",
+        "programming"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "public-apis-public-apis",
+      "name": "public-apis/public-apis",
+      "description": "Collective list of free APIs. 449.8K stars, +359 today. Perennial trending fixture.",
+      "language": "Python",
+      "stars": 449757,
+      "stars_today": 359,
+      "forks": 49425,
+      "url": "https://github.com/public-apis/public-apis",
+      "tags": [
+        "apis",
+        "resources"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "coreyhaines31-marketingskills",
+      "name": "coreyhaines31/marketingskills",
+      "description": "Marketing skills for Claude Code and AI agents covering CRO, copywriting, SEO, analytics, and growth engineering. +299 stars today at 38.6K total.",
+      "language": "JavaScript",
+      "stars": 38634,
+      "stars_today": 299,
+      "forks": 6171,
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "tags": [
+        "claude-code",
+        "marketing",
+        "ai-agent",
+        "skills"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "3b1b-manim",
+      "name": "3b1b/manim",
+      "description": "Math animation engine used for 3Blue1Brown videos. 88.5K stars, +133 today.",
+      "language": "Python",
+      "stars": 88492,
+      "stars_today": 133,
+      "forks": 7379,
+      "url": "https://github.com/3b1b/manim",
+      "tags": [
+        "animation",
+        "math",
+        "education"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Rethinking Visual Pretraining",
+      "description": "Three papers in two days challenge text-centric and image-centric pretraining assumptions. GenCeptional (video-as-pretraining), Scalable Visual Pretraining (visual cues in documents), and pixel-space dense prediction all argue the field is discarding valuable non-text information during training and inference pipelines.",
+      "related_paper_ids": [
+        "genceptional-video-generation-vision-learners",
+        "scalable-visual-pretraining-language",
+        "pixel-space-dense-prediction-t2i"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Evaluation Infrastructure",
+      "description": "Long-Horizon-Terminal-Bench represents a maturing eval ecosystem: moving from binary final-outcome grading to dense reward signals that capture intermediate progress. Signals that the agent benchmark tooling layer is becoming more sophisticated.",
+      "related_paper_ids": [
+        "long-horizon-terminal-bench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Knowledge Memorization vs. Generalization",
+      "description": "The Knowing-Using Gap paper formalizes a well-known practitioner problem with mechanistic rigor: LLMs that memorize new facts during finetuning fail to use them in reasoning. Relevant to RAG, knowledge injection, and finetuning workflows.",
+      "related_paper_ids": [
+        "knowing-using-gap-llm-finetuning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Trading Agent Ecosystem",
+      "description": "Vibe-Trading, ai-hedge-fund, TradingAgents, and TradingAgents-astock are all in GitHub's top 10. This is a sustained multi-week trend: LLM-powered financial agents are attracting extraordinary community attention, likely driven by accessible entry points and aspirational use cases.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open-Weight Audio-Language Models Emerging",
+      "description": "NVIDIA Nemotron-Labs-Audex-30B-A3B and OpenMOSS MOSS-Transcribe-Diarize both hit trending, signaling growing open-weight competition in audio-language modeling — a domain previously dominated by proprietary systems.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "fallback_to_2026-07-13"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=trending",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv Recent",
+      "url": "https://arxiv.org/search/",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "error_404"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-14T02:15:00Z",
+      "status": "ok"
+    }
+  ]
+}
