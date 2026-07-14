@@ -484,6 +484,38 @@ Output ONLY valid JSON matching this schema (no markdown fences, no commentary):
     return json.loads(text)
 
 
+def _patch_engagement(review: dict, hf_papers: list[dict]) -> int:
+    """Inject engagement data from source HF papers into the review.
+
+    Claude sometimes drops upvote/comment counts during synthesis.
+    This matches review papers back to source data by arXiv ID and patches them.
+    Returns the number of papers patched.
+    """
+    source_by_id = {}
+    for p in hf_papers:
+        paper = p.get("paper", p)
+        arxiv_id = paper.get("id", "")
+        if arxiv_id:
+            source_by_id[arxiv_id] = {
+                "upvotes": p.get("numUpvotes", p.get("paper", {}).get("upvotes", 0)),
+                "comments": p.get("numComments", 0),
+            }
+
+    patched = 0
+    for paper in review.get("papers", []):
+        eng = paper.get("engagement", {})
+        if eng.get("upvotes", 0) > 0:
+            continue
+        sources = paper.get("sources", {})
+        arxiv_url = sources.get("arxiv", "")
+        arxiv_id = arxiv_url.rstrip("/").split("/")[-1] if arxiv_url else ""
+        if arxiv_id and arxiv_id in source_by_id:
+            paper["engagement"] = source_by_id[arxiv_id]
+            patched += 1
+
+    return patched
+
+
 def update_index(date: str, review_en: dict, review_cn: dict) -> None:
     """Update both index_en.json and index_cn.json with the new review entry."""
     for lang, index_file, review in [
@@ -606,7 +638,7 @@ def validate_review(review: dict, label: str = "review") -> list[str]:
         errors.append(f"[{label}] Only {len(themes)} themes (minimum 2 expected)")
 
     # Validate paper entries
-    all_zero_engagement = True
+    zero_engagement_count = 0
     for i, paper in enumerate(papers):
         for field in ["id", "title", "authors", "affiliations", "summary",
                       "key_findings", "tags", "relevance", "engagement", "sources"]:
@@ -618,10 +650,12 @@ def validate_review(review: dict, label: str = "review") -> list[str]:
         if not affs or any(a.lower() == "unknown" for a in affs):
             errors.append(f"[{label}] Paper #{i} has missing or 'Unknown' affiliations")
         eng = paper.get("engagement", {})
-        if eng.get("upvotes", 0) > 0 or eng.get("comments", 0) > 0:
-            all_zero_engagement = False
-    if papers and all_zero_engagement:
+        if eng.get("upvotes", 0) == 0 and eng.get("comments", 0) == 0:
+            zero_engagement_count += 1
+    if papers and zero_engagement_count == len(papers):
         errors.append(f"[{label}] ALL {len(papers)} papers have 0 upvotes and 0 comments — engagement data likely lost")
+    elif len(papers) >= 5 and zero_engagement_count > len(papers) // 2:
+        errors.append(f"[{label}] {zero_engagement_count}/{len(papers)} papers have 0 engagement — data may be partially lost")
 
     # Validate model entries
     all_zero_metrics = True
@@ -724,6 +758,11 @@ def main():
 
     # Step 3: Synthesize English review with Claude
     review_en = synthesize_with_claude(context, date)
+
+    # Step 3b: Patch engagement data from source (Claude sometimes drops upvotes)
+    patched = _patch_engagement(review_en, hf_papers)
+    if patched:
+        print(f"  [Patch] Restored engagement data for {patched} paper(s)")
 
     # Step 4: Validate English review before writing
     if not args.skip_validation:
