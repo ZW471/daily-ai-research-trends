@@ -420,10 +420,25 @@ OUTPUT_SCHEMA = r"""
 def _make_anthropic_client():
     """Create an Anthropic client, supporting both api_key and Bearer session tokens."""
     import anthropic
+    import ssl
+
+    # Build an httpx client that uses certifi's CA bundle to avoid
+    # UNKNOWN_CERTIFICATE_VERIFICATION_ERROR in restricted remote environments.
+    try:
+        import certifi
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
+        http_client = httpx.Client(verify=certifi.where())
+    except ImportError:
+        http_client = None
+
+    def _client(**kwargs):
+        if http_client is not None:
+            kwargs.setdefault("http_client", http_client)
+        return anthropic.Anthropic(**kwargs)
 
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if api_key:
-        return anthropic.Anthropic(api_key=api_key)
+        return _client(api_key=api_key)
 
     # Claude Code web sessions provide a Bearer token via CLAUDE_SESSION_INGRESS_TOKEN_FILE
     token_file = os.environ.get("CLAUDE_SESSION_INGRESS_TOKEN_FILE")
@@ -431,12 +446,12 @@ def _make_anthropic_client():
         try:
             token = Path(token_file).read_text().strip()
             if token:
-                return anthropic.Anthropic(auth_token=token)
+                return _client(auth_token=token)
         except Exception:
             pass
 
     # Fall back to default (reads ANTHROPIC_API_KEY from env or fails)
-    return anthropic.Anthropic()
+    return _client()
 
 
 def synthesize_with_claude(source_context: str, date: str) -> dict:
