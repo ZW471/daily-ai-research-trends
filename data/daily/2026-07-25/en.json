@@ -1,0 +1,622 @@
+{
+  "version": "1.0",
+  "date": "2026-07-25",
+  "generated_at": "2026-07-25T03:57:00Z",
+  "summary": {
+    "headline": "AREX debuts recursively self-improving deep research agents with verify-then-refine loops (118 upvotes); agentic benchmarking and training infrastructure surges across WorkBuddy Bench, NOOA, and OpenForgeRL; AI-native browsers and web agents dominate GitHub trending alongside GLM-5.2's massive HuggingFace adoption",
+    "body": "Saturday's HuggingFace Daily Papers feed falls back to Friday's 2026-07-24 list, topped decisively by **AREX**, a BAAI/Renmin University family of Recursively Self-Improving (RSI) deep research agents (118 upvotes). AREX exploits the asymmetry between costly answer discovery and cheap constraint-wise verification: an inner loop gathers evidence and drafts an answer while an outer loop audits it claim-by-claim and launches targeted follow-up research, sustained over long horizons by a self-learned context-compression tool. The team ships both a 4B dense model and a 122B-A10B MoE variant trained via agentic mid-training and long-horizon RL — a credible architectural template for the next generation of deep-research agents.\n\nA dense embodied-AI and robotics cluster follows: **ReferTrack** (Zhejiang University, 44 upvotes) decouples referring from tracking to ground embodied visual tracking in explicit image-space detections rather than opaque spatial latents; **Robostral Navigate** (Mistral AI) introduces an 8B monocular-RGB-only navigation VLM built for cross-embodiment generalization; and **WorldWeaver** (UCLA) adds persistent cross-agent world-state registers to streaming multi-agent video diffusion. Alongside these, **Visual Contrastive Self-Distillation** (University of Maryland, 41 upvotes) pushes on-policy self-distillation toward a purely input-conditioned form that drops the last vestige of teacher/student asymmetry — part of a broader push this week toward cheaper, teacher-free policy distillation for agentic LLMs. On the infrastructure side, Tencent's **WorkBuddy Bench** and NVIDIA's **NOOA** framework both target the maturing pain points of production coding agents: contamination-resistant multi-domain evaluation and a plain-Python object-oriented agent authoring model, respectively.\n\nOn HuggingFace, **zai-org/GLM-5.2** leads trending models by a wide margin (4,416 likes, 667K downloads), with **baidu/Unlimited-OCR** (3,015 likes, 2.5M downloads) and **thinkingmachines/Inkling** (1,546 likes) also drawing heavy adoption; quantized **prism-ml/Bonsai-27B** variants (1-bit and ternary 2-bit GGUF) show continued appetite for extreme on-device compression. GitHub trending is dominated by the agent-tooling stack: **mattpocock/skills** (+2,251 stars today, 186K total) and **koala73/worldmonitor** (+2,184) lead, alongside a cluster of AI-native browsers and web-agent infrastructure — **citrolabs/ego-lite**, **Panniantong/Agent-Reach**, **browser-use/browser-use**, and **unclecode/crawl4ai** — signaling that giving agents reliable, first-class internet access is now a first-order engineering priority alongside the model-level self-improvement work topping the papers list.",
+    "key_themes": [
+      "recursive-self-improving-agents",
+      "agentic-benchmarking-infrastructure",
+      "embodied-navigation-visual-tracking",
+      "teacher-free-self-distillation",
+      "ai-native-browsers-web-agents"
+    ]
+  },
+  "researcher_notes": "**AREX's discovery-verification asymmetry framing is the most exportable idea this week.** Rather than treating 'search longer' as the only lever for deep research agents, AREX treats verification as a cheap, decomposable subroutine that can guide refinement — a general recipe applicable well beyond the paper's own benchmark tasks. Shipping a 122B-A10B MoE alongside a 4B dense model suggests the recipe scales down as well as up. Watch for the learned context-compression tool (not an external summarizer model) to get reused elsewhere; it's the piece most other RSI agent papers currently bolt on as an afterthought.\n\n**ReferTrack and Robostral Navigate both bet on making embodied perception legible again.** ReferTrack's critique of chain-of-thought reasoning operating in 'abstract spatial latents' echoes a recurring complaint about VLA policies: they're hard to supervise precisely because their intermediate representations aren't inspectable. Grounding tracking in explicit image-space detections, and Robostral's decision to consume only monocular RGB (no depth/lidar), both trade a bit of raw capability ceiling for deployability and debuggability — a sensible trade for anyone shipping real robots rather than benchmarks.\n\n**The teacher-free self-distillation thread is worth tracking as a cluster, not an isolated paper.** Visual Contrastive Self-Distillation attacks the last remaining teacher/student asymmetry in on-policy self-distillation, sitting alongside other agentic-distillation work in the broader daily list (multi-turn prefix replay, trust-region masking) that each remove or stabilize a different piece of the same expensive machinery: distilling from a teacher LLM into a student over long agent trajectories. If you're building agentic RL/distillation pipelines, this cluster is worth reading together rather than in isolation.\n\n**GLM-5.2's dominance on HuggingFace trending (4,416 likes) alongside the extreme-quantization Bonsai-27B GGUF variants suggests the open-weight ecosystem is bifurcating**: flagship general models chasing raw capability, and aggressively quantized (1-bit, ternary) variants of smaller strong models chasing on-device deployment. Both trends showed up simultaneously today rather than on alternating days, a useful signal the community isn't choosing one lane over the other.\n\n**On GitHub, the AI-native-browser cluster (ego-lite, browser-use, Agent-Reach, crawl4ai) is now large enough to call a category rather than a handful of scattered projects.** Combined with NOOA's plain-Python agent authoring model and WorkBuddy Bench's Web domain, the throughline across today's papers, models, and repos is consistent: agents need first-class, inspectable interfaces to the messy real world (web pages, terminals, robot sensors), and 2026 tooling is converging on making those interfaces explicit rather than latent.",
+  "papers": [
+    {
+      "id": "arex-recursive-self-improving-deep-research",
+      "title": "AREX: Towards a Recursively Self-Improving Agent for Deep Research",
+      "authors": ["Shuqi Lu", "Chaofan Li", "Kun Luo", "Zhang Zhang", "Hui Wang et al."],
+      "affiliations": ["BAAI (Beijing Academy of Artificial Intelligence)", "Renmin University of China"],
+      "summary": "AREX introduces a family of recursively self-improving (RSI) deep research agents that alternate between an inner research loop gathering evidence and an outer loop that audits answers constraint-by-constraint. The agents learn an autonomous context-compression tool to sustain self-improvement over long horizons, trained via agentic mid-training and long-horizon RL, with dense 4B and 122B-A10B MoE variants.",
+      "key_findings": [
+        "Exploits a discovery-verification asymmetry: verifying a candidate answer is far cheaper than discovering it, enabling constraint-wise auditing to guide refinement",
+        "Learns an autonomous context-compression tool (no external model needed) to sustain self-improvement over long horizons",
+        "Trained via agentic mid-training plus long-horizon RL on verified synthetic tasks; released as both a 4B dense model and a 122B-A10B MoE model"
+      ],
+      "tags": ["agentic-research", "self-improvement", "reinforcement-learning", "mixture-of-experts"],
+      "relevance": "high",
+      "engagement": { "upvotes": 118, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21461",
+        "huggingface": "https://huggingface.co/papers/2607.21461",
+        "pdf": "https://arxiv.org/pdf/2607.21461"
+      }
+    },
+    {
+      "id": "refertrack-embodied-visual-tracking",
+      "title": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
+      "authors": ["Hanjing Ye", "Tianle Zeng", "Jiazhao Zhang", "Shaoan Wang", "Zibo Zhang"],
+      "affiliations": ["Zhejiang University"],
+      "summary": "ReferTrack proposes a referring-then-tracking paradigm for embodied visual tracking, where a mobile agent must continuously follow a natural-language-described target using only onboard vision. It grounds chain-of-thought reasoning in explicit image-space detections rather than abstract spatial latents, improving supervision and alignment.",
+      "key_findings": [
+        "Existing VLA policies reason in abstract spatial latents that are hard to supervise and weakly aligned with image-space detections",
+        "Decoupling referring (identifying the target) from tracking (following it) improves interpretability and grounding",
+        "Explicit detection-based CoT improves robustness of long-horizon embodied tracking"
+      ],
+      "tags": ["embodied-ai", "visual-tracking", "vision-language-action", "robotics"],
+      "relevance": "high",
+      "engagement": { "upvotes": 44, "comments": 10 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20061",
+        "huggingface": "https://huggingface.co/papers/2607.20061",
+        "pdf": "https://arxiv.org/pdf/2607.20061"
+      }
+    },
+    {
+      "id": "visual-contrastive-self-distillation",
+      "title": "Visual Contrastive Self-Distillation",
+      "authors": ["Yijun Liang", "Yunjie Tian", "Yijiang Li", "Yuqi Jia", "Furong Huang"],
+      "affiliations": ["University of Maryland"],
+      "summary": "Studies whether on-policy self-distillation can drop the remaining teacher-student information asymmetry entirely, proposing a purely input-conditioned contrastive self-distillation scheme that removes the need for an external teacher altogether.",
+      "key_findings": [
+        "On-policy self-distillation (OPSD) already removes the external teacher required by classic on-policy distillation but still needs asymmetric teacher/student information",
+        "Proposes a simpler form driven purely by input conditioning, removing the remaining asymmetry",
+        "Contrastive formulation stabilizes self-distillation without external supervision signals"
+      ],
+      "tags": ["self-distillation", "contrastive-learning", "representation-learning"],
+      "relevance": "high",
+      "engagement": { "upvotes": 41, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21556",
+        "huggingface": "https://huggingface.co/papers/2607.21556",
+        "pdf": "https://arxiv.org/pdf/2607.21556"
+      }
+    },
+    {
+      "id": "k12-kgraph-curriculum-knowledge-graph",
+      "title": "K12-KGraph: A Curriculum-Aligned Knowledge Graph for Benchmarking and Training Educational LLMs",
+      "authors": ["Hao Liang", "Qihan Lin", "Zhaoyang Han", "Xiaochen Ma", "Zhen Hao Wong"],
+      "affiliations": ["Sun Yat-sen University"],
+      "summary": "Introduces K12-KGraph, a curriculum-aligned knowledge graph extracted from official People's Education Press K-12 textbooks, targeting a new capability the authors call 'curriculum cognition' — understanding how knowledge is structured and visually presented rather than just answering exam questions.",
+      "key_findings": [
+        "Existing K-12 LLM benchmarks mainly test exam QA, not curriculum structure understanding",
+        "K12-KGraph is built directly from official textbook content, aligning graph structure with real curriculum sequencing",
+        "Enables both benchmarking and training of educational LLMs on curriculum cognition"
+      ],
+      "tags": ["education-ai", "knowledge-graph", "benchmarking", "k12"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 40, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.09635",
+        "huggingface": "https://huggingface.co/papers/2605.09635",
+        "pdf": "https://arxiv.org/pdf/2605.09635"
+      }
+    },
+    {
+      "id": "show-dont-tell-spatial-cognition-pixels",
+      "title": "Show, Don't Tell: Evaluating Spatial Cognition in Generative Pixels Rather Than LLM Text",
+      "authors": ["Xu Wang", "Kaixiang Yao", "Miao Pan", "Xiaohe Zhou", "Xuanyu Liu"],
+      "affiliations": ["University of Science and Technology of China"],
+      "summary": "Argues that existing spatial reasoning benchmarks force an answer-interface mismatch on image-generative models by requiring coordinates, options, or text output, and proposes evaluating spatial cognition directly in generated pixels instead.",
+      "key_findings": [
+        "Text/coordinate-based spatial benchmarks mismatch the native output modality of generative image models",
+        "Evaluating spatial reasoning in generated pixels reveals different capability profiles than text-based scoring",
+        "Highlights a broader need for interface-matched evaluation of generative models"
+      ],
+      "tags": ["spatial-reasoning", "generative-models", "evaluation", "multimodal"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 34, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21072",
+        "huggingface": "https://huggingface.co/papers/2607.21072",
+        "pdf": "https://arxiv.org/pdf/2607.21072"
+      }
+    },
+    {
+      "id": "nvidia-oo-agents-native-python",
+      "title": "NVIDIA-labs OO Agents: Native Python Object-Oriented Agents",
+      "authors": ["Paul Furgale", "Severin Klingler", "James Nolan", "Matt Staats", "Gaia Di Lorenzo"],
+      "affiliations": ["NVIDIA Research"],
+      "summary": "NVIDIA Object-Oriented Agents (NOOA) is a model-agnostic Python framework that represents an agent as a plain Python object, where methods are actions, fields are state, and docstrings are prompts — replacing the fragmented prompt-template/tool-schema/callback stack common in agent development.",
+      "key_findings": [
+        "Traditional agent development splits logic across prompt templates, tool schemas, callbacks, and workflow graphs",
+        "NOOA collapses this into standard Python object-oriented design: methods=actions, fields=state, docstrings=prompts",
+        "Framework is model-agnostic, aiming for reliability and maintainability in production agent code"
+      ],
+      "tags": ["agent-frameworks", "developer-tools", "software-engineering"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 19, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20709",
+        "huggingface": "https://huggingface.co/papers/2607.20709",
+        "pdf": "https://arxiv.org/pdf/2607.20709"
+      }
+    },
+    {
+      "id": "tencent-workbuddy-bench-coding-agents",
+      "title": "Tencent WorkBuddy Bench: A Multi-Domain Coding-Agent Benchmark with Contamination-Resistant Task Construction",
+      "authors": ["Tencent WorkBuddy Bench Team", "Siqi Cai", "Shaopeng Chen", "Xiang Fei", "Yong Mao"],
+      "affiliations": ["Tencent"],
+      "summary": "WorkBuddy Bench is a multi-domain, contamination-resistant coding-agent benchmark spanning Code, Web, Office, and Security domains, with a unified evaluation framework, distribution-informed task construction, and a cross-model leaderboard.",
+      "key_findings": [
+        "Contamination-resistant task construction methodology addresses benchmark leakage concerns in coding-agent evaluation",
+        "Covers four distinct work domains (Code, Web, Office, Security) under one scoring protocol",
+        "Includes a cross-model leaderboard for standardized comparison of coding agents"
+      ],
+      "tags": ["coding-agents", "benchmarking", "evaluation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 18, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20911",
+        "huggingface": "https://huggingface.co/papers/2607.20911",
+        "pdf": "https://arxiv.org/pdf/2607.20911"
+      }
+    },
+    {
+      "id": "sana-video-2-hybrid-linear-attention",
+      "title": "SANA-Video 2.0: Hybrid Linear Attention with Attention Residuals for Efficient Video Generation",
+      "authors": ["Junsong Chen", "Jincheng Yu", "Yitong Li", "Shuchen Xue", "Haozhe Liu"],
+      "affiliations": ["NVIDIA", "MIT"],
+      "summary": "SANA-Video 2.0 is a hybrid video diffusion transformer at 5B and 14B scales that combines linear attention with attention residuals to generate up to 720p video on a single GPU, matching full-softmax video DiT quality while retaining linear attention's favorable long-sequence scaling.",
+      "key_findings": [
+        "Hybrid linear-attention-with-residuals architecture matches full-softmax video DiT quality",
+        "Generates up to 720p video on a single GPU at 5B and 14B scales",
+        "Retains the favorable long-sequence compute scaling of linear attention"
+      ],
+      "tags": ["video-generation", "diffusion-transformers", "efficient-attention"],
+      "relevance": "high",
+      "engagement": { "upvotes": 15, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21553",
+        "huggingface": "https://huggingface.co/papers/2607.21553",
+        "pdf": "https://arxiv.org/pdf/2607.21553"
+      }
+    },
+    {
+      "id": "llms-get-lost-evolving-user-intent",
+      "title": "LLMs Get Lost in Evolving User Intent",
+      "authors": ["Jihoon Tack", "Philippe Laban", "Jennifer Neville"],
+      "affiliations": ["Salesforce Research"],
+      "summary": "Examines how LLM agents handle the dynamic, iterative nature of real user interactions, where intent is disclosed, revised, and reshaped over a conversation rather than specified upfront, showing agents struggle to track evolving intent over multi-turn collaboration.",
+      "key_findings": [
+        "Users rarely specify full intent upfront; it evolves through disclosure and revision across turns",
+        "Current LLM agents struggle to adapt to evolving intent, often anchoring to stale early-turn interpretations",
+        "Highlights a gap between static benchmark evaluation and dynamic real-world collaborative use"
+      ],
+      "tags": ["llm-agents", "human-ai-interaction", "multi-turn-dialogue"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 15, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20734",
+        "huggingface": "https://huggingface.co/papers/2607.20734",
+        "pdf": "https://arxiv.org/pdf/2607.20734"
+      }
+    },
+    {
+      "id": "self-supervised-structured-dynamics-video",
+      "title": "Self-Supervised Learning of Structured Dynamics from Videos",
+      "authors": ["Lukas Knobel", "Andrew Zisserman", "Yuki M. Asano"],
+      "affiliations": ["University of Oxford"],
+      "summary": "Proposes a self-supervised approach to disentangle camera motion from object motion in video, addressing an underexplored decomposition problem in motion representation learning.",
+      "key_findings": [
+        "Frame-to-frame video change entangles camera motion and object motion, complicating motion representation learning",
+        "Self-supervised decomposition of these two dynamics sources improves structured motion understanding",
+        "Opens a path toward more interpretable and controllable video representation learning"
+      ],
+      "tags": ["self-supervised-learning", "video-understanding", "motion-representation"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 14, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21576",
+        "huggingface": "https://huggingface.co/papers/2607.21576",
+        "pdf": "https://arxiv.org/pdf/2607.21576"
+      }
+    },
+    {
+      "id": "worldweaver-streaming-multi-agent-diffusion",
+      "title": "Streaming Multi-Agent Autoregressive Diffusion Model with World State Registers (WorldWeaver)",
+      "authors": ["Sicheng Mo", "Yuheng Li", "Ziyang Leng", "Krishna Kumar Singh", "Bolei Zhou"],
+      "affiliations": ["UCLA"],
+      "summary": "WorldWeaver (W^2) is a streaming multi-agent autoregressive video diffusion model that augments rollout with cross-agent world state registers, letting multi-agent interactive world models maintain persistent, view-consistent state across agents.",
+      "key_findings": [
+        "Multi-agent world models need persistent state that survives across agents and evolving viewpoints, not just per-frame consistency",
+        "Cross-agent world state registers propagate shared state during streaming autoregressive rollout",
+        "Targets interactive multi-agent simulation and world-model applications beyond single-agent video generation"
+      ],
+      "tags": ["world-models", "video-diffusion", "multi-agent-systems"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 9, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21594",
+        "huggingface": "https://huggingface.co/papers/2607.21594",
+        "pdf": "https://arxiv.org/pdf/2607.21594"
+      }
+    },
+    {
+      "id": "robostral-navigate-vlm-navigation",
+      "title": "Robostral Navigate",
+      "authors": ["Arjun Majumdar", "Avinash Sooriyarachchi", "Benjamin Tibi", "Chris Bamford", "Elliot Chane-Sane"],
+      "affiliations": ["Mistral AI"],
+      "summary": "Robostral Navigate is an 8B vision-language model for scalable robot navigation that minimizes sensor assumptions, consuming only monocular RGB image streams, and is designed to generalize across robot embodiments while training efficiently.",
+      "key_findings": [
+        "Uses only monocular RGB input, avoiding depth/lidar sensor dependencies that limit deployment scale",
+        "Designed to generalize across different robot embodiments from a single 8B VLM",
+        "Prioritizes training efficiency as a first-class objective for scalable navigation deployment"
+      ],
+      "tags": ["robotics", "navigation", "vision-language-models"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 8, "comments": 0 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20785",
+        "huggingface": "https://huggingface.co/papers/2607.20785",
+        "pdf": "https://arxiv.org/pdf/2607.20785"
+      }
+    },
+    {
+      "id": "sample-efficient-learning-agent-experience",
+      "title": "Sample-Efficient Learning from Agent Experience",
+      "authors": ["Chenhui Gou", "Haoqin Tu", "Yunhao Fang", "Jianfei Cai", "Hamid Rezatofighi"],
+      "affiliations": ["Monash University"],
+      "summary": "Studies how to make agent learning from environment interaction more sample-efficient by combining in-context learning's sample efficiency with context distillation's ability to internalize contextual information into model weights, so gains persist after context is removed.",
+      "key_findings": [
+        "Real-world agent learning is bottlenecked by costly environment interactions",
+        "In-context learning is sample-efficient but its benefits vanish once experience leaves the context window",
+        "Context distillation internalizes in-context gains into model weights for persistence beyond the context window"
+      ],
+      "tags": ["agent-learning", "context-distillation", "sample-efficiency"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 8, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21051",
+        "huggingface": "https://huggingface.co/papers/2607.21051",
+        "pdf": "https://arxiv.org/pdf/2607.21051"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "zai-org-glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (Z.ai)",
+      "description": "Latest flagship GLM-family text-generation model with a mixture-of-experts architecture (glm_moe_dsa), leading HuggingFace trending by likes and downloads.",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": ["transformers", "safetensors", "glm_moe_dsa", "text-generation", "conversational"],
+      "metrics": { "downloads": 667403, "likes": 4416 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "High-throughput OCR/feature-extraction model from Baidu, the single most downloaded trending model today with over 2.5M downloads.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["transformers", "safetensors", "unlimited-ocr", "feature-extraction", "baidu"],
+      "metrics": { "downloads": 2500391, "likes": 3015 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "thinkingmachines-inkling",
+      "name": "Inkling",
+      "organization": "Thinking Machines",
+      "description": "Multimodal image-text-to-text conversational model from Thinking Machines, drawing strong community engagement.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": ["transformers", "safetensors", "inkling_mm_model", "image-text-to-text", "conversational"],
+      "metrics": { "downloads": 27883, "likes": 1546 },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "prism-ml-bonsai-27b-gguf",
+      "name": "Bonsai-27B (GGUF, 1-bit)",
+      "organization": "Prism ML",
+      "description": "Extreme 1-bit quantized GGUF build of a 27B conversational model for llama.cpp, the most downloaded quantized release trending today.",
+      "task_type": "text-generation",
+      "model_size": "27B (1-bit quantized)",
+      "tags": ["llama.cpp", "gguf", "conversational", "1-bit", "llama-cpp"],
+      "metrics": { "downloads": 2028115, "likes": 632 },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-27B-gguf"
+    },
+    {
+      "id": "prism-ml-ternary-bonsai-27b-gguf",
+      "name": "Ternary-Bonsai-27B (GGUF, 2-bit)",
+      "organization": "Prism ML",
+      "description": "Ternary 2-bit quantized GGUF variant of Bonsai-27B, trading extreme compression for slightly higher fidelity than the 1-bit build.",
+      "task_type": "text-generation",
+      "model_size": "27B (2-bit ternary quantized)",
+      "tags": ["llama.cpp", "gguf", "conversational", "ternary", "2-bit"],
+      "metrics": { "downloads": 595415, "likes": 1006 },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "poolside-laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Text-generation model from Poolside's Laguna family, continuing the company's push into code- and agent-oriented LLMs.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["transformers", "safetensors", "laguna", "text-generation", "laguna-s-2.1"],
+      "metrics": { "downloads": 28992, "likes": 612 },
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "conradlocke-krea2-identity-edit",
+      "name": "krea2-identity-edit",
+      "organization": "Community (conradlocke, Krea-2 ecosystem)",
+      "description": "LoRA for Krea 2 focused on identity-preserving image editing, popular within ComfyUI workflows.",
+      "task_type": "image-editing",
+      "model_size": "LoRA (small)",
+      "tags": ["image-editing", "lora", "comfyui", "krea-2"],
+      "metrics": { "downloads": 0, "likes": 532 },
+      "source_url": "https://huggingface.co/conradlocke/krea2-identity-edit"
+    },
+    {
+      "id": "bottlecapai-thinkingcap-qwen3-6-27b",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "BottlecapAI",
+      "description": "27B image-text-to-text model built on the Qwen3.6 base, tuned for multimodal reasoning tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["transformers", "safetensors", "qwen3_5", "image-text-to-text", "qwen3_6"],
+      "metrics": { "downloads": 26092, "likes": 542 },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    },
+    {
+      "id": "upstage-solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "Large-scale 250B open text-generation model from Upstage's Solar family, aimed at frontier open-weight capability.",
+      "task_type": "text-generation",
+      "model_size": "250B",
+      "tags": ["transformers", "safetensors", "solar_open2", "text-generation", "upstage"],
+      "metrics": { "downloads": 1106, "likes": 543 },
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "nanbeige-nanbeige4-2-3b",
+      "name": "Nanbeige4.2-3B",
+      "organization": "Nanbeige",
+      "description": "Compact 3B text-generation LLM aimed at efficient on-device and low-cost deployment scenarios.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": ["transformers", "safetensors", "nanbeige", "text-generation", "llm"],
+      "metrics": { "downloads": 8169, "likes": 372 },
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B"
+    },
+    {
+      "id": "microsoft-mage-flow",
+      "name": "Mage-Flow",
+      "organization": "Microsoft",
+      "description": "Diffusion-based text-to-image and image-editing/generation model from Microsoft Research.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["diffusers", "safetensors", "text-to-image", "image-generation", "image-editing"],
+      "metrics": { "downloads": 891, "likes": 235 },
+      "source_url": "https://huggingface.co/microsoft/Mage-Flow"
+    },
+    {
+      "id": "openbmb-minicpm-robotmanip",
+      "name": "MiniCPM-RobotManip",
+      "organization": "OpenBMB",
+      "description": "Vision-language-action variant of MiniCPM specialized for robot manipulation tasks, extending the MiniCPM family into embodied control.",
+      "task_type": "vision-language-action",
+      "model_size": "Unknown",
+      "tags": ["transformers", "safetensors", "minicpm_vla", "feature-extraction", "vision-language-action"],
+      "metrics": { "downloads": 559, "likes": 173 },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-RobotManip"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "Large collection of Claude/agent skills sourced from .agents directories, the top-trending repo today with a massive single-day star spike.",
+      "language": "Shell",
+      "stars": 186820,
+      "stars_today": 2251,
+      "forks": 16030,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agent-skills", "claude", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "koala73-worldmonitor",
+      "name": "koala73/worldmonitor",
+      "description": "Real-time global intelligence dashboard powered by AI news aggregation, surging with over 2,100 stars added today.",
+      "language": "TypeScript",
+      "stars": 73321,
+      "stars_today": 2184,
+      "forks": 10995,
+      "url": "https://github.com/koala73/worldmonitor",
+      "tags": ["ai-news-aggregation", "dashboard", "intelligence"],
+      "relevance": "medium"
+    },
+    {
+      "id": "diegosouzapw-omniroute",
+      "name": "diegosouzapw/OmniRoute",
+      "description": "Free MIT-licensed AI gateway routing across 290+ providers and 500+ models, addressing the growing need for unified multi-provider LLM access.",
+      "language": "TypeScript",
+      "stars": 28893,
+      "stars_today": 1841,
+      "forks": 3786,
+      "url": "https://github.com/diegosouzapw/OmniRoute",
+      "tags": ["llm-gateway", "multi-provider", "infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "ruvnet-ruview",
+      "name": "ruvnet/RuView",
+      "description": "Converts WiFi signal data into real-time spatial intelligence, an unusual application of AI-driven sensing to ambient perception.",
+      "language": "Rust",
+      "stars": 85967,
+      "stars_today": 1022,
+      "forks": 11450,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": ["spatial-intelligence", "sensing", "wifi"],
+      "relevance": "medium"
+    },
+    {
+      "id": "citrolabs-ego-lite",
+      "name": "citrolabs/ego-lite",
+      "description": "Fastest browser built specifically for AI agents, part of the fast-growing AI-native browser category trending alongside browser-use and Agent-Reach.",
+      "language": "JavaScript",
+      "stars": 2623,
+      "stars_today": 880,
+      "forks": 124,
+      "url": "https://github.com/citrolabs/ego-lite",
+      "tags": ["ai-native-browser", "agents", "web-automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "composiohq-awesome-claude-skills",
+      "name": "ComposioHQ/awesome-claude-skills",
+      "description": "Curated list of Claude Skills, resources, and tools, the largest single repo in today's list with continued steady growth.",
+      "language": "Python",
+      "stars": 70092,
+      "stars_today": 663,
+      "forks": 7905,
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "tags": ["claude", "awesome-list", "agent-skills"],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "Gives AI agents the ability to see and navigate the entire internet, part of today's surge in AI-native web-access tooling.",
+      "language": "Python",
+      "stars": 60626,
+      "stars_today": 477,
+      "forks": 4881,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["web-agents", "internet-access", "ai-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "Foundation model purpose-built for financial markets, echoing the FinanceComplexQA paper's push into agentic financial reasoning.",
+      "language": "Python",
+      "stars": 33501,
+      "stars_today": 499,
+      "forks": 5680,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["foundation-model", "finance", "time-series"],
+      "relevance": "medium"
+    },
+    {
+      "id": "calesthio-openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "Open-source agentic video production system with 12 pipelines, 100+ tools, and 700+ agent skill files, a large-scale agent orchestration project.",
+      "language": "Python",
+      "stars": 42005,
+      "stars_today": 333,
+      "forks": 5000,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["agentic-video", "multi-agent", "content-production"],
+      "relevance": "medium"
+    },
+    {
+      "id": "lordog-dive-into-llms",
+      "name": "Lordog/dive-into-llms",
+      "description": "Educational tutorial series covering LLM fundamentals and practice, continuing to draw steady interest as an onboarding resource.",
+      "language": "Jupyter Notebook",
+      "stars": 45026,
+      "stars_today": 328,
+      "forks": 5388,
+      "url": "https://github.com/Lordog/dive-into-llms",
+      "tags": ["llm-education", "tutorials"],
+      "relevance": "medium"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Practical, project-based curriculum for learning and shipping AI engineering skills, popular with practitioners entering the field.",
+      "language": "Python",
+      "stars": 43190,
+      "stars_today": 303,
+      "forks": 7220,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["ai-engineering", "education", "curriculum"],
+      "relevance": "medium"
+    },
+    {
+      "id": "unclecode-crawl4ai",
+      "name": "unclecode/crawl4ai",
+      "description": "Open-source, LLM-friendly web crawler designed to feed clean structured content to agents and RAG pipelines.",
+      "language": "Python",
+      "stars": 74885,
+      "stars_today": 302,
+      "forks": 7720,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": ["web-crawling", "llm-friendly", "rag"],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-browser-use",
+      "name": "browser-use/browser-use",
+      "description": "Makes websites accessible for AI agents by providing a reliable browser automation and perception layer, a foundational piece of the AI-native-browser category.",
+      "language": "Python",
+      "stars": 106630,
+      "stars_today": 264,
+      "forks": 11724,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["web-agents", "browser-automation", "ai-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "cheahjs-free-llm-api-resources",
+      "name": "cheahjs/free-llm-api-resources",
+      "description": "Curated, actively maintained list of free LLM inference API resources, a practical reference for cost-conscious developers.",
+      "language": "Python",
+      "stars": 28122,
+      "stars_today": 164,
+      "forks": 2918,
+      "url": "https://github.com/cheahjs/free-llm-api-resources",
+      "tags": ["llm-apis", "awesome-list", "resources"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Recursive Self-Improving Agents",
+      "description": "Deep research agents that verify and refine their own answers via constraint-wise auditing loops, reducing reliance on brute-force search and instead cheaply exploiting the discovery-verification asymmetry.",
+      "related_paper_ids": ["arex-recursive-self-improving-deep-research"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Benchmarking & Training Infrastructure",
+      "description": "New contamination-resistant, multi-domain evaluation suites and lightweight authoring frameworks for coding and tool-use agents, plus sample-efficient methods for learning from agent experience.",
+      "related_paper_ids": ["tencent-workbuddy-bench-coding-agents", "nvidia-oo-agents-native-python", "sample-efficient-learning-agent-experience"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Embodied Navigation & Visual Tracking",
+      "description": "Vision-language-action models and referring-then-tracking paradigms pushing robots toward language-grounded, sensor-light, and persistent-state embodied perception.",
+      "related_paper_ids": ["refertrack-embodied-visual-tracking", "robostral-navigate-vlm-navigation", "worldweaver-streaming-multi-agent-diffusion"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Teacher-Free Self-Distillation",
+      "description": "Distillation methods that remove or reduce reliance on an external teacher model, moving toward purely input-conditioned or self-supervised policy distillation for agentic LLMs.",
+      "related_paper_ids": ["visual-contrastive-self-distillation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI-Native Browsers & Web Agents",
+      "description": "A fast-growing GitHub category of browsers, crawlers, and internet-access layers purpose-built for AI agents rather than humans, reflecting a shift toward first-class agent-web interfaces.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    { "name": "HuggingFace Daily Papers", "url": "https://huggingface.co/api/daily_papers", "checked_at": "2026-07-25T03:57:00Z", "status": "fallback_to_2026-07-24" },
+    { "name": "HuggingFace Trending Models", "url": "https://huggingface.co/api/models?sort=trending", "checked_at": "2026-07-25T03:57:00Z", "status": "ok" },
+    { "name": "arXiv Recent", "url": "https://arxiv.org/search/", "checked_at": "2026-07-25T03:57:00Z", "status": "partial" },
+    { "name": "AlphaXiv Trending", "url": "https://api.alphaxiv.org/v1/papers/trending", "checked_at": "2026-07-25T03:57:00Z", "status": "error_404" },
+    { "name": "GitHub Trending", "url": "https://github.com/trending", "checked_at": "2026-07-25T03:57:00Z", "status": "ok" }
+  ]
+}

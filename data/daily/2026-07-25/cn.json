@@ -1,0 +1,1018 @@
+{
+  "version": "1.0",
+  "date": "2026-07-25",
+  "generated_at": "2026-07-25T03:57:00Z",
+  "summary": {
+    "headline": "AREX推出具备验证-精炼循环的递归自我改进深度研究智能体（118赞）；智能体评测与训练基础设施在WorkBuddy Bench、NOOA和OpenForgeRL上全面爆发；AI原生浏览器与网页智能体主导GitHub趋势榜，GLM-5.2在HuggingFace上迎来大规模采用",
+    "body": "周六的HuggingFace每日论文回退至周五2026-07-24的榜单，由**AREX**明显领跑——这是北京智源研究院（BAAI）与中国人民大学合作推出的递归自我改进（RSI）深度研究智能体系列（118赞）。AREX利用了答案发现成本高昂与约束级验证成本低廉之间的不对称性：内循环收集证据并起草答案，外循环则逐条审计每个论断并发起针对性的后续研究，通过一个自学习的上下文压缩工具在长时域内持续运行。团队发布了4B稠密模型和122B-A10B MoE两个版本，均通过智能体中期训练和长时域强化学习训练而成——为下一代深度研究智能体提供了一个可信的架构范本。\n\n紧随其后的是一组密集的具身智能与机器人学论文：**ReferTrack**（浙江大学，44赞）将「指代」与「跟踪」解耦，把具身视觉跟踪建立在显式的图像空间检测之上，而非不透明的空间隐变量；**Robostral Navigate**（Mistral AI）推出了一个仅使用单目RGB输入的8B导航视觉语言模型，专为跨具身泛化而设计；**WorldWeaver**（UCLA）为流式多智能体视频扩散模型加入了持久的跨智能体世界状态寄存器。与此同时，**Visual Contrastive Self-Distillation（视觉对比自蒸馏）**（马里兰大学，41赞）将同策略自蒸馏推向一种纯粹由输入条件驱动的形式，去除了教师/学生不对称性的最后残余——这是本周朝着更廉价、无需教师的智能体LLM策略蒸馏迈进的更广泛趋势的一部分。在基础设施方面，腾讯的**WorkBuddy Bench**和NVIDIA的**NOOA**框架分别针对生产级编码智能体日益成熟的痛点：前者是抗污染的多领域评测，后者是纯Python面向对象的智能体编写模型。\n\n在HuggingFace上，**zai-org/GLM-5.2**以大幅优势领跑热门模型榜（4,416赞，66.7万次下载），**baidu/Unlimited-OCR**（3,015赞，250万次下载）和**thinkingmachines/Inkling**（1,546赞）同样获得了大量采用；量化版本的**prism-ml/Bonsai-27B**（1比特与三值2比特GGUF）显示出社区对极致端侧压缩持续高涨的需求。GitHub趋势榜则由智能体工具栈主导：**mattpocock/skills**（今日+2,251星，累计18.6万）与**koala73/worldmonitor**（+2,184）领跑，还有一批AI原生浏览器与网页智能体基础设施项目——**citrolabs/ego-lite**、**Panniantong/Agent-Reach**、**browser-use/browser-use**以及**unclecode/crawl4ai**——表明为智能体提供可靠的、一等公民级别的互联网访问能力，已成为与论文榜单头部的模型级自我改进工作并列的首要工程优先事项。",
+    "key_themes": [
+      "recursive-self-improving-agents",
+      "agentic-benchmarking-infrastructure",
+      "embodied-navigation-visual-tracking",
+      "teacher-free-self-distillation",
+      "ai-native-browsers-web-agents"
+    ]
+  },
+  "researcher_notes": "**AREX的「发现-验证不对称性」框架是本周最具可迁移性的思路。**AREX没有把「搜索更久」当作深度研究智能体的唯一杠杆，而是将验证视为一个廉价、可分解的子程序，用以指导精炼过程——这是一个远超论文自身基准任务、具有普适性的方法论。同时发布122B-A10B MoE和4B稠密模型，说明该方法既能向上扩展也能向下压缩。值得关注的是那个学习得到的上下文压缩工具（而非外部摘要模型）——它很可能会被复用到其他场景，而这正是当前大多数其他RSI智能体论文往往只是事后附加、处理粗糙的部分。\n\n**ReferTrack和Robostral Navigate都押注于让具身感知重新变得「可读」。**ReferTrack对在「抽象空间隐变量」中进行思维链推理的批评，呼应了关于VLA（视觉-语言-动作）策略的一个常见抱怨：正因为其中间表示不可检视，才难以被监督。将跟踪建立在显式图像空间检测之上，以及Robostral只使用单目RGB（不用深度/激光雷达）的选择，都是以牺牲一部分原始能力上限来换取可部署性和可调试性——对于要真正交付实体机器人而非只跑基准的团队来说，这是一笔明智的权衡。\n\n**无教师自蒸馏这条线索值得作为一个集群来追踪，而非孤立的单篇论文。**Visual Contrastive Self-Distillation攻克了同策略自蒸馏中最后残留的教师/学生不对称性，与当日榜单中其他智能体蒸馏工作（多轮前缀回放、信任域掩码）并列——这些工作各自去除或稳定了同一套昂贵机制中的不同环节：即在漫长的智能体轨迹上将教师LLM蒸馏为学生模型。如果你正在构建智能体RL/蒸馏流水线，这一组论文值得放在一起阅读，而非孤立看待。\n\n**GLM-5.2在HuggingFace热门榜上的统治地位（4,416赞）与极致量化的Bonsai-27B GGUF变体并存，说明开源权重生态正在分化**：一边是追求原始能力上限的旗舰通用模型，另一边是追求端侧部署的、对较小但强大模型进行激进量化（1比特、三值）的变体。这两种趋势今天是同时出现而非交替出现的，这是一个有用的信号，说明社区并没有在这两条路线之间做非此即彼的选择。\n\n**在GitHub上，AI原生浏览器集群（ego-lite、browser-use、Agent-Reach、crawl4ai）现在的规模已经足以称为一个独立类别，而不再是零散的几个项目。**结合NOOA的纯Python智能体编写模型和WorkBuddy Bench的Web领域，贯穿今天论文、模型和代码仓库的一条主线是一致的：智能体需要能够检视、一等公民级别的接口来对接杂乱的真实世界（网页、终端、机器人传感器），而2026年的工具生态正在趋同于让这些接口显式化，而非隐藏在潜变量之中。",
+  "papers": [
+    {
+      "id": "arex-recursive-self-improving-deep-research",
+      "title": "AREX：迈向面向深度研究的递归自我改进智能体",
+      "authors": [
+        "Shuqi Lu",
+        "Chaofan Li",
+        "Kun Luo",
+        "Zhang Zhang",
+        "Hui Wang et al."
+      ],
+      "affiliations": [
+        "BAAI (Beijing Academy of Artificial Intelligence)",
+        "Renmin University of China"
+      ],
+      "summary": "AREX推出了一系列递归自我改进（RSI）深度研究智能体，在收集证据的内部研究循环与逐条审计答案约束的外部循环之间交替运行。这些智能体学习了一个自主的上下文压缩工具，以在长时域内维持自我改进能力，并通过智能体中期训练和长时域强化学习进行训练，提供4B稠密模型和122B-A10B MoE两种版本。",
+      "key_findings": [
+        "利用了「发现-验证不对称性」：验证一个候选答案的成本远低于发现它的成本，从而可以通过约束级审计来指导精炼",
+        "学习了一个自主的上下文压缩工具（无需外部模型），以在长时域内维持自我改进能力",
+        "在经过验证的合成任务上通过智能体中期训练加长时域强化学习进行训练；发布了4B稠密模型和122B-A10B MoE模型两个版本"
+      ],
+      "tags": [
+        "agentic-research",
+        "self-improvement",
+        "reinforcement-learning",
+        "mixture-of-experts"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 118,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21461",
+        "huggingface": "https://huggingface.co/papers/2607.21461",
+        "pdf": "https://arxiv.org/pdf/2607.21461"
+      }
+    },
+    {
+      "id": "refertrack-embodied-visual-tracking",
+      "title": "ReferTrack：面向具身视觉跟踪的「先指代后跟踪」方法",
+      "authors": [
+        "Hanjing Ye",
+        "Tianle Zeng",
+        "Jiazhao Zhang",
+        "Shaoan Wang",
+        "Zibo Zhang"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "ReferTrack为具身视觉跟踪提出了一种「先指代后跟踪」的范式，要求移动智能体仅依靠机载视觉持续跟随一个用自然语言描述的目标。该方法将思维链推理建立在显式的图像空间检测之上，而非抽象的空间隐变量，从而改善了监督效果和对齐性。",
+      "key_findings": [
+        "现有VLA策略在抽象空间隐变量中进行推理，这类表示难以监督，且与图像空间检测的对齐较弱",
+        "将「指代」（识别目标）与「跟踪」（跟随目标）解耦，提升了可解释性和落地性",
+        "基于显式检测的思维链推理提升了长时域具身跟踪的鲁棒性"
+      ],
+      "tags": [
+        "embodied-ai",
+        "visual-tracking",
+        "vision-language-action",
+        "robotics"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 10
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20061",
+        "huggingface": "https://huggingface.co/papers/2607.20061",
+        "pdf": "https://arxiv.org/pdf/2607.20061"
+      }
+    },
+    {
+      "id": "visual-contrastive-self-distillation",
+      "title": "视觉对比自蒸馏（Visual Contrastive Self-Distillation）",
+      "authors": [
+        "Yijun Liang",
+        "Yunjie Tian",
+        "Yijiang Li",
+        "Yuqi Jia",
+        "Furong Huang"
+      ],
+      "affiliations": [
+        "University of Maryland"
+      ],
+      "summary": "研究同策略自蒸馏能否彻底去除残留的教师-学生信息不对称性，提出了一种纯粹由输入条件驱动的对比自蒸馏方案，完全无需外部教师模型。",
+      "key_findings": [
+        "同策略自蒸馏（OPSD）已经去除了经典同策略蒸馏所需的外部教师，但仍需要不对称的教师/学生信息",
+        "提出了一种仅由输入条件驱动的更简单形式，去除了剩余的不对称性",
+        "对比式建模在没有外部监督信号的情况下稳定了自蒸馏过程"
+      ],
+      "tags": [
+        "self-distillation",
+        "contrastive-learning",
+        "representation-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21556",
+        "huggingface": "https://huggingface.co/papers/2607.21556",
+        "pdf": "https://arxiv.org/pdf/2607.21556"
+      }
+    },
+    {
+      "id": "k12-kgraph-curriculum-knowledge-graph",
+      "title": "K12-KGraph：用于教育LLM评测与训练的课程对齐知识图谱",
+      "authors": [
+        "Hao Liang",
+        "Qihan Lin",
+        "Zhaoyang Han",
+        "Xiaochen Ma",
+        "Zhen Hao Wong"
+      ],
+      "affiliations": [
+        "Sun Yat-sen University"
+      ],
+      "summary": "提出了K12-KGraph，一个从人民教育出版社官方K12教材中提取的、与课程对齐的知识图谱，旨在评测作者所称的「课程认知」这一新能力——即理解知识是如何被组织和可视化呈现的，而不仅仅是回答考试题目。",
+      "key_findings": [
+        "现有K12 LLM基准主要测试考试问答，而非课程结构理解",
+        "K12-KGraph直接基于官方教材内容构建，使图谱结构与真实课程编排顺序对齐",
+        "既支持对教育LLM的课程认知能力进行评测，也支持对其进行相应训练"
+      ],
+      "tags": [
+        "education-ai",
+        "knowledge-graph",
+        "benchmarking",
+        "k12"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 40,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.09635",
+        "huggingface": "https://huggingface.co/papers/2605.09635",
+        "pdf": "https://arxiv.org/pdf/2605.09635"
+      }
+    },
+    {
+      "id": "show-dont-tell-spatial-cognition-pixels",
+      "title": "展示而非讲述：在生成式像素而非LLM文本中评测空间认知",
+      "authors": [
+        "Xu Wang",
+        "Kaixiang Yao",
+        "Miao Pan",
+        "Xiaohe Zhou",
+        "Xuanyu Liu"
+      ],
+      "affiliations": [
+        "University of Science and Technology of China"
+      ],
+      "summary": "认为现有空间推理基准要求图像生成模型输出坐标、选项或文本，这造成了答案接口的不匹配，提出应直接在生成的像素中评测空间认知能力。",
+      "key_findings": [
+        "基于文本/坐标的空间基准与生成式图像模型的原生输出模态不匹配",
+        "在生成的像素中评测空间推理，揭示出与基于文本评分不同的能力画像",
+        "凸显了生成式模型评测中「接口匹配」这一更广泛需求"
+      ],
+      "tags": [
+        "spatial-reasoning",
+        "generative-models",
+        "evaluation",
+        "multimodal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 34,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21072",
+        "huggingface": "https://huggingface.co/papers/2607.21072",
+        "pdf": "https://arxiv.org/pdf/2607.21072"
+      }
+    },
+    {
+      "id": "nvidia-oo-agents-native-python",
+      "title": "NVIDIA-labs OO Agents：原生Python面向对象智能体",
+      "authors": [
+        "Paul Furgale",
+        "Severin Klingler",
+        "James Nolan",
+        "Matt Staats",
+        "Gaia Di Lorenzo"
+      ],
+      "affiliations": [
+        "NVIDIA Research"
+      ],
+      "summary": "NVIDIA面向对象智能体（NOOA）是一个与模型无关的Python框架，将智能体表示为一个纯粹的Python对象——方法即动作，字段即状态，文档字符串即提示词——取代了智能体开发中常见的碎片化的提示模板/工具模式/回调堆栈。",
+      "key_findings": [
+        "传统智能体开发将逻辑分散在提示模板、工具模式、回调函数和工作流图之中",
+        "NOOA将这一切收敛为标准的Python面向对象设计：方法=动作，字段=状态，文档字符串=提示词",
+        "该框架与模型无关，旨在提升生产环境智能体代码的可靠性和可维护性"
+      ],
+      "tags": [
+        "agent-frameworks",
+        "developer-tools",
+        "software-engineering"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 19,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20709",
+        "huggingface": "https://huggingface.co/papers/2607.20709",
+        "pdf": "https://arxiv.org/pdf/2607.20709"
+      }
+    },
+    {
+      "id": "tencent-workbuddy-bench-coding-agents",
+      "title": "腾讯WorkBuddy Bench：具备抗污染任务构建的多领域编码智能体基准",
+      "authors": [
+        "Tencent WorkBuddy Bench Team",
+        "Siqi Cai",
+        "Shaopeng Chen",
+        "Xiang Fei",
+        "Yong Mao"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "WorkBuddy Bench是一个多领域、抗污染的编码智能体基准，覆盖代码、Web、办公和安全四大领域，配有统一的评测框架、基于分布信息的任务构建方法，以及跨模型排行榜。",
+      "key_findings": [
+        "抗污染的任务构建方法解决了编码智能体评测中的基准泄漏问题",
+        "在统一评分协议下覆盖代码、Web、办公、安全四个不同的工作领域",
+        "包含一个跨模型排行榜，用于对编码智能体进行标准化比较"
+      ],
+      "tags": [
+        "coding-agents",
+        "benchmarking",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20911",
+        "huggingface": "https://huggingface.co/papers/2607.20911",
+        "pdf": "https://arxiv.org/pdf/2607.20911"
+      }
+    },
+    {
+      "id": "sana-video-2-hybrid-linear-attention",
+      "title": "SANA-Video 2.0：面向高效视频生成的带注意力残差的混合线性注意力",
+      "authors": [
+        "Junsong Chen",
+        "Jincheng Yu",
+        "Yitong Li",
+        "Shuchen Xue",
+        "Haozhe Liu"
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "MIT"
+      ],
+      "summary": "SANA-Video 2.0是一个5B和14B规模的混合视频扩散Transformer，结合线性注意力与注意力残差，能在单块GPU上生成最高720p的视频，画质可媲美全softmax视频DiT，同时保留了线性注意力在长序列上的良好扩展性。",
+      "key_findings": [
+        "带残差的混合线性注意力架构画质可媲美全softmax视频DiT",
+        "在5B和14B两种规模下均可在单块GPU上生成最高720p的视频",
+        "保留了线性注意力在长序列计算上的良好扩展性"
+      ],
+      "tags": [
+        "video-generation",
+        "diffusion-transformers",
+        "efficient-attention"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21553",
+        "huggingface": "https://huggingface.co/papers/2607.21553",
+        "pdf": "https://arxiv.org/pdf/2607.21553"
+      }
+    },
+    {
+      "id": "llms-get-lost-evolving-user-intent",
+      "title": "LLM在不断演变的用户意图中迷失方向",
+      "authors": [
+        "Jihoon Tack",
+        "Philippe Laban",
+        "Jennifer Neville"
+      ],
+      "affiliations": [
+        "Salesforce Research"
+      ],
+      "summary": "研究了LLM智能体如何应对真实用户交互中动态、迭代的特性——用户意图是在对话过程中逐步披露、修订和重塑的，而非一开始就完整给出，结果表明智能体在多轮协作中难以跟踪不断演变的意图。",
+      "key_findings": [
+        "用户很少一开始就给出完整意图；意图是通过多轮对话中的披露和修订逐步演变的",
+        "当前LLM智能体难以适应不断演变的意图，常常固守早期轮次中已过时的理解",
+        "凸显了静态基准评测与动态真实世界协作使用之间的差距"
+      ],
+      "tags": [
+        "llm-agents",
+        "human-ai-interaction",
+        "multi-turn-dialogue"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20734",
+        "huggingface": "https://huggingface.co/papers/2607.20734",
+        "pdf": "https://arxiv.org/pdf/2607.20734"
+      }
+    },
+    {
+      "id": "self-supervised-structured-dynamics-video",
+      "title": "从视频中自监督学习结构化动力学",
+      "authors": [
+        "Lukas Knobel",
+        "Andrew Zisserman",
+        "Yuki M. Asano"
+      ],
+      "affiliations": [
+        "University of Oxford"
+      ],
+      "summary": "提出了一种自监督方法，用于将视频中的相机运动与物体运动解耦，解决了运动表示学习中一个尚未被充分探索的分解问题。",
+      "key_findings": [
+        "帧间视频变化将相机运动和物体运动纠缠在一起，使运动表示学习变得复杂",
+        "对这两种动力学来源进行自监督分解，改善了结构化运动理解",
+        "为实现更可解释、更可控的视频表示学习开辟了一条道路"
+      ],
+      "tags": [
+        "self-supervised-learning",
+        "video-understanding",
+        "motion-representation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 14,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21576",
+        "huggingface": "https://huggingface.co/papers/2607.21576",
+        "pdf": "https://arxiv.org/pdf/2607.21576"
+      }
+    },
+    {
+      "id": "worldweaver-streaming-multi-agent-diffusion",
+      "title": "WorldWeaver：带有世界状态寄存器的流式多智能体自回归扩散模型",
+      "authors": [
+        "Sicheng Mo",
+        "Yuheng Li",
+        "Ziyang Leng",
+        "Krishna Kumar Singh",
+        "Bolei Zhou"
+      ],
+      "affiliations": [
+        "UCLA"
+      ],
+      "summary": "WorldWeaver（W^2）是一个流式多智能体自回归视频扩散模型，通过在rollout过程中加入跨智能体世界状态寄存器，使多智能体交互式世界模型能够在各智能体之间维持持久且视角一致的状态。",
+      "key_findings": [
+        "多智能体世界模型需要能跨智能体和不断变化的视角持续存在的状态，而不仅仅是逐帧一致性",
+        "跨智能体世界状态寄存器在流式自回归rollout过程中传播共享状态",
+        "面向交互式多智能体仿真和世界模型应用，超越了单智能体视频生成的范畴"
+      ],
+      "tags": [
+        "world-models",
+        "video-diffusion",
+        "multi-agent-systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21594",
+        "huggingface": "https://huggingface.co/papers/2607.21594",
+        "pdf": "https://arxiv.org/pdf/2607.21594"
+      }
+    },
+    {
+      "id": "robostral-navigate-vlm-navigation",
+      "title": "Robostral Navigate",
+      "authors": [
+        "Arjun Majumdar",
+        "Avinash Sooriyarachchi",
+        "Benjamin Tibi",
+        "Chris Bamford",
+        "Elliot Chane-Sane"
+      ],
+      "affiliations": [
+        "Mistral AI"
+      ],
+      "summary": "Robostral Navigate是一个面向可扩展机器人导航的8B视觉语言模型，最大限度减少了对传感器的依赖假设，仅消费单目RGB图像流，设计目标是在高效训练的同时实现跨机器人具身形态的泛化。",
+      "key_findings": [
+        "仅使用单目RGB输入，避免了限制部署规模的深度/激光雷达传感器依赖",
+        "设计为可通过单一的8B视觉语言模型在不同机器人具身形态间泛化",
+        "将训练效率作为可扩展导航部署的首要目标之一"
+      ],
+      "tags": [
+        "robotics",
+        "navigation",
+        "vision-language-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20785",
+        "huggingface": "https://huggingface.co/papers/2607.20785",
+        "pdf": "https://arxiv.org/pdf/2607.20785"
+      }
+    },
+    {
+      "id": "sample-efficient-learning-agent-experience",
+      "title": "从智能体经验中进行样本高效学习",
+      "authors": [
+        "Chenhui Gou",
+        "Haoqin Tu",
+        "Yunhao Fang",
+        "Jianfei Cai",
+        "Hamid Rezatofighi"
+      ],
+      "affiliations": [
+        "Monash University"
+      ],
+      "summary": "研究如何通过结合上下文学习的样本效率与上下文蒸馏将上下文信息内化为模型权重的能力，使智能体从环境交互中学习变得更具样本效率，从而让收益在上下文被移除后依然得以保留。",
+      "key_findings": [
+        "真实世界中的智能体学习受限于高昂的环境交互成本",
+        "上下文学习具有样本效率，但一旦经验离开上下文窗口，其收益便会消失",
+        "上下文蒸馏将上下文学习中获得的收益内化到模型权重中，使其在超出上下文窗口后依然持久保留"
+      ],
+      "tags": [
+        "agent-learning",
+        "context-distillation",
+        "sample-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21051",
+        "huggingface": "https://huggingface.co/papers/2607.21051",
+        "pdf": "https://arxiv.org/pdf/2607.21051"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "zai-org-glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (Z.ai)",
+      "description": "GLM系列最新旗舰文本生成模型，采用混合专家架构（glm_moe_dsa），在HuggingFace热门榜的点赞数和下载量上均遥遥领先。",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "glm_moe_dsa",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 667403,
+        "likes": 4416
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度推出的高吞吐OCR/特征提取模型，是今日下载量最高的热门模型，下载量超过250万次。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "unlimited-ocr",
+        "feature-extraction",
+        "baidu"
+      ],
+      "metrics": {
+        "downloads": 2500391,
+        "likes": 3015
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "thinkingmachines-inkling",
+      "name": "Inkling",
+      "organization": "Thinking Machines",
+      "description": "Thinking Machines推出的多模态图文对话模型，获得了社区的强烈关注。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "inkling_mm_model",
+        "image-text-to-text",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 27883,
+        "likes": 1546
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "prism-ml-bonsai-27b-gguf",
+      "name": "Bonsai-27B (GGUF, 1-bit)",
+      "organization": "Prism ML",
+      "description": "面向llama.cpp的27B对话模型的极致1比特量化GGUF版本，是今日下载量最高的量化模型发布。",
+      "task_type": "text-generation",
+      "model_size": "27B (1-bit quantized)",
+      "tags": [
+        "llama.cpp",
+        "gguf",
+        "conversational",
+        "1-bit",
+        "llama-cpp"
+      ],
+      "metrics": {
+        "downloads": 2028115,
+        "likes": 632
+      },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-27B-gguf"
+    },
+    {
+      "id": "prism-ml-ternary-bonsai-27b-gguf",
+      "name": "Ternary-Bonsai-27B (GGUF, 2-bit)",
+      "organization": "Prism ML",
+      "description": "Bonsai-27B的三值2比特量化GGUF版本，相较1比特版本，以稍低的压缩率换取了略高的保真度。",
+      "task_type": "text-generation",
+      "model_size": "27B (2-bit ternary quantized)",
+      "tags": [
+        "llama.cpp",
+        "gguf",
+        "conversational",
+        "ternary",
+        "2-bit"
+      ],
+      "metrics": {
+        "downloads": 595415,
+        "likes": 1006
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "poolside-laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Poolside旗下Laguna系列文本生成模型，延续了该公司在面向代码与智能体的LLM方向上的布局。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "laguna",
+        "text-generation",
+        "laguna-s-2.1"
+      ],
+      "metrics": {
+        "downloads": 28992,
+        "likes": 612
+      },
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "conradlocke-krea2-identity-edit",
+      "name": "krea2-identity-edit",
+      "organization": "Community (conradlocke, Krea-2 ecosystem)",
+      "description": "面向Krea 2的LoRA，专注于身份保持的图像编辑，在ComfyUI工作流中广受欢迎。",
+      "task_type": "image-editing",
+      "model_size": "LoRA (small)",
+      "tags": [
+        "image-editing",
+        "lora",
+        "comfyui",
+        "krea-2"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 532
+      },
+      "source_url": "https://huggingface.co/conradlocke/krea2-identity-edit"
+    },
+    {
+      "id": "bottlecapai-thinkingcap-qwen3-6-27b",
+      "name": "ThinkingCap-Qwen3.6-27B",
+      "organization": "BottlecapAI",
+      "description": "基于Qwen3.6底座构建的27B图文模型，针对多模态推理任务进行了微调。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5",
+        "image-text-to-text",
+        "qwen3_6"
+      ],
+      "metrics": {
+        "downloads": 26092,
+        "likes": 542
+      },
+      "source_url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"
+    },
+    {
+      "id": "upstage-solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "Upstage旗下Solar系列大规模250B开源文本生成模型，志在冲击前沿开源权重能力水平。",
+      "task_type": "text-generation",
+      "model_size": "250B",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "solar_open2",
+        "text-generation",
+        "upstage"
+      ],
+      "metrics": {
+        "downloads": 1106,
+        "likes": 543
+      },
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "nanbeige-nanbeige4-2-3b",
+      "name": "Nanbeige4.2-3B",
+      "organization": "Nanbeige",
+      "description": "紧凑型3B文本生成LLM，面向高效端侧和低成本部署场景。",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "nanbeige",
+        "text-generation",
+        "llm"
+      ],
+      "metrics": {
+        "downloads": 8169,
+        "likes": 372
+      },
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B"
+    },
+    {
+      "id": "microsoft-mage-flow",
+      "name": "Mage-Flow",
+      "organization": "Microsoft",
+      "description": "微软研究院推出的基于扩散模型的文生图及图像编辑/生成模型。",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "text-to-image",
+        "image-generation",
+        "image-editing"
+      ],
+      "metrics": {
+        "downloads": 891,
+        "likes": 235
+      },
+      "source_url": "https://huggingface.co/microsoft/Mage-Flow"
+    },
+    {
+      "id": "openbmb-minicpm-robotmanip",
+      "name": "MiniCPM-RobotManip",
+      "organization": "OpenBMB",
+      "description": "MiniCPM系列面向机器人操作任务专门优化的视觉-语言-动作变体，将MiniCPM家族拓展至具身控制领域。",
+      "task_type": "vision-language-action",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "minicpm_vla",
+        "feature-extraction",
+        "vision-language-action"
+      ],
+      "metrics": {
+        "downloads": 559,
+        "likes": 173
+      },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-RobotManip"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "从.agents目录汇集的大型Claude/智能体技能合集，是今日头号热门仓库，单日星标数暴涨。",
+      "language": "Shell",
+      "stars": 186820,
+      "stars_today": 2251,
+      "forks": 16030,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "claude",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "koala73-worldmonitor",
+      "name": "koala73/worldmonitor",
+      "description": "由AI新闻聚合驱动的实时全球情报仪表盘，今日新增星标超过2,100颗，涨势迅猛。",
+      "language": "TypeScript",
+      "stars": 73321,
+      "stars_today": 2184,
+      "forks": 10995,
+      "url": "https://github.com/koala73/worldmonitor",
+      "tags": [
+        "ai-news-aggregation",
+        "dashboard",
+        "intelligence"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "diegosouzapw-omniroute",
+      "name": "diegosouzapw/OmniRoute",
+      "description": "免费、MIT许可的AI网关，可在290多个提供商和500多个模型之间进行路由，满足了对统一多提供商LLM访问日益增长的需求。",
+      "language": "TypeScript",
+      "stars": 28893,
+      "stars_today": 1841,
+      "forks": 3786,
+      "url": "https://github.com/diegosouzapw/OmniRoute",
+      "tags": [
+        "llm-gateway",
+        "multi-provider",
+        "infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ruvnet-ruview",
+      "name": "ruvnet/RuView",
+      "description": "将WiFi信号数据转化为实时空间智能，是AI驱动感知在环境感知领域的一种非典型应用。",
+      "language": "Rust",
+      "stars": 85967,
+      "stars_today": 1022,
+      "forks": 11450,
+      "url": "https://github.com/ruvnet/RuView",
+      "tags": [
+        "spatial-intelligence",
+        "sensing",
+        "wifi"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "citrolabs-ego-lite",
+      "name": "citrolabs/ego-lite",
+      "description": "专为AI智能体打造的最快浏览器，属于正在快速崛起的AI原生浏览器类别，与browser-use、Agent-Reach一同登上趋势榜。",
+      "language": "JavaScript",
+      "stars": 2623,
+      "stars_today": 880,
+      "forks": 124,
+      "url": "https://github.com/citrolabs/ego-lite",
+      "tags": [
+        "ai-native-browser",
+        "agents",
+        "web-automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "composiohq-awesome-claude-skills",
+      "name": "ComposioHQ/awesome-claude-skills",
+      "description": "精选的Claude技能、资源与工具清单，是今日榜单中体量最大的单个仓库，持续稳健增长。",
+      "language": "Python",
+      "stars": 70092,
+      "stars_today": 663,
+      "forks": 7905,
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "tags": [
+        "claude",
+        "awesome-list",
+        "agent-skills"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "赋予AI智能体查看和浏览整个互联网的能力，是今日AI原生网页访问工具集体爆发的一部分。",
+      "language": "Python",
+      "stars": 60626,
+      "stars_today": 477,
+      "forks": 4881,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "web-agents",
+        "internet-access",
+        "ai-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "专为金融市场打造的基础模型，与FinanceComplexQA论文在智能体金融推理方向上的推进相呼应。",
+      "language": "Python",
+      "stars": 33501,
+      "stars_today": 499,
+      "forks": 5680,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": [
+        "foundation-model",
+        "finance",
+        "time-series"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "calesthio-openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "开源智能体视频制作系统，包含12条流水线、100多个工具和700多个智能体技能文件，是一个大规模的智能体编排项目。",
+      "language": "Python",
+      "stars": 42005,
+      "stars_today": 333,
+      "forks": 5000,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": [
+        "agentic-video",
+        "multi-agent",
+        "content-production"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "lordog-dive-into-llms",
+      "name": "Lordog/dive-into-llms",
+      "description": "涵盖LLM基础与实践的教学教程系列，作为入门资源持续获得稳定关注。",
+      "language": "Jupyter Notebook",
+      "stars": 45026,
+      "stars_today": 328,
+      "forks": 5388,
+      "url": "https://github.com/Lordog/dive-into-llms",
+      "tags": [
+        "llm-education",
+        "tutorials"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "以项目为导向的实战课程，用于学习并落地AI工程技能，深受入行从业者欢迎。",
+      "language": "Python",
+      "stars": 43190,
+      "stars_today": 303,
+      "forks": 7220,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": [
+        "ai-engineering",
+        "education",
+        "curriculum"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "unclecode-crawl4ai",
+      "name": "unclecode/crawl4ai",
+      "description": "开源、对LLM友好的网页爬虫，专为向智能体和RAG流水线提供干净的结构化内容而设计。",
+      "language": "Python",
+      "stars": 74885,
+      "stars_today": 302,
+      "forks": 7720,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": [
+        "web-crawling",
+        "llm-friendly",
+        "rag"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-browser-use",
+      "name": "browser-use/browser-use",
+      "description": "通过提供可靠的浏览器自动化与感知层，使网站对AI智能体可访问，是AI原生浏览器类别中的基础性项目。",
+      "language": "Python",
+      "stars": 106630,
+      "stars_today": 264,
+      "forks": 11724,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": [
+        "web-agents",
+        "browser-automation",
+        "ai-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cheahjs-free-llm-api-resources",
+      "name": "cheahjs/free-llm-api-resources",
+      "description": "精选并持续维护的免费LLM推理API资源清单，是注重成本的开发者的实用参考。",
+      "language": "Python",
+      "stars": 28122,
+      "stars_today": 164,
+      "forks": 2918,
+      "url": "https://github.com/cheahjs/free-llm-api-resources",
+      "tags": [
+        "llm-apis",
+        "awesome-list",
+        "resources"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "递归自我改进智能体",
+      "description": "通过约束级审计循环验证并精炼自身答案的深度研究智能体，减少了对暴力搜索的依赖，转而低成本地利用发现-验证不对称性。",
+      "related_paper_ids": [
+        "arex-recursive-self-improving-deep-research"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体评测与训练基础设施",
+      "description": "面向编码与工具使用智能体的新型抗污染多领域评测套件与轻量级编写框架，以及从智能体经验中学习的样本高效方法。",
+      "related_paper_ids": [
+        "tencent-workbuddy-bench-coding-agents",
+        "nvidia-oo-agents-native-python",
+        "sample-efficient-learning-agent-experience"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "具身导航与视觉跟踪",
+      "description": "视觉-语言-动作模型与「先指代后跟踪」范式，正推动机器人走向语言落地、轻传感器依赖且具有持久状态的具身感知。",
+      "related_paper_ids": [
+        "refertrack-embodied-visual-tracking",
+        "robostral-navigate-vlm-navigation",
+        "worldweaver-streaming-multi-agent-diffusion"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "无教师自蒸馏",
+      "description": "去除或减少对外部教师模型依赖的蒸馏方法，正朝着面向智能体LLM的纯输入条件驱动或自监督策略蒸馏方向发展。",
+      "related_paper_ids": [
+        "visual-contrastive-self-distillation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI原生浏览器与网页智能体",
+      "description": "GitHub上一个快速增长的类别，专为AI智能体（而非人类）打造的浏览器、爬虫和互联网访问层，反映了向一等公民级别智能体-网页接口转变的趋势。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-25T03:57:00Z",
+      "status": "fallback_to_2026-07-24"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=trending",
+      "checked_at": "2026-07-25T03:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv Recent",
+      "url": "https://arxiv.org/search/",
+      "checked_at": "2026-07-25T03:57:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-25T03:57:00Z",
+      "status": "error_404"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-25T03:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
