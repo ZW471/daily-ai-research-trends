@@ -1,0 +1,618 @@
+{
+  "version": "1.0",
+  "date": "2026-07-26",
+  "generated_at": "2026-07-26T14:57:00Z",
+  "summary": {
+    "headline": "AREX递归自我改进深度研究智能体以127赞登顶HuggingFace；NOOA、WorkBuddy Bench和OpenForgeRL推动智能体基础设施全面成熟；GitHub趋势榜被智能体技能框架和AI原生工具主导，GLM-5.2与极致量化模型领跑HuggingFace采用",
+    "body": "周六的HuggingFace每日论文回退至周四2026-07-24的榜单，由**AREX**（127赞）明显领跑——这是北京智源研究院（BAAI）与中国人民大学合作推出的递归自我改进深度研究智能体系列，利用了答案发现成本高昂与约束级验证成本低廉之间的不对称性。其内外循环架构，加上自学习的上下文压缩工具，以及4B稠密模型和122B-A10B MoE两种版本，为下一代深度研究智能体提供了一个可信的架构范本。紧随其后的是一组强劲的具身AI论文：**ReferTrack**（49赞）将具身视觉跟踪建立在显式的图像空间检测之上，**Robostral Navigate**推进了仅依赖单目RGB的导航方案，**WorldWeaver**则为流式多智能体视频扩散引入了持久的跨智能体世界状态寄存器。\n\n智能体基础设施层正在快速走向成熟。**NVIDIA OO Agents（NOOA）**将智能体编写简化为纯Python对象——方法即动作、文档字符串即提示，腾讯的**WorkBuddy Bench**则解决了抗污染的多领域编码智能体评测问题，**OpenForgeRL**使得端到端强化学习训练原生工具链智能体成为可能。与此同时，**LLMs Get Lost in Evolving User Intent**（18赞）揭示了一个关键盲区：在单轮设定下评测的模型在面对多轮交互中动态演变的用户意图时会系统性地失败。\n\n在HuggingFace上，**GLM-5.2**以4,447赞和70.7万次下载遥遥领先，**baidu/Unlimited-OCR**（3,107赞，260万次下载）和激进量化的**Bonsai-27B**变体（1比特和三值2比特GGUF）反映了开源权重生态对旗舰能力与极致端侧压缩的双重追求。GitHub趋势榜被智能体方向压倒性主导：**mattpocock/skills**（今日+1,740星）、**obra/superpowers**（+479）和**ECC**（+377）领跑智能体技能浪潮，**alibaba/open-code-review**（+431）、**citrolabs/ego-lite**（+986）和**PageIndex**（+180）则表明面向代码审查、浏览器自动化和基于推理的RAG的生产级AI工具正在快速进入主流采用。",
+    "key_themes": [
+      "recursive-self-improving-agents",
+      "agent-infrastructure-maturation",
+      "extreme-quantization-on-device",
+      "embodied-ai-robotics",
+      "evolving-user-intent-multi-turn",
+      "agentic-skills-frameworks"
+    ]
+  },
+  "researcher_notes": "**AREX的「发现-验证不对称性」是今天榜单中最具可迁移性的思路。**将验证候选答案视为可分解的廉价约束级检查、而从头发现答案成本高昂的这一框架化方式，是一个远超AREX特定基准任务、具有广泛适用性的通用原则。自学习的上下文压缩工具（而非外部摘要器）恰恰是当前大多数竞争性RSI智能体论文往往只是事后附加的环节。同时发布4B稠密模型和122B-A10B MoE版本，证明了这套方案既能向上扩展也能向下压缩——这对于在前沿模型预算之外部署研究智能体的团队至关重要。127赞的互动数据印证了社区将此视为一项重要贡献。\n\n**智能体基础设施层正在明显地从「研究原型」跨入「生产工具」阶段。**NOOA押注智能体只需是一个Python对象——方法即动作、文档字符串即提示——这种激进的简化正是赢得采用之战的策略。WorkBuddy Bench的抗污染任务构建方式（从真实提交中逆向工程而非改编公开问题文本）直击现有编码智能体基准中最有力的批评。OpenForgeRL填补了另一个空白：使用现有SFT/RL基础设施无法端到端训练原生工具链智能体的困境。这三篇论文共同表明，智能体生态正在建设那些虽然无聊但至关重要的基础设施（编写、评测、训练）——这正是大规模部署前的必经阶段。\n\n**「LLMs Get Lost in Evolving User Intent」的发现值得比其18赞所暗示的更多关注。**该论文揭示了一个根本性的评测缺口：在单轮、完全指定设定下训练和测试的模型，在用户跨轮次披露、修正和重塑意图时会系统性失败。这恰恰是协作式AI智能体的部署场景，训练分布与实际使用之间的错配或许能解释许多「演示中可行、生产中失败」的抱怨。任何构建多轮智能体系统的团队都应该将这篇论文与AREX和OpenForgeRL放在一起阅读。\n\n**在HuggingFace上，旗舰模型与极致量化之间的分化持续加深。**GLM-5.2的4,447赞与prism-ml三值Bonsai-27B GGUF（1,028赞，61.2万次下载）和1比特变体（638赞，210万次下载）并存，证实社区并未在原始能力与端侧部署之间二选一，而是同时追求两者。poolside/Laguna-S-2.1（662赞）作为新的代码模型竞争者的出现，以及fdtn-ai/antares-1b（163赞）作为安全导向小模型的亮相，表明模型生态正在以用途细分的速度超越以规模细分的速度。\n\n**GitHub趋势榜讲述了一个清晰的故事：智能体技能和AI原生开发工具是压倒性的主导类别。**按总星标计算，前五大仓库中有三个（superpowers 26.1万、ECC 23.3万、mattpocock/skills 18.8万）都是智能体技能框架。结合alibaba/open-code-review、citrolabs/ego-lite（面向智能体的AI原生浏览器）和VectifyAI/PageIndex（无向量的基于推理的RAG），贯穿其中的主线是一致的：业界正在构建让AI智能体可靠地与代码、浏览器和文档交互的基础设施层。这些仓库的极高星标增速表明这不是一个小众趋势，而是当前AI周期中占主导地位的工程优先事项。",
+  "papers": [
+    {
+      "id": "arex-recursive-self-improving-deep-research",
+      "title": "AREX：迈向面向深度研究的递归自我改进智能体",
+      "authors": ["Shuqi Lu", "Chaofan Li", "Kun Luo", "Zhang Zhang", "Hui Wang et al."],
+      "affiliations": ["BAAI (Beijing Academy of Artificial Intelligence)", "Renmin University of China"],
+      "summary": "AREX推出了一系列递归自我改进深度研究智能体，在收集证据的内部研究循环与逐条审计答案约束的外部验证循环之间交替运行，利用部分验证状态引导针对性的后续研究。同时提供了自学习的上下文压缩工具，以及通过智能体中期训练和长时域强化学习训练的4B稠密模型和122B-A10B MoE两种版本。",
+      "key_findings": [
+        "利用「发现-验证不对称性」：通过约束级检查验证候选答案的成本远低于发现它的成本，从而实现由部分验证引导的迭代精炼",
+        "学习了一个自主的上下文压缩工具，在长时域内维持自我改进能力，无需依赖外部摘要器模型",
+        "通过智能体中期训练加长时域强化学习进行训练；发布了4B稠密模型和122B-A10B MoE模型两个版本"
+      ],
+      "tags": ["agentic-research", "self-improvement", "reinforcement-learning", "mixture-of-experts"],
+      "relevance": "high",
+      "engagement": { "upvotes": 127, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21461",
+        "huggingface": "https://huggingface.co/papers/2607.21461",
+        "pdf": "https://arxiv.org/pdf/2607.21461"
+      }
+    },
+    {
+      "id": "k12-kgraph-curriculum-knowledge-graph",
+      "title": "K12-KGraph：面向教育LLM基准测试与训练的课程对齐知识图谱",
+      "authors": ["Hao Liang", "Qihan Lin", "Zhaoyang Han", "Xiaochen Ma", "Zhen Hao Wong"],
+      "affiliations": ["Sun Yat-sen University", "South China University of Technology"],
+      "summary": "提出K12-KGraph，一个从人民教育出版社官方K-12教材中提取的课程对齐知识图谱，针对「课程认知」——理解课程知识的结构和视觉呈现方式，而非仅仅回答考试题目。涵盖前置知识链、概念分类体系、实验-概念关联、教学排序和视觉基础。",
+      "key_findings": [
+        "现有K-12 LLM基准主要测试考试问答而非课程结构理解",
+        "K12-KGraph直接从官方教材内容构建，将图谱结构与真实教学排序对齐",
+        "支持在课程认知任务上对教育LLM进行基准测试和训练"
+      ],
+      "tags": ["education-ai", "knowledge-graph", "benchmarking", "curriculum-cognition"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 55, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.09635",
+        "huggingface": "https://huggingface.co/papers/2605.09635",
+        "pdf": "https://arxiv.org/pdf/2605.09635"
+      }
+    },
+    {
+      "id": "refertrack-embodied-visual-tracking",
+      "title": "ReferTrack：面向具身视觉跟踪的「先指代后跟踪」方法",
+      "authors": ["Hanjing Ye", "Tianle Zeng", "Jiazhao Zhang", "Shaoan Wang", "Zibo Zhang"],
+      "affiliations": ["Zhejiang University"],
+      "summary": "ReferTrack为具身视觉跟踪提出了一种「先指代后跟踪」的范式，将目标识别与轨迹跟随解耦。该方法将思维链推理建立在显式的图像空间检测之上，而非现有VLA策略所使用的抽象空间隐变量，改善了可监督性和对齐性。",
+      "key_findings": [
+        "现有VLA策略在抽象空间隐变量中推理，这类表示难以监督且与图像空间检测对齐较弱",
+        "将「指代」与「跟踪」解耦，提升了可解释性并实现了基于显式检测的思维链推理",
+        "显式基础化提升了长时域具身视觉跟踪的鲁棒性"
+      ],
+      "tags": ["embodied-ai", "visual-tracking", "vision-language-action", "robotics"],
+      "relevance": "high",
+      "engagement": { "upvotes": 49, "comments": 11 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20061",
+        "huggingface": "https://huggingface.co/papers/2607.20061",
+        "pdf": "https://arxiv.org/pdf/2607.20061"
+      }
+    },
+    {
+      "id": "visual-contrastive-self-distillation",
+      "title": "视觉对比自蒸馏",
+      "authors": ["Yijun Liang", "Yunjie Tian", "Yijiang Li", "Yuqi Jia", "Furong Huang"],
+      "affiliations": ["University of Maryland"],
+      "summary": "研究了同策略自蒸馏能否完全消除残留的教师-学生信息不对称性，提出了一种纯粹由输入条件驱动的对比方案。证明了无需特权答案或视觉证据即可创建有效的自蒸馏信号。",
+      "key_findings": [
+        "同策略自蒸馏可以通过纯粹由输入条件驱动的对比方式消除教师/学生不对称性的最后残余",
+        "无需特权答案或视觉证据即可生成有效的学习信号",
+        "对比形式化在无外部监督的情况下稳定了自蒸馏过程"
+      ],
+      "tags": ["self-distillation", "contrastive-learning", "representation-learning"],
+      "relevance": "high",
+      "engagement": { "upvotes": 41, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21556",
+        "huggingface": "https://huggingface.co/papers/2607.21556",
+        "pdf": "https://arxiv.org/pdf/2607.21556"
+      }
+    },
+    {
+      "id": "show-dont-tell-spatial-cognition-pixels",
+      "title": "展示而非讲述：在生成像素而非LLM文本中评估空间认知",
+      "authors": ["Xu Wang", "Kaixiang Yao", "Miao Pan", "Xiaohe Zhou", "Xuanyu Liu"],
+      "affiliations": ["University of Science and Technology of China"],
+      "summary": "指出现有空间推理基准通过要求坐标或文本输出，给图像生成模型造成了答案接口不匹配的问题。提出直接在生成的像素中评估空间认知，揭示了与基于文本评分不同的能力画像。",
+      "key_findings": [
+        "基于文本/坐标的空间基准与生成式图像模型的原生输出模态不匹配",
+        "在生成像素中评估空间推理揭示了与基于文本评分不同的能力画像",
+        "突出了生成模型需要接口匹配评估的更广泛需求"
+      ],
+      "tags": ["spatial-reasoning", "generative-models", "evaluation", "multimodal"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 35, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21072",
+        "huggingface": "https://huggingface.co/papers/2607.21072",
+        "pdf": "https://arxiv.org/pdf/2607.21072"
+      }
+    },
+    {
+      "id": "nvidia-oo-agents-native-python",
+      "title": "NVIDIA-labs OO Agents：原生Python面向对象智能体",
+      "authors": ["Paul Furgale", "Severin Klingler", "James Nolan", "Matt Staats", "Gaia Di Lorenzo"],
+      "affiliations": ["NVIDIA Research"],
+      "summary": "NOOA是一个模型无关的Python框架，其中智能体就是一个Python对象：方法即动作，字段即状态，文档字符串即提示，类型注解即契约。方法体为「...」的方法在运行时由LLM补全，统一了传统上碎片化的智能体开发技术栈。",
+      "key_findings": [
+        "将智能体开发从分散的提示模板、工具Schema和工作流图简化为单一的Python对象",
+        "方法体为「...」的方法在运行时由LLM补全，实现了声明式的智能体编写",
+        "模型无关的设计，类型注解作为人类编写代码与LLM补全代码之间的契约"
+      ],
+      "tags": ["agent-framework", "python", "developer-tools", "model-agnostic"],
+      "relevance": "high",
+      "engagement": { "upvotes": 22, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20709",
+        "huggingface": "https://huggingface.co/papers/2607.20709",
+        "pdf": "https://arxiv.org/pdf/2607.20709"
+      }
+    },
+    {
+      "id": "sana-video-2-hybrid-linear-attention",
+      "title": "SANA-Video 2.0：带注意力残差的混合线性注意力高效视频生成",
+      "authors": ["Junsong Chen", "Jincheng Yu", "Yitong Li", "Shuchen Xue", "Haozhe Liu"],
+      "affiliations": ["NVIDIA Research", "MIT"],
+      "summary": "SANA-Video 2.0是一个5B和14B规模的混合视频扩散Transformer，在质量上匹配全softmax视频DiT的同时保持了线性注意力的O(N)扩展性。结合门控线性注意力与周期性门控softmax锚点的混合方案，实现了在单GPU上生成720p视频。",
+      "key_findings": [
+        "混合线性-Softmax注意力将门控线性注意力与周期性门控softmax锚点相结合，避免了二次方扩展",
+        "在质量上匹配全softmax视频DiT，同时保持了有利的长序列扩展性",
+        "在统一架构下，以5B和14B参数规模在单GPU上生成720p视频"
+      ],
+      "tags": ["video-generation", "diffusion-transformer", "linear-attention", "efficient-inference"],
+      "relevance": "high",
+      "engagement": { "upvotes": 21, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21553",
+        "huggingface": "https://huggingface.co/papers/2607.21553",
+        "pdf": "https://arxiv.org/pdf/2607.21553"
+      }
+    },
+    {
+      "id": "tencent-workbuddy-bench-coding-agent",
+      "title": "腾讯WorkBuddy Bench：具有抗污染任务构建的多领域编码智能体基准",
+      "authors": ["Tencent WorkBuddy Bench Team", "Siqi Cai", "Shaopeng Chen", "Xiang Fei", "Yong Mao"],
+      "affiliations": ["Tencent"],
+      "summary": "一个涵盖代码、Web、Office和安全四个领域的多领域编码智能体评测套件。每个任务都从真实的提交、PR或业务场景中逆向工程而来，以抵御基准污染，而非改编公开的问题文本。",
+      "key_findings": [
+        "任务从真实提交和业务场景中逆向工程而非改编自公开问题，抵御基准污染",
+        "统一评测框架覆盖四个工作领域：代码、Web、Office和安全",
+        "跨模型排行榜揭示了不同领域和智能体架构之间的显著性能差异"
+      ],
+      "tags": ["benchmarking", "coding-agents", "contamination-resistance", "multi-domain"],
+      "relevance": "high",
+      "engagement": { "upvotes": 20, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20911",
+        "huggingface": "https://huggingface.co/papers/2607.20911",
+        "pdf": "https://arxiv.org/pdf/2607.20911"
+      }
+    },
+    {
+      "id": "llms-get-lost-evolving-user-intent",
+      "title": "LLM在动态演变的用户意图中迷失方向",
+      "authors": ["Jihoon Tack", "Philippe Laban", "Jennifer Neville"],
+      "affiliations": ["Google DeepMind"],
+      "summary": "揭示了一个根本性的评测缺口：作为协作式智能体部署的LLM在单轮、完全指定设定下训练和测试，但真实交互本质上是动态的——用户会在对话过程中披露、修正和重塑意图。研究表明模型在追踪演变中的意图时会系统性失败。",
+      "key_findings": [
+        "主要在单轮、完全指定设定下训练和评测的LLM，在用户意图跨轮次演变时会失败",
+        "真实交互本质上是动态的：用户会在对话展开过程中披露、修正和重塑意图",
+        "训练分布与部署场景之间的错配是协作式智能体面临的根本性缺口"
+      ],
+      "tags": ["llm-evaluation", "multi-turn", "user-intent", "collaborative-agents"],
+      "relevance": "high",
+      "engagement": { "upvotes": 18, "comments": 4 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20734",
+        "huggingface": "https://huggingface.co/papers/2607.20734",
+        "pdf": "https://arxiv.org/pdf/2607.20734"
+      }
+    },
+    {
+      "id": "worldweaver-streaming-multi-agent-diffusion",
+      "title": "具有世界状态寄存器的流式多智能体自回归扩散模型",
+      "authors": ["Sicheng Mo", "Yuheng Li", "Ziyang Leng", "Krishna Kumar Singh", "Bolei Zhou"],
+      "affiliations": ["UCLA", "Adobe Research"],
+      "summary": "WorldWeaver为自回归视频扩散推出流程增加了跨智能体世界状态寄存器，这些寄存器在智能体之间持久存在并随视角演化，解决了在多智能体和多视角场景中仅靠观察历史难以维持共享状态的难题。",
+      "key_findings": [
+        "现有自回归视频扩散流水线将观察历史作为上下文传递，在多智能体场景中难以维持共享状态",
+        "世界状态寄存器在智能体之间持久存在并随视角演化，维持一致的世界状态",
+        "实现了具有连贯跨智能体交互的流式多智能体视频生成"
+      ],
+      "tags": ["world-models", "multi-agent", "video-diffusion", "world-state"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 11, "comments": 1 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21594",
+        "huggingface": "https://huggingface.co/papers/2607.21594",
+        "pdf": "https://arxiv.org/pdf/2607.21594"
+      }
+    },
+    {
+      "id": "sample-efficient-learning-agent-experience",
+      "title": "从智能体经验中进行样本高效学习",
+      "authors": ["Chenhui Gou", "Haoqin Tu", "Yunhao Fang", "Jianfei Cai", "Hamid Rezatofighi"],
+      "affiliations": ["Monash University"],
+      "summary": "解决智能体学习中的样本效率问题：上下文学习从交互历史中学习效率高但转瞬即逝，而上下文蒸馏可以将信息内化到权重中但尚未应用于智能体的交互经验。本文提出弥合这一差距。",
+      "key_findings": [
+        "上下文学习提供了高效的智能体学习方式，但一旦经验离开上下文窗口，收益便会消失",
+        "上下文蒸馏可以将上下文信息内化到模型权重中，但尚未应用于智能体经验",
+        "弥合了短暂的上下文学习与持久的权重级内化之间的差距"
+      ],
+      "tags": ["agent-learning", "sample-efficiency", "context-distillation", "reinforcement-learning"],
+      "relevance": "medium",
+      "engagement": { "upvotes": 10, "comments": 2 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21051",
+        "huggingface": "https://huggingface.co/papers/2607.21051",
+        "pdf": "https://arxiv.org/pdf/2607.21051"
+      }
+    },
+    {
+      "id": "openforgerl-harness-native-agents",
+      "title": "OpenForgeRL：在任意环境中训练原生工具链智能体",
+      "authors": ["Xiao Yu", "Baolin Peng", "Ruize Xu", "Hao Zou", "Qianhui Wu"],
+      "affiliations": ["Microsoft Research"],
+      "summary": "现代AI智能体依赖精密的推理工具链（Claude Code、Codex、OpenClaw），但这些工具链难以用现有的开源基础设施进行端到端训练。OpenForgeRL是一个开源框架，使得通过SFT和RL在多样化环境中端到端训练基于工具链的智能体成为可能。",
+      "key_findings": [
+        "现有SFT/RL技术栈无法原生表达生产级智能体所使用的有状态、多进程工具链推理",
+        "OpenForgeRL弥合了复杂推理工具链与标准训练基础设施之间的差距",
+        "使得在多样化环境中端到端训练原生工具链智能体成为可能"
+      ],
+      "tags": ["agent-training", "reinforcement-learning", "open-source", "harness-native"],
+      "relevance": "high",
+      "engagement": { "upvotes": 5, "comments": 3 },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21557",
+        "huggingface": "https://huggingface.co/papers/2607.21557",
+        "pdf": "https://arxiv.org/pdf/2607.21557"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "大规模MoE对话模型，采用DSA（动态稀疏注意力）架构，以超过4,400赞和70.7万次下载的成绩大幅领先HuggingFace热门榜。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["conversational", "moe", "text-generation"],
+      "metrics": { "downloads": 707029, "likes": 4447 },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "高性能OCR模型，拥有260万次下载的大规模采用量，表明了对生产级文档理解能力的强劲需求。",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": ["ocr", "feature-extraction", "document-understanding"],
+      "metrics": { "downloads": 2564264, "likes": 3107 },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwen3-6-35b-a3b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (community)",
+      "description": "Qwen3.6-35B的无审查MoE变体，3B活跃参数，以GGUF格式打包并具备视觉能力。近200万次下载反映了社区对无限制MoE模型的强劲需求。",
+      "task_type": "text-generation",
+      "model_size": "35B-A3B MoE",
+      "tags": ["gguf", "uncensored", "moe", "vision"],
+      "metrics": { "downloads": 1988680, "likes": 3091 },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "qwythos-9b-claude-mythos",
+      "name": "Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+      "organization": "empero-ai (community)",
+      "description": "基于Qwen3.5架构的推理导向9B GGUF模型，支持1M上下文，以160万次下载和2,465赞成为最受欢迎的量化推理模型之一。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "reasoning", "quantized", "1m-context"],
+      "metrics": { "downloads": 1570995, "likes": 2465 },
+      "source_url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF"
+    },
+    {
+      "id": "inkling-multimodal",
+      "name": "Inkling",
+      "organization": "Thinking Machines",
+      "description": "面向图像-文本-到-文本任务的多模态对话模型，获得1,571赞和3.1万次下载。代表了小型实验室在多模态能力方面日益增长的兴趣。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "conversational", "image-text-to-text"],
+      "metrics": { "downloads": 31575, "likes": 1571 },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "ternary-bonsai-27b-gguf",
+      "name": "Ternary-Bonsai-27B-gguf",
+      "organization": "Prism ML",
+      "description": "三值（2比特）量化的27B GGUF格式模型，面向极致端侧部署。属于更广泛的Bonsai系列，以1,028赞和61.2万次下载推动激进量化的边界。",
+      "task_type": "text-generation",
+      "model_size": "27B (ternary 2-bit)",
+      "tags": ["gguf", "ternary", "2-bit", "on-device"],
+      "metrics": { "downloads": 611685, "likes": 1028 },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "来自代码AI初创公司Poolside的代码导向语言模型。以662赞引发广泛关注，官方和社区渠道均快速发布了GGUF/NVFP4量化变体。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["code", "text-generation"],
+      "metrics": { "downloads": 45260, "likes": 662 },
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "bonsai-27b-1bit-gguf",
+      "name": "Bonsai-27B-gguf",
+      "organization": "Prism ML",
+      "description": "1比特量化的27B模型，下载量超过210万次，展示了对极致压缩的巨大需求。是Bonsai系列中下载量最大的模型。",
+      "task_type": "text-generation",
+      "model_size": "27B (1-bit)",
+      "tags": ["gguf", "1-bit", "on-device", "extreme-quantization"],
+      "metrics": { "downloads": 2114963, "likes": 638 },
+      "source_url": "https://huggingface.co/prism-ml/Bonsai-27B-gguf"
+    },
+    {
+      "id": "solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "来自Upstage的250B参数开放模型，是当前热门的最大开放权重模型之一。代表了开放权重谱系中的旗舰规模端。",
+      "task_type": "text-generation",
+      "model_size": "250B",
+      "tags": ["large-scale", "text-generation", "open-weights"],
+      "metrics": { "downloads": 2784, "likes": 563 },
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "krea2-identity-edit",
+      "name": "krea2-identity-edit",
+      "organization": "conradlocke (community)",
+      "description": "基于Krea-2的身份保持图像编辑LoRA适配器，以539赞上榜热门。表明社区对具有身份保持功能的可控图像生成有强烈兴趣。",
+      "task_type": "image-editing",
+      "model_size": "LoRA",
+      "tags": ["lora", "image-editing", "identity-preservation", "comfyui"],
+      "metrics": { "downloads": 0, "likes": 539 },
+      "source_url": "https://huggingface.co/conradlocke/krea2-identity-edit"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "superpowers-agentic-skills",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架和软件开发方法论，用于构建可靠的AI智能体工作流。以超过26.1万星成为总星标最多的智能体技能仓库。",
+      "language": "Shell",
+      "stars": 261122,
+      "stars_today": 479,
+      "forks": 23302,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "developer-tools", "methodology"],
+      "relevance": "high"
+    },
+    {
+      "id": "ecc-agent-harness-optimization",
+      "name": "affaan-m/ECC",
+      "description": "智能体工具链性能优化系统，为Claude Code、Codex、Opencode、Cursor等AI编码工具提供技能、直觉、记忆、安全和研究优先的开发体验。",
+      "language": "JavaScript",
+      "stars": 233332,
+      "stars_today": 377,
+      "forks": 35574,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["agent-harness", "optimization", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "面向AI编码智能体的精选技能集合，直接来自实践者的.agents目录。以今日+1,740星领跑日增速。",
+      "language": "Shell",
+      "stars": 188318,
+      "stars_today": 1740,
+      "forks": 16181,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agent-skills", "claude-code", "best-practices"],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-claude-skills",
+      "name": "ComposioHQ/awesome-claude-skills",
+      "description": "Claude技能、资源和工具的精选列表，用于定制Claude AI工作流。超过7万星反映了Claude技能生态系统的成熟。",
+      "language": "Python",
+      "stars": 70606,
+      "stars_today": 577,
+      "forks": 7943,
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "tags": ["claude-skills", "awesome-list", "ai-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-cookbooks",
+      "name": "anthropics/claude-cookbooks",
+      "description": "Anthropic官方发布的笔记本和教程集合，展示使用Claude的有效模式。以每日+132星持续增长。",
+      "language": "Jupyter Notebook",
+      "stars": 49909,
+      "stars_today": 132,
+      "forks": 5898,
+      "url": "https://github.com/anthropics/claude-cookbooks",
+      "tags": ["claude", "tutorials", "notebooks", "anthropic"],
+      "relevance": "high"
+    },
+    {
+      "id": "strix-ai-pentest",
+      "name": "usestrix/strix",
+      "description": "开源AI渗透测试工具，自动发现并修复应用漏洞，将AI推理与安全扫描相结合。",
+      "language": "Python",
+      "stars": 44216,
+      "stars_today": 210,
+      "forks": 4591,
+      "url": "https://github.com/usestrix/strix",
+      "tags": ["security", "penetration-testing", "ai-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "dive-into-llms",
+      "name": "Lordog/dive-into-llms",
+      "description": "全面的LLM动手编程教程系列（中文），以今日+408星上榜热门。反映了对LLM教育材料持续强劲的需求。",
+      "language": "Jupyter Notebook",
+      "stars": 45369,
+      "stars_today": 408,
+      "forks": 5420,
+      "url": "https://github.com/Lordog/dive-into-llms",
+      "tags": ["education", "llm", "tutorials", "chinese"],
+      "relevance": "medium"
+    },
+    {
+      "id": "pageindex-vectorless-rag",
+      "name": "VectifyAI/PageIndex",
+      "description": "文档索引系统，实现无向量的、基于推理的RAG，绕过传统向量相似性搜索，转而直接对文档结构进行推理。",
+      "language": "Python",
+      "stars": 34565,
+      "stars_today": 180,
+      "forks": 3024,
+      "url": "https://github.com/VectifyAI/PageIndex",
+      "tags": ["rag", "document-indexing", "vectorless", "reasoning"],
+      "relevance": "high"
+    },
+    {
+      "id": "kronos-financial-foundation-model",
+      "name": "shiyu-coder/Kronos",
+      "description": "面向金融市场语言的基础模型，将Transformer架构应用于金融时间序列和市场数据理解。",
+      "language": "Python",
+      "stars": 33813,
+      "stars_today": 319,
+      "forks": 5706,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "time-series"],
+      "relevance": "high"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "经过实战检验的混合代码审查工具，结合确定性流水线与LLM智能体实现精确的行级评论，内置针对NPE、线程安全、XSS和SQL注入的微调规则集。",
+      "language": "Go",
+      "stars": 12999,
+      "stars_today": 431,
+      "forks": 888,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": ["code-review", "llm-agents", "security", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "ego-lite-ai-browser",
+      "name": "citrolabs/ego-lite",
+      "description": "面向AI智能体运行Web自动化的最快浏览器，专为与Codex或Claude Code等智能体共享已登录浏览器状态而构建，无需用户干预。以今日+986星爆发式增长。",
+      "language": "JavaScript",
+      "stars": 3626,
+      "stars_today": 986,
+      "forks": 178,
+      "url": "https://github.com/citrolabs/ego-lite",
+      "tags": ["ai-browser", "web-automation", "agent-infrastructure"],
+      "relevance": "high"
+    },
+    {
+      "id": "chat2db-ai-database",
+      "name": "OtterMind/Chat2DB",
+      "description": "AI驱动的数据库工具和SQL客户端，支持MySQL、Oracle、PostgreSQL等。将自然语言查询与传统数据库管理相结合。",
+      "language": "Java",
+      "stars": 26690,
+      "stars_today": 360,
+      "forks": 2910,
+      "url": "https://github.com/OtterMind/Chat2DB",
+      "tags": ["database", "sql-client", "ai-driven", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "dataflow-llm-data-prep",
+      "name": "OpenDCAI/DataFlow",
+      "description": "数据准备平台，提供基于LLM的算子和流水线，简化AI训练数据集的数据清洗和转换工作流。",
+      "language": "Python",
+      "stars": 6986,
+      "stars_today": 118,
+      "forks": 868,
+      "url": "https://github.com/OpenDCAI/DataFlow",
+      "tags": ["data-preparation", "llm-operators", "pipelines"],
+      "relevance": "high"
+    },
+    {
+      "id": "turbovec-vector-index",
+      "name": "RyanCodrai/turbovec",
+      "description": "基于TurboQuant量化技术的高性能向量索引，使用Rust编写并提供Python绑定，用于高效相似性搜索。",
+      "language": "Python",
+      "stars": 14298,
+      "stars_today": 86,
+      "forks": 1270,
+      "url": "https://github.com/RyanCodrai/turbovec",
+      "tags": ["vector-index", "rust", "similarity-search", "quantization"],
+      "relevance": "high"
+    },
+    {
+      "id": "instatic-visual-cms",
+      "name": "CoreBunch/Instatic",
+      "description": "Webflow和Framer的开源替代方案，具有智能体式自托管可视化CMS，输出整洁的静态页面，支持AI辅助建站。",
+      "language": "TypeScript",
+      "stars": 5113,
+      "stars_today": 426,
+      "forks": 482,
+      "url": "https://github.com/CoreBunch/Instatic",
+      "tags": ["visual-cms", "agentic", "static-site", "open-source"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "递归自我改进与智能体研究",
+      "description": "AREX的「发现-验证不对称性」框架，加上OpenForgeRL的原生工具链训练和样本高效智能体学习，标志着业界对如何构建能系统性改进自身研究和推理能力的智能体有了日益成熟的理解。",
+      "related_paper_ids": ["arex-recursive-self-improving-deep-research", "openforgerl-harness-native-agents", "sample-efficient-learning-agent-experience"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施走向成熟",
+      "description": "NOOA的Python对象智能体、WorkBuddy Bench的抗污染评测，以及GitHub上技能框架（superpowers、ECC、mattpocock/skills）的统治地位，共同表明智能体生态正在构建生产级的编写、评测和部署工具。",
+      "related_paper_ids": ["nvidia-oo-agents-native-python", "tencent-workbuddy-bench-coding-agent", "openforgerl-harness-native-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "面向端侧部署的极致量化",
+      "description": "Prism ML的1比特和三值Bonsai-27B变体以百万级下载量与GLM-5.2、Solar-Open2-250B等旗舰模型并存，证实了开源权重社区在追求原始能力与激进压缩两方面同时发力，而非二选一。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "具身AI与机器人感知",
+      "description": "ReferTrack基于显式检测的跟踪、Robostral Navigate仅使用单目RGB的导航、WorldWeaver持久的世界状态寄存器，以及MiniCPM-RobotManip的视觉-语言-动作模型，构成了一个推动具身AI系统更具可部署性和可解释性的紧密集群。",
+      "related_paper_ids": ["refertrack-embodied-visual-tracking", "worldweaver-streaming-multi-agent-diffusion", "show-dont-tell-spatial-cognition-pixels"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "无教师训练范式",
+      "description": "视觉对比自蒸馏的纯输入条件方案、多轮同策略蒸馏与前缀回放，以及面向LLM RL的预测性发散掩码，各自去除或稳定了智能体LLM昂贵的教师-学生蒸馏机制中的不同环节。",
+      "related_paper_ids": ["visual-contrastive-self-distillation", "llms-get-lost-evolving-user-intent"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-26T14:57:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-26T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-26T14:57:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-26T14:57:00Z",
+      "status": "ok"
+    }
+  ]
+}
