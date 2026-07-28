@@ -1,0 +1,611 @@
+{
+  "version": "1.0",
+  "date": "2026-07-27",
+  "generated_at": "2026-07-28T02:10:00Z",
+  "summary": {
+    "headline": "DataPrep-Bench 建立首个统一的 LLM 训练数据准备基准；Qwen 的 Skill Self-Play 通过强化学习实现智能体技能协同进化；NVIDIA 的 Molt 提供精简的 PyTorch 原生智能体强化学习框架",
+    "body": "今日论文汇聚于一个核心元主题：使大语言模型周边的基础设施——训练数据、智能体能力和部署框架——更加系统化和可扩展。北京大学的 DataPrep-Bench 首次引入了在统一的下游任务驱动协议下联合评估数据构建和数据质量评估的基准，填补了该领域一个令人意外的空白。与此同时，Qwen 团队的 Skill Self-Play 提出了一种协同进化框架，其中提议者、求解器和动态技能控制器在强化学习循环中共同进化，巧妙地化解了自我改进型大语言模型中任务多样性与验证可靠性之间的矛盾。\n\n在系统层面，NVIDIA 的 Molt 框架以极简但高性能的方式脱颖而出——代码足够紧凑，研究者（或 AI 编程助手）可以完整理解其全貌，同时在性能上与基于 Megatron 的技术栈不相上下。腾讯混元关于原生多模态预训练的缩放定律揭示了语言和多模态目标遵循截然不同的缩放行为，文本密集型混合数据仅在更大模型规模下才具有计算效率优势。\n\n热门模型方面，Moonshot AI 的 Kimi-K3 以超过 6,300 个点赞领跑，Poolside 的 Laguna-S-2.1 和智谱 AI 的 GLM-5.2 也在迅速崛起。GitHub 趋势显示 AI 安全工具（Strix）、金融市场建模（Kronos）和面向 AI 的设计语言框架（Impeccable）势头强劲，反映出 AI 在各行业实际应用的不断拓展。",
+    "key_themes": ["training-data-quality", "agentic-self-improvement", "efficient-training-frameworks", "multimodal-scaling", "agent-context-management", "generative-rendering"]
+  },
+  "researcher_notes": "**数据中心 AI 运动迎来首个统一基准。** 北京大学的 DataPrep-Bench（41 个赞）意义深远——它将数据构建和数据质量评估视为同等重要的评估目标，而非孤立研究。其基于 MMD 的分布对齐分数（DAS）是唯一在数学、科学和医学领域同时达到 r > 0.70 下游性能相关性的指标。这可能重塑团队评估合成数据流水线的方式。\n\n**Skill Self-Play 架起了自我改进型 LLM 中一个根本矛盾的桥梁。** Qwen 团队的洞察在于：智能体技能是环境绑定验证（可靠但狭窄）与开放式自我生成（广泛但不可靠）之间的天然中间地带，这一观点十分精妙。提议者、求解器和技能控制器之间的协同进化循环令人联想到基于种群的训练方法，但在技能抽象层面运作。其关于「对初始未对齐模型产生显著逆转效果」的论断值得密切关注。\n\n**NVIDIA 的 Molt 是反复杂性框架的代表。** 在训练基础设施日益繁复的时代，Molt 的明确设计目标——「足够紧凑和清晰，研究者可以完全掌握，AI 编程助手也能阅读和推理」——显得刻意而具有挑衅性。它在保持这种简洁性的同时匹配了最先进的 Megatron 性能，这才是真正的贡献。该论文还特别强调了绝不在智能体未生成的 token 上进行训练，这是对强化学习中数据溯源的一种原则性立场。\n\n**智能体的上下文管理正在走向形式化。** Maximem AI 的 Agentic Context Management 论文（17 个赞）命名并分解了许多生产环境智能体团队正在临时应对的问题。其经济分析表明——简单的上下文累积会导致 token 成本呈二次增长，而经过验证的压缩则能以线性成本保持信息保真度——很好地阐明了这一问题。92% 的 LongMemEval 得分表明其具有实际可行性。\n\n**值得关注的潜力论文：** 滑铁卢大学的 Interactive Training 2 提出了一个可审计的控制平面，通过共享协议来引导实时训练过程——与人机协同和智能体引导训练的日益增长的兴趣高度相关。Three-Body Scattering Modeling 利用受物理学启发的能量距离框架实现了有竞争力的一步图像生成（ImageNet-256 上 FID 1.63），为扩散模型和 GAN 范式提供了一种真正新颖的替代方案。",
+  "papers": [
+    {
+      "id": "dataprep-bench-benchmarking-llms-training-data-preparators",
+      "title": "DataPrep-Bench: Benchmarking LLMs as Training Data Preparators",
+      "authors": ["Hao Liang", "Qifeng Cai", "Yibo Lin", "Jianzhuo Du", "Qifeng Xia et al."],
+      "affiliations": ["Peking University"],
+      "summary": "提出首个统一基准，在共享的下游任务驱动协议下跨六个领域联合评估数据构建和数据质量评估能力。发布了 Data-Construction-Skill 智能体和分布对齐分数（DAS）指标。",
+      "key_findings": [
+        "DAS 在 6 个领域中的 4 个取得了最强的跨模型相关性，且是唯一在数学、科学和医学领域同时达到 r > 0.70 的指标",
+        "Data-Construction-Skill 在 Llama-3.1-8B Finance 上将仅使用 Dolly 的基线提升了近 20 个绝对百分点",
+        "首个将数据构建和质量评估视为同等重要目标的基准"
+      ],
+      "tags": ["benchmark", "data-quality", "training-data", "synthetic-data"],
+      "relevance": "high",
+      "engagement": {"upvotes": 41, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20465",
+        "huggingface": "https://huggingface.co/papers/2607.20465",
+        "pdf": "https://arxiv.org/pdf/2607.20465"
+      }
+    },
+    {
+      "id": "skill-self-play-pushing-frontier-llm-capability",
+      "title": "Skill Self-Play: Pushing the Frontier of LLM Capability with Co-Evolving Skills",
+      "authors": ["Siyuan Huang", "Pengyu Cheng", "Haotian Liu", "Tao Chen", "Yihao Liu et al."],
+      "affiliations": ["Alibaba Group (Qwen)", "QwenBusinessUnit-Edu"],
+      "summary": "提出 Skill Self-Play（Skill-SP）协同进化框架，其中提议者、求解器和动态技能控制器通过强化学习共同进化，在结构化验证和开放式探索之间架起桥梁，实现大语言模型的自我改进。",
+      "key_findings": [
+        "智能体技能作为强有力的中间地带，调和了任务多样性与验证可靠性之间的矛盾",
+        "在工具使用和推理基准测试中持续提升有能力的骨干模型的性能上限",
+        "对初始未对齐的模型产生显著的逆转效果"
+      ],
+      "tags": ["self-play", "reinforcement-learning", "agent-skills", "self-improvement"],
+      "relevance": "high",
+      "engagement": {"upvotes": 30, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22529",
+        "huggingface": "https://huggingface.co/papers/2607.22529",
+        "pdf": "https://arxiv.org/pdf/2607.22529"
+      }
+    },
+    {
+      "id": "molt-scalable-pytorch-native-agentic-rl",
+      "title": "Molt: A Scalable PyTorch-Native Training Framework for Agentic Reinforcement Learning",
+      "authors": ["Jian Hu", "Huiying Li", "Hao Zhang", "Binfeng Xu", "Yifan Zhang et al."],
+      "affiliations": ["NVIDIA"],
+      "summary": "一个面向智能体强化学习的 PyTorch 原生训练框架，以简洁性和可读性为设计核心，同时匹配基于 Megatron 的最先进技术栈性能。强调绝不在智能体未生成的 token 上进行训练。",
+      "key_findings": [
+        "在完全异步协议下，与基于 Megatron 的技术栈在统计上具有可比性",
+        "代码库专为研究者和 AI 编程助手的可读性而设计",
+        "在单一异步循环中支持多模态和混合专家策略"
+      ],
+      "tags": ["training-framework", "reinforcement-learning", "agentic-rl", "pytorch"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21653",
+        "huggingface": "https://huggingface.co/papers/2607.21653",
+        "pdf": "https://arxiv.org/pdf/2607.21653"
+      }
+    },
+    {
+      "id": "scaling-native-multimodal-pre-training-from-scratch",
+      "title": "Scaling Native Multimodal Pre-Training From Scratch",
+      "authors": ["Haoyuan Wu", "Aoqi Wu", "Hai Wang", "Jiajia Wu", "Jinxiang Ou et al."],
+      "affiliations": ["Tencent Hunyuan"],
+      "summary": "研究在固定计算预算下训练视觉-语言模型时的最优模型大小和 token 数量分配，揭示了语言和多模态目标遵循截然不同的缩放行为。",
+      "key_findings": [
+        "语言分配定律基本不受数据组成影响；多模态分配定律则高度敏感",
+        "文本密集型混合数据仅在更大模型规模下才具有计算效率优势",
+        "原生多模态预训练产生了正向的跨模态迁移，增强了纯文本空间推理能力"
+      ],
+      "tags": ["multimodal", "scaling-laws", "pre-training", "vision-language"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22043",
+        "huggingface": "https://huggingface.co/papers/2607.22043",
+        "pdf": "https://arxiv.org/pdf/2607.22043"
+      }
+    },
+    {
+      "id": "agentic-context-management-solving-agent-memory-cost",
+      "title": "Agentic Context Management: Solving Agent Memory and Cost by Treating Them as Lifecycle and Architecture Problems",
+      "authors": ["Gaurav Dadhich"],
+      "affiliations": ["Maximem AI"],
+      "summary": "将智能体上下文管理（ACM）形式化为一门学科，包含五个基本操作：架构设计、摄取、范围界定、预判和压缩。证明经过验证的压缩可以在保持信息保真度的同时实现线性成本增长，而非简单累积导致的二次增长。",
+      "key_findings": [
+        "简单的上下文累积导致 token 成本呈二次增长；经过验证的压缩实现了线性成本",
+        "参考实现在 LongMemEval 上达到 92%，在 LoCoMo 上达到 93.2%",
+        "将上下文管理分解为五个面向生产系统的可操作基本单元"
+      ],
+      "tags": ["context-management", "agent-memory", "token-efficiency", "production-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21503",
+        "huggingface": "https://huggingface.co/papers/2607.21503",
+        "pdf": "https://arxiv.org/pdf/2607.21503"
+      }
+    },
+    {
+      "id": "interactive-training-2-auditable-control-plane",
+      "title": "Interactive Training 2: Auditable Control Plane for Live Model Training",
+      "authors": ["Wentao Zhang", "Xuanhe Pan", "Han Zhou", "Yang Lu", "Yuntian Deng"],
+      "affiliations": ["University of Waterloo"],
+      "summary": "一个用于引导训练过程的开源控制平面，通过共享协议使人类和自动化控制器能够在安全控制点提交经过验证的请求，并保留完整的审计记录。",
+      "key_findings": [
+        "训练应用声明公开的可调设置；控制器通过统一接口提交请求",
+        "请求和结果的时序记录实现了可审计性",
+        "已在五个 NLP 和 RL 工作流中得到验证"
+      ],
+      "tags": ["training-control", "human-in-the-loop", "auditability", "open-source"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 15, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.18314",
+        "huggingface": "https://huggingface.co/papers/2607.18314",
+        "pdf": "https://arxiv.org/pdf/2607.18314"
+      }
+    },
+    {
+      "id": "three-body-scattering-generative-modeling",
+      "title": "Three-Body Scattering for Generative Modeling",
+      "authors": ["Peng Sun", "Zhenglin Cheng", "Deyuan Liu", "Jun Xie", "Xinyi Shang et al."],
+      "affiliations": ["Westlake University"],
+      "summary": "提出 TBSM，一种受物理学启发的生成框架，利用能量距离实现一步生成，无需对抗性判别器、预设的噪声到数据路径或自回归分解。",
+      "key_findings": [
+        "使用像素空间 PixelDiT-XL 达到 FID 2.23，使用潜空间 DiT-XL 在 NFE=1 时达到 FID 1.63",
+        "每个「散射粒子」每个条件仅使用一个参考样本，而非小批量范围内的全配对",
+        "提供了关联扩散监督、漂移动力学和 GAN 目标的设计图谱"
+      ],
+      "tags": ["generative-models", "one-step-generation", "energy-distance", "image-generation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 10, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.18198",
+        "huggingface": "https://huggingface.co/papers/2607.18198",
+        "pdf": "https://arxiv.org/pdf/2607.18198"
+      }
+    },
+    {
+      "id": "lamar-language-aware-multilingual-alignment-reranker",
+      "title": "LAMAR: An Open Language-Aware Multilingual Alignment Reranker",
+      "authors": ["Seongtae Hong", "Youngjoon Jang", "Jungseob Lee", "Seungyoon Lee", "Heuiseok Lim"],
+      "affiliations": ["Korea University (NLP & AI Lab)"],
+      "summary": "一种多语言交叉编码器重排序模型，专为多语言 RAG 场景设计，同时考虑语义相关性和语言一致性，采用以英语为锚点的相关性蒸馏和偏好对齐技术。",
+      "key_findings": [
+        "现有多语言重排序模型未能一致地优先选择同语言文档",
+        "LAMAR 在语言一致性上取得最佳表现，同时在通用基准上保持竞争力",
+        "在对第一阶段检索候选进行重排序时，所有指标均达到最佳结果"
+      ],
+      "tags": ["multilingual", "reranking", "rag", "information-retrieval"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22042",
+        "huggingface": "https://huggingface.co/papers/2607.22042",
+        "pdf": "https://arxiv.org/pdf/2607.22042"
+      }
+    },
+    {
+      "id": "o-vad-industrial-video-anomaly-detection",
+      "title": "O-VAD: Industrial Video Anomaly Detection through Object-Centric Tracking and Reasoning",
+      "authors": ["Mei Yuan", "Qi Long", "Qifeng Wu", "Zhenyang Li", "Yizhou Zhao et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "一种免训练的智能体框架，用于工业视频异常检测，通过跟踪物体状态随时间的演变并对时间状态轨迹进行推理来识别异常物体。",
+      "key_findings": [
+        "优于前沿视觉-语言模型和在目标数据集上微调的传统视频异常检测方法",
+        "免训练方式消除了对特定领域知识或重新训练的需求",
+        "提供关于异常过程和类型的可解释报告"
+      ],
+      "tags": ["anomaly-detection", "video-understanding", "industrial-ai", "agentic-framework"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.18142",
+        "huggingface": "https://huggingface.co/papers/2607.18142",
+        "pdf": "https://arxiv.org/pdf/2607.18142"
+      }
+    },
+    {
+      "id": "multi-head-latent-control-llm-agent-decision-making",
+      "title": "Multi-Head Latent Control: A Unified Interface for LLM Agent Decision Making",
+      "authors": ["Amirhosein Ghasemabadi", "Ruichen Chen", "Bahador Rashidi", "Di Niu"],
+      "affiliations": ["Huawei Technologies", "University of Alberta"],
+      "summary": "一种轻量级层，读取冻结 LLM 的隐藏状态轨迹以生成部署时的控制信号，用于能力路由和解析度决策，无需修改模型。",
+      "key_findings": [
+        "在 AndroidWorld 上将大模型使用量减少高达 90.7%，同时保持性能",
+        "提升工具使用决策质量，相对得分提升高达 +158%",
+        "通过潜在轨迹分析实现无需模型修改的事后适配"
+      ],
+      "tags": ["model-routing", "agent-control", "inference-efficiency", "tool-use"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.14277",
+        "huggingface": "https://huggingface.co/papers/2607.14277",
+        "pdf": "https://arxiv.org/pdf/2607.14277"
+      }
+    },
+    {
+      "id": "ideagent-quality-diversity-research-idea-generation",
+      "title": "IDEAgent: Agentic Quality-Diversity Search for Research Idea Generation",
+      "authors": ["Varun Gumma", "Navonil Majumder", "Soumitra Sinhahajari", "Soujanya Poria"],
+      "affiliations": ["DeCLaRe Lab (SUTD)"],
+      "summary": "一个多智能体框架，将研究创意生成视为质量-多样性搜索问题，通过多目标反馈联合优化质量，通过顺序记忆和显式比较实现多样性。",
+      "key_findings": [
+        "在 8 个计算机科学领域的 32 个主题上，Yield 指标超越最佳基线 3.89 倍",
+        "在比基线多 8 倍的主题上实现非零 Yield",
+        "修复和精炼阶段对于在保持非显而易见性的同时建立逻辑严谨性至关重要"
+      ],
+      "tags": ["research-ideation", "quality-diversity", "multi-agent", "scientific-discovery"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22375",
+        "huggingface": "https://huggingface.co/papers/2607.22375",
+        "pdf": "https://arxiv.org/pdf/2607.22375"
+      }
+    },
+    {
+      "id": "closing-the-loop-revisit-consistency-generative-rendering",
+      "title": "Closing the Loop: Training-Free Revisit Consistency for Autoregressive Generative Rendering",
+      "authors": ["Wenchao Ma", "Changran Liu", "Sharon X. Huang", "Haomiao Jiang"],
+      "affiliations": ["Penn State University"],
+      "summary": "解决自回归生成渲染中的重访不一致性问题，利用 3D 引擎对应关系构建闭环记忆，在相机返回先前访问位置时实现免训练的一致外观。",
+      "key_findings": [
+        "时间对应关系检索姿态匹配的历史潜在块作为闭环记忆",
+        "通过相机姿态和深度的空间对应关系将注意力偏向几何对应区域",
+        "在不损失视频质量的情况下，在重访一致性上优于免训练基线方法"
+      ],
+      "tags": ["generative-rendering", "video-generation", "3d-consistency", "loop-closure"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21848",
+        "huggingface": "https://huggingface.co/papers/2607.21848",
+        "pdf": "https://arxiv.org/pdf/2607.21848"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "Moonshot AI 最新的前沿多模态模型，支持压缩张量，在 HuggingFace 趋势榜上以大量社区互动领跑。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown (compressed)",
+      "tags": ["multimodal", "conversational", "frontier-model"],
+      "metrics": {"downloads": 2850, "likes": 6323},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "百度推出的高性能视觉-语言 OCR 模型，支持多语言，下载量超过 260 万次，展现了强劲的生产级采用率。",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": ["ocr", "vision-language", "multilingual"],
+      "metrics": {"downloads": 2645773, "likes": 3333},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "智谱 AI 的 GLM-5.2 混合专家模型，下载量超 100 万次，采用动态稀疏注意力的混合专家架构实现高效文本生成。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "text-generation"],
+      "metrics": {"downloads": 1003547, "likes": 4552},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Poolside 推出的代码导向语言模型，在开发者中具有强劲吸引力，提供多种量化格式，包括 GGUF 和 NVFP4。",
+      "task_type": "text-generation",
+      "model_size": "Not specified",
+      "tags": ["code-generation", "text-generation", "vllm"],
+      "metrics": {"downloads": 63605, "likes": 758},
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "kimi-k2-7-code",
+      "name": "Kimi-K2.7-Code",
+      "organization": "Moonshot AI",
+      "description": "Moonshot 的 Kimi 模型系列中的专用代码变体，下载量近 70 万次，表明开发者对代码任务的强烈采用。",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown (compressed)",
+      "tags": ["code", "compressed-tensors", "moonshot"],
+      "metrics": {"downloads": 695744, "likes": 1323},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+    },
+    {
+      "id": "inkling",
+      "name": "Inkling",
+      "organization": "Thinking Machines",
+      "description": "具有强大社区互动（1,600+ 点赞）的多模态对话模型，支持图像-文本到文本任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": ["multimodal", "conversational", "image-text-to-text"],
+      "metrics": {"downloads": 36196, "likes": 1604},
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "Upstage 推出的 2500 亿参数混合专家语言模型，支持英语、韩语和日语，在多语言基准测试中表现出色。",
+      "task_type": "text-generation",
+      "model_size": "250B (MoE)",
+      "tags": ["moe", "multilingual", "large-scale"],
+      "metrics": {"downloads": 3761, "likes": 629},
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "ternary-bonsai-27b",
+      "name": "Ternary-Bonsai-27B",
+      "organization": "Prism ML",
+      "description": "一个极端的 2 位三值量化 270 亿参数模型，下载量达 64.8 万次，证明了超低位量化在实际部署中的可行性。",
+      "task_type": "text-generation",
+      "model_size": "27B (ternary/2-bit)",
+      "tags": ["ternary", "quantization", "efficient-inference"],
+      "metrics": {"downloads": 648938, "likes": 1069},
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "mage-flow",
+      "name": "Mage-Flow",
+      "organization": "Microsoft",
+      "description": "微软的文本到图像生成和编辑模型，采用基于扩散的流架构，以 389 个点赞进入热门趋势。",
+      "task_type": "text-to-image",
+      "model_size": "Not specified",
+      "tags": ["image-generation", "image-editing", "diffusers"],
+      "metrics": {"downloads": 1691, "likes": 389},
+      "source_url": "https://huggingface.co/microsoft/Mage-Flow"
+    },
+    {
+      "id": "fara-1-5-27b",
+      "name": "Fara1.5-27B",
+      "organization": "Microsoft",
+      "description": "微软基于 Qwen3.5 架构构建的 270 亿参数模型，具备计算机使用能力，专为多模态智能体任务设计。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["computer-use", "agent", "multimodal"],
+      "metrics": {"downloads": 1406, "likes": 151},
+      "source_url": "https://huggingface.co/microsoft/Fara1.5-27B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "impeccable-design-language-ai",
+      "name": "pbakaus/impeccable",
+      "description": "一个设计语言框架，帮助 AI 工具产出更好的设计，今日新增 847 颗星火爆趋势。代表了 AI 驱动工具中对系统化设计方法日益增长的需求。",
+      "language": "JavaScript",
+      "stars": 51597,
+      "stars_today": 847,
+      "forks": 3045,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": ["design-system", "ai-tools", "ui-design"],
+      "relevance": "high"
+    },
+    {
+      "id": "open-code-review-alibaba",
+      "name": "alibaba/open-code-review",
+      "description": "经阿里巴巴大规模实战检验的开源 AI 代码审查工具，采用混合架构实现自动化代码审查。今日飙升 979 颗星。",
+      "language": "Go",
+      "stars": 14883,
+      "stars_today": 979,
+      "forks": 1005,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": ["code-review", "developer-tools", "ai-automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "strix-ai-pentesting",
+      "name": "usestrix/strix",
+      "description": "用于发现和修复应用漏洞的开源 AI 渗透测试工具，今日新增 507 颗星，总计 4.5 万颗星。",
+      "language": "Python",
+      "stars": 45004,
+      "stars_today": 507,
+      "forks": 4712,
+      "url": "https://github.com/usestrix/strix",
+      "tags": ["security", "penetration-testing", "ai-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "airi-ai-companion",
+      "name": "moeru-ai/airi",
+      "description": "被描述为「灵魂容器」的自托管 AI 伙伴平台，今日新增 572 颗星。反映了对个性化 AI 角色日益增长的兴趣。",
+      "language": "TypeScript",
+      "stars": 44086,
+      "stars_today": 572,
+      "forks": 4400,
+      "url": "https://github.com/moeru-ai/airi",
+      "tags": ["ai-companion", "self-hosted", "conversational-ai"],
+      "relevance": "medium"
+    },
+    {
+      "id": "superfile-terminal-file-manager",
+      "name": "yorukot/superfile",
+      "description": "美观、现代的终端文件管理器，今日势头强劲，新增 600 颗星。以精致的 UI 为终端工作流带来了全新体验。",
+      "language": "Go",
+      "stars": 20928,
+      "stars_today": 600,
+      "forks": 678,
+      "url": "https://github.com/yorukot/superfile",
+      "tags": ["terminal", "file-manager", "developer-tools"],
+      "relevance": "low"
+    },
+    {
+      "id": "kronos-financial-foundation-model",
+      "name": "shiyu-coder/Kronos",
+      "description": "面向金融市场语言的基础模型，今日飙升 441 颗星至总计 3.45 万颗。对金融时间序列应用类 LLM 建模方法意义重大。",
+      "language": "Python",
+      "stars": 34583,
+      "stars_today": 441,
+      "forks": 5799,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "time-series"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-video-tool",
+      "name": "bradautomates/claude-video",
+      "description": "赋予 Claude 通过帧提取和转录观看任何视频的能力，今日新增 434 颗星。属于扩展 LLM 能力的日益壮大的工具生态系统的一部分。",
+      "language": "Python",
+      "stars": 11144,
+      "stars_today": 434,
+      "forks": 1148,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["video-processing", "llm-tools", "claude"],
+      "relevance": "high"
+    },
+    {
+      "id": "geolibre-cloud-gis",
+      "name": "opengeos/GeoLibre",
+      "description": "轻量级云原生 GIS 平台，用于可视化、探索和分析地理空间数据，今日新增 420 颗星。",
+      "language": "TypeScript",
+      "stars": 2738,
+      "stars_today": 420,
+      "forks": 357,
+      "url": "https://github.com/opengeos/GeoLibre",
+      "tags": ["gis", "geospatial", "cloud-native"],
+      "relevance": "medium"
+    },
+    {
+      "id": "bitchat-bluetooth-mesh",
+      "name": "permissionlesstech/bitchat",
+      "description": "具有 IRC 风格的蓝牙网状聊天工具，今日爆发性增长 2,346 颗星。作为不依赖互联网基础设施的去中心化通信工具引人注目。",
+      "language": "Swift",
+      "stars": 32335,
+      "stars_today": 2346,
+      "forks": 5069,
+      "url": "https://github.com/permissionlesstech/bitchat",
+      "tags": ["bluetooth-mesh", "chat", "decentralized"],
+      "relevance": "low"
+    },
+    {
+      "id": "mediacrawler-social-media",
+      "name": "NanmiCoder/MediaCrawler",
+      "description": "多平台社交媒体爬虫，支持小红书、抖音、快手、B站、微博等。今日稳定增长 362 颗星。",
+      "language": "Python",
+      "stars": 58276,
+      "stars_today": 362,
+      "forks": 11597,
+      "url": "https://github.com/NanmiCoder/MediaCrawler",
+      "tags": ["web-scraping", "social-media", "data-collection"],
+      "relevance": "medium"
+    },
+    {
+      "id": "last30days-skill-research",
+      "name": "mvanhorn/last30days-skill",
+      "description": "AI 智能体技能，可在过去 30 天内跨 Reddit、X、YouTube、Hacker News 和 Polymarket 研究任何主题，今日新增 240 颗星。",
+      "language": "Python",
+      "stars": 54202,
+      "stars_today": 240,
+      "forks": 4700,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research-tool", "multi-platform"],
+      "relevance": "high"
+    },
+    {
+      "id": "aisuite-multi-provider",
+      "name": "andrewyng/aisuite",
+      "description": "由 Andrew Ng 开发的简洁统一多生成式 AI 提供商接口，今日增长 185 颗星。面向多提供商 LLM 访问的实用开发工具。",
+      "language": "Python",
+      "stars": 15532,
+      "stars_today": 185,
+      "forks": 1645,
+      "url": "https://github.com/andrewyng/aisuite",
+      "tags": ["multi-provider", "llm-tools", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "mirofish-swarm-intelligence",
+      "name": "666ghj/MiroFish",
+      "description": "用于预测的通用群体智能引擎，将集体智慧方法与现代 AI 相结合。今日 113 颗星，总计 6.95 万颗。",
+      "language": "Python",
+      "stars": 69520,
+      "stars_today": 113,
+      "forks": 10862,
+      "url": "https://github.com/666ghj/MiroFish",
+      "tags": ["swarm-intelligence", "prediction", "collective-ai"],
+      "relevance": "medium"
+    },
+    {
+      "id": "docsgpt-private-ai",
+      "name": "arc53/DocsGPT",
+      "description": "面向智能体、助手和企业搜索的私有 AI 平台，内置智能体能力。今日稳定增长 48 颗星。",
+      "language": "Python",
+      "stars": 18131,
+      "stars_today": 48,
+      "forks": 2094,
+      "url": "https://github.com/arc53/DocsGPT",
+      "tags": ["enterprise-search", "private-ai", "rag"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-webui",
+      "name": "nesquena/hermes-webui",
+      "description": "Hermes Agent 的 Web 和移动端 UI，可通过浏览器或手机便捷访问智能体功能。今日 60 颗星。",
+      "language": "Python",
+      "stars": 16627,
+      "stars_today": 60,
+      "forks": 2249,
+      "url": "https://github.com/nesquena/hermes-webui",
+      "tags": ["agent-ui", "web-interface", "hermes"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "训练数据成为一等基础设施",
+      "description": "DataPrep-Bench 及更广泛的数据中心 AI 运动正在将训练数据准备从临时性手工作业提升为有基准评估的工程学科，引入了统一的评估协议和自动化的质量评分。",
+      "related_paper_ids": ["dataprep-bench-benchmarking-llms-training-data-preparators"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自我改进的智能体架构",
+      "description": "多篇论文探索了 LLM 智能体如何系统性地自我改进，从 Skill Self-Play 的协同进化技能到 IDEAgent 面向研究创意生成的质量-多样性搜索，验证可靠性是核心挑战。",
+      "related_paper_ids": ["skill-self-play-pushing-frontier-llm-capability", "ideagent-quality-diversity-research-idea-generation", "multi-head-latent-control-llm-agent-decision-making"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "精简训练框架",
+      "description": "一股与框架复杂化相反的趋势正在兴起：Molt 明确的极简 PyTorch 原生方案和 Interactive Training 2 的共享控制协议都优先考虑研究者的可理解性，而非功能广度。",
+      "related_paper_ids": ["molt-scalable-pytorch-native-agentic-rl", "interactive-training-2-auditable-control-plane"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "生产级智能体基础设施",
+      "description": "Agentic Context Management 将智能体记忆和上下文的生命周期形式化，而 Multi-Head Latent Control 解决了部署时的模型路由问题——两者都在应对大规模运行智能体的运维挑战。",
+      "related_paper_ids": ["agentic-context-management-solving-agent-memory-cost", "multi-head-latent-control-llm-agent-decision-making"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多模态缩放与效率",
+      "description": "从腾讯的多模态缩放定律到 VisCo 的视觉 token 压缩，再到多模态模型在 HuggingFace 趋势榜上的主导地位，该领域正在向跨模态能力的高效缩放汇聚。",
+      "related_paper_ids": ["scaling-native-multimodal-pre-training-from-scratch"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "ok"
+    }
+  ]
+}

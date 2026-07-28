@@ -1,0 +1,611 @@
+{
+  "version": "1.0",
+  "date": "2026-07-27",
+  "generated_at": "2026-07-28T02:10:00Z",
+  "summary": {
+    "headline": "DataPrep-Bench sets first unified standard for LLM training data preparation; Skill Self-Play from Qwen co-evolves diverse agent skills via RL; NVIDIA's Molt offers a lean PyTorch-native framework for agentic RL at scale",
+    "body": "Today's papers converge on a powerful meta-theme: making the infrastructure around LLMs — their training data, their agentic capabilities, and their deployment frameworks — more systematic and scalable. DataPrep-Bench from Peking University introduces the first benchmark that jointly evaluates both data construction and data quality evaluation under a shared downstream-grounded protocol, filling a surprising gap in the field. Meanwhile, Skill Self-Play from Qwen proposes a co-evolutionary framework where a proposer, solver, and dynamic skill controller evolve together in a reinforcement learning loop, elegantly resolving the tension between task diversity and verification reliability in self-improving LLMs.\n\nOn the systems side, NVIDIA's Molt framework stands out as a refreshingly minimal yet performant approach to agentic RL training — compact enough for a researcher (or an AI coding assistant) to hold in their head while matching Megatron-based stacks in performance. Tencent Hunyuan's scaling laws for native multimodal pre-training reveal that language and multimodal objectives follow distinct scaling behaviors, with text-heavy mixtures becoming compute-efficient only at larger model scales.\n\nThe trending models landscape is dominated by Kimi-K3 from Moonshot AI with over 6,300 likes, alongside the rising Laguna-S-2.1 from Poolside and GLM-5.2 from Zhipu AI. GitHub trends show strong momentum for AI security tools (Strix), financial market modeling (Kronos), and design-language frameworks for AI (Impeccable), reflecting the broadening practical applications of AI across industries.",
+    "key_themes": ["training-data-quality", "agentic-self-improvement", "efficient-training-frameworks", "multimodal-scaling", "agent-context-management", "generative-rendering"]
+  },
+  "researcher_notes": "**The data-centric AI movement gets its first unified benchmark.** DataPrep-Bench from Peking University (41 upvotes) is quietly significant — it treats data construction and data quality evaluation as co-equal targets rather than studying them in isolation. Their Distributional Alignment Score (DAS) using MMD is the only metric achieving r > 0.70 correlation with downstream performance simultaneously across Math, Science, and Medical domains. This could reshape how teams evaluate synthetic data pipelines.\n\n**Skill Self-Play bridges a fundamental tension in self-improving LLMs.** The Qwen team's insight that agent skills serve as a natural middle ground between environment-bound verification (reliable but narrow) and open-ended self-generation (broad but unreliable) is elegant. The co-evolutionary loop between proposer, solver, and skill controller is reminiscent of population-based training but operates at the skill abstraction level. The claim of 'striking turnarounds for initially misaligned models' deserves close attention.\n\n**NVIDIA's Molt is the anti-complexity framework.** In an era of increasingly baroque training infrastructure, Molt's explicit design goal — being 'compact and clean enough for a researcher to hold in their head, and for an AI coding assistant to read and reason about' — feels deliberately provocative. That it matches state-of-the-art Megatron performance while maintaining this simplicity is the real contribution. The paper also notably emphasizes never training on tokens the agent didn't generate, a principled stance on data provenance in RL.\n\n**Context management for agents is getting formalized.** The Agentic Context Management paper from Maximem AI (17 upvotes) names and decomposes what many production agent teams are struggling with ad hoc. Their economic analysis — showing that naive context accumulation grows token cost quadratically while validated compaction achieves linear cost with preserved fidelity — crystallizes the problem well. The 92% LongMemEval score suggests practical viability.\n\n**Sleeper hits to watch:** Interactive Training 2 from Waterloo proposes an auditable control plane for steering live training runs through a shared protocol — relevant for the growing interest in human-in-the-loop and agent-guided training. Three-Body Scattering Modeling achieves competitive one-step image generation (FID 1.63 on ImageNet-256) using a physics-inspired energy distance framework, offering a genuinely novel alternative to diffusion and GAN paradigms.",
+  "papers": [
+    {
+      "id": "dataprep-bench-benchmarking-llms-training-data-preparators",
+      "title": "DataPrep-Bench: Benchmarking LLMs as Training Data Preparators",
+      "authors": ["Hao Liang", "Qifeng Cai", "Yibo Lin", "Jianzhuo Du", "Qifeng Xia et al."],
+      "affiliations": ["Peking University"],
+      "summary": "Introduces the first unified benchmark jointly evaluating data construction and data quality evaluation under a shared downstream-grounded protocol across six domains. Releases Data-Construction-Skill agent and the Distributional Alignment Score (DAS) metric.",
+      "key_findings": [
+        "DAS attains strongest cross-model correlation in 4/6 domains and is the only metric clearing r > 0.70 simultaneously in Math, Science, and Medical",
+        "Data-Construction-Skill lifts Dolly-only baseline by nearly 20 points absolute on Llama-3.1-8B Finance",
+        "First benchmark to treat data construction and quality evaluation as co-equal targets"
+      ],
+      "tags": ["benchmark", "data-quality", "training-data", "synthetic-data"],
+      "relevance": "high",
+      "engagement": {"upvotes": 41, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.20465",
+        "huggingface": "https://huggingface.co/papers/2607.20465",
+        "pdf": "https://arxiv.org/pdf/2607.20465"
+      }
+    },
+    {
+      "id": "skill-self-play-pushing-frontier-llm-capability",
+      "title": "Skill Self-Play: Pushing the Frontier of LLM Capability with Co-Evolving Skills",
+      "authors": ["Siyuan Huang", "Pengyu Cheng", "Haotian Liu", "Tao Chen", "Yihao Liu et al."],
+      "affiliations": ["Alibaba Group (Qwen)", "QwenBusinessUnit-Edu"],
+      "summary": "Proposes Skill Self-Play (Skill-SP), a co-evolutionary framework where a proposer, solver, and dynamic skill controller co-evolve via RL, bridging structured verification and open-ended exploration for LLM self-improvement.",
+      "key_findings": [
+        "Agent skills serve as a powerful middle ground reconciling task diversity and verification reliability",
+        "Consistently pushes performance ceiling of competent backbones on tool-use and reasoning benchmarks",
+        "Catalyzes striking turnarounds for initially misaligned models"
+      ],
+      "tags": ["self-play", "reinforcement-learning", "agent-skills", "self-improvement"],
+      "relevance": "high",
+      "engagement": {"upvotes": 30, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22529",
+        "huggingface": "https://huggingface.co/papers/2607.22529",
+        "pdf": "https://arxiv.org/pdf/2607.22529"
+      }
+    },
+    {
+      "id": "molt-scalable-pytorch-native-agentic-rl",
+      "title": "Molt: A Scalable PyTorch-Native Training Framework for Agentic Reinforcement Learning",
+      "authors": ["Jian Hu", "Huiying Li", "Hao Zhang", "Binfeng Xu", "Yifan Zhang et al."],
+      "affiliations": ["NVIDIA"],
+      "summary": "A PyTorch-native training framework for agentic RL designed for simplicity and readability while matching state-of-the-art Megatron-based stack performance. Emphasizes never training on tokens the agent didn't generate.",
+      "key_findings": [
+        "Statistically comparable to Megatron-based stacks under fully asynchronous protocol",
+        "Codebase designed to be readable by both researchers and AI coding assistants",
+        "Supports multimodal and mixture-of-experts policies in a single async loop"
+      ],
+      "tags": ["training-framework", "reinforcement-learning", "agentic-rl", "pytorch"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21653",
+        "huggingface": "https://huggingface.co/papers/2607.21653",
+        "pdf": "https://arxiv.org/pdf/2607.21653"
+      }
+    },
+    {
+      "id": "scaling-native-multimodal-pre-training-from-scratch",
+      "title": "Scaling Native Multimodal Pre-Training From Scratch",
+      "authors": ["Haoyuan Wu", "Aoqi Wu", "Hai Wang", "Jiajia Wu", "Jinxiang Ou et al."],
+      "affiliations": ["Tencent Hunyuan"],
+      "summary": "Investigates optimal model size and token count for training vision-language models under fixed compute budgets, revealing distinct scaling behaviors for language and multimodal objectives.",
+      "key_findings": [
+        "Language allocation law is largely invariant to data composition; multimodal allocation law is highly sensitive",
+        "Text-heavy mixtures become compute-efficient only at larger model scales",
+        "Native multimodal pre-training induces positive cross-modal transfer enhancing pure-text spatial reasoning"
+      ],
+      "tags": ["multimodal", "scaling-laws", "pre-training", "vision-language"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22043",
+        "huggingface": "https://huggingface.co/papers/2607.22043",
+        "pdf": "https://arxiv.org/pdf/2607.22043"
+      }
+    },
+    {
+      "id": "agentic-context-management-solving-agent-memory-cost",
+      "title": "Agentic Context Management: Solving Agent Memory and Cost by Treating Them as Lifecycle and Architecture Problems",
+      "authors": ["Gaurav Dadhich"],
+      "affiliations": ["Maximem AI"],
+      "summary": "Formalizes Agentic Context Management (ACM) as a discipline with five primitives: architecting, ingesting, scoping, anticipating, and compacting. Shows validated compaction achieves linear cost with preserved fidelity versus quadratic growth of naive accumulation.",
+      "key_findings": [
+        "Naive context accumulation grows token cost quadratically; validated compaction achieves linear cost",
+        "Reference implementation achieves 92% on LongMemEval and 93.2% on LoCoMo",
+        "Decomposes context management into five actionable primitives for production systems"
+      ],
+      "tags": ["context-management", "agent-memory", "token-efficiency", "production-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 17, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21503",
+        "huggingface": "https://huggingface.co/papers/2607.21503",
+        "pdf": "https://arxiv.org/pdf/2607.21503"
+      }
+    },
+    {
+      "id": "interactive-training-2-auditable-control-plane",
+      "title": "Interactive Training 2: Auditable Control Plane for Live Model Training",
+      "authors": ["Wentao Zhang", "Xuanhe Pan", "Han Zhou", "Yang Lu", "Yuntian Deng"],
+      "affiliations": ["University of Waterloo"],
+      "summary": "An open-source control plane for steering training runs through a shared protocol, enabling both humans and automated controllers to submit requests validated at safe control points with full audit trails.",
+      "key_findings": [
+        "Training applications declare exposed settings; controllers submit requests through unified interface",
+        "Chronological record of requests and outcomes enables auditability",
+        "Demonstrated across five NLP and RL workflows"
+      ],
+      "tags": ["training-control", "human-in-the-loop", "auditability", "open-source"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 15, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.18314",
+        "huggingface": "https://huggingface.co/papers/2607.18314",
+        "pdf": "https://arxiv.org/pdf/2607.18314"
+      }
+    },
+    {
+      "id": "three-body-scattering-generative-modeling",
+      "title": "Three-Body Scattering for Generative Modeling",
+      "authors": ["Peng Sun", "Zhenglin Cheng", "Deyuan Liu", "Jun Xie", "Xinyi Shang et al."],
+      "affiliations": ["Westlake University"],
+      "summary": "Introduces TBSM, a physics-inspired generative framework using energy distance for one-step generation that avoids adversarial critics, prescribed noise-to-data paths, or autoregressive factorization.",
+      "key_findings": [
+        "Achieves FID 2.23 with pixel-space PixelDiT-XL and FID 1.63 with latent-space DiT-XL at NFE=1",
+        "Each projectile uses only one reference per condition instead of minibatch-wide all-pairs",
+        "Provides design map relating diffusion supervision, drift dynamics, and GAN objectives"
+      ],
+      "tags": ["generative-models", "one-step-generation", "energy-distance", "image-generation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 10, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.18198",
+        "huggingface": "https://huggingface.co/papers/2607.18198",
+        "pdf": "https://arxiv.org/pdf/2607.18198"
+      }
+    },
+    {
+      "id": "lamar-language-aware-multilingual-alignment-reranker",
+      "title": "LAMAR: An Open Language-Aware Multilingual Alignment Reranker",
+      "authors": ["Seongtae Hong", "Youngjoon Jang", "Jungseob Lee", "Seungyoon Lee", "Heuiseok Lim"],
+      "affiliations": ["Korea University (NLP & AI Lab)"],
+      "summary": "A multilingual cross-encoder reranker trained to account for both semantic relevance and language coherence in multilingual RAG, using English-anchored relevance distillation and preference alignment.",
+      "key_findings": [
+        "Existing multilingual rerankers do not consistently prioritize same-language documents",
+        "LAMAR achieves best performance on language coherence while remaining competitive on general benchmarks",
+        "Best results across all metrics when reranking first-stage retrieval candidates"
+      ],
+      "tags": ["multilingual", "reranking", "rag", "information-retrieval"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22042",
+        "huggingface": "https://huggingface.co/papers/2607.22042",
+        "pdf": "https://arxiv.org/pdf/2607.22042"
+      }
+    },
+    {
+      "id": "o-vad-industrial-video-anomaly-detection",
+      "title": "O-VAD: Industrial Video Anomaly Detection through Object-Centric Tracking and Reasoning",
+      "authors": ["Mei Yuan", "Qi Long", "Qifeng Wu", "Zhenyang Li", "Yizhou Zhao et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "A training-free agentic framework for industrial video anomaly detection that tracks object state evolution over time and reasons over temporal state trajectories to identify abnormal objects.",
+      "key_findings": [
+        "Outperforms frontier VLMs and traditional VAD methods fine-tuned on target datasets",
+        "Training-free approach eliminates need for domain-specific knowledge or retraining",
+        "Provides interpretable reports over anomaly processes and types"
+      ],
+      "tags": ["anomaly-detection", "video-understanding", "industrial-ai", "agentic-framework"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.18142",
+        "huggingface": "https://huggingface.co/papers/2607.18142",
+        "pdf": "https://arxiv.org/pdf/2607.18142"
+      }
+    },
+    {
+      "id": "multi-head-latent-control-llm-agent-decision-making",
+      "title": "Multi-Head Latent Control: A Unified Interface for LLM Agent Decision Making",
+      "authors": ["Amirhosein Ghasemabadi", "Ruichen Chen", "Bahador Rashidi", "Di Niu"],
+      "affiliations": ["Huawei Technologies", "University of Alberta"],
+      "summary": "A lightweight layer that reads hidden-state trajectories from a frozen LLM to produce deployment-time control signals for capability routing and resolution decisions without modifying the model.",
+      "key_findings": [
+        "Reduces large-model usage by up to 90.7% on AndroidWorld while retaining performance",
+        "Improves tool-use decision quality with up to +158% relative score gain",
+        "Enables post-hoc adaptation without model modification via latent trace analysis"
+      ],
+      "tags": ["model-routing", "agent-control", "inference-efficiency", "tool-use"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.14277",
+        "huggingface": "https://huggingface.co/papers/2607.14277",
+        "pdf": "https://arxiv.org/pdf/2607.14277"
+      }
+    },
+    {
+      "id": "ideagent-quality-diversity-research-idea-generation",
+      "title": "IDEAgent: Agentic Quality-Diversity Search for Research Idea Generation",
+      "authors": ["Varun Gumma", "Navonil Majumder", "Soumitra Sinhahajari", "Soujanya Poria"],
+      "affiliations": ["DeCLaRe Lab (SUTD)"],
+      "summary": "A multi-agent framework treating research ideation as a Quality-Diversity search problem, jointly optimizing for quality via multi-objective feedback and diversity through sequential memory and explicit comparison.",
+      "key_findings": [
+        "Outperforms best baseline by 3.89x on Yield metric across 32 topics in 8 CS domains",
+        "Achieves non-zero Yield on 8x more topics than baselines",
+        "Repair and refinement stages are crucial for building logical rigor while preserving non-obviousness"
+      ],
+      "tags": ["research-ideation", "quality-diversity", "multi-agent", "scientific-discovery"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22375",
+        "huggingface": "https://huggingface.co/papers/2607.22375",
+        "pdf": "https://arxiv.org/pdf/2607.22375"
+      }
+    },
+    {
+      "id": "closing-the-loop-revisit-consistency-generative-rendering",
+      "title": "Closing the Loop: Training-Free Revisit Consistency for Autoregressive Generative Rendering",
+      "authors": ["Wenchao Ma", "Changran Liu", "Sharon X. Huang", "Haomiao Jiang"],
+      "affiliations": ["Penn State University"],
+      "summary": "Addresses revisit inconsistency in autoregressive generative rendering by exploiting 3D engine correspondences for loop-closure memory, enabling training-free consistent appearance when cameras return to previously visited locations.",
+      "key_findings": [
+        "Temporal correspondence retrieves pose-matched historical latent chunks as loop-closure memory",
+        "Spatial correspondence via camera pose and depth biases attention toward geometrically corresponding regions",
+        "Outperforms training-free baselines on revisit consistency without losing video quality"
+      ],
+      "tags": ["generative-rendering", "video-generation", "3d-consistency", "loop-closure"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21848",
+        "huggingface": "https://huggingface.co/papers/2607.21848",
+        "pdf": "https://arxiv.org/pdf/2607.21848"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "Moonshot AI's latest frontier multimodal model with compressed tensors support, leading HuggingFace trending with massive community engagement.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown (compressed)",
+      "tags": ["multimodal", "conversational", "frontier-model"],
+      "metrics": {"downloads": 2850, "likes": 6323},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "High-performance vision-language OCR model from Baidu with multilingual support and over 2.6M downloads, demonstrating strong production adoption.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": ["ocr", "vision-language", "multilingual"],
+      "metrics": {"downloads": 2645773, "likes": 3333},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (zai-org)",
+      "description": "GLM-5.2 MoE model with over 1M downloads, featuring mixture-of-experts with dynamic sparse attention for efficient text generation.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": ["moe", "conversational", "text-generation"],
+      "metrics": {"downloads": 1003547, "likes": 4552},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Code-focused language model from Poolside with strong developer traction, available in multiple quantization formats including GGUF and NVFP4.",
+      "task_type": "text-generation",
+      "model_size": "Not specified",
+      "tags": ["code-generation", "text-generation", "vllm"],
+      "metrics": {"downloads": 63605, "likes": 758},
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "kimi-k2-7-code",
+      "name": "Kimi-K2.7-Code",
+      "organization": "Moonshot AI",
+      "description": "Specialized coding variant of Moonshot's Kimi model family with nearly 700K downloads, indicating strong developer adoption for code tasks.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown (compressed)",
+      "tags": ["code", "compressed-tensors", "moonshot"],
+      "metrics": {"downloads": 695744, "likes": 1323},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+    },
+    {
+      "id": "inkling",
+      "name": "Inkling",
+      "organization": "Thinking Machines",
+      "description": "Multimodal conversational model with strong community engagement (1,600+ likes), supporting image-text-to-text tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": ["multimodal", "conversational", "image-text-to-text"],
+      "metrics": {"downloads": 36196, "likes": 1604},
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "A 250B-parameter MoE language model from Upstage supporting English, Korean, and Japanese, with strong multilingual benchmark results.",
+      "task_type": "text-generation",
+      "model_size": "250B (MoE)",
+      "tags": ["moe", "multilingual", "large-scale"],
+      "metrics": {"downloads": 3761, "likes": 629},
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "ternary-bonsai-27b",
+      "name": "Ternary-Bonsai-27B",
+      "organization": "Prism ML",
+      "description": "An extreme 2-bit ternary quantized 27B model achieving 648K downloads, demonstrating viability of ultra-low-bit quantization for practical deployment.",
+      "task_type": "text-generation",
+      "model_size": "27B (ternary/2-bit)",
+      "tags": ["ternary", "quantization", "efficient-inference"],
+      "metrics": {"downloads": 648938, "likes": 1069},
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "mage-flow",
+      "name": "Mage-Flow",
+      "organization": "Microsoft",
+      "description": "Microsoft's text-to-image generation and editing model using diffusion-based flow architecture, trending with 389 likes.",
+      "task_type": "text-to-image",
+      "model_size": "Not specified",
+      "tags": ["image-generation", "image-editing", "diffusers"],
+      "metrics": {"downloads": 1691, "likes": 389},
+      "source_url": "https://huggingface.co/microsoft/Mage-Flow"
+    },
+    {
+      "id": "fara-1-5-27b",
+      "name": "Fara1.5-27B",
+      "organization": "Microsoft",
+      "description": "Microsoft's 27B model built on Qwen3.5 architecture with computer-use capabilities, designed for multimodal agent tasks.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["computer-use", "agent", "multimodal"],
+      "metrics": {"downloads": 1406, "likes": 151},
+      "source_url": "https://huggingface.co/microsoft/Fara1.5-27B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "impeccable-design-language-ai",
+      "name": "pbakaus/impeccable",
+      "description": "A design language framework that makes AI harnesses produce better designs, trending massively with 847 stars today. Represents the growing need for systematic design approaches in AI-powered tools.",
+      "language": "JavaScript",
+      "stars": 51597,
+      "stars_today": 847,
+      "forks": 3045,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": ["design-system", "ai-tools", "ui-design"],
+      "relevance": "high"
+    },
+    {
+      "id": "open-code-review-alibaba",
+      "name": "alibaba/open-code-review",
+      "description": "Open-source AI code review tool battle-tested at Alibaba's scale, with a hybrid architecture for automated code review. Surging with 979 stars today.",
+      "language": "Go",
+      "stars": 14883,
+      "stars_today": 979,
+      "forks": 1005,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": ["code-review", "developer-tools", "ai-automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "strix-ai-pentesting",
+      "name": "usestrix/strix",
+      "description": "Open-source AI penetration testing tool for finding and fixing application vulnerabilities, trending with 507 stars today and 45K total stars.",
+      "language": "Python",
+      "stars": 45004,
+      "stars_today": 507,
+      "forks": 4712,
+      "url": "https://github.com/usestrix/strix",
+      "tags": ["security", "penetration-testing", "ai-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "airi-ai-companion",
+      "name": "moeru-ai/airi",
+      "description": "Self-hosted AI companion platform described as a container of souls, trending with 572 stars today. Represents growing interest in personalized AI characters.",
+      "language": "TypeScript",
+      "stars": 44086,
+      "stars_today": 572,
+      "forks": 4400,
+      "url": "https://github.com/moeru-ai/airi",
+      "tags": ["ai-companion", "self-hosted", "conversational-ai"],
+      "relevance": "medium"
+    },
+    {
+      "id": "superfile-terminal-file-manager",
+      "name": "yorukot/superfile",
+      "description": "Pretty, modern terminal file manager with strong daily momentum of 600 stars. Notable for bringing polished UI to terminal workflows.",
+      "language": "Go",
+      "stars": 20928,
+      "stars_today": 600,
+      "forks": 678,
+      "url": "https://github.com/yorukot/superfile",
+      "tags": ["terminal", "file-manager", "developer-tools"],
+      "relevance": "low"
+    },
+    {
+      "id": "kronos-financial-foundation-model",
+      "name": "shiyu-coder/Kronos",
+      "description": "A foundation model for the language of financial markets, surging with 441 stars today to 34.5K total. Significant for applying LLM-style modeling to financial time series.",
+      "language": "Python",
+      "stars": 34583,
+      "stars_today": 441,
+      "forks": 5799,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "time-series"],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-video-tool",
+      "name": "bradautomates/claude-video",
+      "description": "Gives Claude the ability to watch any video via frame extraction and transcription, trending with 434 stars today. Part of the growing ecosystem of tools extending LLM capabilities.",
+      "language": "Python",
+      "stars": 11144,
+      "stars_today": 434,
+      "forks": 1148,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["video-processing", "llm-tools", "claude"],
+      "relevance": "high"
+    },
+    {
+      "id": "geolibre-cloud-gis",
+      "name": "opengeos/GeoLibre",
+      "description": "Lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data, trending with 420 stars today.",
+      "language": "TypeScript",
+      "stars": 2738,
+      "stars_today": 420,
+      "forks": 357,
+      "url": "https://github.com/opengeos/GeoLibre",
+      "tags": ["gis", "geospatial", "cloud-native"],
+      "relevance": "medium"
+    },
+    {
+      "id": "bitchat-bluetooth-mesh",
+      "name": "permissionlesstech/bitchat",
+      "description": "Bluetooth mesh chat with IRC vibes, exploding with 2,346 stars today. Noteworthy as a decentralized communication tool independent of internet infrastructure.",
+      "language": "Swift",
+      "stars": 32335,
+      "stars_today": 2346,
+      "forks": 5069,
+      "url": "https://github.com/permissionlesstech/bitchat",
+      "tags": ["bluetooth-mesh", "chat", "decentralized"],
+      "relevance": "low"
+    },
+    {
+      "id": "mediacrawler-social-media",
+      "name": "NanmiCoder/MediaCrawler",
+      "description": "Multi-platform social media crawler supporting Xiaohongshu, Douyin, Kuaishou, Bilibili, Weibo and more. Steady momentum with 362 stars today.",
+      "language": "Python",
+      "stars": 58276,
+      "stars_today": 362,
+      "forks": 11597,
+      "url": "https://github.com/NanmiCoder/MediaCrawler",
+      "tags": ["web-scraping", "social-media", "data-collection"],
+      "relevance": "medium"
+    },
+    {
+      "id": "last30days-skill-research",
+      "name": "mvanhorn/last30days-skill",
+      "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, and Polymarket in the last 30 days, trending with 240 stars today.",
+      "language": "Python",
+      "stars": 54202,
+      "stars_today": 240,
+      "forks": 4700,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skills", "research-tool", "multi-platform"],
+      "relevance": "high"
+    },
+    {
+      "id": "aisuite-multi-provider",
+      "name": "andrewyng/aisuite",
+      "description": "Simple, unified interface to multiple generative AI providers by Andrew Ng, gaining 185 stars today. Practical developer tool for multi-provider LLM access.",
+      "language": "Python",
+      "stars": 15532,
+      "stars_today": 185,
+      "forks": 1645,
+      "url": "https://github.com/andrewyng/aisuite",
+      "tags": ["multi-provider", "llm-tools", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "mirofish-swarm-intelligence",
+      "name": "666ghj/MiroFish",
+      "description": "A universal swarm intelligence engine for prediction, combining collective intelligence approaches with modern AI. 113 stars today with 69.5K total.",
+      "language": "Python",
+      "stars": 69520,
+      "stars_today": 113,
+      "forks": 10862,
+      "url": "https://github.com/666ghj/MiroFish",
+      "tags": ["swarm-intelligence", "prediction", "collective-ai"],
+      "relevance": "medium"
+    },
+    {
+      "id": "docsgpt-private-ai",
+      "name": "arc53/DocsGPT",
+      "description": "Private AI platform for agents, assistants, and enterprise search with built-in agent capabilities. Steady growth at 48 stars today.",
+      "language": "Python",
+      "stars": 18131,
+      "stars_today": 48,
+      "forks": 2094,
+      "url": "https://github.com/arc53/DocsGPT",
+      "tags": ["enterprise-search", "private-ai", "rag"],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-webui",
+      "name": "nesquena/hermes-webui",
+      "description": "Web and mobile UI for Hermes Agent, enabling easy access to agentic capabilities from browser or phone. 60 stars today.",
+      "language": "Python",
+      "stars": 16627,
+      "stars_today": 60,
+      "forks": 2249,
+      "url": "https://github.com/nesquena/hermes-webui",
+      "tags": ["agent-ui", "web-interface", "hermes"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Training Data as First-Class Infrastructure",
+      "description": "DataPrep-Bench and the broader data-centric AI movement are elevating training data preparation from ad-hoc craft to benchmarked engineering discipline, with unified evaluation protocols and automated quality scoring.",
+      "related_paper_ids": ["dataprep-bench-benchmarking-llms-training-data-preparators"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Self-Improving Agent Architectures",
+      "description": "Multiple papers explore how LLM agents can systematically improve themselves, from Skill Self-Play's co-evolutionary skills to IDEAgent's quality-diversity search for research ideation, with verification reliability as the key challenge.",
+      "related_paper_ids": ["skill-self-play-pushing-frontier-llm-capability", "ideagent-quality-diversity-research-idea-generation", "multi-head-latent-control-llm-agent-decision-making"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Lean Training Frameworks",
+      "description": "A counter-trend to framework complexity is emerging: Molt's explicitly minimal PyTorch-native approach and Interactive Training 2's shared control protocol both prioritize researcher comprehensibility over feature breadth.",
+      "related_paper_ids": ["molt-scalable-pytorch-native-agentic-rl", "interactive-training-2-auditable-control-plane"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Production Agent Infrastructure",
+      "description": "Agentic Context Management formalizes the lifecycle of agent memory and context, while Multi-Head Latent Control addresses deployment-time model routing — both tackling the operational challenges of running agents at scale.",
+      "related_paper_ids": ["agentic-context-management-solving-agent-memory-cost", "multi-head-latent-control-llm-agent-decision-making"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Scaling and Efficiency",
+      "description": "From Tencent's multimodal scaling laws to VisCo's visual token compression and the dominance of multimodal models on HuggingFace trending, the field is converging on efficient scaling of cross-modal capabilities.",
+      "related_paper_ids": ["scaling-native-multimodal-pre-training-from-scratch"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-28T02:06:00Z",
+      "status": "ok"
+    }
+  ]
+}
