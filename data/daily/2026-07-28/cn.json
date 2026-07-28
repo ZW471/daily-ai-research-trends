@@ -1,0 +1,399 @@
+{
+  "version": "1.0",
+  "date": "2026-07-28",
+  "generated_at": "2026-07-28T15:30:00Z",
+  "summary": {
+    "headline": "StateAct将计算机使用代理从截图像素转向程序状态；中国AI实验室以Kimi-K3和GLM-5.2主导热门模型；Bitchat蓝牙网状聊天今日获2346颗星爆发式增长",
+    "body": "今日新论文提交量较少，但模型发布和社区动态信息密集。最具概念价值的论文**StateAct**挑战了以截图为中心的计算机使用代理主流方法，主张直接访问程序状态（DOM、文件系统、应用后端）从根本上优于基于像素的感知。其代码优先的多智能体框架表明，状态检查在长期任务上优于纯视觉方法——这可能是智能体AI领域的范式转变成果。\n\n在模型方面，中国AI实验室保持着积极的发布节奏。**Kimi-K3**（Moonshot AI）以6376个赞领先并拥有强劲下载量；**GLM-5.2**（智谱AI）推出MoE架构，下载量超百万。**百度Unlimited-OCR**以260万次下载和3335个赞脱颖而出——这表明文档智能在全球范围内仍是巨大的生产工作负载。**Poolside的Laguna-S-2.1**和**Upstage的Solar-Open2-250B**代表西方实验室以同等节奏发布。\n\n在GitHub趋势榜上，**Bitchat**（蓝牙网状P2P聊天）今日新增2346颗星，成为最大的话题——这似乎源于对离线可用、抗审查通信的日益增长的兴趣。**阿里巴巴open-code-review**以其混合LLM加确定性管道的代码审查方法获得979颗星，**pbakaus/impeccable**（847颗星）作为AI生成UI的设计语言规范正在获得广泛关注。",
+    "key_themes": ["computer-use-agents", "chinese-ai-lab-releases", "model-quantization-deployment", "agentic-skill-orchestration", "p2p-decentralized-comms"]
+  },
+  "researcher_notes": "**StateAct的核心洞察值得关注，不仅限于基准测试数字。** 程序状态与像素渲染之间的区别不仅仅是性能优化——它反映了一个更深层的真理：截图是机器状态面向人类的有损投影。能够直接读取DOM节点、文件系统树和API响应的代理可以访问视觉模型必须从渲染结果中猜测还原的真实数据。在感知累积错误会放大的长期任务中，这一点至关重要。值得关注Claude Computer Use、Operator或CUA等主流计算机使用框架是否会采纳这一方法。\n\n**中国开源模型的发布节奏令人瞩目。** Kimi-K3、GLM-5.2 MoE、Nanbeige4.2-3B以及多个Qwen3.6衍生版本同时出现在趋势榜上，表明中国主要实验室已形成同步发布周期，或处于激烈的竞争冲刺阶段。Kimi-K2.7-Code模型（1323个赞）与Kimi-K3同时出现，表明Moonshot正在追求针对通用与代码等不同使用场景的模型家族策略——类似于Anthropic将Haiku/Sonnet/Opus分开的方式。\n\n**三值量化正在成为一种严肃的效率方案。** 「prism-ml/Ternary-Bonsai-27B」（1069个赞）凭借其2位三值权重正在吸引关注，不再只是学术研究，而是作为生产级部署选项。如果三值模型在显著降低内存占用的同时能够与4位GGUF达到性能对等，这可能会改变32GB RAM以下机器的本地推理格局。\n\n**Bitchat的爆发值得深入关注。** 一款蓝牙网状聊天应用单日获得2346颗星，表明它触动了某种文化神经——很可能是围绕审查、隐私或灾害恢复通信的需求。Swift实现方式和5072次fork表明正在快速进行本地化和平台适配。这类「恶劣条件下的基础设施」项目往往预示着开发者对弹性系统的更广泛兴趣。\n\n**「impeccable」AI框架设计语言（847颗星）填补了真实空缺。** 随着AI生成UI的扩散，缺乏一致的设计标准导致视觉噪音增加。一个社区认可的设计规范，供AI代理在代码生成时参考，可以在无需额外微调的情况下显著提升输出质量——这是一种高杠杆、低成本的干预措施。",
+  "papers": [
+    {
+      "id": "stateact-computer-use",
+      "title": "StateAct：长期计算机使用代理优先考虑程序状态而非像素",
+      "authors": ["Yan Yang", "Xiangru Jian", "Ziyang Luo", "Zirui Zhao", "Yutong Dai"],
+      "affiliations": ["香港科技大学", "清华大学"],
+      "summary": "StateAct是一个针对计算机使用任务的代码优先多智能体框架，它直接访问程序状态（DOM、文件系统、应用后端），而不是依赖基于截图的感知。核心洞察是截图是机器状态的有损像素投影，而代码可以精确地检查和修改底层状态。这种方法在长期计算机使用基准测试中表现更优，因为感知误差累积在纯视觉方法中会主导结果。",
+      "key_findings": [
+        "直接程序状态访问在长期计算机使用任务上优于基于截图的感知",
+        "代码优先代理可以检查DOM节点、文件树和在像素渲染中不可见的API响应",
+        "多智能体框架架构实现了状态读取与动作执行代理之间的专业化分工",
+        "不同的程序状态可以产生相同的截图，使得纯视觉方法从根本上存在歧义"
+      ],
+      "tags": ["computer-use", "agents", "program-state", "multi-agent", "long-horizon-tasks"],
+      "relevance": "high",
+      "engagement": {"upvotes": 14, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.22798",
+        "huggingface": "https://huggingface.co/papers/2607.22798",
+        "pdf": "https://arxiv.org/pdf/2607.22798"
+      }
+    },
+    {
+      "id": "drivedna-driving-style",
+      "title": "DriveDNA：用于驾驶风格识别的大规模多模态自然驾驶数据集与基准",
+      "authors": ["Yuhang Wang", "Lingyao Li", "Hao Zhou"],
+      "affiliations": ["伊利诺伊大学厄巴纳-香槟分校", "德克萨斯农工大学"],
+      "summary": "DriveDNA介绍了一个来自465名不同驾驶员的4121次驾驶记录的大规模自然驾驶数据集，专为个性化驾驶风格建模而设计。解决的核心挑战是将驾驶员特定的行为特征与车辆特定和情境特定的干扰因素分离——例如，模型不应将跑车的加速特性误认为是激进的驾驶员风格。该基准提供了驾驶风格识别的标准化评估协议。",
+      "key_findings": [
+        "数据集包含在自然（非人为设置）条件下收集的465名驾驶员的4121次驾驶记录",
+        "新颖的基准设计控制了车辆类型和道路条件等干扰变量",
+        "即使在不同车辆上，驾驶风格也被证明是稳定持久的个人特征",
+        "多模态信号（传感器、视频、GPS）比单模态基线更好地提升了风格识别准确率"
+      ],
+      "tags": ["autonomous-driving", "dataset", "behavioral-modeling", "multimodal", "personalization"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23822",
+        "huggingface": "https://huggingface.co/papers/2607.23822",
+        "pdf": "https://arxiv.org/pdf/2607.23822"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI（月之暗面）",
+      "description": "Moonshot AI的最新旗舰模型，采用compressed-tensors架构。社区采用率强劲，6376个赞表明相较K2系列有显著能力提升。",
+      "task_type": "feature-extraction",
+      "model_size": "未知",
+      "tags": ["moonshot", "kimi", "compressed-tensors", "transformers"],
+      "metrics": {"downloads": 2850, "likes": 6376},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "智谱AI (ZAI)",
+      "description": "采用动态稀疏注意力MoE（混合专家）架构的大型文本生成模型，下载量超过百万，定位为GLM家族中的生产级对话模型。",
+      "task_type": "text-generation",
+      "model_size": "未知（MoE架构）",
+      "tags": ["glm", "moe", "conversational", "text-generation", "chinese"],
+      "metrics": {"downloads": 1003547, "likes": 4552},
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "百度",
+      "description": "百度的OCR模型，下载量惊人（260万次），社区点赞数强劲（3335个），表明其在文档智能和文字提取任务上的广泛生产使用。",
+      "task_type": "feature-extraction",
+      "model_size": "未知",
+      "tags": ["ocr", "document-intelligence", "baidu", "chinese", "production"],
+      "metrics": {"downloads": 2645773, "likes": 3335},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwen-36-35b-uncensored",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS（基于Qwen3.6的社区微调）",
+      "description": "Qwen3.6 35B MoE的一个无内容限制社区微调版本，具备视觉能力。极高的下载量（189万次）表明对不受限制的指令跟随模型需求旺盛。",
+      "task_type": "text-generation",
+      "model_size": "35B（MoE，3B激活参数）",
+      "tags": ["qwen", "uncensored", "moe", "vision", "gguf"],
+      "metrics": {"downloads": 1894395, "likes": 3133},
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "kimi-k27-code",
+      "name": "Kimi-K2.7-Code",
+      "organization": "Moonshot AI（月之暗面）",
+      "description": "Moonshot的代码专用模型变体，下载量69.5万次，1323个赞，表明其在开发者工具和智能体编码工作流中的强劲采用。",
+      "task_type": "feature-extraction",
+      "model_size": "未知",
+      "tags": ["moonshot", "kimi", "code", "coding-assistant"],
+      "metrics": {"downloads": 695744, "likes": 1323},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+    },
+    {
+      "id": "ternary-bonsai-27b",
+      "name": "Ternary-Bonsai-27B",
+      "organization": "PRISM ML",
+      "description": "一个量化为三值（2位）权重的270亿参数模型，为本地推理提供极致内存效率的权衡。1069个赞反映了社区对亚4位部署日益增长的兴趣。",
+      "task_type": "text-generation",
+      "model_size": "27B（2位三值）",
+      "tags": ["ternary", "quantization", "2-bit", "local-inference", "efficiency"],
+      "metrics": {"downloads": 648938, "likes": 1069},
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Poolside的代码生成模型（Laguna系列），提供GGUF、NVFP4和基础版本。多格式发布策略表明其已准备好跨GPU层级的生产部署。",
+      "task_type": "text-generation",
+      "model_size": "未知",
+      "tags": ["poolside", "code", "text-generation", "gguf", "nvfp4"],
+      "metrics": {"downloads": 63605, "likes": 758},
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "Upstage的2500亿参数开放模型，是本周公开可用的最大规模模型之一。其规模定位使其成为前沿级开放权重推理的有力竞争者。",
+      "task_type": "text-generation",
+      "model_size": "250B",
+      "tags": ["upstage", "solar", "large-scale", "text-generation", "open-weight"],
+      "metrics": {"downloads": 3761, "likes": 630},
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "inkling-multimodal",
+      "name": "Inkling",
+      "organization": "Thinking Machines",
+      "description": "来自Thinking Machines的多模态图文转文本对话模型，下载量3.6万次，1605个赞，面向东南亚市场和多语言应用。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": ["multimodal", "conversational", "vision-language", "thinking-machines"],
+      "metrics": {"downloads": 36196, "likes": 1605},
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "fara1-5-27b-computer-use",
+      "name": "Fara1.5-27B",
+      "organization": "微软（Microsoft）",
+      "description": "微软基于Qwen3.5架构的270亿参数计算机使用专用模型，以computer-use为主要标签，专为智能体桌面和浏览器自动化任务而设计。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["microsoft", "computer-use", "qwen3.5", "agentic", "automation"],
+      "metrics": {"downloads": 1406, "likes": 154},
+      "source_url": "https://huggingface.co/microsoft/Fara1.5-27B"
+    },
+    {
+      "id": "mage-flow-image-edit",
+      "name": "Mage-Flow",
+      "organization": "微软（Microsoft）",
+      "description": "微软的文本转图像和图像编辑扩散模型，391个赞。「flow」命名暗示流匹配架构，与FLUX系列模型竞争。",
+      "task_type": "text-to-image",
+      "model_size": "未知",
+      "tags": ["microsoft", "diffusion", "text-to-image", "image-editing", "flow-matching"],
+      "metrics": {"downloads": 1691, "likes": 391},
+      "source_url": "https://huggingface.co/microsoft/Mage-Flow"
+    },
+    {
+      "id": "antares-1b-security",
+      "name": "antares-1b",
+      "organization": "FDTN AI",
+      "description": "基于GraniteMoeHybrid架构的10亿参数安全专用模型，暗示IBM Granite血统针对网络安全场景的适配，207个社区点赞。",
+      "task_type": "text-generation",
+      "model_size": "1B",
+      "tags": ["security", "granite", "moe-hybrid", "cybersecurity", "small-model"],
+      "metrics": {"downloads": 6421, "likes": 207},
+      "source_url": "https://huggingface.co/fdtn-ai/antares-1b"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "bitchat-bluetooth-mesh",
+      "name": "permissionlesstech/bitchat",
+      "description": "一款无需互联网基础设施、实现设备间通信的蓝牙网状聊天应用。受IRC启发，受益于对抗审查和灾害恢复通信兴趣的快速增长，今日爆发式增长。",
+      "language": "Swift",
+      "stars": 32363,
+      "stars_today": 2346,
+      "forks": 5072,
+      "url": "https://github.com/permissionlesstech/bitchat",
+      "tags": ["bluetooth", "mesh-network", "p2p", "privacy", "offline-first"],
+      "relevance": "medium"
+    },
+    {
+      "id": "impeccable-design-language",
+      "name": "pbakaus/impeccable",
+      "description": "AI框架和生成UI的设计语言规范，提供AI代理在代码生成时可参考的一致视觉标准，无需额外微调即可提升生成质量。",
+      "language": "JavaScript",
+      "stars": 51614,
+      "stars_today": 847,
+      "forks": 3045,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": ["design-system", "ai-generated-ui", "design-language", "frontend", "ai-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "阿里巴巴开源的代码审查工具，结合确定性管道与LLM代理实现精确的行级注释。在阿里巴巴规模下经过实战验证，内置针对NPE、线程安全、XSS和SQL注入的微调规则集，兼容OpenAI和Anthropic API。",
+      "language": "Go",
+      "stars": 14915,
+      "stars_today": 979,
+      "forks": 1006,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": ["code-review", "llm", "security", "agentic", "hybrid-pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "superfile-terminal",
+      "name": "yorukot/superfile",
+      "description": "一款用Go编写的现代精美终端文件管理器。今日获600颗星，反映了开发者对具有精致用户体验的终端生产力工具持续的兴趣。",
+      "language": "Go",
+      "stars": 20938,
+      "stars_today": 600,
+      "forks": 678,
+      "url": "https://github.com/yorukot/superfile",
+      "tags": ["terminal", "file-manager", "tui", "cli", "productivity"],
+      "relevance": "low"
+    },
+    {
+      "id": "moeru-ai-airi",
+      "name": "moeru-ai/airi",
+      "description": "一个以达到Neuro-sama水平为目标的自托管AI伴侣平台，支持实时语音聊天和游戏对战（Minecraft、Factorio）。代表VTuber/AI二次元文化与严肃智能体AI基础设施的融合。",
+      "language": "TypeScript",
+      "stars": 44110,
+      "stars_today": 572,
+      "forks": 4402,
+      "url": "https://github.com/moeru-ai/airi",
+      "tags": ["ai-companion", "voice-chat", "agents", "vtuber", "self-hosted"],
+      "relevance": "medium"
+    },
+    {
+      "id": "amnezia-vpn",
+      "name": "amnezia-vpn/amnezia-client",
+      "description": "专注于混淆和翻墙的跨平台VPN客户端，今日获515颗星。与Bitchat同时上榜，暗示隐私保护连接工具正在获得关注的主题。",
+      "language": "C++",
+      "stars": 13872,
+      "stars_today": 515,
+      "forks": 1034,
+      "url": "https://github.com/amnezia-vpn/amnezia-client",
+      "tags": ["vpn", "privacy", "censorship-circumvention", "obfuscation", "desktop"],
+      "relevance": "low"
+    },
+    {
+      "id": "kronos-financial-model",
+      "name": "shiyu-coder/Kronos",
+      "description": "一个将金融市场微观结构数据作为可学习模态处理的金融市场语言基础模型。今日获441颗星，反映了对量化金融领域专用基础模型的强烈兴趣。",
+      "language": "Python",
+      "stars": 34590,
+      "stars_today": 441,
+      "forks": 5799,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["finance", "foundation-model", "time-series", "quantitative", "trading"],
+      "relevance": "medium"
+    },
+    {
+      "id": "claude-video-tool",
+      "name": "bradautomates/claude-video",
+      "description": "一个使Claude能够分析任意视频的工具，通过下载视频、提取帧、转录音频并将多模态内容传递给Claude来实现。今日434颗星显示了扩展Claude视频内容能力的市场需求。",
+      "language": "Python",
+      "stars": 11165,
+      "stars_today": 434,
+      "forks": 1148,
+      "url": "https://github.com/bradautomates/claude-video",
+      "tags": ["claude", "video-analysis", "multimodal", "anthropic", "tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "strix-ai-pentesting",
+      "name": "usestrix/strix",
+      "description": "面向Web应用的开源AI渗透测试工具，用于自动化漏洞发现，今日获507颗星，随着AI安全工具成熟为可行的手动测试替代方案而受到关注。",
+      "language": "Python",
+      "stars": 45012,
+      "stars_today": 507,
+      "forks": 4713,
+      "url": "https://github.com/usestrix/strix",
+      "tags": ["security", "penetration-testing", "ai", "vulnerability-scanning", "offensive-security"],
+      "relevance": "high"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "一个跨Reddit、X、YouTube、Hacker News、Polymarket和开放网络研究任何主题并综合成有据可查摘要的AI代理技能。240颗新星反映了对多源研究代理的日益增长的兴趣。",
+      "language": "Python",
+      "stars": 54214,
+      "stars_today": 240,
+      "forks": 4700,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": ["agent-skill", "research", "multi-source", "web-search", "synthesis"],
+      "relevance": "high"
+    },
+    {
+      "id": "media-crawler",
+      "name": "NanmiCoder/MediaCrawler",
+      "description": "覆盖小红书、抖音、快手、B站、微博和百度贴吧等主要中文社媒平台的综合爬虫。今日362颗星表明对社交媒体数据采集工具持续旺盛的需求。",
+      "language": "Python",
+      "stars": 58309,
+      "stars_today": 362,
+      "forks": 11601,
+      "url": "https://github.com/NanmiCoder/MediaCrawler",
+      "tags": ["web-scraping", "social-media", "chinese-platforms", "data-collection", "crawler"],
+      "relevance": "medium"
+    },
+    {
+      "id": "airi-aisuite",
+      "name": "andrewyng/aisuite",
+      "description": "吴恩达的多生成式AI提供商统一接口库。今日185颗星，总计1.5万颗星，仍是多提供商AI开发的首选抽象层。",
+      "language": "Python",
+      "stars": 15532,
+      "stars_today": 185,
+      "forks": 1645,
+      "url": "https://github.com/andrewyng/aisuite",
+      "tags": ["multi-provider", "llm-abstraction", "andrew-ng", "sdk", "unified-api"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "程序状态优于像素感知的代理范式",
+      "description": "StateAct和微软Fara1.5都标志着向直接访问结构化机器状态（DOM、文件系统、API）的代理转变，而非依赖视觉截图解析。这种方法从根本上减少了长期计算机使用任务中的感知歧义。",
+      "related_paper_ids": ["stateact-computer-use"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "中国AI实验室模型发布冲刺",
+      "description": "Kimi-K3、GLM-5.2、Nanbeige4.2-3B、百度Unlimited-OCR以及多个Qwen社区衍生版本同时趋势化，反映了中国前沿实验室之间加速的竞争态势。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "面向本地推理的极致量化",
+      "description": "Ternary-Bonsai-27B以及GGUF/NVFP4/compressed-tensors模型变体的激增，表明在消费级硬件上运行前沿质量模型的需求持续增长，将量化推进到4位以下。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "隐私保护连接工具",
+      "description": "Bitchat蓝牙网状聊天和Amnezia VPN同时趋势化，表明开发者对在中心化互联网控制之外运行的通信基础设施的兴趣浪潮，可能由地缘政治因素驱动。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI增强的安全与代码审查",
+      "description": "阿里巴巴open-code-review（混合确定性+LLM管道）和Strix AI渗透测试工具双双获得关注，标志着AI安全工具从研究演示走向生产级工作流的成熟。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-28T15:15:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace热门模型",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-28T15:15:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-07-28T15:15:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-28T15:15:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-28T15:15:00Z",
+      "status": "ok"
+    }
+  ]
+}
