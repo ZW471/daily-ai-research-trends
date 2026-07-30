@@ -1,0 +1,1012 @@
+{
+  "version": "1.0",
+  "date": "2026-07-29",
+  "generated_at": "2026-07-29T15:00:00Z",
+  "summary": {
+    "headline": "HiFi-UMI shows sufficiently high-fidelity robot-free data alone can remove the real-robot teleoperation anchor from manipulation policy training; Tencent's RARG turns relevance into an execution prior that improves agentic search convergence; Keep It InMind exposes a stark 84%-vs-14.4% gap between what agent memory systems can recall on demand and what they actually surface for indirectly related queries; Kimi-K3 (8,663 likes) and GLM-5.2 (4,644 likes) lead a synchronized Chinese model-release wave; agentic skill frameworks superpowers and ECC each cross 200K+ GitHub stars, signaling the category's move into the developer-tools mainstream.",
+    "body": "Today's strongest paper by upvotes, **HiFi-UMI** (136 upvotes), makes a genuinely surprising claim about robot-learning data economics: rather than shrinking the expensive real-robot teleoperation fraction, simply raising the fidelity of robot-free UMI capture is enough to remove it entirely. The team's portable rig reaches 3mm end-effector accuracy with only onboard stereo-inertial SLAM, and a policy trained solely on the resulting HiFi-UMI-2K dataset matches teleoperation-grade performance across three backbone families. On the agentic-search side, Tencent's **RARG** (84 upvotes) argues that relevance scores should not just filter which documents an agent sees, but should actively order grep-style traversal and reranking, improving the accuracy-efficiency frontier for complex multi-hop retrieval. KAIST's **ReDesign** (57 upvotes) tackles a different but related agentic-decomposition problem: recovering fully editable design files from raster images, introducing a 909-file Figma Edit Replay Benchmark to make editability, not just visual fidelity, the measure of success.\n\nA cluster of papers this cycle focuses on the limits of current agent infrastructure. **CodeNib** (47 upvotes) shows that serving coding agents multi-view repository context (lexical, dense, structural) from one runtime cuts trajectory tokens by 50-87% versus ad hoc grep/read pipelines. muset.ai's **Keep It InMind** (25 upvotes) is the most conceptually important paper in this group: it isolates a genuine architectural blind spot in long-term agent memory, where facts that must be surfaced via world knowledge (not surface similarity) are recalled on demand at up to 100% but retrieved for the right query at only 14.4%. Zhejiang University's **Pass the Baton** (24 upvotes) proposes Relay-OPD, a label-free teacher-handoff mechanism that fixes 'prefix failure' in on-policy distillation, while Meta's **RL for Code Optimization** (6 upvotes) shows how to make execution-time RL rewards learnable for code generation despite measurement noise and GRPO instability.\n\nOn the multimodal front, Microsoft's **Mage-VL** (24 upvotes) introduces a codec-native tokenizer that cuts visual tokens by over 75% for real-time streaming perception, Adobe's **Wonder** (11 upvotes) builds a camera-controllable, persistent-memory video world model, and Google DeepMind's **Visual Prompt Engineering** (11 upvotes) shows that editing the input image can beat text-based prompting for video reasoning tasks. Moonshot AI's **PerceptionBench** (10 upvotes) delivers a sobering diagnostic: no frontier MLLM exceeds 60% accuracy on atomic visual perception isolated from reasoning. Meanwhile, the model-release charts are dominated by Chinese labs and their fine-tuning communities: **Kimi-K3** (8,663 likes), **GLM-5.2** (4,644 likes, 1.26M downloads), and **Baidu's Unlimited-OCR** (3,516 likes, 2.69M downloads) lead, alongside a wave of community 'uncensored' Qwen3.6 derivatives. On GitHub, agentic skill and harness frameworks dominate: **superpowers** (263K stars) and **ECC** (236K stars) both surged again, alongside voice-AI projects (**speech-to-speech**, **VibeVoice**) and Alibaba's **open-code-review**, signaling that packaged agent skills and hybrid LLM+deterministic tooling are now mainstream developer infrastructure rather than research curiosities.",
+    "key_themes": [
+      "agentic-retrieval",
+      "agent-memory-limitations",
+      "zero-robot-manipulation-data",
+      "streaming-video-world-models",
+      "chinese-ai-lab-releases",
+      "agentic-skill-frameworks"
+    ]
+  },
+  "researcher_notes": "**HiFi-UMI's 'remove the anchor' result deserves scrutiny beyond the headline number.** The paper does not just improve UMI data quality incrementally; it claims the real-robot teleoperation fraction can be eliminated entirely if fidelity (trajectory accuracy, synchronization, field of view) is raised enough. If this generalizes beyond the tested backbones and tasks, it would meaningfully lower the cost floor for training deployable manipulation policies, since UMI capture is far cheaper to scale than teleoperation. The open-sourced HiFi-UMI-2K dataset is worth watching as a community benchmark.\n\n**Keep It InMind is the sleeper paper of the day.** An 84.0% vs. 14.4% gap between in-context and retrieved performance on the exact same facts is a damning result for the current generation of vector/graph/agentic memory systems, and it reframes the problem correctly: this is not a recall problem (systems already hit up to 100% recall on demand) but a routing problem, deciding which facts must stay visible before the query even arrives. Expect this benchmark to get cited heavily by anyone building production agent memory in the next few months.\n\n**Tencent's RARG and CodeNib both point at the same underlying shift: relevance and context should be an execution prior, not a post-hoc filter.** Both papers reorder or restructure how an agent traverses information (documents for RARG, repository views for CodeNib) rather than just ranking results after the fact. This is a subtle but important architectural pattern that seems to be converging across unrelated teams simultaneously, suggesting it may become a standard component of agentic search and coding-agent stacks.\n\n**The streaming/world-model trio (Mage-VL, Wonder, VIPE) shows three different levers for the same goal: making video-native models faster and more reasoning-capable without brute-force scale.** Mage-VL attacks token efficiency at the tokenizer level, Wonder attacks memory and control at the architecture level, and VIPE attacks the problem at the input level by editing the prompt image itself. That such an input-side trick (VIPE) can beat text prompt engineering and test-time scaling is a useful reminder that not every capability gain needs to come from bigger models or more inference-time compute.\n\n**The Chinese-lab and community fine-tuning ecosystem shows no sign of slowing.** Kimi-K3 and GLM-5.2 leading likes while Baidu's Unlimited-OCR leads downloads by a wide margin (2.69M) suggests production OCR/document-intelligence demand remains a bigger real-world workload than flagship chat models. The proliferation of 'uncensored' Qwen3.6-35B-A3B derivatives from multiple independent community accounts (HauhauCS, LuffyTheFox) on the same day also signals how quickly a strong open base model spawns a long tail of alignment-modified variants.\n\n**superpowers and ECC both crossing 200K+ GitHub stars in the same trending window is a genuine signal, not noise.** Packaged 'agent skills' and harness-performance tooling for Claude Code, Codex, and similar assistants have clearly crossed from a research/enthusiast niche into mainstream developer infrastructure. Combined with book-to-skill's 1,421 stars in a single day, this points to a broader category, distilling knowledge and best practices into reusable agent skills, that is likely to keep growing quickly.",
+  "papers": [
+    {
+      "id": "hifi-umi-manipulation",
+      "title": "HiFi-UMI: Learning Deployable Manipulation Policies from High-Fidelity UMI Data Alone",
+      "authors": [
+        "Simple AI",
+        "Yuteng Wei",
+        "Jinming Ma",
+        "Jiawei Wang et al."
+      ],
+      "affiliations": [
+        "Simple World Lab"
+      ],
+      "summary": "HiFi-UMI introduces a portable, robot-free data-capture rig (head-mounted stereo-inertial SLAM, microsecond GPIO triggering, ~200-degree dual wide-angle cameras) that reaches 3mm end-effector accuracy without external tracking infrastructure. The team shows that raising UMI data fidelity, rather than mixing in real-robot teleoperation data, is enough to train deployable manipulation policies from scratch, and releases HiFi-UMI-2K, a 2,000-hour open dataset of synchronized, simulation-validated demonstrations.",
+      "key_findings": [
+        "Policies post-trained solely on HiFi-UMI data match in-domain teleoperation performance across three backbone families (vision-language-action and world-action models), with the strongest policy reaching 85% success on a precision insertion task.",
+        "Pre-training on 4,000 hours of HiFi-UMI data cuts action error by 41% on ten unseen tasks and adds 18.1 points of real-robot success rate on StarVLA-QwenPI.",
+        "The system reaches 3mm workspace-local end-effector accuracy using only onboard stereo-inertial SLAM, removing the need for external motion-capture infrastructure during data collection."
+      ],
+      "tags": [
+        "robot-learning",
+        "manipulation-policies",
+        "imitation-learning",
+        "UMI",
+        "vision-language-action",
+        "data-collection"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 136,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25895",
+        "huggingface": "https://huggingface.co/papers/2607.25895",
+        "pdf": "https://arxiv.org/pdf/2607.25895"
+      }
+    },
+    {
+      "id": "relevance-guided-agentic-search",
+      "title": "A New Role for Relevance: Guiding Corpus Interaction in Agentic Search",
+      "authors": [
+        "Jiangnan Li",
+        "Yuqing Li",
+        "Mo Yu",
+        "Jinchao Zhang",
+        "Jie Zhou et al."
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "Tencent researchers introduce the Relevance-Aware RipGrep Search Agent (RARG), which turns query-relevance scores into an execution prior that orders documents for grep-style traversal, seeds promising entry points, and reranks matches so LLMs see the most informative excerpts first. Across browsing QA and reasoning-intensive retrieval benchmarks, RARG improves the accuracy-efficiency frontier over both classic retrieval agents and relevance-agnostic direct corpus interaction.",
+      "key_findings": [
+        "Relevance-agnostic grep search (Direct Corpus Interaction) exposes useful evidence late in the search process, delaying convergence on complex multi-hop questions.",
+        "Using relevance to order document traversal, seed entry points, and rerank grep matches produces a better accuracy-efficiency tradeoff than either pure retrieval or pure direct interaction.",
+        "The approach generalizes across challenging browse-QA and reasoning-intensive retrieval benchmarks without requiring a different search paradigm."
+      ],
+      "tags": [
+        "agentic-search",
+        "retrieval",
+        "information-retrieval",
+        "LLM-agents",
+        "corpus-interaction"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 84,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24223",
+        "huggingface": "https://huggingface.co/papers/2607.24223",
+        "pdf": "https://arxiv.org/pdf/2607.24223"
+      }
+    },
+    {
+      "id": "redesign-editable-design-recovery",
+      "title": "ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition",
+      "authors": [
+        "Jooyeol Yun",
+        "Jintae Park",
+        "Hyesu Lim",
+        "Junha Hyung",
+        "Hyungjin Chung et al."
+      ],
+      "affiliations": [
+        "KAIST AI"
+      ],
+      "summary": "ReDesign is an agentic framework from KAIST AI that reconstructs an editable, layered design file (typography, vector geometry, color, grouping, layer order) from a single raster image by composing specialized modality-specific tools. A 'graceful verification' step accepts, prunes, or retries each expansion locally, preventing error accumulation over the long tool-composition process, and the team introduces the Figma Edit Replay Benchmark (909 real Figma files, 14,796 edit instructions) to measure editability rather than just visual fidelity.",
+      "key_findings": [
+        "ReDesign achieves the highest editability across layout, color, and text edits on the new Figma Edit Replay Benchmark, beating layered-decomposition and serial tool-use baselines.",
+        "Local accept/prune/retry verification at each expansion step prevents the error accumulation that typically ruins long agentic decomposition pipelines.",
+        "Editability, not just raster reconstruction fidelity, is established as the key metric for evaluating image-to-design recovery systems."
+      ],
+      "tags": [
+        "agentic-decomposition",
+        "design-recovery",
+        "image-to-vector",
+        "UI-generation",
+        "benchmark"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 57,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25565",
+        "huggingface": "https://huggingface.co/papers/2607.25565",
+        "pdf": "https://arxiv.org/pdf/2607.25565"
+      }
+    },
+    {
+      "id": "codenib-repo-context-coding-agents",
+      "title": "CodeNib: A Multi-View Data System for Serving Repository Context to Coding Agents",
+      "authors": [
+        "Zhongming Yu",
+        "Hengjia Yu",
+        "Boqin Yuan",
+        "Shuting Zhao",
+        "Yizhao Chen et al."
+      ],
+      "affiliations": [
+        "SysEvol AI Research"
+      ],
+      "summary": "CodeNib is a multi-view repository-context data system that builds reusable lexical, dense, and structural views per commit so coding agents no longer have to rediscover context through disconnected indexes and language servers. Serving ranked search, symbol navigation, and bounded context from one runtime, CodeNib maps the quality-cost frontier across the repository-context lifecycle and shows large latency and token savings versus ad hoc grep/read pipelines.",
+      "key_findings": [
+        "Incremental graph and vector index updates are 8.7x and 25.4x faster at the median than an independent rebuild while matching output quality.",
+        "Static navigation matching live-server results (63% of requests) is 4.7x faster at the median than a live language server.",
+        "Selected-context policies preserve localization accuracy while using 50-87% fewer trajectory tokens than paired grep/read approaches across five models."
+      ],
+      "tags": [
+        "coding-agents",
+        "repository-context",
+        "code-search",
+        "developer-tools",
+        "infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25431",
+        "huggingface": "https://huggingface.co/papers/2607.25431",
+        "pdf": "https://arxiv.org/pdf/2607.25431"
+      }
+    },
+    {
+      "id": "keep-it-inmind-agent-memory",
+      "title": "Keep It InMind: Benchmarking the Implicit-Association Blind Spot in Agent Memory",
+      "authors": [
+        "Ruizhe Li",
+        "Mingxuan Du",
+        "Benfeng Xu",
+        "Zhendong Mao"
+      ],
+      "affiliations": [
+        "muset.ai"
+      ],
+      "summary": "muset.ai researchers introduce InMind, a 125-task benchmark that isolates the 'implicit-association blind spot' in agent long-term memory: cases where a stored fact should change the answer to a new query through world knowledge, even though the two texts share no retrievable surface cue (e.g., a tree-nut allergy and a macaron request sharing an almond-flour link). The benchmark's paired controls cleanly separate whether a fact was never stored, the model lacks bridging knowledge, or the fact was stored but never surfaced.",
+      "key_findings": [
+        "When the decisive memory is placed directly in context, the backbone model answers 84.0% of indirect queries correctly.",
+        "When the same memory must be retrieved from long-term storage, six vector, graph, and agentic memory systems achieve at most 14.4% accuracy, despite recalling the same facts on demand with up to 100% accuracy.",
+        "Increasing embedding dimensionality by 8x improves answer-blind target recall but leaves the core retrieval gap essentially intact, pointing to query-conditioned routing, not embedding quality, as the open problem."
+      ],
+      "tags": [
+        "agent-memory",
+        "long-term-memory",
+        "benchmark",
+        "retrieval",
+        "implicit-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24368",
+        "huggingface": "https://huggingface.co/papers/2607.24368",
+        "pdf": "https://arxiv.org/pdf/2607.24368"
+      }
+    },
+    {
+      "id": "pass-the-baton-relay-opd",
+      "title": "Pass the Baton: Trajectory-Relayed On-Policy Distillation",
+      "authors": [
+        "Haolei Xu",
+        "Xiaowen Xu",
+        "Haiwen Hong",
+        "Zixuan Ni",
+        "Hongxing Li et al."
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "Zhejiang University researchers identify 'prefix failure' in on-policy distillation: once a student model commits to a wrong reasoning direction, it keeps building on that error while a teacher model would typically redirect. Relay-OPD exploits this teacher-student continuation asymmetry as a label-free trigger, letting the teacher briefly take over at detected failure points before handing control back to the student, concentrating a limited relay budget on critical early positions.",
+      "key_findings": [
+        "With a Qwen3-4B-Instruct teacher and Qwen3-0.6B/1.7B students on eight math reasoning benchmarks, Relay-OPD beats standard on-policy distillation by +5.73% and the strongest baseline (FastOPD) by +1.49% on average at 1.7B.",
+        "Detecting teacher-student continuation asymmetry on failed prefixes provides a label-free signal for exactly when to trigger a teacher handoff during training.",
+        "Relay trajectories reduce training trajectory length by over 50% while improving results, since intervention concentrates on early critical positions."
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "reasoning",
+        "reinforcement-learning",
+        "small-language-models",
+        "teacher-student"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26057",
+        "huggingface": "https://huggingface.co/papers/2607.26057",
+        "pdf": "https://arxiv.org/pdf/2607.26057"
+      }
+    },
+    {
+      "id": "mage-vl-streaming-multimodal",
+      "title": "Mage-VL: An Efficient Codec-Native Streaming Multimodal Foundation Model",
+      "authors": [
+        "Senqiao Yang",
+        "Kaichen Zhang",
+        "Zhaoyang Jia",
+        "Jinghao Guo",
+        "Yifei Shen et al."
+      ],
+      "affiliations": [
+        "Microsoft"
+      ],
+      "summary": "Mage-VL is Microsoft's codec-native streaming multimodal foundation model designed to fix vision-language models' Moravec's-paradox weakness at real-time perception. Its Mage-ViT tokenizer replaces uniform frame sampling with selective encoding of dynamic, entropy-rich regions using motion vectors and residual energy from video codecs, cutting visual token consumption by over 75% while a bio-inspired dual-system architecture (a lightweight event gate plus a causal decoder) enables proactive streaming perception.",
+      "key_findings": [
+        "Mage-ViT, trained from scratch on ~560M images and 100M video frames, matches or beats flagship encoders trained on billions of image-text pairs.",
+        "Mage-VL-4B matches Qwen3-VL-4B on static tasks while gaining strongly on video understanding and 2D/3D spatial reasoning, with up to 3.5x wall-clock inference speedup, and surpasses the 15B Phi-4-reasoning-vision baseline.",
+        "Codec-native token allocation (motion vectors and residual energy across I/P frames) reduces visual tokens by more than 75% while preserving spatiotemporal context."
+      ],
+      "tags": [
+        "streaming-multimodal",
+        "vision-language-models",
+        "video-understanding",
+        "tokenization",
+        "efficient-inference"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24904",
+        "huggingface": "https://huggingface.co/papers/2607.24904",
+        "pdf": "https://arxiv.org/pdf/2607.24904"
+      }
+    },
+    {
+      "id": "shieldstral-safety-classifier",
+      "title": "Shieldstral",
+      "authors": [
+        "Antonia Calvi",
+        "Avinash Sooriyarachchi",
+        "Giada Pistilli",
+        "Guillaume Lample",
+        "Maarten Buyl et al."
+      ],
+      "affiliations": [
+        "Mistral AI"
+      ],
+      "summary": "Mistral AI's Shieldstral is a 3B-parameter policy-adaptive multimodal safety classifier that reformulates content moderation as a unified binary question-answering task, letting heterogeneous safety datasets with different taxonomies be consolidated into a single training framework. Trained on roughly 54.1M curated and generated samples, it matches or beats models nearly 7x its size on text safety benchmarks and sets a new state of the art on multimodal safety classification.",
+      "key_findings": [
+        "Formulating moderation as binary question-answering unifies diverse policy taxonomies under one training framework, avoiding per-policy classifier heads.",
+        "At 3B parameters, Shieldstral matches or outperforms safety classifiers roughly 7x larger on text safety benchmarks.",
+        "The model sets a new state of the art on multimodal safety classification while maintaining policy adaptability, validated by a purpose-built fine-grained evaluation set."
+      ],
+      "tags": [
+        "AI-safety",
+        "content-moderation",
+        "multimodal-classification",
+        "efficient-models",
+        "trust-and-safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25857",
+        "huggingface": "https://huggingface.co/papers/2607.25857",
+        "pdf": "https://arxiv.org/pdf/2607.25857"
+      }
+    },
+    {
+      "id": "novel-claim-deja-vu-fact-checking",
+      "title": "Novel Claim or Déjà Vu? Rethinking \"Contamination-Free\" Dynamic Evaluation for Multimodal Automated Fact-Checking",
+      "authors": [
+        "Haorui He",
+        "Xinwen Chen",
+        "Dacheng Wen",
+        "Reynold Cheng",
+        "Francis C. M. Lau et al."
+      ],
+      "affiliations": [
+        "The University of Hong Kong",
+        "Hong Kong Baptist University"
+      ],
+      "summary": "Researchers from the University of Hong Kong and Hong Kong Baptist University stress-test the assumption that 'dynamic' fact-checking benchmarks, built from claims published after an LLM's knowledge cutoff, are automatically contamination-free. Building a new ClaimReview2025Q4 benchmark alongside the existing AVeriTeC benchmark, they find that dynamic evaluation reduces but does not eliminate contamination, since many post-cutoff claims can still be verified from pre-cutoff public knowledge.",
+      "key_findings": [
+        "17.09%-29.30% of claims published after LLMs' knowledge cutoff remain potentially contaminated, verifiable via internal knowledge or synthesis of pre-cutoff public information.",
+        "Contamination inflates Macro-F1 scores by up to 11.34 points and meaningfully distorts system rankings in multimodal automated fact-checking evaluation.",
+        "Re-evaluating state-of-the-art LLMs under a strictly contamination-controlled setting is necessary for trustworthy benchmarking of fact-checking systems."
+      ],
+      "tags": [
+        "fact-checking",
+        "benchmark-contamination",
+        "multimodal-evaluation",
+        "LLM-evaluation",
+        "misinformation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23514",
+        "huggingface": "https://huggingface.co/papers/2607.23514",
+        "pdf": "https://arxiv.org/pdf/2607.23514"
+      }
+    },
+    {
+      "id": "visual-prompt-engineering-video",
+      "title": "Visual prompt engineering for video models",
+      "authors": [
+        "Robert Geirhos",
+        "Yuxuan Li",
+        "Thaddäus Wiedemer",
+        "Neha Kalibhat",
+        "Zi Wang et al."
+      ],
+      "affiliations": [
+        "Google DeepMind"
+      ],
+      "summary": "Google DeepMind researchers show that video foundation models benefit from 'visual prompt engineering', automatically modifying a task's input image or scene (e.g., turning an abstract sketch into a photorealistic rendering) rather than only editing the text prompt. Across visual reasoning tasks, VIPE improves video model performance and, notably, is often more effective than classic text-based prompt engineering or test-time scaling.",
+      "key_findings": [
+        "Automatically converting abstract or schematic task images into photorealistic versions with an image-editing model improves downstream video reasoning accuracy.",
+        "Visual prompt engineering outperforms classic text-based prompt engineering and test-time scaling on several video reasoning benchmarks.",
+        "The technique is compute-efficient, requiring only a single image-editing call rather than additional inference-time search or scaling."
+      ],
+      "tags": [
+        "video-models",
+        "prompt-engineering",
+        "visual-reasoning",
+        "foundation-models",
+        "test-time-compute"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25537",
+        "huggingface": "https://huggingface.co/papers/2607.25537",
+        "pdf": "https://arxiv.org/pdf/2607.25537"
+      }
+    },
+    {
+      "id": "wonder-video-world-model",
+      "title": "Wonder: Video World Model Done Better",
+      "authors": [
+        "Jiacong Xu",
+        "Hanwen Jiang",
+        "Zhixin Shu",
+        "Kalyan Sunkavalli",
+        "Vishal M. Patel et al."
+      ],
+      "affiliations": [
+        "Adobe Research",
+        "Johns Hopkins University"
+      ],
+      "summary": "Adobe's Wonder is a real-time, camera-controllable video world model that turns a single image or short video into an explorable, playable world with persistent memory of previously visited regions. Key components include a dense coordinate-field camera-conditioning scheme that gives the model direct visual evidence of camera motion, and a sparse attention-based memory mechanism that lets the model retrieve relevant context regardless of how long the generation history grows.",
+      "key_findings": [
+        "Wonder synthesizes diverse, minute-scale explorable videos at 16 FPS while preserving coherent geometry, appearance, and dynamics across long rollouts.",
+        "A sparse attention-based memory mechanism enables fast, precise retrieval over a growing generation context without scaling attention cost with context length.",
+        "Rectifications to the self-forcing distillation pipeline let the student model retain the teacher's control fidelity and diverse generation modes, and Wonder supports re-shooting existing dynamic scenes via video-conditioned generation."
+      ],
+      "tags": [
+        "world-models",
+        "video-generation",
+        "interactive-simulation",
+        "camera-control",
+        "real-time-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26037",
+        "huggingface": "https://huggingface.co/papers/2607.26037",
+        "pdf": "https://arxiv.org/pdf/2607.26037"
+      }
+    },
+    {
+      "id": "perceptionbench-mllm-perception",
+      "title": "PerceptionBench: Evaluating Atomic Visual Perception in Multimodal Large Language Models",
+      "authors": [
+        "Zichao Lin",
+        "Yifeng Xie",
+        "Bowen Qu",
+        "Haiming Wang",
+        "Jia Li et al."
+      ],
+      "affiliations": [
+        "Moonshot AI"
+      ],
+      "summary": "Moonshot AI introduces PerceptionBench, a benchmark that isolates ten 'atomic' visual perception capabilities from reasoning and domain knowledge by diagnosing the earliest failure points across 42 existing MLLM benchmarks. Its 3,000 verified, short-answer questions each target a single perceptual capability, and evaluation across sixteen frontier MLLMs shows atomic perception is largely unsolved, with perception-related hallucination the weakest capability on average.",
+      "key_findings": [
+        "No frontier MLLM reaches 60% accuracy on atomic visual perception tasks that are decoupled from reasoning and world knowledge.",
+        "Perception-related hallucination is the weakest capability category on average across sixteen tested frontier MLLMs.",
+        "Models with similar overall benchmark scores show sharply divergent atomic perception capability profiles, revealing that holistic benchmarks conflate distinct failure modes."
+      ],
+      "tags": [
+        "multimodal-benchmark",
+        "visual-perception",
+        "MLLM-evaluation",
+        "hallucination",
+        "capability-diagnosis"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24957",
+        "huggingface": "https://huggingface.co/papers/2607.24957",
+        "pdf": "https://arxiv.org/pdf/2607.24957"
+      }
+    },
+    {
+      "id": "rl-for-code-optimization",
+      "title": "Reinforcement Learning for Code Optimization",
+      "authors": [
+        "Pierre Chambon",
+        "Kunhao Zheng",
+        "Juliette Decugis",
+        "Benoit Sagot",
+        "Gabriel Synnaeve"
+      ],
+      "affiliations": [
+        "AI at Meta"
+      ],
+      "summary": "Meta AI researchers tackle a practically important failure mode: naively adding execution time to an RL reward for code generation causes measurement noise, reward sparsity, and GRPO instability to overwhelm the training signal. Their three-stage fix, a calibrated optimization benchmark (DMC-Optim) with large test suites, an offline simulator that composes correctness and speed reward and predicts promising configurations, and a GRPO variant adapted to sparser, noisier timed-execution rewards, makes execution-time reward learnable in practice.",
+      "key_findings": [
+        "Optimization-aware RL improves strict top-50% pass@1 from 18.0% to 31.3% on Qwen 2.5 7B and from 30.7% to 50.4% on CWM 32B on the new DMC-Optim benchmark.",
+        "Gains grow at stricter percentiles, reaching 125% relative improvement at top-30% pass@1 for CWM 32B, without sacrificing pure-correctness scores.",
+        "CWM 32B trained with the method wins up to 83% of median-sample speed comparisons against standard RLVR on LiveCodeBench, reaching about half the human rate of complexity-class improvement."
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "code-optimization",
+        "GRPO",
+        "code-generation",
+        "reward-modeling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25970",
+        "huggingface": "https://huggingface.co/papers/2607.25970",
+        "pdf": "https://arxiv.org/pdf/2607.25970"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "Moonshot AI's latest flagship conversational and vision-language model, distributed with compressed-tensors 8-bit weights and rapidly adopted by the community, including same-day unsloth ports.",
+      "task_type": "image-text-to-text",
+      "model_size": "undisclosed (flagship-scale)",
+      "tags": [
+        "transformers",
+        "kimi_k3",
+        "conversational",
+        "image-text-to-text",
+        "compressed-tensors"
+      ],
+      "metrics": {
+        "downloads": 99214,
+        "likes": 8663
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "Zhipu AI (Z.ai)",
+      "description": "A mixture-of-experts conversational text-generation model from Z.ai, with over 1.26M downloads reflecting rapid production adoption.",
+      "task_type": "text-generation",
+      "model_size": "MoE (undisclosed active/total parameters)",
+      "tags": [
+        "transformers",
+        "glm_moe_dsa",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 1267198,
+        "likes": 4644
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "A vision-language OCR and document-intelligence model from Baidu, leading today's trending list with 2.69M downloads, reflecting massive production demand for document understanding.",
+      "task_type": "image-text-to-text",
+      "model_size": "undisclosed",
+      "tags": [
+        "transformers",
+        "unlimited-ocr",
+        "feature-extraction",
+        "vision-language",
+        "ocr"
+      ],
+      "metrics": {
+        "downloads": 2694935,
+        "likes": 3516
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwen3-6-35b-hauhaucs-aggressive",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS (community, base: Qwen3.6)",
+      "description": "A community 'uncensored' MoE fine-tune of Qwen3.6-35B-A3B with vision support, part of a fast-growing wave of alignment-removal derivatives built on the Qwen3.6 base.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B-A3B MoE",
+      "tags": [
+        "gguf",
+        "uncensored",
+        "qwen3.6",
+        "moe",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 1855505,
+        "likes": 3171
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "thinkingmachines-inkling",
+      "name": "Inkling",
+      "organization": "Thinking Machines Lab",
+      "description": "A multimodal conversational model supporting image and audio understanding, marking one of Thinking Machines Lab's first widely-trending public multimodal releases.",
+      "task_type": "image-text-to-text",
+      "model_size": "undisclosed",
+      "tags": [
+        "transformers",
+        "inkling_mm_model",
+        "conversational",
+        "audio-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 39052,
+        "likes": 1640
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "ternary-bonsai-27b",
+      "name": "Ternary-Bonsai-27B-gguf",
+      "organization": "Prism ML",
+      "description": "A 27B-parameter model quantized to 2-bit ternary weights for llama.cpp, targeting extreme memory-efficient local inference on consumer hardware.",
+      "task_type": "text-generation",
+      "model_size": "27B (2-bit ternary)",
+      "tags": [
+        "llama.cpp",
+        "gguf",
+        "ternary",
+        "2-bit",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 665427,
+        "likes": 1095
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "poolside-laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Poolside's latest text-generation model in the Laguna series, aimed at code-centric generation workloads, with an accompanying unsloth GGUF port for local deployment.",
+      "task_type": "text-generation",
+      "model_size": "undisclosed",
+      "tags": [
+        "transformers",
+        "laguna",
+        "laguna-s-2.1",
+        "vllm"
+      ],
+      "metrics": {
+        "downloads": 67286,
+        "likes": 827
+      },
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "upstage-solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "A 250B-parameter open text-generation model from Upstage, also available in a quantized NVFP4 form from Nota AI for efficient serving.",
+      "task_type": "text-generation",
+      "model_size": "250B",
+      "tags": [
+        "transformers",
+        "solar_open2",
+        "text-generation",
+        "upstage"
+      ],
+      "metrics": {
+        "downloads": 4804,
+        "likes": 697
+      },
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "nanbeige4-2-3b",
+      "name": "Nanbeige4.2-3B",
+      "organization": "Nanbeige",
+      "description": "A compact 3B conversational LLM from Chinese AI startup Nanbeige, part of the broader wave of small, efficient Chinese-lab model releases.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "transformers",
+        "nanbeige",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 18933,
+        "likes": 555
+      },
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B"
+    },
+    {
+      "id": "microsoft-fara1-5-27b",
+      "name": "Fara1.5-27B",
+      "organization": "Microsoft",
+      "description": "A 27B computer-use agent model built on Qwen3.5, designed for GUI/CUA-style agentic interaction with software interfaces.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "transformers",
+        "qwen3_5",
+        "computer-use",
+        "cua"
+      ],
+      "metrics": {
+        "downloads": 1543,
+        "likes": 201
+      },
+      "source_url": "https://huggingface.co/microsoft/Fara1.5-27B"
+    },
+    {
+      "id": "kat-coder-v2-5-dev",
+      "name": "KAT-Coder-V2.5-Dev",
+      "organization": "Kuaishou (Kwaipilot)",
+      "description": "A Qwen3.5-MoE-based coding agent model tuned for code generation and agentic developer workflows.",
+      "task_type": "image-text-to-text",
+      "model_size": "MoE (undisclosed)",
+      "tags": [
+        "transformers",
+        "qwen3_5_moe",
+        "code",
+        "agent"
+      ],
+      "metrics": {
+        "downloads": 6275,
+        "likes": 318
+      },
+      "source_url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology packaging reusable skills for coding agents like Claude Code.",
+      "language": "Shell",
+      "stars": 263327,
+      "stars_today": 616,
+      "forks": 23512,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "developer-tools",
+        "claude-code",
+        "methodology"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "A performance-optimization system for agent harnesses, covering skills, instincts, memory, and security tooling spanning Claude Code, Codex, Opencode, Cursor and beyond.",
+      "language": "JavaScript",
+      "stars": 235622,
+      "stars_today": 857,
+      "forks": 35880,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-harness",
+        "developer-tools",
+        "performance",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "virgiliojr94-book-to-skill",
+      "name": "virgiliojr94/book-to-skill",
+      "description": "Converts any technical book PDF into a ready-to-use Claude Code skill for study, reference, and in-context use.",
+      "language": "Python",
+      "stars": 12826,
+      "stars_today": 1421,
+      "forks": 1420,
+      "url": "https://github.com/virgiliojr94/book-to-skill",
+      "tags": [
+        "claude-code",
+        "agent-skills",
+        "developer-tools",
+        "knowledge-extraction"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "moeru-ai-airi",
+      "name": "moeru-ai/airi",
+      "description": "Self-hosted AI companion supporting real-time voice chat and game-playing (Minecraft, Factorio), running on web, macOS, and Windows.",
+      "language": "TypeScript",
+      "stars": 45413,
+      "stars_today": 682,
+      "forks": 4488,
+      "url": "https://github.com/moeru-ai/airi",
+      "tags": [
+        "ai-companion",
+        "voice-ai",
+        "self-hosted",
+        "conversational-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "calesthio-openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "An open-source agentic video production system with 12 production pipelines and 700+ agent skill and production-knowledge files, turning a coding assistant into a full video studio.",
+      "language": "Python",
+      "stars": 43911,
+      "stars_today": 668,
+      "forks": 5286,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": [
+        "agentic-video-production",
+        "creative-ai",
+        "agent-skills",
+        "multimodal-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-vibevoice",
+      "name": "microsoft/VibeVoice",
+      "description": "Microsoft's open-source frontier voice AI model and toolkit for high-quality speech synthesis.",
+      "language": "Python",
+      "stars": 51326,
+      "stars_today": 336,
+      "forks": 5712,
+      "url": "https://github.com/microsoft/VibeVoice",
+      "tags": [
+        "voice-ai",
+        "text-to-speech",
+        "open-source-models"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "huggingface-speech-to-speech",
+      "name": "huggingface/speech-to-speech",
+      "description": "A pipeline for building local, open-source voice agents that handle speech-to-speech interaction end-to-end.",
+      "language": "Python",
+      "stars": 7900,
+      "stars_today": 827,
+      "forks": 1001,
+      "url": "https://github.com/huggingface/speech-to-speech",
+      "tags": [
+        "voice-agents",
+        "speech-to-speech",
+        "local-inference",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "1jehuang-jcode",
+      "name": "1jehuang/jcode",
+      "description": "A RAM-efficient coding agent harness positioned as a lightweight alternative to heavier agentic coding tools.",
+      "language": "Rust",
+      "stars": 13496,
+      "stars_today": 640,
+      "forks": 1479,
+      "url": "https://github.com/1jehuang/jcode",
+      "tags": [
+        "coding-agent",
+        "developer-tools",
+        "performance",
+        "rust"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "Alibaba's battle-tested, open-source code review tool combining deterministic pipelines with an LLM agent for precise line-level comments and a built-in ruleset covering NPE, thread-safety, XSS, and SQL injection.",
+      "language": "Go",
+      "stars": 16048,
+      "stars_today": 359,
+      "forks": 1082,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": [
+        "code-review",
+        "LLM-agents",
+        "developer-tools",
+        "security"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "sgl-project-sglang",
+      "name": "sgl-project/sglang",
+      "description": "A high-performance serving framework for large language and multimodal models, widely used for production LLM inference.",
+      "language": "Python",
+      "stars": 30936,
+      "stars_today": 73,
+      "forks": 7504,
+      "url": "https://github.com/sgl-project/sglang",
+      "tags": [
+        "LLM-serving",
+        "inference-infrastructure",
+        "multimodal-serving"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "An AI agent governance toolkit covering policy enforcement, zero-trust identity, execution sandboxing, and reliability engineering, addressing all 10 items of the OWASP Agentic Top 10.",
+      "language": "Python",
+      "stars": 5466,
+      "stars_today": 442,
+      "forks": 862,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": [
+        "agent-governance",
+        "AI-security",
+        "zero-trust",
+        "owasp"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "different-ai-openwork",
+      "name": "different-ai/openwork",
+      "description": "An open-source alternative to Claude Cowork, built on top of opencode, for collaborative agentic work sessions.",
+      "language": "TypeScript",
+      "stars": 17971,
+      "stars_today": 97,
+      "forks": 1860,
+      "url": "https://github.com/different-ai/openwork",
+      "tags": [
+        "agentic-collaboration",
+        "open-source",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "moonshotai-flashkda",
+      "name": "MoonshotAI/FlashKDA",
+      "description": "High-performance CUDA kernels implementing Kimi Delta Attention, released by Moonshot AI to accelerate its model family's inference and training.",
+      "language": "Cuda",
+      "stars": 997,
+      "stars_today": 91,
+      "forks": 97,
+      "url": "https://github.com/MoonshotAI/FlashKDA",
+      "tags": [
+        "attention-kernels",
+        "inference-optimization",
+        "cuda",
+        "moonshot-ai"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agentic Retrieval Gets Relevance-Aware",
+      "description": "Tencent's RARG and CodeNib both move beyond flat retrieval, turning relevance signals and multi-view repository indexes into execution priors that make agentic search and coding-agent context retrieval faster and more accurate.",
+      "related_paper_ids": [
+        "relevance-guided-agentic-search",
+        "codenib-repo-context-coding-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory's Implicit-Association Gap",
+      "description": "Keep It InMind exposes a stark gap between what agent memory systems can recall on demand (up to 100%) and what they actually surface for indirectly related queries (at most 14.4%), reframing memory retrieval as a routing problem rather than a storage problem.",
+      "related_paper_ids": [
+        "keep-it-inmind-agent-memory"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Zero-Robot Post-Training for Manipulation",
+      "description": "HiFi-UMI shows that sufficiently high-fidelity robot-free data capture can remove the real-robot teleoperation 'anchor' entirely, a potentially significant cost reduction for scaling manipulation policy training.",
+      "related_paper_ids": [
+        "hifi-umi-manipulation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Streaming and World-Model Video Foundation Models",
+      "description": "Mage-VL, Wonder, and Visual Prompt Engineering each push video and vision-language models toward real-time, controllable, and more reasoning-capable operation, from codec-native token efficiency to camera-controllable exploration to input-side prompt design.",
+      "related_paper_ids": [
+        "mage-vl-streaming-multimodal",
+        "wonder-video-world-model",
+        "visual-prompt-engineering-video"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Chinese AI Lab Model Release Sprint",
+      "description": "Kimi-K3, GLM-5.2, Baidu's Unlimited-OCR, Nanbeige4.2-3B, and a wave of community Qwen3.6 derivatives are all trending simultaneously, underscoring an aggressive and synchronized release cadence among Chinese labs and fine-tuning communities.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Skill Frameworks Go Mainstream on GitHub",
+      "description": "superpowers and ECC both crossing hundreds of thousands of GitHub stars, alongside book-to-skill and cangjie-skill, signal that packaged 'agent skills' for coding assistants have moved from research niche to a dominant open-source developer-tools category.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

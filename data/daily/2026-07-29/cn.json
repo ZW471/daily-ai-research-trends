@@ -1,0 +1,1012 @@
+{
+  "version": "1.0",
+  "date": "2026-07-29",
+  "generated_at": "2026-07-29T15:00:00Z",
+  "summary": {
+    "headline": "HiFi-UMI 证明,只要无机器人数据的保真度足够高,就足以彻底去除操作策略训练中真机遥操作这一「锚点」;腾讯的 RARG 将相关性转化为执行先验,提升了智能体式搜索的收敛效果;Keep It InMind 揭示出智能体记忆系统「按需回忆」(84%)与「面向间接查询实际检索」(仅 14.4%)之间的巨大落差;Kimi-K3(8663 赞)与 GLM-5.2(4644 赞)领跑一轮几乎同步的中国模型发布浪潮;智能体技能框架 superpowers 与 ECC 双双突破 20 万 GitHub 星标,标志着这一品类正式迈入开发者工具主流。",
+    "body": "今日按点赞数排名最高的论文 **HiFi-UMI**(136 赞)提出了一个关于机器人学习数据经济学的、真正令人意外的论断:与其缩减昂贵的真机遥操作数据占比,不如直接提高无机器人 UMI 采集的保真度,就足以将其彻底去除。团队的便携式采集装置仅依靠机载双目惯性 SLAM 即达到 3 毫米的末端执行器精度,而仅在由此产生的 HiFi-UMI-2K 数据集上训练出的策略,在三种不同骨干网络体系上都能匹配遥操作级别的表现。在智能体式搜索方面,腾讯的 **RARG**(84 赞)提出,相关性分数不应只用来过滤智能体所看到的文档,而应主动引导 grep 式遍历顺序与重排序,从而提升复杂多跳检索任务中准确率与效率的权衡前沿。KAIST 的 **ReDesign**(57 赞)则处理了一个相关但不同的智能体式分解问题:从栅格图像中恢复完全可编辑的设计文件,并提出了包含 909 个文件的 Figma 编辑回放基准,把「可编辑性」而非单纯的视觉保真度,确立为衡量成功与否的标准。\n\n本轮还有一组论文聚焦于当前智能体基础设施的局限性。**CodeNib**(47 赞)证明,通过统一运行时为编码智能体提供多视图仓库上下文(词法、稠密、结构化),相比临时的 grep/read 流水线可减少 50%-87% 的轨迹 Token 消耗。muset.ai 的 **Keep It InMind**(25 赞)是这一组中在概念上最重要的一篇:它揭示了长期智能体记忆中一个真实存在的架构性盲区——那些必须依靠世界知识(而非表层相似度)才能被调用的事实,在按需回忆时最高可达 100% 的准确率,但在面对真正相关的查询时,检索准确率却只有 14.4%。浙江大学的 **Pass the Baton**(24 赞)提出了 Relay-OPD,一种无需标签的教师接管机制,修复了在策略蒸馏中的「前缀失败」问题;而 Meta 的 **面向代码优化的强化学习**(6 赞)则展示了如何在存在测量噪声与 GRPO 不稳定性的情况下,让面向执行时间的强化学习奖励在代码生成任务中真正变得「可学习」。\n\n在多模态方向上,微软的 **Mage-VL**(24 赞)提出了一种编解码器原生的分词器,将实时流式感知所需的视觉 Token 削减超过 75%;Adobe 的 **Wonder**(11 赞)构建了一个可通过相机控制、具备持久记忆的视频世界模型;Google DeepMind 的 **视觉提示工程**(11 赞)则证明,直接编辑输入图像在视频推理任务上可以胜过基于文本的提示工程。月之暗面的 **PerceptionBench**(10 赞)给出了一个发人深省的诊断结果:在与推理解耦的原子级视觉感知任务上,没有任何前沿多模态大模型的准确率超过 60%。与此同时,模型发布榜单被中国实验室及其微调社区所主导:**Kimi-K3**(8663 赞)、**GLM-5.2**(4644 赞,126 万次下载)与 **百度 Unlimited-OCR**(3516 赞,269 万次下载)领跑,同时还涌现出一大批社区「去审查」版 Qwen3.6 衍生模型。在 GitHub 上,智能体技能与运行框架类项目占据主导地位:**superpowers**(26.3 万星)与 **ECC**(23.6 万星)双双再度飙升,语音 AI 项目(**speech-to-speech**、**VibeVoice**)以及阿里巴巴的 **open-code-review** 也表现抢眼,表明打包式智能体技能与「大模型+确定性规则」混合工具已从研究猎奇走向主流开发者基础设施。",
+    "key_themes": [
+      "agentic-retrieval",
+      "agent-memory-limitations",
+      "zero-robot-manipulation-data",
+      "streaming-video-world-models",
+      "chinese-ai-lab-releases",
+      "agentic-skill-frameworks"
+    ]
+  },
+  "researcher_notes": "**HiFi-UMI「去除锚点」这一结论,值得在头条数字之外做更深入的审视。**这篇论文并非只是渐进式地提升了 UMI 数据质量,而是断言:只要将保真度(轨迹精度、同步性、视场角)提升到足够水平,真机遥操作数据占比就可以被彻底去除。如果这一结论能够超出所测试的骨干网络与任务范围而得到推广,那么由于 UMI 采集相比遥操作要便宜得多、更易规模化,这将实质性地降低训练可部署操作策略的成本下限。开源的 HiFi-UMI-2K 数据集值得作为社区基准持续关注。\n\n**Keep It InMind 是今日最容易被低估的一篇论文。**在完全相同的事实上,「上下文内」表现(84.0%)与「检索式」表现(14.4%)之间的巨大落差,对当前这一代向量/图谱/智能体记忆系统而言是相当不利的结果,而且这篇论文准确地重新定义了问题所在:这并非一个「召回」问题(这些系统在按需检索时本就能达到高达 100% 的召回率),而是一个「路由」问题——即在查询到达之前,就要决定哪些事实必须保持可见。可以预期,未来几个月里,任何在生产环境中构建智能体记忆系统的团队都会大量引用这一基准。\n\n**腾讯的 RARG 与 CodeNib 都指向了同一个底层转变:相关性与上下文应当成为「执行先验」,而不是事后的过滤器。**两篇论文都是在重新排序或重构智能体遍历信息的方式(RARG 针对文档,CodeNib 针对仓库视图),而不是仅仅在事后对结果进行排序。这是一种微妙但重要的架构模式,似乎正在被多个互不相关的团队同时独立地收敛到——这暗示它可能会成为智能体式搜索与编码智能体技术栈中的标准组件。\n\n**流式/世界模型三篇论文(Mage-VL、Wonder、VIPE)展示了实现同一目标的三种不同杠杆:在不依赖蛮力扩大规模的前提下,让视频原生模型更快、推理能力更强。**Mage-VL 从分词器层面攻克 Token 效率问题,Wonder 从架构层面攻克记忆与控制问题,而 VIPE 则从输入端入手,直接编辑提示图像本身来解决问题。像 VIPE 这样一种输入端的技巧居然能够胜过文本提示工程与测试时扩展,这提醒我们:并非所有能力提升都必须来自更大的模型或更多的推理时计算。\n\n**中国实验室与社区微调生态系统丝毫没有放缓的迹象。**Kimi-K3 与 GLM-5.2 在点赞数上领先,而百度 Unlimited-OCR 则以远超其他模型的下载量(269 万次)遥遥领先,这说明生产环境中的 OCR/文档智能需求,仍然是比旗舰级对话模型更大的真实世界工作负载。同一天内,多个互不相关的社区账号(HauhauCS、LuffyTheFox)先后推出「去审查」版Qwen3.6-35B-A3B 衍生模型,也表明一个强大的开源基座模型能够多么迅速地催生出一长串对齐被修改的变体。\n\n**superpowers 与 ECC 在同一个热榜周期内双双突破 20 万 GitHub 星标,这是一个真实的信号,而非噪声。**面向 Claude Code、Codex 等类似助手的「打包式智能体技能」与运行框架性能工具,显然已经从研究/爱好者的小众领域,跨入了主流的开发者基础设施行列。再结合 book-to-skill 单日新增 1421 星标的表现,这都指向一个可能会持续快速增长的更广泛品类——将知识与最佳实践蒸馏为可复用的智能体技能。",
+  "papers": [
+    {
+      "id": "hifi-umi-manipulation",
+      "title": "HiFi-UMI:仅凭高保真 UMI 数据学习可部署的操作策略",
+      "authors": [
+        "Simple AI",
+        "Yuteng Wei",
+        "Jinming Ma",
+        "Jiawei Wang et al."
+      ],
+      "affiliations": [
+        "Simple World Lab（简单世界实验室)"
+      ],
+      "summary": "HiFi-UMI 提出了一套便携式、无需机器人的数据采集装置(头戴式离线双目惯性 SLAM、微秒级 GPIO 同步触发、每只手两个覆盖约 200 度视场的广角相机),在不借助外部追踪设施的情况下实现了 3 毫米的末端执行器精度。团队证明,与其在后训练阶段混入昂贵的真机遥操作数据「锚点」,不如直接提高无机器人 UMI 数据的保真度,即可彻底去除这一锚点;并开源了 HiFi-UMI-2K——一个包含 2000 小时、微秒级同步、经仿真回放验证的高保真示范数据集。",
+      "key_findings": [
+        "仅使用 HiFi-UMI 数据进行后训练的策略,在涵盖「视觉-语言-动作」与「世界-动作模型」两大类共三种骨干网络上均能匹配真机遥操作水平,其中最强策略在精密插入任务上达到 85% 的成功率。",
+        "使用该语料库中 4000 小时数据进行预训练,可将十个未见任务上的动作误差降低 41%,并在 StarVLA-QwenPI 上进一步提升真机成功率 18.1 个百分点。",
+        "该系统仅依靠机载双目惯性 SLAM 即可达到 3 毫米的工作空间局部末端执行器精度,数据采集阶段无需任何外部动作捕捉设施。"
+      ],
+      "tags": [
+        "robot-learning",
+        "manipulation-policies",
+        "imitation-learning",
+        "UMI",
+        "vision-language-action",
+        "data-collection"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 136,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25895",
+        "huggingface": "https://huggingface.co/papers/2607.25895",
+        "pdf": "https://arxiv.org/pdf/2607.25895"
+      }
+    },
+    {
+      "id": "relevance-guided-agentic-search",
+      "title": "相关性的新角色:在智能体式搜索中指导语料交互",
+      "authors": [
+        "Jiangnan Li",
+        "Yuqing Li",
+        "Mo Yu",
+        "Jinchao Zhang",
+        "Jie Zhou et al."
+      ],
+      "affiliations": [
+        "腾讯(Tencent)"
+      ],
+      "summary": "腾讯的研究者提出了「相关性感知的 RipGrep 搜索智能体」(Relevance-Aware RipGrep Search Agent,RARG),将查询相关性分数转化为一种执行先验,用于决定文档的 grep 式遍历顺序、为有潜力的入口点设置初始位置,并对 grep 匹配结果重新排序,让大模型优先看到信息量最大的片段。在浏览式问答与推理密集型检索基准上,RARG 相比传统检索智能体和「相关性无感」的直接语料交互方法,都提升了准确率与效率的权衡前沿。",
+      "key_findings": [
+        "相关性无感的 grep 搜索(直接语料交互)常常在搜索过程后期才暴露有用证据,拖慢了复杂多跳问题的收敛速度。",
+        "利用相关性来安排文档遍历顺序、设置入口点并对 grep 匹配重新排序,比单纯的检索或单纯的直接交互都能带来更好的准确率-效率权衡。",
+        "该方法可推广至具有挑战性的浏览式问答与推理密集型检索基准,而无需切换到完全不同的搜索范式。"
+      ],
+      "tags": [
+        "agentic-search",
+        "retrieval",
+        "information-retrieval",
+        "LLM-agents",
+        "corpus-interaction"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 84,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24223",
+        "huggingface": "https://huggingface.co/papers/2607.24223",
+        "pdf": "https://arxiv.org/pdf/2607.24223"
+      }
+    },
+    {
+      "id": "redesign-editable-design-recovery",
+      "title": "ReDesign:通过智能体式分解从图像中恢复可编辑设计结构",
+      "authors": [
+        "Jooyeol Yun",
+        "Jintae Park",
+        "Hyesu Lim",
+        "Junha Hyung",
+        "Hyungjin Chung et al."
+      ],
+      "affiliations": [
+        "KAIST AI(韩国科学技术院人工智能研究院)"
+      ],
+      "summary": "ReDesign 是 KAIST AI 提出的一套智能体式框架,通过选择并组合跨模态的专用工具,从单张栅格图像中逐步构建出可编辑的分层设计文件(涵盖排版、矢量几何、颜色、分组与图层顺序)。为了在漫长的决策过程中保持鲁棒性(即便工具输出存在瑕疵),该框架在每一步扩展中引入「优雅验证」机制,给出接受、剪枝或重试的局部反馈,防止误差累积;团队还构建了「Figma 编辑回放基准」(909 个真实 Figma 文件、14,796 条编辑指令),以可编辑性而非单纯视觉保真度作为评测标准。",
+      "key_findings": [
+        "在新提出的 Figma 编辑回放基准上,ReDesign 在布局、颜色和文本编辑方面均取得最高可编辑性,超越了分层分解与串行工具调用两类基线方法。",
+        "每一步扩展中的局部「接受/剪枝/重试」验证,有效防止了长程智能体式分解流程中常见的误差累积问题。",
+        "该工作确立了「可编辑性」而非单纯的栅格重建保真度,作为评估图像到设计恢复系统的关键指标。"
+      ],
+      "tags": [
+        "agentic-decomposition",
+        "design-recovery",
+        "image-to-vector",
+        "UI-generation",
+        "benchmark"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 57,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25565",
+        "huggingface": "https://huggingface.co/papers/2607.25565",
+        "pdf": "https://arxiv.org/pdf/2607.25565"
+      }
+    },
+    {
+      "id": "codenib-repo-context-coding-agents",
+      "title": "CodeNib:面向编码智能体的多视图仓库上下文数据系统",
+      "authors": [
+        "Zhongming Yu",
+        "Hengjia Yu",
+        "Boqin Yuan",
+        "Shuting Zhao",
+        "Yizhao Chen et al."
+      ],
+      "affiliations": [
+        "SysEvol AI Research"
+      ],
+      "summary": "CodeNib 是一套多视图仓库上下文数据系统,针对每个代码提交构建可复用的词法、稠密与结构化视图,使编码智能体无需再通过互不相通的索引与语言服务器反复「重新发现」上下文。该系统通过统一的运行时提供排序检索、符号导航与有界上下文服务,并在仓库上下文全生命周期中刻画出质量-成本前沿,相比临时的 grep/read 流水线在延迟与 Token 消耗上都实现了大幅节省。",
+      "key_findings": [
+        "当输出结果与独立重建结果一致时,图索引与向量索引的增量更新在中位数上分别快 8.7 倍和 25.4 倍。",
+        "在与实时语言服务器结果匹配的静态导航子集(占 1000 次请求中的 63%)上,静态方案的中位延迟比实时服务器快 4.7 倍。",
+        "在五个模型上,经过筛选的上下文策略相比配对的 grep/read 方法减少了 50%-87% 的轨迹 Token 消耗,同时保持了定位准确性。"
+      ],
+      "tags": [
+        "coding-agents",
+        "repository-context",
+        "code-search",
+        "developer-tools",
+        "infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25431",
+        "huggingface": "https://huggingface.co/papers/2607.25431",
+        "pdf": "https://arxiv.org/pdf/2607.25431"
+      }
+    },
+    {
+      "id": "keep-it-inmind-agent-memory",
+      "title": "Keep It InMind:为智能体记忆中的「隐性关联盲区」建立基准",
+      "authors": [
+        "Ruizhe Li",
+        "Mingxuan Du",
+        "Benfeng Xu",
+        "Zhendong Mao"
+      ],
+      "affiliations": [
+        "muset.ai"
+      ],
+      "summary": "muset.ai 的研究者提出了 InMind——一个包含 125 项任务的基准,专门用于分离智能体长期记忆中的「隐性关联盲区」:即某条已存储的事实理应通过世界知识改变对新问题的回答,但两段文本之间却没有任何可供检索器捕捉的表层线索(例如,坚果过敏史应当影响对「马卡龙」这一请求的回答,因为马卡龙含有杏仁粉,但两者在文本上毫无关联)。该基准通过配对对照设计,清晰区分了三种可能:事实从未被存储、模型缺乏桥接知识,或事实虽被存储却从未被检索出来。",
+      "key_findings": [
+        "当决定性记忆被直接放入上下文时,基座模型能正确回答 84.0% 的间接查询。",
+        "当同样的记忆必须依靠检索从长期存储中调用时,六种向量、图谱与智能体记忆系统的准确率最高仅为 14.4%,尽管这些系统在按需检索同一事实时准确率可达 100%。",
+        "将嵌入维度提高 8 倍能提升「答案盲测」目标的召回率,但核心的检索差距基本未变,这表明问题的关键在于「按查询条件路由」,而非嵌入质量本身。"
+      ],
+      "tags": [
+        "agent-memory",
+        "long-term-memory",
+        "benchmark",
+        "retrieval",
+        "implicit-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24368",
+        "huggingface": "https://huggingface.co/papers/2607.24368",
+        "pdf": "https://arxiv.org/pdf/2607.24368"
+      }
+    },
+    {
+      "id": "pass-the-baton-relay-opd",
+      "title": "Pass the Baton:轨迹接力式在策略蒸馏",
+      "authors": [
+        "Haolei Xu",
+        "Xiaowen Xu",
+        "Haiwen Hong",
+        "Zixuan Ni",
+        "Hongxing Li et al."
+      ],
+      "affiliations": [
+        "浙江大学(Zhejiang University)"
+      ],
+      "summary": "浙江大学的研究者在在策略蒸馏(On-Policy Distillation,OPD)中识别出一种「前缀失败」现象:一旦学生模型走上错误的推理方向,后续生成便会不断在此错误基础上叠加,而教师模型通常会及时纠偏。Relay-OPD 利用这种「师生续写不对称性」作为无需人工标注的触发信号——在检测到失败节点时,让教师短暂接管生成过程,产生一段「教师续写」,随后再交回学生继续优化,并将有限的接力预算集中用于早期关键位置。",
+      "key_findings": [
+        "以 Qwen3-4B-Instruct-2507 作为教师、Qwen3-0.6B/1.7B(非思维模式)作为学生,在八个数学推理基准上,Relay-OPD 相比标准在策略蒸馏平均提升 5.73%,相比最强基线 FastOPD 在 1.7B 模型上平均提升 1.49%。",
+        "通过检测失败前缀上的师生续写不对称性,可以获得一个无需标签、恰到好处地触发教师接管的信号。",
+        "由于干预集中在早期关键位置,接力轨迹在提升效果的同时,还将训练轨迹长度缩短了超过 50%。"
+      ],
+      "tags": [
+        "on-policy-distillation",
+        "reasoning",
+        "reinforcement-learning",
+        "small-language-models",
+        "teacher-student"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26057",
+        "huggingface": "https://huggingface.co/papers/2607.26057",
+        "pdf": "https://arxiv.org/pdf/2607.26057"
+      }
+    },
+    {
+      "id": "mage-vl-streaming-multimodal",
+      "title": "Mage-VL:一种高效的编解码器原生流式多模态基础模型",
+      "authors": [
+        "Senqiao Yang",
+        "Kaichen Zhang",
+        "Zhaoyang Jia",
+        "Jinghao Guo",
+        "Yifei Shen et al."
+      ],
+      "affiliations": [
+        "微软(Microsoft)"
+      ],
+      "summary": "Mage-VL 是微软推出的编解码器原生流式多模态基础模型,旨在解决视觉-语言模型在实时感知任务上的「莫拉维克悖论」式短板。其自研的 Mage-ViT 分词器摒弃了均匀帧采样,转而利用视频编解码器中的运动矢量与残差能量,选择性编码动态、信息熵丰富的区域,将视觉 Token 消耗降低超过 75%;同时,一套仿生双系统架构(轻量级「系统一」事件门控 + 因果「系统二」解码器)使模型具备主动式流式感知能力。",
+      "key_findings": [
+        "Mage-ViT 完全从零开始、仅用约 5.6 亿张图像和 1 亿视频帧训练,即可匹配或超越那些在数十亿图文对上训练的旗舰级编码器。",
+        "Mage-VL-4B 在静态任务上与 Qwen3-VL-4B 持平,而在视频理解及 2D/3D 空间推理上显著领先,推理速度最高提升 3.5 倍(墙钟时间),并全面超越 150 亿参数的 Phi-4-reasoning-vision 基线。",
+        "基于编解码器原生的 Token 分配策略(跨 I 帧/P 帧的运动矢量与残差能量)在保留时空上下文的同时,将视觉 Token 数量削减超过 75%。"
+      ],
+      "tags": [
+        "streaming-multimodal",
+        "vision-language-models",
+        "video-understanding",
+        "tokenization",
+        "efficient-inference"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24904",
+        "huggingface": "https://huggingface.co/papers/2607.24904",
+        "pdf": "https://arxiv.org/pdf/2607.24904"
+      }
+    },
+    {
+      "id": "shieldstral-safety-classifier",
+      "title": "Shieldstral",
+      "authors": [
+        "Antonia Calvi",
+        "Avinash Sooriyarachchi",
+        "Giada Pistilli",
+        "Guillaume Lample",
+        "Maarten Buyl et al."
+      ],
+      "affiliations": [
+        "Mistral AI"
+      ],
+      "summary": "Mistral AI 推出的 Shieldstral 是一个 30 亿参数、支持策略自适应的多模态安全分类器,将内容审核重新定义为统一的二元问答任务,使得具有不同分类体系的异构安全数据集能够被整合进同一套训练框架。该模型基于约 5410 万条精选与生成样本训练而成,在文本安全基准上匹敌甚至超越了体量约为其 7 倍的模型,并在多模态安全分类任务上刷新了当前最优水平(SOTA)。",
+      "key_findings": [
+        "将内容审核表述为二元问答任务,使不同的审核策略体系得以在同一训练框架下统一,无需为每种策略单独设计分类头。",
+        "在仅 30 亿参数的规模下,Shieldstral 在文本安全基准上匹敌甚至超越了体量约为其 7 倍的安全分类器。",
+        "该模型在多模态安全分类上创造了新的 SOTA,同时通过专门构建的细粒度评测集验证了其策略自适应能力。"
+      ],
+      "tags": [
+        "AI-safety",
+        "content-moderation",
+        "multimodal-classification",
+        "efficient-models",
+        "trust-and-safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25857",
+        "huggingface": "https://huggingface.co/papers/2607.25857",
+        "pdf": "https://arxiv.org/pdf/2607.25857"
+      }
+    },
+    {
+      "id": "novel-claim-deja-vu-fact-checking",
+      "title": "新颖论断还是似曾相识?重新审视多模态自动事实核查中「无污染」动态评测的假设",
+      "authors": [
+        "Haorui He",
+        "Xinwen Chen",
+        "Dacheng Wen",
+        "Reynold Cheng",
+        "Francis C. M. Lau et al."
+      ],
+      "affiliations": [
+        "香港大学(The University of Hong Kong)",
+        "香港浸会大学(Hong Kong Baptist University)"
+      ],
+      "summary": "来自香港大学与香港浸会大学的研究者对「动态」事实核查基准的一个常见假设——即由发布于大模型知识截止日期之后的论断构建的基准天然无污染——进行了压力测试。他们构建了新的 ClaimReview2025Q4 基准,并与现有的 AVeriTeC 基准并列比较,发现动态评测虽然能降低污染风险,却无法将其完全消除,因为许多截止日期之后发布的论断仍可依靠截止日期之前的公开知识来验证。",
+      "key_findings": [
+        "在大模型知识截止日期之后发布的论断中,有 17.09%-29.30% 仍可能受到污染——它们可以通过模型内部知识或对截止日期前公开信息的综合推理来验证。",
+        "污染会使多模态自动事实核查评测中的 Macro-F1 分数虚高最多 11.34 分,并显著扭曲系统排名。",
+        "要实现可信的事实核查基准评测,有必要在严格控制污染的设定下重新评估当前最先进的大模型。"
+      ],
+      "tags": [
+        "fact-checking",
+        "benchmark-contamination",
+        "multimodal-evaluation",
+        "LLM-evaluation",
+        "misinformation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23514",
+        "huggingface": "https://huggingface.co/papers/2607.23514",
+        "pdf": "https://arxiv.org/pdf/2607.23514"
+      }
+    },
+    {
+      "id": "visual-prompt-engineering-video",
+      "title": "面向视频模型的视觉提示工程",
+      "authors": [
+        "Robert Geirhos",
+        "Yuxuan Li",
+        "Thaddäus Wiedemer",
+        "Neha Kalibhat",
+        "Zi Wang et al."
+      ],
+      "affiliations": [
+        "Google DeepMind"
+      ],
+      "summary": "Google DeepMind 的研究者证明,视频基础模型同样能从「视觉提示工程」中获益——即自动修改任务的输入图像或场景(例如将抽象的示意图转换为照片级真实感的渲染图),而不只是编辑文本提示。在一系列视觉推理任务上,这种被称为 VIPE 的技术提升了视频模型的表现,且效果往往优于传统的文本提示工程或测试时扩展(test-time scaling)。",
+      "key_findings": [
+        "利用图像编辑模型,将抽象或示意性的任务图像自动转换为照片级真实感版本,可以提升下游视频推理的准确率。",
+        "在多个视频推理基准上,视觉提示工程的效果优于传统的文本提示工程和测试时扩展方法。",
+        "该技术具有很高的计算效率,仅需一次图像编辑调用,而无需额外的推理时搜索或规模扩展。"
+      ],
+      "tags": [
+        "video-models",
+        "prompt-engineering",
+        "visual-reasoning",
+        "foundation-models",
+        "test-time-compute"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25537",
+        "huggingface": "https://huggingface.co/papers/2607.25537",
+        "pdf": "https://arxiv.org/pdf/2607.25537"
+      }
+    },
+    {
+      "id": "wonder-video-world-model",
+      "title": "Wonder:更出色的视频世界模型",
+      "authors": [
+        "Jiacong Xu",
+        "Hanwen Jiang",
+        "Zhixin Shu",
+        "Kalyan Sunkavalli",
+        "Vishal M. Patel et al."
+      ],
+      "affiliations": [
+        "Adobe Research",
+        "约翰霍普金斯大学(Johns Hopkins University)"
+      ],
+      "summary": "Adobe 推出的 Wonder 是一款支持实时、可通过相机控制的视频世界模型,能将单张图像或一段简短视频转化为可探索、可交互的「可玩世界」,并对已探索过的区域保持持久记忆。其核心组件包括:一种密集坐标场式的相机条件控制方案,为模型提供关于相机运动的直接视觉证据;以及一种基于稀疏注意力的记忆机制,使模型无论生成历史增长到多长,都能高效精确地检索相关上下文。",
+      "key_findings": [
+        "Wonder 能以每秒 16 帧的速度生成多样化、分钟级长度的可探索视频,并在长时间的连续生成中保持几何、外观与动态的一致性。",
+        "基于稀疏注意力的记忆机制,能在生成上下文不断增长的情况下实现快速精确的检索,而无需让注意力计算成本随上下文长度线性增长。",
+        "团队对自蒸馏(self-forcing)式蒸馏流水线进行了改进,使学生模型能够保留教师模型的控制精度与多样化生成模式;此外,Wonder 还支持通过视频条件生成对已有动态场景进行「重新拍摄」。"
+      ],
+      "tags": [
+        "world-models",
+        "video-generation",
+        "interactive-simulation",
+        "camera-control",
+        "real-time-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26037",
+        "huggingface": "https://huggingface.co/papers/2607.26037",
+        "pdf": "https://arxiv.org/pdf/2607.26037"
+      }
+    },
+    {
+      "id": "perceptionbench-mllm-perception",
+      "title": "PerceptionBench:评估多模态大语言模型中的原子级视觉感知能力",
+      "authors": [
+        "Zichao Lin",
+        "Yifeng Xie",
+        "Bowen Qu",
+        "Haiming Wang",
+        "Jia Li et al."
+      ],
+      "affiliations": [
+        "月之暗面(Moonshot AI)"
+      ],
+      "summary": "Moonshot AI 提出了 PerceptionBench 基准,通过在 42 个现有多模态大语言模型(MLLM)基准中诊断最早出现的失败点,将十种「原子级」视觉感知能力从推理与领域知识中剥离出来单独评估。该基准包含 3000 道经过验证、答案简短明确的问题,每道题只针对单一感知能力;对 16 个前沿多模态大模型的评测结果显示,原子级感知能力在很大程度上仍未被真正解决,其中与感知相关的幻觉是平均表现最弱的能力项。",
+      "key_findings": [
+        "在与推理和世界知识解耦的原子级视觉感知任务上,没有任何前沿多模态大模型的准确率超过 60%。",
+        "在受测的 16 个前沿多模态大模型中,与感知相关的幻觉是平均表现最弱的能力类别。",
+        "整体基准得分相近的模型,其原子级感知能力画像却可能大相径庭,这说明综合性基准掩盖了不同性质的失败模式。"
+      ],
+      "tags": [
+        "multimodal-benchmark",
+        "visual-perception",
+        "MLLM-evaluation",
+        "hallucination",
+        "capability-diagnosis"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.24957",
+        "huggingface": "https://huggingface.co/papers/2607.24957",
+        "pdf": "https://arxiv.org/pdf/2607.24957"
+      }
+    },
+    {
+      "id": "rl-for-code-optimization",
+      "title": "面向代码优化的强化学习",
+      "authors": [
+        "Pierre Chambon",
+        "Kunhao Zheng",
+        "Juliette Decugis",
+        "Benoit Sagot",
+        "Gabriel Synnaeve"
+      ],
+      "affiliations": [
+        "Meta AI"
+      ],
+      "summary": "Meta AI 的研究者研究了一个实践中十分重要的失败模式:如果简单地把执行时间加入代码生成的强化学习奖励,测量噪声、奖励稀疏性与 GRPO 不稳定性等问题就会淹没真正的训练信号。他们通过三个阶段的改造使执行时间奖励在实践中变得「可学习」:构建带有大规模优化测试集与经过校准的沙箱环境的 DMC-Optim 基准;设计一个离线模拟器来组合正确性与速度奖励并预测最有希望的配置;以及针对更稀疏、更嘈杂的计时执行环境对 GRPO 及评测方式进行相应调整。",
+      "key_findings": [
+        "在新提出的 DMC-Optim 基准上,面向优化的强化学习将严格 top-50% pass@1 指标在 Qwen 2.5 7B 上从 18.0% 提升到 31.3%,在 CWM 32B 上从 30.7% 提升到 50.4%。",
+        "在更严格的百分位区间(如 top-30%)上收益进一步扩大,CWM 32B 相对提升达 125%,同时不牺牲纯正确性得分。",
+        "在 LiveCodeBench 上,使用该方法训练的 CWM 32B 在最多 83% 的中位数样本速度对比中战胜标准 RLVR,达到人类在复杂度等级改进幅度上约一半的水平。"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "code-optimization",
+        "GRPO",
+        "code-generation",
+        "reward-modeling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.25970",
+        "huggingface": "https://huggingface.co/papers/2607.25970",
+        "pdf": "https://arxiv.org/pdf/2607.25970"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI(月之暗面)",
+      "description": "月之暗面最新的旗舰级对话与视觉-语言模型,以 compressed-tensors 8-bit 权重形式发布,并被社区迅速采用,当天即出现 unsloth 移植版本。",
+      "task_type": "image-text-to-text(图文对话)",
+      "model_size": "未公开(旗舰级规模)",
+      "tags": [
+        "transformers",
+        "kimi_k3",
+        "conversational",
+        "image-text-to-text",
+        "compressed-tensors"
+      ],
+      "metrics": {
+        "downloads": 99214,
+        "likes": 8663
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "智谱 AI(Zhipu AI / Z.ai)",
+      "description": "智谱 AI 推出的混合专家(MoE)对话文本生成模型,下载量超过 126 万次,反映出极高的生产环境采用速度。",
+      "task_type": "text-generation(文本生成)",
+      "model_size": "MoE(激活/总参数量未公开)",
+      "tags": [
+        "transformers",
+        "glm_moe_dsa",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 1267198,
+        "likes": 4644
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "百度(Baidu)",
+      "description": "百度推出的视觉-语言 OCR 与文档理解模型,以 269 万次下载量高居今日热榜首位,反映出文档智能在生产环境中的巨大真实需求。",
+      "task_type": "image-text-to-text(图文/OCR)",
+      "model_size": "未公开",
+      "tags": [
+        "transformers",
+        "unlimited-ocr",
+        "feature-extraction",
+        "vision-language",
+        "ocr"
+      ],
+      "metrics": {
+        "downloads": 2694935,
+        "likes": 3516
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "qwen3-6-35b-hauhaucs-aggressive",
+      "name": "Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+      "organization": "HauhauCS(社区,基座为 Qwen3.6)",
+      "description": "基于 Qwen3.6-35B-A3B 的社区「去审查」混合专家微调版本,支持视觉能力,是围绕 Qwen3.6 基座迅速涌现的一批「去对齐」衍生模型之一。",
+      "task_type": "image-text-to-text(图文对话)",
+      "model_size": "35B-A3B MoE",
+      "tags": [
+        "gguf",
+        "uncensored",
+        "qwen3.6",
+        "moe",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 1855505,
+        "likes": 3171
+      },
+      "source_url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"
+    },
+    {
+      "id": "thinkingmachines-inkling",
+      "name": "Inkling",
+      "organization": "Thinking Machines Lab",
+      "description": "一款支持图像与音频理解的多模态对话模型,是 Thinking Machines Lab 首批广受关注的公开多模态发布之一。",
+      "task_type": "image-text-to-text(图文对话)",
+      "model_size": "未公开",
+      "tags": [
+        "transformers",
+        "inkling_mm_model",
+        "conversational",
+        "audio-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 39052,
+        "likes": 1640
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling"
+    },
+    {
+      "id": "ternary-bonsai-27b",
+      "name": "Ternary-Bonsai-27B-gguf",
+      "organization": "Prism ML",
+      "description": "一款 270 亿参数模型,权重被量化为面向 llama.cpp 的 2-bit 三值(ternary)格式,面向消费级硬件上的极致内存高效本地推理。",
+      "task_type": "text-generation(文本生成)",
+      "model_size": "27B(2-bit 三值量化)",
+      "tags": [
+        "llama.cpp",
+        "gguf",
+        "ternary",
+        "2-bit",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 665427,
+        "likes": 1095
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+    },
+    {
+      "id": "poolside-laguna-s-2-1",
+      "name": "Laguna-S-2.1",
+      "organization": "Poolside",
+      "description": "Poolside 旗下 Laguna 系列的最新文本生成模型,面向代码相关的生成任务,并配有 unsloth GGUF 移植版本便于本地部署。",
+      "task_type": "text-generation(文本生成)",
+      "model_size": "未公开",
+      "tags": [
+        "transformers",
+        "laguna",
+        "laguna-s-2.1",
+        "vllm"
+      ],
+      "metrics": {
+        "downloads": 67286,
+        "likes": 827
+      },
+      "source_url": "https://huggingface.co/poolside/Laguna-S-2.1"
+    },
+    {
+      "id": "upstage-solar-open2-250b",
+      "name": "Solar-Open2-250B",
+      "organization": "Upstage",
+      "description": "Upstage 推出的 2500 亿参数开源文本生成模型,Nota AI 还提供了量化后的 NVFP4 版本以实现高效推理服务。",
+      "task_type": "text-generation(文本生成)",
+      "model_size": "250B",
+      "tags": [
+        "transformers",
+        "solar_open2",
+        "text-generation",
+        "upstage"
+      ],
+      "metrics": {
+        "downloads": 4804,
+        "likes": 697
+      },
+      "source_url": "https://huggingface.co/upstage/Solar-Open2-250B"
+    },
+    {
+      "id": "nanbeige4-2-3b",
+      "name": "Nanbeige4.2-3B",
+      "organization": "Nanbeige(南北阁)",
+      "description": "中国 AI 初创公司 Nanbeige 推出的一款轻量级 30 亿参数对话大模型,是当前中国实验室密集发布高效小模型这一浪潮的一部分。",
+      "task_type": "text-generation(文本生成)",
+      "model_size": "3B",
+      "tags": [
+        "transformers",
+        "nanbeige",
+        "text-generation",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 18933,
+        "likes": 555
+      },
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B"
+    },
+    {
+      "id": "microsoft-fara1-5-27b",
+      "name": "Fara1.5-27B",
+      "organization": "微软(Microsoft)",
+      "description": "基于 Qwen3.5 构建的 270 亿参数计算机操作(computer-use)智能体模型,专为图形界面 / CUA 式的智能体交互而设计。",
+      "task_type": "image-text-to-text(计算机操作)",
+      "model_size": "27B",
+      "tags": [
+        "transformers",
+        "qwen3_5",
+        "computer-use",
+        "cua"
+      ],
+      "metrics": {
+        "downloads": 1543,
+        "likes": 201
+      },
+      "source_url": "https://huggingface.co/microsoft/Fara1.5-27B"
+    },
+    {
+      "id": "kat-coder-v2-5-dev",
+      "name": "KAT-Coder-V2.5-Dev",
+      "organization": "快手(Kuaishou / Kwaipilot)",
+      "description": "基于 Qwen3.5 混合专家架构打造的编码智能体模型,针对代码生成与智能体式开发者工作流进行了专门调优。",
+      "task_type": "image-text-to-text(代码智能体)",
+      "model_size": "MoE(未公开)",
+      "tags": [
+        "transformers",
+        "qwen3_5_moe",
+        "code",
+        "agent"
+      ],
+      "metrics": {
+        "downloads": 6275,
+        "likes": 318
+      },
+      "source_url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "一套智能体技能框架与软件开发方法论,将可复用技能打包供 Claude Code 等编码智能体使用。",
+      "language": "Shell",
+      "stars": 263327,
+      "stars_today": 616,
+      "forks": 23512,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "developer-tools",
+        "claude-code",
+        "methodology"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "一套面向智能体运行框架(agent harness)的性能优化系统,涵盖技能、直觉、记忆与安全工具链,支持 Claude Code、Codex、Opencode、Cursor 等多种平台。",
+      "language": "JavaScript",
+      "stars": 235622,
+      "stars_today": 857,
+      "forks": 35880,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-harness",
+        "developer-tools",
+        "performance",
+        "multi-agent"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "virgiliojr94-book-to-skill",
+      "name": "virgiliojr94/book-to-skill",
+      "description": "将任意技术类书籍 PDF 转化为可直接使用的 Claude Code 技能,便于学习、查阅和在工作中即时调用。",
+      "language": "Python",
+      "stars": 12826,
+      "stars_today": 1421,
+      "forks": 1420,
+      "url": "https://github.com/virgiliojr94/book-to-skill",
+      "tags": [
+        "claude-code",
+        "agent-skills",
+        "developer-tools",
+        "knowledge-extraction"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "moeru-ai-airi",
+      "name": "moeru-ai/airi",
+      "description": "一款可自托管的 AI 伴侣,支持实时语音聊天以及《我的世界》、《异星工厂》等游戏对局,可在网页、macOS 和 Windows 上运行。",
+      "language": "TypeScript",
+      "stars": 45413,
+      "stars_today": 682,
+      "forks": 4488,
+      "url": "https://github.com/moeru-ai/airi",
+      "tags": [
+        "ai-companion",
+        "voice-ai",
+        "self-hosted",
+        "conversational-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "calesthio-openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "一套开源的智能体式视频制作系统,内含 12 条制作流水线与超过 700 个智能体技能/制作知识文件,可将编码助手变身为一整套视频制作工作室。",
+      "language": "Python",
+      "stars": 43911,
+      "stars_today": 668,
+      "forks": 5286,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": [
+        "agentic-video-production",
+        "creative-ai",
+        "agent-skills",
+        "multimodal-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-vibevoice",
+      "name": "microsoft/VibeVoice",
+      "description": "微软推出的开源前沿语音 AI 模型及工具包,用于高质量语音合成。",
+      "language": "Python",
+      "stars": 51326,
+      "stars_today": 336,
+      "forks": 5712,
+      "url": "https://github.com/microsoft/VibeVoice",
+      "tags": [
+        "voice-ai",
+        "text-to-speech",
+        "open-source-models"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "huggingface-speech-to-speech",
+      "name": "huggingface/speech-to-speech",
+      "description": "一套用于构建本地化、开源语音智能体的流水线,可端到端处理语音到语音的交互。",
+      "language": "Python",
+      "stars": 7900,
+      "stars_today": 827,
+      "forks": 1001,
+      "url": "https://github.com/huggingface/speech-to-speech",
+      "tags": [
+        "voice-agents",
+        "speech-to-speech",
+        "local-inference",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "1jehuang-jcode",
+      "name": "1jehuang/jcode",
+      "description": "一款高内存效率的编码智能体运行框架,定位为比重型智能体编码工具更轻量的替代方案。",
+      "language": "Rust",
+      "stars": 13496,
+      "stars_today": 640,
+      "forks": 1479,
+      "url": "https://github.com/1jehuang/jcode",
+      "tags": [
+        "coding-agent",
+        "developer-tools",
+        "performance",
+        "rust"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "阿里巴巴推出的经过大规模实战验证的开源代码评审工具,结合确定性流水线与大模型智能体,提供精准的行级评论,并内置针对空指针异常、线程安全、XSS、SQL 注入等问题的规则集。",
+      "language": "Go",
+      "stars": 16048,
+      "stars_today": 359,
+      "forks": 1082,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": [
+        "code-review",
+        "LLM-agents",
+        "developer-tools",
+        "security"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "sgl-project-sglang",
+      "name": "sgl-project/sglang",
+      "description": "一套面向大语言模型与多模态模型的高性能推理服务框架,广泛用于生产环境的大模型推理。",
+      "language": "Python",
+      "stars": 30936,
+      "stars_today": 73,
+      "forks": 7504,
+      "url": "https://github.com/sgl-project/sglang",
+      "tags": [
+        "LLM-serving",
+        "inference-infrastructure",
+        "multimodal-serving"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-agent-governance-toolkit",
+      "name": "microsoft/agent-governance-toolkit",
+      "description": "一套 AI 智能体治理工具包,涵盖策略执行、零信任身份认证、执行沙箱与可靠性工程,覆盖 OWASP 智能体安全十大风险(Agentic Top 10)全部十项。",
+      "language": "Python",
+      "stars": 5466,
+      "stars_today": 442,
+      "forks": 862,
+      "url": "https://github.com/microsoft/agent-governance-toolkit",
+      "tags": [
+        "agent-governance",
+        "AI-security",
+        "zero-trust",
+        "owasp"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "different-ai-openwork",
+      "name": "different-ai/openwork",
+      "description": "基于 opencode 构建的开源替代方案,对标 Claude Cowork,用于协作式智能体工作会话。",
+      "language": "TypeScript",
+      "stars": 17971,
+      "stars_today": 97,
+      "forks": 1860,
+      "url": "https://github.com/different-ai/openwork",
+      "tags": [
+        "agentic-collaboration",
+        "open-source",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "moonshotai-flashkda",
+      "name": "MoonshotAI/FlashKDA",
+      "description": "由月之暗面(Moonshot AI)发布的高性能 CUDA 内核,实现了 Kimi Delta Attention,用于加速其模型家族的推理与训练。",
+      "language": "Cuda",
+      "stars": 997,
+      "stars_today": 91,
+      "forks": 97,
+      "url": "https://github.com/MoonshotAI/FlashKDA",
+      "tags": [
+        "attention-kernels",
+        "inference-optimization",
+        "cuda",
+        "moonshot-ai"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体式检索走向「相关性感知」",
+      "description": "腾讯的 RARG 与 CodeNib 都超越了扁平化检索的范式,将相关性信号与多视图仓库索引转化为「执行先验」,使智能体式搜索与编码智能体的上下文检索更快、更准。",
+      "related_paper_ids": [
+        "relevance-guided-agentic-search",
+        "codenib-repo-context-coding-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体记忆中的「隐性关联」缺口",
+      "description": "Keep It InMind 揭示了智能体记忆系统「按需回忆」(最高可达 100%)与「面向间接相关查询实际检索出」(最高仅 14.4%)之间的巨大落差,将记忆检索问题重新定义为路由问题,而非存储问题。",
+      "related_paper_ids": [
+        "keep-it-inmind-agent-memory"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "操作策略训练的「零机器人」后训练",
+      "description": "HiFi-UMI 证明,只要无机器人数据采集的保真度足够高,就能彻底去除真机遥操作这一「锚点」,这对操作策略训练的规模化可能带来显著的成本降低。",
+      "related_paper_ids": [
+        "hifi-umi-manipulation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "流式与世界模型式视频基础模型",
+      "description": "Mage-VL、Wonder 与视觉提示工程三篇论文分别从不同角度推动视频/视觉-语言模型走向实时化、可控化与更强的推理能力:一个着眼于编解码器原生的 Token 效率,一个着眼于可控相机探索,一个则从输入端的提示设计入手。",
+      "related_paper_ids": [
+        "mage-vl-streaming-multimodal",
+        "wonder-video-world-model",
+        "visual-prompt-engineering-video"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "中国实验室模型发布冲刺",
+      "description": "Kimi-K3、GLM-5.2、百度 Unlimited-OCR、Nanbeige4.2-3B 以及一大批社区版 Qwen3.6 衍生模型同时登上热榜,凸显出中国实验室及其微调社区正处于一轮激烈且几乎同步的发布节奏之中。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能框架在 GitHub 上走向主流",
+      "description": "superpowers 与 ECC 双双突破数十万 GitHub 星标,加上 book-to-skill 与 cangjie-skill,都表明面向编码助手的「打包式智能体技能」已从研究小众领域,发展成一个主导性的开源开发者工具类别。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers(HuggingFace 每日论文)",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models(HuggingFace 热门模型)",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending(AlphaXiv 热门论文)",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending(GitHub 热门项目)",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-07-29T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
