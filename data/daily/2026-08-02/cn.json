@@ -1,0 +1,1097 @@
+{
+  "version": "1.0",
+  "date": "2026-08-02",
+  "generated_at": "2026-08-02T03:08:44.051981Z",
+  "summary": {
+    "headline": "本周末论文批次中五篇独立研究聚焦智能体记忆系统，形成最强信号；DeepSeek-V4-Flash-0731 与 Kimi-K3 引领新一轮中文大模型发布潮；reverse-skill 与 last30days-skill 登顶 GitHub 热门，AI 技能包生态主流化趋势明显。",
+    "body": "This weekend's paper cluster from HuggingFace (2026-07-31 fallback) shows an unusual concentration around agent memory: **Metis** proposes a Memory Foundation Model as a dedicated architectural component for agents; **Memory Decoder at Scale** separates parametric long-term memory from reasoning into an independently scalable module; **MemHarness** argues that memory retrieval should reconstruct rather than replay past experiences; **Σ-Mem** introduces reliability scoring across agents in multi-agent systems; and **Filesystem-Based Memory** studies how agent-managed directory trees of markdown evolve under real workloads. Five independent teams arriving at memory-system papers in the same window is a strong signal this bottleneck is now widely recognized.\n\nOn the generation and world-model front, **PhiZero** introduces 'physical language' — a discrete, compact state-transition representation enabling physics-grounded world modeling. **ShadowDancer** teaches video world models any action type by learning from video-shadow pairs, enabling frame-level control without action-type supervision. **VideoCoCo** uses code-as-chain-of-thought to enforce physical consistency in text-to-video generation via a dual-engine agentic system. **Chimera** proposes Chinchilla-scaled hybrid visual diffusion transformers that replace quadratic attention with efficient linear alternatives for high-resolution and long-video generation.\n\nOn the model and ecosystem side, **DeepSeek-V4-Flash-0731** (1,438 likes) is a new flash-variant release from DeepSeek, joining **Kimi-K3** (9,492 likes) and **GLM-5.2** (4,737 likes) as the week's dominant Chinese-lab releases. On GitHub, **reverse-skill** (1,320 stars today) — an AI-powered security research skill router for Claude Code and Cursor — leads all trending repos, while **last30days-skill** (600 stars) and Microsoft's **AI-For-Beginners** (949 stars) show continued demand for packaged agent skills and AI education curricula. **TencentDB-Agent-Memory** (227 stars) aligns with the paper cluster above, offering a production team-level memory hub for agents.",
+    "key_themes": [
+      "agent-memory-systems",
+      "physical-world-models",
+      "gui-computer-use-agents",
+      "packaged-ai-skills",
+      "chinese-lab-model-releases",
+      "bm25-rag-at-scale"
+    ]
+  },
+  "researcher_notes": "**The agent memory cluster is the most important signal in this batch.** Five independent papers converging on memory in the same weekend window suggests the community has identified this as the next architectural bottleneck after context windows and retrieval. Metis and Memory Decoder at Scale both propose dedicated memory modules — the key difference is that Metis frames memory as a foundation model in its own right (pretrain-and-adapt), while Memory Decoder uses a parametric slot architecture that can be scaled independently of the reasoning LLM. Both deserve close reading by anyone building production agent infrastructure.\n\n**MemHarness's 'reconstruction not replay' thesis is the sleeper contribution.** The standard approach treats retrieved memories as static records. MemHarness argues that agents should reconstruct memories on retrieval — adapting the recalled experience to the current context rather than replaying it verbatim. This is closer to how human episodic memory actually works and may explain why vanilla RAG-over-memory often degrades in long-horizon tasks.\n\n**PhiZero's 'physical language' is worth tracking as a unifying primitive.** Rather than learning implicit physics from pixels, PhiZero compresses world-state transitions into a discrete symbolic representation first, then builds the generative model on top. If this representation transfers across domains, it could become a shared interface between robotics, video generation, and simulation — similar to how tokens became a shared interface for language.\n\n**The GitHub skill-router explosion (reverse-skill, last30days-skill, cangjie-skill, k-skill) is a genuine ecosystem shift.** A year ago, 'agent skills' meant writing custom prompts. Now there are multiple repos with thousands of stars packaging curated instruction sets, tool-chains, and routing logic for Claude Code, Cursor, and Kiro. The security research router (reverse-skill) hitting 1,320 stars in a single day for a PowerShell skill pack shows this pattern is spreading well beyond the typical Python/AI audience.\n\n**BM25 Wins at Scale has a result that should be widely read in the RAG community.** The paper does a systematic scaling study across retrieval paradigms (lexical, dense, graph, agentic) and finds BM25 remains competitive at scale — and in some configurations wins outright. This is a useful corrective against the assumption that dense and agentic retrieval always dominate as corpus size grows.",
+  "papers": [
+    {
+      "id": "askchem-claim-centered-infrastructure-for-chemistry-literatu",
+      "title": "AskChem: Claim-Centered Infrastructure for Chemistry Literature Synthesis",
+      "authors": [
+        "Bing Yan",
+        "Gregory Wolfe",
+        "Stefano Martiniani",
+        "Kyunghyun Cho et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Chemistry literature synthesis often requires assembling specific findings scattered across many publications, yet existing literature-search systems primarily return ranked document lists. As a result, scientists and AI agents need to locate relevant information, verify their provenance, and assemb...",
+      "key_findings": [
+        "Chemistry literature synthesis often requires assembling specific findings scattered across many publications, yet existing literature-search systems ..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28618",
+        "huggingface": "https://huggingface.co/papers/2607.28618",
+        "pdf": "https://arxiv.org/pdf/2607.28618"
+      }
+    },
+    {
+      "id": "qwen-ui-agent-technical-report-toward-next-generation-real-w",
+      "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+      "authors": [
+        "Hanzhang Zhou",
+        "Panrong Tong",
+        "Xu Zhang",
+        "Quyu Kong et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "GUI agents have the potential to become a general purpose executor over existing digital devices. To advance them toward real-world use, we envision agents that operate reliably on real devices, execute workflows across platforms, combine GUI interaction with CLI execution, complete long-horizon tas...",
+      "key_findings": [
+        "GUI agents have the potential to become a general purpose executor over existing digital devices. To advance them toward real-world use, we envision a..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28227",
+        "huggingface": "https://huggingface.co/papers/2607.28227",
+        "pdf": "https://arxiv.org/pdf/2607.28227"
+      }
+    },
+    {
+      "id": "metis-memory-foundation-model",
+      "title": "Metis: Memory Foundation Model",
+      "authors": [
+        "Zeyu Zhang",
+        "Ziliang Guo",
+        "Yihang Sun",
+        "Xichong Zhang et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Recent advances in AI agents have increasingly internalized native capabilities into their underlying foundation models, giving rise to multimodal foundation models and large reasoning models. However, agent memory is still primarily implemented through external modules, leaving the native memory ca...",
+      "key_findings": [
+        "Recent advances in AI agents have increasingly internalized native capabilities into their underlying foundation models, giving rise to multimodal fou..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26760",
+        "huggingface": "https://huggingface.co/papers/2607.26760",
+        "pdf": "https://arxiv.org/pdf/2607.26760"
+      }
+    },
+    {
+      "id": "frontis-ma1-training-an-ai4ai-model-towards-recursive-self-i",
+      "title": "Frontis-MA1: Training an AI4AI Model towards Recursive Self-Improvement in Machine Learning Engineering",
+      "authors": [
+        "Junlin Yang",
+        "Che Jiang",
+        "Yu Fu",
+        "Tianwei Luo et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Recursive self-improvement (RSI) requires AI systems that improve the process of building AI (i.e., AI4AI); machine learning engineering (MLE) offers a concrete, executable testbed for studying this capability. We introduce OpenMLE, an open full-stack system for RSI research in MLE, spanning verifia...",
+      "key_findings": [
+        "Recursive self-improvement (RSI) requires AI systems that improve the process of building AI (i.e., AI4AI); machine learning engineering (MLE) offers ..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28568",
+        "huggingface": "https://huggingface.co/papers/2607.28568",
+        "pdf": "https://arxiv.org/pdf/2607.28568"
+      }
+    },
+    {
+      "id": "phizero-a-world-model-built-around-physical-language",
+      "title": "PhiZero: A World Model Built Around Physical Language",
+      "authors": [
+        "Shuyao Shang",
+        "Yuqi Wang",
+        "Ruopeng Gao",
+        "Xu Chen et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "We introduce PhiZero, a physical world model built around physical language, a compact discrete representation of world-state transitions. Existing physical world models typically predict future videos directly in pixel space, leaving the underlying world dynamics implicit within high-dimensional vi...",
+      "key_findings": [
+        "We introduce PhiZero, a physical world model built around physical language, a compact discrete representation of world-state transitions. Existing ph..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28624",
+        "huggingface": "https://huggingface.co/papers/2607.28624",
+        "pdf": "https://arxiv.org/pdf/2607.28624"
+      }
+    },
+    {
+      "id": "videococo-code-as-cot-for-physically-consistent-video-genera",
+      "title": "VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System",
+      "authors": [
+        "Haodong Li",
+        "Tianfei Ren",
+        "Xiaoxiao Ma",
+        "Chunmei Qing et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Text-to-video models have achieved remarkable visual quality, yet they still struggle to generate physically consistent dynamics because the temporal evolution of a scene must be inferred implicitly from a highly compressed text prompt. Existing chain-of-thought approaches introduce intermediate pla...",
+      "key_findings": [
+        "Text-to-video models have achieved remarkable visual quality, yet they still struggle to generate physically consistent dynamics because the temporal ..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.27380",
+        "huggingface": "https://huggingface.co/papers/2607.27380",
+        "pdf": "https://arxiv.org/pdf/2607.27380"
+      }
+    },
+    {
+      "id": "memory-decoder-at-scale-a-pretrained-parametric-long-term-me",
+      "title": "Memory Decoder at Scale: A Pretrained, Parametric Long-Term Memory",
+      "authors": [
+        "Rubin Wei",
+        "Jiaqi Cao",
+        "Jiarui Wang",
+        "Junming Zhang et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Decoder-only language models entangle long-term memory and reasoning in a single parameter set, making it difficult to scale memory capacity independently. Memory Decoder introduces a parametric long-term memory module but only studies it at a relatively small scale. In this work, we present Memory ...",
+      "key_findings": [
+        "Decoder-only language models entangle long-term memory and reasoning in a single parameter set, making it difficult to scale memory capacity independe..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.27919",
+        "huggingface": "https://huggingface.co/papers/2607.27919",
+        "pdf": "https://arxiv.org/pdf/2607.27919"
+      }
+    },
+    {
+      "id": "beacon-knowing-when-and-how-to-perform-agentic-visual-reason",
+      "title": "Beacon: Knowing When and How to Perform Agentic Visual Reasoning",
+      "authors": [
+        "Qixun Wang",
+        "Yang Shi",
+        "Letian Cheng",
+        "Zhuoran Zhang et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "The fundamental goal of agentic visual reasoning is to improve the success rate of multimodal large language models (MLLMs) on complex tasks, rather than merely equipping them with a sophisticated yet inefficient reasoning paradigm. In this work, we rethink agentic visual reasoning through two key d...",
+      "key_findings": [
+        "The fundamental goal of agentic visual reasoning is to improve the success rate of multimodal large language models (MLLMs) on complex tasks, rather t..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28595",
+        "huggingface": "https://huggingface.co/papers/2607.28595",
+        "pdf": "https://arxiv.org/pdf/2607.28595"
+      }
+    },
+    {
+      "id": "bm25-wins-at-scale-a-scaling-study-of-retrieval-augmented-ge",
+      "title": "BM25 Wins at Scale: A Scaling Study of Retrieval-Augmented Generation Paradigms",
+      "authors": [
+        "Pengyu Wang",
+        "Benfeng Xu",
+        "Shaohan Wang",
+        "Xin Zeng et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Retrieval-augmented generation (RAG) spans lexical and dense retrieval, graph-based indexing, and agentic search, but these paradigms are usually evaluated on different benchmarks at one corpus size, leaving their accuracy-cost scaling unclear. To bridge this gap, we present a controlled study that ...",
+      "key_findings": [
+        "Retrieval-augmented generation (RAG) spans lexical and dense retrieval, graph-based indexing, and agentic search, but these paradigms are usually eval..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26497",
+        "huggingface": "https://huggingface.co/papers/2607.26497",
+        "pdf": "https://arxiv.org/pdf/2607.26497"
+      }
+    },
+    {
+      "id": "flux-opd-on-policy-distillation-with-evolving-contexts",
+      "title": "Flux-OPD: On-Policy Distillation with Evolving Contexts",
+      "authors": [
+        "Yuran Wang",
+        "Zekun Wang",
+        "Bohan Zeng",
+        "Ruixu Zhang et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Large language model training in open-ended domains lacks verifiable rewards, making task preferences difficult to formalize as effective supervision. Contexts can convey such preferences, yet provide little additional supervision once distilled into the student, motivating contexts that evolve with...",
+      "key_findings": [
+        "Large language model training in open-ended domains lacks verifiable rewards, making task preferences difficult to formalize as effective supervision...."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28022",
+        "huggingface": "https://huggingface.co/papers/2607.28022",
+        "pdf": "https://arxiv.org/pdf/2607.28022"
+      }
+    },
+    {
+      "id": "mpie-bench-benchmarking-anatomically-plausible-multi-person-",
+      "title": "MPIE-Bench: Benchmarking Anatomically Plausible Multi-Person Interaction Editing",
+      "authors": [
+        "Jiajia Lin",
+        "Mingxuan Du",
+        "Tuowen Zhou",
+        "Benfeng Xu et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Text-to-image and personalized editing models now synthesize high-fidelity single-subject images with ease. Yet placing multiple named people into shared contact actions such as embrace, carry, or grapple still exposes major failures: fused limbs, invented extremities, and interpenetrating bodies. E...",
+      "key_findings": [
+        "Text-to-image and personalized editing models now synthesize high-fidelity single-subject images with ease. Yet placing multiple named people into sha..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.27616",
+        "huggingface": "https://huggingface.co/papers/2607.27616",
+        "pdf": "https://arxiv.org/pdf/2607.27616"
+      }
+    },
+    {
+      "id": "ace-data-0-human-centric-ambient-capture-as-embodied-data-en",
+      "title": "ACE-Data-0: Human-Centric Ambient Capture as Embodied Data Engine",
+      "authors": [
+        "Yukang Cao",
+        "Haozhe Xie",
+        "Beichen Wen",
+        "Runmao Yao et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Embodied intelligence faces a fundamental data bottleneck. Models must capture how first-person perception, whole-body motion, dexterous manipulation, object state, sound, and touch evolve together as humans pursue goals over time. Existing datasets fragment this experience across viewpoints, modali...",
+      "key_findings": [
+        "Embodied intelligence faces a fundamental data bottleneck. Models must capture how first-person perception, whole-body motion, dexterous manipulation,..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28625",
+        "huggingface": "https://huggingface.co/papers/2607.28625",
+        "pdf": "https://arxiv.org/pdf/2607.28625"
+      }
+    },
+    {
+      "id": "beyond-borrowed-histories-person-aligned-user-simulation-for",
+      "title": "Beyond Borrowed Histories: Person-Aligned User Simulation for Interactive Role-Playing Evaluation",
+      "authors": [
+        "Yuhang Zhu",
+        "Mingxuan Du",
+        "Benfeng Xu",
+        "Jie Gao et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Role-playing agents (RPAs) have become one of the most important consumer applications of large language models. Users engage in multi-turn conversations with RPAs for experiences such as emotional comfort, making reliable evaluation essential for measuring capability, comparing systems, and guiding...",
+      "key_findings": [
+        "Role-playing agents (RPAs) have become one of the most important consumer applications of large language models. Users engage in multi-turn conversati..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.27816",
+        "huggingface": "https://huggingface.co/papers/2607.27816",
+        "pdf": "https://arxiv.org/pdf/2607.27816"
+      }
+    },
+    {
+      "id": "refcaptioner-multi-reference-image-grounded-video-captioning",
+      "title": "RefCaptioner: Multi-Reference Image-Grounded Video Captioning",
+      "authors": [
+        "Tengfei Liu",
+        "Yang Shi",
+        "Yuran Wang",
+        "Xiaohan Zhang et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Existing video captioning models generate natural descriptions of video content but cannot explicitly ground local visual elements to multiple reference images. We introduce multi-reference image-grounded video captioning, a new task requiring factual video descriptions with phrase-level reference g...",
+      "key_findings": [
+        "Existing video captioning models generate natural descriptions of video content but cannot explicitly ground local visual elements to multiple referen..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28509",
+        "huggingface": "https://huggingface.co/papers/2607.28509",
+        "pdf": "https://arxiv.org/pdf/2607.28509"
+      }
+    },
+    {
+      "id": "see2think-do-multimodal-models-really-use-intermediate-visua",
+      "title": "See2Think: Do Multimodal Models Really Use Intermediate Visual States?",
+      "authors": [
+        "Siyu Yan",
+        "Zhuoran Yan",
+        "Haiying Xu",
+        "Panhao Zhou et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Multimodal large language models increasingly use sketches, annotations, tools, and intermediate images during reasoning, but it remains unclear whether they truly rely on these visual states. Existing benchmarks are limited both by task collections with narrow coverage or partially text-solvable sa...",
+      "key_findings": [
+        "Multimodal large language models increasingly use sketches, annotations, tools, and intermediate images during reasoning, but it remains unclear wheth..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26769",
+        "huggingface": "https://huggingface.co/papers/2607.26769",
+        "pdf": "https://arxiv.org/pdf/2607.26769"
+      }
+    },
+    {
+      "id": "spatialcli-learning-to-reason-with-spatial-tools-then-withou",
+      "title": "SpatialCLI: Learning to Reason With Spatial Tools, Then Without Them",
+      "authors": [
+        "Yang Zhou",
+        "Zixuan Huang",
+        "Sunzhu Li",
+        "Zhuo Yang et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Vision-language models (VLMs) are increasingly used in embodied agents to interpret visual inputs, reason about spatial relationships, and make task-level decisions based on that reasoning. However, a fundamental capability mismatch remains: general VLMs can reason about the overall task but often m...",
+      "key_findings": [
+        "Vision-language models (VLMs) are increasingly used in embodied agents to interpret visual inputs, reason about spatial relationships, and make task-l..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.27703",
+        "huggingface": "https://huggingface.co/papers/2607.27703",
+        "pdf": "https://arxiv.org/pdf/2607.27703"
+      }
+    },
+    {
+      "id": "opsd-deriving-with-policy-optimization-training-with-self-di",
+      "title": "β-OPSD: Deriving with Policy Optimization, Training with Self-Distillation",
+      "authors": [
+        "Jiawei Xu",
+        "Minghui Liu",
+        "Juzheng Zhang",
+        "Tom Goldstein et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "On-policy self-distillation (OPSD) is a promising approach to improve reasoning language models, but it remains brittle in practice: making it work reliably often requires substantial engineering effort. We identify a structural source of this difficulty: vanilla OPSD is precisely the β=1 member of ...",
+      "key_findings": [
+        "On-policy self-distillation (OPSD) is a promising approach to improve reasoning language models, but it remains brittle in practice: making it work re..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28582",
+        "huggingface": "https://huggingface.co/papers/2607.28582",
+        "pdf": "https://arxiv.org/pdf/2607.28582"
+      }
+    },
+    {
+      "id": "chimera-designing-and-chinchilla-scaling-hybrid-visual-diffu",
+      "title": "Chimera: Designing and Chinchilla-Scaling Hybrid Visual Diffusion Transformers",
+      "authors": [
+        "Chongjian Ge",
+        "Hanwen Jiang",
+        "Tianyu Wang",
+        "Jiuxiang Gu et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Visual generation increasingly requires high-resolution images, long videos, and multimodal context, making the quadratic cost of full attention prohibitive. We introduce Chimera, a hybrid visual diffusion backbone with a principled scaling recipe. Chimera processes text, image, and video tokens in ...",
+      "key_findings": [
+        "Visual generation increasingly requires high-resolution images, long videos, and multimodal context, making the quadratic cost of full attention prohi..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28611",
+        "huggingface": "https://huggingface.co/papers/2607.28611",
+        "pdf": "https://arxiv.org/pdf/2607.28611"
+      }
+    },
+    {
+      "id": "shadowdancer-teaching-video-world-models-any-action-by-learn",
+      "title": "ShadowDancer: Teaching Video World Models Any Action by Learning Unified Dynamics Representations from a Video and Its Shadow",
+      "authors": [
+        "Jin Cao",
+        "Zian Meng",
+        "Kaipeng Zhang"
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "We present ShadowDancer, a novel approach to any-action, frame-level control of interactive video world models. The obstacle is representational: existing interfaces either encode an action loosely, leaving how it unfolds for the model to improvise, or encode it exactly through structured signals th...",
+      "key_findings": [
+        "We present ShadowDancer, a novel approach to any-action, frame-level control of interactive video world models. The obstacle is representational: exis..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28362",
+        "huggingface": "https://huggingface.co/papers/2607.28362",
+        "pdf": "https://arxiv.org/pdf/2607.28362"
+      }
+    },
+    {
+      "id": "can-large-language-models-execute-parent-orders",
+      "title": "Can Large Language Models Execute Parent Orders?",
+      "authors": [
+        "Zane Shen",
+        "Xinli Xu",
+        "Guangyi Zhang",
+        "Jialong Chen et al."
+      ],
+      "affiliations": [
+        "Unknown"
+      ],
+      "summary": "Parent-order execution is a core problem in algorithmic trading, where the goal is to split a large order into smaller orders while reducing execution costs. Existing approaches either rely on pre-specified market assumptions that may not hold in practice, or require task-specific training that limi...",
+      "key_findings": [
+        "Parent-order execution is a core problem in algorithmic trading, where the goal is to split a large order into smaller orders while reducing execution..."
+      ],
+      "tags": [
+        "ai",
+        "machine-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28410",
+        "huggingface": "https://huggingface.co/papers/2607.28410",
+        "pdf": "https://arxiv.org/pdf/2607.28410"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "moonshotai",
+      "description": "Trending model on HuggingFace with 559,924 downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 559924,
+        "likes": 9492
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "deepseek-ai",
+      "description": "Trending model on HuggingFace with 15,366 downloads.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 15366,
+        "likes": 1438
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "qwen3-6-27b-fable-fusion-711-uncensored-heretic-nm-dau-neo-m",
+      "name": "Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+      "organization": "DavidAU",
+      "description": "Trending model on HuggingFace with 1,173,001 downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 1173001,
+        "likes": 1240
+      },
+      "source_url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF"
+    },
+    {
+      "id": "unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "baidu",
+      "description": "Trending model on HuggingFace with 2,457,387 downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 2457387,
+        "likes": 3714
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "deepseek-v4-flash-0731-gguf",
+      "name": "DeepSeek-V4-Flash-0731-GGUF",
+      "organization": "unsloth",
+      "description": "Trending model on HuggingFace with 4,048 downloads.",
+      "task_type": "unknown",
+      "model_size": "unknown",
+      "tags": [
+        "ai"
+      ],
+      "metrics": {
+        "downloads": 4048,
+        "likes": 289
+      },
+      "source_url": "https://huggingface.co/unsloth/DeepSeek-V4-Flash-0731-GGUF"
+    },
+    {
+      "id": "inflect-micro-v2",
+      "name": "Inflect-Micro-v2",
+      "organization": "owensong",
+      "description": "Trending model on HuggingFace with 1,565 downloads.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-speech"
+      ],
+      "metrics": {
+        "downloads": 1565,
+        "likes": 363
+      },
+      "source_url": "https://huggingface.co/owensong/Inflect-Micro-v2"
+    },
+    {
+      "id": "glm-5-2",
+      "name": "GLM-5.2",
+      "organization": "zai-org",
+      "description": "Trending model on HuggingFace with 1,683,442 downloads.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1683442,
+        "likes": 4737
+      },
+      "source_url": "https://huggingface.co/zai-org/GLM-5.2"
+    },
+    {
+      "id": "kimi-k3-gguf",
+      "name": "Kimi-K3-GGUF",
+      "organization": "unsloth",
+      "description": "Trending model on HuggingFace with 41,337 downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 41337,
+        "likes": 243
+      },
+      "source_url": "https://huggingface.co/unsloth/Kimi-K3-GGUF"
+    },
+    {
+      "id": "kat-coder-v2-5-dev",
+      "name": "KAT-Coder-V2.5-Dev",
+      "organization": "Kwaipilot",
+      "description": "Trending model on HuggingFace with 10,771 downloads.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 10771,
+        "likes": 391
+      },
+      "source_url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev"
+    },
+    {
+      "id": "inkling-small",
+      "name": "Inkling-Small",
+      "organization": "thinkingmachines",
+      "description": "Trending model on HuggingFace with 3,998 downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 3998,
+        "likes": 213
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling-Small"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "paperswithbacktest-awesome-systematic-trading",
+      "name": "paperswithbacktest/awesome-systematic-trading",
+      "description": "A curated list of awesome libraries, packages, strategies, books, blogs, tutorials for systematic trading.",
+      "language": "Python",
+      "stars": 12277,
+      "stars_today": 523,
+      "forks": 1515,
+      "url": "https://github.com/paperswithbacktest/awesome-systematic-trading",
+      "tags": [
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "huggingface-speech-to-speech",
+      "name": "huggingface/speech-to-speech",
+      "description": "Build local voice agents with open-source models",
+      "language": "Python",
+      "stars": 10235,
+      "stars_today": 442,
+      "forks": 1249,
+      "url": "https://github.com/huggingface/speech-to-speech",
+      "tags": [
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "abus-aikorea-voice-pro",
+      "name": "abus-aikorea/voice-pro",
+      "description": "Gradio WebUI for creators and developers, featuring key TTS (Edge-TTS, kokoro) and zero-shot Voice Cloning (E2 & F5-TTS, CosyVoice), with Whisper audio processing, YouTube download, Demucs vocal isola",
+      "language": "Python",
+      "stars": 11783,
+      "stars_today": 58,
+      "forks": 1724,
+      "url": "https://github.com/abus-aikorea/voice-pro",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ansible-ansible",
+      "name": "ansible/ansible",
+      "description": "Ansible is a radically simple IT automation platform that makes your applications and systems easier to deploy and maintain. Automate everything from code deployment to network configuration to cloud ",
+      "language": "Python",
+      "stars": 70111,
+      "stars_today": 30,
+      "forks": 24271,
+      "url": "https://github.com/ansible/ansible",
+      "tags": [
+        "python"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "microsoft-trellis-2",
+      "name": "microsoft/TRELLIS.2",
+      "description": "Native and Compact Structured Latents for 3D Generation",
+      "language": "Python",
+      "stars": 9948,
+      "stars_today": 107,
+      "forks": 1200,
+      "url": "https://github.com/microsoft/TRELLIS.2",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "bytedance-deer-flow",
+      "name": "bytedance/deer-flow",
+      "description": "An open-source long-horizon SuperAgent harness that researches, codes, and creates. With the help of sandboxes, memories, tools, skill, subagents and message gateway, it handles different levels of ta",
+      "language": "Python",
+      "stars": 78753,
+      "stars_today": 209,
+      "forks": 10744,
+      "url": "https://github.com/bytedance/deer-flow",
+      "tags": [
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-autoresearch",
+      "name": "karpathy/autoresearch",
+      "description": "AI agents running research on single-GPU nanochat training automatically",
+      "language": "Python",
+      "stars": 92753,
+      "stars_today": 91,
+      "forks": 13204,
+      "url": "https://github.com/karpathy/autoresearch",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "simplifyjobs-summer2027-internships",
+      "name": "SimplifyJobs/Summer2027-Internships",
+      "description": "Summer 2026 software engineering, data science, AI, quant, product management, and hardware internship postings. Updated daily by Simplify and Pitt CSC.",
+      "language": "Python",
+      "stars": 45665,
+      "stars_today": 39,
+      "forks": 3202,
+      "url": "https://github.com/SimplifyJobs/Summer2027-Internships",
+      "tags": [
+        "python"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "The agent that grows with you",
+      "language": "Python",
+      "stars": 223866,
+      "stars_today": 475,
+      "forks": 43220,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deepfakes-faceswap",
+      "name": "deepfakes/faceswap",
+      "description": "Deepfakes Software For All",
+      "language": "Python",
+      "stars": 57194,
+      "stars_today": 364,
+      "forks": 13491,
+      "url": "https://github.com/deepfakes/faceswap",
+      "tags": [
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mvanhorn-last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+      "language": "Python",
+      "stars": 56613,
+      "stars_today": 600,
+      "forks": 4944,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": [
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "kangarooking-cangjie-skill",
+      "name": "kangarooking/cangjie-skill",
+      "description": "把书、长视频、播客等高价值内容蒸馏成可执行的 Agent Skills",
+      "language": "Python",
+      "stars": 5918,
+      "stars_today": 113,
+      "forks": 755,
+      "url": "https://github.com/kangarooking/cangjie-skill",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ashishpatel26-500-ai-agents-projects",
+      "name": "ashishpatel26/500-AI-Agents-Projects",
+      "description": "The 500 AI Agents Projects is a curated collection of AI agent use cases across various industries. It showcases practical applications and provides links to open-source projects for implementation, i",
+      "language": "Python",
+      "stars": 35567,
+      "stars_today": 69,
+      "forks": 6327,
+      "url": "https://github.com/ashishpatel26/500-AI-Agents-Projects",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "unslothai-unsloth",
+      "name": "unslothai/unsloth",
+      "description": "Unsloth is a local UI for training and running Kimi K3, Gemma 4, Qwen3.6, DeepSeek-V4, GLM and other models.",
+      "language": "Python",
+      "stars": 69360,
+      "stars_today": 69,
+      "forks": 6262,
+      "url": "https://github.com/unslothai/unsloth",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "libretranslate-libretranslate",
+      "name": "LibreTranslate/LibreTranslate",
+      "description": "Free and Open Source Machine Translation API. Self-hosted, offline capable and easy to setup.",
+      "language": "Python",
+      "stars": 15815,
+      "stars_today": 67,
+      "forks": 1625,
+      "url": "https://github.com/LibreTranslate/LibreTranslate",
+      "tags": [
+        "python"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Memory Systems",
+      "description": "Multiple papers tackle long-term memory for LLM agents — parametric memory, filesystem-based memory, reliability-aware multi-agent memory, and reconstruction-based retrieval.",
+      "related_paper_ids": [
+        "metis-memory-foundation-model",
+        "memory-decoder-at-scale-a-pretrained-parametric-long-ter",
+        "memharness-memory-is-reconstructed-not-replayed",
+        "filesystem-based-memory-for-llm-agents-organization-evol"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Search and Reasoning Infrastructure",
+      "description": "Graph-structured harnesses, provenance-constrained reasoning, and RAG scaling studies refine how agents traverse and trust information.",
+      "related_paper_ids": [
+        "harness-g-a-graph-structured-harness-for-search-agents",
+        "bm25-wins-at-scale-a-scaling-study-of-retrieval-augmente",
+        "ledgermind-provenance-constrained-multimodal-agentic-rea"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video and Physical World Models",
+      "description": "Physical language representations, shadow-based action control, and code-as-chain-of-thought push video world models toward physically consistent generation.",
+      "related_paper_ids": [
+        "phizero-a-world-model-built-around-physical-language",
+        "shadowdancer-teaching-video-world-models-any-action-by-l",
+        "videococo-code-as-cot-for-physically-consistent-video-ge"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "GUI and Computer-Use Agents",
+      "description": "Real-world-centric GUI agents and scalable computer-use training environments push toward deployable digital assistants.",
+      "related_paper_ids": [
+        "qwen-ui-agent-technical-report-toward-next-generation-re",
+        "echoverse-deep-evolving-environments-for-training-comput"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Training Efficiency and On-Policy Distillation",
+      "description": "On-policy self-distillation variants and explorative modeling introduce new axes for model improvement beyond scale.",
+      "related_paper_ids": [
+        "flux-opd-on-policy-distillation-with-evolving-contexts",
+        "beta-opsd-deriving-with-policy-optimization-training-wit",
+        "explorative-modeling-unlocking-a-third-pretraining-axis-"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-02T03:08:44.051981Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-08-02T03:08:44.051981Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-08-02T03:08:44.051981Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-02T03:08:44.051981Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-02T03:08:44.051981Z",
+      "status": "ok"
+    }
+  ]
+}
