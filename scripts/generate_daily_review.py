@@ -454,6 +454,33 @@ def _make_anthropic_client():
     return _client()
 
 
+def _synthesize_via_claude_cli(prompt: str) -> str | None:
+    """Attempt to synthesize using the `claude` CLI subprocess (fallback when SDK auth fails)."""
+    import shutil
+    import subprocess
+    import tempfile
+
+    claude_bin = shutil.which("claude") or os.environ.get("CLAUDE_CODE_EXECPATH", "")
+    if not claude_bin:
+        return None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
+            f.write(prompt)
+            prompt_file = f.name
+        result = subprocess.run(
+            [claude_bin, "-p", "--output-format", "text", f"@{prompt_file}"],
+            capture_output=True, text=True, timeout=300,
+        )
+        os.unlink(prompt_file)
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+        print(f"  [Claude CLI] Exit {result.returncode}: {result.stderr[:200]}")
+        return None
+    except Exception as e:
+        print(f"  [Claude CLI] Failed: {e}")
+        return None
+
+
 def synthesize_with_claude(source_context: str, date: str) -> dict:
     """Use Claude to synthesize the daily review from source data."""
     client = _make_anthropic_client()
@@ -484,12 +511,22 @@ Output ONLY valid JSON matching this schema (no markdown fences, no commentary):
 """
 
     print("  [Claude] Synthesizing daily review...")
-    with client.messages.stream(
-        model=CLAUDE_MODEL,
-        max_tokens=16000,
-        messages=[{"role": "user", "content": prompt}],
-    ) as stream:
-        text = stream.get_final_message().content[0].text.strip()
+    text = None
+    try:
+        with client.messages.stream(
+            model=CLAUDE_MODEL,
+            max_tokens=16000,
+            messages=[{"role": "user", "content": prompt}],
+        ) as stream:
+            text = stream.get_final_message().content[0].text.strip()
+    except Exception as sdk_err:
+        print(f"  [Claude SDK] Failed ({sdk_err}), trying claude CLI fallback...")
+        text = _synthesize_via_claude_cli(prompt)
+        if text is None:
+            raise RuntimeError(
+                "Both Anthropic SDK and claude CLI synthesis failed. "
+                "Set ANTHROPIC_API_KEY or ensure `claude` is authenticated."
+            ) from sdk_err
 
     # Strip markdown fences if present
     if text.startswith("```"):
