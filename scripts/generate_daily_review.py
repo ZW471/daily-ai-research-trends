@@ -422,14 +422,20 @@ def _make_anthropic_client():
     import anthropic
     import ssl
 
-    # Build an httpx client that uses certifi's CA bundle to avoid
-    # UNKNOWN_CERTIFICATE_VERIFICATION_ERROR in restricted remote environments.
-    try:
-        import certifi
-        ssl_context = ssl.create_default_context(cafile=certifi.where())
-        http_client = httpx.Client(verify=certifi.where())
-    except ImportError:
-        http_client = None
+    # In CCR (Claude Code Remote) environments the egress proxy re-terminates TLS
+    # using a custom CA bundle at /root/.ccr/ca-bundle.crt. Prefer that over certifi
+    # so the Anthropic SDK can reach api.anthropic.com through the proxy.
+    ccr_ca = "/root/.ccr/ca-bundle.crt"
+    if Path(ccr_ca).exists():
+        ca_bundle = ccr_ca
+    else:
+        try:
+            import certifi
+            ca_bundle = certifi.where()
+        except ImportError:
+            ca_bundle = None
+
+    http_client = httpx.Client(verify=ca_bundle) if ca_bundle else None
 
     def _client(**kwargs):
         if http_client is not None:

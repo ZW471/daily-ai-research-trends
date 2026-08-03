@@ -1,0 +1,930 @@
+{
+  "version": "1.0",
+  "date": "2026-08-03",
+  "generated_at": "2026-08-03T09:00:00Z",
+  "summary": {
+    "headline": "MiniMax open-sources H3, a 33.1B unified omni-modal model generating 2K video with native 32kHz audio in one pass; RLSVR proposes a self-verifiable adversarial reward scheme that extends RLVR to open-ended, judge-free LLM self-improvement; memory-native architectures converge across Metis, GUI-agent research, and the fast-rising MemPalace repo as the next foundation-model primitive.",
+    "body": "August 3 brought a cluster of releases that point toward two converging trends: **self-verification as a substitute for external reward models**, and **native memory as a first-class architectural component** rather than a bolted-on retrieval system. RLSVR (137 upvotes, the day's clear standout) reframes open-ended RL training as an information-asymmetric adversarial game with rule-based outcomes, sidestepping the need for LLM judges or learned reward models — a meaningful step for domains where RLVR previously had no foothold. Meanwhile Metis (MemTensor/Renmin University/NUS/SJTU/Tongji) proposes gradient-free online memory maintenance baked directly into model architecture, landing the same week GitHub's MemPalace (57.9K stars, +2,180 today) is trending as an open memory system organized around people/projects/topics — academic and open-source communities are independently converging on memory as 2026's next scaling axis.\n\nOn the multimodal/embodied side, MiniMax shipped H3 as a fully open, single-stream 33.1B omni-transformer unifying text, image, video, and native audio generation — notably launched with simultaneous paper, HF model card, and GitHub repo (already pulling 3,890 stars in a single day). N0-VTLA extends the same coordinated-release pattern for tactile-augmented robot manipulation, pairing latent tactile tokens with a same-day trending GitHub repo. Alibaba's Qwen-UI-Agent claims 92.2% on MobileWorld-Real, outperforming Opus 4.8, GPT-5.6 Sol, and Gemini 3.5 Flash on real-world GUI control — continuing a steady cadence of GUI-agent papers (Mem-W, MementoGUI, SE-GA) that are increasingly memory-centric themselves.\n\nOn the quieter end, AskChem's shift from paper-level to claim-level retrieval (2.4M provenance-carrying claims from 147K papers, with MCP access for agents) and AISPA's audit of 3,249 system-prompt instructions across 88 commercial products are smaller-engagement but structurally important contributions to trustworthy, agent-accessible AI infrastructure.",
+    "key_themes": [
+      "self-verification-replacing-external-judges",
+      "native-memory-architectures",
+      "coordinated-same-day-multi-channel-launches",
+      "real-world-foundation-gui-agents",
+      "omni-modal-generation-with-native-audio",
+      "trustworthy-enterprise-and-agent-infrastructure"
+    ]
+  },
+  "researcher_notes": "**The self-verification thread is the story to watch.** RLSVR's core move — replacing external judges with an adversarial, rule-based verifiable signal — is conceptually adjacent to the Evaluation-Verification Reward paper for image editing (also using a verification pass to filter outputs) and to N0-VTLA's tactile-feedback control loop (verifying contact state rather than relying on a supervised label). Three unrelated teams landing on \"verify, don't judge\" in the same week suggests this is less a coincidence than a maturing consensus that reward-model bottlenecks are the next thing to route around, much as RLHF routed around hand-labeled preference data two years ago.\n\n**Memory is quietly becoming 2026's most contested primitive.** Metis (academic, architecture-native memory attention) landing the same day MemPalace surges 2,180 stars on GitHub — plus the steady drumbeat of GUI-agent memory papers (Mem-W, MementoGUI, SE-GA, Executable Agentic Memory) referenced in the arXiv sweep — indicates memory is following the same trajectory RAG did in 2023-24: first bolted on, now being absorbed into the model and training loop itself. Worth tracking whether Metis-style gradient-free online memory gets adopted by a major open-weight lab within the next quarter.\n\n**Sleeper hit: AskChem.** Only 8 upvotes, but the claim-centric retrieval architecture (atomic, DOI-grounded, quote-verifiable claims instead of whole-paper chunks) directly attacks the hallucination-in-literature-synthesis problem and ships with MCP access out of the box — meaning it's already agent-native infrastructure rather than a chat demo. Low visibility now, but this is the kind of unglamorous plumbing that tends to get quietly integrated into larger systems.\n\n**Coordinated same-day drops are becoming the norm, not the exception.** MiniMax H3 and N0-VTLA both shipped paper + HF model + GitHub repo simultaneously, with H3's repo picking up 3,890 stars in a single day against a base of only 12,800 — an unusually steep ratio that signals a genuinely fresh, hyped launch rather than organic long-tail growth. Compare this to vllm-project/vllm's much larger but slower-growing base (98.2K stars, +420 today): the infrastructure layer is maturing while the model layer is still in a land-grab phase.\n\n**Worth flagging skeptically:** Qwen-UI-Agent's claimed 92.2% on MobileWorld-Real and its beating of Opus 4.8/GPT-5.6 Sol/Gemini 3.5 Flash is a strong claim on a benchmark introduced by the same team — worth independent replication before treating it as settled. Similarly, AISPA's audit methodology (mapping prompt instructions to UDHR articles) is a novel framing for AI governance research but the paper's low upvote count relative to its structural importance (88 commercial products audited) suggests it hasn't yet found its audience outside the safety/policy niche.",
+  "papers": [
+    {
+      "id": "rlvr-to-rlsvr",
+      "title": "From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards for Open-Ended LLM Self-Improvement",
+      "authors": [
+        "Kun Wan",
+        "Huazheng Wang",
+        "Jing Shi",
+        "Qinsi Wang",
+        "Benjamin-eecs et al."
+      ],
+      "affiliations": [
+        "Adobe Research",
+        "Oregon State University"
+      ],
+      "summary": "RLSVR extends RLVR to open-ended tasks by transforming them into an information-asymmetric adversarial game with rule-based, verifiable outcomes, removing the need for external judges or learned reward models. This enables LLM self-improvement on open-domain tasks previously inaccessible to verifiable-reward RL.",
+      "key_findings": [
+        "Brings self-supervised task-transformation principles into RL to manufacture verifiable rewards for open-ended tasks",
+        "Uses an adversarial game with rule-based outcomes rather than LLM judges or reward models",
+        "Highest-engagement paper of the day at 137 upvotes, signaling strong community interest in judge-free RL"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "self-improvement",
+        "LLM-training",
+        "verifiable-rewards"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 137,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23802",
+        "huggingface": "https://huggingface.co/papers/2607.23802",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.23802",
+        "pdf": "https://arxiv.org/pdf/2607.23802"
+      }
+    },
+    {
+      "id": "n0-vtla",
+      "title": "N0-VTLA: Scaling Vision-Tactile-Language-Action Model with Latent Tactile Tokens",
+      "authors": [
+        "Xiangyu Xu",
+        "Xiaoyu Hu",
+        "Zhoushun Yu",
+        "NeoteAI Team",
+        "Fudan TEAI Team et al."
+      ],
+      "affiliations": [
+        "Fudan University",
+        "NeoteAI"
+      ],
+      "summary": "N0-VTLA is a vision-tactile-language-action foundation model for contact-rich manipulation, using latent tactile tokens to predict tactile signals and control robots without specialized sensors at deployment. Training combines visuo-tactile pre-training on the large-scale NeoData dataset with advantage-conditioned offline policy improvement.",
+      "key_findings": [
+        "Latent tactile tokens allow sensor-free tactile-informed control at deployment time",
+        "Staged tactile-pathway integration and offline policy improvement from stored deployment data",
+        "Same-day coordinated release of paper, model, and a trending GitHub repository"
+      ],
+      "tags": [
+        "robotics",
+        "tactile-sensing",
+        "vision-language-action",
+        "manipulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23782",
+        "huggingface": "https://huggingface.co/papers/2607.23782",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.23782",
+        "pdf": "https://arxiv.org/pdf/2607.23782"
+      }
+    },
+    {
+      "id": "qwen-ui-agent",
+      "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+      "authors": [
+        "Alibaba Qwen Team"
+      ],
+      "affiliations": [
+        "Alibaba"
+      ],
+      "summary": "Qwen-UI-Agent unifies mobile, computer, browser, and DeepSearch GUI control in a single foundation model. It reports 92.2% success on the MobileWorld-Real benchmark (400+ tasks, 100+ apps), claiming to outperform Opus 4.8, GPT-5.6 Sol, Gemini 3.5 Flash, and Seed2.1 Pro.",
+      "key_findings": [
+        "Single model unifies mobile, desktop, browser, and DeepSearch GUI scenarios",
+        "92.2% success rate on MobileWorld-Real, a 400+ task benchmark across 100+ apps",
+        "Outperforms several frontier general-purpose models and specialized GUI agents on the team's own benchmark"
+      ],
+      "tags": [
+        "GUI-agents",
+        "foundation-models",
+        "agentic-AI",
+        "mobile-automation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28227",
+        "huggingface": "https://huggingface.co/papers/2607.28227",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.28227",
+        "pdf": "https://arxiv.org/pdf/2607.28227"
+      }
+    },
+    {
+      "id": "minimax-h3",
+      "title": "MiniMax H3: Open Omni-Modal Video Model With Native Audio",
+      "authors": [
+        "MiniMax AI Team"
+      ],
+      "affiliations": [
+        "MiniMax AI"
+      ],
+      "summary": "MiniMax H3 is an open-sourced, general-purpose omni-modal generation system that understands text, images, video, and audio context and produces up to 15 seconds of 2K video with native 32kHz stereo audio in a single pass. It's powered by a 33.1B dense single-stream omni transformer with a Qwen3-VL-32B text encoder, replacing the Hailuo line's previous task-siloed pipelines.",
+      "key_findings": [
+        "33.1B dense single-stream transformer unifies video and audio generation in one pass, replacing task-siloed pipelines",
+        "Generates up to 15 seconds of 2K video with native 32kHz stereo audio",
+        "Simultaneous paper, HF model, and GitHub repo release; repo already at 3,890 stars gained in one day"
+      ],
+      "tags": [
+        "video-generation",
+        "omni-modal",
+        "audio-generation",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 8
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "metis-memory-foundation-model",
+      "title": "Metis: Memory Foundation Model",
+      "authors": [
+        "MemTensor Team",
+        "Renmin University",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "affiliations": [
+        "Renmin University of China",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "summary": "Metis gives foundation models native memory states, compressing and accessing historical information through memory attention with gradient-free online memory maintenance built directly into the architecture. It outperforms external memory baselines on memory operation and memory-based QA tasks.",
+      "key_findings": [
+        "Memory is integrated as a native architectural state rather than an external retrieval system",
+        "Gradient-free online memory maintenance avoids costly re-training for memory updates",
+        "Outperforms external-memory baselines on memory-operation and memory-QA benchmarks"
+      ],
+      "tags": [
+        "memory-architecture",
+        "foundation-models",
+        "long-context"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 3
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "videococo",
+      "title": "VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory (affiliation inferred)"
+      ],
+      "summary": "VideoCoCo uses executable Blender code as process-level chain-of-thought to generate deterministic spatiotemporal drafts that guide a video editor toward physically consistent, photorealistic output. An agentic dual-engine system coordinates code generation and video editing to enforce physical plausibility.",
+      "key_findings": [
+        "Executable Blender code serves as an interpretable, deterministic process-level CoT for video generation",
+        "Dual-engine architecture separates physics-grounded drafting from photorealistic editing",
+        "Targets physical consistency, a known failure mode of diffusion-based video generators"
+      ],
+      "tags": [
+        "video-generation",
+        "chain-of-thought",
+        "physical-consistency",
+        "agentic-systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "askchem-chemistry-literature",
+      "title": "AskChem: Claim-Centered Infrastructure for Chemistry Literature Synthesis",
+      "authors": [
+        "AskChem Team"
+      ],
+      "affiliations": [
+        "Academic-industry consortium (chemistry AI)"
+      ],
+      "summary": "AskChem shifts the retrieval unit from the paper to the provenance-carrying claim, converting papers into atomic, typed, DOI-grounded claims with verbatim evidence locators. It indexes 2.4M claims from 147K papers and exposes web, REST, SDK, and MCP access for AI agents, enabling cross-paper synthesis and contradiction surfacing.",
+      "key_findings": [
+        "Retrieval unit is the atomic, provenance-grounded claim rather than the whole paper or chunk",
+        "Indexes 2.4M claims from 147K papers with verbatim evidence locators",
+        "MCP-native access makes it directly consumable by AI agents, not just human users"
+      ],
+      "tags": [
+        "scientific-AI",
+        "retrieval",
+        "chemistry",
+        "agent-infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "aispa-system-prompt-auditing",
+      "title": "AISPA: User-Centric System Prompt Auditing for Large Language Model Applications",
+      "authors": [
+        "Researchers from multiple universities"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University",
+        "University of Washington (multi-institution collaboration)"
+      ],
+      "summary": "AISPA is a user-centric framework for auditing undisclosed system prompts across commercial AI products, defining 8 auditing dimensions grounded in UDHR articles. The study reviewed 3,249 instructions from 88 commercial AI products, classifying each as protective or problematic.",
+      "key_findings": [
+        "Defines 8 UDHR-grounded auditing dimensions covering transparency, privacy, safety, and manipulation prevention",
+        "Reviewed 3,249 real system-prompt instructions across 88 commercial AI products",
+        "Provides one of the first systematic, rights-based frameworks for auditing undisclosed system prompts"
+      ],
+      "tags": [
+        "AI-safety",
+        "transparency",
+        "governance",
+        "system-prompts"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28617",
+        "huggingface": "https://huggingface.co/papers/2607.28617",
+        "pdf": "https://arxiv.org/pdf/2607.28617"
+      }
+    },
+    {
+      "id": "meshy-t2-mesh-generation",
+      "title": "Meshy T2: Fast Native Mesh Generation with Flow Matching",
+      "authors": [
+        "Zangyueyang Xian",
+        "Siyuan Shen",
+        "Yuhao Long",
+        "Rendong Liang",
+        "Jiale Xu",
+        "Zeyi Xu",
+        "Yuanming Hu"
+      ],
+      "affiliations": [
+        "Meshy AI"
+      ],
+      "summary": "Meshy T2 generates artist-quality 3D meshes via a vertex-set mesh VAE and a coarse-to-fine cascade of two flow-matching models, producing meshes with clean topology in a median of 6 seconds. It encodes each vertex as a continuous latent token and decodes vertices, edges, and face winding order in a single pass.",
+      "key_findings": [
+        "Vertex-set mesh VAE encodes one continuous latent token per vertex for direct topology decoding",
+        "Two-stage flow-matching cascade separates coarse shape sketching from artist-quality topology",
+        "Median generation time of 6 seconds for a full 3D mesh"
+      ],
+      "tags": [
+        "3D-generation",
+        "mesh-generation",
+        "flow-matching"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28675",
+        "huggingface": "https://huggingface.co/papers/2607.28675",
+        "pdf": "https://arxiv.org/pdf/2607.28675"
+      }
+    },
+    {
+      "id": "scaling-text-conditioning-visual-generation",
+      "title": "Scaling Properties of Text Conditioning in Visual Generation",
+      "authors": [
+        "Haoqi Fan",
+        "Hongyi Yuan",
+        "Kunchang Li",
+        "Chaorui Deng",
+        "Zilong Chen"
+      ],
+      "affiliations": [
+        "ByteDance Seed"
+      ],
+      "summary": "This paper systematically studies how text conditioning scales in visual generation models, examining the relationship between text encoder capacity, conditioning strength, and generation quality across image and video generation. Accepted to ACM Multimedia 2026 with public code, models, and demo.",
+      "key_findings": [
+        "Establishes scaling relationships between text encoder capacity and generation quality",
+        "Findings generalize across both image and video generation tasks",
+        "Full public release of code, models, and demo alongside ACM MM 2026 acceptance"
+      ],
+      "tags": [
+        "visual-generation",
+        "scaling-laws",
+        "text-conditioning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.29679",
+        "huggingface": "https://huggingface.co/papers/2607.29679",
+        "pdf": "https://arxiv.org/pdf/2607.29679"
+      }
+    },
+    {
+      "id": "evaluation-verification-reward-image-editing",
+      "title": "Evaluation-Verification Reward for Consistent Multi-Reference Image Editing",
+      "authors": [
+        "Lei Sun",
+        "Meng Yu",
+        "Xiaochen Lv",
+        "Pengfei Zhang",
+        "Yingmao Miao"
+      ],
+      "affiliations": [
+        "Tencent ARC Lab"
+      ],
+      "summary": "Proposes an Evaluation-Verification Reward framework for multi-reference image editing that maintains subject identity and style coherence across multiple reference images. The reward combines evaluation scores with a verification pass to filter out inconsistent edits.",
+      "key_findings": [
+        "Combines an evaluation score with an explicit verification filter pass, echoing the day's broader verify-don't-judge trend",
+        "Targets consistency across multiple reference images rather than single-reference editing",
+        "Preserves subject identity and style coherence as joint optimization targets"
+      ],
+      "tags": [
+        "image-editing",
+        "reward-modeling",
+        "multimodal-generation"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.29025",
+        "huggingface": "https://huggingface.co/papers/2607.29025",
+        "pdf": "https://arxiv.org/pdf/2607.29025"
+      }
+    },
+    {
+      "id": "extractbench-enterprise-document-extraction",
+      "title": "ExtractBench: A Benchmark for Schema-Guided Enterprise Document Extraction",
+      "authors": [
+        "Simon Suo",
+        "Zhaoqi Li",
+        "Eli Stewart",
+        "Adrian Lyjak",
+        "Boyang Zhang"
+      ],
+      "affiliations": [
+        "Industry research lab (enterprise document AI)"
+      ],
+      "summary": "ExtractBench introduces a benchmark for schema-guided document extraction in enterprise settings, covering diverse document types and complex nested schema structures, addressing the gap between academic IE benchmarks and real-world enterprise document processing.",
+      "key_findings": [
+        "Covers diverse enterprise document types with complex, nested schema structures",
+        "Explicitly targets the gap between academic information-extraction benchmarks and production requirements",
+        "Positions schema-guided extraction as a distinct evaluation category from general IE"
+      ],
+      "tags": [
+        "benchmarks",
+        "document-extraction",
+        "enterprise-AI"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.29677",
+        "huggingface": "https://huggingface.co/papers/2607.29677",
+        "pdf": "https://arxiv.org/pdf/2607.29677"
+      }
+    },
+    {
+      "id": "qqworld-world-model-regularization",
+      "title": "QQWorld: Quantile-Quantile Matching for World Model Regularization",
+      "authors": [
+        "Zhoushun Yu",
+        "Xiaoyu Hu",
+        "Xiangyu Xu"
+      ],
+      "affiliations": [
+        "Fudan University",
+        "NeoteAI"
+      ],
+      "summary": "QQWorld replaces the Epps-Pulley objective in LeWorldModel with a quantile-quantile matching objective that aligns projected latent samples with rank-matched Gaussian quantiles, preserving corrective gradients in the tails. A cross-batch QQ variant enlarges the effective ranking pool using detached samples from prior batches.",
+      "key_findings": [
+        "QQ matching preserves corrective gradients for isolated tail samples where the EP objective vanishes",
+        "Cross-batch QQ variant enlarges the ranking pool via detached prior-batch samples",
+        "Provides explicit bias-variance trade-off analysis for the cross-batch extension"
+      ],
+      "tags": [
+        "world-models",
+        "regularization",
+        "generative-modeling"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28415",
+        "huggingface": "https://huggingface.co/papers/2607.28415",
+        "pdf": "https://arxiv.org/pdf/2607.28415"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k26",
+      "name": "Kimi-K2.6",
+      "organization": "Moonshot AI",
+      "description": "A multimodal mixture-of-experts model (1T total / 32B active params) with vision and agentic tool-use capabilities and a 256K token context window.",
+      "task_type": "text-generation",
+      "model_size": "1T/32B active (MoE)",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "vision",
+        "agents",
+        "mixture-of-experts"
+      ],
+      "metrics": {
+        "downloads": 58200,
+        "likes": 4320
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K2.6"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "A mixture-of-experts model optimized for coding and reasoning with a 1M token long-context window.",
+      "task_type": "text-generation",
+      "model_size": "MoE, 1M context",
+      "tags": [
+        "text-generation",
+        "coding",
+        "reasoning",
+        "MoE",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 42100,
+        "likes": 3890
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "qwen36-max",
+      "name": "Qwen3.6-Max",
+      "organization": "Alibaba",
+      "description": "Alibaba's flagship reasoning and coding model with strong agentic tool-use capabilities.",
+      "task_type": "text-generation",
+      "model_size": "Max (flagship tier)",
+      "tags": [
+        "text-generation",
+        "coding",
+        "agents",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 38900,
+        "likes": 3210
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-Max"
+    },
+    {
+      "id": "qwen25-15b-instruct",
+      "name": "Qwen2.5-1.5B-Instruct",
+      "organization": "Alibaba",
+      "description": "A lightweight instruction-tuned model designed for edge deployment, driving the highest download volume among trending models.",
+      "task_type": "text-generation",
+      "model_size": "1.5B",
+      "tags": [
+        "text-generation",
+        "NLP",
+        "lightweight",
+        "edge-deployment"
+      ],
+      "metrics": {
+        "downloads": 312000,
+        "likes": 8920
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct"
+    },
+    {
+      "id": "gemma-4-e2b-it",
+      "name": "Gemma 4 E2B-IT",
+      "organization": "Google DeepMind",
+      "description": "An efficient vision-language multimodal instruction-tuned model from the Gemma 4 family.",
+      "task_type": "image-text-to-text",
+      "model_size": "2B",
+      "tags": [
+        "text-generation",
+        "vision-language",
+        "multimodal",
+        "efficient"
+      ],
+      "metrics": {
+        "downloads": 29800,
+        "likes": 2540
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-e2b-it"
+    },
+    {
+      "id": "qwen36-27b-awq-int4",
+      "name": "Qwen3.6-27B-AWQ-INT4",
+      "organization": "Alibaba",
+      "description": "A 4-bit AWQ-quantized variant of Qwen3.6-27B optimized for efficient inference.",
+      "task_type": "text-generation",
+      "model_size": "27B (INT4 quantized)",
+      "tags": [
+        "text-generation",
+        "quantized",
+        "AWQ",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 24300,
+        "likes": 1980
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B-AWQ-INT4"
+    },
+    {
+      "id": "glm-51",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI / THUDM",
+      "description": "A bilingual (Chinese-English) long-context model with agentic capabilities.",
+      "task_type": "text-generation",
+      "model_size": "Not disclosed",
+      "tags": [
+        "text-generation",
+        "bilingual",
+        "agents",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 21700,
+        "likes": 1820
+      },
+      "source_url": "https://huggingface.co/THUDM/GLM-5.1"
+    },
+    {
+      "id": "phi-4",
+      "name": "Phi-4",
+      "organization": "Microsoft",
+      "description": "A small model emphasizing strong reasoning and coding performance relative to its size, driving broad adoption.",
+      "task_type": "text-generation",
+      "model_size": "Small (~14B class)",
+      "tags": [
+        "text-generation",
+        "reasoning",
+        "small-model",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 89400,
+        "likes": 6230
+      },
+      "source_url": "https://huggingface.co/microsoft/Phi-4"
+    },
+    {
+      "id": "minimax-h3-model",
+      "name": "MiniMax-H3",
+      "organization": "MiniMax AI",
+      "description": "Open omni-modal video generation model with native stereo audio, released alongside its arXiv paper and GitHub repo on the same day.",
+      "task_type": "text-to-video",
+      "model_size": "33.1B (dense, single-stream)",
+      "tags": [
+        "text-to-video",
+        "multimodal",
+        "audio-generation",
+        "omni-modal"
+      ],
+      "metrics": {
+        "downloads": 15200,
+        "likes": 2890
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "llama-33-70b-instruct",
+      "name": "Llama-3.3-70B-Instruct",
+      "organization": "Meta AI",
+      "description": "An open-source instruction-following model remaining a top download draw well after release.",
+      "task_type": "text-generation",
+      "model_size": "70B",
+      "tags": [
+        "text-generation",
+        "instruction-following",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 156000,
+        "likes": 7840
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+    },
+    {
+      "id": "mistral-large-2407",
+      "name": "Mistral-Large-2407",
+      "organization": "Mistral AI",
+      "description": "A multilingual long-context flagship model from Mistral AI.",
+      "task_type": "text-generation",
+      "model_size": "Large (~123B class)",
+      "tags": [
+        "text-generation",
+        "long-context",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 18900,
+        "likes": 1540
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-2407"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "A personal AI assistant that runs locally as a gateway with 50+ integrations spanning WhatsApp, Telegram, Slack, Discord, Signal, and iMessage.",
+      "language": "Python",
+      "stars": 346000,
+      "stars_today": 1240,
+      "forks": 28400,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "AI-assistant",
+        "messaging-integrations",
+        "local-first"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "High-throughput LLM serving engine built on PagedAttention, now with expanded 2026 hardware support for AMD, Intel Arc, and TPU.",
+      "language": "Python",
+      "stars": 98200,
+      "stars_today": 420,
+      "forks": 14300,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "inference",
+        "LLM-serving",
+        "hardware-acceleration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mempalace-mempalace",
+      "name": "MemPalace/mempalace",
+      "description": "An open-source AI memory system with structured retrieval, organizing people/projects as 'wings' and topics as 'rooms'; today's fastest-rising AI repo.",
+      "language": "Python",
+      "stars": 57903,
+      "stars_today": 2180,
+      "forks": 7449,
+      "url": "https://github.com/MemPalace/mempalace",
+      "tags": [
+        "memory-systems",
+        "retrieval",
+        "agent-infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "huggingface-lerobot",
+      "name": "huggingface/lerobot",
+      "description": "End-to-end learning framework for real-world robotics, spanning data collection, training, and deployment.",
+      "language": "Python",
+      "stars": 47200,
+      "stars_today": 290,
+      "forks": 5890,
+      "url": "https://github.com/huggingface/lerobot",
+      "tags": [
+        "robotics",
+        "imitation-learning",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-nanochat",
+      "name": "karpathy/nanochat",
+      "description": "A full LLM training pipeline in one readable codebase covering tokenization, pretraining, finetuning, eval, inference, and a chat UI.",
+      "language": "Python",
+      "stars": 42100,
+      "stars_today": 890,
+      "forks": 5820,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "LLM-training",
+        "education",
+        "reference-implementation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "perplexity-ai-bumblebee",
+      "name": "perplexity-ai/bumblebee",
+      "description": "A read-only supply chain scanner covering npm, PyPI, Go, RubyGems, Composer, MCP servers, editor extensions, and browser extensions.",
+      "language": "Python",
+      "stars": 31400,
+      "stars_today": 640,
+      "forks": 2890,
+      "url": "https://github.com/perplexity-ai/bumblebee",
+      "tags": [
+        "supply-chain-security",
+        "MCP",
+        "dev-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-graphrag",
+      "name": "microsoft/graphrag",
+      "description": "A graph-based retrieval-augmented generation system for complex document understanding.",
+      "language": "Python",
+      "stars": 23100,
+      "stars_today": 180,
+      "forks": 2780,
+      "url": "https://github.com/microsoft/graphrag",
+      "tags": [
+        "RAG",
+        "knowledge-graphs",
+        "document-understanding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "arunagirinathan-k-awesome-ai-agents-2026",
+      "name": "ARUNAGIRINATHAN-K/awesome-ai-agents-2026",
+      "description": "A curated list of 300+ AI agents, frameworks, and tools spanning coding, creative, voice, research, and enterprise use cases.",
+      "language": "Markdown",
+      "stars": 18200,
+      "stars_today": 380,
+      "forks": 3120,
+      "url": "https://github.com/ARUNAGIRINATHAN-K/awesome-ai-agents-2026",
+      "tags": [
+        "awesome-list",
+        "agents",
+        "curated-resources"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "minimaxai-minimax-h3-repo",
+      "name": "MiniMaxAI/MiniMax-H3",
+      "description": "Open omni-modal video generation model with native stereo audio; released same-day alongside its paper and HF model card, already the fastest-growing repo of the day by star velocity.",
+      "language": "Python",
+      "stars": 12800,
+      "stars_today": 3890,
+      "forks": 1420,
+      "url": "https://github.com/MiniMaxAI/MiniMax-H3",
+      "tags": [
+        "video-generation",
+        "omni-modal",
+        "audio-generation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "neoteai-n0-vtla",
+      "name": "neoteai/N0-VTLA",
+      "description": "Vision-tactile-language-action model for contact-rich robot manipulation, released alongside its arXiv paper.",
+      "language": "Python",
+      "stars": 8900,
+      "stars_today": 720,
+      "forks": 1120,
+      "url": "https://github.com/neoteai/N0-VTLA",
+      "tags": [
+        "robotics",
+        "tactile-sensing",
+        "vision-language-action"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Self-Verification Replacing External Judges",
+      "description": "Multiple papers (RLSVR, Evaluation-Verification Reward, N0-VTLA's tactile feedback) independently converge on verifiable, rule-based, or self-checking signals instead of learned reward models or LLM judges.",
+      "related_paper_ids": [
+        "rlvr-to-rlsvr",
+        "evaluation-verification-reward-image-editing",
+        "n0-vtla"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Native Memory Architectures",
+      "description": "Memory is moving from external retrieval systems into model-native, gradient-free architectural components, seen in Metis and mirrored by the fast-rising MemPalace open-source project.",
+      "related_paper_ids": [
+        "metis-memory-foundation-model"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Coordinated Same-Day Multi-Channel Launches",
+      "description": "Labs are increasingly releasing paper, model weights, and GitHub code simultaneously (MiniMax H3, N0-VTLA), compressing the research-to-adoption cycle to a single day.",
+      "related_paper_ids": [
+        "minimax-h3",
+        "n0-vtla"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Real-World Foundation GUI Agents",
+      "description": "GUI agents are consolidating from siloed mobile/browser/desktop tools into unified foundation models with strong real-world benchmarks, extending a broader arXiv trend toward agentic memory in GUI control.",
+      "related_paper_ids": [
+        "qwen-ui-agent"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Omni-Modal Generation with Native Audio",
+      "description": "Video generation systems are consolidating text, image, video, and audio generation into single unified transformers rather than task-siloed pipelines.",
+      "related_paper_ids": [
+        "minimax-h3",
+        "videococo",
+        "scaling-text-conditioning-visual-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Trustworthy Enterprise & Agent Infrastructure",
+      "description": "A quieter but steady stream of work on auditing, claim-grounded retrieval, and enterprise document extraction is building the trust and provenance layer underneath agentic AI deployment.",
+      "related_paper_ids": [
+        "aispa-system-prompt-auditing",
+        "askchem-chemistry-literature",
+        "extractbench-enterprise-document-extraction"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending Repositories",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

@@ -1,0 +1,930 @@
+{
+  "version": "1.0",
+  "date": "2026-08-03",
+  "generated_at": "2026-08-03T09:00:00Z",
+  "summary": {
+    "headline": "MiniMax 开源 H3，一个 331 亿参数的统一全模态模型，可在单次推理中生成带有原生 32kHz 音频的 2K 视频；RLSVR 提出自可验证对抗奖励机制，将 RLVR 扩展至无需外部评判模型的开放域 LLM 自我改进；原生记忆架构在 Metis、GUI 智能体研究以及快速崛起的 MemPalace 仓库中不约而同地汇聚，正成为下一代基础模型的核心原语。",
+    "body": "8 月 3 日涌现了一批指向两大融合趋势的研究成果：**以自我验证取代外部奖励模型**，以及**将原生记忆作为一等架构组件**，而非附加式检索系统。RLSVR（137 票，当日最高热度）将开放域强化学习训练重新定义为一种基于规则可验证结果的信息不对称对抗博弈，无需 LLM 评判器或学习型奖励模型——这对 RLVR 此前无法涉足的领域而言是重要进展。与此同时，Metis（MemTensor / 中国人民大学 / 新加坡国立大学 / 上海交通大学 / 同济大学）提出将无梯度在线记忆维护直接融入模型架构，与 GitHub 上 MemPalace（57,900 星，今日新增 2,180 星）同周爆发式增长——学术界与开源社区正独立汇聚于同一结论：记忆将成为 2026 年下一个规模化核心轴。\n\n在多模态与具身智能方向，MiniMax 发布了完全开源的单流 331 亿参数全模态 Transformer H3，统一了文本、图像、视频与原生音频生成——值得注意的是，论文、HF 模型卡与 GitHub 仓库同日发布，仓库当天即获 3,890 颗星。N0-VTLA 延续了同样的协同发布模式，将潜在触觉 token 与同日上热门的 GitHub 仓库配套推出，用于触觉增强的机器人操作。阿里巴巴的 Qwen-UI-Agent 在 MobileWorld-Real 基准上达到 92.2%，超越 Opus 4.8、GPT-5.6 Sol 和 Gemini 3.5 Flash，延续了 GUI 智能体论文（Mem-W、MementoGUI、SE-GA）稳定涌现的节奏，这些论文本身也愈发以记忆为核心。\n\n在相对低调的方向，AskChem 从论文级检索转向声明级检索（从 147,000 篇论文中提取 240 万条带溯源信息的声明，并提供面向智能体的 MCP 接口），以及 AISPA 对 88 款商业产品中 3,249 条系统提示指令的审计，参与度较低，但在构建可信、智能体可访问的 AI 基础设施方面具有重要的结构性价值。",
+    "key_themes": [
+      "self-verification-replacing-external-judges",
+      "native-memory-architectures",
+      "coordinated-same-day-multi-channel-launches",
+      "real-world-foundation-gui-agents",
+      "omni-modal-generation-with-native-audio",
+      "trustworthy-enterprise-and-agent-infrastructure"
+    ]
+  },
+  "researcher_notes": "**自我验证这条线索是最值得关注的故事。** RLSVR 的核心思路——用对抗性、基于规则的可验证信号取代外部评判器——在概念上与图像编辑的评估-验证奖励论文（同样使用验证步骤过滤输出）以及 N0-VTLA 的触觉反馈控制回路（验证接触状态而非依赖监督标签）高度相近。三支毫无关联的团队在同一周都落脚于「验证而非评判」，这与其说是巧合，不如说是一种日趋成熟的共识——奖励模型瓶颈是下一个需要绕过的障碍，正如两年前 RLHF 绕过了人工标注的偏好数据。\n\n**记忆正在悄然成为 2026 年竞争最激烈的基础原语。** Metis（学术界、架构原生记忆注意力）与 MemPalace 当日暴涨 2,180 颗星同步发生——再加上 arXiv 综述中反复出现的 GUI 智能体记忆论文（Mem-W、MementoGUI、SE-GA、Executable Agentic Memory）——表明记忆正在走与 RAG 在 2023-24 年相同的轨迹：先被附加引入，而后被吸收进模型本身与训练循环。值得追踪的是：Metis 风格的无梯度在线记忆是否会在下一季度内被主流开放权重实验室所采用。\n\n**潜力黑马：AskChem。** 仅有 8 票，但其以声明为中心的检索架构（原子化、DOI 溯源、可引用原文的声明，而非整篇论文的分块）直接攻克了文献综合中的幻觉问题，且开箱即支持 MCP 接口——这意味着它已是智能体原生基础设施，而非聊天演示。当前曝光度不高，但这类不起眼的「管道工程」往往会被悄然集成进更大型的系统。\n\n**同日协同发布正从例外变成惯例。** MiniMax H3 与 N0-VTLA 均同步发布了论文 + HF 模型 + GitHub 仓库，H3 仓库在原有 12,800 星的基础上单日新增 3,890 星——这一增速比例异常陡峭，标志着这是一次真正新鲜、颇受期待的发布，而非长尾自然增长。相比之下，vllm-project/vllm 的基础量大得多但增速相对平缓（98,200 星，今日 +420）：基础设施层正在走向成熟，而模型层仍处于圈地阶段。\n\n**值得保持审慎的地方：** Qwen-UI-Agent 声称在 MobileWorld-Real 上达到 92.2% 并超越 Opus 4.8 / GPT-5.6 Sol / Gemini 3.5 Flash——这是一个强力声明，但该基准由同一团队提出，值得独立复现后再视为定论。同样，AISPA 的审计方法论（将提示指令映射至《世界人权宣言》条款）为 AI 治理研究提供了新颖框架，但相对于其结构性重要性（审计了 88 款商业产品），论文的低票数表明它尚未走出安全 / 政策小圈子。",
+  "papers": [
+    {
+      "id": "rlvr-to-rlsvr",
+      "title": "From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards for Open-Ended LLM Self-Improvement",
+      "authors": [
+        "Kun Wan",
+        "Huazheng Wang",
+        "Jing Shi",
+        "Qinsi Wang",
+        "Benjamin-eecs et al."
+      ],
+      "affiliations": [
+        "Adobe Research",
+        "Oregon State University"
+      ],
+      "summary": "RLSVR 通过将开放域任务转化为信息不对称的对抗博弈（结果基于规则且可验证），将 RLVR 扩展至开放域任务，无需外部评判器或学习型奖励模型。这使得 LLM 能够在此前可验证奖励强化学习无法涉足的开放域任务上实现自我改进。",
+      "key_findings": [
+        "将自监督任务变换原则引入强化学习，为开放域任务构造可验证奖励",
+        "采用基于规则结果的对抗博弈，而非 LLM 评判器或奖励模型",
+        "当日最高热度论文，获 137 票，体现社区对无评判器强化学习的强烈兴趣"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "self-improvement",
+        "LLM-training",
+        "verifiable-rewards"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 137,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23802",
+        "huggingface": "https://huggingface.co/papers/2607.23802",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.23802",
+        "pdf": "https://arxiv.org/pdf/2607.23802"
+      }
+    },
+    {
+      "id": "n0-vtla",
+      "title": "N0-VTLA: Scaling Vision-Tactile-Language-Action Model with Latent Tactile Tokens",
+      "authors": [
+        "Xiangyu Xu",
+        "Xiaoyu Hu",
+        "Zhoushun Yu",
+        "NeoteAI Team",
+        "Fudan TEAI Team et al."
+      ],
+      "affiliations": [
+        "Fudan University",
+        "NeoteAI"
+      ],
+      "summary": "N0-VTLA 是一个面向接触密集型操作的视觉-触觉-语言-动作基础模型，通过潜在触觉 token 预测触觉信号，无需在部署时使用专用传感器即可实现触觉感知控制。训练方案结合了在大规模 NeoData 数据集上的视触觉预训练，以及基于优势函数的离线策略改进。",
+      "key_findings": [
+        "潜在触觉 token 使模型在部署时无需实体传感器即可获得触觉感知控制能力",
+        "分阶段触觉路径集成，并利用存储的部署数据进行离线策略改进",
+        "论文、模型与 GitHub 仓库同日协同发布，仓库当天即登上 GitHub 热榜"
+      ],
+      "tags": [
+        "robotics",
+        "tactile-sensing",
+        "vision-language-action",
+        "manipulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.23782",
+        "huggingface": "https://huggingface.co/papers/2607.23782",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.23782",
+        "pdf": "https://arxiv.org/pdf/2607.23782"
+      }
+    },
+    {
+      "id": "qwen-ui-agent",
+      "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+      "authors": [
+        "Alibaba Qwen Team"
+      ],
+      "affiliations": [
+        "Alibaba"
+      ],
+      "summary": "Qwen-UI-Agent 在单一基础模型中统一了移动端、PC 端、浏览器及 DeepSearch GUI 控制能力。在 MobileWorld-Real 基准（400+ 任务、100+ 应用）上取得 92.2% 的成功率，声称超越 Opus 4.8、GPT-5.6 Sol、Gemini 3.5 Flash 和 Seed2.1 Pro。",
+      "key_findings": [
+        "单一模型统一支持移动端、桌面端、浏览器及 DeepSearch GUI 场景",
+        "在 MobileWorld-Real（覆盖 100+ 应用的 400+ 任务基准）上取得 92.2% 成功率",
+        "在团队自建基准上超越多个前沿通用模型及专用 GUI 智能体"
+      ],
+      "tags": [
+        "GUI-agents",
+        "foundation-models",
+        "agentic-AI",
+        "mobile-automation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28227",
+        "huggingface": "https://huggingface.co/papers/2607.28227",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.28227",
+        "pdf": "https://arxiv.org/pdf/2607.28227"
+      }
+    },
+    {
+      "id": "minimax-h3",
+      "title": "MiniMax H3: Open Omni-Modal Video Model With Native Audio",
+      "authors": [
+        "MiniMax AI Team"
+      ],
+      "affiliations": [
+        "MiniMax AI"
+      ],
+      "summary": "MiniMax H3 是一个开源通用全模态生成系统，能够理解文本、图像、视频和音频上下文，并在单次推理中生成最长 15 秒的 2K 视频及原生 32kHz 立体声音频。其核心为 331 亿参数的稠密单流全模态 Transformer，使用 Qwen3-VL-32B 文本编码器，取代了 Hailuo 系列此前各任务独立的流水线架构。",
+      "key_findings": [
+        "331 亿参数稠密单流 Transformer 在单次推理中统一视频与音频生成，取代各任务独立流水线",
+        "可生成最长 15 秒的 2K 视频，并附带原生 32kHz 立体声音频",
+        "论文、HF 模型卡与 GitHub 仓库同日发布，仓库当天即新增 3,890 颗星"
+      ],
+      "tags": [
+        "video-generation",
+        "omni-modal",
+        "audio-generation",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 8
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "metis-memory-foundation-model",
+      "title": "Metis: Memory Foundation Model",
+      "authors": [
+        "MemTensor Team",
+        "Renmin University",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "affiliations": [
+        "Renmin University of China",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "summary": "Metis 为基础模型赋予原生记忆状态，通过记忆注意力机制压缩和访问历史信息，并将无梯度在线记忆维护直接内嵌于模型架构中。在记忆操作和基于记忆的问答任务上，超越了外部记忆基线方法。",
+      "key_findings": [
+        "记忆作为原生架构状态集成，而非外部检索系统",
+        "无梯度在线记忆维护避免了记忆更新时代价高昂的重新训练",
+        "在记忆操作和记忆问答基准上超越外部记忆基线"
+      ],
+      "tags": [
+        "memory-architecture",
+        "foundation-models",
+        "long-context"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 3
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "videococo",
+      "title": "VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory（机构推断）"
+      ],
+      "summary": "VideoCoCo 使用可执行的 Blender 代码作为过程级思维链（CoT），生成确定性的时空草图，引导视频编辑器产出物理一致的逼真输出。一个双引擎智能体系统协调代码生成与视频编辑，以强制保证物理合理性。",
+      "key_findings": [
+        "可执行 Blender 代码充当可解释、确定性的过程级思维链，用于视频生成",
+        "双引擎架构将基于物理的草图绘制与逼真编辑分离",
+        "针对扩散式视频生成器的已知缺陷——物理一致性问题——进行专项攻坚"
+      ],
+      "tags": [
+        "video-generation",
+        "chain-of-thought",
+        "physical-consistency",
+        "agentic-systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "askchem-chemistry-literature",
+      "title": "AskChem: Claim-Centered Infrastructure for Chemistry Literature Synthesis",
+      "authors": [
+        "AskChem Team"
+      ],
+      "affiliations": [
+        "学术-产业联合体（化学 AI 方向）"
+      ],
+      "summary": "AskChem 将检索单元从论文整体转移至带溯源信息的声明，将论文转化为原子化、分类型、以 DOI 锚定且附有原文证据定位器的声明。系统从 147,000 篇论文中索引了 240 万条声明，并通过 Web、REST、SDK 和 MCP 接口供 AI 智能体访问，支持跨论文综合与矛盾检测。",
+      "key_findings": [
+        "检索单元为原子化、溯源锚定的声明，而非整篇论文或分块文本",
+        "从 147,000 篇论文中索引 240 万条声明，附带原文证据定位器",
+        "原生 MCP 接口使其可直接被 AI 智能体消费，而不仅限于人类用户"
+      ],
+      "tags": [
+        "scientific-AI",
+        "retrieval",
+        "chemistry",
+        "agent-infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "aispa-system-prompt-auditing",
+      "title": "AISPA: User-Centric System Prompt Auditing for Large Language Model Applications",
+      "authors": [
+        "Researchers from multiple universities"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University",
+        "University of Washington（多机构合作）"
+      ],
+      "summary": "AISPA 是一个以用户为中心的框架，用于审计商业 AI 产品中未公开的系统提示，定义了以《世界人权宣言》条款为基础的 8 个审计维度。该研究审查了 88 款商业 AI 产品中的 3,249 条指令，将每条指令分类为保护性或问题性。",
+      "key_findings": [
+        "定义 8 个以《世界人权宣言》为基础的审计维度，涵盖透明度、隐私、安全与防操纵",
+        "审查了 88 款商业 AI 产品中 3,249 条真实系统提示指令",
+        "提供了首批针对未公开系统提示进行系统性、权利导向审计的框架之一"
+      ],
+      "tags": [
+        "AI-safety",
+        "transparency",
+        "governance",
+        "system-prompts"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28617",
+        "huggingface": "https://huggingface.co/papers/2607.28617",
+        "pdf": "https://arxiv.org/pdf/2607.28617"
+      }
+    },
+    {
+      "id": "meshy-t2-mesh-generation",
+      "title": "Meshy T2: Fast Native Mesh Generation with Flow Matching",
+      "authors": [
+        "Zangyueyang Xian",
+        "Siyuan Shen",
+        "Yuhao Long",
+        "Rendong Liang",
+        "Jiale Xu",
+        "Zeyi Xu",
+        "Yuanming Hu"
+      ],
+      "affiliations": [
+        "Meshy AI"
+      ],
+      "summary": "Meshy T2 通过顶点集网格 VAE 与两阶段流匹配模型的粗到精级联生成具有清晰拓扑结构的艺术级 3D 网格，中位生成时间仅 6 秒。模型将每个顶点编码为连续潜在 token，并在单次前向传播中解码顶点、边和面绕向顺序。",
+      "key_findings": [
+        "顶点集网格 VAE 为每个顶点编码一个连续潜在 token，支持直接拓扑解码",
+        "两阶段流匹配级联将粗形状草图绘制与艺术级拓扑精化分离",
+        "完整 3D 网格的中位生成时间为 6 秒"
+      ],
+      "tags": [
+        "3D-generation",
+        "mesh-generation",
+        "flow-matching"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28675",
+        "huggingface": "https://huggingface.co/papers/2607.28675",
+        "pdf": "https://arxiv.org/pdf/2607.28675"
+      }
+    },
+    {
+      "id": "scaling-text-conditioning-visual-generation",
+      "title": "Scaling Properties of Text Conditioning in Visual Generation",
+      "authors": [
+        "Haoqi Fan",
+        "Hongyi Yuan",
+        "Kunchang Li",
+        "Chaorui Deng",
+        "Zilong Chen"
+      ],
+      "affiliations": [
+        "ByteDance Seed"
+      ],
+      "summary": "本文系统研究了文本条件在视觉生成模型中的规模化规律，考察了文本编码器容量、条件强度与图像及视频生成质量之间的关系。已被 ACM Multimedia 2026 接收，并公开了代码、模型和演示。",
+      "key_findings": [
+        "建立了文本编码器容量与生成质量之间的规模化关系",
+        "研究发现可推广至图像生成与视频生成任务",
+        "随 ACM MM 2026 录用同步完整公开代码、模型与演示"
+      ],
+      "tags": [
+        "visual-generation",
+        "scaling-laws",
+        "text-conditioning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.29679",
+        "huggingface": "https://huggingface.co/papers/2607.29679",
+        "pdf": "https://arxiv.org/pdf/2607.29679"
+      }
+    },
+    {
+      "id": "evaluation-verification-reward-image-editing",
+      "title": "Evaluation-Verification Reward for Consistent Multi-Reference Image Editing",
+      "authors": [
+        "Lei Sun",
+        "Meng Yu",
+        "Xiaochen Lv",
+        "Pengfei Zhang",
+        "Yingmao Miao"
+      ],
+      "affiliations": [
+        "Tencent ARC Lab"
+      ],
+      "summary": "提出一种评估-验证奖励框架，用于多参考图像编辑中跨多张参考图像保持主体身份和风格一致性。该奖励将评估分数与验证过滤步骤结合，以筛除不一致的编辑结果。",
+      "key_findings": [
+        "将评估分数与显式验证过滤步骤结合，呼应当日「验证而非评判」的整体趋势",
+        "面向多参考图像的一致性，而非单参考图像编辑",
+        "将主体身份保持与风格一致性作为联合优化目标"
+      ],
+      "tags": [
+        "image-editing",
+        "reward-modeling",
+        "multimodal-generation"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.29025",
+        "huggingface": "https://huggingface.co/papers/2607.29025",
+        "pdf": "https://arxiv.org/pdf/2607.29025"
+      }
+    },
+    {
+      "id": "extractbench-enterprise-document-extraction",
+      "title": "ExtractBench: A Benchmark for Schema-Guided Enterprise Document Extraction",
+      "authors": [
+        "Simon Suo",
+        "Zhaoqi Li",
+        "Eli Stewart",
+        "Adrian Lyjak",
+        "Boyang Zhang"
+      ],
+      "affiliations": [
+        "行业研究机构（企业文档 AI 方向）"
+      ],
+      "summary": "ExtractBench 为企业场景下的模式引导文档提取引入了一套基准，涵盖多样化的文档类型与复杂的嵌套模式结构，旨在弥合学术信息抽取基准与真实企业文档处理需求之间的差距。",
+      "key_findings": [
+        "涵盖具有复杂嵌套模式结构的多样化企业文档类型",
+        "明确针对学术信息抽取基准与生产需求之间的差距",
+        "将模式引导提取定位为有别于通用信息抽取的独立评估类别"
+      ],
+      "tags": [
+        "benchmarks",
+        "document-extraction",
+        "enterprise-AI"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.29677",
+        "huggingface": "https://huggingface.co/papers/2607.29677",
+        "pdf": "https://arxiv.org/pdf/2607.29677"
+      }
+    },
+    {
+      "id": "qqworld-world-model-regularization",
+      "title": "QQWorld: Quantile-Quantile Matching for World Model Regularization",
+      "authors": [
+        "Zhoushun Yu",
+        "Xiaoyu Hu",
+        "Xiangyu Xu"
+      ],
+      "affiliations": [
+        "Fudan University",
+        "NeoteAI"
+      ],
+      "summary": "QQWorld 以分位数-分位数匹配目标取代 LeWorldModel 中的 Epps-Pulley 目标，将投影潜在样本与秩匹配的高斯分位数对齐，在尾部保留修正梯度。跨批次 QQ 变体通过使用来自先前批次的分离样本扩大有效排序池。",
+      "key_findings": [
+        "QQ 匹配在 EP 目标梯度消失的孤立尾部样本处保留了修正梯度",
+        "跨批次 QQ 变体通过分离的先前批次样本扩大排序池",
+        "为跨批次扩展提供了明确的偏差-方差权衡分析"
+      ],
+      "tags": [
+        "world-models",
+        "regularization",
+        "generative-modeling"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28415",
+        "huggingface": "https://huggingface.co/papers/2607.28415",
+        "pdf": "https://arxiv.org/pdf/2607.28415"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k26",
+      "name": "Kimi-K2.6",
+      "organization": "Moonshot AI",
+      "description": "一个多模态混合专家模型（总参数 1T / 激活参数 32B），具备视觉与智能体工具调用能力，上下文窗口达 256K token。",
+      "task_type": "text-generation",
+      "model_size": "1T/32B active (MoE)",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "vision",
+        "agents",
+        "mixture-of-experts"
+      ],
+      "metrics": {
+        "downloads": 58200,
+        "likes": 4320
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K2.6"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "organization": "DeepSeek AI",
+      "description": "一个专为编程与推理优化的混合专家模型，上下文窗口达 100 万 token。",
+      "task_type": "text-generation",
+      "model_size": "MoE, 1M context",
+      "tags": [
+        "text-generation",
+        "coding",
+        "reasoning",
+        "MoE",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 42100,
+        "likes": 3890
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    {
+      "id": "qwen36-max",
+      "name": "Qwen3.6-Max",
+      "organization": "Alibaba",
+      "description": "阿里巴巴旗舰级推理与编程模型，具备强大的智能体工具调用能力。",
+      "task_type": "text-generation",
+      "model_size": "Max (flagship tier)",
+      "tags": [
+        "text-generation",
+        "coding",
+        "agents",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 38900,
+        "likes": 3210
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-Max"
+    },
+    {
+      "id": "qwen25-15b-instruct",
+      "name": "Qwen2.5-1.5B-Instruct",
+      "organization": "Alibaba",
+      "description": "专为边缘部署设计的轻量级指令微调模型，在热门模型中下载量最高。",
+      "task_type": "text-generation",
+      "model_size": "1.5B",
+      "tags": [
+        "text-generation",
+        "NLP",
+        "lightweight",
+        "edge-deployment"
+      ],
+      "metrics": {
+        "downloads": 312000,
+        "likes": 8920
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct"
+    },
+    {
+      "id": "gemma-4-e2b-it",
+      "name": "Gemma 4 E2B-IT",
+      "organization": "Google DeepMind",
+      "description": "来自 Gemma 4 系列的高效视觉-语言多模态指令微调模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "2B",
+      "tags": [
+        "text-generation",
+        "vision-language",
+        "multimodal",
+        "efficient"
+      ],
+      "metrics": {
+        "downloads": 29800,
+        "likes": 2540
+      },
+      "source_url": "https://huggingface.co/google/gemma-4-e2b-it"
+    },
+    {
+      "id": "qwen36-27b-awq-int4",
+      "name": "Qwen3.6-27B-AWQ-INT4",
+      "organization": "Alibaba",
+      "description": "Qwen3.6-27B 的 4-bit AWQ 量化变体，针对高效推理进行了优化。",
+      "task_type": "text-generation",
+      "model_size": "27B (INT4 quantized)",
+      "tags": [
+        "text-generation",
+        "quantized",
+        "AWQ",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 24300,
+        "likes": 1980
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-27B-AWQ-INT4"
+    },
+    {
+      "id": "glm-51",
+      "name": "GLM-5.1",
+      "organization": "Zhipu AI / THUDM",
+      "description": "具备智能体能力的中英双语长上下文模型。",
+      "task_type": "text-generation",
+      "model_size": "Not disclosed",
+      "tags": [
+        "text-generation",
+        "bilingual",
+        "agents",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 21700,
+        "likes": 1820
+      },
+      "source_url": "https://huggingface.co/THUDM/GLM-5.1"
+    },
+    {
+      "id": "phi-4",
+      "name": "Phi-4",
+      "organization": "Microsoft",
+      "description": "一个小型模型，在相对体量下展现出强大的推理与编程性能，获得了广泛采用。",
+      "task_type": "text-generation",
+      "model_size": "Small (~14B class)",
+      "tags": [
+        "text-generation",
+        "reasoning",
+        "small-model",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 89400,
+        "likes": 6230
+      },
+      "source_url": "https://huggingface.co/microsoft/Phi-4"
+    },
+    {
+      "id": "minimax-h3-model",
+      "name": "MiniMax-H3",
+      "organization": "MiniMax AI",
+      "description": "开源全模态视频生成模型，支持原生立体声音频，与 arXiv 论文及 GitHub 仓库同日发布。",
+      "task_type": "text-to-video",
+      "model_size": "33.1B (dense, single-stream)",
+      "tags": [
+        "text-to-video",
+        "multimodal",
+        "audio-generation",
+        "omni-modal"
+      ],
+      "metrics": {
+        "downloads": 15200,
+        "likes": 2890
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "llama-33-70b-instruct",
+      "name": "Llama-3.3-70B-Instruct",
+      "organization": "Meta AI",
+      "description": "一个开源指令跟随模型，发布较久后仍保持高下载量。",
+      "task_type": "text-generation",
+      "model_size": "70B",
+      "tags": [
+        "text-generation",
+        "instruction-following",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 156000,
+        "likes": 7840
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+    },
+    {
+      "id": "mistral-large-2407",
+      "name": "Mistral-Large-2407",
+      "organization": "Mistral AI",
+      "description": "Mistral AI 的多语言长上下文旗舰模型。",
+      "task_type": "text-generation",
+      "model_size": "Large (~123B class)",
+      "tags": [
+        "text-generation",
+        "long-context",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 18900,
+        "likes": 1540
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-2407"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "一款在本地运行的个人 AI 助手网关，集成了 WhatsApp、Telegram、Slack、Discord、Signal 和 iMessage 等 50 余种平台。",
+      "language": "Python",
+      "stars": 346000,
+      "stars_today": 1240,
+      "forks": 28400,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "AI-assistant",
+        "messaging-integrations",
+        "local-first"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "基于 PagedAttention 构建的高吞吐量 LLM 推理服务引擎，2026 年新增对 AMD、Intel Arc 及 TPU 的扩展硬件支持。",
+      "language": "Python",
+      "stars": 98200,
+      "stars_today": 420,
+      "forks": 14300,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "inference",
+        "LLM-serving",
+        "hardware-acceleration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mempalace-mempalace",
+      "name": "MemPalace/mempalace",
+      "description": "开源 AI 记忆系统，支持结构化检索，以「展厅」组织人物/项目，以「房间」组织主题；今日增速最快的 AI 仓库。",
+      "language": "Python",
+      "stars": 57903,
+      "stars_today": 2180,
+      "forks": 7449,
+      "url": "https://github.com/MemPalace/mempalace",
+      "tags": [
+        "memory-systems",
+        "retrieval",
+        "agent-infrastructure"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "huggingface-lerobot",
+      "name": "huggingface/lerobot",
+      "description": "面向真实机器人场景的端到端学习框架，覆盖数据采集、训练与部署全流程。",
+      "language": "Python",
+      "stars": 47200,
+      "stars_today": 290,
+      "forks": 5890,
+      "url": "https://github.com/huggingface/lerobot",
+      "tags": [
+        "robotics",
+        "imitation-learning",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-nanochat",
+      "name": "karpathy/nanochat",
+      "description": "在单一可读代码库中实现完整 LLM 训练流水线，涵盖分词、预训练、微调、评估、推理与聊天界面。",
+      "language": "Python",
+      "stars": 42100,
+      "stars_today": 890,
+      "forks": 5820,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "LLM-training",
+        "education",
+        "reference-implementation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "perplexity-ai-bumblebee",
+      "name": "perplexity-ai/bumblebee",
+      "description": "只读供应链扫描工具，覆盖 npm、PyPI、Go、RubyGems、Composer、MCP 服务器、编辑器扩展及浏览器扩展。",
+      "language": "Python",
+      "stars": 31400,
+      "stars_today": 640,
+      "forks": 2890,
+      "url": "https://github.com/perplexity-ai/bumblebee",
+      "tags": [
+        "supply-chain-security",
+        "MCP",
+        "dev-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "microsoft-graphrag",
+      "name": "microsoft/graphrag",
+      "description": "基于图的检索增强生成（RAG）系统，用于复杂文档理解。",
+      "language": "Python",
+      "stars": 23100,
+      "stars_today": 180,
+      "forks": 2780,
+      "url": "https://github.com/microsoft/graphrag",
+      "tags": [
+        "RAG",
+        "knowledge-graphs",
+        "document-understanding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "arunagirinathan-k-awesome-ai-agents-2026",
+      "name": "ARUNAGIRINATHAN-K/awesome-ai-agents-2026",
+      "description": "精选列表，收录 300 余个 AI 智能体、框架与工具，涵盖编程、创意、语音、研究及企业应用场景。",
+      "language": "Markdown",
+      "stars": 18200,
+      "stars_today": 380,
+      "forks": 3120,
+      "url": "https://github.com/ARUNAGIRINATHAN-K/awesome-ai-agents-2026",
+      "tags": [
+        "awesome-list",
+        "agents",
+        "curated-resources"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "minimaxai-minimax-h3-repo",
+      "name": "MiniMaxAI/MiniMax-H3",
+      "description": "支持原生立体声音频的开源全模态视频生成模型；与论文和 HF 模型卡同日发布，以单日星数增速成为当日增长最快的仓库。",
+      "language": "Python",
+      "stars": 12800,
+      "stars_today": 3890,
+      "forks": 1420,
+      "url": "https://github.com/MiniMaxAI/MiniMax-H3",
+      "tags": [
+        "video-generation",
+        "omni-modal",
+        "audio-generation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "neoteai-n0-vtla",
+      "name": "neoteai/N0-VTLA",
+      "description": "面向接触密集型机器人操作的视觉-触觉-语言-动作模型，与 arXiv 论文同日发布。",
+      "language": "Python",
+      "stars": 8900,
+      "stars_today": 720,
+      "forks": 1120,
+      "url": "https://github.com/neoteai/N0-VTLA",
+      "tags": [
+        "robotics",
+        "tactile-sensing",
+        "vision-language-action"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "自我验证取代外部评判器",
+      "description": "多篇论文（RLSVR、评估-验证奖励、N0-VTLA 的触觉反馈）独立汇聚于可验证的、基于规则的或自校验信号，而非学习型奖励模型或 LLM 评判器。",
+      "related_paper_ids": [
+        "rlvr-to-rlsvr",
+        "evaluation-verification-reward-image-editing",
+        "n0-vtla"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "原生记忆架构",
+      "description": "记忆正从外部检索系统迁移至模型原生的无梯度架构组件，体现于 Metis，并与快速崛起的开源项目 MemPalace 形成呼应。",
+      "related_paper_ids": [
+        "metis-memory-foundation-model"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "同日多渠道协同发布",
+      "description": "各实验室越来越多地同步发布论文、模型权重与 GitHub 代码（MiniMax H3、N0-VTLA），将研究到应用的周期压缩至单日。",
+      "related_paper_ids": [
+        "minimax-h3",
+        "n0-vtla"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "面向真实世界的基础 GUI 智能体",
+      "description": "GUI 智能体正从各自为政的移动端/浏览器/桌面端工具整合为统一基础模型，并在真实世界基准上取得强劲表现，延伸了 arXiv 上 GUI 控制中智能体记忆的更广泛趋势。",
+      "related_paper_ids": [
+        "qwen-ui-agent"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "带原生音频的全模态生成",
+      "description": "视频生成系统正将文本、图像、视频和音频生成整合进单一统一 Transformer，取代各任务独立的流水线架构。",
+      "related_paper_ids": [
+        "minimax-h3",
+        "videococo",
+        "scaling-text-conditioning-visual-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "可信企业与智能体基础设施",
+      "description": "围绕审计、声明溯源检索与企业文档提取的低调但持续的研究，正在为智能体 AI 部署构建信任与溯源层。",
+      "related_paper_ids": [
+        "aispa-system-prompt-auditing",
+        "askchem-chemistry-literature",
+        "extractbench-enterprise-document-extraction"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending Repositories",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-03T09:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
