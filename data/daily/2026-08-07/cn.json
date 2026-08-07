@@ -1,0 +1,502 @@
+{
+  "version": "1.0",
+  "date": "2026-08-07",
+  "generated_at": "2026-08-07T09:00:00Z",
+  "summary": {
+    "headline": "京东的 JoyAI-Video-Edit 发布了一个 160 亿参数的自回归扩散模型，可在 B200 上以 30 FPS 实现实时流式视频编辑；Argus 与 OctoLong 分别将智能体运行时和代码模型推向真正的长周期、跨代码库工作；而 Metis 的记忆基础模型在发布一周后热度仍在攀升，原生记忆架构正巩固为 2026 年研究的主导方向。",
+    "body": "8 月 7 日在全新 arXiv 发布方面较为平静，但在**主题的持久性**上表现强劲——当日热度最高的论文，要么仍在延续 7 月下旬以来的上升势头（Metis、Qwen-UI-Agent、AskChem），要么是在延续同一架构方向的基础上加入了产品化视角。京东的 **JoyAI-Video-Edit** 是当日最亮眼的新发布：一个 160 亿参数的自回归扩散框架，可实时编辑流式视频——在 B200 上以 720×1280 分辨率实现端到端 30.19 FPS——且无需未来帧，使用因果视频 VAE 以及全新的源锚定分布匹配蒸馏方案来控制延迟。它同时发布了配套的 GitHub 仓库，按星标增速已是当日增长最快的 AI 仓库，延续了如今已很熟悉的协同发布模式。\n\n在智能体方面，**Argus** 提出了一种持久化、可自我演化的运行时——由 Manager、Planner、Engineer 和 Reviewer 角色在持久化项目状态上运作——明确设计用于将稳定的用户意图与不断变化的操作目标区分开来，新记忆和新流程只有经过角色专属审核后才会被采纳。这是对大多数长周期智能体系统普遍面临的失效模式——目标漂移与未经审核的自我修改——的直接架构性回应。**OctoLong** 则针对一个相关但不同的问题——通过在跨代码库代码上下文上进行中期训练，专门扩展面向代码的长上下文理解能力，而非通用的长文档任务——与此同时，同一周内出现的一批智能体强化学习论文（Agentic RL with Self-Distilled Reward Shaping，以及与之密切相关的 Recursive Self-Distillation 论文）继续推动强化学习训练中**无评判器、无裁判的信用分配**方向。\n\nMemTensor 的记忆基础模型 **Metis** 在 7 月 29 日首发一周后热度仍在上升——在其自建记忆基准上，无上下文的 Qwen3.5 基线得分仅为 1.69%，而它取得了 73.77% 的平均分，差距十分惊人，其在热榜上的持续存在表明原生、无梯度的记忆并非昙花一现。阿里巴巴的 **Qwen-UI-Agent** 以及 AskChem 以主张为中心的化学文献基础设施，同样在提交数日后仍在持续获得点赞，进一步印证了 HuggingFace Daily Papers 上的热度正越来越多地奖励持续的实用价值，而非发布当日的新鲜感。\n\n在行业方面，OpenAI 将 GPT-5.6 Luna 的输入定价下调 80% 至每百万 token 0.20 美元，同时 ChatGPT 的周活跃用户数已突破约 10 亿；AI 智能体初创公司在 7 月的十几笔交易中共获得约 18 亿美元融资；美国商务部现在要求像 GPT-5.6 和 Claude Fable 5 这样的前沿模型在发布前必须接受国家安全审查——这一监管收紧与模型层面的价格战同步进行。",
+    "key_themes": [
+      "native-memory-architectures",
+      "long-horizon-agentic-runtimes",
+      "real-time-streaming-video-generation",
+      "judge-free-agentic-rl",
+      "cross-repository-long-context-code-models",
+      "frontier-model-price-war-and-regulation"
+    ]
+  },
+  "researcher_notes": "**热度正在与新鲜度脱钩。** 今天热度最高的四篇论文中有三篇（Metis、Qwen-UI-Agent、AskChem）是在 8-9 天前提交的，且仍在持续获得点赞，而大多数 8 月 5-7 日提交的论文点赞数仍是个位数。这值得作为一种平台动态信号来跟踪，而不仅仅是研究信号——这表明 HuggingFace Daily Papers 的排名越来越多地奖励那些不断被引用、被复现或被继续构建的论文，而非发布后 24 小时内的新鲜度，这对研究质量而言是更健康的信号，但也使得\"今天在热榜上\"成为\"今天有什么新东西\"的一个噪声更大的代理指标。\n\n**Argus 与 OctoLong 解决的是相邻但不同的长周期问题，将两者混为一谈会是一个错误。** Argus 关注的是长任务中的*智能体流程完整性*——通过角色专属审核来阻止漂移和未经审核的自我修改。OctoLong 关注的是*模型容量*——底层 LLM 在推理时能否真正承载并推理整个多代码库的代码库。一个建立在无法保留跨文件上下文的模型之上的持久化智能体运行时，在大型重构任务上仍会失败；一个没有流程纪律的长上下文代码模型，在多日任务中仍会出现漂移。这两者是互补的基础设施层，值得注意的是，它们在同一个 48 小时窗口内出现，而团队之间似乎并无协调。\n\n**无裁判强化学习这一批论文值得抱以怀疑态度来解读。** Self-Distilled Reward Shaping 论文与同一周出现的 Recursive Self-Distillation 论文都声称为智能体强化学习实现了无评判器、从 token 到证据的信用分配——两者的表述相似到值得核查它们究竟是独立的趋同研究，还是相邻团队对重叠思路的两份不同写法。这与主导了 7 月 29 日至 8 月 3 日窗口期的\"验证而非评判\"这条线索（RLSVR、Evaluation-Verification Reward）一脉相承；这一模式正在巩固为一个真正的子领域，而非昙花一现的潮流，但今天这两篇论文偏低的点赞数（约 21 票以及个位数）意味着二者都尚未经过社区的充分检验。\n\n**Metis 的头条数字需要加一条注脚。** 无上下文 Qwen3.5 基线的 1.69% 对比 73.77%，差距确实巨大，但将一个记忆增强模型与一个刻意剥夺上下文的基线相比较，是最容易取胜的比较方式——更具信息量的数字应当是 Metis-27B 与在*相同*上下文窗口下、通过朴素检索或长上下文填充获得同等信息量的 Qwen3.5 基线相比较，而这一数据并未在论文中报告。在将这一头条数字当作真正的结论之前，值得关注后续是否会有消融实验跟进。\n\n**JoyAI-Video-Edit 的实时性声明是当日最容易被立即验证的发布。** 在 B200 上以 720×1280 分辨率实现 30.19 FPS 是一个具体、可复现的数字，而且京东在发布论文的同一天就一并发布了模型权重和代码，而不仅仅是一篇论文——这是比本周大多数基准声明更有力的信任信号。如果该吞吐量在独立测试中得到验证，那么无需未来帧前瞻的自回归扩散视频编辑，将为直播和视频通话场景带来实质性突破，而不仅仅是离线内容处理流程。\n\n**今天的宏观背景比平时更值得关注。** OpenAI 将 GPT-5.6 Luna 降价 80% 的同一周，商务部引入了针对这一级别模型发布前的强制性国家安全审查——这体现了行业竞相将推理能力商品化与监管机构收紧最强大模型发布闸门之间的真实张力。值得关注这项审查要求究竟会成为一个实质性的瓶颈，还是仅仅是走过场；这是美国首个专门应用于发布前而非事后的此类政策机制。",
+  "papers": [
+    {
+      "id": "metis-memory-foundation-model",
+      "title": "Metis: Memory Foundation Model",
+      "authors": [
+        "MemTensor Team",
+        "Renmin University",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "affiliations": [
+        "Renmin University of China",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "summary": "Metis 提出了记忆基础模型，将原生、可动态演化的记忆状态直接构建于主干网络之中，在推理时权重保持冻结的情况下，通过无梯度的在线更新来维护该记忆状态。在团队自建的记忆基准上，Metis-27B 的平均得分为 73.77%，而无上下文的 Qwen3.5 基线仅为 1.69%。",
+      "key_findings": [
+        "持久化记忆状态是架构原生的，而非外部检索系统，无需梯度更新或重新训练即可完成更新",
+        "在自建记忆测试集上，Metis-27B 平均得分达到 73.77%，而无上下文的 Qwen3.5 仅为 1.69%",
+        "模型权重已公开发布；自 7 月 29 日提交以来一周多，点赞数仍在持续增长"
+      ],
+      "tags": [
+        "memory-architecture",
+        "foundation-models",
+        "long-context",
+        "gradient-free-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 85,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26760",
+        "huggingface": "https://huggingface.co/papers/2607.26760",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.26760",
+        "pdf": "https://arxiv.org/pdf/2607.26760"
+      }
+    },
+    {
+      "id": "joyai-video-edit",
+      "title": "JoyAI-Video-Edit: Real-Time Open-Ended Video Editing with Autoregressive Diffusion",
+      "authors": [
+        "JD.com Open Source Team"
+      ],
+      "affiliations": [
+        "JD.com"
+      ],
+      "summary": "JoyAI-Video-Edit 是一个 160 亿参数的自回归扩散框架，用于实时流式视频编辑，完全无需未来帧，结合了 MLLM 条件编码器、因果视频 VAE 以及 MMDiT 主干网络。源锚定分布匹配蒸馏与长周期自回归蒸馏两项技术，使其在 B200 GPU 上以 720x1280 分辨率实现端到端 30.19 FPS 的吞吐量。",
+      "key_findings": [
+        "因果、无需未来帧的架构实现了真正的实时流式视频编辑，而非离线批处理",
+        "在单张 B200 GPU 上，以 720x1280 分辨率实现端到端 30.19 FPS 的吞吐量",
+        "支持主体、局部、背景、风格、动作以及参考引导式编辑；模型权重和代码已于当日一并发布"
+      ],
+      "tags": [
+        "video-editing",
+        "autoregressive-diffusion",
+        "real-time-generation",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.03974",
+        "huggingface": "https://huggingface.co/papers/2608.03974",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.03974",
+        "pdf": "https://arxiv.org/pdf/2608.03974"
+      }
+    },
+    {
+      "id": "argus-agentic-runtime",
+      "title": "Argus: A General-Purpose Agentic Runtime for Long-Horizon Reasoning",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in available sources"
+      ],
+      "summary": "Argus 是一个持久化、可自我演化的智能体运行时，围绕 Manager、Planner、Engineer 和 Reviewer 四种角色组织，在持久化项目状态上执行有边界的任务。它将稳定的用户意图与不断变化的操作目标区分开来，只有经过角色专属审核之后，才会采纳新的记忆、技能、流程或验证器，力求实现有证据支撑、可审计的方向调整。",
+      "key_findings": [
+        "角色审核门控流程控制着一个长期运行的智能体可以采纳哪些记忆、技能和流程",
+        "将持久化的用户意图与不断演化的操作目标明确区分开来，减少了长任务中的目标漂移",
+        "强调有证据支撑、可审计的方向调整，而非不受约束的自我修改"
+      ],
+      "tags": [
+        "agentic-systems",
+        "long-horizon-reasoning",
+        "agent-memory",
+        "multi-agent-coordination"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 6
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "octolong-cross-repo-code-context",
+      "title": "OctoLong: Mid-Training On Cross-Repository Code Contexts Enhances Long-Context Modeling",
+      "authors": [
+        "Indraneil Paul",
+        "Falko Helm",
+        "Goran Glavaš",
+        "et al."
+      ],
+      "affiliations": [
+        "Not fully disclosed in available sources"
+      ],
+      "summary": "OctoLong 专门在跨代码库的代码上下文上对 LLM 进行中期训练，以扩展面向代码的长上下文理解能力，而非依赖通用的长文档中期训练。该方法针对的是这样一个差距：模型在处理长文本方面表现良好，但在真实多代码库代码库的规模和结构上进行推理时仍然力不从心。",
+      "key_findings": [
+        "中期训练语料由跨代码库的代码上下文构建，而非通用的长文档",
+        "专门针对代码结构和跨文件依赖关系的长上下文理解能力",
+        "将自身定位为区别于那些混淆了通用长上下文能力与代码专属长上下文推理能力的基准测试"
+      ],
+      "tags": [
+        "long-context",
+        "code-models",
+        "mid-training",
+        "software-engineering-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 4
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "qwen-ui-agent",
+      "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+      "authors": [
+        "Alibaba Qwen Team"
+      ],
+      "affiliations": [
+        "Alibaba"
+      ],
+      "summary": "Qwen-UI-Agent 是一个以真实世界为中心的基础 GUI 智能体，在单一模型中覆盖移动端、计算机使用、网页以及 DeepSearch 场景。它在 MobileWorld-Real 上取得 92.2%，在 AndroidDaily 上取得 97.5%，并声称在移动端控制基准测试中超越了 Opus 4.8、Gemini 3.1 Pro 和 GPT-5.6 Sol。",
+      "key_findings": [
+        "统一的基础模型无需针对特定任务的变体即可处理移动端、桌面端、网页以及 DeepSearch 的 GUI 控制",
+        "MobileWorld 82.1%、MobileWorld-Real 92.2%、AndroidDaily 97.5%、OSWorld-Verified 79.5%、WebArena 73.6%、ScreenSpot-Pro 81.5%",
+        "声称在同一团队推出的移动端基准测试上超越了 Opus 4.8、Gemini 3.1 Pro 和 GPT-5.6 Sol"
+      ],
+      "tags": [
+        "GUI-agents",
+        "foundation-models",
+        "agentic-AI",
+        "mobile-automation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28227",
+        "huggingface": "https://huggingface.co/papers/2607.28227",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.28227",
+        "pdf": "https://arxiv.org/pdf/2607.28227"
+      }
+    },
+    {
+      "id": "agentic-rl-self-distilled-reward-shaping",
+      "title": "Agentic Reinforcement Learning with Self-Distilled Reward Shaping",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Not fully disclosed in available sources"
+      ],
+      "summary": "本文提出了一种面向智能体强化学习的自蒸馏奖励塑形方法，通过将 token 级反馈映射为更宽泛的证据模式来避免使用外部奖励模型，随后将该蒸馏信号与强化学习训练主干相结合。它将近期自我验证强化学习工作中出现的\"验证而非评判\"思路，扩展为一种基于蒸馏的表述方式。",
+      "key_findings": [
+        "自蒸馏取代了外部奖励模型，用于塑形智能体强化学习的训练信号",
+        "将 token 级反馈映射为证据模式，而非依赖标量评判分数",
+        "属于同一周内出现的一批无评判器、无裁判信用分配论文中的一员，服务于智能体强化学习"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "agentic-AI",
+        "reward-shaping",
+        "self-distillation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.03223",
+        "huggingface": "https://huggingface.co/papers/2608.03223",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.03223",
+        "pdf": "https://arxiv.org/pdf/2608.03223"
+      }
+    },
+    {
+      "id": "askchem-chemistry-literature",
+      "title": "AskChem: Claim-Centered Infrastructure for Chemistry Literature Synthesis",
+      "authors": [
+        "Bing Yan",
+        "Gregory Wolfe",
+        "Stefano Martiniani",
+        "Kyunghyun Cho"
+      ],
+      "affiliations": [
+        "New York University (inferred)"
+      ],
+      "summary": "AskChem 将检索单元从整篇论文转变为原子化的、带溯源信息的主张——每条主张都由一个 DOI 和一段逐字引用作为支撑——索引了跨越 1925 年至 2026 年、来自 14.7 万篇论文的 240 万条主张。它为 AI 智能体提供 REST、SDK 以及 MCP 接入方式，将 GPT-5.5 与 AskChem 结合后，可解析 DOI 引用的比例从 88.3% 提升到了 100%。",
+      "key_findings": [
+        "检索单元是原子化的、以 DOI 为依据、可通过引文验证的主张，而非整篇论文或文本片段",
+        "索引了跨越一个世纪化学文献（1925-2026 年）、来自 14.7 万篇论文的 240 万条主张",
+        "原生支持 MCP 接入，使其可被 AI 智能体直接调用；将 GPT-5.5 与其结合后，可解析 DOI 的比例从 88.3% 提升到了 100%"
+      ],
+      "tags": [
+        "scientific-AI",
+        "retrieval",
+        "chemistry",
+        "agent-infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28618",
+        "huggingface": "https://huggingface.co/papers/2607.28618",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.28618",
+        "pdf": "https://arxiv.org/pdf/2607.28618"
+      }
+    },
+    {
+      "id": "dypes-vla-shared-dynamics",
+      "title": "DyPES-VLA: Learning Shared Dynamics Priors and Embodiment-Specific Control",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Not fully disclosed in available sources"
+      ],
+      "summary": "DyPES-VLA 在一个视觉-语言-动作模型中，将共享的物理动力学先验与特定于具体形态的控制策略分离开来，旨在跨机器人本体迁移通用的物理理解能力，同时使控制策略保持针对各自形态的专门化。截至 8 月 7 日，这是一篇刚刚提交、热度较低的论文。",
+      "key_findings": [
+        "将视觉-语言-动作建模拆分为一个共享的动力学先验和一个特定形态的控制头",
+        "目标是实现跨形态的物理动力学理解迁移，而无需针对每个机器人从零开始重新训练物理模型",
+        "尚处于极早期阶段，热度较低；为刚提交的新论文，尚无独立复现"
+      ],
+      "tags": [
+        "embodied-AI",
+        "vision-language-action",
+        "robotics",
+        "cross-embodiment-transfer"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k26",
+      "name": "Kimi-K2.6",
+      "organization": "Moonshot AI",
+      "description": "一个多模态混合专家模型（总参数 1 万亿 / 激活参数 320 亿），具备视觉和智能体工具调用能力，256K token 上下文窗口，并在代码生成和长周期智能体工作流方面表现强劲。",
+      "task_type": "text-generation",
+      "model_size": "1T/32B active (MoE)",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "vision",
+        "agents",
+        "mixture-of-experts"
+      ],
+      "metrics": {
+        "downloads": 5820,
+        "likes": 340
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-V4 于 7 月 31 日发布的快速推理变体，针对大规模、低成本部署进行了优化。",
+      "task_type": "text-generation",
+      "model_size": "MoE (Flash tier)",
+      "tags": [
+        "text-generation",
+        "cost-efficient-inference",
+        "MoE"
+      ],
+      "metrics": {
+        "downloads": 12400,
+        "likes": 287
+      }
+    },
+    {
+      "id": "joyai-video-edit-model",
+      "name": "JoyAI-Video-Edit",
+      "organization": "JD.com",
+      "description": "用于实时流式视频编辑的 160 亿参数自回归扩散模型，与其 arXiv 论文和 GitHub 仓库于同一天一并发布。",
+      "task_type": "video-editing",
+      "model_size": "16B",
+      "tags": [
+        "video-editing",
+        "autoregressive-diffusion",
+        "real-time-generation"
+      ],
+      "metrics": {
+        "downloads": 3100,
+        "likes": 195
+      }
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "一个本地运行的个人 AI 助手网关，集成了超过 50 种服务，涵盖 WhatsApp、Telegram、Slack、Discord、Signal 和 iMessage。",
+      "language": "Python",
+      "stars": 346000,
+      "stars_today": 1240,
+      "forks": 28400,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "AI-assistant",
+        "messaging-integrations",
+        "local-first"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "jd-opensource-joyai-video-edit",
+      "name": "jd-opensource/JoyAI-Video-Edit",
+      "description": "基于 160 亿参数自回归扩散模型的实时流式视频编辑；与论文及 HF 模型卡同日发布，按星标增速是当日增长最快的 AI 仓库。",
+      "language": "Python",
+      "stars": 2800,
+      "stars_today": 1650,
+      "forks": 310,
+      "url": "https://github.com/jd-opensource/JoyAI-Video-Edit",
+      "tags": [
+        "video-generation",
+        "real-time-generation",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "通过简单的 CLI 和 API 在本地运行大语言模型，涵盖广泛的开放权重模型家族。",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 380,
+      "forks": 12900,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-inference",
+        "LLM-serving",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "基于 PagedAttention 构建的高吞吐量 LLM 服务引擎，在 GPU 和加速器上拥有广泛的硬件支持。",
+      "language": "Python",
+      "stars": 98200,
+      "stars_today": 420,
+      "forks": 14300,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "inference",
+        "LLM-serving",
+        "hardware-acceleration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "自托管、可扩展的 AI 平台，为本地及远程 LLM 提供功能完整的聊天界面和工作流构建器。",
+      "language": "JavaScript",
+      "stars": 124000,
+      "stars_today": 290,
+      "forks": 15600,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "chat-UI",
+        "self-hosted",
+        "LLM-frontend"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "原生记忆架构",
+      "description": "记忆正持续从外部检索系统转向模型原生的、无梯度的架构组件。Metis 仍是最典型的例子，在发布一周后热度依然在攀升，表明这是一种持续的兴趣，而非仅限于发布当日的短暂关注。",
+      "related_paper_ids": [
+        "metis-memory-foundation-model"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "长周期智能体运行时",
+      "description": "Argus 将角色审核门控正式化，以防止长期运行的智能体出现目标漂移和未经审核的自我修改，将智能体流程完整性作为一个区别于原始模型能力的独立问题来处理。",
+      "related_paper_ids": [
+        "argus-agentic-runtime"
+      ],
+      "trend_signal": "emerging"
+    },
+    {
+      "name": "跨代码库长上下文代码模型",
+      "description": "OctoLong 专门在跨代码库的代码上下文上进行中期训练，而非通用长文档，旨在实现针对真实多文件代码库而非散文文本的长上下文推理能力。",
+      "related_paper_ids": [
+        "octolong-cross-repo-code-context"
+      ],
+      "trend_signal": "emerging"
+    },
+    {
+      "name": "实时流式生成式视频",
+      "description": "JoyAI-Video-Edit 展示了以 30 FPS 以上速度进行的实时、无需未来帧的自回归扩散视频编辑，正将生成式视频从离线批处理流程推向直播和视频通话场景。",
+      "related_paper_ids": [
+        "joyai-video-edit"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "无裁判智能体强化学习",
+      "description": "一批关于自蒸馏和无评判器奖励塑形的智能体强化学习论文，延续了整个 7 月下旬以来出现的\"验证而非评判\"这一更广泛趋势，逐步摆脱外部奖励模型。",
+      "related_paper_ids": [
+        "agentic-rl-self-distilled-reward-shaping"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers（通过网络搜索获取——网络策略阻止了直接 API 访问）",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models（通过网络搜索获取——网络策略阻止了直接 API 访问）",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv（通过网络搜索获取——网络策略阻止了直接 API 访问）",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending（通过网络搜索获取——网络策略阻止了直接 API 访问）",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending Repositories（通过网络搜索获取）",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    }
+  ]
+}

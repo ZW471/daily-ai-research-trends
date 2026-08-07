@@ -1,0 +1,502 @@
+{
+  "version": "1.0",
+  "date": "2026-08-07",
+  "generated_at": "2026-08-07T09:00:00Z",
+  "summary": {
+    "headline": "JD.com's JoyAI-Video-Edit ships a 16B autoregressive-diffusion model doing real-time streaming video edits at 30 FPS on B200; Argus and OctoLong push agent runtimes and code models toward genuinely long-horizon, cross-repository work; and Metis's memory foundation model keeps gaining traction a week after launch as memory-native architecture solidifies into 2026's dominant research axis.",
+    "body": "August 7 was a quieter day for brand-new arXiv drops but a strong one for **durability of theme** — the papers gaining the most engagement were either still climbing from late July (Metis, Qwen-UI-Agent, AskChem) or extending the same architectural bets with a production angle. JD.com's **JoyAI-Video-Edit** is the standout new release: a 16B autoregressive diffusion framework that edits streaming video in real time — 30.19 FPS end-to-end at 720×1280 on a B200 — without needing future frames, using a causal video VAE and a new Source-Anchored Distribution Matching Distillation scheme to keep latency down. It shipped with a simultaneous GitHub repo that is already the fastest-growing AI repo of the day by star velocity, a now-familiar coordinated-launch pattern.\n\nOn the agent side, **Argus** proposes a persistent, self-evolving runtime — Manager, Planner, Engineer, and Reviewer roles operating over durable project state — explicitly designed to separate stable user intent from shifting operational objectives, with new memories and procedures admitted only after role-owned review. That's a direct architectural answer to the failure mode most long-horizon agent systems hit: goal drift and unvetted self-modification. **OctoLong** attacks a related but distinct problem — mid-training LLMs on cross-repository code contexts to extend long-context understanding specifically for code, rather than generic long-document tasks — while a same-week cluster of agentic-RL papers (Agentic RL with Self-Distilled Reward Shaping, and a closely related Recursive Self-Distillation paper) continue the push toward **critic-free, judge-free credit assignment** in RL training.\n\n**Metis**, MemTensor's memory foundation model, is still rising a week after its July 29 debut — 73.77% vs. 1.69% for a context-free Qwen3.5 baseline on its constructed memory benchmark is a striking number, and its persistence on the trending list suggests native, gradient-free memory is not a one-week fad. Alibaba's **Qwen-UI-Agent** and AskChem's claim-centric chemistry literature infrastructure are similarly still gaining upvotes days after submission, reinforcing that engagement on HuggingFace Daily Papers increasingly rewards sustained utility over launch-day novelty.\n\nOn the industry side, OpenAI cut GPT-5.6 Luna's input pricing 80% to $0.20/M tokens while ChatGPT crossed roughly 1 billion weekly active users, AI agent startups pulled in ~$1.8B across a dozen July deals, and the US Commerce Department now requires a national-security review before launch for frontier models like GPT-5.6 and Claude Fable 5 — a regulatory tightening running in parallel with the price war at the model layer.",
+    "key_themes": [
+      "native-memory-architectures",
+      "long-horizon-agentic-runtimes",
+      "real-time-streaming-video-generation",
+      "judge-free-agentic-rl",
+      "cross-repository-long-context-code-models",
+      "frontier-model-price-war-and-regulation"
+    ]
+  },
+  "researcher_notes": "**Engagement is decoupling from freshness.** Three of today's four highest-engagement papers (Metis, Qwen-UI-Agent, AskChem) were submitted 8-9 days ago and are still gaining upvotes, while most of the August 5-7 submissions sit in single digits. That's worth tracking as a platform-dynamics signal, not just a research one — it suggests HuggingFace Daily Papers' ranking increasingly rewards papers that keep getting cited, reproduced, or built on rather than first-24-hour novelty, which is a healthier signal for research quality but makes 'what's trending today' a noisier proxy for 'what's new today.'\n\n**Argus and OctoLong are solving adjacent but distinct long-horizon problems, and conflating them would be a mistake.** Argus is about *agent process integrity* over long missions — stopping drift and unvetted self-modification via role-gated review. OctoLong is about *model capacity* — can the underlying LLM actually hold and reason over a whole multi-repository codebase at inference time. A durable agent runtime built on a model that can't retain cross-file context will still fail on large refactors; a long-context code model without process discipline will still drift on multi-day missions. The two are complementary infrastructure layers, and it's notable they arrived in the same 48-hour window without apparent coordination between teams.\n\n**The judge-free RL cluster deserves a skeptical read.** Both the Self-Distilled Reward Shaping paper and the same-week Recursive Self-Distillation paper claim critic-free, token-to-evidence credit assignment for agentic RL — similar enough in framing that it's worth checking whether they're independent convergent work or two write-ups of overlapping ideas from adjacent teams. This is the same 'verify, don't judge' thread that dominated the July 29-August 3 window (RLSVR, Evaluation-Verification Reward); the pattern is consolidating into a genuine subfield rather than a one-off trend, but the low upvote counts on today's entries (~21 and low single digits) mean neither has yet been stress-tested by the community.\n\n**Metis's headline number needs a footnote.** 73.77% vs. 1.69% for a no-context Qwen3.5 baseline is a huge gap, but comparing a memory-augmented model against a deliberately context-starved baseline is the easiest possible comparison to win — the more informative number would be Metis-27B against a Qwen3.5 baseline given the *same* context window via naive retrieval or long-context stuffing, which isn't reported here. Worth watching for a follow-up ablation before treating the headline figure as the real story.\n\n**JoyAI-Video-Edit's real-time claim is the most immediately verifiable release of the day.** 30.19 FPS at 720×1280 on a B200 is a concrete, reproducible number, and JD shipped model weights and code same-day rather than just a paper — a stronger trust signal than most benchmark claims this week. If the throughput holds up under independent testing, autoregressive-diffusion video editing without future-frame lookahead is a meaningful unlock for live streaming and video-call use cases, not just offline content pipelines.\n\n**Macro context matters more than usual today.** OpenAI's 80% GPT-5.6 Luna price cut lands the same week Commerce introduced a mandatory national-security review before launch for models at that tier — a genuine tension between the industry racing to commoditize inference and regulators tightening the release gate for the most capable models. Worth watching whether the review requirement becomes a meaningful bottleneck or a rubber stamp; it's the first US policy mechanism of this kind applied specifically pre-launch rather than post-hoc.",
+  "papers": [
+    {
+      "id": "metis-memory-foundation-model",
+      "title": "Metis: Memory Foundation Model",
+      "authors": [
+        "MemTensor Team",
+        "Renmin University",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "affiliations": [
+        "Renmin University of China",
+        "National University of Singapore",
+        "Shanghai Jiao Tong University",
+        "Tongji University"
+      ],
+      "summary": "Metis introduces memory foundation models with native, dynamically-evolving memory state built into the backbone, maintained via gradient-free online updates while weights stay frozen at inference. Metis-27B scores 73.77% average on the team's constructed memory benchmark versus 1.69% for a context-free Qwen3.5 baseline.",
+      "key_findings": [
+        "Persistent memory state is architecture-native rather than an external retrieval system, updated without gradient steps or re-training",
+        "Metis-27B reaches 73.77% average on a constructed memory test set versus 1.69% for Qwen3.5 without context",
+        "Model checkpoints released publicly; still gaining upvotes more than a week after its July 29 submission"
+      ],
+      "tags": [
+        "memory-architecture",
+        "foundation-models",
+        "long-context",
+        "gradient-free-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 85,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.26760",
+        "huggingface": "https://huggingface.co/papers/2607.26760",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.26760",
+        "pdf": "https://arxiv.org/pdf/2607.26760"
+      }
+    },
+    {
+      "id": "joyai-video-edit",
+      "title": "JoyAI-Video-Edit: Real-Time Open-Ended Video Editing with Autoregressive Diffusion",
+      "authors": [
+        "JD.com Open Source Team"
+      ],
+      "affiliations": [
+        "JD.com"
+      ],
+      "summary": "JoyAI-Video-Edit is a 16B autoregressive diffusion framework for real-time streaming video editing that never needs future frames, combining an MLLM condition encoder, a causal video VAE, and an MMDiT backbone. Source-Anchored Distribution Matching Distillation and Long-Horizon Autoregressive Distillation push it to 30.19 FPS end-to-end throughput at 720x1280 on a B200 GPU.",
+      "key_findings": [
+        "Causal, future-frame-free architecture enables true real-time streaming video editing rather than offline batch processing",
+        "30.19 FPS end-to-end throughput at 720x1280 resolution on a single B200 GPU",
+        "Supports subject, local, background, style, motion, and reference-guided edits; model weights and code released same-day"
+      ],
+      "tags": [
+        "video-editing",
+        "autoregressive-diffusion",
+        "real-time-generation",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.03974",
+        "huggingface": "https://huggingface.co/papers/2608.03974",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.03974",
+        "pdf": "https://arxiv.org/pdf/2608.03974"
+      }
+    },
+    {
+      "id": "argus-agentic-runtime",
+      "title": "Argus: A General-Purpose Agentic Runtime for Long-Horizon Reasoning",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in available sources"
+      ],
+      "summary": "Argus is a persistent, self-evolving agentic runtime organized around Manager, Planner, Engineer, and Reviewer roles that execute bounded missions over durable project state. It separates stable user intent from shifting operational objectives, and only admits new memories, skills, procedures, or verifiers after role-owned review, targeting evidence-backed and auditable pivots.",
+      "key_findings": [
+        "Role-gated review process controls what memories, skills, and procedures a long-running agent can adopt",
+        "Explicit separation between durable user intent and evolving operational objectives reduces goal drift on long missions",
+        "Emphasizes evidence-backed, auditable pivots rather than unconstrained self-modification"
+      ],
+      "tags": [
+        "agentic-systems",
+        "long-horizon-reasoning",
+        "agent-memory",
+        "multi-agent-coordination"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 6
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "octolong-cross-repo-code-context",
+      "title": "OctoLong: Mid-Training On Cross-Repository Code Contexts Enhances Long-Context Modeling",
+      "authors": [
+        "Indraneil Paul",
+        "Falko Helm",
+        "Goran Glavaš",
+        "et al."
+      ],
+      "affiliations": [
+        "Not fully disclosed in available sources"
+      ],
+      "summary": "OctoLong mid-trains LLMs on cross-repository code contexts specifically to extend long-context understanding for code, rather than relying on generic long-document mid-training. The approach targets the gap between models that handle long text well but still struggle to reason across the scale and structure of real multi-repository codebases.",
+      "key_findings": [
+        "Mid-training corpus is constructed from cross-repository code contexts rather than generic long documents",
+        "Targets long-context understanding specifically for code structure and inter-file dependencies",
+        "Positions itself against benchmarks that conflate generic long-context ability with code-specific long-context reasoning"
+      ],
+      "tags": [
+        "long-context",
+        "code-models",
+        "mid-training",
+        "software-engineering-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 4
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    },
+    {
+      "id": "qwen-ui-agent",
+      "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+      "authors": [
+        "Alibaba Qwen Team"
+      ],
+      "affiliations": [
+        "Alibaba"
+      ],
+      "summary": "Qwen-UI-Agent is a real-world-centric foundation GUI agent spanning mobile, computer-use, web, and DeepSearch scenarios in a single model. It reports 92.2% on MobileWorld-Real and 97.5% on AndroidDaily, claiming to outperform Opus 4.8, Gemini 3.1 Pro, and GPT-5.6 Sol on mobile-control benchmarks.",
+      "key_findings": [
+        "Unified foundation model handles mobile, desktop, web, and DeepSearch GUI control without task-specific variants",
+        "82.1% MobileWorld, 92.2% MobileWorld-Real, 97.5% AndroidDaily, 79.5% OSWorld-Verified, 73.6% WebArena, 81.5% ScreenSpot-Pro",
+        "Claims to outperform Opus 4.8, Gemini 3.1 Pro, and GPT-5.6 Sol on mobile benchmarks introduced by the same team"
+      ],
+      "tags": [
+        "GUI-agents",
+        "foundation-models",
+        "agentic-AI",
+        "mobile-automation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28227",
+        "huggingface": "https://huggingface.co/papers/2607.28227",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.28227",
+        "pdf": "https://arxiv.org/pdf/2607.28227"
+      }
+    },
+    {
+      "id": "agentic-rl-self-distilled-reward-shaping",
+      "title": "Agentic Reinforcement Learning with Self-Distilled Reward Shaping",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Not fully disclosed in available sources"
+      ],
+      "summary": "This paper proposes self-distilled reward shaping for agentic RL that avoids external reward models by mapping token-level feedback into broader evidence patterns, then combining that distillation signal with the RL training backbone. It extends the 'verify, don't judge' thread seen in recent self-verification RL work to a distillation-based framing.",
+      "key_findings": [
+        "Self-distillation replaces external reward models for shaping agentic RL training signals",
+        "Maps token-level feedback into evidence patterns rather than relying on scalar judge scores",
+        "Part of a same-week cluster of critic-free, judge-free credit-assignment papers for agentic RL"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "agentic-AI",
+        "reward-shaping",
+        "self-distillation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.03223",
+        "huggingface": "https://huggingface.co/papers/2608.03223",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.03223",
+        "pdf": "https://arxiv.org/pdf/2608.03223"
+      }
+    },
+    {
+      "id": "askchem-chemistry-literature",
+      "title": "AskChem: Claim-Centered Infrastructure for Chemistry Literature Synthesis",
+      "authors": [
+        "Bing Yan",
+        "Gregory Wolfe",
+        "Stefano Martiniani",
+        "Kyunghyun Cho"
+      ],
+      "affiliations": [
+        "New York University (inferred)"
+      ],
+      "summary": "AskChem shifts the retrieval unit from the whole paper to the atomic, provenance-carrying claim — each backed by a DOI and a verbatim quote — indexing 2.4M claims from 147K papers spanning 1925-2026. It exposes REST, SDK, and MCP access for AI agents, and grounding GPT-5.5 in AskChem raised resolvable DOI citations from 88.3% to 100%.",
+      "key_findings": [
+        "Retrieval unit is the atomic, DOI-grounded, quote-verifiable claim rather than the paper or chunk",
+        "Indexes 2.4M claims from 147K papers spanning a century of chemistry literature (1925-2026)",
+        "MCP-native access makes it directly consumable by AI agents; grounding GPT-5.5 in it raised resolvable-DOI rate from 88.3% to 100%"
+      ],
+      "tags": [
+        "scientific-AI",
+        "retrieval",
+        "chemistry",
+        "agent-infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.28618",
+        "huggingface": "https://huggingface.co/papers/2607.28618",
+        "alphaxiv": "https://alphaxiv.org/abs/2607.28618",
+        "pdf": "https://arxiv.org/pdf/2607.28618"
+      }
+    },
+    {
+      "id": "dypes-vla-shared-dynamics",
+      "title": "DyPES-VLA: Learning Shared Dynamics Priors and Embodiment-Specific Control",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Not fully disclosed in available sources"
+      ],
+      "summary": "DyPES-VLA separates shared physical dynamics priors from embodiment-specific control policies in a vision-language-action model, aiming to transfer general physics understanding across robot bodies while keeping control specialized per embodiment. A freshly submitted, low-engagement paper as of August 7.",
+      "key_findings": [
+        "Splits vision-language-action modeling into a shared dynamics prior and an embodiment-specific control head",
+        "Targets cross-embodiment transfer of physical dynamics understanding without retraining physics from scratch per robot",
+        "Very early-stage engagement; fresh submission with no independent replication yet"
+      ],
+      "tags": [
+        "embodied-AI",
+        "vision-language-action",
+        "robotics",
+        "cross-embodiment-transfer"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/",
+        "pdf": "https://huggingface.co/papers/"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k26",
+      "name": "Kimi-K2.6",
+      "organization": "Moonshot AI",
+      "description": "A multimodal mixture-of-experts model (1T total / 32B active params) with vision and agentic tool-use capabilities, a 256K token context window, and strong coding and long-horizon agent workflow performance.",
+      "task_type": "text-generation",
+      "model_size": "1T/32B active (MoE)",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "vision",
+        "agents",
+        "mixture-of-experts"
+      ],
+      "metrics": {
+        "downloads": 5820,
+        "likes": 340
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "DeepSeek AI",
+      "description": "A fast-inference variant of DeepSeek-V4 released July 31, optimized for cost-efficient deployment at scale.",
+      "task_type": "text-generation",
+      "model_size": "MoE (Flash tier)",
+      "tags": [
+        "text-generation",
+        "cost-efficient-inference",
+        "MoE"
+      ],
+      "metrics": {
+        "downloads": 12400,
+        "likes": 287
+      }
+    },
+    {
+      "id": "joyai-video-edit-model",
+      "name": "JoyAI-Video-Edit",
+      "organization": "JD.com",
+      "description": "16B autoregressive diffusion model for real-time streaming video editing, released alongside its arXiv paper and GitHub repo on the same day.",
+      "task_type": "video-editing",
+      "model_size": "16B",
+      "tags": [
+        "video-editing",
+        "autoregressive-diffusion",
+        "real-time-generation"
+      ],
+      "metrics": {
+        "downloads": 3100,
+        "likes": 195
+      }
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "A personal AI assistant that runs locally as a gateway with 50+ integrations spanning WhatsApp, Telegram, Slack, Discord, Signal, and iMessage.",
+      "language": "Python",
+      "stars": 346000,
+      "stars_today": 1240,
+      "forks": 28400,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "AI-assistant",
+        "messaging-integrations",
+        "local-first"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "jd-opensource-joyai-video-edit",
+      "name": "jd-opensource/JoyAI-Video-Edit",
+      "description": "Real-time streaming video editing with a 16B autoregressive diffusion model; released same-day alongside its paper and HF model card, the fastest-growing AI repo of the day by star velocity.",
+      "language": "Python",
+      "stars": 2800,
+      "stars_today": 1650,
+      "forks": 310,
+      "url": "https://github.com/jd-opensource/JoyAI-Video-Edit",
+      "tags": [
+        "video-generation",
+        "real-time-generation",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "Run large language models locally with a simple CLI and API, spanning a wide range of open-weight model families.",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 380,
+      "forks": 12900,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-inference",
+        "LLM-serving",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "High-throughput LLM serving engine built on PagedAttention, with broad hardware support across GPUs and accelerators.",
+      "language": "Python",
+      "stars": 98200,
+      "stars_today": 420,
+      "forks": 14300,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "inference",
+        "LLM-serving",
+        "hardware-acceleration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "Self-hosted, extensible AI platform providing a full-featured chat UI and workflow builder over local and remote LLMs.",
+      "language": "JavaScript",
+      "stars": 124000,
+      "stars_today": 290,
+      "forks": 15600,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "chat-UI",
+        "self-hosted",
+        "LLM-frontend"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Native Memory Architectures",
+      "description": "Memory continues moving from external retrieval systems into model-native, gradient-free architectural components. Metis remains the clearest example and is still gaining engagement over a week after launch, suggesting sustained rather than launch-day-only interest.",
+      "related_paper_ids": [
+        "metis-memory-foundation-model"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Horizon Agentic Runtimes",
+      "description": "Argus formalizes role-gated review to prevent goal drift and unvetted self-modification in long-running agents, addressing agent process integrity as a distinct problem from raw model capability.",
+      "related_paper_ids": [
+        "argus-agentic-runtime"
+      ],
+      "trend_signal": "emerging"
+    },
+    {
+      "name": "Cross-Repository Long-Context Code Models",
+      "description": "OctoLong mid-trains specifically on cross-repository code contexts rather than generic long documents, targeting long-context reasoning tailored to real multi-file codebases rather than prose.",
+      "related_paper_ids": [
+        "octolong-cross-repo-code-context"
+      ],
+      "trend_signal": "emerging"
+    },
+    {
+      "name": "Real-Time Streaming Generative Video",
+      "description": "JoyAI-Video-Edit demonstrates real-time, future-frame-free autoregressive diffusion video editing at 30+ FPS, pushing generative video from offline batch pipelines toward live streaming and video-call use cases.",
+      "related_paper_ids": [
+        "joyai-video-edit"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Judge-Free Agentic Reinforcement Learning",
+      "description": "A cluster of papers on self-distilled and critic-free reward shaping for agentic RL continues the broader 'verify, don't judge' shift away from external reward models seen throughout late July.",
+      "related_paper_ids": [
+        "agentic-rl-self-distilled-reward-shaping"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers (via web search — direct API blocked by network policy)",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models (via web search — direct API blocked by network policy)",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv (via web search — direct API blocked by network policy)",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending (via web search — direct API blocked by network policy)",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending Repositories (via web search)",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-07T09:00:00Z",
+      "status": "partial"
+    }
+  ]
+}
