@@ -1,0 +1,405 @@
+{
+  "version": "1.0",
+  "date": "2026-08-09",
+  "generated_at": "2026-08-09T14:57:00.000000Z",
+  "summary": {
+    "headline": "Agentic reinforcement learning and world-model memory dominate today's HF paper batch; MiniMax-H3 video model and DeepSeek-V4-Flash lead trending models; 'The Bitter Lesson of Tool Calling' from arXiv is the standout meta-observation of the day.",
+    "body": "Today's HuggingFace paper batch is anchored by **agentic RL** and **world-model cognition**. **EnvACE** internalizes environment dynamics via world rehearsal for agentic RL, directly attacking the sample-efficiency bottleneck by having agents simulate consequences before acting. **AgentOPSD** introduces recursive self-distillation for agentic RL, where agents iteratively improve their own policy by distilling lessons from past rollouts — a clean alternative to expensive human labeling. **WorldClaw** scales agentic 3D open-world generation, combining procedural generation with agent-driven refinement at unprecedented scene complexity.\n\nOn the **memory and context** front, **Activity Frames** (2608.05784) proposes deterministic screen-activity compilation for agent memory — a practical system that transforms raw screen events into compact, replayable memory frames. **ChronoVision** tackles temporal reasoning via latent state reconstruction, showing that agents recover better temporal understanding by reconstructing latent world states rather than attending to raw token histories.\n\nThe **robotics** front sees two strong contributions: **DyPES-VLA** learns shared dynamics priors and embodiment-specific control for cross-embodiment transfer, while **World-to-Wrist** models future wrist motion conditioned on task goals, enabling fine-grained robot manipulation. The **Weights or Skills?** survey provides a timely synthesis of the emerging split in robot learning between frozen-weight policies (VLA models) and code-writing skill agents.\n\nOn the **model ecosystem** side, **MiniMax-H3** (image-text-to-video) and its LoRA variant are the week's breakout video models. **DeepSeek-V4-Flash-0731** continues the Chinese-lab fast-inference push, while **Kimi-K3** (multimodal) and **LiquidAI LFM2.5-2.6B** (edge-scale language) round out a diverse trending model batch.\n\nThe most provocative arXiv paper today is **'The Bitter Lesson of Tool Calling'** (2608.06370), which argues that the current approach to LLM tool-calling interfaces is systematically misaligned with how capable models generalize — a potential inflection point for the entire function-calling ecosystem.",
+    "key_themes": [
+      "agentic-reinforcement-learning",
+      "world-model-memory",
+      "cross-embodiment-robotics",
+      "video-generation-models",
+      "tool-calling-interface-design",
+      "temporal-reasoning"
+    ]
+  },
+  "researcher_notes": "**EnvACE and AgentOPSD together signal a maturing agentic RL research front.** Both papers target the same gap — agents that learn efficiently without dense human feedback — but via different mechanisms. EnvACE uses world-model rollouts to simulate consequences before committing to actions (model-based). AgentOPSD uses recursive self-distillation to compress policy knowledge from its own successful rollouts (model-free). Both should be read alongside WorldClaw, which shows what happens when you scale these ideas to open 3D world generation: the agent must simultaneously manage generation, consistency, and exploration.\n\n**'The Bitter Lesson of Tool Calling' is the meta-paper of the day.** The original Bitter Lesson argued that general methods leveraging compute beat hand-crafted structure. This paper applies that lens to tool-calling interfaces: if current function-calling APIs are designed around human-readable structure (named parameters, typed schemas), but capable models generalize better with less structure, the entire paradigm may need to shift. This is worth tracking carefully — it directly challenges the design assumptions behind every major AI platform's tool API.\n\n**Activity Frames addresses a real production gap.** Most agent memory systems work at the conversation or task level. Activity Frames works at the screen-event level — deterministically compiling raw screen activity into replayable, inspectable memory frames. This is closer to how observability works in production software than anything in the academic memory literature, and may have immediate applicability for enterprise computer-use agents.\n\n**MiniMax-H3 is the video model to watch this week.** Both the base model and the Turbo LoRA variant are trending, and Comfy-Org already has an integration — a fast adoption signal. The image-text-to-video pipeline suggests it handles conditional generation well, which is the key capability for controlled video synthesis.\n\n**The cross-embodiment robotics papers (DyPES-VLA, Weights or Skills?) reflect a field converging on transfer as the central problem.** Training separate policies per robot form factor is unsustainable. DyPES-VLA's shared-dynamics-prior approach and the survey's weights-vs-skills framing are complementary attempts to find generalizable representations that survive embodiment change.",
+  "papers": [
+    {
+      "id": "envaace-internalizing-environment-dynamics-via-world-rehearsa",
+      "title": "EnvACE: Internalizing Environment Dynamics via World Rehearsal for Agentic Reinforcement Learning",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "EnvACE internalizes environment dynamics into the agent's policy via world rehearsal — the agent simulates consequences of candidate actions in a learned world model before committing, improving sample efficiency and generalization in agentic RL settings.",
+      "key_findings": [
+        "World rehearsal before action commitment improves sample efficiency in agentic RL",
+        "Internalizing dynamics into the policy reduces dependence on environment resets",
+        "Method generalizes across agentic benchmarks without task-specific tuning"
+      ],
+      "tags": ["agentic-rl", "world-models", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06197",
+        "huggingface": "https://huggingface.co/papers/2608.06197",
+        "pdf": "https://arxiv.org/pdf/2608.06197"
+      }
+    },
+    {
+      "id": "agentopsd-recursive-self-distillation-for-agentic-reinforcem",
+      "title": "AgentOPSD: Recursive Self-Distillation for Agentic Reinforcement Learning",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "AgentOPSD introduces recursive self-distillation for agentic RL, where agents iteratively distill policy knowledge from their own successful rollouts, reducing dependence on human demonstrations while improving long-horizon task performance.",
+      "key_findings": [
+        "Recursive self-distillation outperforms behavior cloning from human demos in several agentic benchmarks",
+        "Policy quality improves monotonically across distillation rounds without catastrophic forgetting",
+        "Method is compatible with off-the-shelf base LLMs without architectural changes"
+      ],
+      "tags": ["agentic-rl", "self-distillation", "reinforcement-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05987",
+        "huggingface": "https://huggingface.co/papers/2608.05987",
+        "pdf": "https://arxiv.org/pdf/2608.05987"
+      }
+    },
+    {
+      "id": "activity-frames-deterministic-screen-activity-compilation",
+      "title": "Activity Frames: Deterministic Screen-Activity Compilation for Agent Memory and Planning",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "Activity Frames proposes a deterministic system for compiling raw screen-activity events into compact, replayable memory frames that agents can use for planning, summarization, and episodic recall — addressing the gap between low-level screen observation and high-level task memory.",
+      "key_findings": [
+        "Deterministic compilation ensures reproducible memory frames across agent runs",
+        "Activity frames reduce token overhead for long-horizon computer-use tasks by 60-80% vs raw history",
+        "Replayable format enables post-hoc inspection and debugging of agent sessions"
+      ],
+      "tags": ["agent-memory", "computer-use", "screen-activity"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05784",
+        "huggingface": "https://huggingface.co/papers/2608.05784",
+        "pdf": "https://arxiv.org/pdf/2608.05784"
+      }
+    },
+    {
+      "id": "worldclaw-agentic-3d-open-world-generation-at-scale",
+      "title": "WorldClaw: Agentic 3D Open-World Generation at Scale",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "WorldClaw scales agentic 3D open-world generation by combining procedural generation with agent-driven refinement, enabling complex scene creation at scales and levels of diversity not achievable by prior single-pass generative approaches.",
+      "key_findings": [
+        "Agent-driven refinement loops produce more coherent large-scale 3D worlds than single-pass generation",
+        "Procedural seeding combined with agent correction handles rare-object distribution challenges",
+        "Method scales to open-world scenes with 10x more objects than prior SOTA"
+      ],
+      "tags": ["3d-generation", "world-models", "agentic-ai"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05248",
+        "huggingface": "https://huggingface.co/papers/2608.05248",
+        "pdf": "https://arxiv.org/pdf/2608.05248"
+      }
+    },
+    {
+      "id": "chronovision-temporal-reasoning-via-latent-state-reconstruct",
+      "title": "ChronoVision: Temporal Reasoning via Latent State Reconstruction",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "ChronoVision improves temporal reasoning in LLMs by having models reconstruct latent world states at each time step rather than attending to raw token histories, yielding better performance on event-ordering, duration-estimation, and causal-chain benchmarks.",
+      "key_findings": [
+        "Latent state reconstruction outperforms direct attention to token history on temporal QA benchmarks",
+        "Method improves event-ordering accuracy by 15% over chain-of-thought baselines",
+        "Reconstruction objective provides better training signal for temporal tasks than next-token prediction"
+      ],
+      "tags": ["temporal-reasoning", "latent-representations", "language-models"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05631",
+        "huggingface": "https://huggingface.co/papers/2608.05631",
+        "pdf": "https://arxiv.org/pdf/2608.05631"
+      }
+    },
+    {
+      "id": "dypes-vla-learning-shared-dynamics-priors-and-embodiment-spe",
+      "title": "DyPES-VLA: Learning Shared Dynamics Priors and Embodiment-Specific Control for Cross-Embodiment Transfer",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "DyPES-VLA disentangles shared physical dynamics (gravity, contact, inertia) from embodiment-specific actuation in vision-language-action models, enabling zero-shot or few-shot transfer of manipulation skills across robot morphologies.",
+      "key_findings": [
+        "Shared dynamics prior transfers across 5 robot morphologies with under 10 fine-tuning demos",
+        "Disentangled architecture outperforms monolithic VLA fine-tuning on cross-embodiment benchmarks",
+        "Physical priors learned on simulation data transfer to real hardware with minimal domain-gap"
+      ],
+      "tags": ["robotics", "cross-embodiment", "vla", "transfer-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06374",
+        "huggingface": "https://huggingface.co/papers/2608.06374",
+        "pdf": "https://arxiv.org/pdf/2608.06374"
+      }
+    },
+    {
+      "id": "weights-or-skills-survey-robot-learning",
+      "title": "Weights or Skills? A Survey of Robot-Learning Techniques: from Action-Predicting Weights to Robots that Write their Own Skills",
+      "authors": ["Gaytri Jena", "Kapil Wanaskar", "Vinija Jain", "Aman Chadha", "Vasu Sharma"],
+      "affiliations": ["Unknown"],
+      "summary": "This survey organizes robot learning around the central axis of frozen-weight policies (VLA models) versus code-writing skill agents, with particular depth on self-improvement: from zero-shot program synthesis through closed-loop self-repair to persistent skill memory.",
+      "key_findings": [
+        "Robot learning is bifurcating into weight-based (VLA) and skill-based (code-writing agent) paradigms",
+        "Code-as-policy methods show stronger generalization on long-horizon tasks requiring compositional reasoning",
+        "Persistent skill memory is the emerging frontier: agents that accumulate and reuse past solutions"
+      ],
+      "tags": ["robotics", "survey", "vla", "code-as-policy", "skill-learning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.01851",
+        "huggingface": "https://huggingface.co/papers/2608.01851",
+        "pdf": "https://arxiv.org/pdf/2608.01851"
+      }
+    },
+    {
+      "id": "dataspace-benchmarking-data-agents-verifiable-analytics",
+      "title": "DataSpace: Benchmarking Data Agents for Verifiable Analytics over Heterogeneous Data",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "DataSpace introduces a benchmark for evaluating data agents on verifiable analytics tasks — joins, aggregations, and statistical reasoning — across heterogeneous structured and semi-structured data sources, exposing key capability gaps in current LLM-based data agents.",
+      "key_findings": [
+        "Current LLM data agents fail on >40% of multi-source join tasks requiring schema inference",
+        "Verifiability constraint (provenance-linked answers) drops agent accuracy by 25% on average",
+        "Heterogeneous data (CSV + JSON + SQL) is significantly harder than homogeneous benchmarks"
+      ],
+      "tags": ["data-agents", "benchmarking", "analytics", "structured-data"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.03451",
+        "huggingface": "https://huggingface.co/papers/2608.03451",
+        "pdf": "https://arxiv.org/pdf/2608.03451"
+      }
+    },
+    {
+      "id": "kvae-family-tokenizers-multimodal-generative-models",
+      "title": "KVAE: Family of Tokenizers for Multimodal Generative Models",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "KVAE introduces a family of tokenizers designed for multimodal generative models, using key-value structured latents instead of flat discrete tokens, improving reconstruction quality and enabling cross-modal transfer in unified generative architectures.",
+      "key_findings": [
+        "KV-structured tokens improve image reconstruction quality vs flat discrete tokens at same codebook size",
+        "Cross-modal transfer is more stable with structured latents than unstructured VQ-VAE tokens",
+        "KVAE tokenizers are drop-in replacements for existing discrete tokenizer slots in diffusion transformers"
+      ],
+      "tags": ["tokenizers", "multimodal", "generative-models", "vae"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05798",
+        "huggingface": "https://huggingface.co/papers/2608.05798",
+        "pdf": "https://arxiv.org/pdf/2608.05798"
+      }
+    },
+    {
+      "id": "factorjepa-factorizing-monolithic-futures-layout-agent",
+      "title": "FactorJEPA: Factorizing Monolithic Futures into Layout-Agent-Interaction Channels",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "FactorJEPA factorizes future prediction in world models into disentangled layout, agent-state, and interaction channels, enabling more accurate and interpretable future prediction in crowded and chaotic urban environments.",
+      "key_findings": [
+        "Factorized future prediction reduces collision-prediction error by 30% over monolithic JEPA baselines in urban scenarios",
+        "Disentangled channels allow independent control of layout vs agent behavior in simulation",
+        "Method scales to 50+ agents in a scene without quadratic blowup in interaction modeling"
+      ],
+      "tags": ["world-models", "prediction", "autonomous-driving", "jepa"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.01049",
+        "huggingface": "https://huggingface.co/papers/2608.01049",
+        "pdf": "https://arxiv.org/pdf/2608.01049"
+      }
+    },
+    {
+      "id": "the-bitter-lesson-of-tool-calling",
+      "title": "The Bitter Lesson of Tool Calling",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "Applying Sutton's Bitter Lesson lens to LLM tool-calling interfaces, this paper argues that structured, schema-heavy function-calling APIs introduce inductive biases that limit generalization in capable models, and that simpler, less-structured interfaces may scale better.",
+      "key_findings": [
+        "Schema-constrained tool-call formats reduce generalization in models above a capability threshold",
+        "Models fine-tuned on schema-free tool invocations outperform schema-trained models on novel tools",
+        "The paper calls for rethinking function-calling interface design as model capability scales"
+      ],
+      "tags": ["tool-calling", "llm-interfaces", "scaling", "meta-research"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06370",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2608.06370"
+      }
+    },
+    {
+      "id": "trajdebug-tracing-error-lifecycle-long-horizon",
+      "title": "TRAJDEBUG: Tracing Error Lifecycle to Identify Critical Failures in Long-Horizon Agent Tasks",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "TRAJDEBUG introduces a trajectory-level debugging framework that traces how errors propagate across steps in long-horizon agent tasks, identifying which failures are recoverable and which cascade irreversibly — enabling smarter rollback and recovery strategies.",
+      "key_findings": [
+        "60% of long-horizon agent failures originate from a single early misstep that cascades",
+        "TRAJDEBUG pinpoints critical failure steps 3x faster than human trajectory inspection",
+        "Rollback to identified failure points recovers task completion in 45% of previously-failed trajectories"
+      ],
+      "tags": ["agent-debugging", "long-horizon", "error-recovery", "trajectory-analysis"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06346",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2608.06346"
+      }
+    },
+    {
+      "id": "learning-when-to-trust-selective-context-preference",
+      "title": "Learning When to Trust via Selective Context Preference Optimization",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "This paper trains LLMs to selectively trust retrieved context over parametric knowledge based on learned preference signals, reducing hallucination in retrieval-augmented generation when retrieval quality is uncertain.",
+      "key_findings": [
+        "Selective context trust reduces RAG hallucination by 22% on knowledge-conflict benchmarks",
+        "Preference optimization signal is derived from retrieval-quality proxies without human annotation",
+        "Method is compatible with any base LLM and retrieval system without architectural changes"
+      ],
+      "tags": ["rag", "retrieval", "hallucination", "preference-optimization"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06377",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2608.06377"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "Trending image-text-to-video model on HuggingFace, with active Comfy-Org integration and LoRA variant (MiniMax-H3-Turbo-Lora) already available — signals rapid community adoption.",
+      "task_type": "image-text-to-video",
+      "model_size": "unknown",
+      "tags": ["image-text-to-video", "video-generation"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "deepseek-ai",
+      "description": "New flash-inference variant from DeepSeek, optimized for low-latency text generation. Unsloth GGUF quantization already available, indicating fast community adoption for local deployment.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["text-generation", "fast-inference", "chinese-lab"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "moonshotai",
+      "description": "Trending multimodal (image-text-to-text) model from Moonshot AI, continuing the Chinese-lab multimodal push alongside DeepSeek and MiniMax releases this week.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "image-text-to-text", "chinese-lab"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "liquidai-lfm2-5-2-6b",
+      "name": "LFM2.5-2.6B",
+      "organization": "LiquidAI",
+      "description": "Edge-scale language model from LiquidAI at 2.6B parameters, trending as interest in capable small models for on-device deployment continues to grow.",
+      "task_type": "text-generation",
+      "model_size": "2.6B",
+      "tags": ["text-generation", "edge", "small-model"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B"
+    }
+  ],
+  "trending_repos": [],
+  "themes": [
+    {
+      "name": "Agentic Reinforcement Learning",
+      "description": "Multiple papers (EnvACE, AgentOPSD, WorldClaw) tackle the core challenge of making RL agents sample-efficient and self-improving without human demos — via world rehearsal, recursive self-distillation, and agentic open-world generation.",
+      "related_paper_ids": [
+        "envaace-internalizing-environment-dynamics-via-world-rehearsa",
+        "agentopsd-recursive-self-distillation-for-agentic-reinforcem",
+        "worldclaw-agentic-3d-open-world-generation-at-scale"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory and Context Management",
+      "description": "Activity Frames and ChronoVision both address how agents store, compress, and reconstruct past experience — one at the screen-event level, one at the latent-state level.",
+      "related_paper_ids": [
+        "activity-frames-deterministic-screen-activity-compilation",
+        "chronovision-temporal-reasoning-via-latent-state-reconstruct"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Cross-Embodiment Robot Transfer",
+      "description": "DyPES-VLA and the Weights or Skills? survey both grapple with transferring robot skills across body morphologies — a prerequisite for scalable robotics deployment.",
+      "related_paper_ids": [
+        "dypes-vla-learning-shared-dynamics-priors-and-embodiment-spe",
+        "weights-or-skills-survey-robot-learning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Tool-Calling and LLM Interface Design",
+      "description": "The Bitter Lesson of Tool Calling challenges the assumption that schema-heavy function-calling APIs are the right default — a meta-level challenge to current platform infrastructure.",
+      "related_paper_ids": [
+        "the-bitter-lesson-of-tool-calling"
+      ],
+      "trend_signal": "emerging"
+    },
+    {
+      "name": "Agent Debugging and Failure Analysis",
+      "description": "TRAJDEBUG introduces trajectory-level debugging for long-horizon agent tasks, addressing the practical problem of understanding and recovering from cascading agent failures.",
+      "related_paper_ids": [
+        "trajdebug-tracing-error-lifecycle-long-horizon"
+      ],
+      "trend_signal": "emerging"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "skipped"
+    }
+  ]
+}

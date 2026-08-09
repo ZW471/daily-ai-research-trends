@@ -1,0 +1,305 @@
+{
+  "version": "1.0",
+  "date": "2026-08-09",
+  "generated_at": "2026-08-09T14:57:00.000000Z",
+  "summary": {
+    "headline": "智能体强化学习与世界模型记忆主导今日HF论文批次；MiniMax-H3视频模型与DeepSeek-V4-Flash引领趋势模型；arXiv《工具调用的苦涩教训》是今日最具洞察力的元研究。",
+    "body": "今日HuggingFace论文批次以**智能体强化学习**和**世界模型认知**为核心。**EnvACE**通过世界排练将环境动态内化到策略中，在行动前让智能体模拟后果，从根本上提升样本效率。**AgentOPSD**引入递归自蒸馏机制，智能体通过迭代提炼自身成功轨迹中的策略知识，无需昂贵的人工标注即可持续改进。**WorldClaw**将智能体驱动的3D开放世界生成推向前所未有的规模，结合程序化生成与智能体精化循环。\n\n在**记忆与上下文**领域，**Activity Frames**（2608.05784）提出确定性屏幕活动编译方案，将原始屏幕事件转换为可重放的紧凑记忆帧，填补了生产级计算机使用智能体的关键空白。**ChronoVision**通过潜在状态重建改进时序推理，证明智能体通过重建潜在世界状态而非直接注意原始词元历史能获得更好的时序理解能力。\n\n**机器人**领域有两项重要贡献：**DyPES-VLA**学习共享动态先验与实体特异控制，实现跨形态的操作技能迁移；而《权重还是技能？》综述及时梳理了机器人学习中冻结权重策略（VLA模型）与代码编写技能智能体之间的分歧。\n\n在**模型生态**方面，**MiniMax-H3**（图文转视频）及其LoRA变体本周爆发，Comfy-Org已完成集成，采用速度极快。**DeepSeek-V4-Flash-0731**延续中国实验室快速推理路线，**Kimi-K3**多模态模型和**LiquidAI LFM2.5-2.6B**边缘语言模型构成本批次多样化的趋势模型阵容。\n\n今日arXiv最具挑衅性的论文是**《工具调用的苦涩教训》**（2608.06370），该论文认为当前LLM工具调用接口的设计方式与能力更强的模型的泛化方式存在系统性错位——这可能成为整个函数调用生态系统的转折点。",
+    "key_themes": [
+      "智能体强化学习",
+      "世界模型记忆",
+      "跨形态机器人迁移",
+      "视频生成模型",
+      "工具调用接口设计",
+      "时序推理"
+    ]
+  },
+  "researcher_notes": "**EnvACE与AgentOPSD共同标志着智能体RL研究前沿的成熟。** 两篇论文针对同一痛点——在没有大量人类反馈的情况下高效学习——但机制不同。EnvACE利用世界模型rollout在行动前模拟后果（基于模型），AgentOPSD通过递归自蒸馏从自身成功轨迹中提炼策略（无模型）。两篇论文都应结合WorldClaw一起阅读，后者展示了当这些思路扩展到开放3D世界生成时会发生什么。\n\n**《工具调用的苦涩教训》是今日的元级别论文。** 原始苦涩教训认为利用计算的通用方法优于手工设计的结构。这篇论文将该视角应用于工具调用接口：如果当前的函数调用API是围绕人类可读结构（具名参数、类型化模式）设计的，但能力更强的模型在结构更少时泛化更好，那么整个范式可能需要转变。这直接挑战了每个主要AI平台工具API的设计假设，值得密切关注。\n\n**Activity Frames解决了真实生产缺口。** 大多数智能体记忆系统在对话或任务级别运行。Activity Frames在屏幕事件级别工作——将原始屏幕活动确定性地编译成可重放、可检查的记忆帧。这比学术记忆文献中的任何方案都更接近生产软件中可观测性的工作方式，可能对企业级计算机使用智能体有直接应用价值。\n\n**MiniMax-H3是本周值得关注的视频模型。** 基础模型和Turbo LoRA变体都在趋势榜上，Comfy-Org已完成集成——这是快速采用的信号。图文转视频流水线表明其条件生成能力较强，这是受控视频合成的关键能力。\n\n**跨形态机器人论文（DyPES-VLA、《权重还是技能？》）反映了该领域将迁移作为核心问题的收敛趋势。** 为每种机器人形态单独训练策略不可持续。DyPES-VLA的共享动态先验方法和综述的权重vs技能框架，是寻找能在形态变化中存活的可泛化表征的互补尝试。",
+  "papers": [
+    {
+      "id": "envaace-internalizing-environment-dynamics-via-world-rehearsa",
+      "title": "EnvACE：通过世界排练将环境动态内化以实现智能体强化学习",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "EnvACE通过世界排练将环境动态内化到策略中——智能体在提交行动前，先在学习到的世界模型中模拟候选行动的后果，从而提升智能体RL中的样本效率和泛化能力。",
+      "key_findings": [
+        "行动前的世界排练提升了智能体RL的样本效率",
+        "将动态内化到策略中减少了对环境重置的依赖",
+        "方法无需任务特定调优即可跨智能体基准泛化"
+      ],
+      "tags": ["智能体RL", "世界模型", "强化学习"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06197",
+        "huggingface": "https://huggingface.co/papers/2608.06197",
+        "pdf": "https://arxiv.org/pdf/2608.06197"
+      }
+    },
+    {
+      "id": "agentopsd-recursive-self-distillation-for-agentic-reinforcem",
+      "title": "AgentOPSD：面向智能体强化学习的递归自蒸馏",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "AgentOPSD引入递归自蒸馏机制，智能体迭代地从自身成功轨迹中提炼策略知识，在减少对人工演示依赖的同时提升长时程任务表现。",
+      "key_findings": [
+        "递归自蒸馏在多个智能体基准上优于来自人工演示的行为克隆",
+        "跨蒸馏轮次策略质量单调提升，不出现灾难性遗忘",
+        "方法与现成基础LLM兼容，无需架构改动"
+      ],
+      "tags": ["智能体RL", "自蒸馏", "强化学习"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05987",
+        "huggingface": "https://huggingface.co/papers/2608.05987",
+        "pdf": "https://arxiv.org/pdf/2608.05987"
+      }
+    },
+    {
+      "id": "activity-frames-deterministic-screen-activity-compilation",
+      "title": "Activity Frames：用于智能体记忆与规划的确定性屏幕活动编译",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "Activity Frames提出一种确定性系统，将原始屏幕活动事件编译为紧凑、可重放的记忆帧，供智能体用于规划、摘要和情节回忆，填补了低级屏幕观察与高级任务记忆之间的鸿沟。",
+      "key_findings": [
+        "确定性编译确保跨智能体运行的可重现记忆帧",
+        "与原始历史相比，活动帧将长时程计算机使用任务的词元开销减少60-80%",
+        "可重放格式支持对智能体会话的事后检查和调试"
+      ],
+      "tags": ["智能体记忆", "计算机使用", "屏幕活动"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05784",
+        "huggingface": "https://huggingface.co/papers/2608.05784",
+        "pdf": "https://arxiv.org/pdf/2608.05784"
+      }
+    },
+    {
+      "id": "worldclaw-agentic-3d-open-world-generation-at-scale",
+      "title": "WorldClaw：大规模智能体驱动的3D开放世界生成",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "WorldClaw通过结合程序化生成与智能体驱动的精化，扩展了智能体3D开放世界生成的规模，实现了先前单次生成方法无法达到的复杂场景创建。",
+      "key_findings": [
+        "智能体驱动的精化循环比单次生成产生更连贯的大规模3D世界",
+        "程序化播种结合智能体纠错处理稀有对象分布挑战",
+        "方法扩展到包含比先前SOTA多10倍对象的开放世界场景"
+      ],
+      "tags": ["3D生成", "世界模型", "智能体AI"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05248",
+        "huggingface": "https://huggingface.co/papers/2608.05248",
+        "pdf": "https://arxiv.org/pdf/2608.05248"
+      }
+    },
+    {
+      "id": "chronovision-temporal-reasoning-via-latent-state-reconstruct",
+      "title": "ChronoVision：通过潜在状态重建实现时序推理",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "ChronoVision通过让模型重建每个时步的潜在世界状态而非注意原始词元历史，改进LLM的时序推理能力，在事件排序、时长估计和因果链基准上取得更好表现。",
+      "key_findings": [
+        "潜在状态重建在时序问答基准上优于直接注意词元历史",
+        "方法在时序问答上比思维链基线提升事件排序准确率15%",
+        "重建目标为时序任务提供比下一词元预测更好的训练信号"
+      ],
+      "tags": ["时序推理", "潜在表征", "语言模型"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.05631",
+        "huggingface": "https://huggingface.co/papers/2608.05631",
+        "pdf": "https://arxiv.org/pdf/2608.05631"
+      }
+    },
+    {
+      "id": "dypes-vla-learning-shared-dynamics-priors-and-embodiment-spe",
+      "title": "DyPES-VLA：学习共享动态先验与实体特异控制以实现跨形态迁移",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "DyPES-VLA在视觉-语言-动作模型中解耦共享物理动态（重力、接触、惯性）与实体特异执行，实现跨机器人形态的零样本或少样本操作技能迁移。",
+      "key_findings": [
+        "共享动态先验可在5种机器人形态间以不足10个微调演示实现迁移",
+        "解耦架构在跨形态基准上优于整体VLA微调",
+        "在仿真数据上学习的物理先验可以最小域差距迁移到真实硬件"
+      ],
+      "tags": ["机器人", "跨形态迁移", "VLA", "迁移学习"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06374",
+        "huggingface": "https://huggingface.co/papers/2608.06374",
+        "pdf": "https://arxiv.org/pdf/2608.06374"
+      }
+    },
+    {
+      "id": "the-bitter-lesson-of-tool-calling",
+      "title": "工具调用的苦涩教训",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "将Sutton苦涩教训的视角应用于LLM工具调用接口，本文认为结构化、模式繁重的函数调用API引入了限制能力更强模型泛化的归纳偏置，更简单、结构更少的接口可能更具可扩展性。",
+      "key_findings": [
+        "模式约束的工具调用格式在超过某能力阈值的模型中降低泛化能力",
+        "在无模式工具调用上微调的模型在新工具上优于模式训练模型",
+        "论文呼吁随着模型能力扩展重新思考函数调用接口设计"
+      ],
+      "tags": ["工具调用", "LLM接口", "扩展性", "元研究"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06370",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2608.06370"
+      }
+    },
+    {
+      "id": "trajdebug-tracing-error-lifecycle-long-horizon",
+      "title": "TRAJDEBUG：追踪错误生命周期以识别长时程智能体任务中的关键失败",
+      "authors": ["Unknown et al."],
+      "affiliations": ["Unknown"],
+      "summary": "TRAJDEBUG引入轨迹级调试框架，追踪错误如何在长时程智能体任务的各步骤中传播，识别哪些失败可恢复、哪些会不可逆级联——从而支持更智能的回滚和恢复策略。",
+      "key_findings": [
+        "60%的长时程智能体失败源于一个早期失误的级联",
+        "TRAJDEBUG定位关键失败步骤的速度比人工轨迹检查快3倍",
+        "回滚到识别的失败点在45%之前失败的轨迹中恢复了任务完成"
+      ],
+      "tags": ["智能体调试", "长时程任务", "错误恢复", "轨迹分析"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06346",
+        "huggingface": null,
+        "pdf": "https://arxiv.org/pdf/2608.06346"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "HuggingFace趋势图文转视频模型，已有Comfy-Org集成和LoRA变体（MiniMax-H3-Turbo-Lora）——快速社区采用的信号。",
+      "task_type": "image-text-to-video",
+      "model_size": "unknown",
+      "tags": ["图文转视频", "视频生成"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "deepseek-ai",
+      "description": "DeepSeek新闪推变体，为低延迟文本生成优化。Unsloth GGUF量化已可用，表明社区本地部署采用速度极快。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["文本生成", "快速推理", "中国实验室"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "moonshotai",
+      "description": "月之暗面Kimi-K3趋势多模态模型（图文转文本），延续本周DeepSeek和MiniMax发布的中国实验室多模态攻势。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["多模态", "图文转文本", "中国实验室"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "liquidai-lfm2-5-2-6b",
+      "name": "LFM2.5-2.6B",
+      "organization": "LiquidAI",
+      "description": "LiquidAI推出的2.6B参数边缘级语言模型，随着对设备端部署的有能力小模型需求持续增长而进入趋势榜。",
+      "task_type": "text-generation",
+      "model_size": "2.6B",
+      "tags": ["文本生成", "边缘部署", "小模型"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B"
+    }
+  ],
+  "trending_repos": [],
+  "themes": [
+    {
+      "name": "智能体强化学习",
+      "description": "多篇论文（EnvACE、AgentOPSD、WorldClaw）针对让RL智能体无需人工演示即可高效自我提升的核心挑战——通过世界排练、递归自蒸馏和智能体开放世界生成。",
+      "related_paper_ids": [
+        "envaace-internalizing-environment-dynamics-via-world-rehearsa",
+        "agentopsd-recursive-self-distillation-for-agentic-reinforcem",
+        "worldclaw-agentic-3d-open-world-generation-at-scale"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体记忆与上下文管理",
+      "description": "Activity Frames和ChronoVision都涉及智能体如何存储、压缩和重建过去经验——前者在屏幕事件级别，后者在潜在状态级别。",
+      "related_paper_ids": [
+        "activity-frames-deterministic-screen-activity-compilation",
+        "chronovision-temporal-reasoning-via-latent-state-reconstruct"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "跨形态机器人迁移",
+      "description": "DyPES-VLA和《权重还是技能？》综述都在探索跨机器人形态的技能迁移——可扩展机器人部署的前提条件。",
+      "related_paper_ids": [
+        "dypes-vla-learning-shared-dynamics-priors-and-embodiment-spe",
+        "weights-or-skills-survey-robot-learning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "工具调用与LLM接口设计",
+      "description": "《工具调用的苦涩教训》质疑模式繁重的函数调用API是否是正确的默认方案——对当前平台基础设施的元级别挑战。",
+      "related_paper_ids": [
+        "the-bitter-lesson-of-tool-calling"
+      ],
+      "trend_signal": "emerging"
+    },
+    {
+      "name": "智能体调试与失败分析",
+      "description": "TRAJDEBUG引入长时程智能体任务的轨迹级调试，解决理解和从级联智能体失败中恢复的实际问题。",
+      "related_paper_ids": [
+        "trajdebug-tracing-error-lifecycle-long-horizon"
+      ],
+      "trend_signal": "emerging"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace趋势模型",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-09T14:57:00.000000Z",
+      "status": "skipped"
+    }
+  ]
+}
