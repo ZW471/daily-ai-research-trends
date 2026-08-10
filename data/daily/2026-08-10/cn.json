@@ -1,0 +1,562 @@
+{
+  "version": "1.0",
+  "date": "2026-08-10",
+  "generated_at": "2026-08-10T15:00:00.000000Z",
+  "summary": {
+    "headline": "NVIDIA的WorldTrace解决视频世界模型中KV缓存记忆崩溃问题；MiniMax-H3生态系统主导趋势模型榜单；智能体技能工具与自我改进编程智能体在GitHub上爆发式增长",
+    "body": "今日HuggingFace仅收录一篇论文，但堪称精品：**NVIDIA的WorldTrace**解决了交互式视频世界模型中一个根本性限制——一旦推演步骤超出训练时域，模型便无法可靠地寻址KV缓存中存储的内容。论文将时序RoPE位置偏移识别为根本原因，并提出一种无需重训练的记忆框架，通过为压缩摘要槽位分配训练分布内的虚拟位置来维持可寻址性。WorldTrace-Field在时序一致性上提升+15.5%，WorldTrace-Landmark在新提出的LoopBench基准上将情节回忆提升+19.5%。\n\n**趋势模型生态**由**MiniMax-H3**及其衍生版本主导——基础模型、ComfyUI集成、LoRA变体和GGUF量化版本共占据趋势前20名中的9席，标志着这一多模态视频生成模型的社区采用速度极快。与此同时，**DeepSeek-V4-Flash**和**Kimi-K3**在文本生成和多模态推理领域持续领跑，**deepgrove/maple-preview**引入了新颖的三值混合专家架构，**mistralai/Shieldstral-1.0-3B**则满足了轻量级安全分类器的迫切需求。\n\nGitHub趋势榜上，今天属于**AI智能体工具生态**。**PrimeIntellect的prime-agent**单日新增2,356颗星，作为面向编程工作流的自我改进强化学习模型智能体备受关注。**agency-agents**（单日858星）和**addyosmani/agent-skills**（单日680星）反映出对生产级智能体技能框架的强烈兴趣。**TradingAgents**凭借LLM驱动的金融交易框架持续病毒式传播，单日获得598星。趋势清晰可见：社区正从构建智能体转向构建智能体基础设施。",
+    "key_themes": [
+      "video-world-model-memory",
+      "minimax-h3-ecosystem",
+      "agent-skills-infrastructure",
+      "self-improving-coding-agents",
+      "edge-and-efficient-models",
+      "ai-financial-applications"
+    ]
+  },
+  "researcher_notes": "**WorldTrace是今日技术含量最高的论文，尽管只是唯一一篇HF日报收录文章。** 核心洞见——时序RoPE偏移会导致记忆寻址在推演超出训练时域后失效——是对影响所有带位置编码的基于Transformer的世界模型这一失效模式的具体诊断。修复方案（为压缩记忆槽位分配训练分布内的虚拟位置）既优雅又无需重训练，这意味着它可以直接应用于任何现有模型。他们引入的LoopBench基准（测试压缩缓存在长途绕行后能否重建之前访问过的场景）设计精良，应当成为衡量视觉持久性的标准评测。\n\n**MiniMax-H3模型生态系统的爆炸式增长是本周最显著的趋势。** 前20名趋势模型中有9个是MiniMax-H3的变体——基础模型、ComfyUI适配器、LoRA加速器、GGUF量化版本和社区微调模型。这是自Stable Video Diffusion以来视频生成模型最快的社区采用曲线。多模态流水线（图文转视频、文本转音视频）以及快速的ComfyUI集成表明这个模型在能力与易用性之间找到了甜蜜点。值得注意的是：lightx2v的Turbo变体和drbaph的剪枝LoRA都针对推理速度进行了优化，这表明社区已经从能力评估阶段进入了部署优化阶段。\n\n**GitHub趋势列表讲述了一个清晰的故事：2026年是智能体基础设施之年。** PrimeIntellect的prime-agent（单日2,356星）是一个面向编程的自我改进强化学习模型智能体——本质上是一个通过自身经验不断提升的智能体。agency-agents和agent-skills共同代表了「技能库层」：经过策划的专业化智能体行为和技能集合。book-to-skill则将技术书籍转化为Claude Code技能。这是能力突破之后必然出现的基础设施建设期——一旦智能体能够做到某些事情，问题就变成了如何组织、共享和改进这些能力。\n\n**deepgrove/maple-preview值得作为暗马关注。** MIT许可的三值混合专家模型代表了不同的计算范式——三值权重实现极致量化，而MoE通过稀疏激活维持质量。如果质量基准能够经受检验，这对于边缘部署可能具有重要意义，因为在那些场景下，全精度和标准量化都不够用。\n\n**Mistral的Shieldstral-1.0-3B标志着安全作为一等模型类别的成熟。** 一个专用的3B安全分类器，多语言、Apache许可——这正是生产部署所需的轻量级护栏层。它与大型能力模型并列趋势榜，说明社区已经认识到安全基础设施与能力进步同等重要。",
+  "papers": [
+    {
+      "id": "worldtrace-addressable-memory-for-video-world-models",
+      "title": "视频世界模型的可寻址记忆",
+      "authors": [
+        "Xindi Wu",
+        "Sven Elflein",
+        "James Lucas",
+        "Olga Russakovsky",
+        "Laura Leal-Taixé",
+        "Despoina Paschalidou",
+        "Jonathan Lorraine",
+        "Aljoša Ošep"
+      ],
+      "affiliations": [
+        "NVIDIA",
+        "Princeton University",
+        "Technical University of Munich"
+      ],
+      "summary": "WorldTrace提出了一种无需重训练的记忆框架，用于解决交互式视频世界模型中的长时域视觉持久性问题。论文发现时序RoPE偏移导致KV缓存记忆寻址在超出训练时域后失效，并通过为压缩记忆槽分配训练分布内的虚拟位置来维持可寻址性。",
+      "key_findings": [
+        "时序RoPE偏移导致视频世界模型在推演超出训练时域后无法寻址已存储的KV缓存内容",
+        "WorldTrace-Field通过对历史进行时序连贯性压缩，将时序一致性提升+15.5%",
+        "WorldTrace-Landmark通过在检测到的场景转换处存储逐帧场景轨迹，将情节回忆提升+19.5%（在LoopBench上）",
+        "该框架无需重训练，可直接应用于现有模型"
+      ],
+      "tags": [
+        "video-world-models",
+        "kv-cache",
+        "memory",
+        "rope",
+        "visual-persistence"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.07408",
+        "huggingface": "https://huggingface.co/papers/2608.07408",
+        "pdf": "https://arxiv.org/pdf/2608.07408"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "最先进的多模态视频生成模型，支持文本转视频、图像转视频和同步音视频生成。本周趋势榜上以3,250个点赞数领跑，ComfyUI和diffusers生态的社区采用速度极快。",
+      "task_type": "image-text-to-video",
+      "model_size": "Unknown",
+      "tags": [
+        "video-generation",
+        "multimodal",
+        "diffusers"
+      ],
+      "metrics": {
+        "downloads": 35295,
+        "likes": 3250
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4架构的快速推理变体，延续了中国实验室对高吞吐量文本生成的持续投入。MIT许可，基准测试成绩优异，支持8位/fp8量化。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "text-generation",
+        "fast-inference",
+        "deepseek"
+      ],
+      "metrics": {
+        "downloads": 868576,
+        "likes": 2952
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "支持图文转文本的多模态模型，具备压缩张量和对话能力。以10,399个总点赞数领跑所有趋势模型，自6月发布以来持续保持社区热度。",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "conversational"
+      ],
+      "metrics": {
+        "downloads": 1456459,
+        "likes": 10399
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "lfm2-5-2-6b",
+      "name": "LFM2.5-2.6B",
+      "organization": "Liquid AI",
+      "description": "2.6B参数的边缘语言模型，支持15种语言的多语言推理。基于Liquid AI独特的LFM架构，以最小计算量实现有竞争力的质量，针对设备端和边缘部署优化。",
+      "task_type": "text-generation",
+      "model_size": "2.6B",
+      "tags": [
+        "edge",
+        "multilingual",
+        "liquid-foundation"
+      ],
+      "metrics": {
+        "downloads": 85651,
+        "likes": 453
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B"
+    },
+    {
+      "id": "maple-preview",
+      "name": "maple-preview",
+      "organization": "Deepgrove",
+      "description": "MIT许可的新颖三值混合专家语言模型。通过三值权重实现极致量化效率，同时通过稀疏MoE激活保持质量——一种可能对边缘部署具有重大意义的架构方案。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "mixture-of-experts",
+        "ternary",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 1089,
+        "likes": 290
+      },
+      "source_url": "https://huggingface.co/deepgrove/maple-preview"
+    },
+    {
+      "id": "nemotronlabs-voicechat-11b",
+      "name": "NVIDIA-NemotronLabs-VoiceChat-11B",
+      "organization": "NVIDIA",
+      "description": "基于Nemotron-Nano-9B-v2构建的110亿参数语音对话模型。面向实时对话语音交互，附有多篇语音合成与音频处理的支撑论文。",
+      "task_type": "voice-chat",
+      "model_size": "11B",
+      "tags": [
+        "voice",
+        "conversational",
+        "speech"
+      ],
+      "metrics": {
+        "downloads": 543,
+        "likes": 261
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-NemotronLabs-VoiceChat-11B"
+    },
+    {
+      "id": "ling-3-0-flash",
+      "name": "Ling-3.0-flash",
+      "organization": "InclusionAI",
+      "description": "使用混合架构（bailing_hybrid）的快速推理语言模型。是快闪/极速优化模型浪潮中的新成员，面向低延迟部署场景。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "text-generation",
+        "fast-inference",
+        "hybrid-architecture"
+      ],
+      "metrics": {
+        "downloads": 4747,
+        "likes": 246
+      },
+      "source_url": "https://huggingface.co/inclusionAI/Ling-3.0-flash"
+    },
+    {
+      "id": "shieldstral-1-0-3b",
+      "name": "Shieldstral-1.0-3B",
+      "organization": "Mistral AI",
+      "description": "轻量级3B安全分类器，支持12+种语言。Apache许可，设计为生产级LLM部署的护栏层。基于Ministral-3-3B-Base构建，支持vLLM推理服务。",
+      "task_type": "text-classification",
+      "model_size": "3B",
+      "tags": [
+        "safety",
+        "moderation",
+        "multilingual",
+        "guardrails"
+      ],
+      "metrics": {
+        "downloads": 5651,
+        "likes": 211
+      },
+      "source_url": "https://huggingface.co/mistralai/Shieldstral-1.0-3B"
+    },
+    {
+      "id": "minimax-h3-turbo-lora",
+      "name": "MiniMax-H3-Turbo-Lora",
+      "organization": "larryvrh (community)",
+      "description": "MiniMax-H3的社区LoRA适配器，可加速文本转视频和文本转音频的推理。兼容ComfyUI工作流。",
+      "task_type": "text-to-video",
+      "model_size": "LoRA adapter",
+      "tags": [
+        "lora",
+        "video-generation",
+        "turbo",
+        "comfyui"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 545
+      },
+      "source_url": "https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora"
+    },
+    {
+      "id": "comfy-org-minimax-h3",
+      "name": "Comfy-Org/MiniMax-H3",
+      "organization": "Comfy-Org",
+      "description": "MiniMax-H3的官方ComfyUI兼容单文件发行版。近500万次下载体现了ComfyUI流水线生态的大规模采用。",
+      "task_type": "image-text-to-video",
+      "model_size": "Unknown",
+      "tags": [
+        "comfyui",
+        "video-generation",
+        "diffusion-single-file"
+      ],
+      "metrics": {
+        "downloads": 4947943,
+        "likes": 1076
+      },
+      "source_url": "https://huggingface.co/Comfy-Org/MiniMax-H3"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "prime-agent",
+      "name": "PrimeIntellect-ai/prime-agent",
+      "description": "自我改进强化学习模型编程智能体，适用于编码工作流和长时运行的自主任务。单日新增2,356星，反映出社区对「能通过自身经验不断改进的智能体」的强烈兴趣。",
+      "language": "TypeScript",
+      "stars": 11291,
+      "stars_today": 2356,
+      "forks": 1159,
+      "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+      "tags": [
+        "agent",
+        "self-improving",
+        "coding",
+        "reinforcement-learning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "完整的AI智能体框架，包含覆盖前端、社区运营、内容创作和质量保障的专业化智能体。每个智能体都有独特的个性、流程和可交付成果。",
+      "language": "Shell",
+      "stars": 140786,
+      "stars_today": 858,
+      "forks": 22989,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "agent-framework",
+        "multi-agent",
+        "production"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "面向AI编程智能体的生产级工程技能集。精心策划的可复用智能体技能与最佳实践集合，用于构建可靠的AI辅助开发工作流。",
+      "language": "JavaScript",
+      "stars": 85185,
+      "stars_today": 680,
+      "forks": 9166,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agent-skills",
+        "coding-agent",
+        "best-practices"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "多智能体LLM金融交易框架，实现跨市场的自主分析与执行。持续病毒式传播，单日获得598星。",
+      "language": "Python",
+      "stars": 96869,
+      "stars_today": 598,
+      "forks": 18699,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "book-to-skill",
+      "name": "virgiliojr94/book-to-skill",
+      "description": "将任意技术书籍PDF转化为Claude Code技能，便于学习、参考和在编程过程中调用。弥合了静态知识（书籍）与智能体主动能力之间的鸿沟。",
+      "language": "Python",
+      "stars": 19469,
+      "stars_today": 568,
+      "forks": 2083,
+      "url": "https://github.com/virgiliojr94/book-to-skill",
+      "tags": [
+        "claude-code",
+        "skills",
+        "knowledge-extraction",
+        "pdf"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-skills",
+      "name": "google/skills",
+      "description": "Google产品和技术的官方智能体技能库。提供结构化技能定义，使AI智能体能够与Google产品生态系统交互。",
+      "language": "Python",
+      "stars": 17268,
+      "stars_today": 528,
+      "forks": 1394,
+      "url": "https://github.com/google/skills",
+      "tags": [
+        "google",
+        "agent-skills",
+        "official"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "Comfy-Org/ComfyUI",
+      "description": "最受欢迎的扩散模型节点式GUI，随MiniMax-H3的发布迎来新一轮增长，单日新增365星。",
+      "language": "Python",
+      "stars": 125592,
+      "stars_today": 365,
+      "forks": 14846,
+      "url": "https://github.com/Comfy-Org/ComfyUI",
+      "tags": [
+        "diffusion",
+        "gui",
+        "workflow",
+        "video-generation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM驱动的多市场股票分析系统，集成实时新闻、决策看板和自动通知，支持零成本定时运行。",
+      "language": "Python",
+      "stars": 61261,
+      "stars_today": 306,
+      "forks": 52017,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": [
+        "finance",
+        "llm",
+        "stock-analysis",
+        "automation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "witr",
+      "name": "pranshuparmar/witr",
+      "description": "CLI和TUI工具，用于追踪任何进程、端口、容器或文件的启动来源。对于理解系统资源归属的开发者调试工具。",
+      "language": "Go",
+      "stars": 20725,
+      "stars_today": 210,
+      "forks": 726,
+      "url": "https://github.com/pranshuparmar/witr",
+      "tags": [
+        "debugging",
+        "cli",
+        "tui",
+        "process-tracing"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "dspy",
+      "name": "stanfordnlp/dspy",
+      "description": "斯坦福大学开发的「编程而非提示词」语言模型框架。单日稳定获得152星，表明其作为基础LLM编程范式的持续采用势头。",
+      "language": "Python",
+      "stars": 36928,
+      "stars_today": 152,
+      "forks": 3199,
+      "url": "https://github.com/stanfordnlp/dspy",
+      "tags": [
+        "llm-programming",
+        "framework",
+        "stanford"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "code-graph-rag",
+      "name": "vitali87/code-graph-rag",
+      "description": "利用知识图谱对单体代码库进行AI辅助查询、理解和编辑的RAG系统。",
+      "language": "Python",
+      "stars": 3045,
+      "stars_today": 96,
+      "forks": 523,
+      "url": "https://github.com/vitali87/code-graph-rag",
+      "tags": [
+        "rag",
+        "knowledge-graph",
+        "code-understanding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "weathernext",
+      "name": "google-deepmind/weathernext",
+      "description": "Google DeepMind的天气预测系统。单日新增86星，代表基础模型在科学预测领域的应用。",
+      "language": "Python",
+      "stars": 7106,
+      "stars_today": 86,
+      "forks": 939,
+      "url": "https://github.com/google-deepmind/weathernext",
+      "tags": [
+        "weather",
+        "deepmind",
+        "scientific-ml",
+        "forecasting"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "从过去交互中学习的智能体记忆系统。解决了生产级智能体部署中对持久性、可改进记忆的关键需求。",
+      "language": "Python",
+      "stars": 19405,
+      "stars_today": 80,
+      "forks": 1245,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": [
+        "agent-memory",
+        "learning",
+        "production"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "t3code",
+      "name": "pingdotgg/t3code",
+      "description": "来自T3技术栈生态的开发者工具。单日获得163星，延续社区对全栈TypeScript工具的持续兴趣。",
+      "language": "TypeScript",
+      "stars": 17680,
+      "stars_today": 163,
+      "forks": 4014,
+      "url": "https://github.com/pingdotgg/t3code",
+      "tags": [
+        "developer-tools",
+        "typescript",
+        "t3-stack"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "harvey-labs",
+      "name": "harveyai/harvey-labs",
+      "description": "用于评估和改进智能体在法律工作中能力的基准测试集。为数不多的垂直领域智能体评测基准之一，填补了通用智能体评估与专业职业用例之间的空白。",
+      "language": "Python",
+      "stars": 842,
+      "stars_today": 47,
+      "forks": 178,
+      "url": "https://github.com/harveyai/harvey-labs",
+      "tags": [
+        "benchmark",
+        "legal-ai",
+        "agent-evaluation"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "视频世界模型的记忆与持久性",
+      "description": "WorldTrace解决了基于Transformer的视频世界模型中维持可寻址记忆的根本挑战，将时序RoPE位置编码识别为超出训练时域后记忆崩溃的根本原因。",
+      "related_paper_ids": [
+        "worldtrace-addressable-memory-for-video-world-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MiniMax-H3生态系统爆发",
+      "description": "MiniMax-H3及其衍生版本（LoRA、GGUF、ComfyUI集成）占据前20名趋势模型中的9席，是视频生成模型有史以来最快的社区采用曲线。该生态系统已从能力评估阶段进入部署优化阶段。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体技能与基础设施",
+      "description": "多个趋势仓库（agent-skills、agency-agents、google/skills、book-to-skill）专注于构建可复用、可共享的智能体能力，而非智能体本身——标志着从智能体能力到智能体基础设施的转变。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自我改进与自主智能体",
+      "description": "PrimeIntellect的prime-agent（单日2,356星）以及更广泛的智能体记忆/学习仓库（hindsight、code-graph-rag）代表了对「通过自身经验而非人工微调来自我改进的智能体」的日益增长的兴趣。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "边缘与高效模型部署",
+      "description": "LiquidAI的2.6B边缘模型、deepgrove的三值MoE、Mistral的3B安全分类器，以及各趋势模型的广泛GGUF量化，共同指向在整个模型规模谱上对高效部署的日益重视。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

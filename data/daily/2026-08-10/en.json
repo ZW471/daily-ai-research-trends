@@ -1,0 +1,399 @@
+{
+  "version": "1.0",
+  "date": "2026-08-10",
+  "generated_at": "2026-08-10T15:00:00.000000Z",
+  "summary": {
+    "headline": "NVIDIA's WorldTrace tackles KV-cache memory collapse in video world models; MiniMax-H3 ecosystem dominates trending models; agent-skills tooling and self-improving coding agents explode on GitHub",
+    "body": "Today's single HuggingFace paper is a standout: **NVIDIA's WorldTrace** addresses a fundamental limitation in interactive video world models — the inability to reliably address KV-cache memory once rollouts exceed the training horizon. The paper identifies temporal RoPE offsets as the root cause and proposes a training-free memory framework that assigns compressed summary slots distinct in-distribution virtual positions. WorldTrace-Field improves temporal consistency by +15.5% and WorldTrace-Landmark improves episodic recall by +19.5% on the new LoopBench benchmark.\n\nThe **trending model ecosystem** is dominated by **MiniMax-H3** and its derivatives — the base model, ComfyUI integrations, LoRA variants, and GGUF quantizations collectively occupy 9 of the top 20 trending slots, signaling massive community adoption of this multimodal video generation model. Alongside this, **DeepSeek-V4-Flash** and **Kimi-K3** continue their momentum in text generation and multimodal inference, while **deepgrove/maple-preview** introduces a novel ternary mixture-of-experts architecture and **mistralai/Shieldstral-1.0-3B** addresses the growing need for lightweight safety classifiers.\n\nOn GitHub, the day belongs to **AI agent tooling**. **PrimeIntellect's prime-agent** gained 2,356 stars today as a self-improving RLM agent for coding workflows. **agency-agents** (858 stars/day) and **addyosmani/agent-skills** (680 stars/day) reflect surging interest in production-grade agent skill frameworks. **TradingAgents** continues its viral run with 598 stars/day for LLM-powered financial trading. The trend is clear: the community is moving from building agents to building agent infrastructure.",
+    "key_themes": [
+      "video-world-model-memory",
+      "minimax-h3-ecosystem",
+      "agent-skills-infrastructure",
+      "self-improving-coding-agents",
+      "edge-and-efficient-models",
+      "ai-financial-applications"
+    ]
+  },
+  "researcher_notes": "**WorldTrace is the most technically interesting paper today, despite being the only HF paper.** The core insight — that temporal RoPE offsets cause memory addressing to fail once rollouts exceed training horizon length — is a concrete diagnosis of a failure mode that affects all transformer-based world models with positional encoding. The fix (assigning compressed memory slots virtual positions within the training distribution) is elegant and training-free, which means it can be applied to any existing model. The LoopBench benchmark they introduce (testing whether a compressed cache can reconstruct a previously visited scene after a long detour) is a well-designed evaluation that should become standard for measuring visual persistence.\n\n**The MiniMax-H3 model ecosystem explosion is the week's defining trend.** Nine of the top 20 trending HuggingFace models are MiniMax-H3 variants — base model, ComfyUI adapters, LoRA accelerators, GGUF quantizations, and community fine-tunes. This is the fastest community adoption curve for a video generation model since Stable Video Diffusion. The multimodal pipeline (image-text-to-video, text-to-audio-video) and the rapid ComfyUI integration suggest this model hits a sweet spot of capability and accessibility. Worth noting: lightx2v's Turbo variant and drbaph's pruned LoRA both target inference speed, indicating the community has already moved past capability evaluation into deployment optimization.\n\n**The GitHub trending list tells a clear story: 2026 is the year of agent infrastructure.** PrimeIntellect's prime-agent (2,356 stars in a single day) is a self-improving reinforcement learning model agent for coding — essentially an agent that gets better at being an agent through its own experience. agency-agents and agent-skills together represent the pattern library layer: curated collections of specialized agent behaviors and skills. book-to-skill converts technical books into Claude Code skills. This is the infrastructure buildout that follows the capability breakthrough — once agents can do things, the question becomes how to organize, share, and improve the things they do.\n\n**deepgrove/maple-preview deserves attention as a sleeper.** A ternary mixture-of-experts model with MIT license, it represents a different computational paradigm — ternary weights enable extreme quantization while MoE maintains quality through sparse activation. If the quality benchmarks hold up, this could be significant for edge deployment where neither full-precision nor standard quantization is sufficient.\n\n**Shieldstral-1.0-3B from Mistral signals the maturation of safety as a first-class model category.** A dedicated 3B safety classifier model, multilingual, Apache-licensed — this is exactly what production deployments need as a lightweight guardrail layer. The fact that it's trending alongside much larger capability models suggests the community recognizes that safety infrastructure is as important as capability advancement.",
+  "papers": [
+    {
+      "id": "worldtrace-addressable-memory-for-video-world-models",
+      "title": "Addressable Memory for Video World Models",
+      "authors": ["Xindi Wu", "Sven Elflein", "James Lucas", "Olga Russakovsky", "Laura Leal-Taixé", "Despoina Paschalidou", "Jonathan Lorraine", "Aljoša Ošep"],
+      "affiliations": ["NVIDIA", "Princeton University", "Technical University of Munich"],
+      "summary": "WorldTrace proposes a training-free memory framework for long-horizon visual persistence in interactive video world models. The paper identifies that temporal RoPE offsets cause KV-cache memory addressing to fail beyond the training horizon, and introduces compressed memory slots with in-distribution virtual positions to maintain addressability.",
+      "key_findings": [
+        "Temporal RoPE offsets cause video world models to lose the ability to address stored KV-cache content once rollouts exceed training horizon length",
+        "WorldTrace-Field improves temporal consistency by +15.5% through compressed history for temporal coherence",
+        "WorldTrace-Landmark improves episodic recall by +19.5% on LoopBench by storing verbatim scene traces at detected transitions",
+        "The framework is training-free and can be applied to existing models without retraining"
+      ],
+      "tags": ["video-world-models", "kv-cache", "memory", "rope", "visual-persistence"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.07408",
+        "huggingface": "https://huggingface.co/papers/2608.07408",
+        "pdf": "https://arxiv.org/pdf/2608.07408"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "State-of-the-art multimodal video generation model supporting text-to-video, image-to-video, and synchronized audio-video generation. Dominates this week's trending charts with 3,250 likes and rapid community adoption across ComfyUI and diffusers ecosystems.",
+      "task_type": "image-text-to-video",
+      "model_size": "Unknown",
+      "tags": ["video-generation", "multimodal", "diffusers"],
+      "metrics": {"downloads": 35295, "likes": 3250},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "DeepSeek",
+      "description": "Fast-inference variant of DeepSeek's V4 architecture, continuing the Chinese lab's push for high-throughput text generation. MIT-licensed with strong benchmark results and 8-bit/fp8 quantization support.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["text-generation", "fast-inference", "deepseek"],
+      "metrics": {"downloads": 868576, "likes": 2952},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "Multimodal model supporting image-text-to-text with compressed tensors and conversational capabilities. Leads all trending models in total likes at 10,399, reflecting sustained community interest since its June release.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "image-text-to-text", "conversational"],
+      "metrics": {"downloads": 1456459, "likes": 10399},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "lfm2-5-2-6b",
+      "name": "LFM2.5-2.6B",
+      "organization": "Liquid AI",
+      "description": "Edge-scale 2.6B language model with 15-language multilingual support. Based on Liquid AI's novel LFM architecture, targeting on-device and edge deployment with competitive quality at minimal compute.",
+      "task_type": "text-generation",
+      "model_size": "2.6B",
+      "tags": ["edge", "multilingual", "liquid-foundation"],
+      "metrics": {"downloads": 85651, "likes": 453},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B"
+    },
+    {
+      "id": "maple-preview",
+      "name": "maple-preview",
+      "organization": "Deepgrove",
+      "description": "Novel ternary mixture-of-experts language model with MIT license. Uses ternary weights for extreme quantization efficiency while maintaining quality through sparse MoE activation — a potentially significant architecture for edge deployment.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["mixture-of-experts", "ternary", "reasoning"],
+      "metrics": {"downloads": 1089, "likes": 290},
+      "source_url": "https://huggingface.co/deepgrove/maple-preview"
+    },
+    {
+      "id": "nemotronlabs-voicechat-11b",
+      "name": "NVIDIA-NemotronLabs-VoiceChat-11B",
+      "organization": "NVIDIA",
+      "description": "11B parameter voice chat model built on Nemotron-Nano-9B-v2. Targets real-time conversational voice interaction with multiple supporting papers on speech synthesis and audio processing.",
+      "task_type": "voice-chat",
+      "model_size": "11B",
+      "tags": ["voice", "conversational", "speech"],
+      "metrics": {"downloads": 543, "likes": 261},
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-NemotronLabs-VoiceChat-11B"
+    },
+    {
+      "id": "ling-3-0-flash",
+      "name": "Ling-3.0-flash",
+      "organization": "InclusionAI",
+      "description": "Fast-inference language model using a hybrid architecture (bailing_hybrid). Part of the growing wave of flash/turbo-optimized models targeting low-latency deployment.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["text-generation", "fast-inference", "hybrid-architecture"],
+      "metrics": {"downloads": 4747, "likes": 246},
+      "source_url": "https://huggingface.co/inclusionAI/Ling-3.0-flash"
+    },
+    {
+      "id": "shieldstral-1-0-3b",
+      "name": "Shieldstral-1.0-3B",
+      "organization": "Mistral AI",
+      "description": "Lightweight 3B safety classifier model supporting 12+ languages. Apache-licensed, designed as a guardrail layer for production LLM deployments. Built on Ministral-3-3B-Base with vLLM serving support.",
+      "task_type": "text-classification",
+      "model_size": "3B",
+      "tags": ["safety", "moderation", "multilingual", "guardrails"],
+      "metrics": {"downloads": 5651, "likes": 211},
+      "source_url": "https://huggingface.co/mistralai/Shieldstral-1.0-3B"
+    },
+    {
+      "id": "minimax-h3-turbo-lora",
+      "name": "MiniMax-H3-Turbo-Lora",
+      "organization": "larryvrh (community)",
+      "description": "Community-built LoRA adapter for MiniMax-H3 enabling accelerated inference for text-to-video and text-to-audio generation. Compatible with ComfyUI workflows.",
+      "task_type": "text-to-video",
+      "model_size": "LoRA adapter",
+      "tags": ["lora", "video-generation", "turbo", "comfyui"],
+      "metrics": {"downloads": 0, "likes": 545},
+      "source_url": "https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora"
+    },
+    {
+      "id": "comfy-org-minimax-h3",
+      "name": "Comfy-Org/MiniMax-H3",
+      "organization": "Comfy-Org",
+      "description": "Official ComfyUI-compatible single-file distribution of MiniMax-H3. Nearly 5M downloads indicate massive adoption through the ComfyUI pipeline ecosystem.",
+      "task_type": "image-text-to-video",
+      "model_size": "Unknown",
+      "tags": ["comfyui", "video-generation", "diffusion-single-file"],
+      "metrics": {"downloads": 4947943, "likes": 1076},
+      "source_url": "https://huggingface.co/Comfy-Org/MiniMax-H3"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "prime-agent",
+      "name": "PrimeIntellect-ai/prime-agent",
+      "description": "A self-improving reinforcement learning model agent for coding workflows and long-running autonomous tasks. Gained 2,356 stars in a single day, reflecting intense interest in agents that improve through their own experience.",
+      "language": "TypeScript",
+      "stars": 11291,
+      "stars_today": 2356,
+      "forks": 1159,
+      "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+      "tags": ["agent", "self-improving", "coding", "reinforcement-learning"],
+      "relevance": "high"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "A complete AI agency framework with specialized expert agents covering frontend, community management, content creation, and quality assurance. Each agent has distinct personality, processes, and deliverables.",
+      "language": "Shell",
+      "stars": 140786,
+      "stars_today": 858,
+      "forks": 22989,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": ["agent-framework", "multi-agent", "production"],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Production-grade engineering skills for AI coding agents. A curated collection of reusable agent skills and best practices for building reliable AI-assisted development workflows.",
+      "language": "JavaScript",
+      "stars": 85185,
+      "stars_today": 680,
+      "forks": 9166,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agent", "best-practices"],
+      "relevance": "high"
+    },
+    {
+      "id": "trading-agents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "Multi-agent LLM financial trading framework enabling autonomous analysis and execution across markets. Continued viral momentum with 598 stars/day.",
+      "language": "Python",
+      "stars": 96869,
+      "stars_today": 598,
+      "forks": 18699,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": ["trading", "multi-agent", "finance", "llm"],
+      "relevance": "high"
+    },
+    {
+      "id": "book-to-skill",
+      "name": "virgiliojr94/book-to-skill",
+      "description": "Converts any technical book PDF into a Claude Code skill for studying, referencing, and using while coding. Bridges the gap between static knowledge (books) and active agent capabilities.",
+      "language": "Python",
+      "stars": 19469,
+      "stars_today": 568,
+      "forks": 2083,
+      "url": "https://github.com/virgiliojr94/book-to-skill",
+      "tags": ["claude-code", "skills", "knowledge-extraction", "pdf"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-skills",
+      "name": "google/skills",
+      "description": "Official agent skills for Google products and technologies. Provides structured skill definitions enabling AI agents to interact with Google's product ecosystem.",
+      "language": "Python",
+      "stars": 17268,
+      "stars_today": 528,
+      "forks": 1394,
+      "url": "https://github.com/google/skills",
+      "tags": ["google", "agent-skills", "official"],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "Comfy-Org/ComfyUI",
+      "description": "The most popular node-based GUI for diffusion models, experiencing renewed momentum alongside MiniMax-H3's release with 365 stars/day.",
+      "language": "Python",
+      "stars": 125592,
+      "stars_today": 365,
+      "forks": 14846,
+      "url": "https://github.com/Comfy-Org/ComfyUI",
+      "tags": ["diffusion", "gui", "workflow", "video-generation"],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM-powered multi-market stock analysis system with real-time news integration, decision dashboards, and automated notifications. Supports zero-cost scheduled runs.",
+      "language": "Python",
+      "stars": 61261,
+      "stars_today": 306,
+      "forks": 52017,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["finance", "llm", "stock-analysis", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "witr",
+      "name": "pranshuparmar/witr",
+      "description": "CLI and TUI tool for tracing any process, port, container, or file back to what started it. A developer debugging tool with broad utility for understanding system resource ownership.",
+      "language": "Go",
+      "stars": 20725,
+      "stars_today": 210,
+      "forks": 726,
+      "url": "https://github.com/pranshuparmar/witr",
+      "tags": ["debugging", "cli", "tui", "process-tracing"],
+      "relevance": "medium"
+    },
+    {
+      "id": "dspy",
+      "name": "stanfordnlp/dspy",
+      "description": "Stanford's framework for programming (not prompting) language models. Steady trending at 152 stars/day, indicating sustained adoption as a foundational LLM programming paradigm.",
+      "language": "Python",
+      "stars": 36928,
+      "stars_today": 152,
+      "forks": 3199,
+      "url": "https://github.com/stanfordnlp/dspy",
+      "tags": ["llm-programming", "framework", "stanford"],
+      "relevance": "high"
+    },
+    {
+      "id": "code-graph-rag",
+      "name": "vitali87/code-graph-rag",
+      "description": "RAG system for monorepos using knowledge graphs to query, understand, and edit multi-language codebases with AI assistance.",
+      "language": "Python",
+      "stars": 3045,
+      "stars_today": 96,
+      "forks": 523,
+      "url": "https://github.com/vitali87/code-graph-rag",
+      "tags": ["rag", "knowledge-graph", "code-understanding"],
+      "relevance": "high"
+    },
+    {
+      "id": "weathernext",
+      "name": "google-deepmind/weathernext",
+      "description": "Google DeepMind's weather prediction system. Gaining traction with 86 stars/day, representing the application of foundation models to scientific forecasting.",
+      "language": "Python",
+      "stars": 7106,
+      "stars_today": 86,
+      "forks": 939,
+      "url": "https://github.com/google-deepmind/weathernext",
+      "tags": ["weather", "deepmind", "scientific-ml", "forecasting"],
+      "relevance": "high"
+    },
+    {
+      "id": "hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "Agent memory system that learns from past interactions. Addresses the critical need for persistent, improving memory in production agent deployments.",
+      "language": "Python",
+      "stars": 19405,
+      "stars_today": 80,
+      "forks": 1245,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": ["agent-memory", "learning", "production"],
+      "relevance": "high"
+    },
+    {
+      "id": "t3code",
+      "name": "pingdotgg/t3code",
+      "description": "Developer tool from the T3 stack ecosystem. Gaining 163 stars/day, reflecting continued community interest in full-stack TypeScript tooling.",
+      "language": "TypeScript",
+      "stars": 17680,
+      "stars_today": 163,
+      "forks": 4014,
+      "url": "https://github.com/pingdotgg/t3code",
+      "tags": ["developer-tools", "typescript", "t3-stack"],
+      "relevance": "medium"
+    },
+    {
+      "id": "harvey-labs",
+      "name": "harveyai/harvey-labs",
+      "description": "Benchmark for evaluating and improving agent capabilities in legal work. One of few domain-specific agent benchmarks, addressing the gap between general-purpose agent evaluations and specialized professional use cases.",
+      "language": "Python",
+      "stars": 842,
+      "stars_today": 47,
+      "forks": 178,
+      "url": "https://github.com/harveyai/harvey-labs",
+      "tags": ["benchmark", "legal-ai", "agent-evaluation"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Video World Model Memory and Persistence",
+      "description": "WorldTrace addresses the fundamental challenge of maintaining addressable memory in transformer-based video world models, diagnosing RoPE positional encoding as the root cause of memory collapse beyond training horizons.",
+      "related_paper_ids": ["worldtrace-addressable-memory-for-video-world-models"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "MiniMax-H3 Ecosystem Explosion",
+      "description": "MiniMax-H3 and its derivatives (LoRA, GGUF, ComfyUI integrations) occupy 9 of the top 20 trending models, representing the fastest community adoption curve for a video generation model. The ecosystem has already moved from capability evaluation to deployment optimization.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skills and Infrastructure",
+      "description": "Multiple trending repos (agent-skills, agency-agents, google/skills, book-to-skill) focus on building reusable, shareable agent capabilities rather than agents themselves — signaling a shift from agent capability to agent infrastructure.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Self-Improving and Autonomous Agents",
+      "description": "PrimeIntellect's prime-agent (2,356 stars in one day) and the broader agent memory/learning repos (hindsight, code-graph-rag) represent growing interest in agents that improve through their own experience rather than requiring human fine-tuning.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Edge and Efficient Model Deployment",
+      "description": "LiquidAI's 2.6B edge model, deepgrove's ternary MoE, Mistral's 3B safety classifier, and widespread GGUF quantization of trending models all point to intensifying focus on efficient deployment across the model size spectrum.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-10T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
