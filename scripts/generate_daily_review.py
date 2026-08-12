@@ -608,7 +608,6 @@ def update_index(date: str, review_en: dict, review_cn: dict) -> None:
 
 def translate_to_chinese(review_en: dict) -> dict:
     """Use Claude to translate the English review JSON to Chinese."""
-    client = _make_anthropic_client()
 
     prompt = f"""Translate the following AI research daily review JSON from English to Chinese.
 
@@ -627,12 +626,23 @@ Input JSON:
 Output ONLY valid JSON (no markdown fences, no commentary):"""
 
     print("  [Claude] Translating to Chinese...")
-    with client.messages.stream(
-        model=CLAUDE_MODEL,
-        max_tokens=32000,
-        messages=[{"role": "user", "content": prompt}],
-    ) as stream:
-        text = stream.get_final_message().content[0].text.strip()
+    text = None
+    try:
+        client = _make_anthropic_client()
+        with client.messages.stream(
+            model=CLAUDE_MODEL,
+            max_tokens=32000,
+            messages=[{"role": "user", "content": prompt}],
+        ) as stream:
+            text = stream.get_final_message().content[0].text.strip()
+    except Exception as sdk_err:
+        print(f"  [Claude SDK] Translation failed ({sdk_err}), trying claude CLI fallback...")
+        text = _synthesize_via_claude_cli(prompt)
+        if text is None:
+            raise RuntimeError(
+                "Both Anthropic SDK and claude CLI translation failed. "
+                "Set ANTHROPIC_API_KEY or ensure `claude` is authenticated."
+            ) from sdk_err
 
     if text.startswith("```"):
         text = re.sub(r"^```(?:json)?\s*\n?", "", text)

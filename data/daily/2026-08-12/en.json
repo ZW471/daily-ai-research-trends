@@ -1,0 +1,936 @@
+{
+  "version": "1.0",
+  "date": "2026-08-12",
+  "generated_at": "2026-08-12T05:24:21.007951+00:00",
+  "summary": {
+    "headline": "BDH-CQ; Macaron-V1; SWE-Bench ProMax",
+    "body": "Today's HuggingFace trending papers (from 2026-08-12) are led by **BDH-CQ: In-Context Learning with Recurrent Latent Reasoning** (247 upvotes), which introduces a novel recurrent latent reasoning approach combining in-context learning with non-verbal iterative computation. Close behind is **Macaron-V1: Towards Open Continual Learning with Self-Improvement and Mixture-of-LoRA** (223 upvotes), proposing a continual learning framework using frozen base models with Mixture-of-LoRA adapters.\n\nThe self-improvement theme dominates: Ouroboros presents a coding agent that rewrites its own core implementation through reviewed commits, while Macaron-V1 targets lifelong adaptation. Simultaneously, benchmark quality is under scrutiny — SWE-Bench ProMax exposes test flaws in 60% of SWE-bench instances and introduces multilingual code refactoring challenges that resist memorization.\n\nOn the infrastructure side, Motif 3's 314B MoE model demonstrates fine-grained expert routing at scale, and OasisKV addresses HBM capacity limits for long-context inference. A notable security paper reveals that encrypted chain-of-thought blocks are interchangeable across user sessions, representing a structural vulnerability in how reasoning traces are handled.",
+    "key_themes": [
+      "self-improving-agents",
+      "on-policy-distillation",
+      "agent-memory",
+      "benchmark-quality",
+      "inference-efficiency"
+    ]
+  },
+  "researcher_notes": "**The self-development loop is closing.** Three papers this week — Ouroboros, Macaron-V1, and Evo-Bench — collectively describe a world where agents not only complete tasks but actively improve the infrastructure they run on. Ouroboros commits reviewed changes to its own runtime; Macaron-V1 evaluates successor configurations against an external contract; Evo-Bench benchmarks the meta-capability of LLMs to evolve their own harness. This isn't science fiction — these are working systems with concrete evaluation results.\n\n**Unsupervised distillation is reaching maturity.** Both the top self-distillation paper (On-Policy Self-Distillation without Any Supervision) and SPOT show that you can extract surprisingly strong post-training signal from a model's own outputs — no ground truth, no teacher labels, no environment feedback. The internal consistency criterion in OPD is particularly elegant: the model converges on answers that are stable across perturbations. This could compress the feedback data requirement dramatically for future fine-tuning pipelines.\n\n**MiniMax-H3 is dominating the model leaderboard** in a way that's hard to ignore: it appears in six of the top-20 trending model slots simultaneously (base model, ComfyUI wrappers, LoRA adapters, community variants). This kind of ecosystem explosion typically signals a model that genuinely hit a quality-vs-accessibility sweet spot. Kimi-K3 leads on raw likes (10,528) despite being a feature-extraction model, suggesting strong developer interest in embeddings infrastructure.\n\n**GitHub trending is an agent-tooling story today.** PrimeIntellect's prime-agent (1,138 stars today), agency-agents (958), and Orca's ADE (875) all target the same problem from different angles: how do you manage, orchestrate, and improve a fleet of coding agents? The paperclipai/paperclip repo at 748 stars today reflects the same demand. This is a market forming in real time around agentic infrastructure primitives.\n\n**Sleeper hit to watch:** Scaling Inherently Interpretable Language Models (Guide Labs, 13 upvotes) is quietly making the case that interpretability doesn't have to be a post-hoc tax on capability. By baking interpretability into the training objective and showing it scales across three orders of magnitude of compute, this could reframe the entire alignment-vs-capability tradeoff conversation. Low engagement now, but the ideas are significant.",
+  "papers": [
+    {
+      "id": "bdh-cq-in-context-learning-with-recurrent-latent-reasoning",
+      "title": "BDH-CQ: In-Context Learning with Recurrent Latent Reasoning",
+      "authors": [
+        "Björn Engdahl",
+        "Adrian Kosowski",
+        "Jan Chorowski",
+        "Zuzanna Stamirowska",
+        "Przemysław Uznański",
+        "Junlin Jiang"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "We introduce BDH-CQ, a reasoning model that combines in-context learning with recurrent latent reasoning. Inputs presented at inference time continuously update the model's recurrent memory; the model then solves a query through iterative computation in a high-dimensional latent space, without verbalizing its intermediate reasoning. We evaluate the model on the public ARC-AGI-1 evaluation set a...",
+      "key_findings": [
+        "Inputs presented at inference time continuously update the model's recurrent memory; the model then solves a query through iterative computation in a ",
+        "We evaluate the model on the public ARC-AGI-1 evaluation set and use controlled ARC-like interventions to study what it learns from demonstrations, ho",
+        "A 150M-parameter configuration reaches 29.5% pass@2 at a computed inference cost of \\$0.0007 per task."
+      ],
+      "tags": [
+        "memory",
+        "reasoning",
+        "model-arch"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 247,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09888",
+        "huggingface": "https://huggingface.co/papers/2608.09888",
+        "pdf": "https://arxiv.org/pdf/2608.09888"
+      }
+    },
+    {
+      "id": "macaron-v1-towards-open-continual-learning-with-self-improve",
+      "title": "Macaron-V1: Towards Open Continual Learning with Self-Improvement and Mixture-of-LoRA",
+      "authors": [
+        "Mind Lab",
+        "Vin Bo",
+        "Asher Cai",
+        "Jingwei Cao",
+        "Song Cao",
+        "Vic Cao"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Macaron-V1 is an open agent-model family for experiential intelligence: learning from experience in real environments and continuing to learn after deployment. It is organized around two system goals. Adaptation is pursued through recursive improvement of versioned model-harness pairs, where experience from one configuration is evaluated under an external contract and used to construct its succ...",
+      "key_findings": [
+        "It is organized around two system goals.",
+        "Adaptation is pursued through recursive improvement of versioned model-harness pairs, where experience from one configuration is evaluated under an ex",
+        "Collaboration is pursued via the Mixture-of-LoRA (MoL) architecture that freezes a base model, composes specialist LoRA adapters, and selects one LoRA"
+      ],
+      "tags": [
+        "agents",
+        "model-arch"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 223,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09819",
+        "huggingface": "https://huggingface.co/papers/2608.09819",
+        "pdf": "https://arxiv.org/pdf/2608.09819"
+      }
+    },
+    {
+      "id": "swe-bench-promax-benchmarking-agents-on-large-scale-multilin",
+      "title": "SWE-Bench ProMax: Benchmarking Agents on Large-Scale Multilingual Code Refactoring",
+      "authors": [
+        "Yuling Shi",
+        "Jinghan Xu",
+        "Kelin Fu",
+        "Wenhao Zeng",
+        "Shilin He",
+        "Lei Zhang"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "As AI coding agents take on increasingly complex, long-horizon software engineering tasks, existing benchmarks are rapidly saturating and their evaluation quality has come under serious scrutiny: a recent audit found that nearly 60% of unsolved SWE-bench Verified instances contain flawed tests -- either overly narrow tests that reject correct solutions or overly broad tests that check unstated ...",
+      "key_findings": [
+        "Code refactoring, which requires coordinated, behavior-preserving changes across many files, offers a substantially harder and more realistic test of ",
+        "We introduce SWE-Bench ProMax, an expert-curated, multilingual code refactoring benchmark of 170 instances drawn from real commits across seven progra",
+        "Every instance undergoes rigorous, multi-stage curation that directly addresses the quality problems identified in prior benchmarks: issue description"
+      ],
+      "tags": [
+        "agents",
+        "benchmarks",
+        "code-generation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 117,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09802",
+        "huggingface": "https://huggingface.co/papers/2608.09802",
+        "pdf": "https://arxiv.org/pdf/2608.09802"
+      }
+    },
+    {
+      "id": "on-policy-self-distillation-without-any-supervision",
+      "title": "On-Policy Self-Distillation without Any Supervision",
+      "authors": [
+        "Yijiang Li",
+        "Bingyang Wang",
+        "Yijun Liang",
+        "Yunjie Tian",
+        "Di Fu",
+        "Nuno Vasconcelos"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "On-policy (Self-)Distillation (OPD / OPSD) has shown strong potential for post-training large language models (LLMs). However, existing methods still rely heavily on external supervision, including ground-truth signals, environmental feedback, or guidance from larger models, and therefore fall short of genuine \"self\"-distillation. In this study, we show that on-policy self-distillation can be a...",
+      "key_findings": [
+        "However, existing methods still rely heavily on external supervision, including ground-truth signals, environmental feedback, or guidance from larger ",
+        "In this study, we show that on-policy self-distillation can be achieved using only a model's own generations via internal consistency.",
+        "We propose unsupervised on-policy self-distillation (U-OPSD)."
+      ],
+      "tags": [
+        "distillation",
+        "llm",
+        "model-arch",
+        "vision"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 67,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06296",
+        "huggingface": "https://huggingface.co/papers/2608.06296",
+        "pdf": "https://arxiv.org/pdf/2608.06296"
+      }
+    },
+    {
+      "id": "ouroboros-a-self-developing-frontier-coding-agent-with-revie",
+      "title": "Ouroboros: A Self-Developing Frontier Coding Agent with Reviewed Core Evolution",
+      "authors": [
+        "Anton Razzhigaev",
+        "Andrei Gritsaev",
+        "Andrei Kaznacheev",
+        "Nikita Dragunov",
+        "Roman Yampolskiy",
+        "Andrei Kuznetsov"
+      ],
+      "affiliations": [
+        "Inria",
+        "University of Louisville"
+      ],
+      "summary": "We present Ouroboros, a self-developing agent harness whose tools, prompts, context assembly, and core implementation improve through reviewed commits that become the runtime for later work. Core evolution proceeds in two modes. In recursive free evolution, improvement is itself a task, and completing one evolution cycle can schedule the next.",
+      "key_findings": [
+        "Core evolution proceeds in two modes.",
+        "In recursive free evolution, improvement is itself a task, and completing one evolution cycle can schedule the next.",
+        "In experience-driven core evolution, ordinary work and social interaction expose bugs, rough edges, and inefficient context construction that lead to "
+      ],
+      "tags": [
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 66,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.08311",
+        "huggingface": "https://huggingface.co/papers/2608.08311",
+        "pdf": "https://arxiv.org/pdf/2608.08311"
+      }
+    },
+    {
+      "id": "stealing-reasoning-traces-from-proprietary-llm-apis",
+      "title": "Stealing Reasoning Traces from Proprietary LLM APIs",
+      "authors": [
+        "Alexander Panfilov",
+        "David Schmotz",
+        "Ilia Shumailov",
+        "Luca Beurer-Kellner",
+        "Joachim Schaeffer",
+        "Ameya Prabhu"
+      ],
+      "affiliations": [
+        "Google DeepMind",
+        "ETH Zurich",
+        "UC Berkeley"
+      ],
+      "summary": "Leading large language model providers now conceal their models' step-by-step reasoning, or chain-of-thought, to protect intellectual property and limit information leakage. Rather than storing these traces server-side, providers return them to the client as blocks of encrypted text, which the client passes back with each subsequent request. Building on prior research, we identify an architectu...",
+      "key_findings": [
+        "Rather than storing these traces server-side, providers return them to the client as blocks of encrypted text, which the client passes back with each ",
+        "Building on prior research, we identify an architectural vulnerability: these encrypted blocks are fully compatible and interchangeable across differe",
+        "We exploit this compatibility to develop a scalable decryption jailbreak."
+      ],
+      "tags": [
+        "reasoning",
+        "llm",
+        "model-arch"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 36,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09867",
+        "huggingface": "https://huggingface.co/papers/2608.09867",
+        "pdf": "https://arxiv.org/pdf/2608.09867"
+      }
+    },
+    {
+      "id": "motif-3-technical-report",
+      "title": "Motif 3: Technical Report",
+      "authors": [
+        "Junghwan Lim",
+        "Joon Son Chung",
+        "Sungmin Lee",
+        "Wai Ting Cheung",
+        "Gihun Cho",
+        "Minsu Ha"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "We introduce Motif 3, a decoder-only Mixture-of-Experts language model with 314 billion total parameters and 13.2 billion activated per token. Each sparse MoE layer contains 384 routed experts, with eight selected per token. This fine-grained sparsity provides substantial expert capacity while limiting computation.",
+      "key_findings": [
+        "Each sparse MoE layer contains 384 routed experts, with eight selected per token.",
+        "This fine-grained sparsity provides substantial expert capacity while limiting computation.",
+        "Motif 3 is built around Grouped Differential Latent Attention (GDLA), which integrates grouped differential attention with the compressed key-value re"
+      ],
+      "tags": [
+        "model-arch",
+        "moe",
+        "code-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 34,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09119",
+        "huggingface": "https://huggingface.co/papers/2608.09119",
+        "pdf": "https://arxiv.org/pdf/2608.09119"
+      }
+    },
+    {
+      "id": "agent-memory-distillation-empowering-small-llm-agents-with-h",
+      "title": "Agent Memory Distillation: Empowering Small LLM Agents with Hierarchical Teacher Memory",
+      "authors": [
+        "Taeil Kim",
+        "Kangsan Kim",
+        "Sung Ju Hwang"
+      ],
+      "affiliations": [
+        "KAIST",
+        "KAIST",
+        "KAIST"
+      ],
+      "summary": "Memory systems have shown promise for improving agent performance, but their potential remains largely unexplored for small language models, which struggle to generate sufficient successful trajectories on their own. We propose Agent Memory Distillation (AMD), a training-free framework that transfers structured knowledge from a large teacher agent to a small student agent through hierarchical m...",
+      "key_findings": [
+        "We propose Agent Memory Distillation (AMD), a training-free framework that transfers structured knowledge from a large teacher agent to a small studen",
+        "AMD constructs three complementary memory types from successful teacher trajectories: Workflow memory encodes task-level strategies, Subtask memory pr",
+        "Workflow and Subtask memories are injected proactively at the start of each task, while Function memory is retrieved reactively upon tool-calling erro"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "distillation",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 34,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.07169",
+        "huggingface": "https://huggingface.co/papers/2608.07169",
+        "pdf": "https://arxiv.org/pdf/2608.07169"
+      }
+    },
+    {
+      "id": "sci-vbench-evaluating-knowledge--and-reasoning-intensive-vid",
+      "title": "Sci-VBench: Evaluating Knowledge- and Reasoning-Intensive Video Generation in Science Domains",
+      "authors": [
+        "Diandian Zhang",
+        "Tingyu Song",
+        "Lin Fu",
+        "Zheyuan Yang",
+        "Yilun Zhao"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "We introduce Sci-VBench, a comprehensive benchmark for evaluating knowledge- and reasoning-intensive video generation across scientific domains. It contains 1,253 expert-annotated examples spanning 60 subjects across four core disciplines: Natural Science, Healthcare, Humanities & Social Sciences, and Engineering. Each example requires models to generate temporally rich videos that demand scien...",
+      "key_findings": [
+        "It contains 1,253 expert-annotated examples spanning 60 subjects across four core disciplines: Natural Science, Healthcare, Humanities & Social Scienc",
+        "Each example requires models to generate temporally rich videos that demand scientific reasoning and knowledge-grounded synthesis, going beyond surfac",
+        "We further establish a rubric-based evaluation protocol."
+      ],
+      "tags": [
+        "benchmarks",
+        "reasoning",
+        "video"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 23,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09873",
+        "huggingface": "https://huggingface.co/papers/2608.09873",
+        "pdf": "https://arxiv.org/pdf/2608.09873"
+      }
+    },
+    {
+      "id": "what-to-edit-next-visually-aligned-image-editing-follow-up-s",
+      "title": "What to Edit Next: Visually Aligned Image-Editing Follow-Up Suggestions in Conversational Systems",
+      "authors": [
+        "Zhijing Zhang",
+        "Jinpeng Yu",
+        "Xin Song",
+        "Bingnan Li",
+        "Chuyue Li",
+        "Changhui Du"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Conversational assistants increasingly recommend follow-up edits to help users continue a task. Existing systems primarily target text-only interactions, leaving image-creation conversations underexplored. In image-creation tasks, useful follow-up edit suggestions must reflect user preferences, offer diverse directions, and remain executable on the current image.",
+      "key_findings": [
+        "Existing systems primarily target text-only interactions, leaving image-creation conversations underexplored.",
+        "In image-creation tasks, useful follow-up edit suggestions must reflect user preferences, offer diverse directions, and remain executable on the curre",
+        "We collected 100,000 real multi-turn image-creation conversation samples from Qwen App and found that 80.1% are image-dependent, underscoring the need"
+      ],
+      "tags": [
+        "language-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 23,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.07565",
+        "huggingface": "https://huggingface.co/papers/2608.07565",
+        "pdf": "https://arxiv.org/pdf/2608.07565"
+      }
+    },
+    {
+      "id": "oasiskv-scaling-in-decode-kv-cache-beyond-hbm-with-lookahead",
+      "title": "OasisKV: Scaling In-Decode KV Cache Beyond HBM with Lookahead Sparse Prefetching",
+      "authors": [
+        "Can Xiao",
+        "Sukmin Cho",
+        "Junbong We",
+        "Zhixiong Niu",
+        "Jianyi Cheng",
+        "Yiren Zhao"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Large language model (LLM) inference serving is increasingly constrained by memory rather than compute. As long-context and long-form reasoning workloads become more prevalent, the key-value (KV) cache dominates both memory footprint and memory traffic during LLM token generation, i.e., decode. In particular, HBM capacity has become a scarce and costly resource that heavily limits inference bat...",
+      "key_findings": [
+        "As long-context and long-form reasoning workloads become more prevalent, the key-value (KV) cache dominates both memory footprint and memory traffic d",
+        "In particular, HBM capacity has become a scarce and costly resource that heavily limits inference batch size and system throughput.",
+        "This paper presents OasisKV, a memory-centric LLM inference system design that alleviates HBM capacity pressure by decoupling full KV-cache storage fr"
+      ],
+      "tags": [
+        "memory",
+        "reasoning",
+        "llm",
+        "model-arch"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.08097",
+        "huggingface": "https://huggingface.co/papers/2608.08097",
+        "pdf": "https://arxiv.org/pdf/2608.08097"
+      }
+    },
+    {
+      "id": "spot-sparse-probing-and-outcome-calibration-for-on-policy-di",
+      "title": "SPOT: Sparse Probing and Outcome Calibration for On-Policy Distillation",
+      "authors": [
+        "Zikun Qu",
+        "Min Zhang",
+        "Mingze Kong",
+        "Zhiwei Shang",
+        "Yikun Ban",
+        "Shuang Qiu"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "On-policy distillation (OPD) provides dense teacher supervision on student-generated trajectories, but standard reverse-KL training can assign insufficient probability to other plausible continuations. Teacher entropy alone does not reveal whether uncertainty is concentrated among a few plausible next tokens or dispersed over a long probability tail, nor whether the student already represents t...",
+      "key_findings": [
+        "Teacher entropy alone does not reveal whether uncertainty is concentrated among a few plausible next tokens or dispersed over a long probability tail,",
+        "Moreover, local teacher probabilities may not predict downstream success.",
+        "We introduce Sparse Probing and Outcome-calibrated Targets OPD (SPOT), which addresses two coupled decisions, where to probe and what to distill, thro"
+      ],
+      "tags": [
+        "distillation",
+        "vision"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.04419",
+        "huggingface": "https://huggingface.co/papers/2608.04419",
+        "pdf": "https://arxiv.org/pdf/2608.04419"
+      }
+    },
+    {
+      "id": "scaling-inherently-interpretable-language-models",
+      "title": "Scaling Inherently Interpretable Language Models",
+      "authors": [
+        "Guide Labs Team",
+        "Andreas Madsen",
+        "Aya Abdelsalam Ismail",
+        "Giang Nguyen",
+        "Isaac Plant",
+        "Muawiz Chaudhary"
+      ],
+      "affiliations": [
+        "Guide Labs"
+      ],
+      "summary": "Interpretability is often treated as a tax on capability: language models are trained as opaque systems, then explained after the fact, with methods whose reliability is difficult to establish. In this work, we challenge this premise. Rather than reverse-engineering a model, we make interpretability a constraint of the training pipeline, optimized alongside the language modeling objective.",
+      "key_findings": [
+        "In this work, we challenge this premise.",
+        "Rather than reverse-engineering a model, we make interpretability a constraint of the training pipeline, optimized alongside the language modeling obj",
+        "Across three orders of magnitude of compute, on both autoregressive and diffusion language models, interpretability scales with capability rather than"
+      ],
+      "tags": [
+        "model-arch",
+        "interpretability"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 13,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.07594",
+        "huggingface": "https://huggingface.co/papers/2608.07594",
+        "pdf": "https://arxiv.org/pdf/2608.07594"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-H3 by MiniMaxAI. 59,368 downloads, 3,579 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "text-to-video",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 59368,
+        "likes": 3579
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "muse-glimmer-30b",
+      "name": "Muse-Glimmer-30B",
+      "organization": "meta-models",
+      "description": "Muse-Glimmer-30B by meta-models. 0 downloads, 1,102 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "muse_glimmer",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 1102
+      },
+      "source_url": "https://huggingface.co/meta-models/Muse-Glimmer-30B"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "deepseek-ai",
+      "description": "DeepSeek-V4-Flash-0731 by deepseek-ai. 1,048,685 downloads, 3,153 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1048685,
+        "likes": 3153
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "minimax-h3-turbo-lora",
+      "name": "MiniMax-H3-Turbo-Lora",
+      "organization": "larryvrh",
+      "description": "MiniMax-H3-Turbo-Lora by larryvrh. 0 downloads, 651 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "text-to-video",
+        "text-to-audio",
+        "audio-video",
+        "lora"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 651
+      },
+      "source_url": "https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora"
+    },
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "Comfy-Org",
+      "description": "MiniMax-H3 by Comfy-Org. 6,798,796 downloads, 1,213 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusion-single-file",
+        "comfyui",
+        "license:other"
+      ],
+      "metrics": {
+        "downloads": 6798796,
+        "likes": 1213
+      },
+      "source_url": "https://huggingface.co/Comfy-Org/MiniMax-H3"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "moonshotai",
+      "description": "Kimi-K3 by moonshotai. 1,565,484 downloads, 10,528 likes on HuggingFace.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "kimi_k3",
+        "feature-extraction"
+      ],
+      "metrics": {
+        "downloads": 1565484,
+        "likes": 10528
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "lfm25-26b",
+      "name": "LFM2.5-2.6B",
+      "organization": "LiquidAI",
+      "description": "LFM2.5-2.6B by LiquidAI. 93,668 downloads, 551 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "lfm2",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 93668,
+        "likes": 551
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B"
+    },
+    {
+      "id": "qwen36-27b-fable-fusion-711-uncensored-heretic-nm-dau-neo-ma",
+      "name": "Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+      "organization": "DavidAU",
+      "description": "Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF by DavidAU. 2,521,093 downloads, 1,899 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "unsloth",
+        "fine tune",
+        "heretic"
+      ],
+      "metrics": {
+        "downloads": 2521093,
+        "likes": 1899
+      },
+      "source_url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF"
+    },
+    {
+      "id": "minimax-h3-turbo",
+      "name": "Minimax-h3-Turbo",
+      "organization": "lightx2v",
+      "description": "Minimax-h3-Turbo by lightx2v. 20,376 downloads, 343 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "t2v",
+        "i2v",
+        "r2v"
+      ],
+      "metrics": {
+        "downloads": 20376,
+        "likes": 343
+      },
+      "source_url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo"
+    },
+    {
+      "id": "muse-glimmer-30b-gguf",
+      "name": "Muse-Glimmer-30B-GGUF",
+      "organization": "unsloth",
+      "description": "Muse-Glimmer-30B-GGUF by unsloth. 0 downloads, 307 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "gguf",
+        "unsloth",
+        "meta"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 307
+      },
+      "source_url": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "prime-agent",
+      "name": "PrimeIntellect-ai/prime-agent",
+      "description": "A self-improving RLM agent for coding workflows and long-running autonomous tasks.",
+      "language": "TypeScript",
+      "stars": 14158,
+      "stars_today": 1138,
+      "forks": 1461,
+      "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.",
+      "language": "Shell",
+      "stars": 143340,
+      "stars_today": 958,
+      "forks": 23283,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "semantica",
+      "name": "semantica-agi/semantica",
+      "description": "Graph-Native Infrastructure for Context and Accountable AI Systems",
+      "language": "Python",
+      "stars": 4938,
+      "stars_today": 893,
+      "forks": 532,
+      "url": "https://github.com/semantica-agi/semantica",
+      "tags": [
+        "ai",
+        "graph"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "orca",
+      "name": "stablyai/orca",
+      "description": "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and VPS.",
+      "language": "TypeScript",
+      "stars": 42851,
+      "stars_today": 875,
+      "forks": 2983,
+      "url": "https://github.com/stablyai/orca",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mediacrawler",
+      "name": "NanmiCoder/MediaCrawler",
+      "description": "小红书笔记 | 评论爬虫、抖音视频 | 评论爬虫、快手视频 | 评论爬虫、B 站视频 ｜ 评论爬虫、微博帖子 ｜ 评论爬虫、百度贴吧帖子 ｜ 百度贴吧评论回复爬虫 | 知乎问答文章｜评论爬虫",
+      "language": "Python",
+      "stars": 61720,
+      "stars_today": 855,
+      "forks": 12089,
+      "url": "https://github.com/NanmiCoder/MediaCrawler",
+      "tags": [
+        "code-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "DeepTutor: Lifelong Personalized Tutoring. https://deeptutor.info/.",
+      "language": "Python",
+      "stars": 34777,
+      "stars_today": 812,
+      "forks": 4422,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "The open-source app everyone uses to manage agents at work",
+      "language": "TypeScript",
+      "stars": 77199,
+      "stars_today": 748,
+      "forks": 14255,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Production-grade engineering skills for AI coding agents.",
+      "language": "JavaScript",
+      "stars": 86250,
+      "stars_today": 578,
+      "forks": 9267,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "skills",
+      "name": "anthropics/skills",
+      "description": "Public repository for Agent Skills",
+      "language": "Python",
+      "stars": 168169,
+      "stars_today": 485,
+      "forks": 20036,
+      "url": "https://github.com/anthropics/skills",
+      "tags": [
+        "agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "World's first open-source, agentic video production system. 12 production pipelines, 100+ tools, 700+ agent skill and production-knowledge files. Turn your AI coding assistant into a full video production studio.",
+      "language": "Python",
+      "stars": 47379,
+      "stars_today": 458,
+      "forks": 5905,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": [
+        "agents",
+        "ai",
+        "video"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "project-based-learning",
+      "name": "practical-tutorials/project-based-learning",
+      "description": "Curated list of project-based tutorials",
+      "language": "Python",
+      "stars": 278489,
+      "stars_today": 401,
+      "forks": 35781,
+      "url": "https://github.com/practical-tutorials/project-based-learning",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "code-graph-rag",
+      "name": "vitali87/code-graph-rag",
+      "description": "The ultimate RAG for your monorepo. Query, understand, and edit multi-language codebases with the power of AI and knowledge graphs",
+      "language": "Python",
+      "stars": 3853,
+      "stars_today": 341,
+      "forks": 564,
+      "url": "https://github.com/vitali87/code-graph-rag",
+      "tags": [
+        "ai",
+        "rag",
+        "graph",
+        "code-tools"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Self-Improving Agents",
+      "description": "Systems that autonomously improve their own code, prompts, and architectures through experience — from Ouroboros's recursive core evolution to Macaron-V1's continual learning framework.",
+      "related_paper_ids": [
+        "macaron-v1-towards-open-continual-learning-with-self-improve",
+        "swe-bench-promax-benchmarking-agents-on-large-scale-multilin",
+        "ouroboros-a-self-developing-frontier-coding-agent-with-revie",
+        "agent-memory-distillation-empowering-small-llm-agents-with-h"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "On-Policy Distillation",
+      "description": "A wave of methods using a model's own generated data — without external supervision — to improve post-training quality, driven by internal consistency and sparse outcome signals.",
+      "related_paper_ids": [
+        "on-policy-self-distillation-without-any-supervision",
+        "agent-memory-distillation-empowering-small-llm-agents-with-h",
+        "spot-sparse-probing-and-outcome-calibration-for-on-policy-di"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory Systems",
+      "description": "Novel architectures for giving LLM agents persistent, structured memory — including hierarchical distillation from teacher agents and reduced-order RL for memory utility.",
+      "related_paper_ids": [
+        "bdh-cq-in-context-learning-with-recurrent-latent-reasoning",
+        "agent-memory-distillation-empowering-small-llm-agents-with-h",
+        "oasiskv-scaling-in-decode-kv-cache-beyond-hbm-with-lookahead"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Benchmark Quality & Saturation",
+      "description": "Growing concern about benchmark validity: SWE-Bench ProMax surfaces flawed test suites, while Evo-Bench targets the meta-problem of agents improving evaluation frameworks themselves.",
+      "related_paper_ids": [
+        "swe-bench-promax-benchmarking-agents-on-large-scale-multilin",
+        "sci-vbench-evaluating-knowledge--and-reasoning-intensive-vid"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Inference Efficiency",
+      "description": "Hardware-aware LLM serving innovations: OasisKV scales KV cache beyond HBM with lookahead sparse prefetching; Motif 3 demonstrates fine-grained MoE sparsity at 314B scale.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-12T05:24:21.007951+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-08-12T05:24:21.007951+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-08-12T05:24:21.007951+00:00",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-12T05:24:21.007951+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-12T05:24:21.007951+00:00",
+      "status": "ok"
+    }
+  ]
+}
