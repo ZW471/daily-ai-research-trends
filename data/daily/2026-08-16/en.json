@@ -1,0 +1,933 @@
+{
+  "version": "1.0",
+  "date": "2026-08-16",
+  "generated_at": "2026-08-16T02:12:44.602621+00:00",
+  "summary": {
+    "headline": "Alaya-EVOKE redefines interactive world models with endless sessions; DarwinX and AutoDesign evolve agent harnesses through natural selection and meta-optimization; DreamX-Phi 1.0 bridges world models to robotic manipulation",
+    "body": "Today's trending papers (sourced from August 14 HuggingFace Daily Papers, the weekend fallback) are dominated by **world models and agent self-improvement**. Leading with 111 upvotes, **Alaya-EVOKE** introduces a world model architecture that decouples persistent memory from the denoiser context, enabling interactive sessions that scale linearly rather than quadratically — a significant step toward endless interactive environments.\n\n**DarwinX** (70 upvotes) brings evolutionary computation to agent harness optimization, treating prompts, tools, and control flow as a genome subject to natural selection rather than single-lineage gradient descent. This pairs with **AutoDesign** (38 upvotes), which takes a meta-learning approach to harness optimization for long-horizon agentic design tasks. Meanwhile, **DreamX-Phi 1.0** (85 upvotes) demonstrates that action-conditioned video world models can serve as effective planners for robotic manipulation.\n\nOn the infrastructure side, **LLMRouter** (97 upvotes) provides a unified framework for developing and evaluating model routers — a critical piece as organizations juggle multiple LLMs for different query types. The model leaderboard shows Qwen 3.8-27B dominating with nearly 10K likes, while DeepSeek-V4-Pro-0813 signals a new generation of the DeepSeek series. GitHub trending highlights continued momentum in AI agent tooling and developer infrastructure.",
+    "key_themes": [
+      "interactive-world-models",
+      "agent-harness-evolution",
+      "llm-infrastructure",
+      "spatial-intelligence",
+      "ai-evaluation-integrity"
+    ]
+  },
+  "researcher_notes": "**World models are bifurcating into two distinct research programs.** Alaya-EVOKE and PlayWorld represent opposite poles: EVOKE solves the *engineering* problem of making world models run indefinitely by offloading memory to a separate module, while PlayWorld tackles the *evaluation* problem by having agent players complete long-horizon objectives rather than relying on human judgment. DreamX-Phi 1.0 sits at the intersection — it's a world model that must be accurate enough to serve as a robotic planner. This three-way split (scalable generation, rigorous evaluation, downstream utility) suggests the field is maturing past the \"impressive demos\" phase.\n\n**Agent harness evolution is becoming its own subfield.** DarwinX's population-based approach to harness optimization is a direct response to the brittleness of single-lineage self-improvement loops. The key insight: treating harness components as a genome lets you maintain diversity and avoid the path-dependence that plagues greedy search. AutoDesign complements this with meta-optimization for structured design tasks. Together with last week's work on agent self-improvement, we're seeing a rapid convergence on the idea that the *scaffolding around* the model matters as much as the model itself.\n\n**The rhetoric-hacking paper deserves more attention than its 42 upvotes suggest.** Li et al. show that AI reviewers can be systematically gamed through rhetorical choices alone, without changing scientific content. This is a foundational vulnerability for any system using LLMs for evaluation — and it arrives just as the community is scaling up AI-assisted peer review. The controlled experimental design (preserving content while varying rhetoric) makes this unusually rigorous for a \"red team\" style paper.\n\n**Model leaderboard signals: Qwen 3.8 and DeepSeek V4 are the new defaults.** Qwen 3.8-27B leads with 9,817 likes and multiple derivative models (GGUF quantizations, FP8 variants), indicating broad adoption across deployment environments. DeepSeek-V4-Pro-0813 is fresh (released August 13) and already accumulating downloads, suggesting the V4 series is being rapidly evaluated. MiniMax-H3 continues its video generation dominance with over 2.2M downloads.\n\n**Sleeper hit to watch:** Massive Activations in Hybrid Linear Attention LLMs (23 upvotes, 4 comments) systematically characterizes \"massive activations\" — extreme outlier values that spike before attention layers. Understanding these activation patterns is critical for quantization, pruning, and efficient serving, making this paper more practically important than its modest engagement suggests.",
+  "papers": [
+    {
+      "id": "alaya-evoke-from-linear-scaling-supervision-to-endless-world",
+      "title": "Alaya-EVOKE: From Linear-Scaling Supervision to Endless World",
+      "authors": [
+        "Yuanyang Yin",
+        "Gongxuan Wang",
+        "Yifan Zhan",
+        "Chuanhao Li",
+        "Kaipeng Zhang",
+        "Feng Zhao"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Interactive world models must support persistent memory, responsive interaction, and long-horizon generation, yet these requirements place conflicting demands on the model. Maintaining history in the denoiser context or key-value cache incurs growing cost, forcing a trade-off between session length and retained memory, while low-latency interaction relies on few-step generation whose capabiliti...",
+      "key_findings": [
+        "Maintaining history in the denoiser context or key-value cache incurs growing cost, forcing a trade-off between session length and retained memory, wh",
+        "Evoke addresses both limitations by externalizing persistent world state and redesigning the teacher for long-horizon interactive generation.",
+        "Scene geometry is maintained in an external, camera-indexed world state bank, from which only view-relevant information is retrieved, keeping the deno"
+      ],
+      "tags": [
+        "memory",
+        "model-arch",
+        "vision",
+        "reinforcement-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 111,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.13546",
+        "huggingface": "https://huggingface.co/papers/2608.13546",
+        "pdf": "https://arxiv.org/pdf/2608.13546"
+      }
+    },
+    {
+      "id": "llmrouter-unified-infrastructure-for-developing-evaluating-a",
+      "title": "LLMRouter: Unified Infrastructure for Developing, Evaluating, and Deploying LLM Routers",
+      "authors": [
+        "Tao Feng",
+        "Fangxu Yu",
+        "Haozhen Zhang",
+        "Zhongjie Dai",
+        "Liangqi Yuan",
+        "Zijie Lei"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "No single large language model (LLM) is optimal across all queries and budget constraints, making model routing essential for cost-effective deployment. Existing routers adopt diverse formulations and implementations, making fair comparison and extension difficult. We present a unified formulation of LLM routing as a sequential decision process characterized by five components: context encoders...",
+      "key_findings": [
+        "Existing routers adopt diverse formulations and implementations, making fair comparison and extension difficult.",
+        "We present a unified formulation of LLM routing as a sequential decision process characterized by five components: context encoders, model encoders, s",
+        "Based on this formulation, we develop an automated pipeline for constructing routing supervision and evaluating routers jointly on response quality an"
+      ],
+      "tags": [
+        "llm",
+        "model-arch"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 97,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.06867",
+        "huggingface": "https://huggingface.co/papers/2608.06867",
+        "pdf": "https://arxiv.org/pdf/2608.06867"
+      }
+    },
+    {
+      "id": "dreamx-phi-10-action-conditioned-video-world-model-for-robot",
+      "title": "DreamX-Phi 1.0: Action-Conditioned Video World Model for Robotic Manipulation",
+      "authors": [
+        "DreamX Team",
+        "Rui Chen",
+        "Xiangxiang Chu",
+        "Geng Li",
+        "Jifan Li",
+        "Qingfeng Shi"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "We present DreamX-Phi 1.0, an action-conditioned video world model for robotic manipulation that, given an observed frame, a language instruction, and a prescribed action sequence comprising end-effector poses and gripper states, predicts the resulting future observations. Yet realism alone does not guarantee faithfulness: a convincing rollout can still move the wrong arm or lose the manipulate...",
+      "key_findings": [
+        "Yet realism alone does not guarantee faithfulness: a convincing rollout can still move the wrong arm or lose the manipulated object.",
+        "To ensure the prediction respects each arm's commanded path, we inject per-arm SE(3) transformations into attention via PRoPE-style geometric encoding",
+        "Action control alone does not fully constrain scene geometry or the evolution of small manipulated objects."
+      ],
+      "tags": [
+        "model-arch",
+        "video",
+        "robotics",
+        "reinforcement-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 85,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.13489",
+        "huggingface": "https://huggingface.co/papers/2608.13489",
+        "pdf": "https://arxiv.org/pdf/2608.13489"
+      }
+    },
+    {
+      "id": "darwinx-evolving-agent-harnesses-through-natural-selection",
+      "title": "DarwinX: Evolving Agent Harnesses Through Natural Selection",
+      "authors": [
+        "Yifan Zhang",
+        "Yutong Dai",
+        "Juntao Tan",
+        "Luyu Yang",
+        "Rishi Mullur",
+        "Thai Hoang"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "An LLM agent's capability depends not only on model weights but on its harness: prompts, tools, skills, and control flow. Self-improvement loops already edit harnesses, yet single-lineage search is path-dependent and local wins often regress other tasks. We introduce DarwinX, which treats self-evolution as selection over a population of harnesses with the model frozen: a preserve-and-extend con...",
+      "key_findings": [
+        "Self-improvement loops already edit harnesses, yet single-lineage search is path-dependent and local wins often regress other tasks.",
+        "We introduce DarwinX, which treats self-evolution as selection over a population of harnesses with the model frozen: a preserve-and-extend contract ad",
+        "Fitness comes from each benchmark's own verifier: no gold solutions, no hand-picked winners."
+      ],
+      "tags": [
+        "agents",
+        "llm",
+        "model-arch"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 70,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.07545",
+        "huggingface": "https://huggingface.co/papers/2608.07545",
+        "pdf": "https://arxiv.org/pdf/2608.07545"
+      }
+    },
+    {
+      "id": "intern-s2-preview-scientific-agentic-foundation-model",
+      "title": "Intern-S2-Preview: Scientific Agentic Foundation Model",
+      "authors": [
+        "Lei Bai",
+        "Jiaqi Cao",
+        "Chiyu Chen",
+        "Guanzhou Chen",
+        "Kai Chen",
+        "Guangran Cheng"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Scientific discovery increasingly requires AI systems that can reason over scientific evidence of heterogeneous modalities, interact with scientific tools and environments, and sustain progress across long task horizons. We present Intern-S2-Preview, a series of scientific agentic foundation models designed to support multimodal scientific understanding, reasoning, generation, and long-horizon ...",
+      "key_findings": [
+        "We present Intern-S2-Preview, a series of scientific agentic foundation models designed to support multimodal scientific understanding, reasoning, gen",
+        "The training pipeline begins with scientific multimodal pre-training over rendered scientific documents, interleaved image-text data, and diverse scie",
+        "Starting from the pretrained checkpoint, we apply a unified post-training pipeline consisting of supervised fine-tuning, scalable multi-task reinforce"
+      ],
+      "tags": [
+        "agents",
+        "model-arch"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.13505",
+        "huggingface": "https://huggingface.co/papers/2608.13505",
+        "pdf": "https://arxiv.org/pdf/2608.13505"
+      }
+    },
+    {
+      "id": "how-can-rhetoric-reward-hack-ai-reviewers-dissecting-rhetori",
+      "title": "How Can Rhetoric Reward-Hack AI Reviewers? Dissecting Rhetorical Sensitivity in AI-Based Peer Review",
+      "authors": [
+        "Ming Li",
+        "Chenguang Wang",
+        "Xirui Li",
+        "Xinyue Zeng",
+        "Dianqi Li",
+        "Peng Shi"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "As large language models increasingly participate in scientific evaluation, we investigate a potential form of reward hacking: how rhetorical choices shape AI-review judgments when reported scientific content is preserved and how these effects vary across evaluation conditions. We construct a controlled corpus of 4,200 full-paper manuscripts derived from 120 anonymized ICLR 2026 submissions. Tw...",
+      "key_findings": [
+        "We construct a controlled corpus of 4,200 full-paper manuscripts derived from 120 anonymized ICLR 2026 submissions.",
+        "Two LLM rewriters transform six rhetorical dimensions in opposing directions, and five LLM reviewers evaluate the resulting manuscripts under standard",
+        "We also test joint, recursive, and reviewer-guided rewriting."
+      ],
+      "tags": [
+        "model-arch"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.08975",
+        "huggingface": "https://huggingface.co/papers/2608.08975",
+        "pdf": "https://arxiv.org/pdf/2608.08975"
+      }
+    },
+    {
+      "id": "autodesign-meta-harness-optimization-for-long-horizon-agenti",
+      "title": "AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design",
+      "authors": [
+        "Yaxin Luo",
+        "Haobin Jiang",
+        "Jialv Zou",
+        "Xu Huang",
+        "Wenhao Yan",
+        "Haodong Li"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Transforming multimodal sources into condensed and structured media outputs can be fundamentally conceptualized as a long-horizon agentic process centered on a model-harness system. While an ideal harness system should align with human design priors and accumulate reusable experience through empirical exploration to drive recursive self-improvement, existing paradigms remain static and fall sho...",
+      "key_findings": [
+        "While an ideal harness system should align with human design priors and accumulate reusable experience through empirical exploration to drive recursiv",
+        "In this paper, we present AutoDesign, a framework that aligns with human design priors, where a meta-harness optimizer guides a code agent to recursiv",
+        "To instantiate and evaluate this framework, we focus on the academic paper-to-poster generation task and introduce PosterBench, comprising a 100-paper"
+      ],
+      "tags": [
+        "agents",
+        "model-arch",
+        "multimodal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.13560",
+        "huggingface": "https://huggingface.co/papers/2608.13560",
+        "pdf": "https://arxiv.org/pdf/2608.13560"
+      }
+    },
+    {
+      "id": "playworld-benchmarking-world-models-with-agent-players-over-",
+      "title": "PlayWorld: Benchmarking World Models with Agent Players over Long-Horizon Objectives",
+      "authors": [
+        "Kaixin Ding",
+        "Xi Chen",
+        "Minghong Cai",
+        "Zhiyuan Xu",
+        "Yiyang Wang",
+        "Yuxiang Lu"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Video world models simulate future states conditioned on current observations and user actions. Recent systems have demonstrated impressive video consistency and action controllability over long sequences. However, fairly comparing these interactive models remains challenging.",
+      "key_findings": [
+        "Recent systems have demonstrated impressive video consistency and action controllability over long sequences.",
+        "However, fairly comparing these interactive models remains challenging.",
+        "In practice, a human player typically evaluates a world model by pursuing long-horizon objectives through interaction."
+      ],
+      "tags": [
+        "agents",
+        "benchmarks",
+        "model-arch",
+        "video"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.13552",
+        "huggingface": "https://huggingface.co/papers/2608.13552",
+        "pdf": "https://arxiv.org/pdf/2608.13552"
+      }
+    },
+    {
+      "id": "spatial-memory-agent-experience-grounded-procedure-memory-fo",
+      "title": "Spatial Memory Agent: Experience-Grounded Procedure Memory for Spatial Intelligence",
+      "authors": [
+        "Haokai Zhang",
+        "Yuhang Ding",
+        "Yunshu Zhou",
+        "Xinze Du",
+        "Shengtao Zhang",
+        "Zhiyue Zhao"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Spatial intelligence is becoming a foundation for embodied agents, robotic planning, and multimodal assistants. To improve the spatial reasoning ability of VLM agents, existing work has mainly followed two lines. One line uses post-training methods, such as supervised fine-tuning and reinforcement learning.",
+      "key_findings": [
+        "To improve the spatial reasoning ability of VLM agents, existing work has mainly followed two lines.",
+        "One line uses post-training methods, such as supervised fine-tuning and reinforcement learning.",
+        "Another line adopts an agentic paradigm in which the model calls external spatial tools, such as depth estimation and 3D reconstruction tools, to gath"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "reasoning",
+        "robotics"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 34,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.12743",
+        "huggingface": "https://huggingface.co/papers/2608.12743",
+        "pdf": "https://arxiv.org/pdf/2608.12743"
+      }
+    },
+    {
+      "id": "massive-activations-in-hybrid-linear-attention-large-languag",
+      "title": "Massive Activations in Hybrid Linear Attention Large Language Models: Pre-Attention Spikes and Inter-Spike Plateaus",
+      "authors": [
+        "Zunhai Su",
+        "Bohan Sun",
+        "Xialie Zhuang",
+        "Shuibai Zhang",
+        "He Xiao",
+        "Jing Xiong"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "We present the first systematic study of Massive activations (MAs) in layer-interleaved HLA LLMs and uncover two architecture-aligned morphologies: MAs consistently spike immediately before full attention layers, forming pre-attention spikes (PAS), and can persist through intervening linear attention layers, giving rise to inter-spike plateaus (ISP). As full attention becomes denser, successive...",
+      "key_findings": [
+        "As full attention becomes denser, successive PAS become increasingly connected through ISP, ultimately recovering the stable MA morphology of full att",
+        "We establish the recurrence of this organization across five linear attention architectures, six hybridization configurations, five data domains, and ",
+        "Controlled pretraining of GDN-based hybrids at scales up to 1.3B shows that both morphologies emerge early and respond asymmetrically to output gating"
+      ],
+      "tags": [
+        "llm",
+        "model-arch",
+        "reinforcement-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 23,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.12149",
+        "huggingface": "https://huggingface.co/papers/2608.12149",
+        "pdf": "https://arxiv.org/pdf/2608.12149"
+      }
+    },
+    {
+      "id": "uniswap-streaming-audio-visual-identity-swapping-for-talking",
+      "title": "UniSwap: Streaming Audio-Visual Identity Swapping for Talking Videos",
+      "authors": [
+        "Yuxuan Zhang",
+        "Haozhong Xiong",
+        "Jiayi Song",
+        "Jinpeng Yu",
+        "Yang Shi",
+        "Jiaming Liu"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Talking-video character replacement requires coordinated transfer of appearance and voice while preserving the source motion, scene, linguistic content, and audio-video timing. Existing methods use separately optimized models for the two modalities, making audio-visual consistency difficult to enforce. We present UniSwap, the first framework for streaming joint audio-visual identity replacement...",
+      "key_findings": [
+        "Existing methods use separately optimized models for the two modalities, making audio-visual consistency difficult to enforce.",
+        "We present UniSwap, the first framework for streaming joint audio-visual identity replacement in talking videos.",
+        "Given a source video, a reference image, and a reference voice clip, UniSwap transfers the reference appearance and vocal timbre within a single audio"
+      ],
+      "tags": [
+        "video"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.11752",
+        "huggingface": "https://huggingface.co/papers/2608.11752",
+        "pdf": "https://arxiv.org/pdf/2608.11752"
+      }
+    },
+    {
+      "id": "liveanimate-stable-long-form-streaming-human-animation-in-re",
+      "title": "LiveAnimate: Stable Long-Form Streaming Human Animation in Real-Time",
+      "authors": [
+        "Yuxuan Zhang",
+        "Haozhong Xiong",
+        "Yubo Huang",
+        "Jiayi Song",
+        "Jinpeng Yu",
+        "Haofan Wang"
+      ],
+      "affiliations": [
+        "NVIDIA"
+      ],
+      "summary": "Pose-driven human animation synthesizes a video of a target person from a single reference image and a driving pose stream. Real-time generation is essential for interactive applications such as live streaming, telepresence, and virtual avatars, yet diffusion-based systems require minutes to hours per clip, precluding responsive interaction. We present LiveAnimate, to our knowledge the first an...",
+      "key_findings": [
+        "Real-time generation is essential for interactive applications such as live streaming, telepresence, and virtual avatars, yet diffusion-based systems ",
+        "We present LiveAnimate, to our knowledge the first animation system to combine real-time streaming with stable long-form generation at billion scale, ",
+        "A two-stage training pipeline first adapts a pretrained bidirectional DiT into a block-causal autoregressive generator through Reference-Anchored Teac"
+      ],
+      "tags": [
+        "video"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.11745",
+        "huggingface": "https://huggingface.co/papers/2608.11745",
+        "pdf": "https://arxiv.org/pdf/2608.11745"
+      }
+    },
+    {
+      "id": "full-bandwidth-transformer",
+      "title": "Full-bandwidth transformer",
+      "authors": [
+        "Xi Wang",
+        "Ziyang Cai",
+        "Zheng Zhan",
+        "Harry Dong",
+        "Ying Fan",
+        "Gustavo de Rosa"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Autoregressive transformers compute along two axes: horizontally across generated tokens, and vertically through model depth. Dense attention gives each token broad horizontal access to the past, but the vertical feedback channel between decoding steps remains narrow: only the sampled token returns to the bottom of the stack, while the top-layer hidden state is discarded. We introduce the full-...",
+      "key_findings": [
+        "Dense attention gives each token broad horizontal access to the past, but the vertical feedback channel between decoding steps remains narrow: only th",
+        "We introduce the full-bandwidth transformer, which widens this channel with latent feedback: at each decoding step, the previous top-layer hidden stat",
+        "Latent feedback lets non-verbalized computation re-enter the stack with a renewed depth budget, while preserving the standard transformer architecture"
+      ],
+      "tags": [
+        "model-arch"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 14,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.08888",
+        "huggingface": "https://huggingface.co/papers/2608.08888",
+        "pdf": "https://arxiv.org/pdf/2608.08888"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "Qwen3.8-27B by Qwen. 91,917 downloads, 9,817 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 91917,
+        "likes": 9817
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "muse-glimmer-30b",
+      "name": "Muse-Glimmer-30B",
+      "organization": "meta-models",
+      "description": "Muse-Glimmer-30B by meta-models. 246,454 downloads, 1,581 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "muse_glimmer",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 246454,
+        "likes": 1581
+      },
+      "source_url": "https://huggingface.co/meta-models/Muse-Glimmer-30B"
+    },
+    {
+      "id": "qwen38-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "unsloth",
+      "description": "Qwen3.8-27B-GGUF by unsloth. 867,963 downloads, 1,244 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "qwen3_5",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 867963,
+        "likes": 1244
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "qwen38-24t-a95b",
+      "name": "Qwen3.8-2.4T-A95B",
+      "organization": "Qwen",
+      "description": "Qwen3.8-2.4T-A95B by Qwen. 6,381 downloads, 974 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe_text",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 6381,
+        "likes": 974
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+    },
+    {
+      "id": "ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "LTX-2.5 by Lightricks. 378,439 downloads, 949 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusion-single-file",
+        "image-to-video",
+        "text-to-video",
+        "video-to-video"
+      ],
+      "metrics": {
+        "downloads": 378439,
+        "likes": 949
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "minimax-music3",
+      "name": "MiniMax-Music3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-Music3 by MiniMaxAI. 5,079 downloads, 772 likes on HuggingFace.",
+      "task_type": "audio-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "minimax_music3",
+        "music-generation"
+      ],
+      "metrics": {
+        "downloads": 5079,
+        "likes": 772
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-Music3"
+    },
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-H3 by MiniMaxAI. 2,212,155 downloads, 3,978 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "minimax-h3",
+        "diffusers",
+        "safetensors",
+        "text-to-video"
+      ],
+      "metrics": {
+        "downloads": 2212155,
+        "likes": 3978
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "deepseek-v4-pro-0813",
+      "name": "DeepSeek-V4-Pro-0813",
+      "organization": "deepseek-ai",
+      "description": "DeepSeek-V4-Pro-0813 by deepseek-ai. 19,945 downloads, 496 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 19945,
+        "likes": 496
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "organization": "deepseek-ai",
+      "description": "DeepSeek-V4-Flash-0731 by deepseek-ai. 1,798,247 downloads, 3,425 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1798247,
+        "likes": 3425
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    {
+      "id": "muse-glimmer-30b-gguf",
+      "name": "Muse-Glimmer-30B-GGUF",
+      "organization": "unsloth",
+      "description": "Muse-Glimmer-30B-GGUF by unsloth. 682,188 downloads, 438 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "gguf",
+        "unsloth",
+        "meta"
+      ],
+      "metrics": {
+        "downloads": 682188,
+        "likes": 438
+      },
+      "source_url": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "public-apis",
+      "name": "public-apis/public-apis",
+      "description": "A collective list of free APIs",
+      "language": "Python",
+      "stars": 460225,
+      "stars_today": 2260,
+      "forks": 50855,
+      "url": "https://github.com/public-apis/public-apis",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "diagram-design",
+      "name": "cathrynlavery/diagram-design",
+      "description": "29 editorial diagram types for Claude Code. Self-contained HTML + SVG. No shadows, no Mermaid-slop.",
+      "language": "HTML",
+      "stars": 18667,
+      "stars_today": 1607,
+      "forks": 1126,
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "tags": [
+        "ai",
+        "machine-learning",
+        "code-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "spec-kit",
+      "name": "github/spec-kit",
+      "description": "💫 Toolkit to help you get started with Spec-Driven Development",
+      "language": "Python",
+      "stars": 129219,
+      "stars_today": 892,
+      "forks": 11552,
+      "url": "https://github.com/github/spec-kit",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cordis",
+      "name": "cordiverse/cordis",
+      "description": "Meta-Framework of Spatiotemporal Composability",
+      "language": "TypeScript",
+      "stars": 4092,
+      "stars_today": 599,
+      "forks": 202,
+      "url": "https://github.com/cordiverse/cordis",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "needle",
+      "name": "cactus-compute/needle",
+      "description": "14MB foundation model for tiny devices; phones, wearables, smart home, and robots.",
+      "language": "Python",
+      "stars": 6083,
+      "stars_today": 547,
+      "forks": 406,
+      "url": "https://github.com/cactus-compute/needle",
+      "tags": [
+        "models"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ego-lite",
+      "name": "citrolabs/ego-lite",
+      "description": "The fastest browser for AI agents to run browser automation, built for sharing your logged-in browser state with your AI agents, like Codex or Claude Code, without disturbing you. Zero cost, zero config.",
+      "language": "JavaScript",
+      "stars": 10992,
+      "stars_today": 545,
+      "forks": 561,
+      "url": "https://github.com/citrolabs/ego-lite",
+      "tags": [
+        "agents",
+        "ai",
+        "code-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tooljet",
+      "name": "ToolJet/ToolJet",
+      "description": "ToolJet is the open-source foundation of ToolJet AI - the enterprise app generation platform for building internal tools, dashboard, business applications, workflows and AI agents 🚀",
+      "language": "JavaScript",
+      "stars": 39557,
+      "stars_today": 544,
+      "forks": 5297,
+      "url": "https://github.com/ToolJet/ToolJet",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "semantica",
+      "name": "semantica-agi/semantica",
+      "description": "Graph-Native Infrastructure for Context and Accountable AI Systems",
+      "language": "Python",
+      "stars": 7947,
+      "stars_today": 469,
+      "forks": 814,
+      "url": "https://github.com/semantica-agi/semantica",
+      "tags": [
+        "ai",
+        "graph"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "colleague-skill",
+      "name": "titanwings/colleague-skill",
+      "description": "将冰冷的离别化为温暖的 Skill，欢迎加入数字生命1.0！Transforming cold farewells into warm skills? It's giving rebirth era. Welcome to Digital Life 1.0. 🫶",
+      "language": "Python",
+      "stars": 22498,
+      "stars_today": 435,
+      "forks": 2050,
+      "url": "https://github.com/titanwings/colleague-skill",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "unsloth",
+      "name": "unslothai/unsloth",
+      "description": "Local UI to run and train LLMs and diffusion models, including Qwen3.8, Kimi K3, MiniMax-H3, Gemma 4, DeepSeek-V4, FLUX and more.",
+      "language": "Python",
+      "stars": 72067,
+      "stars_today": 434,
+      "forks": 6495,
+      "url": "https://github.com/unslothai/unsloth",
+      "tags": [
+        "llm",
+        "ai",
+        "models"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
+      "language": "Python",
+      "stars": 103956,
+      "stars_today": 403,
+      "forks": 15762,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": [
+        "ai",
+        "video"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "holehe",
+      "name": "megadose/holehe",
+      "description": "holehe allows you to check if the mail is used on different sites like twitter, instagram and will retrieve information on sites with the forgotten password function.",
+      "language": "Python",
+      "stars": 13127,
+      "stars_today": 382,
+      "forks": 1741,
+      "url": "https://github.com/megadose/holehe",
+      "tags": [
+        "ai"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Interactive World Models",
+      "description": "Architectures for persistent, scalable, and interactive world simulation — from Alaya-EVOKE's endless sessions to PlayWorld's agent-based evaluation and DreamX-Phi's robotic planning.",
+      "related_paper_ids": [
+        "alaya-evoke-from-linear-scaling-supervision-to-endless-world",
+        "dreamx-phi-10-action-conditioned-video-world-model-for-robot",
+        "playworld-benchmarking-world-models-with-agent-players-over-"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Harness Evolution",
+      "description": "Methods for automatically optimizing the scaffolding around LLMs — prompts, tools, skills, and control flow — through evolutionary and meta-learning approaches.",
+      "related_paper_ids": [
+        "darwinx-evolving-agent-harnesses-through-natural-selection",
+        "autodesign-meta-harness-optimization-for-long-horizon-agenti"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Infrastructure & Routing",
+      "description": "Unified frameworks for deploying, routing, and serving multiple LLMs cost-effectively, addressing the growing complexity of multi-model production systems.",
+      "related_paper_ids": [
+        "llmrouter-unified-infrastructure-for-developing-evaluating-a",
+        "massive-activations-in-hybrid-linear-attention-large-languag",
+        "full-bandwidth-transformer"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Spatial & Embodied Intelligence",
+      "description": "Grounding AI agents in physical space through procedural memory, robotic manipulation, and spatial reasoning benchmarks.",
+      "related_paper_ids": [
+        "dreamx-phi-10-action-conditioned-video-world-model-for-robot",
+        "spatial-memory-agent-experience-grounded-procedure-memory-fo"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI Evaluation Integrity",
+      "description": "Examining and defending against vulnerabilities in AI-based evaluation systems, including rhetorical reward-hacking of AI reviewers.",
+      "related_paper_ids": [
+        "intern-s2-preview-scientific-agentic-foundation-model",
+        "how-can-rhetoric-reward-hack-ai-reviewers-dissecting-rhetori",
+        "playworld-benchmarking-world-models-with-agent-players-over-"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-16T02:12:44.602621+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-08-16T02:12:44.602621+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-08-16T02:12:44.602621+00:00",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-16T02:12:44.602621+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-16T02:12:44.602621+00:00",
+      "status": "ok"
+    }
+  ]
+}
