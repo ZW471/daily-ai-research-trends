@@ -1,0 +1,627 @@
+{
+  "version": "1.0",
+  "date": "2026-08-17",
+  "generated_at": "2026-08-17T02:06:18.715825+00:00",
+  "summary": {
+    "headline": "Beyond Final Scores; Marionette; SPARGen",
+    "body": "Today's HuggingFace trending papers (from 2026-08-17) are led by **Beyond Final Scores: A Systematic Evaluation of Agents for Long-Horizon AI Research and Development** (4 upvotes), which introduces a novel recurrent latent reasoning approach combining in-context learning with non-verbal iterative computation. Close behind is **Marionette: Predicting World States, Rendering Geometry, Painting Appearance** (2 upvotes), proposing a continual learning framework using frozen base models with Mixture-of-LoRA adapters.\n\nThe self-improvement theme dominates: Ouroboros presents a coding agent that rewrites its own core implementation through reviewed commits, while Macaron-V1 targets lifelong adaptation. Simultaneously, benchmark quality is under scrutiny — SWE-Bench ProMax exposes test flaws in 60% of SWE-bench instances and introduces multilingual code refactoring challenges that resist memorization.\n\nOn the infrastructure side, Motif 3's 314B MoE model demonstrates fine-grained expert routing at scale, and OasisKV addresses HBM capacity limits for long-context inference. A notable security paper reveals that encrypted chain-of-thought blocks are interchangeable across user sessions, representing a structural vulnerability in how reasoning traces are handled.",
+    "key_themes": [
+      "self-improving-agents",
+      "on-policy-distillation",
+      "agent-memory",
+      "benchmark-quality",
+      "inference-efficiency"
+    ]
+  },
+  "researcher_notes": "**The self-development loop is closing.** Three papers this week — Ouroboros, Macaron-V1, and Evo-Bench — collectively describe a world where agents not only complete tasks but actively improve the infrastructure they run on. Ouroboros commits reviewed changes to its own runtime; Macaron-V1 evaluates successor configurations against an external contract; Evo-Bench benchmarks the meta-capability of LLMs to evolve their own harness. This isn't science fiction — these are working systems with concrete evaluation results.\n\n**Unsupervised distillation is reaching maturity.** Both the top self-distillation paper (On-Policy Self-Distillation without Any Supervision) and SPOT show that you can extract surprisingly strong post-training signal from a model's own outputs — no ground truth, no teacher labels, no environment feedback. The internal consistency criterion in OPD is particularly elegant: the model converges on answers that are stable across perturbations. This could compress the feedback data requirement dramatically for future fine-tuning pipelines.\n\n**MiniMax-H3 is dominating the model leaderboard** in a way that's hard to ignore: it appears in six of the top-20 trending model slots simultaneously (base model, ComfyUI wrappers, LoRA adapters, community variants). This kind of ecosystem explosion typically signals a model that genuinely hit a quality-vs-accessibility sweet spot. Kimi-K3 leads on raw likes (10,528) despite being a feature-extraction model, suggesting strong developer interest in embeddings infrastructure.\n\n**GitHub trending is an agent-tooling story today.** PrimeIntellect's prime-agent (1,138 stars today), agency-agents (958), and Orca's ADE (875) all target the same problem from different angles: how do you manage, orchestrate, and improve a fleet of coding agents? The paperclipai/paperclip repo at 748 stars today reflects the same demand. This is a market forming in real time around agentic infrastructure primitives.\n\n**Sleeper hit to watch:** Scaling Inherently Interpretable Language Models (Guide Labs, 13 upvotes) is quietly making the case that interpretability doesn't have to be a post-hoc tax on capability. By baking interpretability into the training objective and showing it scales across three orders of magnitude of compute, this could reframe the entire alignment-vs-capability tradeoff conversation. Low engagement now, but the ideas are significant.",
+  "papers": [
+    {
+      "id": "beyond-final-scores-a-systematic-evaluation-of-agents-for-lo",
+      "title": "Beyond Final Scores: A Systematic Evaluation of Agents for Long-Horizon AI Research and Development",
+      "authors": [
+        "Yiwei Li",
+        "Wanli Yang",
+        "Hexiang Tan",
+        "Xiangzhou Huang",
+        "Zhengyu Chen",
+        "Ziran Li"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Autonomous agents are increasingly capable of improving models, systems, and other technical artifacts through long-horizon experimentation. To understand the current state of this capability, however, evaluation must go beyond final scores, which neither reveal where progress is gained or lost nor indicate whether accumulated experience improves later decisions. We therefore present a systemat...",
+      "key_findings": [
+        "To understand the current state of this capability, however, evaluation must go beyond final scores, which neither reveal where progress is gained or ",
+        "We therefore present a systematic evaluation of seven frontier models on 36 long-horizon tasks based on a new framework that uses rule-based metrics t",
+        "The results show that current agents operate more like engineering optimizers than fully autonomous researchers: they can formulate and implement prac"
+      ],
+      "tags": [
+        "agents",
+        "model-arch"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.13417",
+        "huggingface": "https://huggingface.co/papers/2608.13417",
+        "pdf": "https://arxiv.org/pdf/2608.13417"
+      }
+    },
+    {
+      "id": "marionette-predicting-world-states-rendering-geometry-painti",
+      "title": "Marionette: Predicting World States, Rendering Geometry, Painting Appearance",
+      "authors": [
+        "Zian Meng",
+        "Zhen Li",
+        "Chuanhao Li",
+        "Qiang Li",
+        "Kaipeng Zhang"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Interactive game world models typically autoregress visual observations directly in pixel or latent space, forcing structured properties such as pose, geometry, and occlusion to be implicitly maintained by the same generative sequence. Over long horizons, errors in these latent world properties accumulate, making consistency and controllability fragile. We explicitly model the evolving world st...",
+      "key_findings": [
+        "Over long horizons, errors in these latent world properties accumulate, making consistency and controllability fragile.",
+        "We explicitly model the evolving world state, delegate exact geometric computation to a fixed, zero-parameter renderer, and leave the neural model to ",
+        "We instantiate this idea as Marionette, a world model for interactive games with articulated characters."
+      ],
+      "tags": [
+        "model-arch",
+        "reinforcement-learning"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14530",
+        "huggingface": "https://huggingface.co/papers/2608.14530",
+        "pdf": "https://arxiv.org/pdf/2608.14530"
+      }
+    },
+    {
+      "id": "spargen-unifying-spatial-perception-and-reasoning-through-na",
+      "title": "SPARGen: Unifying Spatial Perception and Reasoning through Native Multimodal Generation",
+      "authors": [
+        "Jinsheng Quan",
+        "Jianhua Li",
+        "Siyi Xie",
+        "Xuanke Shi",
+        "Kewang Deng",
+        "Zukai Chen"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Spatial perception and reasoning from visual observations require recovering geometric structure, establishing correspondences, and understanding spatial relations. Existing approaches typically address these capabilities separately using task-specific architectures or external geometric modules, limiting knowledge transfer among complementary representations of the same physical scene. We intr...",
+      "key_findings": [
+        "Existing approaches typically address these capabilities separately using task-specific architectures or external geometric modules, limiting knowledg",
+        "We introduce SPARGen, a unified multimodal framework that casts 3D reconstruction, dense correspondence, and spatial reasoning as instruction-conditio",
+        "SPARGen serializes compact structured and linguistic outputs as token sequences while generating dense geometric fields in image-aligned forms, enabli"
+      ],
+      "tags": [
+        "reasoning",
+        "multimodal"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14138",
+        "huggingface": "https://huggingface.co/papers/2608.14138",
+        "pdf": "https://arxiv.org/pdf/2608.14138"
+      }
+    },
+    {
+      "id": "intern-s2-mobius-foundation-model-with-decoupled-knowledge-a",
+      "title": "Intern-S2-Mobius: Foundation Model with Decoupled Knowledge and Reasoning",
+      "authors": [
+        "Kai Chen",
+        "Jifeng Ding",
+        "Ning Ding",
+        "Jiaye Ge",
+        "Lixin Gu",
+        "Yicheng Gu"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "We introduce Mobius-v0, an architecture that comprises a globally shared Memory (FFN) that stores knowledge vectors and multiple Reasoners (Self-Attn) that iteratively achieve compositional reasoning. Using hidden states as cache and carrier, reasoners repeatedly query memory for required knowledge-vectors, while the knowledge is transmitted back to reasoning operators. Through this knowledge-r...",
+      "key_findings": [
+        "Using hidden states as cache and carrier, reasoners repeatedly query memory for required knowledge-vectors, while the knowledge is transmitted back to",
+        "Through this knowledge-reasoning-separation architecture, Mobius achieves better knowledge compression and reasoning efficiency.",
+        "Built upon Mobius-v0 architecture: 1) Our 7B model trained-from-scratch achieves similar downstream score as a 7B Transformer baseline with 62.6% of b"
+      ],
+      "tags": [
+        "memory",
+        "reasoning",
+        "model-arch"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14290",
+        "huggingface": "https://huggingface.co/papers/2608.14290",
+        "pdf": "https://arxiv.org/pdf/2608.14290"
+      }
+    },
+    {
+      "id": "dion3-full-stack-orthogonal-updates",
+      "title": "Dion3: Full-Stack Orthogonal Updates",
+      "authors": [
+        "Noah Amsel",
+        "Jack Zhang",
+        "Kwangjun Ahn",
+        "Ali Naeimi",
+        "Austin Feng",
+        "Berlin Chen"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "The Muon optimizer incurs a significant overhead cost due to its cubic-time Newton-Schulz orthogonalization step. When weights are sharded, communication overhead compounds this computational cost, eroding the benefits of Muon in many settings. We present Dion3, a revision of Muon that targets this overhead at every level of the stack.",
+      "key_findings": [
+        "When weights are sharded, communication overhead compounds this computational cost, eroding the benefits of Muon in many settings.",
+        "We present Dion3, a revision of Muon that targets this overhead at every level of the stack.",
+        "Our Gram Newton-Schulz algorithm reduces the FLOP cost of orthogonalization, our CuteDSL kernels accelerate it by exploiting symmetry, and our megabat"
+      ],
+      "tags": [
+        "language-models"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.11612",
+        "huggingface": "https://huggingface.co/papers/2608.11612",
+        "pdf": "https://arxiv.org/pdf/2608.11612"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "Qwen3.8-27B by Qwen. 267,725 downloads, 10,310 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 267725,
+        "likes": 10310
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "muse-glimmer-30b",
+      "name": "Muse-Glimmer-30B",
+      "organization": "meta-models",
+      "description": "Muse-Glimmer-30B by meta-models. 292,973 downloads, 1,634 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "muse_glimmer",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 292973,
+        "likes": 1634
+      },
+      "source_url": "https://huggingface.co/meta-models/Muse-Glimmer-30B"
+    },
+    {
+      "id": "qwen38-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "unsloth",
+      "description": "Qwen3.8-27B-GGUF by unsloth. 1,945,635 downloads, 1,469 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "qwen3_5",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 1945635,
+        "likes": 1469
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "qwen38-24t-a95b",
+      "name": "Qwen3.8-2.4T-A95B",
+      "organization": "Qwen",
+      "description": "Qwen3.8-2.4T-A95B by Qwen. 7,932 downloads, 1,012 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe_text",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 7932,
+        "likes": 1012
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+    },
+    {
+      "id": "ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "LTX-2.5 by Lightricks. 424,099 downloads, 1,030 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusion-single-file",
+        "image-to-video",
+        "text-to-video",
+        "video-to-video"
+      ],
+      "metrics": {
+        "downloads": 424099,
+        "likes": 1030
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "minimax-music3",
+      "name": "MiniMax-Music3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-Music3 by MiniMaxAI. 8,639 downloads, 846 likes on HuggingFace.",
+      "task_type": "audio-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "diffusers",
+        "safetensors",
+        "minimax_music3",
+        "music-generation"
+      ],
+      "metrics": {
+        "downloads": 8639,
+        "likes": 846
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-Music3"
+    },
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax-H3 by MiniMaxAI. 2,307,541 downloads, 4,031 likes on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "minimax-h3",
+        "diffusers",
+        "safetensors",
+        "text-to-video"
+      ],
+      "metrics": {
+        "downloads": 2307541,
+        "likes": 4031
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "deepseek-v4-pro-0813",
+      "name": "DeepSeek-V4-Pro-0813",
+      "organization": "deepseek-ai",
+      "description": "DeepSeek-V4-Pro-0813 by deepseek-ai. 21,873 downloads, 537 likes on HuggingFace.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "deepseek_v4",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 21873,
+        "likes": 537
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+    },
+    {
+      "id": "qwen38-27b-fp8",
+      "name": "Qwen3.8-27B-FP8",
+      "organization": "Qwen",
+      "description": "Qwen3.8-27B-FP8 by Qwen. 352,971 downloads, 487 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "safetensors",
+        "qwen3_5",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 352971,
+        "likes": 487
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B-FP8"
+    },
+    {
+      "id": "muse-glimmer-30b-gguf",
+      "name": "Muse-Glimmer-30B-GGUF",
+      "organization": "unsloth",
+      "description": "Muse-Glimmer-30B-GGUF by unsloth. 718,178 downloads, 458 likes on HuggingFace.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": [
+        "transformers",
+        "gguf",
+        "unsloth",
+        "meta"
+      ],
+      "metrics": {
+        "downloads": 718178,
+        "likes": 458
+      },
+      "source_url": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "public-apis",
+      "name": "public-apis/public-apis",
+      "description": "A collective list of free APIs",
+      "language": "Python",
+      "stars": 461867,
+      "stars_today": 1588,
+      "forks": 51018,
+      "url": "https://github.com/public-apis/public-apis",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "strix",
+      "name": "usestrix/strix",
+      "description": "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+      "language": "Python",
+      "stars": 53405,
+      "stars_today": 856,
+      "forks": 5719,
+      "url": "https://github.com/usestrix/strix",
+      "tags": [
+        "ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cordis",
+      "name": "cordiverse/cordis",
+      "description": "Meta-Framework of Spatiotemporal Composability",
+      "language": "TypeScript",
+      "stars": 4822,
+      "stars_today": 720,
+      "forks": 262,
+      "url": "https://github.com/cordiverse/cordis",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "unsloth",
+      "name": "unslothai/unsloth",
+      "description": "Local UI to run and train LLMs and diffusion models, including Qwen3.8, Kimi K3, MiniMax-H3, Gemma 4, DeepSeek-V4, FLUX and more.",
+      "language": "Python",
+      "stars": 72638,
+      "stars_today": 572,
+      "forks": 6551,
+      "url": "https://github.com/unslothai/unsloth",
+      "tags": [
+        "llm",
+        "ai",
+        "models"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "moneyprinterturbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
+      "language": "Python",
+      "stars": 104732,
+      "stars_today": 494,
+      "forks": 15918,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": [
+        "ai",
+        "video"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tooljet",
+      "name": "ToolJet/ToolJet",
+      "description": "ToolJet is the open-source foundation of ToolJet AI - the enterprise app generation platform for building internal tools, dashboard, business applications, workflows and AI agents 🚀",
+      "language": "JavaScript",
+      "stars": 40078,
+      "stars_today": 452,
+      "forks": 5331,
+      "url": "https://github.com/ToolJet/ToolJet",
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "needle",
+      "name": "cactus-compute/needle",
+      "description": "14MB foundation model for tiny devices; phones, wearables, smart home, and robots.",
+      "language": "Python",
+      "stars": 6627,
+      "stars_today": 443,
+      "forks": 435,
+      "url": "https://github.com/cactus-compute/needle",
+      "tags": [
+        "models"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "soup",
+      "name": "MakazhanAlpamys/Soup",
+      "description": "Fine-tune LLMs from one YAML. Layer streaming trains an 8B model on a 4 GB laptop GPU.",
+      "language": "Python",
+      "stars": 2004,
+      "stars_today": 443,
+      "forks": 297,
+      "url": "https://github.com/MakazhanAlpamys/Soup",
+      "tags": [
+        "llm",
+        "ai",
+        "machine-learning",
+        "fine-tuning"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "\"CLI-Anything: Making ALL Software Agent-Native\" -- CLI-Hub: https://clianything.cc/",
+      "language": "Python",
+      "stars": 47636,
+      "stars_today": 384,
+      "forks": 4413,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": [
+        "agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "omarchy",
+      "name": "basecamp/omarchy",
+      "description": "Beautiful, Modern & Opinionated Linux",
+      "language": "Shell",
+      "stars": 25435,
+      "stars_today": 270,
+      "forks": 2596,
+      "url": "https://github.com/basecamp/omarchy",
+      "tags": [
+        "tooling"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "holehe",
+      "name": "megadose/holehe",
+      "description": "holehe allows you to check if the mail is used on different sites like twitter, instagram and will retrieve information on sites with the forgotten password function.",
+      "language": "Python",
+      "stars": 13300,
+      "stars_today": 231,
+      "forks": 1757,
+      "url": "https://github.com/megadose/holehe",
+      "tags": [
+        "ai"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "yt-dlp",
+      "name": "yt-dlp/yt-dlp",
+      "description": "A feature-rich command-line audio/video downloader",
+      "language": "Python",
+      "stars": 184904,
+      "stars_today": 216,
+      "forks": 15925,
+      "url": "https://github.com/yt-dlp/yt-dlp",
+      "tags": [
+        "video"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Self-Improving Agents",
+      "description": "Systems that autonomously improve their own code, prompts, and architectures through experience — from Ouroboros's recursive core evolution to Macaron-V1's continual learning framework.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "On-Policy Distillation",
+      "description": "A wave of methods using a model's own generated data — without external supervision — to improve post-training quality, driven by internal consistency and sparse outcome signals.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory Systems",
+      "description": "Novel architectures for giving LLM agents persistent, structured memory — including hierarchical distillation from teacher agents and reduced-order RL for memory utility.",
+      "related_paper_ids": [
+        "intern-s2-mobius-foundation-model-with-decoupled-knowledge-a"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Benchmark Quality & Saturation",
+      "description": "Growing concern about benchmark validity: SWE-Bench ProMax surfaces flawed test suites, while Evo-Bench targets the meta-problem of agents improving evaluation frameworks themselves.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Inference Efficiency",
+      "description": "Hardware-aware LLM serving innovations: OasisKV scales KV cache beyond HBM with lookahead sparse prefetching; Motif 3 demonstrates fine-grained MoE sparsity at 314B scale.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-17T02:06:18.715825+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-08-17T02:06:18.715825+00:00",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-08-17T02:06:18.715825+00:00",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-17T02:06:18.715825+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-17T02:06:18.715825+00:00",
+      "status": "ok"
+    }
+  ]
+}
