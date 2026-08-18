@@ -76,28 +76,34 @@ def fetch_hf_daily_papers(date: str | None = None) -> list[dict]:
     return papers[:30]
 
 
-def fetch_hf_daily_papers_with_fallback(date: str) -> list[dict]:
-    """Fetch daily papers with fallback to previous days if the target date is empty.
+def fetch_hf_daily_papers_with_fallback(date: str, min_papers: int = 5) -> list[dict]:
+    """Fetch daily papers, aggregating from prior days if below min_papers threshold.
 
-    This handles weekends, holidays, and transient API gaps by trying up to 2 prior days.
+    Handles weekends, holidays, and sparse days by merging papers from up to 3 prior days.
+    Deduplicates by arXiv ID.
     """
+    from datetime import timedelta
     papers = fetch_hf_daily_papers(date)
-    if papers:
+    if len(papers) >= min_papers:
         return papers
 
-    # Fallback: try previous 2 days (covers weekends)
-    from datetime import timedelta
+    seen_ids = {p.get("paper", {}).get("id", p.get("id", "")) for p in papers}
     dt = datetime.strptime(date, "%Y-%m-%d")
-    for days_back in range(1, 3):
+    for days_back in range(1, 4):
         prev = (dt - timedelta(days=days_back)).strftime("%Y-%m-%d")
-        print(f"  [HF Papers] No papers for {date}, trying {prev}...")
-        papers = fetch_hf_daily_papers(prev)
-        if papers:
-            print(f"  [HF Papers] Using {len(papers)} papers from {prev} as fallback")
+        print(f"  [HF Papers] Only {len(papers)} papers, supplementing from {prev}...")
+        prev_papers = fetch_hf_daily_papers(prev)
+        for p in prev_papers:
+            pid = p.get("paper", {}).get("id", p.get("id", ""))
+            if pid and pid not in seen_ids:
+                papers.append(p)
+                seen_ids.add(pid)
+        if len(papers) >= min_papers:
+            print(f"  [HF Papers] Aggregated {len(papers)} papers from {date} + prior days")
             return papers
 
-    print(f"  [HF Papers] WARNING: No papers found for {date} or 2 prior days")
-    return []
+    print(f"  [HF Papers] WARNING: Only {len(papers)} papers after checking 3 prior days")
+    return papers
 
 
 def fetch_hf_trending_models() -> list[dict]:

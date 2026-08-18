@@ -211,39 +211,109 @@ def repo_to_entry(r: dict) -> dict:
     }
 
 
+THEME_DEFS = [
+    ("agents", "Autonomous Agents", "Systems that plan, act, and improve autonomously — spanning coding agents, tool-use orchestration, and self-evolving architectures."),
+    ("reasoning", "Reasoning & Chain-of-Thought", "Advances in structured reasoning, chain-of-thought prompting, and logical inference capabilities of language models."),
+    ("model-arch", "Model Architecture", "Novel architectures, scaling strategies, and training paradigms for foundation models."),
+    ("multimodal", "Multimodal AI", "Cross-modal understanding and generation spanning text, images, video, and audio."),
+    ("distillation", "Knowledge Distillation", "Methods for transferring capabilities between models — including self-distillation, on-policy approaches, and compression techniques."),
+    ("benchmarks", "Evaluation & Benchmarks", "New benchmarks, evaluation methodologies, and analysis of existing evaluation frameworks."),
+    ("inference-efficiency", "Inference Efficiency", "Hardware-aware serving innovations, KV cache optimization, quantization, and latency reduction techniques."),
+    ("code-generation", "Code Generation", "AI systems for code synthesis, debugging, refactoring, and software engineering automation."),
+    ("interpretability", "Interpretability & Safety", "Mechanistic interpretability, alignment techniques, and safety-relevant research."),
+    ("vision", "Computer Vision", "Object detection, image understanding, visual reasoning, and vision-language models."),
+    ("robotics", "Robotics & Embodied AI", "Robot learning, embodied reasoning, and physical world interaction."),
+    ("reinforcement-learning", "Reinforcement Learning", "RL algorithms, reward modeling, and policy optimization for LLM and agent training."),
+    ("security", "AI Security", "Adversarial attacks, defenses, jailbreaking, and security analysis of AI systems."),
+    ("video", "Video Understanding & Generation", "Video analysis, generation, editing, and temporal reasoning."),
+]
+
+
 def build_themes(papers: list[dict]) -> list[dict]:
-    return [
-        {
-            "name": "Self-Improving Agents",
-            "description": "Systems that autonomously improve their own code, prompts, and architectures through experience — from Ouroboros's recursive core evolution to Macaron-V1's continual learning framework.",
-            "related_paper_ids": [p["id"] for p in papers if any(t in p.get("tags", []) for t in ["agents"]) and p["engagement"]["upvotes"] >= 30][:4],
-            "trend_signal": "rising",
-        },
-        {
-            "name": "On-Policy Distillation",
-            "description": "A wave of methods using a model's own generated data — without external supervision — to improve post-training quality, driven by internal consistency and sparse outcome signals.",
-            "related_paper_ids": [p["id"] for p in papers if "distillation" in p.get("tags", [])][:3],
-            "trend_signal": "rising",
-        },
-        {
-            "name": "Agent Memory Systems",
-            "description": "Novel architectures for giving LLM agents persistent, structured memory — including hierarchical distillation from teacher agents and reduced-order RL for memory utility.",
-            "related_paper_ids": [p["id"] for p in papers if "memory" in p.get("tags", [])][:3],
-            "trend_signal": "rising",
-        },
-        {
-            "name": "Benchmark Quality & Saturation",
-            "description": "Growing concern about benchmark validity: SWE-Bench ProMax surfaces flawed test suites, while Evo-Bench targets the meta-problem of agents improving evaluation frameworks themselves.",
-            "related_paper_ids": [p["id"] for p in papers if "benchmarks" in p.get("tags", [])][:3],
+    themes = []
+    for tag, name, desc in THEME_DEFS:
+        related = [p["id"] for p in papers if tag in p.get("tags", [])][:4]
+        if related:
+            themes.append({
+                "name": name,
+                "description": desc,
+                "related_paper_ids": related,
+                "trend_signal": "rising" if len(related) >= 2 else "stable",
+            })
+    if len(themes) < 2:
+        themes.append({
+            "name": "Language Models",
+            "description": "General advances in large language model capabilities, training, and deployment.",
+            "related_paper_ids": [p["id"] for p in papers[:3]],
             "trend_signal": "stable",
-        },
-        {
-            "name": "Inference Efficiency",
-            "description": "Hardware-aware LLM serving innovations: OasisKV scales KV cache beyond HBM with lookahead sparse prefetching; Motif 3 demonstrates fine-grained MoE sparsity at 314B scale.",
-            "related_paper_ids": [p["id"] for p in papers if "inference-efficiency" in p.get("tags", [])][:3],
-            "trend_signal": "stable",
-        },
-    ]
+        })
+    return themes[:5]
+
+
+def _build_summary_body(date: str, papers: list[dict], models: list[dict], repos: list[dict], themes: list[dict]) -> str:
+    parts = []
+    if papers:
+        p0 = papers[0]
+        lead = f"Today's HuggingFace trending papers (from {date[:10]}) are led by **{p0['title']}** ({p0['engagement']['upvotes']} upvotes)"
+        first_finding = p0["key_findings"][0] if p0.get("key_findings") else ""
+        if first_finding:
+            lead += f", which {first_finding[0].lower()}{first_finding[1:]}" if first_finding[0].isupper() else f" — {first_finding}"
+        if len(papers) > 1:
+            p1 = papers[1]
+            lead += f". Close behind is **{p1['title']}** ({p1['engagement']['upvotes']} upvotes)."
+        parts.append(lead)
+
+    theme_names = [t["name"] for t in themes[:3]]
+    if theme_names:
+        parts.append(f"Key themes today: {', '.join(theme_names)}.")
+
+    if models:
+        top_model = models[0]
+        parts.append(f"On the model side, **{top_model['name']}** by {top_model['organization']} leads trending models with {top_model['metrics']['downloads']:,} downloads.")
+
+    if repos:
+        top_repos = sorted(repos, key=lambda r: r.get("stars_today", 0), reverse=True)[:3]
+        repo_strs = [f"{r['name']} ({r['stars_today']} stars today)" for r in top_repos if r.get("stars_today")]
+        if repo_strs:
+            parts.append(f"GitHub trending highlights: {', '.join(repo_strs)}.")
+
+    return "\n\n".join(parts)
+
+
+def _build_researcher_notes(papers: list[dict], models: list[dict], repos: list[dict], themes: list[dict]) -> str:
+    notes = []
+
+    if papers:
+        p0 = papers[0]
+        tags_str = ", ".join(p0.get("tags", [])[:3])
+        notes.append(f"**Top paper: {p0['title']}.** Tagged [{tags_str}] with {p0['engagement']['upvotes']} upvotes. {p0['summary'][:200]}")
+
+    high_papers = [p for p in papers if p.get("relevance") == "high"]
+    if high_papers:
+        titles = [p["title"] for p in high_papers[:3]]
+        notes.append(f"**High-relevance papers:** {'; '.join(titles)}. These had the highest community engagement and likely represent the day's most impactful contributions.")
+
+    if themes:
+        rising = [t for t in themes if t.get("trend_signal") == "rising"]
+        if rising:
+            names = [t["name"] for t in rising[:3]]
+            notes.append(f"**Rising themes:** {', '.join(names)}. Multiple papers cluster around these topics, suggesting active research momentum.")
+
+    if models:
+        orgs = {}
+        for m in models[:10]:
+            org = m.get("organization", "Unknown")
+            orgs[org] = orgs.get(org, 0) + 1
+        top_orgs = sorted(orgs.items(), key=lambda x: -x[1])[:3]
+        org_str = ", ".join(f"{org} ({count} models)" for org, count in top_orgs)
+        notes.append(f"**Model leaderboard dominated by:** {org_str}.")
+
+    if repos:
+        top_repo = max(repos, key=lambda r: r.get("stars_today", 0))
+        if top_repo.get("stars_today", 0) > 0:
+            notes.append(f"**GitHub spotlight:** {top_repo['name']} ({top_repo['stars_today']} stars today) — {top_repo.get('description', '')[:150]}")
+
+    return "\n\n".join(notes)
 
 
 def main():
@@ -282,21 +352,8 @@ def main():
 
     ts = datetime.now(timezone.utc).isoformat()
 
-    summary_body = f"""Today's HuggingFace trending papers (from {date[:10]}) are led by **{papers[0]['title']}** ({papers[0]['engagement']['upvotes']} upvotes), which introduces a novel recurrent latent reasoning approach combining in-context learning with non-verbal iterative computation. Close behind is **{papers[1]['title']}** ({papers[1]['engagement']['upvotes']} upvotes), proposing a continual learning framework using frozen base models with Mixture-of-LoRA adapters.
-
-The self-improvement theme dominates: Ouroboros presents a coding agent that rewrites its own core implementation through reviewed commits, while Macaron-V1 targets lifelong adaptation. Simultaneously, benchmark quality is under scrutiny — SWE-Bench ProMax exposes test flaws in 60% of SWE-bench instances and introduces multilingual code refactoring challenges that resist memorization.
-
-On the infrastructure side, Motif 3's 314B MoE model demonstrates fine-grained expert routing at scale, and OasisKV addresses HBM capacity limits for long-context inference. A notable security paper reveals that encrypted chain-of-thought blocks are interchangeable across user sessions, representing a structural vulnerability in how reasoning traces are handled."""
-
-    researcher_notes = f"""**The self-development loop is closing.** Three papers this week — Ouroboros, Macaron-V1, and Evo-Bench — collectively describe a world where agents not only complete tasks but actively improve the infrastructure they run on. Ouroboros commits reviewed changes to its own runtime; Macaron-V1 evaluates successor configurations against an external contract; Evo-Bench benchmarks the meta-capability of LLMs to evolve their own harness. This isn't science fiction — these are working systems with concrete evaluation results.
-
-**Unsupervised distillation is reaching maturity.** Both the top self-distillation paper (On-Policy Self-Distillation without Any Supervision) and SPOT show that you can extract surprisingly strong post-training signal from a model's own outputs — no ground truth, no teacher labels, no environment feedback. The internal consistency criterion in OPD is particularly elegant: the model converges on answers that are stable across perturbations. This could compress the feedback data requirement dramatically for future fine-tuning pipelines.
-
-**MiniMax-H3 is dominating the model leaderboard** in a way that's hard to ignore: it appears in six of the top-20 trending model slots simultaneously (base model, ComfyUI wrappers, LoRA adapters, community variants). This kind of ecosystem explosion typically signals a model that genuinely hit a quality-vs-accessibility sweet spot. Kimi-K3 leads on raw likes (10,528) despite being a feature-extraction model, suggesting strong developer interest in embeddings infrastructure.
-
-**GitHub trending is an agent-tooling story today.** PrimeIntellect's prime-agent (1,138 stars today), agency-agents (958), and Orca's ADE (875) all target the same problem from different angles: how do you manage, orchestrate, and improve a fleet of coding agents? The paperclipai/paperclip repo at 748 stars today reflects the same demand. This is a market forming in real time around agentic infrastructure primitives.
-
-**Sleeper hit to watch:** Scaling Inherently Interpretable Language Models (Guide Labs, 13 upvotes) is quietly making the case that interpretability doesn't have to be a post-hoc tax on capability. By baking interpretability into the training objective and showing it scales across three orders of magnitude of compute, this could reframe the entire alignment-vs-capability tradeoff conversation. Low engagement now, but the ideas are significant."""
+    summary_body = _build_summary_body(date, papers, models, repos, themes)
+    researcher_notes = _build_researcher_notes(papers, models, repos, themes)
 
     review_en = {
         "version": "1.0",
