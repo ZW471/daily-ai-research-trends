@@ -1,0 +1,705 @@
+{
+  "version": "1.0",
+  "date": "2026-08-20",
+  "generated_at": "2026-08-20T15:00:00.000000+00:00",
+  "summary": {
+    "headline": "解密智能体技能：过程锚定主导效果；ASI-Bench测试真正自主科研能力；FreeToken将前沿MoE模型带到边缘设备",
+    "body": "今日AI研究热点聚焦三大主线：**智能体技能理解**、**ASI级基准测试**和**边缘推理效率**。HuggingFace热门论文榜首，《解密智能体技能》（arXiv:2608.14036）首次严格分解了大语言模型智能体技能生效与失效的机制——研究发现过程锚定（程序性锚定）占增益的65.7%，而当技能池从5扩展到100时，检索精度从29.6%骤降至3.3%，对生产级智能体部署具有直接指导意义。\n\nASI-Bench论文（arXiv:2608.17271）代表着评估方法论的重大突破：由40余位专家耗费31,000余人时构建，包含跨11个科学领域的60个项目级任务，通过逐步撤除人工引导来测试真正的自主推理能力。当前最优智能体在充分引导下得分50.91，但脱离引导后仅为26.62——清晰量化了当前AI距真正自主科研的差距。与此同时，《Agentic ESOpt》（arXiv:2608.17310）表明，进化策略可在大幅降低GPU资源需求的前提下微调270亿参数的智能体，在WebArena-Lite上相对基线提升6.69%。\n\n基础设施层面，UC Berkeley团队（Matei Zaharia、Ion Stoica等）的FreeToken（arXiv:2608.16157）将个人电脑视为弹性推理平台，无需依赖云端即可运行前沿规模的MoE模型。安全研究同样引人关注：UC Berkeley的HarmProfile（arXiv:2608.14577）记录了一个令人警醒的发现——随着模型能力提升，有害内容的危害性和多样性均同步增加。",
+    "key_themes": [
+      "agent-skill-learning",
+      "agi-benchmarking",
+      "edge-ai-inference",
+      "ai-safety-alignment",
+      "agentic-fine-tuning"
+    ]
+  },
+  "researcher_notes": "**头号论文：解密智能体技能（arXiv:2608.14036）**是本周最突出的贡献。技能池从5→100扩展时检索精度从29.6%跌至3.3%这一发现，是大多数智能体技能论文回避的*关键实用洞察*。作者采用对比研究方法论——独立控制表示方式、结果标注、检索难度和跨框架鲁棒性——方法严格可复现，是所有构建生产级智能体系统人员的必读文献。\n\n**潜力之作：Agentic ESOpt（arXiv:2608.17310）**使用进化策略（ES）而非强化学习来微调长程智能体，声称以「极少GPU资源」实现Qwen-3.5-27B的全参数优化。扰动尺度σ的余弦衰减调度是算法亮点。若GPU效率声明经得起验证，将为资源受限的实践者开放智能体微调能力——潜在的民主化论文。\n\n**基准测试时刻：ASI-Bench（arXiv:2608.17271）**代表了新一代评估范式：不仅测试模型能否回答问题，更测试模型能否在没有人工方法论支撑的情况下独立开展端到端科学研究。有无引导条件下24分的性能差距，是对当前系统「自主性代价」迄今最清晰的量化。预计各大顶级实验室将迅速开始针对该基准进行优化。\n\n**安全双线：HarmProfile（arXiv:2608.14577）+ 幻觉滚雪球（arXiv:2608.14588）**本周形成互补配对。HarmProfile表明，更强大的模型产生的有害内容危害性更高、多样性更强——「对齐表面」下隐藏着日益危险的能力。幻觉滚雪球将多智能体流水线中的错误传播建模为状态转移，揭示了初始小错误如何层层放大。两篇论文共同描绘了能力扩展风险的清晰图景，是对齐研究必须正视的挑战。\n\n**基础设施周：FreeToken（arXiv:2608.16157）与UI-Mate（arXiv:2608.15930）**都体现了AI普及化趋势——FreeToken在个人电脑上运行前沿MoE；腾讯的UI-Mate让开源GUI智能体变得实用。腾讯的发布策略（270亿参数开源模型+上下文示例学习）与Google、Meta在其他领域的路线如出一辙。",
+  "papers": [
+    {
+      "id": "demystifying-agent-skills-why-they-work-until-they-dont",
+      "title": "解密智能体技能：为何生效，为何失效",
+      "authors": [
+        "Zhiyuan Jiang",
+        "Fangrui Huang",
+        "Hanwen Xing",
+        "Xander Wu",
+        "Yipeng Gao",
+        "Rui Cao",
+        "Mengdi Wang",
+        "Shilong Liu",
+        "Yijiang Li"
+      ],
+      "affiliations": [
+        "普林斯顿大学",
+        "麻省理工学院",
+        "斯坦福大学"
+      ],
+      "summary": "首次对大语言模型智能体技能成功或失败的原因进行严格的受控分解。通过8,135条跨基准、跨智能体框架、跨大语言模型的实验记录，研究发现：过程锚定（稳定行动序列而非注入缺失事实）占技能收益的65.7%，而显式知识注入仅占4.5%。关键发现：当技能池从5扩展到100时，检索精度从29.6%骤降至3.3%。",
+      "key_findings": [
+        "过程锚定占技能收益的65.7%；显式知识注入仅占4.5%",
+        "技能池从5扩展到100时，检索精度从29.6%降至3.3%——这是生产部署的核心瓶颈",
+        "精确的基准技能召用既非下游任务成功的充分条件，也非必要条件"
+      ],
+      "tags": [
+        "agents",
+        "skills",
+        "retrieval",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 187,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14036",
+        "huggingface": "https://huggingface.co/papers/2608.14036",
+        "pdf": "https://arxiv.org/pdf/2608.14036"
+      }
+    },
+    {
+      "id": "asi-bench-at-the-dawn-of-artificial-superintelligence",
+      "title": "ASI-Bench：人工超级智能的黎明",
+      "authors": [
+        "Apexin AI团队"
+      ],
+      "affiliations": [
+        "Apexin AI"
+      ],
+      "summary": "首个旨在评估AI系统跨11个领域自主端到端科学研究能力的基准，由40余位专家耗费31,000余人时构建。ASI-Bench包含60个项目级研究任务，并通过逐步撤除人工方法论引导来测试真正的自主能力。在18个最先进的智能体-模型配置中，平均得分从充分引导下的50.91降至无引导下的26.62。",
+      "key_findings": [
+        "撤除人工引导后平均得分下降24分（50.91→26.62），量化了当前AI的自主能力差距",
+        "当前智能体更像工程优化器而非自主研究者——能执行给定方法，但无法独立确定方法",
+        "耗费31,000余人时跨11个科学领域构建——迄今最严格的ASI级基准"
+      ],
+      "tags": [
+        "benchmarks",
+        "agents",
+        "scientific-ai",
+        "agi"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 142,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.17271",
+        "huggingface": "https://huggingface.co/papers/2608.17271",
+        "pdf": "https://arxiv.org/pdf/2608.17271"
+      }
+    },
+    {
+      "id": "agentic-esopt-fine-tuning-long-horizon-llm-agents",
+      "title": "Agentic ESOpt：以最少GPU资源微调长程大语言模型智能体",
+      "authors": [
+        "Agentic ESOpt团队"
+      ],
+      "affiliations": [
+        "独立研究"
+      ],
+      "summary": "提出将进化策略（ES）作为强化学习的替代方案，用于微调长程大语言模型智能体，以大幅降低的GPU资源需求实现270亿规模模型的全参数优化。ESOpt在每一步对当前参数进行扰动采样，用环境奖励评估智能体，并通过带有余弦衰减调度的在线奖励加权更新来改进参数。在WebArena-Lite上，对Qwen-3.5-27B的全参数优化相对无技能基线提升6.69%。",
+      "key_findings": [
+        "进化策略（ES）以比强化学习低得多的GPU需求实现270亿参数智能体的全参数优化",
+        "扰动尺度σ的余弦衰减调度改善探索-适应权衡",
+        "WebArena-Lite上：相对无技能基线提升+6.69%；在36项启发式设计设置中的28项优于对比强化学习基线"
+      ],
+      "tags": [
+        "agents",
+        "fine-tuning",
+        "evolution-strategies",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 98,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.17310",
+        "huggingface": "https://huggingface.co/papers/2608.17310",
+        "pdf": "https://arxiv.org/pdf/2608.17310"
+      }
+    },
+    {
+      "id": "freetoken-efficient-edge-native-moe-serving",
+      "title": "FreeToken：带宽自适应执行的高效边缘原生MoE推理",
+      "authors": [
+        "Shuo Yang",
+        "Xiaoze Fan",
+        "Melissa Pan",
+        "Haocheng Xi",
+        "Zhe Wang",
+        "Shanlin Sun",
+        "Kurt Keutzer",
+        "Song Han",
+        "Matei Zaharia",
+        "Chenfeng Xu",
+        "Ion Stoica"
+      ],
+      "affiliations": [
+        "加州大学伯克利分校",
+        "麻省理工学院"
+      ],
+      "summary": "FreeToken针对边缘AI的两个现实设计了完整的MoE推理栈——模型布局、专家驻留、CPU-GPU执行、智能体状态复用和运行时内存管理：智能体工作负载持续改变执行模式，边缘硬件具有异构资源。该系统将个人电脑视为统一的弹性推理平台，使前沿规模的开源权重模型无需云端依赖即可部署。",
+      "key_findings": [
+        "带宽自适应执行在异构CPU-GPU边缘硬件上动态映射计算和模型状态",
+        "智能体状态复用减少长程智能体工作负载中的冗余计算",
+        "已在flashml.ai发布——将开源权重转化为前沿规模智能的可部署本地软件"
+      ],
+      "tags": [
+        "inference",
+        "edge-ai",
+        "moe",
+        "systems"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16157",
+        "huggingface": "https://huggingface.co/papers/2608.16157",
+        "pdf": "https://arxiv.org/pdf/2608.16157"
+      }
+    },
+    {
+      "id": "harmprofile-characterizing-harmful-distributions-in-frontier-llms",
+      "title": "HarmProfile：刻画前沿大语言模型的有害分布",
+      "authors": [
+        "HarmProfile团队"
+      ],
+      "affiliations": [
+        "加州大学伯克利分校"
+      ],
+      "summary": "提出HarmProfile，一个以内容为核心的基准数据集，收录了跨多个危害类别和模型家族的模型不当行为。包含来自23个前沿大语言模型（13个模型家族）的80,000余条经验证的制品，涵盖15个危害类别和57个子类别。研究发现，随着模型能力提升，有害输出的危害性和多样性均同步增加，表明对齐的表面下可能隐藏着日益危险的能力。",
+      "key_findings": [
+        "大语言模型有害输出的危害性和多样性均随模型能力增强而提高——对对齐扩展的关键警示",
+        "来自23个前沿大语言模型的80,000余条经验证的不当行为制品，涵盖15个危害类别和57个子类别",
+        "不同模型家族呈现出明显的风险特征差异；在对抗性提示下，前沿模型可规模化地产生有害内容"
+      ],
+      "tags": [
+        "safety",
+        "alignment",
+        "benchmarks",
+        "red-teaming"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 64,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14577",
+        "huggingface": "https://huggingface.co/papers/2608.14577",
+        "pdf": "https://arxiv.org/pdf/2608.14577"
+      }
+    },
+    {
+      "id": "ui-mate-advancing-open-weight-foundation-gui-agents",
+      "title": "UI-Mate：通过上下文示例推进开源基础GUI智能体",
+      "authors": [
+        "Zihan Ding",
+        "等"
+      ],
+      "affiliations": [
+        "腾讯HY前沿团队"
+      ],
+      "summary": "UI-Mate是一个基础GUI智能体，将环境接地训练与上下文示例学习相结合，提升长程GUI任务的可靠性。270亿参数开源模型（tencent/UI-Mate-27B）从真实交互环境中提取示例，实现跨多样化GUI应用的强泛化能力。",
+      "key_findings": [
+        "从真实环境交互中进行上下文示例学习显著提升长程GUI任务成功率",
+        "发布270亿参数开源模型tencent/UI-Mate-27B——无需专有API即可使用基础GUI智能体",
+        "环境接地训练减少训练与真实GUI执行之间的分布偏移"
+      ],
+      "tags": [
+        "agents",
+        "gui",
+        "open-weight",
+        "computer-use"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 53,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.15930",
+        "huggingface": "https://huggingface.co/papers/2608.15930",
+        "pdf": "https://arxiv.org/pdf/2608.15930"
+      }
+    },
+    {
+      "id": "matraix-simulating-the-world-with-8-billion-persona-agents",
+      "title": "MatrAIx：用83亿人格智能体模拟世界",
+      "authors": [
+        "Xiaomin Li",
+        "等"
+      ],
+      "affiliations": [
+        "MatrAIx AI"
+      ],
+      "summary": "MatrAIx引入了人口规模的模拟用户评估基础设施。其核心组件Persona 8B包含跨1,290个类别维度的83亿条人格记录，支持对AI系统在多样化模拟人群中进行大规模交互式评估。",
+      "key_findings": [
+        "跨1,290个类别维度的83亿条人格记录——迄今最大的模拟用户评估语料库",
+        "支持针对真实人口分布（而非精心策划的对抗集合）对AI系统进行压力测试",
+        "MatrAIx-Persona-8B模型在GitHub发布（MatrAIx-ai/MatrAIx-Persona-8B）供社区评估使用"
+      ],
+      "tags": [
+        "evaluation",
+        "simulation",
+        "agents",
+        "benchmarks"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.04205",
+        "huggingface": "https://huggingface.co/papers/2608.04205",
+        "pdf": "https://arxiv.org/pdf/2608.04205"
+      }
+    },
+    {
+      "id": "the-hallucination-snowball-error-propagation-in-multi-agent-pipelines",
+      "title": "幻觉滚雪球：多智能体大语言模型流水线中的错误传播",
+      "authors": [
+        "幻觉滚雪球团队"
+      ],
+      "affiliations": [
+        "独立研究"
+      ],
+      "summary": "将多智能体大语言模型流水线中的幻觉传播建模为状态转移，揭示初始小错误如何在流水线阶段层层复合形成「滚雪球」效应。该论文已被ICML 2026的FAGEN研讨会（智能体AI失效模式）接收，提供了理论框架和实证证据，表明下游智能体的错误率并不独立于上游智能体的输出。",
+      "key_findings": [
+        "幻觉传播建模为马尔可夫链状态转移——支持对跨流水线阶段错误累积的原理性分析",
+        "初始幻觉率5-10%经3个以上流水线阶段后复合为40-60%的错误率",
+        "被ICML 2026 FAGEN研讨会接收——该研讨会专门研究智能体AI的失效模式"
+      ],
+      "tags": [
+        "hallucination",
+        "multi-agent",
+        "reliability",
+        "safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14588",
+        "huggingface": "https://huggingface.co/papers/2608.14588",
+        "pdf": "https://arxiv.org/pdf/2608.14588"
+      }
+    },
+    {
+      "id": "dflash-block-diffusion-for-flash-speculative-decoding",
+      "title": "DFlash：闪速推测解码的块扩散方法",
+      "authors": [
+        "Chen",
+        "Liang",
+        "Liu"
+      ],
+      "affiliations": [
+        "Z Lab",
+        "RedHat AI"
+      ],
+      "summary": "DFlash是一种推测解码框架，使用轻量级块扩散模型进行并行令牌草稿生成，在保持输出质量的同时实现显著的推理加速。通过在单次前向传递中生成草稿令牌，并将目标模型提取的上下文特征作为条件，DFlash实现了比先前自回归推测解码方法更高的接受率。预训练投机器模型已通过RedHatAI在HuggingFace上发布。",
+      "key_findings": [
+        "块扩散草稿模型在单次前向传递中生成并行令牌草稿，显著降低延迟",
+        "比先前自回归推测解码基线具有更高的接受率",
+        "预训练DFlash投机器模型通过RedHatAI在HuggingFace上发布——可直接用于生产集成"
+      ],
+      "tags": [
+        "inference",
+        "speculative-decoding",
+        "efficiency",
+        "diffusion"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2602.06036",
+        "huggingface": "https://huggingface.co/papers/2602.06036",
+        "pdf": "https://arxiv.org/pdf/2602.06036"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen35-72b-instruct",
+      "name": "Qwen3.5-72B-Instruct",
+      "organization": "Qwen",
+      "description": "Qwen 3.5系列旗舰模型，具备增强的多语言能力、推理、编程和多模态功能。在Qwen3基础上升级，采用融合门控DeltaNet层的混合架构以改善序列建模。",
+      "task_type": "text-generation",
+      "model_size": "72B",
+      "tags": [
+        "instruction-tuned",
+        "multilingual",
+        "reasoning",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 2847392,
+        "likes": 18430
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-72B-Instruct"
+    },
+    {
+      "id": "qwen-qwen35-32b-instruct",
+      "name": "Qwen3.5-32B-Instruct",
+      "organization": "Qwen",
+      "description": "Qwen 3.5系列中端模型，在能力与效率之间取得强力平衡。支持更长上下文窗口，具备改进的指令遵循和多语言推理能力。",
+      "task_type": "text-generation",
+      "model_size": "32B",
+      "tags": [
+        "instruction-tuned",
+        "multilingual",
+        "chat"
+      ],
+      "metrics": {
+        "downloads": 1923847,
+        "likes": 11280
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-32B-Instruct"
+    },
+    {
+      "id": "sarvam-ai-sarvam-m",
+      "name": "Sarvam-M",
+      "organization": "Sarvam AI",
+      "description": "来自印度的1050亿参数混合专家模型（推理时约激活100亿参数），专为印度语言设计，具备高级多语言推理、数学、编程和企业级任务处理能力。是美国和中国以外发布的最大开源多语言模型之一。",
+      "task_type": "text-generation",
+      "model_size": "105B MoE",
+      "tags": [
+        "multilingual",
+        "indic-languages",
+        "moe",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 312847,
+        "likes": 4920
+      },
+      "source_url": "https://huggingface.co/sarvamai/sarvam-m"
+    },
+    {
+      "id": "tencent-ui-mate-27b",
+      "name": "UI-Mate-27B",
+      "organization": "腾讯",
+      "description": "腾讯发布的270亿参数开源基础GUI智能体，能够跨桌面和Web界面执行长程任务。结合环境接地训练与上下文示例学习，实现鲁棒的真实世界GUI自动化。",
+      "task_type": "computer-use",
+      "model_size": "27B",
+      "tags": [
+        "gui-agent",
+        "computer-use",
+        "open-weight",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 187293,
+        "likes": 3840
+      },
+      "source_url": "https://huggingface.co/tencent/UI-Mate-27B"
+    },
+    {
+      "id": "openai-whisper-large-v3",
+      "name": "Whisper Large-v3",
+      "organization": "OpenAI",
+      "description": "2026年HuggingFace下载量最高的语音识别模型，凭借在口音、噪声环境和99种语言上的鲁棒性持续保持主导地位。持续的研究工作不断验证其作为ASR社区标准的相关性。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "1.5B",
+      "tags": [
+        "speech-recognition",
+        "multilingual",
+        "robust"
+      ],
+      "metrics": {
+        "downloads": 8473920,
+        "likes": 22140
+      },
+      "source_url": "https://huggingface.co/openai/whisper-large-v3"
+    },
+    {
+      "id": "sentence-transformers-all-minilm-l6-v2",
+      "name": "all-MiniLM-L6-v2",
+      "organization": "sentence-transformers",
+      "description": "HuggingFace下载量最高的模型，占前300名模型总下载量的28.3%。将句子和段落映射到384维密集向量空间，用于语义相似度、聚类和检索应用。",
+      "task_type": "sentence-similarity",
+      "model_size": "22M",
+      "tags": [
+        "embeddings",
+        "sentence-transformers",
+        "retrieval",
+        "rag"
+      ],
+      "metrics": {
+        "downloads": 248935735,
+        "likes": 9870
+      },
+      "source_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+    },
+    {
+      "id": "matraix-ai-persona-8b",
+      "name": "MatrAIx-Persona-8B",
+      "organization": "MatrAIx AI",
+      "description": "MatrAIx人口规模评估框架的骨干模型，编码了跨1,290个类别维度的83亿条人格记录，用于模拟真实人类用户分布以评估AI系统。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "evaluation",
+        "simulation",
+        "persona"
+      ],
+      "metrics": {
+        "downloads": 94823,
+        "likes": 2310
+      },
+      "source_url": "https://huggingface.co/MatrAIx-ai/MatrAIx-Persona-8B"
+    },
+    {
+      "id": "redhatai-dflash-llama-31-8b-instruct",
+      "name": "DFlash Llama-3.1-8B推测器",
+      "organization": "RedHat AI",
+      "description": "用于Llama-3.1-8B-Instruct的预训练DFlash块扩散推测器模型。通过块扩散实现并行令牌草稿生成，为生产推理部署提供显著的延迟降低效果。",
+      "task_type": "text-generation",
+      "model_size": "约200M（推测器）",
+      "tags": [
+        "speculative-decoding",
+        "inference",
+        "efficiency"
+      ],
+      "metrics": {
+        "downloads": 71248,
+        "likes": 1840
+      },
+      "source_url": "https://huggingface.co/RedHatAI/DFlash-Llama-3.1-8B-Instruct-Speculator"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "GitHub历史上增长最快的开源AI项目：一款完全在本地设备运行的个人AI助手，无需数据离开设备即可连接50余种集成（WhatsApp、Telegram、Slack、Signal、iMessage等）。",
+      "language": "TypeScript",
+      "stars": 210000,
+      "stars_today": 847,
+      "forks": 18420,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "ai-assistant",
+        "local-ai",
+        "privacy",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deepseek-ai-deepseek-harness",
+      "name": "deepseek-ai/deepseek-harness",
+      "description": "DeepSeek模型的综合评估框架，支持编程、数学和推理任务的可复现基准测试。是独立评估DeepSeek模型家族的首选框架。",
+      "language": "Python",
+      "stars": 153000,
+      "stars_today": 612,
+      "forks": 12840,
+      "url": "https://github.com/deepseek-ai/deepseek-harness",
+      "tags": [
+        "evaluation",
+        "llm",
+        "benchmarks",
+        "deepseek"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "本地运行大语言模型的标准平台。支持Llama、Qwen、Gemma、Mistral等数百种模型，提供统一API。2026年突破16.5万星，反映了本地AI推理的巨大需求。",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 389,
+      "forks": 14920,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-ai",
+        "inference",
+        "llm",
+        "edge-ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "primeintellect-ai-prime-agent",
+      "name": "PrimeIntellect-ai/prime-agent",
+      "description": "专为编程工作流和长程自主任务设计的自我改进RLM智能体。Prime Agent通过多轮交互的强化学习持续提升自身能力。",
+      "language": "Python",
+      "stars": 17300,
+      "stars_today": 234,
+      "forks": 1840,
+      "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+      "tags": [
+        "agents",
+        "self-improving",
+        "rl",
+        "coding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cloudflare-cloudflare-os",
+      "name": "cloudflare/cloudflare-os",
+      "description": "基于Cloudflare Workers构建的智能体工作空间，用于创建文档、构建应用和运行带企业上下文的AI智能体。将AI原生智能体工作流引入无服务器边缘基础设施。",
+      "language": "TypeScript",
+      "stars": 8600,
+      "stars_today": 178,
+      "forks": 720,
+      "url": "https://github.com/cloudflare/cloudflare-os",
+      "tags": [
+        "agents",
+        "edge-computing",
+        "serverless",
+        "enterprise"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "n8n-io-n8n",
+      "name": "n8n-io/n8n",
+      "description": "开源工作流自动化平台，结合可视化无代码界面与自定义代码灵活性，现已集成原生AI能力，用于构建智能体工作流。日益成为多智能体系统的编排层。",
+      "language": "TypeScript",
+      "stars": 89400,
+      "stars_today": 312,
+      "forks": 9180,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "agents",
+        "no-code",
+        "orchestration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "matraix-ai-matraix-persona-8b",
+      "name": "MatrAIx-ai/MatrAIx-Persona-8B",
+      "description": "MatrAIx人口规模模拟的官方代码和模型：83亿条人格记录，用于大规模AI评估。支持研究人员针对真实人口人口统计分布测试AI系统。",
+      "language": "Python",
+      "stars": 4280,
+      "stars_today": 147,
+      "forks": 380,
+      "url": "https://github.com/MatrAIx-ai/MatrAIx-Persona-8B",
+      "tags": [
+        "evaluation",
+        "simulation",
+        "research"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "zhiyuanjiang04-demystify-agent-skills",
+      "name": "zhiyuanjiang04/demystify-agent-skills",
+      "description": "《解密智能体技能》官方代码库，包含跨智能体基准的受控实验、技能池规模扩展分析和技能召用模式理解的轨迹分析工具。",
+      "language": "Python",
+      "stars": 1840,
+      "stars_today": 389,
+      "forks": 142,
+      "url": "https://github.com/zhiyuanjiang04/demystify-agent-skills",
+      "tags": [
+        "agents",
+        "skills",
+        "evaluation",
+        "research"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体技能学习与评估",
+      "description": "本周的一批论文严格审视了大语言模型智能体技能何时成功、何时失败，从超越聚合指标走向机制性理解。检索瓶颈、过程锚定和跨框架鲁棒性成为关键维度。",
+      "related_paper_ids": [
+        "demystifying-agent-skills-why-they-work-until-they-dont",
+        "agentic-esopt-fine-tuning-long-horizon-llm-agents",
+        "ui-mate-advancing-open-weight-foundation-gui-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AGI与ASI基准测试",
+      "description": "ASI-Bench代表了新一代基准：不仅测试任务执行表现，更测试自主科学方法论能力——通过撤除人工支架来衡量AI真正的独立性。这标志着学界对用ASI级标准评估前沿模型的兴趣日益增强。",
+      "related_paper_ids": [
+        "asi-bench-at-the-dawn-of-artificial-superintelligence",
+        "matraix-simulating-the-world-with-8-billion-persona-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "边缘AI与本地模型部署",
+      "description": "FreeToken（在个人电脑上运行MoE）和Ollama持续占据GitHub趋势榜，共同反映了加速演进的趋势：用户和开发者希望获得前沿规模的AI，而无需依赖云端。带宽自适应执行和CPU-GPU异构性管理是正在解决的核心技术挑战。",
+      "related_paper_ids": [
+        "freetoken-efficient-edge-native-moe-serving",
+        "dflash-block-diffusion-for-flash-speculative-decoding"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "规模化AI安全与对齐",
+      "description": "HarmProfile和幻觉滚雪球均指向随规模增长而加剧的根本挑战：有害内容多样性随能力提升而增加，多智能体流水线错误会级联传播。安全研究界正在构建量化这些风险的实证基础设施。",
+      "related_paper_ids": [
+        "harmprofile-characterizing-harmful-distributions-in-frontier-llms",
+        "the-hallucination-snowball-error-propagation-in-multi-agent-pipelines"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "低资源智能体微调",
+      "description": "Agentic ESOpt证明进化策略可以在不需要强化学习所需GPU开销的情况下微调大型智能体，使智能体定制化不再是资源丰富实验室的专属领域。这补充了让高级AI对更广泛社区可及的整体趋势。",
+      "related_paper_ids": [
+        "agentic-esopt-fine-tuning-long-horizon-llm-agents"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace热门模型",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "网络搜索（备用）",
+      "url": "https://www.google.com",
+      "checked_at": "2026-08-20T15:00:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}

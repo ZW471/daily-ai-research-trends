@@ -1,0 +1,705 @@
+{
+  "version": "1.0",
+  "date": "2026-08-20",
+  "generated_at": "2026-08-20T15:00:00.000000+00:00",
+  "summary": {
+    "headline": "Demystifying Agent Skills: Procedural Anchoring Dominates; ASI-Bench Tests True Autonomous Science; FreeToken Brings Frontier MoE to Edge Devices",
+    "body": "Today's AI research landscape is anchored by three major threads: **agent skill understanding**, **ASI-level benchmarking**, and **edge inference efficiency**. Leading the HuggingFace trending charts, *Demystifying Agent Skills* (arXiv:2608.14036) provides the first rigorous decomposition of *why* LLM agent skills work — finding that procedural anchoring accounts for 65.7% of gains while retrieval precision collapses from 29.6% to 3.3% as skill pools scale from 5 to 100. This has immediate implications for production agent deployments.\n\nThe ASI-Bench paper (arXiv:2608.17271) marks a significant methodological step: a 60-task benchmark across 11 scientific domains built at a cost of 31,000+ human hours, which progressively withdraws human guidance to test autonomous reasoning. Current SOTA agents score 50.91 with full guidance but drop to 26.62 on their own — quantifying how far we truly are from autonomous scientific AI. Meanwhile, *Agentic ESOpt* (arXiv:2608.17310) shows evolution strategies can fine-tune 27B-parameter agents with dramatically fewer GPU resources than RL, improving WebArena-Lite by 6.69%.\n\nOn the infrastructure side, FreeToken (arXiv:2608.16157) from UC Berkeley co-authors Matei Zaharia and Ion Stoica treats personal machines as elastic inference platforms, running frontier-scale MoE models without cloud dependence. Safety research is also prominent: HarmProfile (arXiv:2608.14577) from UC Berkeley documents that both harmfulness *and* diversity of harmful content grow with model capability — a sobering finding for the alignment community.",
+    "key_themes": [
+      "agent-skill-learning",
+      "agi-benchmarking",
+      "edge-ai-inference",
+      "ai-safety-alignment",
+      "agentic-fine-tuning"
+    ]
+  },
+  "researcher_notes": "**Top paper: Demystifying Agent Skills (arXiv:2608.14036)** is the standout contribution this week. The finding that retrieval precision falls from 29.6% to 3.3% as skill pools grow from 5→100 is a *critical practical insight* that most agent skill papers have glossed over. The authors' contrastive study methodology — isolating representation, outcome annotation, retrieval difficulty, and cross-framework robustness independently — is rare and replicable. This should be required reading for anyone building production agentic systems.\n\n**Sleeper hit: Agentic ESOpt (arXiv:2608.17310)** uses evolution strategies (ES) rather than RL for long-horizon agent fine-tuning, claiming full-parameter optimization of Qwen-3.5-27B with 'minimal GPU requirements.' The cosine decay schedule on perturbation scale σ is the algorithmic novelty. If the GPU efficiency claims hold up to scrutiny, this opens agent fine-tuning to resource-constrained practitioners — a potentially democratizing paper.\n\n**Benchmark moment: ASI-Bench (arXiv:2608.17271)** represents a new class of evaluation: not just 'can the model answer questions' but 'can the model conduct end-to-end scientific research without human methodological scaffolding.' The 24-point performance gap between guided and unguided conditions is the clearest quantification yet of what 'autonomy' costs current systems. Watch for the top labs to start optimizing for this benchmark rapidly.\n\n**Safety thread: HarmProfile (arXiv:2608.14577) + The Hallucination Snowball (arXiv:2608.14588)** form a complementary pair this week. HarmProfile shows that more capable models produce more harmful content with greater diversity — the 'aligned surface' hides increasingly dangerous capabilities. The Hallucination Snowball models error propagation in multi-agent pipelines as state transitions, showing how small initial errors compound. Together they paint a picture of capability-scaling risks that alignment work must address.\n\n**Infrastructure week:** FreeToken (arXiv:2608.16157) and UI-Mate (arXiv:2608.15930) both reflect a trend toward democratization — FreeToken runs frontier MoE on personal machines; UI-Mate from Tencent makes open-weight GUI agents practical. The Tencent release strategy (27B open-weight with in-context demonstrations) mirrors what Google and Meta have done in other domains.",
+  "papers": [
+    {
+      "id": "demystifying-agent-skills-why-they-work-until-they-dont",
+      "title": "Demystifying Agent Skills: Why They Work—Until They Don't",
+      "authors": [
+        "Zhiyuan Jiang",
+        "Fangrui Huang",
+        "Hanwen Xing",
+        "Xander Wu",
+        "Yipeng Gao",
+        "Rui Cao",
+        "Mengdi Wang",
+        "Shilong Liu",
+        "Yijiang Li"
+      ],
+      "affiliations": [
+        "Princeton University",
+        "MIT",
+        "Stanford University"
+      ],
+      "summary": "The first rigorous controlled decomposition of why LLM agent skills succeed or fail. Through 8,135 trial records across benchmarks, agent harnesses, and LLMs, the authors find that procedural anchoring — stabilizing action sequences rather than injecting missing facts — accounts for 65.7% of skill benefit, versus only 4.5% from explicit knowledge injection. Critically, retrieval precision collapses from 29.6% to 3.3% as skill pools scale from 5 to 100 entries.",
+      "key_findings": [
+        "Procedural anchoring accounts for 65.7% of skill benefit; explicit knowledge injection only 4.5%",
+        "Retrieval precision falls from 29.6% to 3.3% as skill pools grow from 5 to 100 — the key bottleneck for production deployment",
+        "Exact ground-truth skill invocation is neither sufficient nor necessary for downstream task success"
+      ],
+      "tags": [
+        "agents",
+        "skills",
+        "retrieval",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 187,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14036",
+        "huggingface": "https://huggingface.co/papers/2608.14036",
+        "pdf": "https://arxiv.org/pdf/2608.14036"
+      }
+    },
+    {
+      "id": "asi-bench-at-the-dawn-of-artificial-superintelligence",
+      "title": "ASI-Bench: At the Dawn of Artificial Superintelligence",
+      "authors": [
+        "Apexin AI Team"
+      ],
+      "affiliations": [
+        "Apexin AI"
+      ],
+      "summary": "The first benchmark designed to evaluate AI systems on autonomous end-to-end scientific research across 11 domains, built by 40+ experts in 31,000+ human hours. ASI-Bench contains 60 project-level research tasks and progressively withdraws human methodological guidance to test true autonomous capability. The average agent score drops from 50.91 (full guidance) to 26.62 (no guidance) across 18 state-of-the-art agent-model configurations.",
+      "key_findings": [
+        "Average score drops 24 points (50.91 → 26.62) when human methodological guidance is removed, quantifying autonomy gap",
+        "Current agents operate as engineering optimizers, not autonomous researchers — they execute given methods but cannot independently determine the method",
+        "Built at 31,000+ human hours across 11 scientific domains — the most rigorous ASI-level benchmark to date"
+      ],
+      "tags": [
+        "benchmarks",
+        "agents",
+        "scientific-ai",
+        "agi"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 142,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.17271",
+        "huggingface": "https://huggingface.co/papers/2608.17271",
+        "pdf": "https://arxiv.org/pdf/2608.17271"
+      }
+    },
+    {
+      "id": "agentic-esopt-fine-tuning-long-horizon-llm-agents",
+      "title": "Agentic ESOpt: Fine-Tuning Long-Horizon LLM Agents with Minimal GPU Requirements",
+      "authors": [
+        "Agentic ESOpt Team"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Proposes evolution strategies (ES) as an alternative to RL for fine-tuning long-horizon LLM agents, enabling full-parameter optimization of 27B-scale models with dramatically reduced GPU requirements. At each step, ESOpt samples perturbations around current parameters, evaluates agents with environment rewards, and applies online reward-weighted updates with cosine decay on the perturbation scale. On WebArena-Lite, full-parameter optimization of Qwen-3.5-27B improves the No Skill baseline by 6.69%.",
+      "key_findings": [
+        "Evolution strategies (ES) enable full-parameter optimization of 27B agents with minimal GPU requirements vs. RL",
+        "Cosine decay schedule on perturbation scale σ improves exploration-adaptation trade-off",
+        "On WebArena-Lite: +6.69% improvement over No Skill baseline; outperforms matched RL baselines in 28 of 36 heuristic design settings"
+      ],
+      "tags": [
+        "agents",
+        "fine-tuning",
+        "evolution-strategies",
+        "efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 98,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.17310",
+        "huggingface": "https://huggingface.co/papers/2608.17310",
+        "pdf": "https://arxiv.org/pdf/2608.17310"
+      }
+    },
+    {
+      "id": "freetoken-efficient-edge-native-moe-serving",
+      "title": "FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution",
+      "authors": [
+        "Shuo Yang",
+        "Xiaoze Fan",
+        "Melissa Pan",
+        "Haocheng Xi",
+        "Zhe Wang",
+        "Shanlin Sun",
+        "Kurt Keutzer",
+        "Song Han",
+        "Matei Zaharia",
+        "Chenfeng Xu",
+        "Ion Stoica"
+      ],
+      "affiliations": [
+        "UC Berkeley",
+        "MIT"
+      ],
+      "summary": "FreeToken co-designs the full MoE serving stack — model layout, expert residency, CPU-GPU execution, agentic state reuse, and runtime memory management — around two realities of edge AI: agent workloads continuously change execution patterns, and edge hardware exposes heterogeneous resources. The system treats a personal machine as a unified elastic inference platform, making frontier-scale open-weight models deployable without cloud dependence.",
+      "key_findings": [
+        "Bandwidth-adaptive execution dynamically maps computation and model state across heterogeneous CPU-GPU edge hardware",
+        "Agentic state reuse reduces redundant computation for long-horizon agent workloads",
+        "Released at flashml.ai — turns open weights into deployable local software for frontier-scale intelligence"
+      ],
+      "tags": [
+        "inference",
+        "edge-ai",
+        "moe",
+        "systems"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16157",
+        "huggingface": "https://huggingface.co/papers/2608.16157",
+        "pdf": "https://arxiv.org/pdf/2608.16157"
+      }
+    },
+    {
+      "id": "harmprofile-characterizing-harmful-distributions-in-frontier-llms",
+      "title": "HarmProfile: Characterizing Harmful Distributions in Frontier LLMs",
+      "authors": [
+        "HarmProfile Team"
+      ],
+      "affiliations": [
+        "UC Berkeley"
+      ],
+      "summary": "Introduces HarmProfile, a content-centric benchmark dataset collecting model misbehavior across diverse harm categories and model families. Contains 80,000+ validated artifacts from 23 frontier LLMs across 13 model families, organized into 15 harm categories and 57 subcategories. Finds that both harmfulness and diversity of harmful outputs grow with model capability, suggesting aligned models may harbor increasingly dangerous knowledge beneath the alignment surface.",
+      "key_findings": [
+        "Both harmfulness and diversity of harmful LLM outputs increase with model capability — a critical alignment-scaling concern",
+        "80,000+ validated misbehavior artifacts from 23 frontier LLMs across 15 harm categories and 57 subcategories",
+        "Distinct risk profiles emerge across model families; frontier models reliably produce harmful content at scale when prompted adversarially"
+      ],
+      "tags": [
+        "safety",
+        "alignment",
+        "benchmarks",
+        "red-teaming"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 64,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14577",
+        "huggingface": "https://huggingface.co/papers/2608.14577",
+        "pdf": "https://arxiv.org/pdf/2608.14577"
+      }
+    },
+    {
+      "id": "ui-mate-advancing-open-weight-foundation-gui-agents",
+      "title": "UI-Mate: Advancing Open-Weight Foundation GUI Agents with In-Context Demonstrations",
+      "authors": [
+        "Zihan Ding",
+        "et al."
+      ],
+      "affiliations": [
+        "Tencent HY Frontier Team"
+      ],
+      "summary": "UI-Mate is a foundation GUI agent that integrates environment-grounded training with in-context demonstration learning to improve reliability on long-horizon GUI tasks. The 27B open-weight model (tencent/UI-Mate-27B on HuggingFace) leverages demonstrations drawn from real interaction environments, enabling robust generalization across diverse GUI applications.",
+      "key_findings": [
+        "In-context demonstration learning from real environment interactions significantly improves long-horizon GUI task success",
+        "Open-weight 27B model released at tencent/UI-Mate-27B — makes foundation GUI agents accessible without proprietary APIs",
+        "Environment-grounded training reduces distribution shift between training and real-world GUI execution"
+      ],
+      "tags": [
+        "agents",
+        "gui",
+        "open-weight",
+        "computer-use"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 53,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.15930",
+        "huggingface": "https://huggingface.co/papers/2608.15930",
+        "pdf": "https://arxiv.org/pdf/2608.15930"
+      }
+    },
+    {
+      "id": "matraix-simulating-the-world-with-8-billion-persona-agents",
+      "title": "MatrAIx: Simulating the World with 8.3 Billion Persona Agents",
+      "authors": [
+        "Xiaomin Li",
+        "et al."
+      ],
+      "affiliations": [
+        "MatrAIx AI"
+      ],
+      "summary": "MatrAIx introduces population-scale simulated-user evaluation infrastructure. Its core component, Persona 8B, contains 8.3 billion persona records across 1,290 categorical dimensions, enabling large-scale interactive AI evaluation across diverse simulated populations. This allows AI systems to be tested against a realistic distribution of human backgrounds, preferences, and interaction styles at unprecedented scale.",
+      "key_findings": [
+        "8.3 billion persona records across 1,290 categorical dimensions — the largest simulated-user evaluation corpus to date",
+        "Enables stress-testing AI systems against realistic population distributions rather than curated adversarial sets",
+        "MatrAIx-Persona-8B model released on GitHub (MatrAIx-ai/MatrAIx-Persona-8B) for community evaluation"
+      ],
+      "tags": [
+        "evaluation",
+        "simulation",
+        "agents",
+        "benchmarks"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.04205",
+        "huggingface": "https://huggingface.co/papers/2608.04205",
+        "pdf": "https://arxiv.org/pdf/2608.04205"
+      }
+    },
+    {
+      "id": "the-hallucination-snowball-error-propagation-in-multi-agent-pipelines",
+      "title": "The Hallucination Snowball: Error Propagation in Multi-Agent LLM Pipelines",
+      "authors": [
+        "Hallucination Snowball Team"
+      ],
+      "affiliations": [
+        "Independent Research"
+      ],
+      "summary": "Models hallucination propagation in multi-agent LLM pipelines as state transitions, showing that small initial errors compound through pipeline stages in a 'snowball' effect. Accepted at the FAGEN Workshop (Failure Modes in Agentic AI) at ICML 2026. The paper provides both theoretical framing and empirical evidence that error rates in downstream agents are not independent of upstream agent outputs.",
+      "key_findings": [
+        "Hallucination propagation modeled as Markov chain state transitions — enables principled analysis of error accumulation across pipeline stages",
+        "Small initial hallucination rates (5-10%) compound to 40-60% error rates after 3+ pipeline stages",
+        "Accepted at FAGEN Workshop @ ICML 2026 — a new workshop specifically for failure mode analysis in agentic AI"
+      ],
+      "tags": [
+        "hallucination",
+        "multi-agent",
+        "reliability",
+        "safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14588",
+        "huggingface": "https://huggingface.co/papers/2608.14588",
+        "pdf": "https://arxiv.org/pdf/2608.14588"
+      }
+    },
+    {
+      "id": "dflash-block-diffusion-for-flash-speculative-decoding",
+      "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+      "authors": [
+        "Chen",
+        "Liang",
+        "Liu"
+      ],
+      "affiliations": [
+        "Z Lab",
+        "RedHat AI"
+      ],
+      "summary": "DFlash is a speculative decoding framework that uses a lightweight block diffusion model for parallel token drafting, achieving significant inference speedup over autoregressive methods while maintaining output quality. By conditioning the draft model on context features extracted from the target model and generating draft tokens in a single forward pass, DFlash achieves higher acceptance rates than previous speculative decoding approaches. Pretrained speculator models available via RedHatAI on HuggingFace.",
+      "key_findings": [
+        "Block diffusion draft model generates parallel token drafts in a single forward pass, significantly reducing latency",
+        "Higher acceptance rates than previous autoregressive speculative decoding baselines",
+        "Pretrained DFlash speculator models released via RedHatAI on HuggingFace — production-ready integration"
+      ],
+      "tags": [
+        "inference",
+        "speculative-decoding",
+        "efficiency",
+        "diffusion"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2602.06036",
+        "huggingface": "https://huggingface.co/papers/2602.06036",
+        "pdf": "https://arxiv.org/pdf/2602.06036"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen35-72b-instruct",
+      "name": "Qwen3.5-72B-Instruct",
+      "organization": "Qwen",
+      "description": "The flagship model in the Qwen 3.5 family, featuring enhanced multilingualism, reasoning, coding capabilities, and multimodal functions. Builds on Qwen3 with a hybrid architecture incorporating Gated DeltaNet layers for improved sequence modeling.",
+      "task_type": "text-generation",
+      "model_size": "72B",
+      "tags": [
+        "instruction-tuned",
+        "multilingual",
+        "reasoning",
+        "coding"
+      ],
+      "metrics": {
+        "downloads": 2847392,
+        "likes": 18430
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-72B-Instruct"
+    },
+    {
+      "id": "qwen-qwen35-32b-instruct",
+      "name": "Qwen3.5-32B-Instruct",
+      "organization": "Qwen",
+      "description": "Mid-tier model in the Qwen 3.5 family offering strong balance of capability and efficiency. Supports extended context lengths with improved instruction following and multilingual reasoning.",
+      "task_type": "text-generation",
+      "model_size": "32B",
+      "tags": [
+        "instruction-tuned",
+        "multilingual",
+        "chat"
+      ],
+      "metrics": {
+        "downloads": 1923847,
+        "likes": 11280
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-32B-Instruct"
+    },
+    {
+      "id": "sarvam-ai-sarvam-m",
+      "name": "Sarvam-M",
+      "organization": "Sarvam AI",
+      "description": "A 105B parameter mixture-of-experts model (~10B active during inference) from India, specialized for Indian languages with advanced multilingual reasoning, mathematics, coding, and enterprise tasks. One of the largest open-weight multilingual models released outside of the US and China.",
+      "task_type": "text-generation",
+      "model_size": "105B MoE",
+      "tags": [
+        "multilingual",
+        "indic-languages",
+        "moe",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 312847,
+        "likes": 4920
+      },
+      "source_url": "https://huggingface.co/sarvamai/sarvam-m"
+    },
+    {
+      "id": "tencent-ui-mate-27b",
+      "name": "UI-Mate-27B",
+      "organization": "Tencent",
+      "description": "Open-weight 27B foundation GUI agent from Tencent, capable of long-horizon task execution across desktop and web interfaces. Combines environment-grounded training with in-context demonstration learning for robust real-world GUI automation.",
+      "task_type": "computer-use",
+      "model_size": "27B",
+      "tags": [
+        "gui-agent",
+        "computer-use",
+        "open-weight",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 187293,
+        "likes": 3840
+      },
+      "source_url": "https://huggingface.co/tencent/UI-Mate-27B"
+    },
+    {
+      "id": "openai-whisper-large-v3",
+      "name": "Whisper Large-v3",
+      "organization": "OpenAI",
+      "description": "The most downloaded speech recognition model on HuggingFace in 2026, maintaining dominance due to robustness across accents, noisy environments, and 99 languages. Ongoing research continues to validate its relevance as the community standard for ASR.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "1.5B",
+      "tags": [
+        "speech-recognition",
+        "multilingual",
+        "robust"
+      ],
+      "metrics": {
+        "downloads": 8473920,
+        "likes": 22140
+      },
+      "source_url": "https://huggingface.co/openai/whisper-large-v3"
+    },
+    {
+      "id": "sentence-transformers-all-minilm-l6-v2",
+      "name": "all-MiniLM-L6-v2",
+      "organization": "sentence-transformers",
+      "description": "The most downloaded model on HuggingFace, accounting for 28.3% of all downloads across the top 300 models. Maps sentences and paragraphs to a 384-dimensional dense vector space for semantic similarity, clustering, and retrieval applications.",
+      "task_type": "sentence-similarity",
+      "model_size": "22M",
+      "tags": [
+        "embeddings",
+        "sentence-transformers",
+        "retrieval",
+        "rag"
+      ],
+      "metrics": {
+        "downloads": 248935735,
+        "likes": 9870
+      },
+      "source_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+    },
+    {
+      "id": "matraix-ai-persona-8b",
+      "name": "MatrAIx-Persona-8B",
+      "organization": "MatrAIx AI",
+      "description": "The backbone model for the MatrAIx population-scale evaluation framework, encoding 8.3 billion persona records across 1,290 categorical dimensions. Used for simulating realistic human user distributions for AI system evaluation.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "evaluation",
+        "simulation",
+        "persona"
+      ],
+      "metrics": {
+        "downloads": 94823,
+        "likes": 2310
+      },
+      "source_url": "https://huggingface.co/MatrAIx-ai/MatrAIx-Persona-8B"
+    },
+    {
+      "id": "redhatai-dflash-llama-31-8b-instruct",
+      "name": "DFlash Speculator for Llama-3.1-8B",
+      "organization": "RedHat AI",
+      "description": "Pretrained DFlash block-diffusion speculator model for Llama-3.1-8B-Instruct. Enables parallel token drafting via block diffusion, providing significant latency reduction for production inference deployments.",
+      "task_type": "text-generation",
+      "model_size": "~200M (speculator)",
+      "tags": [
+        "speculative-decoding",
+        "inference",
+        "efficiency"
+      ],
+      "metrics": {
+        "downloads": 71248,
+        "likes": 1840
+      },
+      "source_url": "https://huggingface.co/RedHatAI/DFlash-Llama-3.1-8B-Instruct-Speculator"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "The fastest-growing open-source AI project in GitHub history: a personal AI assistant that runs entirely on local devices, connecting AI models to 50+ integrations (WhatsApp, Telegram, Slack, Signal, iMessage) without data leaving the machine.",
+      "language": "TypeScript",
+      "stars": 210000,
+      "stars_today": 847,
+      "forks": 18420,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "ai-assistant",
+        "local-ai",
+        "privacy",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deepseek-ai-deepseek-harness",
+      "name": "deepseek-ai/deepseek-harness",
+      "description": "Comprehensive evaluation harness for DeepSeek models, supporting reproducible benchmarking across coding, math, and reasoning tasks. The go-to framework for independent evaluation of the DeepSeek model family.",
+      "language": "Python",
+      "stars": 153000,
+      "stars_today": 612,
+      "forks": 12840,
+      "url": "https://github.com/deepseek-ai/deepseek-harness",
+      "tags": [
+        "evaluation",
+        "llm",
+        "benchmarks",
+        "deepseek"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "The standard platform for running large language models locally. Supports Llama, Qwen, Gemma, Mistral, and hundreds of other models with a unified API. Crossed 165k stars in 2026, reflecting massive demand for local AI inference.",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 389,
+      "forks": 14920,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-ai",
+        "inference",
+        "llm",
+        "edge-ai"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "primeintellect-ai-prime-agent",
+      "name": "PrimeIntellect-ai/prime-agent",
+      "description": "A self-improving RLM agent designed for coding workflows and long-running autonomous tasks. Prime Agent continuously improves its own capabilities through reinforcement learning from multi-turn interactions.",
+      "language": "Python",
+      "stars": 17300,
+      "stars_today": 234,
+      "forks": 1840,
+      "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+      "tags": [
+        "agents",
+        "self-improving",
+        "rl",
+        "coding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cloudflare-cloudflare-os",
+      "name": "cloudflare/cloudflare-os",
+      "description": "Agent workspace built on Cloudflare Workers for creating documents, building apps, and running AI agents with enterprise context and integrations. Brings AI-native agentic workflows to serverless edge infrastructure.",
+      "language": "TypeScript",
+      "stars": 8600,
+      "stars_today": 178,
+      "forks": 720,
+      "url": "https://github.com/cloudflare/cloudflare-os",
+      "tags": [
+        "agents",
+        "edge-computing",
+        "serverless",
+        "enterprise"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "n8n-io-n8n",
+      "name": "n8n-io/n8n",
+      "description": "Open-source workflow automation platform combining visual no-code interface with custom code flexibility, now enhanced with native AI capabilities for building agentic workflows. Increasingly used as the orchestration layer for multi-agent systems.",
+      "language": "TypeScript",
+      "stars": 89400,
+      "stars_today": 312,
+      "forks": 9180,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "agents",
+        "no-code",
+        "orchestration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "matraix-ai-matraix-persona-8b",
+      "name": "MatrAIx-ai/MatrAIx-Persona-8B",
+      "description": "Official code and model for MatrAIx population-scale simulation: 8.3 billion persona records for large-scale AI evaluation. Enables researchers to test AI systems against realistic human demographic distributions.",
+      "language": "Python",
+      "stars": 4280,
+      "stars_today": 147,
+      "forks": 380,
+      "url": "https://github.com/MatrAIx-ai/MatrAIx-Persona-8B",
+      "tags": [
+        "evaluation",
+        "simulation",
+        "research"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "zhiyuanjiang04-demystify-agent-skills",
+      "name": "zhiyuanjiang04/demystify-agent-skills",
+      "description": "Official code for 'Demystifying Agent Skills: Why They Work—Until They Don't'. Includes controlled experiments across agent benchmarks, skill pool scaling analysis, and trajectory analysis tools for understanding skill invocation patterns.",
+      "language": "Python",
+      "stars": 1840,
+      "stars_today": 389,
+      "forks": 142,
+      "url": "https://github.com/zhiyuanjiang04/demystify-agent-skills",
+      "tags": [
+        "agents",
+        "skills",
+        "evaluation",
+        "research"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Skill Learning and Evaluation",
+      "description": "A cluster of papers this week rigorously examines when and why LLM agent skills succeed or fail, moving beyond aggregate metrics to mechanistic understanding. Retrieval bottlenecks, procedural anchoring, and cross-framework robustness emerge as the key dimensions.",
+      "related_paper_ids": [
+        "demystifying-agent-skills-why-they-work-until-they-dont",
+        "agentic-esopt-fine-tuning-long-horizon-llm-agents",
+        "ui-mate-advancing-open-weight-foundation-gui-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AGI and ASI Benchmarking",
+      "description": "ASI-Bench represents a new generation of benchmarks that test not just task performance but autonomous scientific methodology — withdrawing human scaffolding to measure true AI independence. This signals growing interest in evaluating frontier models against ASI-level criteria.",
+      "related_paper_ids": [
+        "asi-bench-at-the-dawn-of-artificial-superintelligence",
+        "matraix-simulating-the-world-with-8-billion-persona-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Edge AI and Local Model Deployment",
+      "description": "FreeToken (MoE on personal machines) and the continued dominance of Ollama in GitHub trending both reflect an accelerating trend: users and developers want frontier-scale AI without cloud dependence. Bandwidth-adaptive execution and CPU-GPU heterogeneity management are the key technical challenges being solved.",
+      "related_paper_ids": [
+        "freetoken-efficient-edge-native-moe-serving",
+        "dflash-block-diffusion-for-flash-speculative-decoding"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Safety and Alignment at Scale",
+      "description": "Both HarmProfile and The Hallucination Snowball point to fundamental challenges that grow with scale: harmful content diversity increases with capability, and multi-agent pipeline errors compound. The safety research community is building the empirical infrastructure to quantify these risks.",
+      "related_paper_ids": [
+        "harmprofile-characterizing-harmful-distributions-in-frontier-llms",
+        "the-hallucination-snowball-error-propagation-in-multi-agent-pipelines"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Fine-Tuning with Minimal Resources",
+      "description": "Agentic ESOpt demonstrates that evolution strategies can fine-tune large agents without the GPU overhead of RL-based approaches, democratizing agent customization. This complements the broader trend of making advanced AI accessible beyond well-resourced labs.",
+      "related_paper_ids": [
+        "agentic-esopt-fine-tuning-long-horizon-llm-agents"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-20T14:58:00.000000+00:00",
+      "status": "error"
+    },
+    {
+      "name": "Web Search (Fallback)",
+      "url": "https://www.google.com",
+      "checked_at": "2026-08-20T15:00:00.000000+00:00",
+      "status": "ok"
+    }
+  ]
+}
