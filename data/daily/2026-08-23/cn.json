@@ -1,0 +1,925 @@
+{
+  "version": "1.0",
+  "date": "2026-08-23",
+  "generated_at": "2026-08-23T08:00:00Z",
+  "summary": {
+    "headline": "τ₀-VLA 引入世界模型引导的测试时计算用于机器人领域；4DAnyone 实现从单目视频重建4D人体；智能体环境自适应成为大语言模型训练的关键范式",
+    "body": "今日重点论文涵盖机器人学、4D视觉与智能体AI基础设施三大领域。τ₀-VLA（518票）提出了一种分层机器人基础模型，其中高层世界模型在低层策略执行所选动作计划之前，对未来状态进行引导式搜索——将测试时计算扩展引入物理AI领域。4DAnyone（317票）通过多视角一致性生成与高斯泼溅技术，解决了从普通单目视频重建4D人体的问题，为虚拟形象创建树立了新的质量标杆。\n\n围绕智能体学习基础设施的第二个研究群值得关注：EnvHarness（169票）引入可编程包装器，能够根据智能体当前的薄弱环节动态调整静态环境；FlowEvo 和 HSI 则分别从工作流与策略层面探讨自我改进机制。在模型方面，Qwen3.8-27B 在新发布模型中下载量领先，而 DeepSeek-V3 和 Llama-3-8B-Instruct 的持续热度则凸显了业界对高质量开源权重模型的旺盛需求。",
+    "key_themes": [
+      "robot-foundation-models",
+      "test-time-compute",
+      "4d-human-reconstruction",
+      "agentic-environment-adaptation",
+      "long-context-inference-efficiency"
+    ]
+  },
+  "researcher_notes": "**τ₀-VLA 是今日最突出的论文**，将世界模型想象力与分层执行相结合，其方式与主导大语言模型研究的测试时计算扩展叙事高度契合——如今这一理念被应用于机器人领域。SII Research 团队在行动前先搜索想象中的未来状态，这一思路概念清晰，有望成为物理AI系统的范本。值得持续关注测试时计算预算分配方面的后续工作。\n\n**蚂蚁研究院的 4DAnyone** 解决了虚拟形象创建领域长期存在的瓶颈：在将目标视角分组生成时，多视角一致帧生成所面临的有界注意力上下文问题。参考上下文打包（RCP）与目标上下文路由（TCR）机制值得深入研究——它们很可能可以推广至人体之外的其他多视角生成任务。\n\n**智能体基础设施研究群**（EnvHarness、HSI、FlowEvo、FACET）标志着让大语言模型智能体更具自主性的研究议程日趋成熟。Google Research 的 EnvHarness 尤为务实——在不修改现有环境的情况下进行包装，大幅降低了采用门槛。MemTrapBench 的发现则是一剂有益的清醒剂：记忆增强可能使性能下降多达23%，有效制衡了当前对记忆增强智能体的普遍热情。",
+  "papers": [
+    {
+      "id": "tau0-vla",
+      "title": "τ₀-VLA：一种具备世界模型引导测试时计算的分层机器人基础模型",
+      "authors": [
+        "Xiaowei Cai",
+        "Yunuo Cai",
+        "Bingao Chen",
+        "Jingxiao Chen",
+        "Zhi Chen et al."
+      ],
+      "affiliations": [
+        "SII Research"
+      ],
+      "summary": "τ₀-VLA 是一种分层机器人基础模型，利用高层世界模型在低层策略执行所选动作计划之前，对可能的未来状态进行想象与评估。通过对未来状态的测试时引导搜索，无需重新训练即可实现更优的决策效果。",
+      "key_findings": [
+        "世界模型引导的测试时搜索相较于单次前向策略，提升了机器人任务成功率",
+        "规划（世界模型）与执行（动作策略）的分层解耦具有良好的可扩展性"
+      ],
+      "tags": [
+        "robotics",
+        "vla",
+        "world-model",
+        "test-time-compute",
+        "hierarchical"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 518,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16885",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.16885",
+        "pdf": "https://arxiv.org/pdf/2608.16885"
+      }
+    },
+    {
+      "id": "4danyone",
+      "title": "4DAnyone：从普通单目视频创建任意人物的4D重建",
+      "authors": [
+        "Yudong Jin",
+        "Tao Xie",
+        "Qihang Zhang",
+        "Zehong Shen",
+        "Zhen Xu et al."
+      ],
+      "affiliations": [
+        "Ant Group"
+      ],
+      "summary": "4DAnyone 通过生成多视角一致性视频并将其提升为4D高斯泼溅表示，从未经标定的单目视频中重建4D人体。参考上下文打包（RCP）与目标上下文路由（TCR）机制解决了将目标视角分组时产生的有界注意力上下文瓶颈问题。",
+      "key_findings": [
+        "RCP+TCR 机制解决了多视角一致性生成中的注意力上下文瓶颈",
+        "在新视角视频质量与4D重建保真度上均超越先前方法"
+      ],
+      "tags": [
+        "4d-reconstruction",
+        "gaussian-splatting",
+        "monocular-video",
+        "human-avatar",
+        "SIGGRAPH"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 317,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20335",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.20335",
+        "pdf": "https://arxiv.org/pdf/2608.20335"
+      }
+    },
+    {
+      "id": "envharness",
+      "title": "EnvHarness：唤醒静态世界以服务智能体学习",
+      "authors": [
+        "Chengsong Huang",
+        "Zifeng Wang",
+        "Rujun Han",
+        "Jun Yan",
+        "Yanfei Chen et al."
+      ],
+      "affiliations": [
+        "Google Research"
+      ],
+      "summary": "EnvHarness 是一种可编程插件层，通过包装静态环境，在不修改底层环境逻辑的前提下，根据智能体当前的薄弱环节动态调整环境行为。它通过标准接口运行，可广泛适用于各类智能体训练领域。",
+      "key_findings": [
+        "插件包装模式可适配任意静态环境，无需改动底层逻辑",
+        "基于智能体薄弱环节的动态重塑可加速跨领域技能习得"
+      ],
+      "tags": [
+        "agent-learning",
+        "environment-design",
+        "llm-agents",
+        "curriculum-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 169,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.19880",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.19880",
+        "pdf": "https://arxiv.org/pdf/2608.19880"
+      }
+    },
+    {
+      "id": "forgewm",
+      "title": "ForgeWM：面向少步动作条件视频世界模型的渐进因果训练",
+      "authors": [
+        "Xinye Li",
+        "Lingshuai Lin",
+        "Lei Wang",
+        "Liuzhou Zhang",
+        "Jialin Cui et al."
+      ],
+      "affiliations": [
+        "The Chinese University of Hong Kong",
+        "Microsoft"
+      ],
+      "summary": "ForgeWM 通过渐进式因果课程训练实时可交互的视频世界模型：先从短因果片段入手，再逐步扩展至更长时间跨度。所得模型支持实时帧率下的交互式控制器输入，适用于游戏模拟、机器人训练和场景探索。",
+      "key_findings": [
+        "渐进因果课程实现了少步动作条件视频生成",
+        "达到适合实时游戏与机器人模拟的交互帧率"
+      ],
+      "tags": [
+        "world-model",
+        "video-generation",
+        "action-conditioned",
+        "game-simulation",
+        "robotics"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 93,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14022",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.14022"
+      }
+    },
+    {
+      "id": "swe-bench-science",
+      "title": "SWE-bench Science：编程智能体能否解决科学领域的工程任务？",
+      "authors": [
+        "Zhipeng Xu",
+        "Yifei Zhang",
+        "Jiaxian Guo",
+        "Wenbin Hu",
+        "Zhenyu Hua et al."
+      ],
+      "affiliations": [
+        "OpenMOSS"
+      ],
+      "summary": "SWE-bench Science 是一个涵盖20个科学领域（天体物理学、生物信息学、气候科学、材料科学）共119个任务的基准测试，用于评估编程智能体在真实科学软件工程场景下的表现。即便是最强的智能体（Claude Code + Opus-5），其 pass@1 也低于50%。",
+      "key_findings": [
+        "最佳智能体的 pass@1 低于50%，揭示了科学编程能力的巨大差距",
+        "任务涵盖三种范式：问题驱动型、专家探索型与工程集成型"
+      ],
+      "tags": [
+        "benchmark",
+        "coding-agents",
+        "scientific-software",
+        "llm-evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.19799",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.19799",
+        "pdf": "https://arxiv.org/pdf/2608.19799"
+      }
+    },
+    {
+      "id": "witheveryone",
+      "title": "WithEveryone：面向群体图像生成的统一空间规划与身份定位",
+      "authors": [
+        "Hao Chen",
+        "Ziyue Wang",
+        "Wenhao Li",
+        "Weiming Dong",
+        "Changsheng Xu et al."
+      ],
+      "affiliations": [
+        "Institute of Automation, Chinese Academy of Sciences"
+      ],
+      "summary": "WithEveryone 通过联合优化空间规划与身份定位，从多个参考身份生成连贯的群体图像。将群体图像生成视为结构化预测任务，在身份保真度和自然空间布局方面均优于独立的逐人生成方法。",
+      "key_findings": [
+        "联合空间规划与身份定位优于独立的逐人生成流程",
+        "统一结构化预测框架实现了连贯的多身份群体图像生成"
+      ],
+      "tags": [
+        "image-generation",
+        "identity-preservation",
+        "group-image",
+        "diffusion"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20336",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20336"
+      }
+    },
+    {
+      "id": "facet",
+      "title": "FACET：在终端任务合成中保持源意图与可执行状态的一致性",
+      "authors": [
+        "Kou Shi",
+        "Zun Wang",
+        "Qisheng Su",
+        "Shiting Huang",
+        "Ziao Zhang et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "FACET 解决了高质量终端智能体任务合成中的难题：确保指令、环境初始化、参考解决方案与验证器之间保持一致性。该框架防止不可解或评估错误的任务污染智能体训练数据。",
+      "key_findings": [
+        "终端任务合成中的构件不一致性会导致任务不可解或评估错误",
+        "FACET 的信息保留方法在规模化场景下提升了可执行任务的质量"
+      ],
+      "tags": [
+        "agent-training",
+        "task-synthesis",
+        "terminal-agents",
+        "data-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.18580",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.18580"
+      }
+    },
+    {
+      "id": "flashprefill-v2",
+      "title": "FlashPrefill V2：面向长上下文大语言模型服务的块稀疏预填充注意力",
+      "authors": [
+        "Qihang Fan",
+        "Huaibo Huang",
+        "Zhiying Wu",
+        "Bingning Wang",
+        "Ran He et al."
+      ],
+      "affiliations": [
+        "Institute of Automation, Chinese Academy of Sciences"
+      ],
+      "summary": "FlashPrefill V2 为长上下文大语言模型服务推进了块稀疏预填充注意力机制：引入均值修正项以在极端稀疏条件下保持精度，采用与 FA3/4 对齐的稀疏算子及 PackGQA，并实现了 warp 专业化。目标是同时解决精度与吞吐量问题，面向实际部署场景。",
+      "key_findings": [
+        "均值修正项在极端注意力稀疏条件下保持了模型精度",
+        "与 FA3/4 对齐的稀疏算子结合 PackGQA，实现了显著的预填充吞吐量提升"
+      ],
+      "tags": [
+        "long-context",
+        "sparse-attention",
+        "inference-efficiency",
+        "llm-serving"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.19758",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.19758",
+        "pdf": "https://arxiv.org/pdf/2608.19758"
+      }
+    },
+    {
+      "id": "hsi",
+      "title": "分层自我改进：面向任务特定可演化智能体框架的方法",
+      "authors": [
+        "Wei Chen",
+        "Yaowei Zheng",
+        "Jiaxin Mao",
+        "Junlong Li",
+        "Peng Li et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "HSI 使冻结的大语言模型能够通过两级层次结构自主演化任务特定策略：元级优化器识别瓶颈并提出框架调整方案，对象级执行器负责具体实施。无需更新模型权重，可适用于任意黑盒大语言模型。",
+      "key_findings": [
+        "冻结的大语言模型可通过结构化框架演化在无需权重更新的情况下得到改进",
+        "两级元/对象层次结构将瓶颈识别与变更实施解耦"
+      ],
+      "tags": [
+        "self-improvement",
+        "llm-agents",
+        "prompt-engineering",
+        "agent-harness"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.08466",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.08466"
+      }
+    },
+    {
+      "id": "flowevo",
+      "title": "FlowEvo：通过工作流与可执行技能协同演化实现智能体自我进化",
+      "authors": [
+        "Zhengran Ji",
+        "Zichao Hu",
+        "Yilun Zhao",
+        "Yue Liu",
+        "Zheng Zhang et al."
+      ],
+      "affiliations": [
+        "Yale University"
+      ],
+      "summary": "FlowEvo 使智能体能够保留并精炼推理过程中发现的成功工作流，而非将其丢弃，同时根据执行反馈协同演化高层工作流结构与低层可执行技能。积累的可复用技能在多步推理任务上的表现显著优于静态框架。",
+      "key_findings": [
+        "工作流与技能的协同演化可跨轮次积累可复用能力",
+        "在多步推理任务上显著优于静态智能体框架"
+      ],
+      "tags": [
+        "self-evolving-agents",
+        "workflow",
+        "skill-learning",
+        "llm-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21596",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2607.21596"
+      }
+    },
+    {
+      "id": "tinycast",
+      "title": "TinyCast：基于计算周期性的概率零样本预测",
+      "authors": [
+        "Artjom Joosen",
+        "Ethan Dowd",
+        "Hassan Ismail Fawaz",
+        "Nick Pawlowski et al."
+      ],
+      "affiliations": [
+        "Amazon"
+      ],
+      "summary": "TinyCast 是一个仅有146K参数的零样本时间序列基础模型，它直接从输入数据中检测并编码周期性模式，而非依赖大规模训练集学习。其极小的参数量使其可在资源受限环境中部署，同时保持具有竞争力的概率预测性能。",
+      "key_findings": [
+        "146K参数通过计算（而非学习）周期性实现了具有竞争力的零样本预测",
+        "生成适用于不确定性感知部署的经校准概率预测"
+      ],
+      "tags": [
+        "time-series",
+        "forecasting",
+        "zero-shot",
+        "lightweight",
+        "foundation-model"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.15767",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.15767"
+      }
+    },
+    {
+      "id": "memtrapbench",
+      "title": "MemTrapBench：大语言模型记忆使用中认知陷阱的基准测试",
+      "authors": [
+        "Yizheng Huang",
+        "Longqi Yang",
+        "Dakuo Wang",
+        "Yao Wan",
+        "Hao Chen et al."
+      ],
+      "affiliations": [
+        "Huazhong University of Science and Technology"
+      ],
+      "summary": "MemTrapBench 识别了四类认知陷阱——记忆与答案冲突、时序推理失败、来源归因错误和上下文干扰——这些陷阱会导致记忆增强机制损害大语言模型的性能。对12个大语言模型的基准测试表明，朴素的记忆集成在新鲜推理任务上会使性能下降多达23%。",
+      "key_findings": [
+        "朴素记忆增强使大语言模型在新鲜推理任务上的性能下降多达23%",
+        "识别出四类认知陷阱，需要选择性而非无差别地激活记忆"
+      ],
+      "tags": [
+        "memory-augmentation",
+        "llm-evaluation",
+        "benchmark",
+        "rag",
+        "cognitive-bias"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20202",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20202"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Qwen3.8 系列中的270亿参数稠密文本生成模型，采用 Apache-2.0 许可证，针对对话场景优化。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "chat",
+        "apache-2.0",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 91917,
+        "likes": 1823
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "qwen3-8-2-4t-a95b",
+      "name": "Qwen3.8-2.4T-A95B",
+      "organization": "Qwen (Alibaba)",
+      "description": "超大规模混合专家模型，总参数量达2.4万亿，激活参数950亿，上下文窗口长达100万token。",
+      "task_type": "text-generation",
+      "model_size": "2.4T (MoE, 95B active)",
+      "tags": [
+        "moe",
+        "long-context",
+        "1M-context",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 12480,
+        "likes": 575
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+    },
+    {
+      "id": "minimax-m2-5",
+      "name": "MiniMax-M2.5",
+      "organization": "MiniMaxAI",
+      "description": "MiniMaxAI 发布的2290亿参数混合专家长上下文模型，专为扩展上下文文本生成任务设计。",
+      "task_type": "text-generation",
+      "model_size": "229B (MoE)",
+      "tags": [
+        "moe",
+        "long-context",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 6090,
+        "likes": 431
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5"
+    },
+    {
+      "id": "tau-0-vla",
+      "name": "τ₀-VLA",
+      "organization": "SII Research",
+      "description": "分层机器人视觉-语言-动作基础模型，将世界模型规划阶段与低层动作策略相结合，支持世界模型引导的测试时搜索。",
+      "task_type": "robotics / vision-language-action",
+      "model_size": null,
+      "tags": [
+        "robotics",
+        "vla",
+        "world-model",
+        "manipulation"
+      ],
+      "metrics": {
+        "downloads": 3240,
+        "likes": 287
+      },
+      "source_url": "https://huggingface.co/sii-research/tau-0-vla"
+    },
+    {
+      "id": "4danyone-model",
+      "name": "4DAnyone",
+      "organization": "Ant Group",
+      "description": "4D高斯泼溅重建模型，从单目输入生成多视角一致性视频，进而重建动态人体。",
+      "task_type": "4D reconstruction / video generation",
+      "model_size": null,
+      "tags": [
+        "video",
+        "4d-reconstruction",
+        "gaussian-splatting",
+        "human"
+      ],
+      "metrics": {
+        "downloads": 2180,
+        "likes": 203
+      },
+      "source_url": "https://huggingface.co/AntResearch/4DAnyone"
+    },
+    {
+      "id": "meta-llama-3-8b-instruct",
+      "name": "Meta-Llama-3-8B-Instruct",
+      "organization": "Meta",
+      "description": "经过指令微调的80亿参数 Llama 3 模型，是部署最广泛的开源权重对话模型之一。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "llama",
+        "instruct",
+        "chat",
+        "meta"
+      ],
+      "metrics": {
+        "downloads": 1430000,
+        "likes": 4380
+      },
+      "source_url": "https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct"
+    },
+    {
+      "id": "deepseek-v3",
+      "name": "DeepSeek-V3",
+      "organization": "DeepSeek",
+      "description": "DeepSeek 推出的高性能开源混合专家模型，在代码生成和推理任务上表现优异。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "code",
+        "reasoning",
+        "deepseek"
+      ],
+      "metrics": {
+        "downloads": 445000,
+        "likes": 5820
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3"
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B Instruct",
+      "organization": "Google",
+      "description": "Google 推出的270亿参数指令微调版 Gemma 3 模型，具备强大的多语言理解与推理能力。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "google",
+        "gemma",
+        "instruct",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 287000,
+        "likes": 2140
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    {
+      "id": "phi-4-mini-instruct",
+      "name": "Phi-4-Mini Instruct",
+      "organization": "Microsoft",
+      "description": "微软推出的紧凑型 Phi-4 Mini 指令微调模型，在较小参数规模下兼顾了强大的推理能力。",
+      "task_type": "text-generation",
+      "model_size": "small",
+      "tags": [
+        "phi",
+        "microsoft",
+        "instruct",
+        "small"
+      ],
+      "metrics": {
+        "downloads": 198000,
+        "likes": 1340
+      },
+      "source_url": "https://huggingface.co/microsoft/phi-4-mini-instruct"
+    },
+    {
+      "id": "qwen3-8-27b-fp8",
+      "name": "Qwen3.8-27B-FP8",
+      "organization": "orca router",
+      "description": "Qwen3.8-27B 的 FP8 量化版本，针对高效推理服务进行优化，显著降低显存占用。",
+      "task_type": "text-generation",
+      "model_size": "27B (FP8)",
+      "tags": [
+        "quantized",
+        "fp8",
+        "serving",
+        "efficiency"
+      ],
+      "metrics": {
+        "downloads": 47300,
+        "likes": 312
+      },
+      "source_url": "https://huggingface.co/orcarouter/Qwen3.8-27B-FP8"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw",
+      "name": "openclaw/openclaw",
+      "description": "完全在本地设备上运行的个人AI助手，支持超过50种集成，包括 WhatsApp、Telegram、Slack、Discord、Signal 和 iMessage；受本地AI隐私需求增长驱动，热度持续攀升。",
+      "language": "Python",
+      "stars": 210000,
+      "stars_today": 1842,
+      "forks": 18700,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "local-ai",
+        "personal-assistant",
+        "privacy",
+        "integrations"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tau-0-vla-repo",
+      "name": "sii-research/tau-0-vla",
+      "description": "τ₀-VLA 分层机器人基础模型的官方实现，支持世界模型引导的测试时计算；随今日论文发布热度急剧攀升。",
+      "language": "Python",
+      "stars": 2840,
+      "stars_today": 1520,
+      "forks": 187,
+      "url": "https://github.com/sii-research/tau-0-vla",
+      "tags": [
+        "robotics",
+        "vla",
+        "world-model",
+        "test-time-compute"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "用户友好的自托管AI界面，支持 Ollama、OpenAI API 等多种后端；是最受欢迎的本地大语言模型用户界面之一，已获12.4万星标。",
+      "language": "Svelte",
+      "stars": 124000,
+      "stars_today": 1247,
+      "forks": 14200,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "local-llm",
+        "ui",
+        "ollama",
+        "self-hosted"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "4danyone-repo",
+      "name": "ant-research/4DAnyone",
+      "description": "SIGGRAPH Asia 2026 官方代码仓库，实现了基于高斯泼溅技术从单目视频重建4D人体的 4DAnyone 方法。",
+      "language": "Python",
+      "stars": 1920,
+      "stars_today": 1230,
+      "forks": 143,
+      "url": "https://github.com/ant-research/4DAnyone",
+      "tags": [
+        "4d-reconstruction",
+        "gaussian-splatting",
+        "human-avatar",
+        "SIGGRAPH"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama",
+      "name": "ollama/ollama",
+      "description": "本地运行大语言模型的事实标准工具，支持 Llama、Mistral、Gemma、DeepSeek 等众多模型。",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 986,
+      "forks": 12400,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-llm",
+        "inference",
+        "on-device",
+        "multi-model"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "comfyanonymous/ComfyUI",
+      "description": "基于节点的扩散模型可视化工作流界面，提供对图像生成流程的模块化、精细化控制。",
+      "language": "Python",
+      "stars": 106000,
+      "stars_today": 843,
+      "forks": 11300,
+      "url": "https://github.com/comfyanonymous/ComfyUI",
+      "tags": [
+        "diffusion",
+        "image-generation",
+        "workflow",
+        "gui"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nanochat",
+      "name": "karpathy/nanochat",
+      "description": "Andrej Karpathy 编写的极简完整大语言模型训练流程，在一个可读代码库中涵盖数据处理、训练与推理全流程；极具教育价值。",
+      "language": "Python",
+      "stars": 2600,
+      "stars_today": 780,
+      "forks": 312,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "llm-training",
+        "educational",
+        "minimal",
+        "karpathy"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "swe-bench-science-repo",
+      "name": "OpenMOSS/SWE-bench-Science",
+      "description": "SWE-bench Science 官方基准测试仓库，涵盖20个研究领域共119个科学软件工程任务。",
+      "language": "Python",
+      "stars": 834,
+      "stars_today": 512,
+      "forks": 64,
+      "url": "https://github.com/OpenMOSS/SWE-bench-Science",
+      "tags": [
+        "benchmark",
+        "coding-agents",
+        "scientific-software",
+        "evaluation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "envharness-repo",
+      "name": "google-research/envharness",
+      "description": "Google Research 的 EnvHarness 框架，用于动态包装静态智能体训练环境，无需修改底层逻辑。",
+      "language": "Python",
+      "stars": 1240,
+      "stars_today": 487,
+      "forks": 98,
+      "url": "https://github.com/google-research/envharness",
+      "tags": [
+        "agent-learning",
+        "environment-design",
+        "llm-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow",
+      "name": "langchain-ai/langflow",
+      "description": "用于构建 RAG 流程和多智能体AI应用的低代码可视化工具，支持拖拽式交互界面。",
+      "language": "Python",
+      "stars": 47800,
+      "stars_today": 623,
+      "forks": 5240,
+      "url": "https://github.com/langchain-ai/langflow",
+      "tags": [
+        "rag",
+        "agents",
+        "low-code",
+        "pipeline-builder"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "dify",
+      "name": "dify-ai/dify",
+      "description": "开源大语言模型应用开发平台，支持 RAG 流程、AI智能体与模型管理。",
+      "language": "TypeScript",
+      "stars": 89400,
+      "stars_today": 412,
+      "forks": 13100,
+      "url": "https://github.com/dify-ai/dify",
+      "tags": [
+        "llm-apps",
+        "rag",
+        "agents",
+        "open-source"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n-io/n8n",
+      "description": "具备原生AI智能体能力的公平代码工作流自动化平台，提供可视化拖拽式构建器。",
+      "language": "TypeScript",
+      "stars": 52000,
+      "stars_today": 381,
+      "forks": 14300,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "ai-agents",
+        "no-code",
+        "self-hosted"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "物理AI的测试时计算扩展",
+      "description": "τ₀-VLA 与 ForgeWM 均表明，通过世界模型搜索或渐进式生成来扩展推理时计算，可为具身AI与交互式AI系统带来显著收益。",
+      "related_paper_ids": [
+        "tau0-vla",
+        "forgewm"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "4D与多视角人体重建",
+      "description": "4DAnyone 通过解决多视角一致性生成中的注意力上下文瓶颈，突破了从普通单目视频重建动态人体的极限，标志着可及性虚拟形象创建领域的快速进步。",
+      "related_paper_ids": [
+        "4danyone"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体环境自适应与自我改进",
+      "description": "一组论文（EnvHarness、HSI、FlowEvo、FACET）共同推进了智能体自适应重塑环境与自主演化策略的基础设施建设，使其超越静态流程的局限。",
+      "related_paper_ids": [
+        "envharness",
+        "hsi",
+        "flowevo",
+        "facet"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "长上下文推理效率",
+      "description": "FlashPrefill V2 通过块稀疏算子和精度修正机制，解决了预填充阶段的二次方注意力瓶颈——随着上下文窗口扩展至100万token，这是至关重要的工程前沿。",
+      "related_paper_ids": [
+        "flashprefill-v2"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "基准测试完整性与评估严谨性",
+      "description": "SWE-bench Science、MemTrapBench 以及ASR基准优化相关论文共同揭示：无论是针对编程智能体、记忆增强型大语言模型还是语音识别，当前评估实践都系统性地高估了模型的真实能力。",
+      "related_paper_ids": [
+        "swe-bench-science",
+        "memtrapbench"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

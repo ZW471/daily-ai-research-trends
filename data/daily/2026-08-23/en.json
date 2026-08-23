@@ -1,0 +1,925 @@
+{
+  "version": "1.0",
+  "date": "2026-08-23",
+  "generated_at": "2026-08-23T08:00:00Z",
+  "summary": {
+    "headline": "τ₀-VLA introduces world-model-guided test-time compute for robotics; 4DAnyone enables 4D human reconstruction from monocular video; agentic environment adaptation emerges as a key LLM training paradigm",
+    "body": "Today's top papers span robotics, 4D vision, and agentic AI infrastructure. τ₀-VLA (518 upvotes) proposes a hierarchical robot foundation model where a high-level world model performs guided search over future states before a low-level policy executes—bringing test-time compute scaling to physical AI. 4DAnyone (317 upvotes) tackles 4D human reconstruction from casual monocular video via multiview-consistent generation and Gaussian Splatting, setting a new quality bar for avatar creation.\n\nA secondary cluster around agent learning infrastructure is notable: EnvHarness (169 upvotes) introduces programmable wrappers that dynamically adapt static environments to an agent's current weaknesses, while FlowEvo and HSI address self-improvement at the workflow and strategy levels respectively. On the model side, Qwen3.8-27B leads downloads among new releases, and the ongoing popularity of DeepSeek-V3 and Llama-3-8B-Instruct underscores continued demand for high-quality open-weight models.",
+    "key_themes": [
+      "robot-foundation-models",
+      "test-time-compute",
+      "4d-human-reconstruction",
+      "agentic-environment-adaptation",
+      "long-context-inference-efficiency"
+    ]
+  },
+  "researcher_notes": "**τ₀-VLA is the standout paper of the day**, combining world-model imagination with hierarchical execution in a way that directly mirrors the test-time compute scaling story that has dominated LLM research—now applied to robotics. The SII Research team's approach of searching over imagined futures before acting is conceptually clean and could become a template for physical AI systems. Watch for follow-up work on compute budgeting at test time.\n\n**4DAnyone from Ant Research** addresses a longstanding bottleneck in avatar creation: the bounded-attention-context problem when generating multiview-consistent frames. The Reference Context Packing and Target Context Routing mechanisms are worth studying carefully—they likely generalize to other multiview generation tasks beyond humans.\n\n**The agentic infrastructure cluster** (EnvHarness, HSI, FlowEvo, FACET) signals a maturing research agenda around making LLM agents more self-sufficient. EnvHarness from Google Research is particularly pragmatic—wrapping existing environments without modifying them lowers the barrier to adoption. MemTrapBench's finding that memory augmentation can *degrade* performance by up to 23% is a useful counterweight to the prevailing enthusiasm for memory-augmented agents.",
+  "papers": [
+    {
+      "id": "tau0-vla",
+      "title": "τ₀-VLA: a Hierarchical Robot Foundation Model with World-Model-Guided Test-Time Computation",
+      "authors": [
+        "Xiaowei Cai",
+        "Yunuo Cai",
+        "Bingao Chen",
+        "Jingxiao Chen",
+        "Zhi Chen et al."
+      ],
+      "affiliations": [
+        "SII Research"
+      ],
+      "summary": "τ₀-VLA is a hierarchical robot foundation model that uses a high-level world model to imagine and evaluate possible future states before a low-level policy executes the selected action plan. Test-time guided search over futures enables more optimal decision-making without retraining.",
+      "key_findings": [
+        "World-model-guided test-time search improves robot task success over single-pass policies",
+        "Hierarchical separation of planning (world model) and execution (action policy) scales cleanly"
+      ],
+      "tags": [
+        "robotics",
+        "vla",
+        "world-model",
+        "test-time-compute",
+        "hierarchical"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 518,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16885",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.16885",
+        "pdf": "https://arxiv.org/pdf/2608.16885"
+      }
+    },
+    {
+      "id": "4danyone",
+      "title": "4DAnyone: Create Anyone in 4D from a Casual Monocular Video",
+      "authors": [
+        "Yudong Jin",
+        "Tao Xie",
+        "Qihang Zhang",
+        "Zehong Shen",
+        "Zhen Xu et al."
+      ],
+      "affiliations": [
+        "Ant Group"
+      ],
+      "summary": "4DAnyone reconstructs 4D humans from uncalibrated monocular video by generating multiview-consistent videos and lifting them into 4D Gaussian Splatting. Reference Context Packing and Target Context Routing solve the bounded-attention-context problem that arises when splitting target views into groups.",
+      "key_findings": [
+        "RCP+TCR mechanisms resolve attention-context bottleneck in multiview-consistent generation",
+        "Outperforms prior methods in novel-view video quality and 4D reconstruction fidelity"
+      ],
+      "tags": [
+        "4d-reconstruction",
+        "gaussian-splatting",
+        "monocular-video",
+        "human-avatar",
+        "SIGGRAPH"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 317,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20335",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.20335",
+        "pdf": "https://arxiv.org/pdf/2608.20335"
+      }
+    },
+    {
+      "id": "envharness",
+      "title": "EnvHarness: Awakening Static Worlds for Agent Learning",
+      "authors": [
+        "Chengsong Huang",
+        "Zifeng Wang",
+        "Rujun Han",
+        "Jun Yan",
+        "Yanfei Chen et al."
+      ],
+      "affiliations": [
+        "Google Research"
+      ],
+      "summary": "EnvHarness is a programmable plug-in layer that wraps static environments to dynamically reshape their behavior based on an agent's current weaknesses, without modifying the underlying environment logic. It operates through standard interfaces, enabling broad applicability across diverse agent training domains.",
+      "key_findings": [
+        "Plug-in wrapper pattern adapts any static environment without touching underlying logic",
+        "Dynamic reshaping based on agent weaknesses accelerates skill acquisition across domains"
+      ],
+      "tags": [
+        "agent-learning",
+        "environment-design",
+        "llm-agents",
+        "curriculum-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 169,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.19880",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.19880",
+        "pdf": "https://arxiv.org/pdf/2608.19880"
+      }
+    },
+    {
+      "id": "forgewm",
+      "title": "ForgeWM: Progressive Causal Training for Few-Step Action-Conditioned Video World Models",
+      "authors": [
+        "Xinye Li",
+        "Lingshuai Lin",
+        "Lei Wang",
+        "Liuzhou Zhang",
+        "Jialin Cui et al."
+      ],
+      "affiliations": [
+        "The Chinese University of Hong Kong",
+        "Microsoft"
+      ],
+      "summary": "ForgeWM trains real-time playable video world models via a progressive causal curriculum: short causal segments first, then extending to longer horizons. The resulting model supports interactive controller input at real-time frame rates for game simulation, robot training, and scene exploration.",
+      "key_findings": [
+        "Progressive causal curriculum enables few-step action-conditioned video generation",
+        "Achieves interactive frame rates suitable for real-time game and robot simulation"
+      ],
+      "tags": [
+        "world-model",
+        "video-generation",
+        "action-conditioned",
+        "game-simulation",
+        "robotics"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 93,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.14022",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.14022"
+      }
+    },
+    {
+      "id": "swe-bench-science",
+      "title": "SWE-bench Science: Can Coding Agents Resolve Engineering Tasks in Science?",
+      "authors": [
+        "Zhipeng Xu",
+        "Yifei Zhang",
+        "Jiaxian Guo",
+        "Wenbin Hu",
+        "Zhenyu Hua et al."
+      ],
+      "affiliations": [
+        "OpenMOSS"
+      ],
+      "summary": "SWE-bench Science is a 119-task benchmark spanning 20 scientific domains (astrophysics, bioinformatics, climate science, materials science) that tests coding agents on real scientific software engineering. Even the best agent (Claude Code + Opus-5) achieves less than 50% pass@1.",
+      "key_findings": [
+        "Best agent achieves <50% pass@1, revealing large gaps in scientific coding capability",
+        "Three task paradigms: Issue-driven, Expert-exploratory, and Engineering-integration"
+      ],
+      "tags": [
+        "benchmark",
+        "coding-agents",
+        "scientific-software",
+        "llm-evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.19799",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.19799",
+        "pdf": "https://arxiv.org/pdf/2608.19799"
+      }
+    },
+    {
+      "id": "witheveryone",
+      "title": "WithEveryone: Unified Planning and Identity Grounding for Group Image Generation",
+      "authors": [
+        "Hao Chen",
+        "Ziyue Wang",
+        "Wenhao Li",
+        "Weiming Dong",
+        "Changsheng Xu et al."
+      ],
+      "affiliations": [
+        "Institute of Automation, Chinese Academy of Sciences"
+      ],
+      "summary": "WithEveryone jointly optimizes spatial planning and identity grounding to generate coherent group images from multiple reference identities. Treating group image generation as structured prediction yields superior identity preservation and natural spatial arrangements over independent per-person methods.",
+      "key_findings": [
+        "Joint spatial planning + identity grounding outperforms independent per-person pipelines",
+        "Unified structured prediction formulation enables coherent multi-identity group images"
+      ],
+      "tags": [
+        "image-generation",
+        "identity-preservation",
+        "group-image",
+        "diffusion"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20336",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20336"
+      }
+    },
+    {
+      "id": "facet",
+      "title": "FACET: Preserving Source Intent and Executable State in Terminal Task Synthesis",
+      "authors": [
+        "Kou Shi",
+        "Zun Wang",
+        "Qisheng Su",
+        "Shiting Huang",
+        "Ziao Zhang et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "FACET addresses the challenge of synthesizing high-quality terminal agent tasks by ensuring consistency among instruction, environment initialization, reference solution, and verifier. The framework prevents unsolvable or incorrectly evaluated tasks from contaminating agent training data.",
+      "key_findings": [
+        "Artifact inconsistency in terminal task synthesis causes unsolvable or mis-evaluated tasks",
+        "FACET's information preservation approach improves executable task quality at scale"
+      ],
+      "tags": [
+        "agent-training",
+        "task-synthesis",
+        "terminal-agents",
+        "data-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.18580",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.18580"
+      }
+    },
+    {
+      "id": "flashprefill-v2",
+      "title": "FlashPrefill V2: Block-Sparse Prefill Attention for Long-Context LLM Serving",
+      "authors": [
+        "Qihang Fan",
+        "Huaibo Huang",
+        "Zhiying Wu",
+        "Bingning Wang",
+        "Ran He et al."
+      ],
+      "affiliations": [
+        "Institute of Automation, Chinese Academy of Sciences"
+      ],
+      "summary": "FlashPrefill V2 advances block-sparse prefill attention for long-context LLM serving with a mean correction term for accuracy under extreme sparsity, an FA3/4-aligned sparse kernel with PackGQA, and warp specialization. Targets practical deployment by addressing accuracy and throughput together.",
+      "key_findings": [
+        "Mean correction term preserves model accuracy under extreme attention sparsity",
+        "FA3/4-aligned sparse kernel with PackGQA achieves significant prefill throughput gains"
+      ],
+      "tags": [
+        "long-context",
+        "sparse-attention",
+        "inference-efficiency",
+        "llm-serving"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.19758",
+        "huggingface": null,
+        "alphaxiv": "https://alphaxiv.org/abs/2608.19758",
+        "pdf": "https://arxiv.org/pdf/2608.19758"
+      }
+    },
+    {
+      "id": "hsi",
+      "title": "Hierarchical Self-Improvement: A Framework for Task-Specific Evolvable Agent Harnesses",
+      "authors": [
+        "Wei Chen",
+        "Yaowei Zheng",
+        "Jiaxin Mao",
+        "Junlong Li",
+        "Peng Li et al."
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "HSI enables frozen LLMs to autonomously evolve task-specific strategies through a two-level hierarchy: a meta-level optimizer identifies bottlenecks and proposes harness changes, while an object-level executor implements them. No weight fine-tuning is required, making it applicable to any black-box LLM.",
+      "key_findings": [
+        "Frozen LLMs can be improved through structured harness evolution without weight updates",
+        "Two-level meta/object hierarchy separates bottleneck identification from change implementation"
+      ],
+      "tags": [
+        "self-improvement",
+        "llm-agents",
+        "prompt-engineering",
+        "agent-harness"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.08466",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.08466"
+      }
+    },
+    {
+      "id": "flowevo",
+      "title": "FlowEvo: Self-Evolving Agents through the Co-Evolution of Workflows and Executable Skills",
+      "authors": [
+        "Zhengran Ji",
+        "Zichao Hu",
+        "Yilun Zhao",
+        "Yue Liu",
+        "Zheng Zhang et al."
+      ],
+      "affiliations": [
+        "Yale University"
+      ],
+      "summary": "FlowEvo enables agents to retain and refine successful workflows discovered during inference rather than discarding them, co-evolving both high-level workflow structure and low-level executable skills based on execution feedback. Accumulated reusable skills improve multi-step reasoning performance over static frameworks.",
+      "key_findings": [
+        "Co-evolution of workflows and skills accumulates reusable capabilities across episodes",
+        "Significantly outperforms static agent frameworks on multi-step reasoning tasks"
+      ],
+      "tags": [
+        "self-evolving-agents",
+        "workflow",
+        "skill-learning",
+        "llm-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.21596",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2607.21596"
+      }
+    },
+    {
+      "id": "tinycast",
+      "title": "TinyCast: Probabilistic Zero-Shot Forecasting with Computed Periodicity",
+      "authors": [
+        "Artjom Joosen",
+        "Ethan Dowd",
+        "Hassan Ismail Fawaz",
+        "Nick Pawlowski et al."
+      ],
+      "affiliations": [
+        "Amazon"
+      ],
+      "summary": "TinyCast is a 146K-parameter zero-shot time series foundation model that detects and encodes periodic patterns from input data directly rather than learning them from large training sets. Its tiny footprint enables deployment in resource-constrained environments with competitive probabilistic forecasting.",
+      "key_findings": [
+        "146K parameters achieves competitive zero-shot forecasting via computed (not learned) periodicity",
+        "Generates calibrated probabilistic forecasts suitable for uncertainty-aware deployment"
+      ],
+      "tags": [
+        "time-series",
+        "forecasting",
+        "zero-shot",
+        "lightweight",
+        "foundation-model"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.15767",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.15767"
+      }
+    },
+    {
+      "id": "memtrapbench",
+      "title": "MemTrapBench: Benchmarking Cognitive Traps in LLM Memory Use",
+      "authors": [
+        "Yizheng Huang",
+        "Longqi Yang",
+        "Dakuo Wang",
+        "Yao Wan",
+        "Hao Chen et al."
+      ],
+      "affiliations": [
+        "Huazhong University of Science and Technology"
+      ],
+      "summary": "MemTrapBench identifies four classes of cognitive traps—memory-answer conflicts, temporal reasoning failures, source attribution errors, and context interference—that cause memory augmentation to impair LLM performance. Benchmarking 12 LLMs shows naive memory integration degrades performance by up to 23% on fresh-reasoning tasks.",
+      "key_findings": [
+        "Naive memory augmentation degrades LLM performance by up to 23% on fresh-reasoning tasks",
+        "Four cognitive trap classes identified requiring selective rather than blanket memory engagement"
+      ],
+      "tags": [
+        "memory-augmentation",
+        "llm-evaluation",
+        "benchmark",
+        "rag",
+        "cognitive-bias"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20202",
+        "huggingface": null,
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20202"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "27B dense text-generation model in the Qwen3.8 series, Apache-2.0 licensed and optimized for chat.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "chat",
+        "apache-2.0",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 91917,
+        "likes": 1823
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "qwen3-8-2-4t-a95b",
+      "name": "Qwen3.8-2.4T-A95B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Massive 2.4T total parameter MoE model with 95B active parameters and 1M-token context window.",
+      "task_type": "text-generation",
+      "model_size": "2.4T (MoE, 95B active)",
+      "tags": [
+        "moe",
+        "long-context",
+        "1M-context",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 12480,
+        "likes": 575
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+    },
+    {
+      "id": "minimax-m2-5",
+      "name": "MiniMax-M2.5",
+      "organization": "MiniMaxAI",
+      "description": "229B MoE long-context model from MiniMaxAI designed for extended context text generation tasks.",
+      "task_type": "text-generation",
+      "model_size": "229B (MoE)",
+      "tags": [
+        "moe",
+        "long-context",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 6090,
+        "likes": 431
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5"
+    },
+    {
+      "id": "tau-0-vla",
+      "name": "τ₀-VLA",
+      "organization": "SII Research",
+      "description": "Hierarchical robot VLA foundation model combining a world-model planning stage with a low-level action policy, enabling world-model-guided test-time search.",
+      "task_type": "robotics / vision-language-action",
+      "model_size": null,
+      "tags": [
+        "robotics",
+        "vla",
+        "world-model",
+        "manipulation"
+      ],
+      "metrics": {
+        "downloads": 3240,
+        "likes": 287
+      },
+      "source_url": "https://huggingface.co/sii-research/tau-0-vla"
+    },
+    {
+      "id": "4danyone-model",
+      "name": "4DAnyone",
+      "organization": "Ant Group",
+      "description": "4D Gaussian Splatting reconstruction model that generates multiview-consistent videos from monocular input to reconstruct dynamic humans.",
+      "task_type": "4D reconstruction / video generation",
+      "model_size": null,
+      "tags": [
+        "video",
+        "4d-reconstruction",
+        "gaussian-splatting",
+        "human"
+      ],
+      "metrics": {
+        "downloads": 2180,
+        "likes": 203
+      },
+      "source_url": "https://huggingface.co/AntResearch/4DAnyone"
+    },
+    {
+      "id": "meta-llama-3-8b-instruct",
+      "name": "Meta-Llama-3-8B-Instruct",
+      "organization": "Meta",
+      "description": "Instruction-tuned 8B Llama 3 model, one of the most widely deployed open-weight chat models.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "llama",
+        "instruct",
+        "chat",
+        "meta"
+      ],
+      "metrics": {
+        "downloads": 1430000,
+        "likes": 4380
+      },
+      "source_url": "https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct"
+    },
+    {
+      "id": "deepseek-v3",
+      "name": "DeepSeek-V3",
+      "organization": "DeepSeek",
+      "description": "High-performance open MoE model from DeepSeek excelling at code generation and reasoning tasks.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "moe",
+        "code",
+        "reasoning",
+        "deepseek"
+      ],
+      "metrics": {
+        "downloads": 445000,
+        "likes": 5820
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3"
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B Instruct",
+      "organization": "Google",
+      "description": "Google's 27B instruction-tuned Gemma 3 model offering strong multilingual and reasoning capabilities.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "google",
+        "gemma",
+        "instruct",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 287000,
+        "likes": 2140
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    {
+      "id": "phi-4-mini-instruct",
+      "name": "Phi-4-Mini Instruct",
+      "organization": "Microsoft",
+      "description": "Microsoft's compact Phi-4 Mini instruction-tuned model balancing strong reasoning with a small footprint.",
+      "task_type": "text-generation",
+      "model_size": "small",
+      "tags": [
+        "phi",
+        "microsoft",
+        "instruct",
+        "small"
+      ],
+      "metrics": {
+        "downloads": 198000,
+        "likes": 1340
+      },
+      "source_url": "https://huggingface.co/microsoft/phi-4-mini-instruct"
+    },
+    {
+      "id": "qwen3-8-27b-fp8",
+      "name": "Qwen3.8-27B-FP8",
+      "organization": "orca router",
+      "description": "FP8-quantized version of Qwen3.8-27B optimized for efficient serving with reduced memory footprint.",
+      "task_type": "text-generation",
+      "model_size": "27B (FP8)",
+      "tags": [
+        "quantized",
+        "fp8",
+        "serving",
+        "efficiency"
+      ],
+      "metrics": {
+        "downloads": 47300,
+        "likes": 312
+      },
+      "source_url": "https://huggingface.co/orcarouter/Qwen3.8-27B-FP8"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw",
+      "name": "openclaw/openclaw",
+      "description": "Personal AI assistant running entirely on-device with 50+ integrations including WhatsApp, Telegram, Slack, Discord, Signal, and iMessage; trending on growing local-AI privacy demand.",
+      "language": "Python",
+      "stars": 210000,
+      "stars_today": 1842,
+      "forks": 18700,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "local-ai",
+        "personal-assistant",
+        "privacy",
+        "integrations"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tau-0-vla-repo",
+      "name": "sii-research/tau-0-vla",
+      "description": "Official implementation of τ₀-VLA hierarchical robot foundation model with world-model-guided test-time computation; surging with today's paper release.",
+      "language": "Python",
+      "stars": 2840,
+      "stars_today": 1520,
+      "forks": 187,
+      "url": "https://github.com/sii-research/tau-0-vla",
+      "tags": [
+        "robotics",
+        "vla",
+        "world-model",
+        "test-time-compute"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "User-friendly self-hosted AI interface supporting Ollama, OpenAI API, and more; one of the most popular local LLM UIs with 124K stars.",
+      "language": "Svelte",
+      "stars": 124000,
+      "stars_today": 1247,
+      "forks": 14200,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "local-llm",
+        "ui",
+        "ollama",
+        "self-hosted"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "4danyone-repo",
+      "name": "ant-research/4DAnyone",
+      "description": "SIGGRAPH Asia 2026 official code for 4DAnyone 4D human reconstruction from monocular video using Gaussian Splatting.",
+      "language": "Python",
+      "stars": 1920,
+      "stars_today": 1230,
+      "forks": 143,
+      "url": "https://github.com/ant-research/4DAnyone",
+      "tags": [
+        "4d-reconstruction",
+        "gaussian-splatting",
+        "human-avatar",
+        "SIGGRAPH"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama",
+      "name": "ollama/ollama",
+      "description": "The de-facto standard tool for running LLMs locally; supports Llama, Mistral, Gemma, DeepSeek, and many more models.",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 986,
+      "forks": 12400,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-llm",
+        "inference",
+        "on-device",
+        "multi-model"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "comfyanonymous/ComfyUI",
+      "description": "Node-based visual workflow GUI for diffusion models offering modular, granular control over image generation pipelines.",
+      "language": "Python",
+      "stars": 106000,
+      "stars_today": 843,
+      "forks": 11300,
+      "url": "https://github.com/comfyanonymous/ComfyUI",
+      "tags": [
+        "diffusion",
+        "image-generation",
+        "workflow",
+        "gui"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "nanochat",
+      "name": "karpathy/nanochat",
+      "description": "Minimal full LLM training pipeline by Andrej Karpathy covering data, training, and inference in one readable codebase; highly educational.",
+      "language": "Python",
+      "stars": 2600,
+      "stars_today": 780,
+      "forks": 312,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "llm-training",
+        "educational",
+        "minimal",
+        "karpathy"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "swe-bench-science-repo",
+      "name": "OpenMOSS/SWE-bench-Science",
+      "description": "Official benchmark repository for SWE-bench Science covering 119 scientific software engineering tasks across 20 research domains.",
+      "language": "Python",
+      "stars": 834,
+      "stars_today": 512,
+      "forks": 64,
+      "url": "https://github.com/OpenMOSS/SWE-bench-Science",
+      "tags": [
+        "benchmark",
+        "coding-agents",
+        "scientific-software",
+        "evaluation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "envharness-repo",
+      "name": "google-research/envharness",
+      "description": "Google Research's EnvHarness framework for dynamically wrapping static agent training environments without modifying underlying logic.",
+      "language": "Python",
+      "stars": 1240,
+      "stars_today": 487,
+      "forks": 98,
+      "url": "https://github.com/google-research/envharness",
+      "tags": [
+        "agent-learning",
+        "environment-design",
+        "llm-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langflow",
+      "name": "langchain-ai/langflow",
+      "description": "Low-code visual builder for RAG pipelines and multi-agent AI applications with drag-and-drop interface.",
+      "language": "Python",
+      "stars": 47800,
+      "stars_today": 623,
+      "forks": 5240,
+      "url": "https://github.com/langchain-ai/langflow",
+      "tags": [
+        "rag",
+        "agents",
+        "low-code",
+        "pipeline-builder"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "dify",
+      "name": "dify-ai/dify",
+      "description": "Open-source LLM app development platform supporting RAG pipelines, AI agents, and model management.",
+      "language": "TypeScript",
+      "stars": 89400,
+      "stars_today": 412,
+      "forks": 13100,
+      "url": "https://github.com/dify-ai/dify",
+      "tags": [
+        "llm-apps",
+        "rag",
+        "agents",
+        "open-source"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n-io/n8n",
+      "description": "Fair-code workflow automation platform with native AI agent capabilities and visual drag-and-drop builder.",
+      "language": "TypeScript",
+      "stars": 52000,
+      "stars_today": 381,
+      "forks": 14300,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "ai-agents",
+        "no-code",
+        "self-hosted"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Test-Time Compute for Physical AI",
+      "description": "τ₀-VLA and ForgeWM both demonstrate that scaling inference-time computation via world-model search or progressive generation yields significant gains for embodied and interactive AI systems.",
+      "related_paper_ids": [
+        "tau0-vla",
+        "forgewm"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "4D & Multiview Human Reconstruction",
+      "description": "4DAnyone pushes the boundary of reconstructing dynamic humans from casual monocular video by solving the attention-context bottleneck in multiview-consistent generation, signaling rapid progress toward accessible avatar creation.",
+      "related_paper_ids": [
+        "4danyone"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Environment Adaptation & Self-Improvement",
+      "description": "A cluster of papers (EnvHarness, HSI, FlowEvo, FACET) collectively advance the infrastructure for agents that adaptively reshape their environment and autonomously evolve strategies, moving beyond static pipelines.",
+      "related_paper_ids": [
+        "envharness",
+        "hsi",
+        "flowevo",
+        "facet"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Context Inference Efficiency",
+      "description": "FlashPrefill V2 addresses the quadratic attention bottleneck in the prefill phase with block-sparse kernels and accuracy corrections, a critical engineering frontier as context windows reach 1M tokens.",
+      "related_paper_ids": [
+        "flashprefill-v2"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Benchmark Integrity & Evaluation Rigor",
+      "description": "SWE-bench Science, MemTrapBench, and the ASR benchmark optimization paper collectively highlight that current evaluation practices—whether for coding agents, memory-augmented LLMs, or speech recognition—systematically overstate true capability.",
+      "related_paper_ids": [
+        "swe-bench-science",
+        "memtrapbench"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-23T08:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
