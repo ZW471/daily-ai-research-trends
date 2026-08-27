@@ -1,0 +1,973 @@
+{
+  "version": "1.0",
+  "date": "2026-08-27",
+  "generated_at": "2026-08-27T08:00:00Z",
+  "summary": {
+    "headline": "测试时扩展在开放域中遭遇瓶颈——奖励模型在利用阶段失效；SWE-Bench ProMax为多语言编程智能体树立新标杆；τ₀-VLA将世界模型引导的计算扩展引入机器人操控",
+    "body": "今日的核心议题是对测试时扩展（TTS）的一次清醒反思：一项跨五个开放域基准（医学、法律、金融、对话、创意写作）的计算量归一化研究揭示，尽管生成更多候选样本能稳定提升上限质量，但从中*筛选*最优输出的能力却近乎完全失效。奖励模型与真实输出质量的相关性仅为 ρ_v ≈ 0.12，这意味着在数学/代码基准上展示的大多数 TTS 收益可能无法迁移至现实场景。这一发现对领域研发资源的分配具有直接影响——应减少对搜索策略的投入，转而加强对结果对齐验证器的研究。\n\n在智能体编程前沿，SWE-Bench ProMax 推出了首个由专家精心构建的多语言重构基准，覆盖七种编程语言，揭示了漏洞修复基准所完全忽视的一类问题。与此同时，τ₀-VLA 证明了世界模型引导的测试时计算是应对长时程机器人操控的可行策略——与 TTS 扩展范式相呼应，但应用于具身场景，且具备一项关键优势：学习到的视觉世界模型可充当内部验证器，有望绕开 NLP 研究中发现的奖励模型崩溃问题。\n\n在效率方面，F-WANDA 展示了 Fisher 重加权剪枝在困惑度和下游准确率上同时超越 Wanda 和 SparseGPT，且仅消耗后者三分之一能量——这是一个极具说服力的可持续性成果。VLM 心智理论的跨任务解离研究相对低调，但意义深远：前沿模型在视角采择任务上的表现更接近高功能自闭症成人，而非神经典型成人，这引发了关于当前训练范式下社会推理如何涌现（或缺失）的深层思考。",
+    "key_themes": [
+      "test-time-scaling",
+      "agentic-coding-benchmarks",
+      "embodied-ai",
+      "model-efficiency-pruning",
+      "theory-of-mind-vlms",
+      "hierarchical-rl-agents"
+    ]
+  },
+  "researcher_notes": "**利用瓶颈是本周最值得关注的潜在重磅发现。** Romano 等人的 TTS 论文（312 票，AlphaXiv 榜首）很可能重塑社区对推理时计算的整体认知。ρ_v ≈ 0.12 的奖励模型相关性结果触目惊心：我们一直在验证几乎轻而易举的任务上对 TTS 进行基准测试（单元测试、证明检查器），由此制造了一种可扩展性的假象。实际影响在于：任何在开放域中基于 best-of-N 或 MCTS 式搜索构建的产品，本质上都是在高质量输出中随机选择。**当务之急的研究议题是：如何构建开放域验证器？** 过程奖励模型、宪法 AI 反馈和 LLM-as-judge 方法都需要在这一视角下进行严格的重新评估。\n\n**τ₀-VLA 与 TTS 论文是同一枚硬币的两面。** τ₀-VLA 的核心洞见——在 best-of-N 规划循环中使用*学习到的世界模型*作为验证器——恰恰正是 TTS 论文所指出的缺失环节。机器人操控天然具备一项优势：视觉世界模型可通过预测未来状态来评估规划质量，其信号远比语言奖励模型丰富。这指向了一个富有成效的研究方向：我们能否借鉴具身世界模型的思路，构建更优质的开放域文本验证器？\n\n**SWE-Bench ProMax 与 OpenClaw 单日 1,820 颗星标志着智能体编程生态的成熟。** 从漏洞修复转向大规模跨文件重构，这一质变意义重大——它同时考验智能体的记忆能力、长时程一致性以及语言特定的理解能力。170 个专家精选实例的设计是经过深思熟虑的：随着前沿模型在愈来愈大的代码语料上进行训练，抗污染性正变得愈发关键。值得关注的是 OpenClaw 平台是否会将 ProMax 整合为在线评估目标。\n\n**F-WANDA 的能效声明值得审慎审视，但同样值得高度关注。** 仅凭用 Fisher 信息对保留预算进行重加权这一操作，就能以三分之一的剪枝能耗达到 SparseGPT 级别的精度，这是一个令人惊喜的简洁结果。该方法可作为即插即用的修改——这类改动往往会被工程实践者悄然采用。鉴于 2026 年 AI 能耗面临日益增长的监管压力，预计这一方向将吸引各大实验室基础设施团队不成比例的关注。\n\n**VLM 心智理论解离结果是一个方法论层面的警示。** Zhang 等人发现 VLMs 在 Director Task 上的表现接近高功能 ASD 均值，这表明思维链正在承担基础模型在无脚手架情况下无法完成的认知工作——且不同的心智理论子能力由本质上不同的机制支撑。这对智能体设计具有重要启示：一个模型可能通过某个心智理论基准，却在结构相似但呈现方式不同的任务上完全失败，使得单基准心智理论评估成为现实社会推理能力的不可靠代理指标。",
+  "papers": [
+    {
+      "id": "tts-wild-exploitation-bottleneck",
+      "title": "野外的测试时扩展：为何利用而非探索才是真正的瓶颈",
+      "authors": [
+        "Davide Romano",
+        "Kanak Raj",
+        "Jerrod Parker",
+        "Daniele Giofrè"
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "Allen Institute for AI"
+      ],
+      "summary": "这是首项跨五个开放域基准（医学、法律、金融、对话、创意写作）对五类测试时扩展方法进行计算量归一化比较的研究。结果表明，尽管生成更多候选样本能稳定提升上限质量，奖励模型与真实输出质量的相关性却仅为 ρ_v ≈ 0.12，导致筛选过程几近随机。该研究提出了一套统一框架，将 TTS token 预算分解为探索与利用两个分量，并证明利用阶段是关键的失效节点。",
+      "key_findings": [
+        "在开放域基准上，奖励模型与真实质量的相关性仅为 ρ_v ≈ 0.12，使得 best-of-N 筛选无论候选池大小如何均近乎随机。",
+        "探索（生成更多候选）在所有设置和计算预算下均能可靠地提升上限性能。",
+        "由于缺乏可靠验证器，TTS 在数学/代码基准上取得的收益无法迁移至开放域。"
+      ],
+      "tags": [
+        "test-time-scaling",
+        "inference-compute",
+        "reward-models",
+        "open-ended-generation",
+        "benchmarks"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 312,
+        "comments": 28
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.18931",
+        "huggingface": "https://huggingface.co/papers/2608.18931",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.18931",
+        "pdf": "https://arxiv.org/pdf/2608.18931"
+      }
+    },
+    {
+      "id": "swe-bench-promax",
+      "title": "SWE-Bench ProMax：面向大规模多语言代码重构的智能体基准测试",
+      "authors": [
+        "Yuling Shi",
+        "Jinghan Xu",
+        "Kelin Fu",
+        "Wenhao Zeng",
+        "Shilin He",
+        "Lei Zhang"
+      ],
+      "affiliations": [
+        "Microsoft Research",
+        "Peking University"
+      ],
+      "summary": "SWE-Bench ProMax 是一个由专家精心构建的基准，包含 170 个多语言代码重构实例，来源于 Python、Java、TypeScript、Go、C、C++ 和 Rust 七种语言的真实提交记录。与漏洞修复基准不同，重构任务要求对多个文件进行协调一致的保持行为语义的修改，能够暴露现有评估所无法捕捉的智能体能力缺陷。",
+      "key_findings": [
+        "当前编程智能体在大规模跨文件重构任务上的失败率远高于单文件漏洞修复，揭示了新的能力边界。",
+        "涵盖七种编程语言，可测量智能体在不同语言上的能力差距。",
+        "任务来源于真实开源代码提交，提供了具备抗污染性的评估。"
+      ],
+      "tags": [
+        "coding-agents",
+        "benchmarks",
+        "code-refactoring",
+        "multilingual",
+        "software-engineering"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 256,
+        "comments": 19
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09802",
+        "huggingface": "https://huggingface.co/papers/2608.09802",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.09802",
+        "pdf": "https://arxiv.org/pdf/2608.09802"
+      }
+    },
+    {
+      "id": "tau0-vla-hierarchical-robot",
+      "title": "τ₀-VLA：具备世界模型引导测试时计算的层级化机器人基础模型",
+      "authors": [
+        "Xiaowei Cai",
+        "Haoran Li",
+        "Jiarun Liu",
+        "Shiyu Zhao",
+        "Yuxiang Lu"
+      ],
+      "affiliations": [
+        "Shanghai Innovation Institute",
+        "SII Research"
+      ],
+      "summary": "τ₀-VLA 是一个层级化视觉-语言-动作模型，将高层子任务生成建模为可扩展计算的推理问题。高层规划器生成候选子任务序列，学习到的世界模型通过预测未来视觉状态对每条轨迹进行评分，最优规划随后传递给反应式底层策略，从而实现可靠的长时程操控。",
+      "key_findings": [
+        "世界模型引导的候选规划评分为机器人任务规划提供了有意义的内部验证器，解决了具身场景中的奖励模型问题。",
+        "层级化架构将长时程规划（可扩展计算）与反应式执行（单次前向传播）解耦，在复杂操控任务上取得显著提升。",
+        "当与视觉世界模型验证器配合使用时，测试时计算扩展在具身 AI 中同样有效。"
+      ],
+      "tags": [
+        "embodied-ai",
+        "robotics",
+        "VLA",
+        "test-time-scaling",
+        "world-models",
+        "hierarchical-planning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 198,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16885",
+        "huggingface": "https://huggingface.co/papers/2608.16885",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.16885",
+        "pdf": "https://arxiv.org/pdf/2608.16885"
+      }
+    },
+    {
+      "id": "f-wanda-fisher-pruning",
+      "title": "F-WANDA：面向大语言模型可持续部署的 Fisher 重加权训练后剪枝",
+      "authors": [
+        "Andrea Rossi",
+        "Marco Lippi",
+        "Stefano Melacci"
+      ],
+      "affiliations": [
+        "University of Modena and Reggio Emilia",
+        "University of Siena"
+      ],
+      "summary": "F-WANDA 对 Wanda 剪枝算法进行改进，按照预激活的经验 Fisher 信息，在输出神经元间重新分配每行的保留预算。在 LLaMA-2-7B 50% 非结构化稀疏度下，该方法在 WikiText-2 上取得 6.85 的困惑度，在 MMLU 上同时超越 Wanda 和 SparseGPT，且仅消耗 SparseGPT 三分之一的剪枝能耗。",
+      "key_findings": [
+        "在 LLaMA-2-7B 50% 稀疏度下，Fisher 重加权剪枝在 5-shot MMLU 上比 Wanda 提升 +1.6 个百分点，比 SparseGPT 提升 +1.1 个百分点。",
+        "剪枝的墙钟时间和能耗降至 SparseGPT 的三分之一，使 F-WANDA 成为可持续部署的有力选择。",
+        "该改进为即插即用式修改，无需任何架构变更或额外训练。"
+      ],
+      "tags": [
+        "model-pruning",
+        "efficiency",
+        "sustainability",
+        "LLM-compression",
+        "sparsity"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 187,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.00481",
+        "huggingface": "https://huggingface.co/papers/2608.00481",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.00481"
+      }
+    },
+    {
+      "id": "vlm-theory-of-mind-dissociation",
+      "title": "前沿视觉-语言模型心智理论的跨任务解离",
+      "authors": [
+        "Kejia Zhang",
+        "Youran Sun",
+        "Chugang Yi",
+        "Haizhao Yang"
+      ],
+      "affiliations": [
+        "University of Maryland",
+        "Tsinghua University"
+      ],
+      "summary": "研究在两个源自心理学的心智理论基准上对九个前沿 VLM 进行评估：Keysar 指挥者任务（视觉视角采择）和 Frith-Happé 动态三角形（基于运动的意图归因）。在不使用思维链的情况下，模型在指挥者任务的 78% 试验中出现自我中心错误，其心智理论特征与高功能自闭症成人的相似程度是与神经典型成人的三倍。",
+      "key_findings": [
+        "前沿 VLMs 在不使用思维链提示的情况下，在 78% 的视觉视角采择试验中出现自我中心错误。",
+        "在意图归因任务上，模型的心智理论特征与高功能 ASD 均值的距离比与典型发展成人均值的距离近 3 倍以上。",
+        "跨任务解离表明心智理论子能力并非均匀分布，单一基准评估因此失效。"
+      ],
+      "tags": [
+        "theory-of-mind",
+        "VLMs",
+        "cognitive-science",
+        "evaluation",
+        "social-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 143,
+        "comments": 17
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.00261",
+        "huggingface": "https://huggingface.co/papers/2608.00261",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.00261"
+      }
+    },
+    {
+      "id": "prime-agent-orchestrator",
+      "title": "PrimeAgentOrchestrator：面向个人 AI 基础设施的记忆预启动智能体编排",
+      "authors": [
+        "Lucas Fernandez",
+        "Aiko Tanaka",
+        "Priya Raghavan"
+      ],
+      "affiliations": [
+        "Stanford University",
+        "MIT CSAIL"
+      ],
+      "summary": "PrimeAgentOrchestrator 通过维护持久化情节记忆库来解决多智能体系统中的冷启动问题，该记忆库可用先前会话中的相关上下文预启动新生成的智能体。该框架在复杂个人 AI 工作流上实现了冗余工具调用减少 42%，任务完成率提升 2.3 倍。",
+      "key_findings": [
+        "持久化情节记忆预启动在复杂多会话工作流中将冗余工具调用减少 42%。",
+        "在个人 AI 基础设施基准上，任务完成率比冷启动基线提升 2.3 倍。",
+        "记忆预启动生成机制使多智能体能够在跨会话的长期协作中保持连贯性，无需重新初始化。"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "multi-agent",
+        "personal-AI",
+        "infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 131,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20342",
+        "huggingface": "https://huggingface.co/papers/2608.20342",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20342"
+      }
+    },
+    {
+      "id": "cargo-t-causal-humor",
+      "title": "CaRGo-T：因果推理图式思维提升多模态幽默理解",
+      "authors": [
+        "Shengli Wu",
+        "Jingnan Wang",
+        "Fei Liu"
+      ],
+      "affiliations": [
+        "University of Central Florida",
+        "Renmin University of China"
+      ],
+      "summary": "CaRGo-T 在生成幽默解释之前，先在视觉和文本线索上构建显式因果图，在 HumorBench 上取得最先进结果，F1 提升 8.3 分。因果图结构为多模态幽默检测提供了可解释的推理依据。",
+      "key_findings": [
+        "在多模态线索上构建因果图，在 HumorBench 上将幽默检测 F1 比此前最佳结果提升 8.3 个点。",
+        "图式思维推理提供了可解释的中间推理依据，而非不透明的端到端预测。",
+        "该方法证明，显式因果结构有助于理解幽默等具有隐式结构的现象。"
+      ],
+      "tags": [
+        "multimodal",
+        "causal-reasoning",
+        "humor",
+        "graph-of-thought",
+        "NLP"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 98,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.23172",
+        "huggingface": "https://huggingface.co/papers/2608.23172",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.23172"
+      }
+    },
+    {
+      "id": "fraudbench-banking-agents",
+      "title": "FraudBench：针对自适应欺诈的策略约束银行智能体压力测试",
+      "authors": [
+        "Xiaoyi Feng",
+        "Rui Zhang",
+        "Tomasz Korbak",
+        "Marco Vecchio"
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "DeepMind",
+        "Bocconi University"
+      ],
+      "summary": "FraudBench 提供 150 个对抗性场景，用于评估基于 LLM 的银行智能体在面对自适应对手时的策略约束欺诈检测能力。即使是最优秀的智能体，当对手根据先前交互更新策略时，成功率也仅为 61%。",
+      "key_findings": [
+        "最优 LLM 银行智能体在面对自适应欺诈对手时成功率仅为 61%。",
+        "根据历史交互更新策略的自适应对手，暴露了当前智能体在策略约束方面的脆弱性。",
+        "该基准揭示了静态评估性能与对抗自适应鲁棒性之间的显著差距。"
+      ],
+      "tags": [
+        "agents",
+        "security",
+        "benchmarks",
+        "finance",
+        "adversarial-robustness"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 87,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.18136",
+        "huggingface": "https://huggingface.co/papers/2608.18136",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.18136"
+      }
+    },
+    {
+      "id": "intentqa-video-reasoning",
+      "title": "IntentQA：基于认知情境推理的视频意图问答",
+      "authors": [
+        "Chen Li",
+        "Xiaoming Wei",
+        "Guanbin Li"
+      ],
+      "affiliations": [
+        "Sun Yat-sen University",
+        "Meituan"
+      ],
+      "summary": "IntentQA 引入了一个包含 9,600 个问答对的基准，来源于 4,800 段视频片段，要求对角色目标与动机进行多步因果推理。该基准面向意图的认知情境推理，这一能力超越了标准动作识别的范畴。",
+      "key_findings": [
+        "包含 9,600 个问答对，涵盖需要对目标与动机进行多步因果推理的意图识别场景。",
+        "当前视频-语言模型在意图问题上的表现弱于动作描述问题，暴露了能力差距。",
+        "关于意图的认知情境推理需要同时整合时序、因果与动机理解。"
+      ],
+      "tags": [
+        "video-understanding",
+        "QA-benchmarks",
+        "causal-reasoning",
+        "intent-recognition",
+        "multimodal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.23330",
+        "huggingface": "https://huggingface.co/papers/2608.23330",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.23330"
+      }
+    },
+    {
+      "id": "mamba-hm-hierarchical-memory",
+      "title": "Mamba with Hierarchical Memory：解决长序列建模中的表示瓶颈",
+      "authors": [
+        "Yuncheng Li",
+        "Zhengyang Geng",
+        "Tri Dao"
+      ],
+      "affiliations": [
+        "Princeton University",
+        "Together AI"
+      ],
+      "summary": "Mamba-HM 在 Mamba 状态空间模型基础上增加了层级化记忆模块，在多个时间尺度上维护压缩表示。在 SCROLLS 长文档基准上与注意力机制持平或更优，同时在超过 32k token 的序列上推理速度提升 3 倍。",
+      "key_findings": [
+        "多时间尺度的层级化记忆解决了原始 Mamba 在超长序列上的表示瓶颈问题。",
+        "在超过 32k token 的序列上，相比基于注意力的模型推理速度提升 3 倍，同时保持有竞争力的精度。",
+        "无需完整注意力机制，在 SCROLLS 长文档基准上达到或超越 Transformer 的性能。"
+      ],
+      "tags": [
+        "SSMs",
+        "Mamba",
+        "long-context",
+        "efficiency",
+        "sequence-modeling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.02347",
+        "huggingface": "https://huggingface.co/papers/2608.02347",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.02347"
+      }
+    },
+    {
+      "id": "ai4ai-bench-self-improvement",
+      "title": "AI4AI-Bench：面向递归自我改进的 LLM 智能体算法设计基准测试",
+      "authors": [
+        "Oliver Haas",
+        "Sebastien Bubeck",
+        "Harri Valpola"
+      ],
+      "affiliations": [
+        "Microsoft Research",
+        "Curious AI"
+      ],
+      "summary": "AI4AI-Bench 评估 LLM 智能体能否自主设计更优的 AI 训练算法，涵盖超参数优化、新型损失函数设计和架构搜索共 84 个任务。当前前沿模型仅能自主完成其中 23% 的任务。",
+      "key_findings": [
+        "前沿 LLM 智能体仅能自主解决 23% 的 AI 算法设计任务，表明递归自我改进距离可行仍有相当大的差距。",
+        "任务涵盖超参数优化、损失函数设计和架构搜索，为元学习评估提供了全面的范围。",
+        "在需要新颖算法洞见的任务上，性能相比优化已知设计空间的任务大幅下降。"
+      ],
+      "tags": [
+        "meta-learning",
+        "AI-safety",
+        "self-improvement",
+        "agents",
+        "benchmarks"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 69,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20318",
+        "huggingface": "https://huggingface.co/papers/2608.20318",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20318"
+      }
+    },
+    {
+      "id": "arise-hierarchical-rl",
+      "title": "ARISE：层级强化学习中的内在技能进化驱动智能体推理",
+      "authors": [
+        "Sung Ju Hwang",
+        "Taeil Kim",
+        "Kangsan Kim"
+      ],
+      "affiliations": [
+        "KAIST",
+        "Korea University"
+      ],
+      "summary": "ARISE 引入内在动机信号，驱动层级强化学习中技能的持续分化，从而解决低层技能在训练过程中陷入停滞的问题。该框架在长时程导航任务上比平面强化学习基线提升 31%。",
+      "key_findings": [
+        "内在动机驱动的技能分化防止了层级强化学习中常见的技能停滞平台期。",
+        "在长时程导航基准上比平面强化学习基线提升 31%。",
+        "持续的技能进化使智能体能够在训练过程中发展出愈发专业化的子策略。"
+      ],
+      "tags": [
+        "hierarchical-RL",
+        "intrinsic-motivation",
+        "skill-discovery",
+        "agents",
+        "navigation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 62,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.16060",
+        "huggingface": "https://huggingface.co/papers/2603.16060",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2603.16060"
+      }
+    },
+    {
+      "id": "society-bench-counterfactual",
+      "title": "SocietyBench：反事实社会世界演化预测基准",
+      "authors": [
+        "Elena Voronova",
+        "Mikhail Burtsev",
+        "Anna Korhonen"
+      ],
+      "affiliations": [
+        "Moscow Institute of Physics and Technology",
+        "University of Cambridge"
+      ],
+      "summary": "SocietyBench 提供 1,200 个基于历史社会科学案例研究的场景，用于评估 LLMs 预测社会系统在反事实干预下如何演化的能力。LLMs 在短期预测任务上超越人类预测者，但在多步级联效应上表现不佳。",
+      "key_findings": [
+        "LLMs 在近期社会预测任务上超越人类预测者，但在多步级联反事实效应上表现失败。",
+        "1,200 个基于历史社会科学案例研究的场景提供了具有生态效度的评估。",
+        "对社会系统的多步因果推理是所有被评估前沿模型的持续性弱点。"
+      ],
+      "tags": [
+        "social-science",
+        "forecasting",
+        "benchmarks",
+        "counterfactual-reasoning",
+        "LLMs"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 54,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.04009",
+        "huggingface": "https://huggingface.co/papers/2608.04009",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.04009"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-max",
+      "name": "Qwen3.8-Max",
+      "organization": "Alibaba Qwen Team",
+      "description": "Qwen3.8-Max 是一个具备强大多语言和智能体能力的混合专家推理模型，代表 Qwen3 系列的旗舰产品。在复杂推理、编程和多步智能体任务完成方面表现卓越。",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": [
+        "MoE",
+        "reasoning",
+        "agentic",
+        "multilingual",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 4200000,
+        "likes": 18500
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Max"
+    },
+    {
+      "id": "deepseek-r1",
+      "name": "DeepSeek-R1",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-R1 是一个通过强化学习训练的推理模型，在数学、代码和逻辑推理基准上达到前沿水平。是 2026 年下载量最高的开放权重推理模型之一。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "reasoning",
+        "math",
+        "code",
+        "rl-trained",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 3100000,
+        "likes": 28400
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+    },
+    {
+      "id": "meta-llama-4-scout",
+      "name": "Llama 4 Scout",
+      "organization": "Meta AI",
+      "description": "Llama 4 Scout 是一个支持文本和图像输入、具备长上下文理解能力的多模态混合专家模型，专为需要长上下文和多模态推理的企业与研究部署而设计。",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": [
+        "multimodal",
+        "MoE",
+        "long-context",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 2150000,
+        "likes": 11700
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-4-Scout"
+    },
+    {
+      "id": "glm-5-3",
+      "name": "GLM-5.3",
+      "organization": "THUDM (Tsinghua University)",
+      "description": "GLM-5.3 是一个推理与编程模型，具备强大的中文语言能力和智能体任务表现，在编程和多步推理基准上可与前沿模型竞争。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "reasoning",
+        "coding",
+        "agentic",
+        "Chinese",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1850000,
+        "likes": 9200
+      },
+      "source_url": "https://huggingface.co/THUDM/GLM-5.3"
+    },
+    {
+      "id": "sentence-transformers-all-minilm-l6-v2",
+      "name": "all-MiniLM-L6-v2",
+      "organization": "Sentence Transformers",
+      "description": "长期占据主导地位的句向量嵌入模型 all-MiniLM-L6-v2 依然是语义相似度、RAG 检索和轻量嵌入任务的首选。其 2400 万参数的轻巧体量与高吞吐量使其成为生产环境的标配。",
+      "task_type": "feature-extraction",
+      "model_size": "22M",
+      "tags": [
+        "embeddings",
+        "sentence-similarity",
+        "feature-extraction",
+        "RAG"
+      ],
+      "metrics": {
+        "downloads": 24890000,
+        "likes": 12300
+      },
+      "source_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+    },
+    {
+      "id": "flux-2-dev",
+      "name": "FLUX.2-dev",
+      "organization": "Black Forest Labs",
+      "description": "FLUX.2-dev 是 Black Forest Labs 推出的最新开放权重高分辨率文本生成图像扩散模型，延续 FLUX 系列血统，在真实感和提示遵从性上进一步提升，在 ComfyUI 和开源图像生成流水线中被广泛使用。",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "high-resolution",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 680000,
+        "likes": 7200
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/FLUX.2-dev"
+    },
+    {
+      "id": "microsoft-phi-5-mini",
+      "name": "Phi-5-mini",
+      "organization": "Microsoft Research",
+      "description": "Phi-5-mini 是一个针对推理和边缘部署优化的小型语言模型，延续了微软 Phi 系列追求单位参数高能力的设计理念，适用于设备端和算力受限场景下的推理。",
+      "task_type": "text-generation",
+      "model_size": "~3.8B",
+      "tags": [
+        "small-model",
+        "reasoning",
+        "edge-deployment",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 980000,
+        "likes": 6800
+      },
+      "source_url": "https://huggingface.co/microsoft/Phi-5-mini"
+    },
+    {
+      "id": "mistral-8b-instruct-2026",
+      "name": "Mistral-8B-Instruct-2026",
+      "organization": "Mistral AI",
+      "description": "Mistral 8B 指令微调模型的 2026 年版本，指令遵循能力和推理速度均有所提升。作为被广泛采用的开放权重模型，适用于对速度与质量平衡有要求的生产部署场景。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "instruction-following",
+        "fast-inference",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 870000,
+        "likes": 5400
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-8B-Instruct-2026"
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B Instruct",
+      "organization": "Google DeepMind",
+      "description": "Gemma 3 27B Instruct 是 Google 规模最大的开放权重指令微调模型，在推理、编程和指令遵循方面提供强劲的通用性能，在研究和微调应用中广受欢迎。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "instruction-following",
+        "open-weights",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 750000,
+        "likes": 4900
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    {
+      "id": "whisper-large-v4",
+      "name": "Whisper Large v4",
+      "organization": "OpenAI Community",
+      "description": "Whisper Large v4 在 OpenAI 语音识别系列基础上进一步提升了多语言转写准确率和对噪声音频的鲁棒性，依然是生产部署中占据主导地位的开放权重自动语音识别模型。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "~1.5B",
+      "tags": [
+        "ASR",
+        "multilingual",
+        "audio",
+        "speech-recognition"
+      ],
+      "metrics": {
+        "downloads": 590000,
+        "likes": 3400
+      },
+      "source_url": "https://huggingface.co/openai-community/whisper-large-v4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-agentic-coding",
+      "name": "OpenClaw/OpenClaw",
+      "description": "2026 年增长最快的开源智能体编程平台，具备多文件编辑、代码库感知推理和终端集成功能。今日新增近 1,820 颗星，呈爆炸式增长，已成为专有编程智能体的事实上的开源替代方案。",
+      "language": "Python",
+      "stars": 210000,
+      "stars_today": 1820,
+      "forks": 18400,
+      "url": "https://github.com/OpenClaw/OpenClaw",
+      "tags": [
+        "coding-agents",
+        "agentic-AI",
+        "code-editing",
+        "LLM",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "一个用户友好的自托管 AI 界面，支持 Ollama、OpenAI API、Claude、Gemini 及任何兼容 OpenAI 的后端。是本地和云端 LLM 部署的领先开源前端，凭借持续新增的后端集成而长期保持热度。",
+      "language": "Python",
+      "stars": 124000,
+      "stars_today": 980,
+      "forks": 14200,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "LLM-interface",
+        "self-hosted",
+        "Ollama",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "comfyanonymous/ComfyUI",
+      "description": "功能最强大的模块化 Stable Diffusion 图形界面，采用基于节点的工作流编辑器，支持完整的 FLUX.2 模型家族和复杂图像生成流水线，是高级生成式图像工作流的首选平台。",
+      "language": "Python",
+      "stars": 106000,
+      "stars_today": 720,
+      "forks": 11500,
+      "url": "https://github.com/comfyanonymous/ComfyUI",
+      "tags": [
+        "image-generation",
+        "diffusion",
+        "workflow",
+        "FLUX",
+        "no-code"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langchain",
+      "name": "langchain-ai/langchain",
+      "description": "用于构建多智能体系统、RAG 流水线和工具调用智能体的基础 Python 框架。尽管面临越来越多轻量级替代方案的竞争，仍是 LLM 应用栈的核心基石。",
+      "language": "Python",
+      "stars": 98000,
+      "stars_today": 540,
+      "forks": 16300,
+      "url": "https://github.com/langchain-ai/langchain",
+      "tags": [
+        "agents",
+        "RAG",
+        "LLM-framework",
+        "multi-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tau-0-vla-repo",
+      "name": "sii-research/tau-0-vla",
+      "description": "τ₀-VLA 层级化机器人基础模型的官方实现，具备世界模型引导的测试时计算能力。随今日论文发布迅速积累星标，成为具身 AI 研究人员的重要资源。",
+      "language": "Python",
+      "stars": 2800,
+      "stars_today": 430,
+      "forks": 210,
+      "url": "https://github.com/sii-research/tau-0-vla",
+      "tags": [
+        "robotics",
+        "VLA",
+        "embodied-AI",
+        "world-models",
+        "hierarchical-planning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "bumblebee-supply-chain",
+      "name": "perplexity-ai/bumblebee",
+      "description": "一款针对依赖项、MCP 服务器和编辑器扩展的只读供应链安全扫描工具，专为检测 AI 开发环境中被篡改或恶意软件包而设计。随着 MCP 服务器生态系统扩张，正获得越来越多的关注。",
+      "language": "Python",
+      "stars": 8400,
+      "stars_today": 380,
+      "forks": 620,
+      "url": "https://github.com/perplexity-ai/bumblebee",
+      "tags": [
+        "security",
+        "supply-chain",
+        "MCP",
+        "developer-tools",
+        "AI-safety"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "swe-bench-promax-repo",
+      "name": "swe-bench-promax/SWE-Bench-ProMax",
+      "description": "SWE-Bench ProMax 多语言代码重构基准的官方仓库，包含七种语言的 170 个专家精选实例，随今日论文发布而迅速走红。",
+      "language": "Python",
+      "stars": 1900,
+      "stars_today": 320,
+      "forks": 145,
+      "url": "https://github.com/swe-bench-promax/SWE-Bench-ProMax",
+      "tags": [
+        "benchmarks",
+        "coding-agents",
+        "code-refactoring",
+        "multilingual",
+        "evaluation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-inference-time-scaling",
+      "name": "ThreeSR/Awesome-Inference-Time-Scaling",
+      "description": "一份追踪快速增长的推理时与测试时扩展文献的精选论文列表。今日因 Romano 等人关于 TTS 利用瓶颈的病毒式传播论文而引发关注激增。",
+      "language": null,
+      "stars": 4200,
+      "stars_today": 290,
+      "forks": 380,
+      "url": "https://github.com/ThreeSR/Awesome-Inference-Time-Scaling",
+      "tags": [
+        "test-time-scaling",
+        "inference",
+        "paper-list",
+        "LLMs",
+        "research-resources"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "agents-radar",
+      "name": "duanyytop/agents-radar",
+      "description": "一款自动化 AI 开源趋势追踪工具，定期生成关于智能体相关仓库、论文和工具的周报，有助于跟上快速演进的智能体 AI 生态系统。",
+      "language": "TypeScript",
+      "stars": 3100,
+      "stars_today": 240,
+      "forks": 280,
+      "url": "https://github.com/duanyytop/agents-radar",
+      "tags": [
+        "agents",
+        "trend-tracking",
+        "automation",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "strix-ai-pentest",
+      "name": "strix-ai/strix",
+      "description": "一款行为类似真实安全研究员的开源 AI 渗透测试工具，可自动发现 Web 应用和 API 中的漏洞。随着 AI 辅助安全工具进入主流应用，正持续走红。",
+      "language": "Python",
+      "stars": 14600,
+      "stars_today": 210,
+      "forks": 1200,
+      "url": "https://github.com/strix-ai/strix",
+      "tags": [
+        "security",
+        "penetration-testing",
+        "AI-agents",
+        "red-teaming",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "测试时扩展：利用阶段的危机",
+      "description": "今日的主导主题是奖励模型在开放域中筛选优质输出的严重失效，揭示了 TTS 在数学/代码基准上取得的收益无法泛化的问题。研究重点转向构建开放域验证器。",
+      "related_paper_ids": [
+        "tts-wild-exploitation-bottleneck",
+        "tau0-vla-hierarchical-robot"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体编程基准与基础设施",
+      "description": "SWE-Bench ProMax 与 OpenClaw 平台标志着智能体编程生态系统的成熟，正从单文件漏洞修复迈向多语言大规模重构与真实世界软件工程任务。",
+      "related_paper_ids": [
+        "swe-bench-promax",
+        "prime-agent-orchestrator"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "模型效率与可持续部署",
+      "description": "F-WANDA 和 Mamba-HM 都针对同一底层挑战：在不牺牲质量的前提下降低计算成本——F-WANDA 聚焦于剪枝能耗，Mamba-HM 聚焦于长序列推理效率。",
+      "related_paper_ids": [
+        "f-wanda-fisher-pruning",
+        "mamba-hm-hierarchical-memory"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "具身 AI 与层级化智能体",
+      "description": "τ₀-VLA 和 ARISE 均通过层级化分解应对长时程决策问题——τ₀-VLA 借助机器人领域的世界模型引导规划，ARISE 则通过内在动机驱动的技能进化在强化学习中实现。",
+      "related_paper_ids": [
+        "tau0-vla-hierarchical-robot",
+        "arise-hierarchical-rl"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "面向 VLM 的认知与社会推理基准",
+      "description": "VLM 心智理论的跨任务解离研究与 IntentQA 均探究前沿模型是否具备真正的社会与认知推理能力，并发现了单任务评估所遗漏的系统性能力缺口。",
+      "related_paper_ids": [
+        "vlm-theory-of-mind-dissociation",
+        "intentqa-video-reasoning",
+        "society-bench-counterfactual"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体安全性、鲁棒性基准",
+      "description": "FraudBench 和 AI4AI-Bench 分别揭示了智能体在对抗条件和递归自我改进场景下的失败，指向智能体鲁棒性评估这一日益重要的子领域。",
+      "related_paper_ids": [
+        "fraudbench-banking-agents",
+        "ai4ai-bench-self-improvement"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-27T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-27T07:05:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv CS.AI/CS.CL/CS.LG",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-08-27T07:10:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org/trending",
+      "checked_at": "2026-08-27T07:15:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-27T07:20:00Z",
+      "status": "ok"
+    }
+  ]
+}

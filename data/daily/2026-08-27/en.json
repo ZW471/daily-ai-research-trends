@@ -1,0 +1,973 @@
+{
+  "version": "1.0",
+  "date": "2026-08-27",
+  "generated_at": "2026-08-27T08:00:00Z",
+  "summary": {
+    "headline": "Test-time scaling hits a wall in open-ended domains as reward models fail at exploitation; SWE-Bench ProMax raises the bar for multilingual coding agents; τ₀-VLA brings world-model-guided compute scaling to robot manipulation",
+    "body": "Today's dominant story is a sobering reality check on test-time scaling (TTS): a landmark compute-normalised study across five open-ended benchmarks (medicine, law, finance, chat, creative writing) reveals that while generating more candidates consistently helps, the ability to *select* the best one is catastrophically broken. Reward models correlate at only ρ_v ≈ 0.12 with true output quality, meaning that most TTS gains demonstrated on math/code benchmarks may not transfer to the real world. This finding has immediate implications for how the field should allocate R&D—less on search, more on outcome-aligned verifiers.\n\nOn the agentic coding front, SWE-Bench ProMax introduces the first expert-curated multilingual refactoring benchmark spanning seven languages, surfacing a class of problems that bug-fixing benchmarks entirely miss. Meanwhile, τ₀-VLA demonstrates that world-model-guided test-time compute is a viable strategy for long-horizon robot manipulation, mirroring the TTS scaling paradigm but in the embodied setting—and with the crucial advantage that a learned visual world model can serve as an internal verifier, potentially sidestepping the reward model collapse problem identified in the NLP study.\n\nOn the efficiency front, F-WANDA shows that Fisher-reweighted pruning can beat both Wanda and SparseGPT simultaneously on perplexity and downstream accuracy while using only one-third the energy—a compelling sustainability story. The cross-task dissociation study in VLM Theory of Mind is a quieter but important result: frontier models behave more like high-functioning autistic adults than neurotypical adults on perspective-taking tasks, raising questions about how social reasoning emerges (or fails to) in current training paradigms.",
+    "key_themes": [
+      "test-time-scaling",
+      "agentic-coding-benchmarks",
+      "embodied-ai",
+      "model-efficiency-pruning",
+      "theory-of-mind-vlms",
+      "hierarchical-rl-agents"
+    ]
+  },
+  "researcher_notes": "**The exploitation bottleneck is the sleeper hit of the week.** The Romano et al. TTS paper (312 upvotes, top of AlphaXiv) will likely reshape how the community thinks about inference-time compute. The ρ_v ≈ 0.12 reward model correlation result is stark: we have been benchmarking TTS on tasks where verification is almost trivially easy (unit tests, proof checkers), creating an illusion of scalability. The practical implication is that any product built on best-of-N or MCTS-style search in open-ended domains is essentially doing random selection among high-quality outputs. **The urgent research agenda is now: how do we build open-ended verifiers?** Process reward models, constitutional AI feedback, and LLM-as-judge approaches all need rigorous re-evaluation under this lens.\n\n**τ₀-VLA and the TTS paper are two sides of the same coin.** τ₀-VLA's key insight—use a *learned world model* as the verifier in a best-of-N planning loop—is precisely the missing piece the TTS paper identifies. Robotic manipulation has a natural advantage: a visual world model can evaluate plan quality by predicting future states, a far richer signal than language reward models. This suggests a productive research direction: can we borrow ideas from embodied world models to build better open-ended text verifiers?\n\n**SWE-Bench ProMax + OpenClaw's 1,820 stars/day signal a maturing agentic coding ecosystem.** The shift from bug-fixing to large-scale cross-file refactoring is qualitatively important—it tests agent memory, coherence over long horizons, and language-specific understanding simultaneously. The 170-instance expert-curated design is deliberate: contamination resistance is increasingly critical as frontier models are trained on ever-larger code corpora. Watch whether the OpenClaw platform integrates ProMax as an in-the-loop evaluation target.\n\n**F-WANDA's energy efficiency claim deserves scrutiny but also attention.** Achieving SparseGPT-level accuracy at one-third the pruning energy by simply reweighting the keep budget with Fisher information is a surprisingly clean result. The method is a drop-in modification—the kind of change that gets quietly adopted by practitioners. Given the growing regulatory pressure on AI energy consumption in 2026, expect this line of work to attract disproportionate attention from infrastructure teams at major labs.\n\n**The VLM Theory of Mind dissociation result is a methodological warning.** Zhang et al.'s finding that VLMs perform near the high-functioning ASD mean on the Director Task suggests that chain-of-thought is doing cognitive work that the base model cannot do without scaffolding—and that different ToM sub-capacities are supported by fundamentally different mechanisms. This has implications for agent design: a model may pass one ToM benchmark while failing catastrophically on a structurally similar but differently presented task, making single-benchmark ToM evaluations unreliable proxies for real-world social reasoning.",
+  "papers": [
+    {
+      "id": "tts-wild-exploitation-bottleneck",
+      "title": "Test-Time Scaling in the Wild: Why Exploitation, Not Exploration, Is the Bottleneck",
+      "authors": [
+        "Davide Romano",
+        "Kanak Raj",
+        "Jerrod Parker",
+        "Daniele Giofrè"
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "Allen Institute for AI"
+      ],
+      "summary": "The first compute-normalised comparison of five test-time scaling families across five open-ended benchmarks (medicine, law, finance, chat, creative writing) reveals that while generating more candidates consistently improves oracle quality, reward models correlate at only ρ_v ≈ 0.12 with true output quality, making selection near-random. The study introduces a unified framework decomposing TTS token budgets into exploration and exploitation components, showing exploitation is the critical failure point.",
+      "key_findings": [
+        "Reward model correlation with true quality is only ρ_v ≈ 0.12 across open-ended benchmarks, rendering best-of-N selection near-random regardless of candidate pool size.",
+        "Exploration (generating more candidates) reliably improves oracle performance across all settings and compute budgets.",
+        "Gains from TTS observed on math/code benchmarks do not transfer to open-ended domains due to the absence of reliable verifiers."
+      ],
+      "tags": [
+        "test-time-scaling",
+        "inference-compute",
+        "reward-models",
+        "open-ended-generation",
+        "benchmarks"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 312,
+        "comments": 28
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.18931",
+        "huggingface": "https://huggingface.co/papers/2608.18931",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.18931",
+        "pdf": "https://arxiv.org/pdf/2608.18931"
+      }
+    },
+    {
+      "id": "swe-bench-promax",
+      "title": "SWE-Bench ProMax: Benchmarking Agents on Large-Scale Multilingual Code Refactoring",
+      "authors": [
+        "Yuling Shi",
+        "Jinghan Xu",
+        "Kelin Fu",
+        "Wenhao Zeng",
+        "Shilin He",
+        "Lei Zhang"
+      ],
+      "affiliations": [
+        "Microsoft Research",
+        "Peking University"
+      ],
+      "summary": "SWE-Bench ProMax is an expert-curated benchmark of 170 multilingual code refactoring instances drawn from real commits across Python, Java, TypeScript, Go, C, C++, and Rust. Unlike bug-fixing benchmarks, refactoring requires coordinated behavior-preserving changes across many files, exposing agent weaknesses not captured by existing evaluations.",
+      "key_findings": [
+        "Current coding agents fail substantially more on large-scale cross-file refactoring than on single-file bug fixing, revealing a new capability frontier.",
+        "Seven programming languages are represented, enabling measurement of language-specific agent capability gaps.",
+        "Tasks sourced from real open-source commits provide contamination-resistant evaluation."
+      ],
+      "tags": [
+        "coding-agents",
+        "benchmarks",
+        "code-refactoring",
+        "multilingual",
+        "software-engineering"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 256,
+        "comments": 19
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.09802",
+        "huggingface": "https://huggingface.co/papers/2608.09802",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.09802",
+        "pdf": "https://arxiv.org/pdf/2608.09802"
+      }
+    },
+    {
+      "id": "tau0-vla-hierarchical-robot",
+      "title": "τ₀-VLA: a Hierarchical Robot Foundation Model with World-Model-Guided Test-Time Computation",
+      "authors": [
+        "Xiaowei Cai",
+        "Haoran Li",
+        "Jiarun Liu",
+        "Shiyu Zhao",
+        "Yuxiang Lu"
+      ],
+      "affiliations": [
+        "Shanghai Innovation Institute",
+        "SII Research"
+      ],
+      "summary": "τ₀-VLA is a hierarchical vision-language-action model that formulates high-level subtask generation as a compute-scalable inference problem. A high-level planner proposes candidate subtask sequences, a learned world model scores each trajectory by predicting future visual states, and the best plan is passed to a reactive low-level policy—enabling reliable long-horizon manipulation.",
+      "key_findings": [
+        "World-model-guided scoring of candidate plans provides a meaningful internal verifier for robot task planning, addressing the reward model problem in embodied settings.",
+        "The hierarchical architecture decouples long-horizon planning (compute-scalable) from reactive execution (single forward pass), yielding gains on complex manipulation tasks.",
+        "Test-time compute scaling is effective in embodied AI when paired with a visual world model verifier."
+      ],
+      "tags": [
+        "embodied-ai",
+        "robotics",
+        "VLA",
+        "test-time-scaling",
+        "world-models",
+        "hierarchical-planning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 198,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16885",
+        "huggingface": "https://huggingface.co/papers/2608.16885",
+        "alphaxiv": "https://alphaxiv.org/abs/2608.16885",
+        "pdf": "https://arxiv.org/pdf/2608.16885"
+      }
+    },
+    {
+      "id": "f-wanda-fisher-pruning",
+      "title": "F-WANDA: Fisher-Reweighted Post-Training Pruning for Sustainable Deployment of Large Language Models",
+      "authors": [
+        "Andrea Rossi",
+        "Marco Lippi",
+        "Stefano Melacci"
+      ],
+      "affiliations": [
+        "University of Modena and Reggio Emilia",
+        "University of Siena"
+      ],
+      "summary": "F-WANDA modifies the Wanda pruning algorithm by reallocating per-row keep budgets across output neurons in proportion to empirical Fisher information of the pre-activation. On LLaMA-2-7B at 50% unstructured sparsity, it achieves WikiText-2 perplexity of 6.85, outperforms both Wanda and SparseGPT on MMLU, and uses only one-third of SparseGPT's pruning energy.",
+      "key_findings": [
+        "Fisher-reweighted pruning improves 5-shot MMLU by +1.6 pp over Wanda and +1.1 pp over SparseGPT on LLaMA-2-7B at 50% sparsity.",
+        "Pruning wall-clock and energy are reduced to one-third of SparseGPT's cost, making F-WANDA compelling for sustainable deployment.",
+        "The modification is a drop-in change requiring no architectural changes or additional training."
+      ],
+      "tags": [
+        "model-pruning",
+        "efficiency",
+        "sustainability",
+        "LLM-compression",
+        "sparsity"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 187,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.00481",
+        "huggingface": "https://huggingface.co/papers/2608.00481",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.00481"
+      }
+    },
+    {
+      "id": "vlm-theory-of-mind-dissociation",
+      "title": "Cross-Task Dissociation in Frontier Vision-Language Model Theory of Mind",
+      "authors": [
+        "Kejia Zhang",
+        "Youran Sun",
+        "Chugang Yi",
+        "Haizhao Yang"
+      ],
+      "affiliations": [
+        "University of Maryland",
+        "Tsinghua University"
+      ],
+      "summary": "Nine frontier VLMs are evaluated on two psychology-derived ToM benchmarks: the Keysar Director Task (visual perspective-taking) and Frith-Happé animated triangles (intention attribution from motion). Without chain-of-thought, models make egocentric errors on 78% of Director Task trials and show a ToM profile three times closer to high-functioning autistic adults than to neurotypical adults.",
+      "key_findings": [
+        "Frontier VLMs make egocentric errors on 78% of visual perspective-taking trials without chain-of-thought prompting.",
+        "Models' ToM profiles sit more than 3× closer to the high-functioning ASD mean than the typical-development adult mean on intention attribution.",
+        "Cross-task dissociation suggests ToM sub-capacities are not uniformly represented, invalidating single-benchmark evaluations."
+      ],
+      "tags": [
+        "theory-of-mind",
+        "VLMs",
+        "cognitive-science",
+        "evaluation",
+        "social-reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 143,
+        "comments": 17
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.00261",
+        "huggingface": "https://huggingface.co/papers/2608.00261",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.00261"
+      }
+    },
+    {
+      "id": "prime-agent-orchestrator",
+      "title": "PrimeAgentOrchestrator: Memory-Primed Agent Spawning for Personal AI Infrastructure",
+      "authors": [
+        "Lucas Fernandez",
+        "Aiko Tanaka",
+        "Priya Raghavan"
+      ],
+      "affiliations": [
+        "Stanford University",
+        "MIT CSAIL"
+      ],
+      "summary": "PrimeAgentOrchestrator addresses the cold-start problem in multi-agent systems by maintaining a persistent episodic memory store that primes newly spawned agents with relevant context from prior sessions. The framework achieves a 42% reduction in redundant tool calls and a 2.3× improvement in task completion on complex personal AI workflows.",
+      "key_findings": [
+        "Persistent episodic memory priming reduces redundant tool calls by 42% across complex multi-session workflows.",
+        "Task completion rate improves 2.3× over cold-start baselines on personal AI infrastructure benchmarks.",
+        "Memory-primed spawning enables coherent multi-agent coordination across extended sessions without reinitialization overhead."
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "multi-agent",
+        "personal-AI",
+        "infrastructure"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 131,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20342",
+        "huggingface": "https://huggingface.co/papers/2608.20342",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20342"
+      }
+    },
+    {
+      "id": "cargo-t-causal-humor",
+      "title": "CaRGo-T: Causal Reasoning Graph-of-Thought Improves Multimodal Humor Comprehension",
+      "authors": [
+        "Shengli Wu",
+        "Jingnan Wang",
+        "Fei Liu"
+      ],
+      "affiliations": [
+        "University of Central Florida",
+        "Renmin University of China"
+      ],
+      "summary": "CaRGo-T builds an explicit causal graph over visual and textual cues before generating humor explanations, achieving state-of-the-art on HumorBench with +8.3 F1 improvement. The causal graph structure provides interpretable rationales for multimodal humor detection.",
+      "key_findings": [
+        "Causal graph construction over multimodal cues improves humor detection F1 by 8.3 points over previous best on HumorBench.",
+        "Graph-of-thought reasoning provides interpretable intermediate rationales rather than opaque end-to-end predictions.",
+        "The approach demonstrates that explicit causal structure benefits understanding of implicitly structured phenomena like humor."
+      ],
+      "tags": [
+        "multimodal",
+        "causal-reasoning",
+        "humor",
+        "graph-of-thought",
+        "NLP"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 98,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.23172",
+        "huggingface": "https://huggingface.co/papers/2608.23172",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.23172"
+      }
+    },
+    {
+      "id": "fraudbench-banking-agents",
+      "title": "FraudBench: Stress-Testing Policy-Grounded Banking Agents Against Adaptive Fraud",
+      "authors": [
+        "Xiaoyi Feng",
+        "Rui Zhang",
+        "Tomasz Korbak",
+        "Marco Vecchio"
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "DeepMind",
+        "Bocconi University"
+      ],
+      "summary": "FraudBench provides 150 adversarial scenarios for evaluating LLM-based banking agents against policy-grounded fraud detection with adaptive adversaries. Even the best agents succeed on only 61% of tasks when adversaries update their strategy based on prior interactions.",
+      "key_findings": [
+        "Best-in-class LLM banking agents achieve only 61% success against adaptive fraud adversaries.",
+        "Adaptive adversaries that update strategy based on prior interactions expose brittle policy grounding in current agents.",
+        "The benchmark reveals a significant gap between static evaluation performance and robustness to adversarial adaptation."
+      ],
+      "tags": [
+        "agents",
+        "security",
+        "benchmarks",
+        "finance",
+        "adversarial-robustness"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 87,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.18136",
+        "huggingface": "https://huggingface.co/papers/2608.18136",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.18136"
+      }
+    },
+    {
+      "id": "intentqa-video-reasoning",
+      "title": "IntentQA: Intent Question Answering in Videos by Cognitive Context Reasoning",
+      "authors": [
+        "Chen Li",
+        "Xiaoming Wei",
+        "Guanbin Li"
+      ],
+      "affiliations": [
+        "Sun Yat-sen University",
+        "Meituan"
+      ],
+      "summary": "IntentQA introduces a benchmark of 9,600 QA pairs from 4,800 video clips requiring multi-step causal reasoning about character goals and motivations. The benchmark targets cognitive context reasoning about intent, a capability beyond standard action recognition.",
+      "key_findings": [
+        "9,600 QA pairs spanning intent recognition scenarios requiring multi-step causal reasoning about goals and motivations.",
+        "Current video-language models underperform on intent questions relative to action description questions, exposing a capability gap.",
+        "Cognitive context reasoning about intent requires integrating temporal, causal, and motivational understanding simultaneously."
+      ],
+      "tags": [
+        "video-understanding",
+        "QA-benchmarks",
+        "causal-reasoning",
+        "intent-recognition",
+        "multimodal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.23330",
+        "huggingface": "https://huggingface.co/papers/2608.23330",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.23330"
+      }
+    },
+    {
+      "id": "mamba-hm-hierarchical-memory",
+      "title": "Mamba with Hierarchical Memory: Solving Representation Bottleneck in Long Sequence Modeling",
+      "authors": [
+        "Yuncheng Li",
+        "Zhengyang Geng",
+        "Tri Dao"
+      ],
+      "affiliations": [
+        "Princeton University",
+        "Together AI"
+      ],
+      "summary": "Mamba-HM augments the Mamba state-space model with a hierarchical memory module maintaining compressed representations at multiple temporal scales. It matches or exceeds attention on SCROLLS long-document benchmarks while remaining 3× faster at inference on sequences longer than 32k tokens.",
+      "key_findings": [
+        "Hierarchical memory at multiple temporal scales resolves the representation bottleneck in vanilla Mamba for very long sequences.",
+        "3× inference speedup over attention-based models on sequences exceeding 32k tokens while maintaining competitive accuracy.",
+        "Matches or exceeds transformer performance on SCROLLS long-document benchmarks without full attention."
+      ],
+      "tags": [
+        "SSMs",
+        "Mamba",
+        "long-context",
+        "efficiency",
+        "sequence-modeling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.02347",
+        "huggingface": "https://huggingface.co/papers/2608.02347",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.02347"
+      }
+    },
+    {
+      "id": "ai4ai-bench-self-improvement",
+      "title": "AI4AI-Bench: Benchmarking LLM Agents in Algorithmic Design for Recursive Self-Improvement",
+      "authors": [
+        "Oliver Haas",
+        "Sebastien Bubeck",
+        "Harri Valpola"
+      ],
+      "affiliations": [
+        "Microsoft Research",
+        "Curious AI"
+      ],
+      "summary": "AI4AI-Bench evaluates whether LLM agents can design better AI training algorithms across 84 tasks spanning hyperparameter optimization, novel loss function design, and architecture search. Current frontier models solve only 23% of tasks autonomously.",
+      "key_findings": [
+        "Frontier LLM agents solve only 23% of AI algorithm design tasks autonomously, revealing substantial headroom before recursive self-improvement becomes viable.",
+        "Tasks span hyperparameter optimization, loss function design, and architecture search—a comprehensive scope for meta-learning evaluation.",
+        "Performance degrades sharply on tasks requiring novel algorithmic insights versus optimization of known design spaces."
+      ],
+      "tags": [
+        "meta-learning",
+        "AI-safety",
+        "self-improvement",
+        "agents",
+        "benchmarks"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 69,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.20318",
+        "huggingface": "https://huggingface.co/papers/2608.20318",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.20318"
+      }
+    },
+    {
+      "id": "arise-hierarchical-rl",
+      "title": "ARISE: Agent Reasoning with Intrinsic Skill Evolution in Hierarchical Reinforcement Learning",
+      "authors": [
+        "Sung Ju Hwang",
+        "Taeil Kim",
+        "Kangsan Kim"
+      ],
+      "affiliations": [
+        "KAIST",
+        "Korea University"
+      ],
+      "summary": "ARISE introduces intrinsic motivation signals that drive continuous skill differentiation in hierarchical RL, addressing the skill stagnation problem where low-level skills plateau during training. The framework achieves 31% improvement on long-horizon navigation tasks over flat-RL baselines.",
+      "key_findings": [
+        "Intrinsic motivation-driven skill differentiation prevents the skill stagnation plateau common in hierarchical RL.",
+        "31% improvement on long-horizon navigation benchmarks over flat-RL baselines.",
+        "Continuous skill evolution enables the agent to develop increasingly specialized sub-policies over training."
+      ],
+      "tags": [
+        "hierarchical-RL",
+        "intrinsic-motivation",
+        "skill-discovery",
+        "agents",
+        "navigation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 62,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.16060",
+        "huggingface": "https://huggingface.co/papers/2603.16060",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2603.16060"
+      }
+    },
+    {
+      "id": "society-bench-counterfactual",
+      "title": "SocietyBench: Forecasting Counterfactual Social-World Evolution",
+      "authors": [
+        "Elena Voronova",
+        "Mikhail Burtsev",
+        "Anna Korhonen"
+      ],
+      "affiliations": [
+        "Moscow Institute of Physics and Technology",
+        "University of Cambridge"
+      ],
+      "summary": "SocietyBench provides 1,200 scenarios derived from historical social science case studies for evaluating LLMs' ability to forecast how social systems evolve under counterfactual interventions. LLMs outperform human forecasters on near-term predictions but underperform on cascading multi-step effects.",
+      "key_findings": [
+        "LLMs outperform human forecasters on near-term social prediction tasks but fail on cascading multi-step counterfactual effects.",
+        "1,200 scenarios grounded in historical social science case studies provide ecologically valid evaluation.",
+        "Multi-step causal reasoning over social systems is a persistent weakness across all evaluated frontier models."
+      ],
+      "tags": [
+        "social-science",
+        "forecasting",
+        "benchmarks",
+        "counterfactual-reasoning",
+        "LLMs"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 54,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.04009",
+        "huggingface": "https://huggingface.co/papers/2608.04009",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2608.04009"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-max",
+      "name": "Qwen3.8-Max",
+      "organization": "Alibaba Qwen Team",
+      "description": "Qwen3.8-Max is a mixture-of-experts reasoning model with strong multilingual and agentic capabilities, representing the flagship of the Qwen3 series. Excels at complex reasoning, coding, and multi-step agentic task completion.",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": [
+        "MoE",
+        "reasoning",
+        "agentic",
+        "multilingual",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 4200000,
+        "likes": 18500
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Max"
+    },
+    {
+      "id": "deepseek-r1",
+      "name": "DeepSeek-R1",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek-R1 is a reinforcement-learning-trained reasoning model achieving frontier-level performance on math, code, and logic benchmarks. One of the most downloaded open-weight reasoning models of 2026.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "reasoning",
+        "math",
+        "code",
+        "rl-trained",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 3100000,
+        "likes": 28400
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+    },
+    {
+      "id": "meta-llama-4-scout",
+      "name": "Llama 4 Scout",
+      "organization": "Meta AI",
+      "description": "Llama 4 Scout is a multimodal mixture-of-experts model with long-context understanding, supporting both text and image inputs. Designed for enterprise and research deployments requiring long-context and multimodal reasoning.",
+      "task_type": "text-generation",
+      "model_size": "Unknown (MoE)",
+      "tags": [
+        "multimodal",
+        "MoE",
+        "long-context",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 2150000,
+        "likes": 11700
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-4-Scout"
+    },
+    {
+      "id": "glm-5-3",
+      "name": "GLM-5.3",
+      "organization": "THUDM (Tsinghua University)",
+      "description": "GLM-5.3 is a reasoning and coding model with strong Chinese-language capabilities and agentic task performance. Competes with frontier models on coding and multi-step reasoning benchmarks.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "reasoning",
+        "coding",
+        "agentic",
+        "Chinese",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 1850000,
+        "likes": 9200
+      },
+      "source_url": "https://huggingface.co/THUDM/GLM-5.3"
+    },
+    {
+      "id": "sentence-transformers-all-minilm-l6-v2",
+      "name": "all-MiniLM-L6-v2",
+      "organization": "Sentence Transformers",
+      "description": "The perennially dominant sentence embedding model, all-MiniLM-L6-v2 remains the go-to for semantic similarity, RAG retrieval, and lightweight embedding tasks. Its 24M parameter footprint and high throughput make it a production staple.",
+      "task_type": "feature-extraction",
+      "model_size": "22M",
+      "tags": [
+        "embeddings",
+        "sentence-similarity",
+        "feature-extraction",
+        "RAG"
+      ],
+      "metrics": {
+        "downloads": 24890000,
+        "likes": 12300
+      },
+      "source_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+    },
+    {
+      "id": "flux-2-dev",
+      "name": "FLUX.2-dev",
+      "organization": "Black Forest Labs",
+      "description": "FLUX.2-dev is the latest open-weights high-resolution text-to-image diffusion model from Black Forest Labs, continuing the FLUX lineage with improved photorealism and prompt adherence. Widely used in ComfyUI and open-source image generation pipelines.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "high-resolution",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 680000,
+        "likes": 7200
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/FLUX.2-dev"
+    },
+    {
+      "id": "microsoft-phi-5-mini",
+      "name": "Phi-5-mini",
+      "organization": "Microsoft Research",
+      "description": "Phi-5-mini is a compact small language model optimized for reasoning and edge deployment, continuing Microsoft's Phi series philosophy of high capability per parameter. Suitable for on-device and constrained-compute inference.",
+      "task_type": "text-generation",
+      "model_size": "~3.8B",
+      "tags": [
+        "small-model",
+        "reasoning",
+        "edge-deployment",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 980000,
+        "likes": 6800
+      },
+      "source_url": "https://huggingface.co/microsoft/Phi-5-mini"
+    },
+    {
+      "id": "mistral-8b-instruct-2026",
+      "name": "Mistral-8B-Instruct-2026",
+      "organization": "Mistral AI",
+      "description": "The 2026 edition of Mistral's 8B instruction-tuned model, featuring improved instruction following and faster inference. A widely adopted open-weights model for production deployments requiring speed and quality balance.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "instruction-following",
+        "fast-inference",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 870000,
+        "likes": 5400
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-8B-Instruct-2026"
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B Instruct",
+      "organization": "Google DeepMind",
+      "description": "Gemma 3 27B Instruct is Google's largest open-weights instruction-tuned model, offering strong general-purpose performance across reasoning, coding, and instruction following. Popular for research and fine-tuning applications.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "instruction-following",
+        "open-weights",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 750000,
+        "likes": 4900
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    {
+      "id": "whisper-large-v4",
+      "name": "Whisper Large v4",
+      "organization": "OpenAI Community",
+      "description": "Whisper Large v4 extends OpenAI's speech recognition lineage with improved multilingual transcription accuracy and robustness to noisy audio. Remains the dominant open-weights ASR model for production deployments.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "~1.5B",
+      "tags": [
+        "ASR",
+        "multilingual",
+        "audio",
+        "speech-recognition"
+      ],
+      "metrics": {
+        "downloads": 590000,
+        "likes": 3400
+      },
+      "source_url": "https://huggingface.co/openai-community/whisper-large-v4"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-agentic-coding",
+      "name": "OpenClaw/OpenClaw",
+      "description": "The fastest-growing open-source agentic coding platform of 2026, featuring multi-file editing, codebase-aware reasoning, and terminal integration. Trending explosively with nearly 1,820 new stars today as the de facto open alternative to proprietary coding agents.",
+      "language": "Python",
+      "stars": 210000,
+      "stars_today": 1820,
+      "forks": 18400,
+      "url": "https://github.com/OpenClaw/OpenClaw",
+      "tags": [
+        "coding-agents",
+        "agentic-AI",
+        "code-editing",
+        "LLM",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "A user-friendly, self-hosted AI interface supporting Ollama, OpenAI API, Claude, Gemini, and any OpenAI-compatible backend. The leading open-source frontend for local and cloud LLM deployment, consistently trending due to new backend integrations.",
+      "language": "Python",
+      "stars": 124000,
+      "stars_today": 980,
+      "forks": 14200,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "LLM-interface",
+        "self-hosted",
+        "Ollama",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "comfyui",
+      "name": "comfyanonymous/ComfyUI",
+      "description": "The most powerful modular stable diffusion GUI, featuring a node-based workflow editor that supports the full FLUX.2 model family and complex image generation pipelines. The go-to platform for advanced generative image workflows.",
+      "language": "Python",
+      "stars": 106000,
+      "stars_today": 720,
+      "forks": 11500,
+      "url": "https://github.com/comfyanonymous/ComfyUI",
+      "tags": [
+        "image-generation",
+        "diffusion",
+        "workflow",
+        "FLUX",
+        "no-code"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langchain",
+      "name": "langchain-ai/langchain",
+      "description": "The foundational Python framework for building multi-agent systems, RAG pipelines, and tool-use agents. Remains a cornerstone of the LLM application stack despite increasing competition from lighter alternatives.",
+      "language": "Python",
+      "stars": 98000,
+      "stars_today": 540,
+      "forks": 16300,
+      "url": "https://github.com/langchain-ai/langchain",
+      "tags": [
+        "agents",
+        "RAG",
+        "LLM-framework",
+        "multi-agent",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tau-0-vla-repo",
+      "name": "sii-research/tau-0-vla",
+      "description": "Official implementation of the τ₀-VLA hierarchical robot foundation model with world-model-guided test-time computation. Rapidly accumulating stars following today's paper release, making it a key resource for embodied AI researchers.",
+      "language": "Python",
+      "stars": 2800,
+      "stars_today": 430,
+      "forks": 210,
+      "url": "https://github.com/sii-research/tau-0-vla",
+      "tags": [
+        "robotics",
+        "VLA",
+        "embodied-AI",
+        "world-models",
+        "hierarchical-planning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "bumblebee-supply-chain",
+      "name": "perplexity-ai/bumblebee",
+      "description": "A read-only supply chain security scanner for dependencies, MCP servers, and editor extensions, designed to detect compromised or malicious packages in AI development environments. Gaining traction as MCP server ecosystems expand.",
+      "language": "Python",
+      "stars": 8400,
+      "stars_today": 380,
+      "forks": 620,
+      "url": "https://github.com/perplexity-ai/bumblebee",
+      "tags": [
+        "security",
+        "supply-chain",
+        "MCP",
+        "developer-tools",
+        "AI-safety"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "swe-bench-promax-repo",
+      "name": "swe-bench-promax/SWE-Bench-ProMax",
+      "description": "Official repository for the SWE-Bench ProMax multilingual code refactoring benchmark with 170 expert-curated instances across seven languages. Rising rapidly alongside today's paper release.",
+      "language": "Python",
+      "stars": 1900,
+      "stars_today": 320,
+      "forks": 145,
+      "url": "https://github.com/swe-bench-promax/SWE-Bench-ProMax",
+      "tags": [
+        "benchmarks",
+        "coding-agents",
+        "code-refactoring",
+        "multilingual",
+        "evaluation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-inference-time-scaling",
+      "name": "ThreeSR/Awesome-Inference-Time-Scaling",
+      "description": "A curated paper list tracking the rapidly growing inference-time and test-time scaling literature. Seeing a surge in interest today driven by the viral Romano et al. TTS exploitation bottleneck paper.",
+      "language": null,
+      "stars": 4200,
+      "stars_today": 290,
+      "forks": 380,
+      "url": "https://github.com/ThreeSR/Awesome-Inference-Time-Scaling",
+      "tags": [
+        "test-time-scaling",
+        "inference",
+        "paper-list",
+        "LLMs",
+        "research-resources"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "agents-radar",
+      "name": "duanyytop/agents-radar",
+      "description": "An automated AI open-source trends tracker that produces weekly reports on agent-related repositories, papers, and tools. Useful for staying current on the rapidly evolving agentic AI ecosystem.",
+      "language": "TypeScript",
+      "stars": 3100,
+      "stars_today": 240,
+      "forks": 280,
+      "url": "https://github.com/duanyytop/agents-radar",
+      "tags": [
+        "agents",
+        "trend-tracking",
+        "automation",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "strix-ai-pentest",
+      "name": "strix-ai/strix",
+      "description": "An open-source AI penetration testing tool that behaves like a real security researcher, automatically discovering vulnerabilities in web applications and APIs. Trending as AI-assisted security tooling enters mainstream use.",
+      "language": "Python",
+      "stars": 14600,
+      "stars_today": 210,
+      "forks": 1200,
+      "url": "https://github.com/strix-ai/strix",
+      "tags": [
+        "security",
+        "penetration-testing",
+        "AI-agents",
+        "red-teaming",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Test-Time Scaling: The Exploitation Crisis",
+      "description": "The dominant theme today is the critical failure of reward models to select good outputs in open-ended domains, revealing that TTS gains on math/code benchmarks do not generalize. Research priority shifts to building open-ended verifiers.",
+      "related_paper_ids": [
+        "tts-wild-exploitation-bottleneck",
+        "tau0-vla-hierarchical-robot"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Coding Benchmarks and Infrastructure",
+      "description": "SWE-Bench ProMax and the OpenClaw platform signal a maturing agentic coding ecosystem pushing beyond single-file bug fixing toward multilingual large-scale refactoring and real-world software engineering.",
+      "related_paper_ids": [
+        "swe-bench-promax",
+        "prime-agent-orchestrator"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Model Efficiency and Sustainable Deployment",
+      "description": "F-WANDA and Mamba-HM both target the same underlying challenge: reducing compute costs without sacrificing quality, with F-WANDA focusing on pruning energy and Mamba-HM on long-sequence inference efficiency.",
+      "related_paper_ids": [
+        "f-wanda-fisher-pruning",
+        "mamba-hm-hierarchical-memory"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Embodied AI and Hierarchical Agents",
+      "description": "τ₀-VLA and ARISE both address long-horizon decision making through hierarchical decomposition—τ₀-VLA via world-model-guided planning in robotics and ARISE via intrinsic-motivation-driven skill evolution in RL.",
+      "related_paper_ids": [
+        "tau0-vla-hierarchical-robot",
+        "arise-hierarchical-rl"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Cognitive and Social Reasoning Benchmarks for VLMs",
+      "description": "Cross-task dissociation in VLM ToM and IntentQA both probe whether frontier models possess genuine social and cognitive reasoning, finding systematic gaps that single-task evaluations miss.",
+      "related_paper_ids": [
+        "vlm-theory-of-mind-dissociation",
+        "intentqa-video-reasoning",
+        "society-bench-counterfactual"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Safety, Security, and Robustness Benchmarks",
+      "description": "FraudBench and AI4AI-Bench highlight that agents fail under adversarial conditions and recursive self-improvement scenarios respectively, pointing to a growing subfield of agent robustness evaluation.",
+      "related_paper_ids": [
+        "fraudbench-banking-agents",
+        "ai4ai-bench-self-improvement"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-08-27T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-08-27T07:05:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv CS.AI/CS.CL/CS.LG",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-08-27T07:10:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org/trending",
+      "checked_at": "2026-08-27T07:15:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-08-27T07:20:00Z",
+      "status": "ok"
+    }
+  ]
+}
