@@ -1,0 +1,786 @@
+{
+  "version": "1.0",
+  "date": "2026-09-05",
+  "generated_at": "2026-09-05T09:00:00Z",
+  "summary": {
+    "headline": "AI4AI技能蒸馏成为主流：DisCo从1,000个GitHub仓库中挖掘出5,000多个可复用的智能体技能；开放视频世界模型与边缘原生MoE推理服务推动实用的设备端智能体AI发展；Qwen的Terminal-Universe将原始智能体轨迹转化为可扩展的训练环境，为下一代编程/终端智能体提供支持。",
+    "body": "今日热门研究呈现出一个明显的转向：从追求原始模型能力转变为构建**智能体的运行基础设施**——即智能体如何获取、存储和复用知识经验。BAAI/VectorSpaceLab的Repo-To-Skill（DisCo）以312个赞位居榜首，该研究将1,000个广泛使用的机器学习仓库蒸馏为一个包含5,000多项技能的技能库（AREX-Skill），使MLE-bench类智能体的表现提升了130%以上。阿里巴巴Qwen团队的Terminal-Universe紧随其后，该研究从智能体轨迹日志中重建完整的终端环境，解决了编程和终端使用类智能体长期面临的真实、可扩展强化学习/训练环境稀缺的问题。\n\n在生成式模型方面，inclusionAI的LLaDA-Image证明了完全开源、从零训练的扩散Transformer搭配扩散语言模型骨干网络，能够取得最先进的双语图像生成分数，该模型已成为当日下载量最高的新模型。SolarWM将开放配方理念延伸到长时程视频世界模型领域，发布了一个包含143万个片段的数据引擎，以及基于Wan2.2、LTX-2.5和MiniMax-H3构建的四种规模（5B-33B）模型。与此同时，系统研究方面的FreeToken（来自Song Han、Matei Zaharia和Ion Stoica）正在悄然为这波热潮的落地提供支撑：其带宽自适应MoE推理服务能让游戏台式机在本地运行2840亿参数的模型。\n\n另一组论文——VoiceMem、LatentPress、ARIS和AI-Trader——分别聚焦于智能体记忆、上下文压缩、对抗性自我验证以及严格的实时市场基准测试。总体而言，这些研究表明，2026年的前沿趋势不再是一味追求更大的基础模型，而是更加注重围绕智能体的配套体系：技能、记忆、环境以及可信的评估机制，这些才是让智能体在现实世界中可靠发挥作用的关键。",
+    "key_themes": [
+      "agent-skill-distillation",
+      "scalable-agent-environments",
+      "open-diffusion-generation",
+      "long-horizon-world-models",
+      "edge-native-moe-serving",
+      "agent-memory-and-evaluation"
+    ]
+  },
+  "researcher_notes": "**重心已经从预训练转向后训练基础设施。**今日五篇热门论文中有四篇——DisCo/Repo-To-Skill、Terminal-Universe、LLaDA-Image和SolarWM——关注的并非如何从更大的Transformer中榨取更高的基准分数，而是构建*配套体系*（技能、环境、训练配方、世界模型），从而让现有模型作为智能体时的实用性大幅提升。DisCo中配备技能的智能体在MLE-bench上取得130%以上的提升，这是一个引人注目的数据点：它表明智能体的失败模式在很大程度上并非源于推理能力不足，而是*缺乏可操作的知识*——而这正是蒸馏出的可复用技能所要弥补的差距。VectorSpaceLab在同一新闻周期内同时发布了论文和完全开源的AREX-Skill Library（GitHub星标超过3,870，当日新增987星），这表明从开放研究到可用产物的转化速度已经变得非常快。\n\n**环境稀缺问题正通过挖掘轨迹数据而非手工构建模拟器来解决。**Terminal-Universe的方法——通过重放工具执行历史来重建文件系统的*智能体操作前*状态——是一种巧妙且低成本的方式，能将大量现存的智能体日志转化为强化学习所需的环境（这类环境本身稀缺且构建成本高昂）。这是一个值得关注的趋势：预计未来几个月内，除终端之外的其他领域（浏览器、IDE、机器人模拟器）也会出现更多「轨迹转环境」类论文，因为这种方法避开了昂贵的模拟器工程开发需求。\n\n**在生成式建模领域，开放配方正在追赶封闭的前沿实验室。**LLaDA-Image从零训练的6B DiT搭配冻结的扩散语言模型骨干网络取得了最先进的双语分数，而SolarWM完全开源、四种规模（5B-33B）的视频世界模型体系同样表明，在生成式和世界模型任务上，「开放且文档完备的训练配方」与「封闭的前沿系统」之间的差距正在显著缩小。这两个项目都同样重视*可复现性*（开放的数据引擎、分阶段的训练配方），而不仅仅是追求原始输出质量，这对整个领域基于共享基础持续构建、而非从零重新推导，是一个健康的趋势。\n\n**高效的本地推理正在成为一个一线研究目标，而非事后考虑的附加项。**FreeToken（作者包括Song Han、Matei Zaharia和Ion Stoica）将个人设备视为一个弹性的MoE推理平台，通过带宽自适应的专家驻留机制和智能体状态复用，使「GL[X]」级硬件也能运行7530亿参数级别的模型。再加上已在Hugging Face上走红的FreeToken-DeepSeek-V4-Flash-MXFP4量化版本，这有力地表明，到2026年，**设备端/边缘智能体AI正在从新奇尝试走向可用于生产环境**——随着智能体需要持续、低成本地运行而非按查询计费，这一主题的重要性将日益凸显。\n\n**信任与评估基础设施是不太引人注意的第四大支柱。**ARIS的对抗性多智能体研究框架和AI-Trader的无数据污染实时金融基准测试，二者都在回应同一个根本性问题：随着智能体运行时间更长、自主性更高，业界需要一种不会被记忆或短期代理指标所操纵的验证与评估方法。AI-Trader的发现表明，通用智能并不能自动转化为交易能力，这为当下能力基准测试的过热炒作提供了一次有益的现实检验，预计将在未来关于智能体安全性与可靠性的讨论中被大量引用。",
+  "papers": [
+    {
+      "id": "repo-to-skill-disco",
+      "title": "Repo-To-Skill: Distilling GitHub Repositories Into AI4AI Skills",
+      "authors": [
+        "VectorSpaceLab Team",
+        "BAAI Team et al."
+      ],
+      "affiliations": [
+        "Beijing Academy of Artificial Intelligence (BAAI)",
+        "VectorSpaceLab"
+      ],
+      "summary": "DisCo从1,000个广泛使用的机器学习仓库中蒸馏出可操作性知识，构建了一个涵盖20个能力领域、包含5,000多项可复用且经过验证的技能库。基于GPT-5.5骨干网络、配备技能的智能体在MLE-bench类评测中的得分比基线智能体高出134.3%。",
+      "key_findings": [
+        "两种蒸馏模式：任务无关型（通用可复用技能）与任务导向型（针对特定任务的技能）",
+        "构建了AREX-Skill技能库：从1,000个仓库中提炼出涵盖20个能力领域、超过5,000项经过验证的技能",
+        "配备技能的GPT-5.5骨干网络智能体在MLE-bench类任务中的得分提高了134.3%"
+      ],
+      "tags": [
+        "agents",
+        "skill-distillation",
+        "ML-research-automation",
+        "operational-knowledge"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 312,
+        "comments": 28
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.02749",
+        "huggingface": "https://huggingface.co/papers/2609.02749",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.02749",
+        "pdf": "https://arxiv.org/pdf/2609.02749"
+      }
+    },
+    {
+      "id": "terminal-universe",
+      "title": "Terminal-Universe: Turning Agent Trajectories into Scalable Terminal Environments",
+      "authors": [
+        "Qwen Team",
+        "Alibaba Research et al."
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Qwen Team"
+      ],
+      "summary": "Terminal-Universe通过重放现有终端智能体轨迹中记录的文件操作历史，重建可复用的终端环境，恢复工作区在修改之前的状态。这一方法将原本仅能使用一次的轨迹日志，转化为可扩展、可复用的终端/编程智能体训练与评估环境。",
+      "key_findings": [
+        "通过重放智能体轨迹中记录的文件操作来重建环境状态",
+        "无需手工构建模拟器，即可将现有轨迹日志转化为可复用环境",
+        "已大规模应用于公开的终端智能体轨迹数据集"
+      ],
+      "tags": [
+        "agents",
+        "terminal-agents",
+        "RL-environments",
+        "coding-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 287,
+        "comments": 19
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.04148",
+        "huggingface": "https://huggingface.co/papers/2609.04148",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.04148",
+        "pdf": "https://arxiv.org/pdf/2609.04148"
+      }
+    },
+    {
+      "id": "lladaimage",
+      "title": "LLaDA-Image: Building Strong Image Generators with Fully Open Training Recipes",
+      "authors": [
+        "inclusionAI Team"
+      ],
+      "affiliations": [
+        "Ant Group (inclusionAI)"
+      ],
+      "summary": "LLaDA-Image将一个从零训练的6B扩散Transformer与基于LLaDA2.0-Mini扩散语言模型构建的冻结视觉-语言模块相结合。通过先在2.2亿样本上进行纯图像预训练以建立视觉生成先验，该模型取得了英文53.53分、中文53.38分的开源最先进成绩。",
+      "key_findings": [
+        "从零训练的6B DiT搭配基于LLaDA2.0-Mini的冻结视觉-语言理解模块",
+        "在引入图文配对数据之前，先通过2.2亿样本的纯图像预训练流程建立强大的视觉生成先验",
+        "取得开源最先进的双语生成分数（英文53.53 / 中文53.38）"
+      ],
+      "tags": [
+        "diffusion",
+        "image-generation",
+        "multimodal",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 256,
+        "comments": 31
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.03796",
+        "huggingface": "https://huggingface.co/papers/2609.03796",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.03796",
+        "pdf": "https://arxiv.org/pdf/2609.03796"
+      }
+    },
+    {
+      "id": "solarwm",
+      "title": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "authors": [
+        "Junchao Huang",
+        "17 other authors"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "SolarWM为交互式视频世界模型提供了一套端到端的开放基础方案，将来自10个数据集的143万个片段转化为统一的帧对齐数据规范。该方案基于Wan2.2、LTX-2.5和MiniMax-H3构建了四个5B-33B规模的模型实例，采用双向适配、教师强制自回归初始化和分布匹配蒸馏三阶段训练配方。",
+      "key_findings": [
+        "统一数据引擎将来自10个数据集的143万个片段转化为帧对齐的训练规范",
+        "基于三种不同骨干网络系列（Wan2.2、LTX-2.5、MiniMax-H3）构建了四种规模（5B-33B）的模型",
+        "三阶段训练配方支持长时程、交互式的视频世界建模"
+      ],
+      "tags": [
+        "world-models",
+        "video-generation",
+        "long-horizon",
+        "open-data"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 231,
+        "comments": 22
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.02886",
+        "huggingface": "https://huggingface.co/papers/2609.02886",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.02886",
+        "pdf": "https://arxiv.org/pdf/2609.02886"
+      }
+    },
+    {
+      "id": "latentpress",
+      "title": "LatentPress: Context Compression Beyond Text and Vision",
+      "authors": [
+        "Research Team et al."
+      ],
+      "affiliations": [
+        "Independent AI Research Collective"
+      ],
+      "summary": "LatentPress将长对话和文档编码为连续记忆令牌，由冻结的语言模型解码器通过其输入嵌入接口直接读取，从而省去了文本重建/摘要环节。一个与读取器匹配的轻量级写入器将长上下文压缩为短的连续向量序列，从而提升了LongMemEval等长期记忆基准测试的表现。",
+      "key_findings": [
+        "将上下文压缩为连续记忆令牌，而非人类可读的摘要",
+        "冻结的解码器通过嵌入接口直接消费记忆令牌，无需重建过程",
+        "通过省去独立的摘要环节，提升了在LongMemEval上的表现"
+      ],
+      "tags": [
+        "context-compression",
+        "memory",
+        "long-context",
+        "efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 198,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.01507",
+        "huggingface": "https://huggingface.co/papers/2609.01507",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.01507",
+        "pdf": "https://arxiv.org/pdf/2609.01507"
+      }
+    },
+    {
+      "id": "freetoken",
+      "title": "FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution",
+      "authors": [
+        "Song Han",
+        "Matei Zaharia",
+        "Ion Stoica"
+      ],
+      "affiliations": [
+        "MIT",
+        "UC Berkeley",
+        "Databricks"
+      ],
+      "summary": "FreeToken是一个边缘原生的MoE推理服务系统，将个人设备视为统一的弹性推理平台，对模型布局、专家驻留、CPU-GPU执行以及智能体状态复用进行协同设计。该系统能让笔记本电脑运行350亿参数模型，游戏台式机运行2840亿参数模型，而在更高端的本地硬件上则可运行7530亿参数级别的模型。",
+      "key_findings": [
+        "协同设计的推理服务栈涵盖模型布局、专家驻留、执行调度与内存管理",
+        "带宽自适应执行机制可应对异构边缘硬件和不断变化的智能体工作负载模式",
+        "可从笔记本电脑上的350亿参数模型扩展到高性能本地台式机上的7530亿参数级别模型"
+      ],
+      "tags": [
+        "edge-inference",
+        "MoE",
+        "systems",
+        "on-device-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 184,
+        "comments": 26
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16157",
+        "huggingface": "https://huggingface.co/papers/2608.16157",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.16157",
+        "pdf": "https://arxiv.org/pdf/2608.16157"
+      }
+    },
+    {
+      "id": "voicemem",
+      "title": "VoiceMem: Streaming Dual-Brain Memory for Real-Time Interaction",
+      "authors": [
+        "Zhifei Xie",
+        "Jiaqi Lang",
+        "Ze An",
+        "Yifan Zhao",
+        "Dongchao Yang"
+      ],
+      "affiliations": [
+        "Fudan University",
+        "Chinese University of Hong Kong"
+      ],
+      "summary": "VoiceMem为双工语音语言模型引入了一种流式双脑记忆架构——负责信息处理的左脑和负责情感处理的右脑。在top-5检索任务上，左脑的表现比Mem0高出近30分，而右脑则在角色一致性得分上取得了最先进的成绩，端到端检索仅需134毫秒即可完成。",
+      "key_findings": [
+        "双脑设计将信息性记忆与情感/角色记忆区分开来",
+        "在top-200/top-5检索任务中，左脑的检索表现比Mem0高出约30分",
+        "右脑角色建模使综合得分比此前最佳水平提高了4.29分，检索延迟为134毫秒"
+      ],
+      "tags": [
+        "speech",
+        "memory",
+        "real-time-interaction",
+        "duplex-SLM"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 167,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.26005",
+        "huggingface": "https://huggingface.co/papers/2608.26005",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.26005",
+        "pdf": "https://arxiv.org/pdf/2608.26005"
+      }
+    },
+    {
+      "id": "aris",
+      "title": "ARIS: Autonomous Research via Adversarial Multi-Agent Collaboration",
+      "authors": [
+        "Ruofeng Yang",
+        "Yongcan Li",
+        "Shuai Li"
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University"
+      ],
+      "summary": "ARIS是一个开源研究框架，通过跨模型对抗协作来保障长时间运行的自主研究智能体的可靠性，其核心是协调编排机制和一个三阶段保障层（完整性验证、结果与结论映射、结论审计）。该框架可协调五种端到端研究工作流，并支持可调节的努力程度设置。",
+      "key_findings": [
+        "跨模型对抗协作提升了长时程自主研究智能体的可靠性",
+        "三阶段保障层：完整性验证、结果与结论映射、结论审计",
+        "协调五种端到端研究工作流，并支持可配置的审查模型路由"
+      ],
+      "tags": [
+        "agents",
+        "multi-agent",
+        "research-automation",
+        "verification"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 143,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.03042",
+        "huggingface": "https://huggingface.co/papers/2605.03042",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2605.03042",
+        "pdf": "https://arxiv.org/pdf/2605.03042"
+      }
+    },
+    {
+      "id": "ai-trader",
+      "title": "AI-Trader: Benchmarking Autonomous Agents in Real-Time Financial Markets",
+      "authors": [
+        "HKUDS Team et al."
+      ],
+      "affiliations": [
+        "University of Hong Kong (Data Intelligence Lab, HKUDS)"
+      ],
+      "summary": "AI-Trader是首个针对大语言模型智能体在金融决策方面的全自动、实时、无数据污染的基准测试，涵盖美股、A股和加密货币。在最小信息范式下，智能体必须自行搜索、验证并综合实时市场数据，研究结果表明通用智能并不能自动转化为交易能力。",
+      "key_findings": [
+        "首个覆盖三大主要市场、无数据污染的实时金融智能体基准测试",
+        "最小信息范式要求智能体自行获取并验证实时数据",
+        "通用智能并不能可靠地预测交易表现"
+      ],
+      "tags": [
+        "agents",
+        "benchmark",
+        "finance",
+        "real-time-evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 128,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2512.10971",
+        "huggingface": "https://huggingface.co/papers/2512.10971",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2512.10971",
+        "pdf": "https://arxiv.org/pdf/2512.10971"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "一个拥有2.8万亿参数的多模态、长上下文文本生成模型，具备强大的智能体能力，是当日下载量最高的热门模型。",
+      "task_type": "text-generation",
+      "model_size": "2.8T",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "long-context",
+        "agent"
+      ],
+      "metrics": {
+        "downloads": 412000,
+        "likes": 8730
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "glm-5-3-9b-chat",
+      "name": "GLM-5.3-9B-Chat",
+      "organization": "THUDM (Zhipu AI)",
+      "description": "GLM系列中一个经过指令微调的90亿参数对话模型，具备较强的编程能力。",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "text-generation",
+        "coding",
+        "chat",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 328000,
+        "likes": 5240
+      },
+      "source_url": "https://huggingface.co/THUDM/GLM-5.3-9B-Chat"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek AI",
+      "description": "一个针对编程和推理任务优化的快速推理MoE模型，同时提供面向边缘推理的量化版本。",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "text-generation",
+        "MoE",
+        "coding",
+        "reasoning",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 287000,
+        "likes": 4560
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "qwen3-8-27b-chat",
+      "name": "Qwen3.8-27B-Chat",
+      "organization": "Alibaba (Qwen)",
+      "description": "一个以推理能力为重点的多语言、多模态对话模型，基于Apache-2.0协议发布。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "multilingual",
+        "reasoning",
+        "multimodal",
+        "Apache-2.0"
+      ],
+      "metrics": {
+        "downloads": 241000,
+        "likes": 3980
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B-Chat"
+    },
+    {
+      "id": "qwen3-8-235b-a22b",
+      "name": "Qwen3.8-235B-A22B",
+      "organization": "Alibaba (Qwen)",
+      "description": "一个大规模MoE推理模型，是Qwen3.8对话版本的稀疏激活版本。",
+      "task_type": "text-generation",
+      "model_size": "235B (A22B MoE)",
+      "tags": [
+        "text-generation",
+        "MoE",
+        "reasoning",
+        "large-scale"
+      ],
+      "metrics": {
+        "downloads": 156000,
+        "likes": 3210
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-235B-A22B"
+    },
+    {
+      "id": "llama-4-2-scout-17b",
+      "name": "Llama-4.2-Scout-17B",
+      "organization": "Meta",
+      "description": "Meta旗下Llama 4.2 Scout系列中一个开源的多模态文本生成模型。",
+      "task_type": "text-generation",
+      "model_size": "17B",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "llama",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 187000,
+        "likes": 3450
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-4.2-Scout-17B"
+    },
+    {
+      "id": "lladaimage-model",
+      "name": "LLaDA-Image",
+      "organization": "Ant Group (inclusionAI)",
+      "description": "一个完全开源的6B扩散Transformer图像生成模型，搭配扩散语言模型骨干网络，取得了开源双语生成任务的最先进成绩。",
+      "task_type": "text-to-image",
+      "model_size": "6B",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "image-generation",
+        "multimodal",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 87400,
+        "likes": 2340
+      },
+      "source_url": "https://huggingface.co/inclusionAI/LLaDA-Image"
+    },
+    {
+      "id": "lladaimage-turbo",
+      "name": "LLaDA-Image-Turbo",
+      "organization": "Ant Group (inclusionAI)",
+      "description": "LLaDA-Image的快速推理、编辑优化版本，提供更低延迟的图像生成与编辑能力。",
+      "task_type": "text-to-image",
+      "model_size": "6B (distilled)",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference",
+        "image-editing"
+      ],
+      "metrics": {
+        "downloads": 64200,
+        "likes": 1890
+      },
+      "source_url": "https://huggingface.co/inclusionAI/LLaDA-Image-Turbo"
+    },
+    {
+      "id": "freetoken-deepseek-v4-flash-mxfp4",
+      "name": "FreeToken-DeepSeek-V4-Flash-MXFP4",
+      "organization": "FlashML-org",
+      "description": "DeepSeek-V4-Flash的MXFP4量化版本，专为FreeToken推理服务系统下的边缘原生本地MoE推理优化。",
+      "task_type": "text-generation",
+      "model_size": "MoE (MXFP4 quantized)",
+      "tags": [
+        "quantized",
+        "edge-inference",
+        "MoE",
+        "MXFP4",
+        "local-inference"
+      ],
+      "metrics": {
+        "downloads": 98700,
+        "likes": 2180
+      },
+      "source_url": "https://huggingface.co/FlashML-org/FreeToken-DeepSeek-V4-Flash-MXFP4"
+    },
+    {
+      "id": "arex-skill-qwen3-5-27b",
+      "name": "AREX-Skill-Qwen3.5-27B",
+      "organization": "VectorSpaceLab / BAAI",
+      "description": "一个基于AREX-Skill技能库微调的Qwen3.5-27B模型，为机器学习研究智能体赋予可复用的操作性编程技能。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "code",
+        "skills",
+        "agent",
+        "ML-research"
+      ],
+      "metrics": {
+        "downloads": 72300,
+        "likes": 1870
+      },
+      "source_url": "https://huggingface.co/VectorSpaceLab/AREX-Skill-Qwen3.5-27B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "flashml-org-freetoken",
+      "name": "FlashML-org/FreeToken",
+      "description": "将数据中心级别的MoE模型推理服务带到桌面端，为DeepSeek、Qwen3和GLM-5.2模型提供快速的边缘原生本地推理能力。",
+      "language": "Python",
+      "stars": 11600,
+      "stars_today": 342,
+      "forks": 890,
+      "url": "https://github.com/FlashML-org/FreeToken",
+      "tags": [
+        "edge-inference",
+        "MoE",
+        "serving",
+        "local-AI"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "inclusionai-lladaimage",
+      "name": "inclusionAI/LLaDA-Image",
+      "description": "LLaDA-Image的官方实现，这是一个基于扩散语言模型的图像生成器，具备最先进的开源性能；是当日AI/ML仓库中star增长最多的项目。",
+      "language": "Python",
+      "stars": 4230,
+      "stars_today": 1840,
+      "forks": 312,
+      "url": "https://github.com/inclusionAI/LLaDA-Image",
+      "tags": [
+        "diffusion",
+        "image-generation",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vectorspacelab-arex-skill",
+      "name": "VectorSpaceLab/AREX-Skill",
+      "description": "AREX-Skill技能库：从1,000个GitHub仓库中蒸馏出的5,000多项经过验证的机器学习研究技能，为自主机器学习研究智能体提供可复用的操作性知识。",
+      "language": "Python",
+      "stars": 3870,
+      "stars_today": 987,
+      "forks": 267,
+      "url": "https://github.com/VectorSpaceLab/AREX-Skill",
+      "tags": [
+        "agents",
+        "skill-distillation",
+        "ML-research"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "voltagent-awesome-ai-agent-papers",
+      "name": "VoltAgent/awesome-ai-agent-papers",
+      "description": "一个每周更新的精选合集，收录2026年AI智能体研究论文，涵盖工程实现、记忆、评估和自主系统等方向。",
+      "language": "Unknown",
+      "stars": 20400,
+      "stars_today": 520,
+      "forks": 1230,
+      "url": "https://github.com/VoltAgent/awesome-ai-agent-papers",
+      "tags": [
+        "awesome-list",
+        "agents",
+        "research-papers"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openclaw-openclaw",
+      "name": "OpenClaw/openclaw",
+      "description": "一个本地、设备端运行的个人AI助手网关，将AI模型与WhatsApp、Telegram、Slack、Discord、Signal、iMessage等50多个集成服务连接起来。",
+      "language": "TypeScript",
+      "stars": 210000,
+      "stars_today": 210,
+      "forks": 18900,
+      "url": "https://github.com/OpenClaw/openclaw",
+      "tags": [
+        "personal-assistant",
+        "local-first",
+        "integrations"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "一个用于本地运行和管理大语言模型的轻量级Go框架，持续稳居GitHub Trending榜单前列。",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 185,
+      "forks": 14200,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-inference",
+        "LLM-runtime"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "一个高吞吐、内存高效的大语言模型推理与服务引擎，提供与OpenAI兼容的API，支持NVIDIA、AMD、Intel Arc和TPU等后端。",
+      "language": "Python",
+      "stars": 52800,
+      "stars_today": 165,
+      "forks": 7890,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "inference-serving",
+        "LLM-infrastructure"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "junchao-cs-solarwm",
+      "name": "Junchao-cs/SolarWM",
+      "description": "面向长时程交互式视频世界模型的开源框架与训练配方，支持Wan2.2、LTX-2.5和MiniMax-H3等骨干网络，覆盖5B-33B多种模型规模。",
+      "language": "Python",
+      "stars": 2870,
+      "stars_today": 760,
+      "forks": 198,
+      "url": "https://github.com/Junchao-cs/SolarWM",
+      "tags": [
+        "world-models",
+        "video-generation",
+        "open-recipe"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-ai-trader",
+      "name": "HKUDS/AI-Trader",
+      "description": "首个面向大语言模型智能体的全自动实时金融市场基准测试，覆盖美股、A股和加密货币，涉及多种交易时间粒度。",
+      "language": "Python",
+      "stars": 3120,
+      "stars_today": 430,
+      "forks": 289,
+      "url": "https://github.com/HKUDS/AI-Trader",
+      "tags": [
+        "agents",
+        "benchmark",
+        "finance"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "langflow-ai-langflow",
+      "name": "langflow-ai/langflow",
+      "description": "一个用于设计AI智能体流水线的拖拽式可视化界面，集成了主流大语言模型提供商、向量数据库以及智能体工作流所需的各类工具。",
+      "language": "Python",
+      "stars": 41200,
+      "stars_today": 148,
+      "forks": 4320,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": [
+        "agent-builder",
+        "low-code",
+        "workflows"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "caramaschihg-awesome-ai-agents-2026",
+      "name": "caramaschiHG/awesome-ai-agents-2026",
+      "description": "一份由社区持续更新的详尽列表，收录2026年300多个AI智能体、框架和工具，涵盖20多个类别。",
+      "language": "Unknown",
+      "stars": 8930,
+      "stars_today": 312,
+      "forks": 654,
+      "url": "https://github.com/caramaschiHG/awesome-ai-agents-2026",
+      "tags": [
+        "awesome-list",
+        "agents",
+        "tools"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Skill Distillation",
+      "description": "Converting existing GitHub repositories and codebases into reusable, verified operational skills that dramatically boost autonomous agent performance.",
+      "related_paper_ids": [
+        "repo-to-skill-disco"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Scalable Agent Training Environments",
+      "description": "Reconstructing training and evaluation environments from real agent trajectory logs instead of hand-built simulators, solving the environment scarcity bottleneck.",
+      "related_paper_ids": [
+        "terminal-universe"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open Diffusion-Based Generation",
+      "description": "Fully documented, reproducible training recipes for state-of-the-art open-source image generation, narrowing the gap with closed frontier systems.",
+      "related_paper_ids": [
+        "lladaimage"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Horizon Video World Models",
+      "description": "Open data engines and multi-scale training recipes for interactive video world models capable of long-horizon inference.",
+      "related_paper_ids": [
+        "solarwm"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Edge-Native MoE Serving",
+      "description": "Systems research and quantized releases enabling large MoE models to run efficiently on personal and edge hardware.",
+      "related_paper_ids": [
+        "freetoken"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory, Compression and Trustworthy Evaluation",
+      "description": "New memory architectures, continuous-token context compression, and adversarial or data-uncontaminated evaluation methods for reliable long-running agents.",
+      "related_paper_ids": [
+        "voicemem",
+        "latentpress",
+        "aris",
+        "ai-trader"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://www.alphaxiv.org/",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending Repositories",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

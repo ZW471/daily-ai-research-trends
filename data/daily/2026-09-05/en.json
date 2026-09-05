@@ -1,0 +1,786 @@
+{
+  "version": "1.0",
+  "date": "2026-09-05",
+  "generated_at": "2026-09-05T09:00:00Z",
+  "summary": {
+    "headline": "AI4AI skill distillation goes mainstream as DisCo mines 1,000 GitHub repos into 5,000+ reusable agent skills; open video world models and edge-native MoE serving push practical, on-device agentic AI forward; Qwen's Terminal-Universe turns raw agent trajectories into scalable training environments for the next generation of coding/terminal agents.",
+    "body": "Today's trending research is dominated by a clear shift from raw model capability toward **operational infrastructure for agents** — how agents acquire, store, and reuse know-how. BAAI/VectorSpaceLab's Repo-To-Skill (DisCo) leads with 312 upvotes, distilling 1,000 widely-used ML repositories into a 5,000+ skill library (AREX-Skill) that boosts MLE-bench-style agent performance by over 130%. Alibaba's Qwen Team follows closely with Terminal-Universe, which reconstructs full terminal environments from agent trajectory logs, addressing the chronic scarcity of realistic, scalable RL/training environments for coding and terminal-use agents.\n\nOn the generative side, inclusionAI's LLaDA-Image demonstrates that fully open, from-scratch diffusion transformers paired with diffusion-language-model backbones can hit state-of-the-art bilingual image generation scores, and it is already the most-downloaded new model of the day. SolarWM extends the open-recipe philosophy to long-horizon video world models, releasing a 1.43M-clip data engine and four model scales (5B-33B) built on Wan2.2, LTX-2.5, and MiniMax-H3. Meanwhile, systems research (FreeToken, from Song Han, Matei Zaharia, and Ion Stoica) is quietly enabling the practical side of this boom: bandwidth-adaptive MoE serving that lets a gaming desktop run 284B-parameter models locally.\n\nA second cluster of papers — VoiceMem, LatentPress, ARIS, and AI-Trader — addresses agent memory, context compression, adversarial self-verification, and rigorous live-market benchmarking, respectively. Collectively these signal that 2026's frontier is less about bigger base models and more about the surrounding scaffolding: skills, memory, environments, and trustworthy evaluation that make agents reliably useful in the real world.",
+    "key_themes": [
+      "agent-skill-distillation",
+      "scalable-agent-environments",
+      "open-diffusion-generation",
+      "long-horizon-world-models",
+      "edge-native-moe-serving",
+      "agent-memory-and-evaluation"
+    ]
+  },
+  "researcher_notes": "**The center of gravity has moved from pretraining to post-training infrastructure.** Four of today's top five papers — DisCo/Repo-To-Skill, Terminal-Universe, LLaDA-Image, and SolarWM — are not about squeezing more benchmark performance out of a bigger transformer, but about building the *scaffolding* (skills, environments, training recipes, world models) that make existing models dramatically more useful as agents. DisCo's 130%+ MLE-bench improvement from skill-equipped agents is a striking data point: it suggests that a large fraction of an agent's failure modes are not reasoning failures but *missing operational knowledge* — exactly the gap that distilled, reusable skills are designed to close. The fact that VectorSpaceLab shipped both the paper and a fully open AREX-Skill Library (3,870+ GitHub stars, 987 stars today) within the same news cycle shows how fast open research-to-artifact turnaround has become.\n\n**Environment scarcity is being solved by mining trajectories instead of hand-authoring simulators.** Terminal-Universe's approach — replaying tool-execution history to reconstruct the *pre-agent* state of a filesystem — is a clever, cheap way to convert existing agent logs (which are abundant) into RL-ready environments (which are scarce and expensive to build). This is a pattern worth watching: expect more \"trajectory-to-environment\" papers across domains beyond terminals (browsers, IDEs, robotics simulators) in the coming months, since it sidesteps the need for costly simulator engineering.\n\n**Open recipes are catching up to closed frontier labs in generative modeling.** LLaDA-Image's from-scratch 6B DiT paired with a frozen diffusion-LM backbone achieving SOTA bilingual scores — and SolarWM's fully open, four-scale (5B-33B) video world model stack — both signal that the gap between \"open, fully documented training recipe\" and \"closed frontier system\" is narrowing meaningfully for generative and world-model tasks. Both projects emphasize *reproducibility* (open data engines, staged training recipes) as much as raw output quality, which is a healthy trend for the field's ability to build on shared foundations rather than re-deriving from scratch.\n\n**Efficient local inference is becoming a first-class research target, not an afterthought.** FreeToken (Song Han, Matei Zaharia, Ion Stoica) treats a personal machine as an elastic MoE inference platform, enabling 753B-class models on \"GL[X]\"-tier hardware through bandwidth-adaptive expert residency and agentic state reuse. Paired with the FreeToken-DeepSeek-V4-Flash-MXFP4 quantized release already trending on Hugging Face, this is a strong signal that **on-device/edge agentic AI is moving from novelty to production-viable** in 2026 — a theme that will matter increasingly as agents need to run continuously and cheaply rather than per-query.\n\n**Trust and evaluation infrastructure is the quiet fourth leg.** ARIS's adversarial multi-agent research harness and AI-Trader's data-uncontaminated, live financial benchmark both respond to the same underlying problem: as agents run longer and more autonomously, the field needs verification and evaluation methods that can't be gamed by memorization or short-horizon proxies. AI-Trader's finding that general intelligence doesn't automatically translate to trading competence is a useful reality check against capability-benchmark hype, and is likely to be cited heavily in upcoming agent-safety and agent-reliability discussions.",
+  "papers": [
+    {
+      "id": "repo-to-skill-disco",
+      "title": "Repo-To-Skill: Distilling GitHub Repositories Into AI4AI Skills",
+      "authors": [
+        "VectorSpaceLab Team",
+        "BAAI Team et al."
+      ],
+      "affiliations": [
+        "Beijing Academy of Artificial Intelligence (BAAI)",
+        "VectorSpaceLab"
+      ],
+      "summary": "DisCo distills operational knowledge from 1,000 widely-used ML repositories into a library of 5,000+ reusable, verified skills spanning 20 capability areas. Skill-equipped agents built on a GPT-5.5 backbone score 134.3% higher on MLE-bench-style evaluations than baseline agents.",
+      "key_findings": [
+        "Two distillation modes: task-agnostic (general reusable skills) and task-oriented (skills for a specific task)",
+        "Produced the AREX-Skill Library: 5,000+ verified skills across 20 capability areas from 1,000 repos",
+        "GPT-5.5 backbone agents equipped with skills scored 134.3% higher on MLE-bench-style tasks"
+      ],
+      "tags": [
+        "agents",
+        "skill-distillation",
+        "ML-research-automation",
+        "operational-knowledge"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 312,
+        "comments": 28
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.02749",
+        "huggingface": "https://huggingface.co/papers/2609.02749",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.02749",
+        "pdf": "https://arxiv.org/pdf/2609.02749"
+      }
+    },
+    {
+      "id": "terminal-universe",
+      "title": "Terminal-Universe: Turning Agent Trajectories into Scalable Terminal Environments",
+      "authors": [
+        "Qwen Team",
+        "Alibaba Research et al."
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Qwen Team"
+      ],
+      "summary": "Terminal-Universe reconstructs reusable terminal environments by replaying the file-operation history embedded in existing terminal agent trajectories, restoring pre-modification workspace states. This turns previously single-use trajectory logs into scalable, reusable training and evaluation environments for terminal/coding agents.",
+      "key_findings": [
+        "Reconstructs environment state by replaying file operations recorded in agent trajectories",
+        "Converts existing trajectory logs into reusable environments without hand-built simulators",
+        "Applied to public terminal agent trajectory datasets at scale"
+      ],
+      "tags": [
+        "agents",
+        "terminal-agents",
+        "RL-environments",
+        "coding-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 287,
+        "comments": 19
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.04148",
+        "huggingface": "https://huggingface.co/papers/2609.04148",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.04148",
+        "pdf": "https://arxiv.org/pdf/2609.04148"
+      }
+    },
+    {
+      "id": "lladaimage",
+      "title": "LLaDA-Image: Building Strong Image Generators with Fully Open Training Recipes",
+      "authors": [
+        "inclusionAI Team"
+      ],
+      "affiliations": [
+        "Ant Group (inclusionAI)"
+      ],
+      "summary": "LLaDA-Image pairs a 6B Diffusion Transformer trained from scratch with a frozen vision-language module built on the LLaDA2.0-Mini diffusion language model. By first building a visual generative prior via image-only pre-training on 220M samples, it achieves state-of-the-art open-source scores of 53.53 (English) and 53.38 (Chinese).",
+      "key_findings": [
+        "6B DiT trained from scratch paired with a frozen LLaDA2.0-Mini-based VL understanding module",
+        "220M-sample image-only pre-training pipeline builds a strong visual generative prior before paired data",
+        "State-of-the-art open-source bilingual generation scores (53.53 EN / 53.38 ZH)"
+      ],
+      "tags": [
+        "diffusion",
+        "image-generation",
+        "multimodal",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 256,
+        "comments": 31
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.03796",
+        "huggingface": "https://huggingface.co/papers/2609.03796",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.03796",
+        "pdf": "https://arxiv.org/pdf/2609.03796"
+      }
+    },
+    {
+      "id": "solarwm",
+      "title": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "authors": [
+        "Junchao Huang",
+        "17 other authors"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "SolarWM provides an end-to-end open foundation for interactive video world models, converting 1.43 million clips from 10 datasets into a unified frame-aligned data contract. It instantiates four 5B-33B models on Wan2.2, LTX-2.5, and MiniMax-H3 using a three-stage recipe of bidirectional adaptation, teacher-forced autoregressive initialization, and distribution matching distillation.",
+      "key_findings": [
+        "Unified data engine converts 1.43M clips from 10 datasets into a frame-aligned training contract",
+        "Four model scales (5B-33B) built on three different backbone families (Wan2.2, LTX-2.5, MiniMax-H3)",
+        "Three-stage training recipe enables long-horizon, interactive video world modeling"
+      ],
+      "tags": [
+        "world-models",
+        "video-generation",
+        "long-horizon",
+        "open-data"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 231,
+        "comments": 22
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.02886",
+        "huggingface": "https://huggingface.co/papers/2609.02886",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.02886",
+        "pdf": "https://arxiv.org/pdf/2609.02886"
+      }
+    },
+    {
+      "id": "latentpress",
+      "title": "LatentPress: Context Compression Beyond Text and Vision",
+      "authors": [
+        "Research Team et al."
+      ],
+      "affiliations": [
+        "Independent AI Research Collective"
+      ],
+      "summary": "LatentPress encodes long conversations and documents as continuous memory tokens read directly by a frozen language-model decoder through its input-embedding interface, avoiding a text-reconstruction/summarization pass. A lightweight reader-matched writer compresses long contexts into short continuous vector sequences, improving long-memory benchmarks like LongMemEval.",
+      "key_findings": [
+        "Compresses context into continuous memory tokens instead of human-readable summaries",
+        "Frozen decoder consumes memory tokens directly via its embedding interface, no reconstruction needed",
+        "Improves performance on LongMemEval by avoiding a separate summarization pass"
+      ],
+      "tags": [
+        "context-compression",
+        "memory",
+        "long-context",
+        "efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 198,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.01507",
+        "huggingface": "https://huggingface.co/papers/2609.01507",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.01507",
+        "pdf": "https://arxiv.org/pdf/2609.01507"
+      }
+    },
+    {
+      "id": "freetoken",
+      "title": "FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution",
+      "authors": [
+        "Song Han",
+        "Matei Zaharia",
+        "Ion Stoica"
+      ],
+      "affiliations": [
+        "MIT",
+        "UC Berkeley",
+        "Databricks"
+      ],
+      "summary": "FreeToken is an edge-native MoE serving system that treats a personal machine as a unified, elastic inference platform, co-designing model layout, expert residency, CPU-GPU execution, and agentic state reuse. It enables running models from 35B on a laptop up to 284B on a gaming desktop and 753B-class models on higher-end local hardware.",
+      "key_findings": [
+        "Co-designed serving stack spans model layout, expert residency, execution, and memory management",
+        "Bandwidth-adaptive execution handles heterogeneous edge hardware and shifting agent workload patterns",
+        "Scales from 35B models on laptops to 753B-class models on capable local desktops"
+      ],
+      "tags": [
+        "edge-inference",
+        "MoE",
+        "systems",
+        "on-device-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 184,
+        "comments": 26
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.16157",
+        "huggingface": "https://huggingface.co/papers/2608.16157",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.16157",
+        "pdf": "https://arxiv.org/pdf/2608.16157"
+      }
+    },
+    {
+      "id": "voicemem",
+      "title": "VoiceMem: Streaming Dual-Brain Memory for Real-Time Interaction",
+      "authors": [
+        "Zhifei Xie",
+        "Jiaqi Lang",
+        "Ze An",
+        "Yifan Zhao",
+        "Dongchao Yang"
+      ],
+      "affiliations": [
+        "Fudan University",
+        "Chinese University of Hong Kong"
+      ],
+      "summary": "VoiceMem introduces a streaming dual-brain memory architecture — an informational left brain and an emotional right brain — for duplex speech language models. The left brain outperforms Mem0 by nearly 30 points at top-5 retrieval, while the right brain sets state-of-the-art persona-consistency scores, with end-to-end retrieval completing in 134ms.",
+      "key_findings": [
+        "Dual-brain design separates informational memory from emotional/persona memory",
+        "Left-brain retrieval outperforms Mem0 by ~30 points at top-200/top-5 retrieval",
+        "Right-brain persona modeling improves aggregate score by 4.29 points over prior best, with 134ms retrieval latency"
+      ],
+      "tags": [
+        "speech",
+        "memory",
+        "real-time-interaction",
+        "duplex-SLM"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 167,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.26005",
+        "huggingface": "https://huggingface.co/papers/2608.26005",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.26005",
+        "pdf": "https://arxiv.org/pdf/2608.26005"
+      }
+    },
+    {
+      "id": "aris",
+      "title": "ARIS: Autonomous Research via Adversarial Multi-Agent Collaboration",
+      "authors": [
+        "Ruofeng Yang",
+        "Yongcan Li",
+        "Shuai Li"
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University"
+      ],
+      "summary": "ARIS is an open-source research harness using cross-model adversarial collaboration to keep long-running autonomous research agents reliable, via coordinated orchestration and a three-stage assurance layer (integrity verification, result-to-claim mapping, claim auditing). It coordinates five end-to-end research workflows with adjustable effort settings.",
+      "key_findings": [
+        "Cross-model adversarial collaboration improves reliability of long-horizon autonomous research agents",
+        "Three-stage assurance layer: integrity verification, result-to-claim mapping, claim auditing",
+        "Coordinates five end-to-end research workflows with configurable reviewer-model routing"
+      ],
+      "tags": [
+        "agents",
+        "multi-agent",
+        "research-automation",
+        "verification"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 143,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2605.03042",
+        "huggingface": "https://huggingface.co/papers/2605.03042",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2605.03042",
+        "pdf": "https://arxiv.org/pdf/2605.03042"
+      }
+    },
+    {
+      "id": "ai-trader",
+      "title": "AI-Trader: Benchmarking Autonomous Agents in Real-Time Financial Markets",
+      "authors": [
+        "HKUDS Team et al."
+      ],
+      "affiliations": [
+        "University of Hong Kong (Data Intelligence Lab, HKUDS)"
+      ],
+      "summary": "AI-Trader is the first fully-automated, live, data-uncontaminated benchmark for LLM agents in financial decision-making across U.S. stocks, A-shares, and cryptocurrencies. Under a minimal-information paradigm, agents must independently search, verify, and synthesize live market data, revealing that general intelligence does not automatically translate into trading competence.",
+      "key_findings": [
+        "First live, data-uncontaminated financial agent benchmark spanning three major markets",
+        "Minimal information paradigm forces agents to independently source and verify live data",
+        "General-purpose intelligence does not reliably predict trading performance"
+      ],
+      "tags": [
+        "agents",
+        "benchmark",
+        "finance",
+        "real-time-evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 128,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2512.10971",
+        "huggingface": "https://huggingface.co/papers/2512.10971",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2512.10971",
+        "pdf": "https://arxiv.org/pdf/2512.10971"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3",
+      "name": "Kimi-K3",
+      "organization": "Moonshot AI",
+      "description": "A 2.8T-parameter multimodal, long-context text-generation model with strong agentic capabilities, the most-downloaded trending model of the day.",
+      "task_type": "text-generation",
+      "model_size": "2.8T",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "long-context",
+        "agent"
+      ],
+      "metrics": {
+        "downloads": 412000,
+        "likes": 8730
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+    },
+    {
+      "id": "glm-5-3-9b-chat",
+      "name": "GLM-5.3-9B-Chat",
+      "organization": "THUDM (Zhipu AI)",
+      "description": "An instruction-tuned 9B chat model from the GLM family with strong coding capability.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": [
+        "text-generation",
+        "coding",
+        "chat",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 328000,
+        "likes": 5240
+      },
+      "source_url": "https://huggingface.co/THUDM/GLM-5.3-9B-Chat"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "organization": "DeepSeek AI",
+      "description": "A fast-inference MoE model tuned for coding and reasoning workloads, also available in a quantized edge-inference variant.",
+      "task_type": "text-generation",
+      "model_size": "MoE",
+      "tags": [
+        "text-generation",
+        "MoE",
+        "coding",
+        "reasoning",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 287000,
+        "likes": 4560
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    {
+      "id": "qwen3-8-27b-chat",
+      "name": "Qwen3.8-27B-Chat",
+      "organization": "Alibaba (Qwen)",
+      "description": "A multilingual, multimodal reasoning-focused chat model released under Apache-2.0.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "multilingual",
+        "reasoning",
+        "multimodal",
+        "Apache-2.0"
+      ],
+      "metrics": {
+        "downloads": 241000,
+        "likes": 3980
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B-Chat"
+    },
+    {
+      "id": "qwen3-8-235b-a22b",
+      "name": "Qwen3.8-235B-A22B",
+      "organization": "Alibaba (Qwen)",
+      "description": "A large-scale MoE reasoning model, the sparse-activation sibling of the Qwen3.8 chat release.",
+      "task_type": "text-generation",
+      "model_size": "235B (A22B MoE)",
+      "tags": [
+        "text-generation",
+        "MoE",
+        "reasoning",
+        "large-scale"
+      ],
+      "metrics": {
+        "downloads": 156000,
+        "likes": 3210
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-235B-A22B"
+    },
+    {
+      "id": "llama-4-2-scout-17b",
+      "name": "Llama-4.2-Scout-17B",
+      "organization": "Meta",
+      "description": "An open, multimodal text-generation model in Meta's Llama 4.2 Scout line.",
+      "task_type": "text-generation",
+      "model_size": "17B",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "llama",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 187000,
+        "likes": 3450
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-4.2-Scout-17B"
+    },
+    {
+      "id": "lladaimage-model",
+      "name": "LLaDA-Image",
+      "organization": "Ant Group (inclusionAI)",
+      "description": "A fully open 6B diffusion-transformer image generator paired with a diffusion-language-model backbone, achieving state-of-the-art open bilingual generation scores.",
+      "task_type": "text-to-image",
+      "model_size": "6B",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "image-generation",
+        "multimodal",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 87400,
+        "likes": 2340
+      },
+      "source_url": "https://huggingface.co/inclusionAI/LLaDA-Image"
+    },
+    {
+      "id": "lladaimage-turbo",
+      "name": "LLaDA-Image-Turbo",
+      "organization": "Ant Group (inclusionAI)",
+      "description": "A fast-inference, editing-optimized variant of LLaDA-Image for lower-latency image generation and editing.",
+      "task_type": "text-to-image",
+      "model_size": "6B (distilled)",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "fast-inference",
+        "image-editing"
+      ],
+      "metrics": {
+        "downloads": 64200,
+        "likes": 1890
+      },
+      "source_url": "https://huggingface.co/inclusionAI/LLaDA-Image-Turbo"
+    },
+    {
+      "id": "freetoken-deepseek-v4-flash-mxfp4",
+      "name": "FreeToken-DeepSeek-V4-Flash-MXFP4",
+      "organization": "FlashML-org",
+      "description": "An MXFP4-quantized build of DeepSeek-V4-Flash optimized for edge-native, local MoE inference under the FreeToken serving system.",
+      "task_type": "text-generation",
+      "model_size": "MoE (MXFP4 quantized)",
+      "tags": [
+        "quantized",
+        "edge-inference",
+        "MoE",
+        "MXFP4",
+        "local-inference"
+      ],
+      "metrics": {
+        "downloads": 98700,
+        "likes": 2180
+      },
+      "source_url": "https://huggingface.co/FlashML-org/FreeToken-DeepSeek-V4-Flash-MXFP4"
+    },
+    {
+      "id": "arex-skill-qwen3-5-27b",
+      "name": "AREX-Skill-Qwen3.5-27B",
+      "organization": "VectorSpaceLab / BAAI",
+      "description": "A Qwen3.5-27B model fine-tuned with the AREX-Skill Library to give ML-research agents reusable operational coding skills.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "code",
+        "skills",
+        "agent",
+        "ML-research"
+      ],
+      "metrics": {
+        "downloads": 72300,
+        "likes": 1870
+      },
+      "source_url": "https://huggingface.co/VectorSpaceLab/AREX-Skill-Qwen3.5-27B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "flashml-org-freetoken",
+      "name": "FlashML-org/FreeToken",
+      "description": "Datacenter-scale MoE model serving brought to the desktop, enabling fast, edge-native local inference for DeepSeek, Qwen3, and GLM-5.2 models.",
+      "language": "Python",
+      "stars": 11600,
+      "stars_today": 342,
+      "forks": 890,
+      "url": "https://github.com/FlashML-org/FreeToken",
+      "tags": [
+        "edge-inference",
+        "MoE",
+        "serving",
+        "local-AI"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "inclusionai-lladaimage",
+      "name": "inclusionAI/LLaDA-Image",
+      "description": "Official implementation of LLaDA-Image, a diffusion language model-based image generator with state-of-the-art open-source performance; posted the largest stars-today gain among AI/ML repos.",
+      "language": "Python",
+      "stars": 4230,
+      "stars_today": 1840,
+      "forks": 312,
+      "url": "https://github.com/inclusionAI/LLaDA-Image",
+      "tags": [
+        "diffusion",
+        "image-generation",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vectorspacelab-arex-skill",
+      "name": "VectorSpaceLab/AREX-Skill",
+      "description": "The AREX-Skill Library: 5,000+ verified ML research skills distilled from 1,000 GitHub repos, powering autonomous ML research agents with reusable operational knowledge.",
+      "language": "Python",
+      "stars": 3870,
+      "stars_today": 987,
+      "forks": 267,
+      "url": "https://github.com/VectorSpaceLab/AREX-Skill",
+      "tags": [
+        "agents",
+        "skill-distillation",
+        "ML-research"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "voltagent-awesome-ai-agent-papers",
+      "name": "VoltAgent/awesome-ai-agent-papers",
+      "description": "A curated, weekly-updated collection of 2026 AI agent research papers covering engineering, memory, evaluation, and autonomous systems.",
+      "language": "Unknown",
+      "stars": 20400,
+      "stars_today": 520,
+      "forks": 1230,
+      "url": "https://github.com/VoltAgent/awesome-ai-agent-papers",
+      "tags": [
+        "awesome-list",
+        "agents",
+        "research-papers"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openclaw-openclaw",
+      "name": "OpenClaw/openclaw",
+      "description": "A local, on-device personal AI assistant gateway connecting AI models to 50+ integrations including WhatsApp, Telegram, Slack, Discord, Signal, and iMessage.",
+      "language": "TypeScript",
+      "stars": 210000,
+      "stars_today": 210,
+      "forks": 18900,
+      "url": "https://github.com/OpenClaw/openclaw",
+      "tags": [
+        "personal-assistant",
+        "local-first",
+        "integrations"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "Lightweight Go framework for running and managing large language models locally, remaining a top steady performer on GitHub Trending.",
+      "language": "Go",
+      "stars": 165000,
+      "stars_today": 185,
+      "forks": 14200,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-inference",
+        "LLM-runtime"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "A high-throughput, memory-efficient LLM inference and serving engine with an OpenAI-compatible API, supporting NVIDIA, AMD, Intel Arc, and TPU backends.",
+      "language": "Python",
+      "stars": 52800,
+      "stars_today": 165,
+      "forks": 7890,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "inference-serving",
+        "LLM-infrastructure"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "junchao-cs-solarwm",
+      "name": "Junchao-cs/SolarWM",
+      "description": "Open framework and training recipe for long-horizon interactive video world models, supporting Wan2.2, LTX-2.5, and MiniMax-H3 backbones across 5B-33B model variants.",
+      "language": "Python",
+      "stars": 2870,
+      "stars_today": 760,
+      "forks": 198,
+      "url": "https://github.com/Junchao-cs/SolarWM",
+      "tags": [
+        "world-models",
+        "video-generation",
+        "open-recipe"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-ai-trader",
+      "name": "HKUDS/AI-Trader",
+      "description": "The first fully-automated, live benchmark for LLM agents in real-time financial markets, covering US stocks, A-shares, and crypto across multiple trading granularities.",
+      "language": "Python",
+      "stars": 3120,
+      "stars_today": 430,
+      "forks": 289,
+      "url": "https://github.com/HKUDS/AI-Trader",
+      "tags": [
+        "agents",
+        "benchmark",
+        "finance"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "langflow-ai-langflow",
+      "name": "langflow-ai/langflow",
+      "description": "A drag-and-drop visual interface for designing AI agent pipelines, integrating major LLM providers, vector stores, and tools for agentic workflows.",
+      "language": "Python",
+      "stars": 41200,
+      "stars_today": 148,
+      "forks": 4320,
+      "url": "https://github.com/langflow-ai/langflow",
+      "tags": [
+        "agent-builder",
+        "low-code",
+        "workflows"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "caramaschihg-awesome-ai-agents-2026",
+      "name": "caramaschiHG/awesome-ai-agents-2026",
+      "description": "A comprehensive, community-updated list of 300+ AI agents, frameworks, and tools across 20+ categories for 2026.",
+      "language": "Unknown",
+      "stars": 8930,
+      "stars_today": 312,
+      "forks": 654,
+      "url": "https://github.com/caramaschiHG/awesome-ai-agents-2026",
+      "tags": [
+        "awesome-list",
+        "agents",
+        "tools"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Skill Distillation",
+      "description": "Converting existing GitHub repositories and codebases into reusable, verified operational skills that dramatically boost autonomous agent performance.",
+      "related_paper_ids": [
+        "repo-to-skill-disco"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Scalable Agent Training Environments",
+      "description": "Reconstructing training and evaluation environments from real agent trajectory logs instead of hand-built simulators, solving the environment scarcity bottleneck.",
+      "related_paper_ids": [
+        "terminal-universe"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open Diffusion-Based Generation",
+      "description": "Fully documented, reproducible training recipes for state-of-the-art open-source image generation, narrowing the gap with closed frontier systems.",
+      "related_paper_ids": [
+        "lladaimage"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Long-Horizon Video World Models",
+      "description": "Open data engines and multi-scale training recipes for interactive video world models capable of long-horizon inference.",
+      "related_paper_ids": [
+        "solarwm"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Edge-Native MoE Serving",
+      "description": "Systems research and quantized releases enabling large MoE models to run efficiently on personal and edge hardware.",
+      "related_paper_ids": [
+        "freetoken"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory, Compression and Trustworthy Evaluation",
+      "description": "New memory architectures, continuous-token context compression, and adversarial or data-uncontaminated evaluation methods for reliable long-running agents.",
+      "related_paper_ids": [
+        "voicemem",
+        "latentpress",
+        "aris",
+        "ai-trader"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://www.alphaxiv.org/",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending Repositories",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-05T09:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
