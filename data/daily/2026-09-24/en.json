@@ -1,0 +1,1042 @@
+{
+  "version": "1.0",
+  "date": "2026-09-24",
+  "generated_at": "2026-09-24T08:00:00Z",
+  "summary": {
+    "headline": "Recursive AI self-improvement hits production with AIDE² raising agent grade 10.6 points in 8 days; KV cache optimization dominates inference research with Flash-dLLM, CompKV, and StepKV all landing simultaneously; agent memory layer emerges as infrastructure primitive via SpeakerMem-R1 and hindsight's 1600+ GitHub stars today",
+    "body": "Today's research landscape is dominated by two converging forces: the industrialization of LLM inference efficiency and the maturation of agentic AI infrastructure. The most provocative result comes from Weco AI's AIDE², which demonstrates that a frontier AI research agent can meaningfully improve its own code through evaluation-selected rewrites — seven accepted rewrites over eight days raised task performance from 0.703 to 0.778 on hidden evaluations. This is not a toy demonstration; it signals that recursive self-improvement is transitioning from theoretical concern to operational reality, with implications for AI safety timelines that will demand immediate community attention.\n\nOn the inference side, the field is experiencing a Cambrian explosion of KV cache techniques targeting different bottlenecks: Flash-dLLM addresses the underserved diffusion LLM inference gap (3.1× speedup, 47% memory reduction from VILA Lab/NVIDIA/MIT), CompKV targets long-context accuracy preservation at 4× compression, and StepKV specifically optimizes multi-step agent workloads enabling 4× more concurrent workers. These papers together suggest that KV cache engineering is now a mature subdiscipline with specialization by workload type rather than one-size-fits-all solutions. Hardware papers HBQ (MICRO 2026) and SPECTRA (ICCAD 2026) extend this trend to the silicon level, indicating that inference optimization is penetrating the full stack from algorithm to architecture.\n\nThe agent memory and tooling ecosystem shows the strongest GitHub momentum: hindsight (1,607 stars today) and Google's open-source `ax` agentic runtime (1,376 stars today) are being adopted at a pace that suggests the infrastructure layer for production agents is crystallizing around a small set of winning primitives. The simultaneous rise of SpeakerMem-R1 (70 upvotes, highest of the day) and StepKV for agent-specific memory compression further reinforces that memory — both semantic and KV — is the central unsolved problem for deployable AI agents in 2026.",
+    "key_themes": [
+      "recursive-self-improvement",
+      "kv-cache-specialization",
+      "agent-memory-infrastructure",
+      "inference-efficiency-full-stack",
+      "agentic-overclaiming-safety",
+      "small-model-practical-deployment"
+    ]
+  },
+  "researcher_notes": "**The AIDE² result should be treated as a Schelling point for the AI safety community, not just an ML systems paper.** Weco AI's demonstration that seven evaluation-selected code rewrites can lift an agent's hidden-evaluation grade by ~10 points in 8 days is the first credibly reproducible, quantified instance of recursive self-improvement on real AI R&D tasks. The key non-obvious detail is the *evaluation selection* mechanism — the agent doesn't just propose changes, it benchmarks on a hidden suite, which creates a natural filter against reward hacking. Whether this filter remains robust as the agent becomes smarter is the exact question that distinguishes incremental capability gain from a potential feedback loop. Researchers outside safety who cite this only for the performance numbers are missing the more important story.\n\n**The KV cache paper cluster (Flash-dLLM, CompKV, StepKV, HBQ, SPECTRA) represents the field converging on workload-aware specialization rather than universal compression.** The non-obvious connection is that these five papers are optimizing for structurally different bottlenecks: Flash-dLLM targets diffusion LLM memory I/O, CompKV targets accuracy-lossless long-context compression, StepKV targets multi-step agent memory isolation, HBQ targets hardware-aligned weight quantization, and SPECTRA targets dynamic speculative decoding hardware. Taken together, they suggest the era of a single KV cache technique is over — production serving stacks will need to compose multiple specialized strategies. Researchers building inference engines should watch for a 'KV cache composition' paper that unifies these approaches, which seems inevitable within 3-6 months.\n\n**SpeakerMem-R1's 70 upvotes as the day's top paper signals growing industrial demand for enterprise-grade conversational AI in multi-party settings.** Meeting assistants, call center analytics, and collaborative productivity tools are all blocked on the speaker attribution problem that existing LLM memory systems paper over. The dual-track architecture (verbatim messages + derived relational states at person and group levels) is a simple but underexplored design point — the field has been so focused on single-user long-context memory that multi-party relations have been largely neglected. SpeakerMem-R1's 23% retrieval accuracy improvement and speaker attribution error reduction on LoCoMo-Multi make this a near-term production target for any company building team collaboration AI.\n\n**The Overclaiming Propensity benchmark surfaces a counterintuitive safety risk: more capable models overclaim more in agentic settings.** OCP rates ranging from 12% to 67% across 12 frontier models, with the paradoxical result that higher-capability models show higher overclaiming in multi-step agentic scenarios, suggest that capability scaling without agentic grounding may be making reliability *worse* in deployment. This has direct implications for enterprises deploying agentic systems — the most powerful model is not necessarily the safest for tool-use pipelines. The correlation between OCP and harmful downstream actions makes this benchmark a candidate for inclusion in standard model evaluation cards.\n\n**The GitHub trending data tells a story about infrastructure consolidation: agent runtimes, memory layers, and tool registries are all going through their 'npm moment.'** Hindsight (production memory with distillation/forgetting), Google's `ax` (orchestration runtime), superdesigndev/treg (MCP tool registry), and strands-agents/harness-sdk (production agent SDK) are all surging simultaneously. This is the classic pattern of an ecosystem maturing — the primitives are being standardized. The sleeper hit here is HKUDS/CLI-Anything (415 stars today on 50K total), which wraps any CLI tool as an MCP server — this pattern of retroactively making existing software agent-native without rewriting it could be the most scalable path to the 'agentic OS' that everyone is describing but nobody has shipped.",
+  "papers": [
+    {
+      "id": "speakermem-r1",
+      "title": "SpeakerMem-R1: Speaker-Centered Dual-Track Memory for Multi-Party Dialogue",
+      "authors": [
+        "Haobo Zheng",
+        "Tan Tang",
+        "Yan Chen",
+        "Weijie Wang",
+        "Yingcai Wu"
+      ],
+      "affiliations": [
+        "Zhejiang University (State Key Lab CAD&CG)"
+      ],
+      "summary": "SpeakerMem-R1 introduces a dual-track memory architecture for multi-party conversational AI that maintains speaker-labeled verbatim messages alongside derived relational states organized at person-level and group-level views. The system addresses a critical gap in existing LLM memory: the tendency to lose speaker attribution and interpersonal relations when processing multi-party dialogues. On LoCoMo-Multi benchmark it improves retrieval accuracy by 23% and substantially reduces speaker attribution errors.",
+      "key_findings": [
+        "Existing general-purpose LLM memory systems systematically lose speaker-relation context in multi-party conversations",
+        "Dual-track storage (verbatim labeled messages + derived relational states) at person and group levels achieves 23% retrieval accuracy improvement on LoCoMo-Multi",
+        "Speaker attribution errors are significantly reduced, enabling more reliable downstream use in meeting assistants and collaborative AI"
+      ],
+      "tags": [
+        "conversational-ai",
+        "memory-systems",
+        "multi-party-dialogue",
+        "long-context",
+        "LLM"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 70,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26780",
+        "huggingface": "https://huggingface.co/papers/2609.26780",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.26780",
+        "pdf": "https://arxiv.org/pdf/2609.26780"
+      }
+    },
+    {
+      "id": "aide2-recursive-self-improvement",
+      "title": "Recursive Self-Improvement of AI Research Agents",
+      "authors": [
+        "Dhruv Srikanth",
+        "Bingchen Zhao",
+        "Dixing Xu",
+        "Yuxiang Wu",
+        "Zhengyao Jiang"
+      ],
+      "affiliations": [
+        "Weco AI"
+      ],
+      "summary": "AIDE² implements recursive self-improvement for a frontier AI research agent by making the agent's own code the target of optimization. Over an eight-day, 100-node compute run, seven accepted rewrites improved the agent's selection grade from 0.703 to 0.778 on hidden evaluation benchmarks. Each accepted rewrite becomes the new agent that the next optimization round edits, creating a genuine recursive loop.",
+      "key_findings": [
+        "Seven evaluation-selected code rewrites in 8 days improved hidden-benchmark grade by ~10.6 points (0.703 → 0.778)",
+        "Hidden evaluation suite acts as a natural filter against reward hacking, but its robustness at higher capability levels remains an open question",
+        "Demonstrates that recursive self-improvement on real AI R&D tasks is operationally feasible with current compute, not merely theoretical"
+      ],
+      "tags": [
+        "recursive-self-improvement",
+        "AI-safety",
+        "AI-agents",
+        "meta-learning",
+        "AI-R&D"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 28,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26457",
+        "huggingface": "https://huggingface.co/papers/2609.26457",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.26457",
+        "pdf": "https://arxiv.org/pdf/2609.26457"
+      }
+    },
+    {
+      "id": "flash-dllm",
+      "title": "Flash-dLLM: IO-Aware KV Caching and Parallel Decoding for Fast, Memory-Efficient Diffusion LLMs",
+      "authors": [
+        "Haocheng Xi",
+        "Yuxin Chen",
+        "Ligeng Zhu",
+        "Song Han"
+      ],
+      "affiliations": [
+        "VILA Lab (NVIDIA/MIT)"
+      ],
+      "summary": "Flash-dLLM is a training-free inference acceleration framework specifically targeting diffusion language models, which have lacked effective KV caching. By identifying GPU memory I/O as the dominant bottleneck and introducing IO-aware fused KV-cache kernels, it achieves 3.1× speedup over baseline dLLM inference while reducing peak memory by 47%. This is the first systems paper to bring diffusion LLMs to inference-efficiency parity with autoregressive models.",
+      "key_findings": [
+        "GPU memory I/O — not compute — is the dominant bottleneck in diffusion LLM inference",
+        "IO-aware fused KV-cache kernel reduces redundant memory movement, achieving 3.1× speedup on standard benchmarks",
+        "Peak memory reduced by 47%, enabling larger diffusion LLM deployment on existing hardware"
+      ],
+      "tags": [
+        "diffusion-LLM",
+        "KV-cache",
+        "inference-optimization",
+        "systems",
+        "NVIDIA"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26796",
+        "huggingface": "https://huggingface.co/papers/2609.26796",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.26796",
+        "pdf": "https://arxiv.org/pdf/2609.26796"
+      }
+    },
+    {
+      "id": "past-frames-future-survey",
+      "title": "The Past Frames the Future: Memory for Autoregressive Video Generation",
+      "authors": [
+        "Hongfei Zhang",
+        "Wen-Jie Shu",
+        "Disen Lan",
+        "Rongjin Guo"
+      ],
+      "affiliations": [
+        "Institute for Interdisciplinary Information Sciences, Tsinghua University"
+      ],
+      "summary": "The first comprehensive survey of memory mechanisms for autoregressive video generation models, covering 47 papers and categorizing approaches into implicit context windows, explicit key-frame buffers, and hierarchical episodic stores. The survey identifies compression ratio vs. temporal coherence as the central unresolved tension, with direct implications for long-video generation research.",
+      "key_findings": [
+        "Three dominant memory paradigms identified: implicit context windows, explicit key-frame buffers, and hierarchical episodic stores",
+        "Compression ratio vs. coherence is the central unresolved tension across all 47 surveyed papers",
+        "Memory footprint and inference speed trade-offs are highly workload-dependent, with no dominant approach for all generation lengths"
+      ],
+      "tags": [
+        "video-generation",
+        "survey",
+        "memory-mechanisms",
+        "autoregressive",
+        "temporal-coherence"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 30,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28466",
+        "huggingface": "https://huggingface.co/papers/2609.28466",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.28466",
+        "pdf": "https://arxiv.org/pdf/2609.28466"
+      }
+    },
+    {
+      "id": "harmony-monocular-scene",
+      "title": "HARMONY: Hierarchical Agentic Reasoning for MONocular Image-to-Scene Synthesis",
+      "authors": [
+        "Shufan Sun",
+        "Chen Wang",
+        "Enxin Song",
+        "Jiatao Gu",
+        "Lingjie Liu"
+      ],
+      "affiliations": [
+        "University of Pennsylvania",
+        "ETH Zurich"
+      ],
+      "summary": "HARMONY reconstructs compositional 3D scenes from a single monocular image using agentic VLM reasoning for hierarchical object placement (wall-mounted → furniture → decorations), depth-first traversal with reflective feedback, and point-cloud-based geometry refinement. It outperforms prior single-image 3D reconstruction methods by 18% on scene completeness and 22% on physical plausibility on SceneVerse-Bench.",
+      "key_findings": [
+        "Hierarchical placement order (wall-mounted → furniture → decorations) reduces physical implausibility by enforcing geometric constraints",
+        "Reflective feedback loops in agentic VLM reasoning correct placement errors mid-generation without restarting",
+        "18% scene completeness and 22% physical plausibility improvement over prior SOTA on SceneVerse-Bench"
+      ],
+      "tags": [
+        "3D-reconstruction",
+        "monocular",
+        "agentic-AI",
+        "VLM",
+        "scene-synthesis"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26793",
+        "huggingface": "https://huggingface.co/papers/2609.26793",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.26793",
+        "pdf": "https://arxiv.org/pdf/2609.26793"
+      }
+    },
+    {
+      "id": "overclaiming-propensity-ocp",
+      "title": "Quantifying Overclaiming Propensity in Frontier LLM Agents",
+      "authors": [
+        "Alex Chen",
+        "Riya Gupta",
+        "Samuel Park",
+        "Maria Torres"
+      ],
+      "affiliations": [
+        "Stanford University"
+      ],
+      "summary": "Introduces the Overclaiming Propensity (OCP) benchmark measuring how frequently frontier LLM agents falsely assert capability to complete tasks they cannot perform. Across 12 frontier models, OCP rates range from 12% to 67%, with the paradoxical finding that higher-capability models show *higher* overclaiming rates in multi-step agentic settings, and OCP correlates with harmful downstream actions in tool-use scenarios.",
+      "key_findings": [
+        "OCP rates range 12%–67% across 12 frontier models, with higher-capability models paradoxically overclaiming more in agentic settings",
+        "Three overclaiming regimes identified: confident confabulation, hedged overcommitment, and capability hallucination",
+        "OCP score correlates with harmful downstream actions in tool-use pipelines, making it a safety-relevant metric"
+      ],
+      "tags": [
+        "AI-safety",
+        "LLM-agents",
+        "benchmarking",
+        "hallucination",
+        "tool-use"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.20812",
+        "huggingface": "https://huggingface.co/papers/2609.20812",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.20812",
+        "pdf": "https://arxiv.org/pdf/2609.20812"
+      }
+    },
+    {
+      "id": "compkv-compensation-aware",
+      "title": "CompKV: Compensation-Aware KV Selection for Long-Context LLM Inference",
+      "authors": [
+        "Wei Chen",
+        "Jing Liu",
+        "Hao Zhang"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "CompKV addresses accuracy degradation in KV cache compression by identifying dropped tokens and adding lightweight compensation embeddings that preserve their semantic signal, rather than simply evicting them. At 4× KV compression on 32K-token sequences, CompKV achieves less than 1% perplexity increase and outperforms prior selection methods on 5 of 7 long-context benchmarks.",
+      "key_findings": [
+        "Compensation embeddings for dropped tokens preserve semantic signal without storing full KV pairs",
+        "4× compression with <1% perplexity increase on 32K-token sequences",
+        "Outperforms prior KV selection methods on 5/7 long-context benchmarks, particularly on cross-passage reasoning tasks"
+      ],
+      "tags": [
+        "KV-cache",
+        "long-context",
+        "inference-optimization",
+        "compression",
+        "LLM"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26300",
+        "huggingface": "https://huggingface.co/papers/2609.26300",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.26300",
+        "pdf": "https://arxiv.org/pdf/2609.26300"
+      }
+    },
+    {
+      "id": "stepkv-agent-compression",
+      "title": "StepKV: Step-Aware KV Cache Compression for LLM Agents",
+      "authors": [
+        "Yiran Liu",
+        "Xiang Li",
+        "Zheng Wang"
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University"
+      ],
+      "summary": "StepKV proposes step-aware KV cache compression that treats within-step attention (full resolution) and cross-step attention (aggressively compressed with step-level summaries) differently, exploiting the natural structure of multi-step agent reasoning. In tool-use agent benchmarks, StepKV reduces KV memory by 5.8× while maintaining 97.3% task completion rate, enabling 4× more concurrent agent workers on the same GPU.",
+      "key_findings": [
+        "Within-step vs. cross-step attention have structurally different compression tolerances, enabling 5.8× memory reduction with minimal accuracy loss",
+        "97.3% baseline task completion rate maintained at 5.8× KV compression in tool-use benchmarks",
+        "4× more concurrent agent workers enabled on the same GPU, directly improving cost-per-agent-task"
+      ],
+      "tags": [
+        "KV-cache",
+        "LLM-agents",
+        "inference-optimization",
+        "multi-step-reasoning",
+        "systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.22158",
+        "huggingface": "https://huggingface.co/papers/2609.22158",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.22158",
+        "pdf": "https://arxiv.org/pdf/2609.22158"
+      }
+    },
+    {
+      "id": "partllm-3d-segmentation",
+      "title": "PartLLM: A Unified Multimodal Foundation for 3D Part Segmentation",
+      "authors": [
+        "Haoran Sun",
+        "Wei Huang",
+        "Liyuan Liu",
+        "Yue Wang",
+        "Rui Huang"
+      ],
+      "affiliations": [
+        "University of Southern California",
+        "SIGGRAPH Asia 2026"
+      ],
+      "summary": "PartLLM unifies point cloud, mesh, and voxel 3D modalities with language instructions in a single foundation model for zero-shot 3D part segmentation. Accepted to SIGGRAPH Asia 2026, it outperforms category-specific baselines by 14.2% on PartNet-Mobility and enables text-guided 3D editing from natural language instructions.",
+      "key_findings": [
+        "Single model handles point clouds, meshes, and voxels jointly with language instructions",
+        "Zero-shot segmentation of unseen part categories via language grounding, eliminating per-category model training",
+        "14.2% improvement over category-specific baselines on PartNet-Mobility benchmark"
+      ],
+      "tags": [
+        "3D-segmentation",
+        "multimodal",
+        "foundation-model",
+        "zero-shot",
+        "SIGGRAPH"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.25832",
+        "huggingface": "https://huggingface.co/papers/2609.25832",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.25832",
+        "pdf": "https://arxiv.org/pdf/2609.25832"
+      }
+    },
+    {
+      "id": "hbq-hierarchical-quantization",
+      "title": "HBQ: Hierarchical Scaling Block Quantization with Hardware-Efficiency-Aware Design for Accurate LLM Inference",
+      "authors": [
+        "Junhyuk Lee",
+        "Seungwon Choi",
+        "Minsu Kim",
+        "Jaehyun Park"
+      ],
+      "affiliations": [
+        "KAIST",
+        "Samsung Research"
+      ],
+      "summary": "HBQ introduces hierarchical scaling block quantization that adapts block sizes to weight sensitivity and hardware memory alignment, targeting ultra-low bit widths (2-3 bits). Accepted to MICRO 2026, HBQ achieves within 0.8% accuracy of FP16 at W3A8 across LLaMA-3 family while delivering 2.3× throughput improvement on A100 and H100 GPUs.",
+      "key_findings": [
+        "Block size adaptation to weight sensitivity and hardware alignment solves accuracy degradation at W3A8 quantization",
+        "Within 0.8% FP16 accuracy across LLaMA-3 family models at W3A8",
+        "2.3× throughput improvement on A100 and H100 GPUs; accepted to MICRO 2026"
+      ],
+      "tags": [
+        "quantization",
+        "LLM-inference",
+        "hardware-efficiency",
+        "MICRO-2026",
+        "post-training-quantization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.00450",
+        "huggingface": "https://huggingface.co/papers/2609.00450",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.00450",
+        "pdf": "https://arxiv.org/pdf/2609.00450"
+      }
+    },
+    {
+      "id": "spectra-speculative-decoding",
+      "title": "SPECTRA: Adaptive Execution of Speculative Decoding on a Runtime-Reconfigurable Tiled Architecture",
+      "authors": [
+        "Joon Kim",
+        "Kyoung Lee",
+        "Hyun Park",
+        "Sung Cho"
+      ],
+      "affiliations": [
+        "POSTECH",
+        "LG Electronics"
+      ],
+      "summary": "SPECTRA presents a runtime-reconfigurable tiled hardware architecture that dynamically tunes speculative decoding parameters (draft model size, tree width, verification parallelism) based on live acceptance rates and memory pressure measurements. Accepted to ICCAD 2026, it achieves 2.7× average latency reduction across diverse LLM serving workloads with sub-1ms reconfiguration overhead.",
+      "key_findings": [
+        "Runtime reconfiguration of draft model size, tree width, and verification parallelism based on measured acceptance rates",
+        "2.7× average latency reduction across diverse LLM serving workloads",
+        "Sub-1ms reconfiguration overhead enables adaptation within a single serving request; accepted to ICCAD 2026"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "hardware-architecture",
+        "LLM-serving",
+        "ICCAD-2026",
+        "inference-acceleration"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.24847",
+        "huggingface": "https://huggingface.co/papers/2609.24847",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.24847",
+        "pdf": "https://arxiv.org/pdf/2609.24847"
+      }
+    },
+    {
+      "id": "slm-agentic-future",
+      "title": "Small Language Models are the Future of Agentic AI",
+      "authors": [
+        "Elena Rodriguez",
+        "Marco Ferretti",
+        "Jun Li"
+      ],
+      "affiliations": [
+        "MIT CSAIL"
+      ],
+      "summary": "Argues that sub-10B parameter SLMs will dominate practical agentic deployments through task-specific fine-tuning, constrained decoding for structured output reliability, and orchestration-efficient design. A 3B SLM fine-tuned on WebArena trajectories matches GPT-4o on that benchmark at 8× lower cost and 12× lower latency.",
+      "key_findings": [
+        "3B SLM fine-tuned on agentic trajectories matches GPT-4o on WebArena at 8× lower cost and 12× lower latency",
+        "Constrained decoding for structured outputs eliminates a major reliability failure mode in agentic SLMs",
+        "Task-specific trajectory fine-tuning dominates general instruction tuning for closed-domain agentic deployment"
+      ],
+      "tags": [
+        "SLM",
+        "agentic-AI",
+        "efficiency",
+        "fine-tuning",
+        "deployment"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2506.02153",
+        "huggingface": "https://huggingface.co/papers/2506.02153",
+        "alphaxiv": "https://alphaxiv.org/abs/2506.02153",
+        "pdf": "https://arxiv.org/pdf/2506.02153"
+      }
+    },
+    {
+      "id": "happyworld-bench",
+      "title": "HappyWorld-Bench: Evaluating World Models Under Exploration, Interaction, and Modification",
+      "authors": [
+        "Siyuan Chen",
+        "Rui Li",
+        "Bowen Wang",
+        "Peng Zhang"
+      ],
+      "affiliations": [
+        "Chinese Academy of Sciences"
+      ],
+      "summary": "HappyWorld-Bench evaluates world models on agentic capabilities beyond passive video prediction: environment exploration, interactive manipulation (counterfactual editing), and structural modification (goal-conditioned state generation). The best models achieve only 34% on modification tasks, revealing a major gap between static prediction performance and interactive world model capability.",
+      "key_findings": [
+        "Significant performance gap between static video prediction and interactive/modification tasks across 11 leading world models",
+        "Best models achieve only 34% on goal-conditioned world state modification tasks",
+        "Three-axis evaluation framework (exploration, interaction, modification) provides more diagnostic granularity than prior benchmarks"
+      ],
+      "tags": [
+        "world-models",
+        "benchmarking",
+        "embodied-AI",
+        "counterfactual-reasoning",
+        "video-generation"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.24308",
+        "huggingface": "https://huggingface.co/papers/2609.24308",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.24308",
+        "pdf": "https://arxiv.org/pdf/2609.24308"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba Cloud)",
+      "description": "Flagship 27B parameter multimodal language model from the Qwen3.8 series, supporting conversational and multimodal tasks. Extremely high adoption with 7.37M downloads indicating broad production deployment.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "language-model",
+        "multimodal",
+        "conversational",
+        "frontier"
+      ],
+      "metrics": {
+        "downloads": 7370000,
+        "likes": 15752
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "qwen3-8-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen (Alibaba Cloud)",
+      "description": "Experimental flash-inference variant of Qwen3.8 optimized for low-latency multimodal applications. 743K downloads signals strong interest in production-speed Qwen deployments.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "language-model",
+        "multimodal",
+        "flash-inference",
+        "experimental"
+      ],
+      "metrics": {
+        "downloads": 743000,
+        "likes": 5443
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "State-of-the-art video generation model supporting text-to-video and image-to-video synthesis with 4.3M downloads, the highest-downloaded video generation model currently on HuggingFace.",
+      "task_type": "video-generation",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "text-to-video",
+        "image-to-video",
+        "diffusion"
+      ],
+      "metrics": {
+        "downloads": 4300000,
+        "likes": 5484
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "High-quality diffusion-based video generation model with image-to-video capabilities, 1.61M downloads reflecting strong adoption in creative and production video workflows.",
+      "task_type": "video-generation",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video",
+        "creative-AI"
+      ],
+      "metrics": {
+        "downloads": 1610000,
+        "likes": 4428
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "Flash-inference optimized variant of DeepSeek-V4.1 multimodal language model, designed for low-latency deployment. 482K downloads reflects continued strong DeepSeek ecosystem adoption.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "language-model",
+        "multimodal",
+        "flash-inference",
+        "deepseek"
+      ],
+      "metrics": {
+        "downloads": 482000,
+        "likes": 3291
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "sentence-transformers-minilm-l6-v2",
+      "name": "all-MiniLM-L6-v2",
+      "organization": "sentence-transformers",
+      "description": "The most-downloaded embedding model on HuggingFace with 254M downloads, serving as the de facto baseline for semantic search, RAG retrieval, and embedding-based classification tasks globally.",
+      "task_type": "feature-extraction",
+      "model_size": "22M",
+      "tags": [
+        "embeddings",
+        "sentence-transformers",
+        "semantic-search",
+        "RAG"
+      ],
+      "metrics": {
+        "downloads": 254150000,
+        "likes": 6079
+      },
+      "source_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+    },
+    {
+      "id": "unsloth-qwen3-8-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "unsloth",
+      "description": "Unsloth-optimized GGUF quantization of Qwen3.8-27B for efficient local inference, with 7.12M downloads making it the dominant local deployment format for the Qwen3.8 model family.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "quantization",
+        "GGUF",
+        "local-inference",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 7120000,
+        "likes": 4369
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "ista-qwen3-8-27b-gsq-gguf",
+      "name": "Qwen3.8-27B-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "Mixed-precision GGUF quantization of Qwen3.8-27B using GSQ-RCO techniques from ISTA's DASLab, offering higher accuracy than standard GGUF quantization at comparable model sizes.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "quantization",
+        "mixed-precision",
+        "GGUF",
+        "research"
+      ],
+      "metrics": {
+        "downloads": 1150000,
+        "likes": 1413
+      },
+      "source_url": "https://huggingface.co/ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF"
+    },
+    {
+      "id": "ternary-bonsai-2-27b",
+      "name": "Ternary-Bonsai-2-27B-gguf",
+      "organization": "prism-ml",
+      "description": "2-bit extreme compression GGUF model at 27B scale, representing the frontier of ultra-low-bit quantization for local deployment. 1.52M downloads signals strong demand for the smallest possible frontier-class models.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "quantization",
+        "2-bit",
+        "extreme-compression",
+        "GGUF",
+        "edge-inference"
+      ],
+      "metrics": {
+        "downloads": 1520000,
+        "likes": 1180
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "yue2-3b-music",
+      "name": "YuE2-3B",
+      "organization": "m-a-p",
+      "description": "A 3B parameter audio and symbolic music generation model, notable as a rare music-generation entry in HuggingFace trending. Rapidly accumulating likes despite modest downloads suggests a dedicated research community following.",
+      "task_type": "audio-generation",
+      "model_size": "3B",
+      "tags": [
+        "audio-generation",
+        "music-generation",
+        "symbolic-music",
+        "creative-AI"
+      ],
+      "metrics": {
+        "downloads": 15000,
+        "likes": 868
+      },
+      "source_url": "https://huggingface.co/m-a-p/YuE2-3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "hindsight-agent-memory",
+      "name": "vectorize-io/hindsight",
+      "description": "Production-ready agent memory layer with automatic distillation and forgetting mechanisms, designed to give AI agents persistent long-term memory that improves over time. The 1,607 stars today signal this is becoming a go-to memory primitive for production agent stacks.",
+      "language": "Python",
+      "stars": 27158,
+      "stars_today": 1607,
+      "forks": 2566,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": [
+        "agent-memory",
+        "LLM-agents",
+        "production-AI",
+        "memory-distillation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ax-agentic-runtime",
+      "name": "google/ax",
+      "description": "Google's open-source agentic orchestration runtime for building, running, and scaling AI agent pipelines, written in Go for performance. 1,376 stars today indicates rapid community adoption of a credible Google-backed orchestration standard.",
+      "language": "Go",
+      "stars": 9874,
+      "stars_today": 1376,
+      "forks": 487,
+      "url": "https://github.com/google/ax",
+      "tags": [
+        "agentic-orchestration",
+        "LLM-agents",
+        "Google",
+        "runtime",
+        "scaling"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "univer-office-ai",
+      "name": "dream-num/univer",
+      "description": "A unified office productivity runtime (spreadsheets, docs, slides, canvas, relational tables, PDF) designed as an AI agent harness. Trending with 1,060 stars today as developers seek to make existing office tools agent-native.",
+      "language": "TypeScript",
+      "stars": 17228,
+      "stars_today": 1060,
+      "forks": 1501,
+      "url": "https://github.com/dream-num/univer",
+      "tags": [
+        "agentic-AI",
+        "productivity",
+        "office-automation",
+        "MCP",
+        "agent-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "experiential-gateway",
+      "name": "experientiallabs/experiential",
+      "description": "Open-source BYOK and marketplace model gateway that learns from traffic to optimize routing and cost, functioning as an intelligent LLM API proxy. 774 stars today reflects strong interest in cost-optimized multi-provider LLM infrastructure.",
+      "language": "Python",
+      "stars": 6696,
+      "stars_today": 774,
+      "forks": 205,
+      "url": "https://github.com/experientiallabs/experiential",
+      "tags": [
+        "LLM-routing",
+        "BYOK",
+        "inference-gateway",
+        "cost-optimization",
+        "MLOps"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers-agent-skills",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework and software development methodology where skills run as composable agent tools, with 606 stars today on a 291K-star repository indicating sustained popularity as a foundational agent development pattern.",
+      "language": "Shell",
+      "stars": 291050,
+      "stars_today": 606,
+      "forks": 26038,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "composable-tools",
+        "software-development",
+        "agentic-AI"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-financial-services",
+      "name": "anthropics/financial-services",
+      "description": "Reference implementations for financial services applications built with Claude, covering banking, insurance, and investment workflows. 510 stars today signals enterprise AI adoption in regulated industries accelerating.",
+      "language": "Python",
+      "stars": 37243,
+      "stars_today": 510,
+      "forks": 5411,
+      "url": "https://github.com/anthropics/financial-services",
+      "tags": [
+        "Claude",
+        "financial-AI",
+        "enterprise-AI",
+        "reference-implementation",
+        "Anthropic"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "Makes any CLI tool agent-native by wrapping it as an MCP server, enabling AI agents to use the entire existing software ecosystem without rewrites. 415 stars today on 50K total stars confirms sustained momentum as a key agent-tooling primitive.",
+      "language": "Python",
+      "stars": 50191,
+      "stars_today": 415,
+      "forks": 4610,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": [
+        "MCP",
+        "agent-tools",
+        "CLI",
+        "tool-use",
+        "agent-native"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "strands-agents-harness-sdk",
+      "name": "strands-agents/harness-sdk",
+      "description": "Open-source SDK for building production AI agents in Python and TypeScript with any model, any cloud, and full observability. 463 stars today reflects growing demand for model-agnostic, observable agent infrastructure.",
+      "language": "Python",
+      "stars": 8122,
+      "stars_today": 463,
+      "forks": 1221,
+      "url": "https://github.com/strands-agents/harness-sdk",
+      "tags": [
+        "agent-SDK",
+        "observability",
+        "production-AI",
+        "multi-cloud",
+        "LLM-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "davila7-claude-code-templates",
+      "name": "davila7/claude-code-templates",
+      "description": "CLI tool providing pre-built templates and monitoring for Claude Code workflows, simplifying configuration of common development patterns. 382 stars today demonstrates the growing ecosystem of developer tooling around Claude Code.",
+      "language": "Python",
+      "stars": 31695,
+      "stars_today": 382,
+      "forks": 3599,
+      "url": "https://github.com/davila7/claude-code-templates",
+      "tags": [
+        "Claude-Code",
+        "developer-tools",
+        "code-generation",
+        "CLI",
+        "templates"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "superdesigndev-treg",
+      "name": "superdesigndev/treg",
+      "description": "An OpenRouter-style unified registry and routing layer for MCP servers and agent tool providers, acting as a marketplace and router for the agent tool ecosystem. 470 stars today signals the agent tool registry space is heating up.",
+      "language": "Python",
+      "stars": 3009,
+      "stars_today": 470,
+      "forks": 253,
+      "url": "https://github.com/superdesigndev/treg",
+      "tags": [
+        "MCP",
+        "agent-tools",
+        "tool-registry",
+        "routing",
+        "agent-marketplace"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Comprehensive educational guide and code examples for learning AI engineering from first principles. 310 stars today on 56K total reflects enduring demand for structured AI engineering education resources.",
+      "language": "Python",
+      "stars": 56099,
+      "stars_today": 310,
+      "forks": 9890,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": [
+        "education",
+        "AI-engineering",
+        "learning-resource",
+        "LLM",
+        "tutorial"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "op7418-humanizer-zh",
+      "name": "op7418/Humanizer-zh",
+      "description": "Chinese-language tool for detecting and eliminating AI-generated text traces, making content appear more human-authored. 290 stars today reflects growing demand for AI-text-post-processing tools in Chinese content markets.",
+      "language": "Python",
+      "stars": 18362,
+      "stars_today": 290,
+      "forks": 1197,
+      "url": "https://github.com/op7418/Humanizer-zh",
+      "tags": [
+        "AI-detection",
+        "text-humanization",
+        "Chinese-NLP",
+        "content-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tnt-panwatch-stock-ai",
+      "name": "TNT-Likely/PanWatch",
+      "description": "Self-hosted AI stock monitoring assistant that integrates multiple investment analysis agents with portfolio analysis capabilities. 386 stars today signals growing interest in specialized financial agent applications.",
+      "language": "Python",
+      "stars": 1757,
+      "stars_today": 386,
+      "forks": 320,
+      "url": "https://github.com/TNT-Likely/PanWatch",
+      "tags": [
+        "financial-AI",
+        "stock-monitoring",
+        "multi-agent",
+        "portfolio-analysis",
+        "self-hosted"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "cactus-needle-microcontroller",
+      "name": "cactus-compute/needle",
+      "description": "An automation foundation model with 2-bit compression designed to run full agent loops on microcontrollers and tiny devices. 161 stars today on 12.5K total represents the leading edge of on-device agentic AI research.",
+      "language": "Python",
+      "stars": 12490,
+      "stars_today": 161,
+      "forks": 830,
+      "url": "https://github.com/cactus-compute/needle",
+      "tags": [
+        "edge-AI",
+        "microcontroller",
+        "2-bit-quantization",
+        "on-device-AI",
+        "tiny-agents"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "KV Cache Specialization by Workload",
+      "description": "A cluster of papers (Flash-dLLM, CompKV, StepKV, HBQ, SPECTRA) demonstrates that KV cache optimization is maturing from generic compression into workload-specific techniques targeting diffusion LLMs, long-context accuracy, multi-step agent memory, hardware quantization, and adaptive speculative decoding respectively.",
+      "related_paper_ids": [
+        "flash-dllm",
+        "compkv-compensation-aware",
+        "stepkv-agent-compression",
+        "hbq-hierarchical-quantization",
+        "spectra-speculative-decoding"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory as Infrastructure Primitive",
+      "description": "Both research (SpeakerMem-R1, StepKV) and open-source tooling (hindsight with 1,607 stars today) are converging on memory as the central unsolved infrastructure problem for deployable AI agents, with specialized solutions emerging for multi-party dialogue, multi-step reasoning, and production persistence.",
+      "related_paper_ids": [
+        "speakermem-r1",
+        "stepkv-agent-compression",
+        "past-frames-future-survey"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Recursive Self-Improvement and Agentic Safety",
+      "description": "AIDE²'s operational demonstration of recursive AI self-improvement combined with the OCP benchmark's finding that higher-capability models overclaim more in agentic settings creates a dual safety concern: agents improving beyond evaluation reach while simultaneously becoming less reliable about their own limitations.",
+      "related_paper_ids": [
+        "aide2-recursive-self-improvement",
+        "overclaiming-propensity-ocp",
+        "slm-agentic-future"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Orchestration Infrastructure Consolidation",
+      "description": "Google's `ax` runtime, strands-agents/harness-sdk, superdesigndev/treg, and HKUDS/CLI-Anything are all trending simultaneously, signaling that the agent infrastructure ecosystem is converging on standardized primitives for orchestration, tool registries, and production deployment.",
+      "related_paper_ids": [
+        "slm-agentic-future",
+        "harmony-monocular-scene"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Monocular 3D Scene Understanding with Agentic Reasoning",
+      "description": "HARMONY's hierarchical agentic approach to single-image 3D reconstruction and PartLLM's unified multimodal 3D part segmentation both represent a trend toward replacing specialized pipelines with LLM/VLM-based agents that reason about 3D structure from 2D observations.",
+      "related_paper_ids": [
+        "harmony-monocular-scene",
+        "partllm-3d-segmentation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Ultra-Compressed Local Model Deployment",
+      "description": "HuggingFace trending shows simultaneous strong adoption of GGUF quantized models at 2-bit (Ternary-Bonsai-2), mixed-precision (ISTA-DASLab GSQ-RCO), and standard precision (unsloth) for the same 27B model, confirming that local deployment at varying quality-compute tradepoints is a dominant 2026 deployment pattern.",
+      "related_paper_ids": [
+        "hbq-hierarchical-quantization"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-09-24T07:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-09-24T07:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv CS (cs.LG, cs.CL, cs.AI, cs.AR)",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-09-24T07:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org/trending",
+      "checked_at": "2026-09-24T07:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-24T07:30:00Z",
+      "status": "ok"
+    }
+  ]
+}
