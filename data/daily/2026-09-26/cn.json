@@ -1,0 +1,569 @@
+{
+  "version": "1.0",
+  "date": "2026-09-26",
+  "generated_at": "2026-09-26T15:30:00Z",
+  "summary": {
+    "headline": "30余名研究者携手挑战客体永久性难题，发布里程碑式世界模型基准；Transformer叠加性证据开辟可解释性新前沿",
+    "body": "今日最受瞩目的是一篇关于在世界模型中训练客体永久性（object permanence）的大规模协作论文，汇聚了来自卡内基梅隆大学、南加州大学、牛津大学等十余所机构的研究者，系统评估生成模型能否真正追踪被遮挡物体，而非仅凭统计规律预测合理的后续内容。结果显示，当前最优模型与基准上限之间存在明显差距，将客体永久性定义为将世界模型根植于因果物理现实的下一个前沿课题。\n\n在可解释性领域，Skoltech/AIRI团队证明了Transformer隐藏状态遵循一种令人惊讶的线性性质：当不同文本流的输入线性叠加时，模型输出可分解为各独立输入下一词分布的叠加。考虑到现代大语言模型包含大量高度非线性的组件，这一发现颇为反直觉；其实际意义在于可以从单次前向传播同时生成两段连贯的文本续写，这可能从根本上改变推理时计算资源的分配方式。\n\n开源模型生态系统持续快速演进：Qwen3.8-27B、DeepSeek-V4.1-Flash和星辰（Xing4.0-29B-A4B）均出现在今日热门模型榜单，同时MiniMax-H3的全模态视频-音频扩散系统也备受关注。在GitHub上，paperclipai/paperclip和vectorize-io/hindsight成为智能体基础设施领域的最大亮点，凭借强劲的用户增长势头，正在积累数以千计的星标，逐渐成为从业者管理工作中智能体的核心工具。",
+    "key_themes": [
+      "world-modeling-embodied-ai",
+      "mechanistic-interpretability",
+      "multimodal-generation-rl",
+      "agentic-planning-synthesis",
+      "open-weight-ecosystem"
+    ]
+  },
+  "researcher_notes": "**客体永久性论文是本周最重要的基准贡献。** 追踪被遮挡物体的能力是6个月大的婴儿便已掌握的技能，但对于通过像素统计相关性学习的视频-语言模型而言，这仍是一个顽固的难题。该论文的协作规模——30余位来自视觉、语言、认知科学和机器人领域的作者——表明学界将其视为社区共同攻关的挑战，而非单一实验室的基准竞赛。值得关注的是，高斯散射（Gaussian Splatting）和场景图增强世界模型方向的后续研究将会迅速跟进，因为这类架构在表示持久化物体状态方面具有天然优势。\n\n**Transformer叠加性结果是一个潜力巨大的「沉睡杰作」（sleeper hit）。** Skoltech/AIRI的Nikita Dragunov等人证明，叠加线性假设（Superposition Linearity Hypothesis）在多种架构上均成立，尽管该性质在预训练过程中会减弱，但可通过轻量级微调大幅恢复。实际收益在于从单次前向传播并行解码两段连贯文本，这是一项新颖的能力，有望催生廉价的推测解码（speculative decoding）变体。更深层的理论意涵颇具挑战性：若隐藏状态叠加是Transformer架构的内在属性，则意味着模型的「思维」是共享语义空间中的向量，而非孤立的计算过程。这以一种非显而易见的方式，将这一发现与稀疏自编码器（SAE）领域的研究贯通起来。\n\n**强化学习正在加速渗透扩散模型领域。** AV-GRPO将GRPO（分组相对策略优化）应用于联合音视频生成，解决了对异质多模态奖励进行朴素强化学习时的信用分配（credit assignment）难题。这已是近三周内第三篇GRPO-扩散模型相关论文（此前还有关于图像质量和视频时序一致性的工作）。规律已清晰可见：在推理链领域大获成功的GRPO技巧，正被系统性地迁移至每一种生成模态。预计一个月内，音频、3D和代码生成领域的同类变体将相继出现。\n\n**智能体基础设施层正在向少数竞争范式收敛。** paperclipai/paperclip（今日新增+2,109星）正在将自己定位为跨工具和会话管理智能体工作流的用户界面层；vectorize-io/hindsight（+1,653星）解决了大多数生产级智能体部署中无状态化的核心痛点；Google的ax（+1,379星）则是来自基础设施领域优势方的生产级编排（orchestration）方案。这三个项目尚未达到LangChain时代框架的规模，但今日的星标增速表明，从业者的采用是真实加速的，而非投机性的。\n\n**Qwen3.8生态系统正在呈现异常的单一文化动态。** 在下载量前20的热门模型中，至少有8个是Qwen3.8的基础发布版或其量化/微调衍生版（Unsloth GGUF、ISTA-DASLab GSQ-RCO、DavidAU创意变体、Comfy-Org工作流重新打包版）。这种衍生品集中度之高，自Llama 2时代以来从未见过，并引发了生态系统脆弱性的合理担忧——基础模型中单一的能力缺口或对齐问题，会同步传播至数百个社区微调版本中。",
+  "papers": [
+    {
+      "id": "training-object-permanence-world-models",
+      "title": "在世界模型中训练客体永久性（Training Object Permanence in World Models）",
+      "authors": ["Haotian Zhang", "Fengyuan Yu", "Dezhi Luo", "Haoran Sun", "Zehong Zhao", "Renrui Zhang", "Ziyu Guo", "Letian Wang", "Mengyue Yang", "Kangfu Mei", "Ran Ji", "Philip Torr", "Alan Yuille", "Nikolaus Kriegeskorte", "Jieneng Chen", "Yilun Du", "et al."],
+      "affiliations": ["Carnegie Mellon University", "University of Southern California", "University of Michigan", "Johns Hopkins University", "UC San Diego", "UCLA", "Columbia University", "UC Berkeley", "University of Toronto", "University of Bristol", "University of Oxford"],
+      "summary": "一项大规模协作基准与训练框架研究，聚焦于世界模型能否在遮挡场景下追踪物体并维持隐藏状态——这是当前视频-语言模型普遍缺乏的基本认知能力。研究引入了多难度层级的结构化训练课程和评估协议，面向客体永久性任务进行系统测评。",
+      "key_findings": [
+        "当前最优世界模型在所有基准层级上，均与人类水平的客体永久性存在显著性能差距",
+        "针对遮挡场景的结构化课程训练可显著提升物体追踪能力，且不损害通用视频理解性能",
+        "显式表示潜在物体状态（而非像素分布）的模型，在新颖遮挡模式上泛化能力更强"
+      ],
+      "tags": ["world-models", "object-permanence", "embodied-ai", "video-understanding", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 186, "comments": 12},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28654",
+        "huggingface": "https://huggingface.co/papers/2609.28654",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.28654"
+      }
+    },
+    {
+      "id": "transformer-two-thoughts-superposition",
+      "title": "你的Transformer可以同时持有两种想法：大语言模型中线性叠加的证据（Your Transformer Can Hold Two Thoughts at Once: Evidence of Linear Superposition in LLMs）",
+      "authors": ["Pavel Tikhonov", "Anton Korznikov", "Matvey Mikhalchuk", "Nikita Dragunov", "Temurbek Rahmatullaev", "Polina Druzhinina", "Anton Razzhigaev", "Ivan Oseledets", "Elena Tutubalina"],
+      "affiliations": ["Skoltech（斯科尔科沃科技大学）", "AIRI（人工智能研究院）", "Kazan Federal University（喀山联邦大学）"],
+      "summary": "证明了叠加线性假设（Superposition Linearity Hypothesis）：当来自不同文本流的输入线性叠加时，Transformer输出可分解为各独立输入下一词分布的叠加。该效应是Transformer架构的内在属性，在预训练过程中逐渐减弱，但可通过轻量级微调大幅恢复。引入引导式解码程序，实现从单次前向传播同时生成两段连贯文本续写。",
+      "key_findings": [
+        "叠加线性性质是Transformer架构的内在属性，而非训练的涌现结果",
+        "叠加效应在预训练过程中减弱，但可通过轻量级微调大幅恢复",
+        "引导式解码可实现从单次前向传播并行生成两段连贯文本，额外开销极低"
+      ],
+      "tags": ["interpretability", "mechanistic-interpretability", "transformers", "superposition", "decoding"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29845",
+        "huggingface": "https://huggingface.co/papers/2609.29845",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29845"
+      }
+    },
+    {
+      "id": "past-frames-future-ar-video-memory",
+      "title": "过去帧定义未来：自回归视频生成的记忆机制（The Past Frames the Future: Memory for Autoregressive Video Generation）",
+      "authors": ["Harold Chen", "et al."],
+      "affiliations": ["Tsinghua University（清华大学）", "Beijing Academy of Artificial Intelligence（北京人工智能研究院）"],
+      "summary": "一篇系统综述，从五个维度梳理自回归视频生成中的记忆机制：形式（历史的表征载体）、功能（需要保留的语义/物理信息）、操作（记忆的写入、读取、更新和整合生命周期）、学习（闭环展开下的记忆行为优化）和评估（诊断真正记忆能力的范式）。",
+      "key_findings": [
+        "现有自回归视频模型混淆了至少三种不同的记忆功能（外观连续性、物理状态、叙事连贯性），它们各自需要不同的架构解决方案",
+        "在展开（rollout）条件下的闭环记忆学习，在长程一致性上显著优于教师强迫的记忆训练",
+        "当前评估范式系统性地低估记忆失败，因为它们衡量的是输出质量而非记忆利用情况"
+      ],
+      "tags": ["video-generation", "autoregressive", "memory", "survey", "world-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 38, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28466",
+        "huggingface": "https://huggingface.co/papers/2609.28466",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.28466",
+        "pdf": "https://arxiv.org/pdf/2609.28466"
+      }
+    },
+    {
+      "id": "wanpe-cinematic-prompt-enhancement",
+      "title": "WanPE：面向现代文本到视频生成的电影级提示词增强（WanPE: Towards Cinematic Prompt Enhancement for Modern Text-to-Video Generation）",
+      "authors": ["Wan Team", "et al."],
+      "affiliations": ["Alibaba Group（阿里巴巴集团）", "Tongyi Lab（通义实验室）"],
+      "summary": "提出WanPE，一套将用户简短输入转化为电影级结构化提示词的增强系统，专为文本到视频模型设计。该方法利用融合领域专属影视摄影知识的大语言模型进行提示词扩写，在万象（Wan）系列模型上显著提升了视频输出质量与提示-视频对齐度。",
+      "key_findings": [
+        "结构化电影级提示词扩写在万象模型系列上，人类评估视频质量提升31%（相对于原始用户提示）",
+        "领域专属影视词汇注入在视频生成任务中优于通用大语言模型提示词扩写",
+        "WanPE可泛化至万象系列以外的其他文本到视频模型，获得适度性能增益"
+      ],
+      "tags": ["text-to-video", "prompt-engineering", "video-generation", "cinematography", "wan"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 26, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30221",
+        "huggingface": "https://huggingface.co/papers/2609.30221",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30221"
+      }
+    },
+    {
+      "id": "av-grpo-audio-video-generation-rl",
+      "title": "AV-GRPO：面向联合音视频生成的模态锚定解耦扩散强化学习",
+      "authors": ["Zhiyu Xu", "Weilong Yan", "Yufei Shi", "Shiyang Li", "Yihao Liu", "Kin-Man Lam", "Yuewen Cao"],
+      "affiliations": ["Hong Kong Polytechnic University（香港理工大学）", "Nanyang Technological University（南洋理工大学）"],
+      "summary": "提出AV-GRPO，一种面向联合音视频生成的模态锚定在线扩散强化学习框架，通过对每个模态解耦奖励信号来解决异质多模态奖励优化中的信用分配难题。同时引入5DAV——一个解耦的、难度可控的音视频生成训练数据集。",
+      "key_findings": [
+        "对联合音视频奖励朴素应用GRPO会混淆模态特定的信用分配，导致音频保真度和视频质量双双下降",
+        "模态锚定解耦在每模态质量和跨模态同步方面，均显著优于联合奖励基线",
+        "5DAV难度控制课程使强化学习在多样化音视频场景下稳定收敛"
+      ],
+      "tags": ["audio-video-generation", "reinforcement-learning", "diffusion-models", "grpo", "multimodal"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29816",
+        "huggingface": "https://huggingface.co/papers/2609.29816",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29816"
+      }
+    },
+    {
+      "id": "coding-agents-tamp",
+      "title": "用于广义任务与运动规划问题的编程智能体（Coding Agents for Generalized Task and Motion Planning Problems）",
+      "authors": ["Matteo Merler", "Bowen Li", "Josh Roy", "Yichao Liang", "Qianwei Wang", "Yixuan Huang", "Tom Silver"],
+      "affiliations": ["MIT（麻省理工学院）"],
+      "summary": "研究编程智能体能否通过合成可跨问题实例泛化的程序，来自动化广义任务与运动规划（TAMP）。智能体在固定合成预算内与模拟器交互并开发程序，随后将冻结的程序在未见实例上评估。在来自KinDER和PDDLStream的28个模拟环境上评估了Claude Code（Opus 5）和Codex等变体。",
+      "key_findings": [
+        "编程智能体在超过60%的测试环境中成功将TAMP程序泛化至未见问题实例",
+        "程序合成预算对泛化能力影响显著：交互预算更充裕的智能体产生更鲁棒的程序",
+        "Claude Code（Opus 5）在符号规划任务上优于GPT-5.6 Sol，而GPT-6 Astra在几何密集型操作任务上略胜一筹"
+      ],
+      "tags": ["task-and-motion-planning", "coding-agents", "robotics", "program-synthesis", "llm-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 11, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30233",
+        "huggingface": "https://huggingface.co/papers/2609.30233",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30233"
+      }
+    },
+    {
+      "id": "omniecho-spatial-audio-embodied",
+      "title": "OmniEcho：面向全模态具身智能体的音视频空间理解",
+      "authors": ["Ruixun Liu", "Yuxuan Wang", "Jiacheng Xie", "Yuhuan You", "Donghua Cai", "Junming Lin", "Xiong-Hui Chen", "Zhifang Guo", "Yunfei Chu", "Qize Yang", "Xize Cheng", "Jin Xu", "Yiwu Zhong"],
+      "affiliations": ["Peking University（北京大学）", "Alibaba Group（阿里巴巴集团）", "Tsinghua University（清华大学）"],
+      "summary": "引入OmniEchoBench，一个涵盖空间音视频感知和音视语言导航的统一基准，包含197个真实世界空间音视觉场景、2,972个问答对和900个导航样本（采用一阶立体声FOA音频）。提出OmniEcho，一种具有空间感知能力的全模态模型，融合FOA空间编码器与预训练语义音频通路。",
+      "key_findings": [
+        "当前最优视觉-语言模型在音频引导导航任务上表现显著不足，而人类依靠空间音频线索可以轻松完成",
+        "FOA空间编码与语义音频通路结合，在方向定位任务上比视觉单模态基线提升23个百分点",
+        "可控空间音频渲染管线实现了具身音视觉研究中可扩展的基准数据创建"
+      ],
+      "tags": ["embodied-ai", "spatial-audio", "omni-modal", "navigation", "benchmark"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.23407",
+        "huggingface": "https://huggingface.co/papers/2609.23407",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.23407"
+      }
+    },
+    {
+      "id": "virdm-few-step-causal-video-generation",
+      "title": "ViRDM：用于少步因果视频生成的表示分布匹配驯化",
+      "authors": ["ViRDM Team", "et al."],
+      "affiliations": ["Chinese Academy of Sciences（中国科学院）", "University of Chinese Academy of Sciences（中国科学院大学）"],
+      "summary": "通过引入表示分布匹配（RDM）训练目标，解决因果（自回归）视频模型中少步生成的挑战。ViRDM将少步生成的潜在分布对齐至多步参考分布，实现4-8倍推理加速且质量损失极小。",
+      "key_findings": [
+        "表示分布匹配消除了4步与50步因果视频生成之间85%的质量差距",
+        "RDM训练无需修改现有因果视频模型架构即可兼容",
+        "少步因果生成在分布外提示上的泛化能力优于基于蒸馏的加速方法"
+      ],
+      "tags": ["video-generation", "diffusion-models", "few-step", "causal-generation", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 7, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28923",
+        "huggingface": "https://huggingface.co/papers/2609.28923",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.28923"
+      }
+    },
+    {
+      "id": "agent-editing-world-model",
+      "title": "智能体编辑世界模型：重新思考面向大语言模型智能体的世界建模（Agent-Editing World Model）",
+      "authors": ["Shuang Sun", "Guoxin Chen", "Fanzhe Meng", "Jia Deng", "Huatong Song", "Jinhao Jiang", "Wayne Xin Zhao", "Hongteng Xu", "Ji-Rong Wen"],
+      "affiliations": ["Renmin University of China（中国人民大学）", "Beijing Key Laboratory of Big Data Management and Analysis Methods（大数据管理与分析方法重点实验室）"],
+      "summary": "提出智能体编辑世界模型（AEWM），建模推理和行动如何塑造未来任务进展，而非模拟工具响应。结合行动判断器（将决策分类为关键型、探索型和噪声型）与状态修订器（从相同观察历史中编辑噪声推理-行动序列），解决任务状态污染问题。",
+      "key_findings": [
+        "预测任务状态演变比模拟原始工具输出在长程智能体规划中的样本效率更高",
+        "行动判断器的三分类机制可对高熵决策点进行精准修订，同时不干扰成功轨迹",
+        "AEWM在WebArena基准上将幻觉计划减少34%"
+      ],
+      "tags": ["world-models", "llm-agents", "task-planning", "state-revision", "agentic-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28416",
+        "huggingface": "https://huggingface.co/papers/2609.28416",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.28416"
+      }
+    },
+    {
+      "id": "itersynth-deep-search-agents",
+      "title": "IterSynth：通过角色解耦迭代合成重新思考深度搜索智能体",
+      "authors": ["IterSynth Team", "et al."],
+      "affiliations": ["Peking University（北京大学）", "Microsoft Research Asia（微软亚洲研究院）"],
+      "summary": "提出IterSynth，一种将搜索、提取和合成角色分配给专用子智能体并进行迭代轮次操作的深度搜索智能体架构。通过跨智能体角色分离关注点，与单智能体深度搜索基线相比，显著提升了事实依据质量并降低了幻觉率。",
+      "key_findings": [
+        "深度搜索智能体中的角色解耦，在多跳问答任务上比单体架构幻觉率降低41%",
+        "重新审视早期证据的迭代合成轮次提升了答案完整性，且无需指数级增加token开销",
+        "IterSynth在FRAMES和多跳问答基准上取得新的最优结果"
+      ],
+      "tags": ["deep-search", "information-retrieval", "llm-agents", "multi-agent", "rag"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29444",
+        "huggingface": "https://huggingface.co/papers/2609.29444",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29444"
+      }
+    },
+    {
+      "id": "neural-spectral-capacity",
+      "title": "神经谱容量：仅从网络规格测量和设计架构（Neural Spectral Capacity）",
+      "authors": ["Neural Spectral Capacity Team", "et al."],
+      "affiliations": ["MIT（麻省理工学院）", "Stanford University（斯坦福大学）"],
+      "summary": "提出神经谱容量（NSC），一种从权重矩阵谱属性中预测网络架构表达能力和泛化行为的理论驱动指标，无需训练即可评估。NSC支持在无需昂贵训练运行的前提下进行架构搜索和比较，为经验性NAS基准提供了有据可查的替代方案。",
+      "key_findings": [
+        "神经谱容量在NAS-Bench-201超过200种架构变体上预测保留测试集性能，Spearman相关系数达0.87",
+        "NSC引导的架构设计以十分之一的搜索计算量，达到或超越NAS-Bench-201最优配置",
+        "谱框架揭示了跳跃连接和层归一化通过保熵谱整形提升可训练性的原因"
+      ],
+      "tags": ["neural-architecture-search", "theory", "expressivity", "spectral-analysis", "nas"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.23087",
+        "huggingface": "https://huggingface.co/papers/2609.23087",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.23087"
+      }
+    },
+    {
+      "id": "rgbd20k-benchmark",
+      "title": "RGBD20K：面向RGB-D语义分割的大规模基准",
+      "authors": ["RGBD20K Team", "et al."],
+      "affiliations": ["National University of Defense Technology（国防科技大学）", "Huazhong University of Science and Technology（华中科技大学）"],
+      "summary": "推出RGBD20K，一个包含20,000对RGB-D图像、涵盖室内外场景100+目标类别密集语义分割标注的大规模基准，解决RGB-D语义分割研究中的数据匮乏瓶颈，尤其关注稀有类别和复杂深度条件。",
+      "key_findings": [
+        "RGBD20K将RGB-D语义分割评估规模扩展为此前最大基准的5倍",
+        "在RGBD20K上经过深度监督训练的模型，在光照变化剧烈的保留场景上比视觉单模态基线高出8.2 mIoU",
+        "长尾类别分布分析揭示，当前RGB-D模型在小目标和反射面上的失败率不成比例地偏高"
+      ],
+      "tags": ["rgb-d", "semantic-segmentation", "benchmark", "depth-sensing", "computer-vision"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29028",
+        "huggingface": "https://huggingface.co/papers/2609.29028",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29028"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "Qwen3.8系列的旗舰模型——一个270亿参数的图文对话模型，兼具强大的多模态推理能力和广泛的语言覆盖。目前是HuggingFace上获赞最多的开源模型，超过16,000赞和660万次下载，催生了庞大的量化与微调衍生生态系统。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "conversational", "open-weight", "qwen"],
+      "metrics": {"downloads": 6579319, "likes": 16278},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "于2026年7月31日发布的全模态生成模型（海螺3.0/Hailuo 3.0），可从文本、图像和多模态输入生成带同步音频的视频。搭载H3-VAE实现4倍有效序列长度，可生成最高2K分辨率、15秒时长、原生立体声的视频片段。是2026年最重要的多模态生成发布之一。",
+      "task_type": "video-generation",
+      "model_size": null,
+      "tags": ["video-generation", "audio-video", "omni-modal", "diffusion"],
+      "metrics": {"downloads": 3600000, "likes": 5674},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "截至2026年9月，开源视频生成领域的领先模型，支持文本到视频、图像到视频和视频到视频等多种生成方式，时序一致性强。凭借5,101赞和160万次下载持续走红，代表着开源阵营在视频扩散领域的竞争优势。",
+      "task_type": "text-to-video",
+      "model_size": null,
+      "tags": ["video-generation", "text-to-video", "image-to-video", "open-source"],
+      "metrics": {"downloads": 1598133, "likes": 5101},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen3-8-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "Qwen3.8的实验性快速响应变体，专为图文对话中低延迟场景优化。面向Qwen3.8-27B速度不足的应用场景，5,701赞显示从业者对快速开源多模态模型的强烈需求。",
+      "task_type": "image-text-to-text",
+      "model_size": null,
+      "tags": ["multimodal", "fast-inference", "conversational", "qwen"],
+      "metrics": {"downloads": 846820, "likes": 5701},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek最新的快速多模态模型，融合文本生成与图文理解能力。下载量居Qwen系列之后位列第三，DeepSeek-V4.1-Flash正成为不依赖阿里巴巴供应链用户的首选快速多模态替代方案，3,752赞且周下载量势头强劲。",
+      "task_type": "text-generation",
+      "model_size": null,
+      "tags": ["multimodal", "text-generation", "fast-inference", "deepseek"],
+      "metrics": {"downloads": 621396, "likes": 3752},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "convai-laya",
+      "name": "laya",
+      "organization": "ConvAI Innovations",
+      "description": "一种经校准的文本分类模型，支持在100+种语言中通过单次前向传播完成类型化选择、评分和是/否决策——本质上是一种非自回归决策引擎。凭借3,669赞（下载量为0）走红，主要通过社区对Jev生态系统的热情推动，表明采用主要以API调用或laya-mlx等配套工具为主。",
+      "task_type": "text-classification",
+      "model_size": null,
+      "tags": ["classification", "decision-making", "multilingual", "calibration", "inference"],
+      "metrics": {"downloads": 0, "likes": 3669},
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "qwen-image-2-1",
+      "name": "Qwen-Image-2.1",
+      "organization": "Qwen（阿里巴巴）",
+      "description": "阿里巴巴最新的基于扩散模型的图像生成与编辑模型，凭借出色的图像质量和ComfyUI集成（通过Comfy-Org的单文件重打包）迅速在创意工作流中普及。2,318赞，生态系统支持持续增长，是对专有图像生成API的开源竞争回应。",
+      "task_type": "text-to-image",
+      "model_size": null,
+      "tags": ["image-generation", "image-editing", "diffusion", "comfyui", "qwen"],
+      "metrics": {"downloads": 42469, "likes": 2318},
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "xingchen-xing4-0-29b",
+      "name": "Xing4.0-29B-A4B",
+      "organization": "XingChen-AGI（星辰AGI）",
+      "description": "星辰AGI推出的290亿参数开源中文大语言模型，采用40亿激活参数的稀疏MoE架构（A4B）。侧重推理和中文语言任务，与通义Qwen、DeepSeek和Yandex的AliceAI共同丰富着各国人工智能模型的多元格局。",
+      "task_type": "text-generation",
+      "model_size": "29B（4B激活参数）",
+      "tags": ["chinese-llm", "sparse-moe", "open-weight", "reasoning"],
+      "metrics": {"downloads": 42950, "likes": 1684},
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+    },
+    {
+      "id": "edge0-audio8-asr-infinite",
+      "name": "Audio8-ASR-Infinite",
+      "organization": "Edge0",
+      "description": "一款面向长格式和持续音频的流式自动语音识别模型，解决传统ASR模型在多小时录音中因上下文长度限制导致的质量下降问题。在播客转录、会议纪要和实时字幕的规模化场景中作为实用解决方案走红。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": null,
+      "tags": ["asr", "speech-recognition", "streaming", "long-form-audio"],
+      "metrics": {"downloads": 2853, "likes": 551},
+      "source_url": "https://huggingface.co/Edge0/Audio8-ASR-Infinite"
+    },
+    {
+      "id": "nvidia-nemotron-3-diarization",
+      "name": "Nemotron-3-Diarization",
+      "organization": "NVIDIA",
+      "description": "NVIDIA在NeMo框架内发布的说话人日志（diarization）和语音活动检测模型，隶属Nemotron-3系列。面向企业转录流水线中多说话人音频处理的生产缺口，凭借强大的NeMo框架集成支持规模化部署。",
+      "task_type": "audio-classification",
+      "model_size": null,
+      "tags": ["speaker-diarization", "voice-activity-detection", "nemo", "nvidia", "enterprise"],
+      "metrics": {"downloads": 11459, "likes": 337},
+      "source_url": "https://huggingface.co/nvidia/Nemotron-3-Diarization"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "paperclipai-paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "用于在工作中管理AI智能体的开源应用——提供统一界面，跨工具和会话调度、监控和交互智能体工作流。今日新增+2,109星，显示从业者对超越单会话脚本的持久智能体管理基础设施的迫切需求。",
+      "language": "TypeScript",
+      "stars": 2109,
+      "stars_today": 2109,
+      "forks": 0,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": ["agent-management", "workflow", "productivity", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "vectorize-io-hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "AI智能体的跨会话持久记忆——一个Python库，让智能体能够在不幻觉历史上下文的前提下，回忆过往交互中的事实、偏好和背景。今日新增+1,653星，正面解决生产级智能体部署中最常见的痛点之一。",
+      "language": "Python",
+      "stars": 1653,
+      "stars_today": 1653,
+      "forks": 0,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": ["agent-memory", "persistence", "retrieval", "llm-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ax",
+      "name": "google/ax",
+      "description": "Google开源的智能体编排运行时——用Go语言编写的生产级框架，用于大规模构建、部署和管理自主智能体。今日新增+1,379星，从业者正在评估Google的智能体编排方案是否比现有以Python为中心的框架更具优势。",
+      "language": "Go",
+      "stars": 1379,
+      "stars_today": 1379,
+      "forks": 0,
+      "url": "https://github.com/google/ax",
+      "tags": ["agent-orchestration", "google", "production", "go"],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "「学以致用，构建交付」——将概念讲解与生产级代码实现相结合的综合AI工程课程。今日新增+1,177星，主要由从软件工程向AI原生角色转型、且无机器学习研究背景的工程师群体需求驱动。",
+      "language": "Python",
+      "stars": 1177,
+      "stars_today": 1177,
+      "forks": 0,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "curriculum", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "dream-num-univer",
+      "name": "dream-num/univer",
+      "description": "「AI智能体的办公室驱动层（Office Harness）」——基于TypeScript的统一运行时，使AI智能体能够原生操作电子表格、文档、演示文稿和画布。今日新增+1,050星，代表着智能体与生产力工具（而非纯文本）协作需求的快速增长。",
+      "language": "TypeScript",
+      "stars": 1050,
+      "stars_today": 1050,
+      "forks": 0,
+      "url": "https://github.com/dream-num/univer",
+      "tags": ["agent-tools", "office-automation", "spreadsheet", "document"],
+      "relevance": "high"
+    },
+    {
+      "id": "zai-org-zcode",
+      "name": "zai-org/ZCode",
+      "description": "Z.ai的开源编程智能体框架——一个定位强大、智能、可扩展的TypeScript框架。总星标6,725，ZCode正成为专有编程智能体的严肃替代选项，尤其受到希望完全掌控智能体行为和工具集成的团队青睐。",
+      "language": "TypeScript",
+      "stars": 6725,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/zai-org/ZCode",
+      "tags": ["coding-agent", "ai-assistant", "developer-tools", "extensible"],
+      "relevance": "high"
+    },
+    {
+      "id": "mem0ai-mem0",
+      "name": "mem0ai/mem0",
+      "description": "「AI智能体的记忆层」——最成熟的开源LLM应用持久记忆解决方案，总星标66,009。随着新智能体框架和模型不断涌现，用户对跨会话上下文记忆管理的关注度持续攀升，带动其再度走红。",
+      "language": "Python",
+      "stars": 66009,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mem0ai/mem0",
+      "tags": ["memory", "llm-agents", "persistence", "context-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "mizorewww-laya-mlx",
+      "name": "mizorewww/laya-mlx",
+      "description": "Laya类型化决策模型的原生MLX运行时，无需文本生成、PyTorch或云API，即可在Apple Silicon（M3 Max）上实现7-14ms的快速决策。作为更广泛的Jev/Laya生态系统的一部分，服务于离线、低延迟决策应用场景。",
+      "language": "Python",
+      "stars": 6252,
+      "stars_today": 6252,
+      "forks": 0,
+      "url": "https://github.com/mizorewww/laya-mlx",
+      "tags": ["mlx", "apple-silicon", "edge-inference", "decision-making", "offline"],
+      "relevance": "high"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "「真实工程师的技能库」——面向软件工程任务的实用智能体技能定义集合。今日新增+583星，折射出随着团队开始定义和共享可复用的智能体行为，软件开发工作流中技能化智能体定制的日益普及。",
+      "language": "Shell",
+      "stars": 583,
+      "stars_today": 583,
+      "forks": 0,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agent-skills", "software-engineering", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "面向自主智能体开发的技能框架，提供用于创建专业化智能体能力的可组合构建块。今日新增+468星，随着开发者寻求超越即兴提示词的结构化方式来定义和组合智能体技能，正逐渐获得关注。",
+      "language": "Shell",
+      "stars": 468,
+      "stars_today": 468,
+      "forks": 0,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "agent-framework", "composable", "autonomous-agents"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "世界建模与物理基础（World Modeling and Physical Grounding）",
+      "description": "多篇论文聚焦于统计预测与真正物理理解之间的鸿沟——客体永久性、任务状态建模和视频生成记忆机制，殊途同归，指向同一核心问题：追踪潜在状态而非仅建模表面模式的模型。",
+      "related_paper_ids": ["training-object-permanence-world-models", "past-frames-future-ar-video-memory", "agent-editing-world-model"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "规模化机制可解释性（Mechanistic Interpretability at Scale）",
+      "description": "叠加线性性结果和神经谱容量研究均表明，原则性的理论框架能够揭示深度网络的非显然结构属性，既促进更好的分析，也支持更好的架构设计。",
+      "related_paper_ids": ["transformer-two-thoughts-superposition", "neural-spectral-capacity"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "生成模态的强化学习后训练（RL Post-Training for Generative Modalities）",
+      "description": "在推理链领域大获成功的GRPO技巧，现在正被系统性地迁移至跨视频、音频和联合生成的扩散模型——AV-GRPO展示了多奖励异质生成所需的关键技术适配。",
+      "related_paper_ids": ["av-grpo-audio-video-generation-rl", "wanpe-cinematic-prompt-enhancement", "virdm-few-step-causal-video-generation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体规划与合成（Agentic Planning and Synthesis）",
+      "description": "从TAMP程序合成到深度搜索智能体，领域正从单轮智能体向跨长任务视野规划、修订和合成的系统演进，每篇论文各自应对朴素智能体部署的不同失败模式。",
+      "related_paper_ids": ["coding-agents-tamp", "itersynth-deep-search-agents", "agent-editing-world-model"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "开源权重模型生态系统碎片化（Open-Weight Model Ecosystem Fragmentation）",
+      "description": "热门模型榜单折射出各国和商业开源权重模型的快速扩张——通义Qwen、DeepSeek、星辰、Yandex、MiMo——而量化工具（Unsloth、ISTA-DASLab）竞相跟进，社区微调版本数量持续倍增。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    }
+  ]
+}

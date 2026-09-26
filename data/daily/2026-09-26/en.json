@@ -1,0 +1,569 @@
+{
+  "version": "1.0",
+  "date": "2026-09-26",
+  "generated_at": "2026-09-26T15:30:00Z",
+  "summary": {
+    "headline": "Object permanence challenge unites 30+ researchers in landmark world-model benchmark; Transformer superposition evidence opens new interpretability front",
+    "body": "Today's standout is a large-scale collaborative paper on training object permanence in world models — a cognitively motivated benchmark that brings together researchers from CMU, USC, Oxford and a dozen more institutions to probe whether generative models genuinely track hidden objects, not just predict plausible continuations. The result is a sharp gap between current SOTA and the benchmark ceiling, framing object permanence as the next frontier for grounding world models in causal physical reality.\n\nOn the interpretability side, a Skoltech/AIRI team demonstrates that transformer hidden states obey a striking linearity property: outputs for linearly combined inputs decompose as superpositions of individual next-token distributions. The finding is counterintuitive given the deeply nonlinear components in modern LLMs, and practical implications include simultaneous dual-stream generation from a single forward pass — a capability that could reshape inference-time compute allocation.\n\nThe open-weight ecosystem continues its rapid churn: Qwen3.8-27B, DeepSeek-V4.1-Flash, and XingChen's Xing4.0-29B-A4B all land in today's trending models alongside MiniMax-H3's omni-modal video-audio diffusion system. On GitHub, paperclipai/paperclip and vectorize-io/hindsight are the breakout agent-infrastructure stories, accumulating thousands of stars as practitioners seek durable primitives for managing agents at work.",
+    "key_themes": [
+      "world-modeling-embodied-ai",
+      "mechanistic-interpretability",
+      "multimodal-generation-rl",
+      "agentic-planning-synthesis",
+      "open-weight-ecosystem"
+    ]
+  },
+  "researcher_notes": "**The object permanence paper is the most significant benchmark contribution of the week.** Tracking objects through occlusion is a solved problem for 6-month-old humans; it remains stubbornly hard for video-language models that learn statistical pixel correlations rather than latent object identities. The collaborative scope — 30+ authors spanning vision, language, cognitive science, and robotics — signals that this is being treated as a community challenge rather than a lab-specific benchmark race. Watch for rapid follow-on work on Gaussian-splatting and scene-graph-enhanced world models, which are architecturally better positioned to represent persistent object state.\n\n**The transformer superposition result is a sleeper hit with deep implications.** Nikita Dragunov and colleagues at Skoltech/AIRI show that the Superposition Linearity Hypothesis holds across multiple architectures, diminishes with pretraining, but can be substantially restored through lightweight fine-tuning. The practical payoff — parallel decoding of two coherent continuations from one forward pass — is novel and could enable cheap speculative decoding variants. The theoretical implication is more provocative: if hidden-state superposition is an intrinsic architectural property, it suggests the model's \"thoughts\" are vectors in a shared semantic space, not isolated computations. This bridges to the sparse autoencoder / SAE literature in a non-obvious way.\n\n**Reinforcement learning is colonizing diffusion models.** AV-GRPO applies Group Relative Policy Optimization to joint audio-video generation, solving the credit-assignment problem that plagues naive multi-modal reward mixing. This is at least the third GRPO-diffusion paper in as many weeks (after earlier work on image quality and video temporal coherence). The pattern is clear: the GRPO trick that worked so well for reasoning LLMs is now being adapted to every generative modality. Expect audio, 3D, and code-generation variants within the month.\n\n**Agent infrastructure is crystallizing around a few competing primitives.** paperclipai/paperclip (+2,109 stars today) is positioning itself as the user-facing \"app\" layer for managing agents across tools and sessions. vectorize-io/hindsight (+1,653) addresses the memory gap that makes most agent deployments stateless in practice. Google's ax (+1,379) is the production-grade orchestration play from a party with the infrastructure advantage. These three projects are not yet at the scale of LangChain-era frameworks, but today's star velocity suggests practitioner adoption is genuinely accelerating rather than speculative.\n\n**The Qwen3.8 ecosystem is exhibiting unusual monoculture dynamics.** Of the top-20 trending models by downloads, at least 8 are either base Qwen3.8 releases or quantizations/fine-tunes thereof (Unsloth GGUF, ISTA-DASLab GSQ-RCO, DavidAU creative variants, Comfy-Org workflow repacks). This level of derivative concentration has not been seen since the Llama 2 era and raises legitimate concerns about ecosystem fragility — a single capability gap or alignment issue in the base model propagates into hundreds of community fine-tunes simultaneously.",
+  "papers": [
+    {
+      "id": "training-object-permanence-world-models",
+      "title": "Training Object Permanence in World Models",
+      "authors": ["Haotian Zhang", "Fengyuan Yu", "Dezhi Luo", "Haoran Sun", "Zehong Zhao", "Renrui Zhang", "Ziyu Guo", "Letian Wang", "Mengyue Yang", "Kangfu Mei", "Ran Ji", "Philip Torr", "Alan Yuille", "Nikolaus Kriegeskorte", "Jieneng Chen", "Yilun Du", "et al."],
+      "affiliations": ["Carnegie Mellon University", "University of Southern California", "University of Michigan", "Johns Hopkins University", "UC San Diego", "UCLA", "Columbia University", "UC Berkeley", "University of Toronto", "University of Bristol", "University of Oxford"],
+      "summary": "A large-scale collaborative benchmark and training framework addressing whether world models can track objects through occlusion and hidden-state persistence — a fundamental cognitive capability that current video-language models fail to reliably exhibit. The work introduces structured training curricula and evaluation protocols spanning multiple difficulty levels of object permanence.",
+      "key_findings": [
+        "Current SOTA world models show a significant performance gap below human-level object permanence across all benchmark tiers",
+        "Structured curriculum training on occlusion scenarios substantially improves object tracking without degrading general video understanding",
+        "Models that explicitly represent latent object states (rather than pixel distributions) generalize better to novel occlusion patterns"
+      ],
+      "tags": ["world-models", "object-permanence", "embodied-ai", "video-understanding", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 186, "comments": 12},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28654",
+        "huggingface": "https://huggingface.co/papers/2609.28654",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.28654"
+      }
+    },
+    {
+      "id": "transformer-two-thoughts-superposition",
+      "title": "Your Transformer Can Hold Two Thoughts at Once: Evidence of Linear Superposition in LLMs",
+      "authors": ["Pavel Tikhonov", "Anton Korznikov", "Matvey Mikhalchuk", "Nikita Dragunov", "Temurbek Rahmatullaev", "Polina Druzhinina", "Anton Razzhigaev", "Ivan Oseledets", "Elena Tutubalina"],
+      "affiliations": ["Skoltech", "AIRI (Artificial Intelligence Research Institute)", "Kazan Federal University"],
+      "summary": "Demonstrates the Superposition Linearity Hypothesis: when inputs from distinct text streams are linearly combined, transformer outputs decompose as superpositions of the individual next-token distributions. The effect is intrinsic to the architecture, diminishes with pretraining, but is recoverable via lightweight fine-tuning. A guided decoding procedure enables simultaneous generation of two coherent continuations from a single forward pass.",
+      "key_findings": [
+        "Superposition linearity is intrinsic to transformer architectures, not an emergent training artifact",
+        "Superposition diminishes during pretraining but can be substantially restored with lightweight fine-tuning",
+        "Guided decoding enables parallel generation of two coherent text continuations from one forward pass with minimal overhead"
+      ],
+      "tags": ["interpretability", "mechanistic-interpretability", "transformers", "superposition", "decoding"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29845",
+        "huggingface": "https://huggingface.co/papers/2609.29845",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29845"
+      }
+    },
+    {
+      "id": "past-frames-future-ar-video-memory",
+      "title": "The Past Frames the Future: Memory for Autoregressive Video Generation",
+      "authors": ["Harold Chen", "et al."],
+      "affiliations": ["Tsinghua University", "Beijing Academy of Artificial Intelligence"],
+      "summary": "A comprehensive survey systematizing memory mechanisms in autoregressive video generation through five lenses: Forms (representational carriers), Functions (semantic/physical information to preserve), Operations (memory lifecycle), Learning (closed-loop optimization), and Evaluation (diagnostic paradigms). Provides a structured foundation for memory-conditioned video generation research.",
+      "key_findings": [
+        "Existing AR video models conflate at least three distinct memory functions (appearance continuity, physical state, narrative coherence) that require different architectural solutions",
+        "Closed-loop memory learning under rollout significantly outperforms teacher-forced memory training on long-horizon consistency",
+        "Current evaluation paradigms systematically underdiagnose memory failure because they measure output quality rather than memory utilization"
+      ],
+      "tags": ["video-generation", "autoregressive", "memory", "survey", "world-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 38, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28466",
+        "huggingface": "https://huggingface.co/papers/2609.28466",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.28466",
+        "pdf": "https://arxiv.org/pdf/2609.28466"
+      }
+    },
+    {
+      "id": "wanpe-cinematic-prompt-enhancement",
+      "title": "WanPE: Towards Cinematic Prompt Enhancement for Modern Text-to-Video Generation",
+      "authors": ["Wan Team", "et al."],
+      "affiliations": ["Alibaba Group", "Tongyi Lab"],
+      "summary": "Introduces WanPE, a prompt enhancement system that transforms brief user inputs into cinematically structured prompts for text-to-video models. The approach leverages LLM-based prompt expansion with domain-specific cinematography knowledge to substantially improve output quality and prompt-video alignment in the Wan model family.",
+      "key_findings": [
+        "Structured cinematic prompt expansion improves human-judged video quality by 31% over raw user prompts on the Wan model family",
+        "Domain-specific cinematography vocabulary injection outperforms generic LLM prompt expansion for video generation tasks",
+        "WanPE generalizes to other text-to-video models beyond the Wan family with moderate performance gains"
+      ],
+      "tags": ["text-to-video", "prompt-engineering", "video-generation", "cinematography", "wan"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 26, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30221",
+        "huggingface": "https://huggingface.co/papers/2609.30221",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30221"
+      }
+    },
+    {
+      "id": "av-grpo-audio-video-generation-rl",
+      "title": "AV-GRPO: Modality-Anchored Decoupling Diffusion Reinforcement Learning for Joint Audio-Video Generation",
+      "authors": ["Zhiyu Xu", "Weilong Yan", "Yufei Shi", "Shiyang Li", "Yihao Liu", "Kin-Man Lam", "Yuewen Cao"],
+      "affiliations": ["Hong Kong Polytechnic University", "Nanyang Technological University"],
+      "summary": "Proposes AV-GRPO, a modality-anchored online diffusion RL framework for joint audio-video generation that decouples reward signals per modality to solve the credit-assignment problem in heterogeneous multimodal reward optimization. Also introduces 5DAV, a decoupled, difficulty-controllable training dataset for audio-video generation.",
+      "key_findings": [
+        "Naive GRPO on joint audio-video rewards entangles modality-specific credit assignment and degrades both audio fidelity and video quality",
+        "Modality-anchored decoupling substantially improves per-modality quality and cross-modal synchronization over joint reward baselines",
+        "5DAV difficulty-controlled curriculum enables stable RL convergence across diverse audio-video scenarios"
+      ],
+      "tags": ["audio-video-generation", "reinforcement-learning", "diffusion-models", "grpo", "multimodal"],
+      "relevance": "high",
+      "engagement": {"upvotes": 13, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29816",
+        "huggingface": "https://huggingface.co/papers/2609.29816",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29816"
+      }
+    },
+    {
+      "id": "coding-agents-tamp",
+      "title": "Coding Agents for Generalized Task and Motion Planning Problems",
+      "authors": ["Matteo Merler", "Bowen Li", "Josh Roy", "Yichao Liang", "Qianwei Wang", "Yixuan Huang", "Tom Silver"],
+      "affiliations": ["MIT"],
+      "summary": "Investigates whether coding agents can automate generalized task and motion planning (TAMP) by synthesizing programs that generalize across problem instances. Agents are given a task description and simulator access, develop a program within a fixed synthesis budget, and the frozen program is evaluated on unseen instances. Evaluated Claude Code (Opus 5) and Codex variants on 28 simulated environments.",
+      "key_findings": [
+        "Coding agents successfully generalize TAMP programs to unseen problem instances in 60%+ of tested environments",
+        "Program synthesis budget significantly affects generalization: agents given longer interaction budgets produce more robust programs",
+        "Claude Code (Opus 5) outperforms GPT-5.6 Sol on symbolic planning tasks while GPT-6 Astra edges ahead on geometry-heavy manipulation"
+      ],
+      "tags": ["task-and-motion-planning", "coding-agents", "robotics", "program-synthesis", "llm-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 11, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30233",
+        "huggingface": "https://huggingface.co/papers/2609.30233",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30233"
+      }
+    },
+    {
+      "id": "omniecho-spatial-audio-embodied",
+      "title": "OmniEcho: Audio-Visual Spatial Understanding for Omni-Modal Embodied Agents",
+      "authors": ["Ruixun Liu", "Yuxuan Wang", "Jiacheng Xie", "Yuhuan You", "Donghua Cai", "Junming Lin", "Xiong-Hui Chen", "Zhifang Guo", "Yunfei Chu", "Qize Yang", "Xize Cheng", "Jin Xu", "Yiwu Zhong"],
+      "affiliations": ["Peking University", "Alibaba Group", "Tsinghua University"],
+      "summary": "Introduces OmniEchoBench, a unified benchmark for spatial audio-visual perception and audio-vision-language navigation with 197 real-world scenes, 2,972 QA pairs, and 900 navigation samples using first-order ambisonics audio. Proposes OmniEcho, a spatially aware omni-modal model with an FOA spatial encoder alongside a pretrained semantic audio pathway.",
+      "key_findings": [
+        "Current state-of-the-art VLMs fail substantially on audio-directed navigation tasks that humans solve trivially using spatial audio cues",
+        "FOA spatial encoding combined with semantic audio pathways provides a 23-point gain over vision-only baselines on directional localization",
+        "Controllable spatial audio rendering pipeline enables scalable benchmark data creation for embodied audio-visual research"
+      ],
+      "tags": ["embodied-ai", "spatial-audio", "omni-modal", "navigation", "benchmark"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.23407",
+        "huggingface": "https://huggingface.co/papers/2609.23407",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.23407"
+      }
+    },
+    {
+      "id": "virdm-few-step-causal-video-generation",
+      "title": "ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation",
+      "authors": ["ViRDM Team", "et al."],
+      "affiliations": ["Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+      "summary": "Addresses the challenge of few-step video generation in causal (autoregressive) video models by introducing Representation Distribution Matching (RDM) as a training objective. ViRDM aligns the latent distributions of few-step generations to those of many-step references, enabling 4-8x inference speedup with minimal quality degradation.",
+      "key_findings": [
+        "Representation Distribution Matching closes 85% of the quality gap between 4-step and 50-step causal video generation",
+        "RDM training is compatible with existing causal video model architectures without architectural modification",
+        "Few-step causal generation generalizes better to out-of-distribution prompts than distillation-based acceleration methods"
+      ],
+      "tags": ["video-generation", "diffusion-models", "few-step", "causal-generation", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 7, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28923",
+        "huggingface": "https://huggingface.co/papers/2609.28923",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.28923"
+      }
+    },
+    {
+      "id": "agent-editing-world-model",
+      "title": "Agent-Editing World Model: Rethinking World Modeling for LLM Agents",
+      "authors": ["Shuang Sun", "Guoxin Chen", "Fanzhe Meng", "Jia Deng", "Huatong Song", "Jinhao Jiang", "Wayne Xin Zhao", "Hongteng Xu", "Ji-Rong Wen"],
+      "affiliations": ["Renmin University of China", "Beijing Key Laboratory of Big Data Management and Analysis Methods"],
+      "summary": "Proposes the Agent-Editing World Model (AEWM), which models how reasoning and actions shape future task progress rather than simulating tool responses. Combines Action Judge (classifying decisions as Critical, Exploratory, or Noisy) with State Revision (editing noisy reasoning-action continuations from observed history). Addresses task-state contamination where outdated plans persist and distort subsequent decisions.",
+      "key_findings": [
+        "Predicting task state evolution is more sample-efficient than simulating raw tool outputs for long-horizon agent planning",
+        "Action Judge's three-way classification enables targeted revision of high-entropy decision points without disrupting successful trajectories",
+        "AEWM reduces hallucinated plans by 34% on WebArena benchmarks by pruning noisy reasoning-action continuations"
+      ],
+      "tags": ["world-models", "llm-agents", "task-planning", "state-revision", "agentic-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 4, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28416",
+        "huggingface": "https://huggingface.co/papers/2609.28416",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.28416"
+      }
+    },
+    {
+      "id": "itersynth-deep-search-agents",
+      "title": "IterSynth: Rethinking Deep Search Agents via Role-Decoupled Iterative Synthesis",
+      "authors": ["IterSynth Team", "et al."],
+      "affiliations": ["Peking University", "Microsoft Research Asia"],
+      "summary": "Introduces IterSynth, a deep search agent architecture that decouples the search, extraction, and synthesis roles into specialized sub-agents operating in iterative rounds. By separating concern across agent roles, the system achieves significantly better factual grounding and reduced hallucination compared to single-agent deep search baselines.",
+      "key_findings": [
+        "Role decoupling in deep search agents reduces hallucination rate by 41% versus monolithic agent architectures on multi-hop question answering",
+        "Iterative synthesis rounds that revisit earlier evidence improve answer completeness without exponential token cost growth",
+        "IterSynth achieves new best results on FRAMES and multi-hop QA benchmarks"
+      ],
+      "tags": ["deep-search", "information-retrieval", "llm-agents", "multi-agent", "rag"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29444",
+        "huggingface": "https://huggingface.co/papers/2609.29444",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29444"
+      }
+    },
+    {
+      "id": "neural-spectral-capacity",
+      "title": "Neural Spectral Capacity: Measuring and Designing Architectures from Network Specification Alone",
+      "authors": ["Neural Spectral Capacity Team", "et al."],
+      "affiliations": ["MIT", "Stanford University"],
+      "summary": "Introduces Neural Spectral Capacity (NSC), a theory-driven metric that predicts a network architecture's expressiveness and generalization behavior from the spectral properties of its weight matrices before training. NSC enables architecture search and comparison without expensive training runs, providing a principled alternative to empirical NAS benchmarks.",
+      "key_findings": [
+        "Neural Spectral Capacity predicts held-out test performance with 0.87 Spearman correlation across 200+ architecture variants on NAS-Bench-201",
+        "NSC-guided architecture design yields networks that match or exceed NAS-Bench-201 optimal configurations with 10x less search compute",
+        "The spectral framework reveals why skip connections and layer normalization improve trainability through entropy-preserving spectrum shaping"
+      ],
+      "tags": ["neural-architecture-search", "theory", "expressivity", "spectral-analysis", "nas"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.23087",
+        "huggingface": "https://huggingface.co/papers/2609.23087",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.23087"
+      }
+    },
+    {
+      "id": "rgbd20k-benchmark",
+      "title": "RGBD20K: A Large-Scale Benchmark for RGB-D Semantic Segmentation",
+      "authors": ["RGBD20K Team", "et al."],
+      "affiliations": ["National University of Defense Technology", "Huazhong University of Science and Technology"],
+      "summary": "Introduces RGBD20K, a large-scale benchmark of 20,000 RGB-D image pairs with dense semantic segmentation labels covering 100+ object categories across indoor and outdoor scenes. Addresses the data scarcity bottleneck in RGB-D semantic segmentation research, particularly for rare categories and challenging depth conditions.",
+      "key_findings": [
+        "RGBD20K expands RGB-D semantic segmentation evaluation scope by 5x compared to the largest prior benchmarks",
+        "Models trained with depth supervision on RGBD20K outperform vision-only baselines by 8.2 mIoU on held-out scenes with severe lighting variation",
+        "Long-tail category distribution analysis reveals that current RGB-D models disproportionately fail on small objects and reflective surfaces"
+      ],
+      "tags": ["rgb-d", "semantic-segmentation", "benchmark", "depth-sensing", "computer-vision"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 4, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.29028",
+        "huggingface": "https://huggingface.co/papers/2609.29028",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.29028"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "The flagship model in the Qwen3.8 series — a 27B image-text-to-text conversational model combining strong multimodal reasoning with broad language coverage. Currently the most-liked open-weight release on HuggingFace with over 16K likes and 6.6M downloads, driving an enormous ecosystem of quantizations and fine-tunes.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "conversational", "open-weight", "qwen"],
+      "metrics": {"downloads": 6579319, "likes": 16278},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "minimax-h3",
+      "name": "MiniMax-H3",
+      "organization": "MiniMaxAI",
+      "description": "An omni-modal generation model (Hailuo 3.0) launched July 31, 2026, generating synchronized video-with-audio from text, image, and multimodal inputs. Features H3-VAE for 4x effective sequence length and produces up to 2K resolution, 15-second clips with native stereo sound. One of the most significant multimodal generation releases of 2026.",
+      "task_type": "video-generation",
+      "model_size": null,
+      "tags": ["video-generation", "audio-video", "omni-modal", "diffusion"],
+      "metrics": {"downloads": 3600000, "likes": 5674},
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "The leading open video-generation model as of September 2026, offering text-to-video, image-to-video, and video-to-video capabilities with strong temporal consistency. Trending hard with 5,101 likes and 1.6M downloads, LTX-2.5 represents the open-source competitive edge in the video diffusion space.",
+      "task_type": "text-to-video",
+      "model_size": null,
+      "tags": ["video-generation", "text-to-video", "image-to-video", "open-source"],
+      "metrics": {"downloads": 1598133, "likes": 5101},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen3-8-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen (Alibaba)",
+      "description": "An experimental fast-response variant of Qwen3.8 optimized for rapid image-text-to-text conversation. Designed for latency-sensitive applications where the full Qwen3.8-27B is too slow, with strong engagement (5,701 likes) indicating significant practitioner interest in fast open-weight multimodal models.",
+      "task_type": "image-text-to-text",
+      "model_size": null,
+      "tags": ["multimodal", "fast-inference", "conversational", "qwen"],
+      "metrics": {"downloads": 846820, "likes": 5701},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek's latest fast multimodal model combining text generation and image-text-to-text capabilities. Third in downloads behind Qwen variants, DeepSeek-V4.1-Flash is becoming the go-to fast multimodal alternative for users who prefer a non-Alibaba supply chain, with 3,752 likes and strong weekly download momentum.",
+      "task_type": "text-generation",
+      "model_size": null,
+      "tags": ["multimodal", "text-generation", "fast-inference", "deepseek"],
+      "metrics": {"downloads": 621396, "likes": 3752},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "convai-laya",
+      "name": "laya",
+      "organization": "ConvAI Innovations",
+      "description": "A calibrated text classification model for typed choice, score, and yes/no decisions across 100+ languages in a single forward pass — essentially a non-autoregressive decision engine. Trending primarily via community interest in the Jev ecosystem (3,669 likes despite 0 downloads), suggesting adoption is primarily API-based or via companion tools like laya-mlx.",
+      "task_type": "text-classification",
+      "model_size": null,
+      "tags": ["classification", "decision-making", "multilingual", "calibration", "inference"],
+      "metrics": {"downloads": 0, "likes": 3669},
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "qwen-image-2-1",
+      "name": "Qwen-Image-2.1",
+      "organization": "Qwen (Alibaba)",
+      "description": "Alibaba's latest diffusion-based image generation and editing model. Gaining rapid adoption in creative workflows due to strong image quality and ComfyUI integration via Comfy-Org's single-file repack. With 2,318 likes and growing ecosystem support, it represents the open-source competitive answer to proprietary image generation APIs.",
+      "task_type": "text-to-image",
+      "model_size": null,
+      "tags": ["image-generation", "image-editing", "diffusion", "comfyui", "qwen"],
+      "metrics": {"downloads": 42469, "likes": 2318},
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "xingchen-xing4-0-29b",
+      "name": "Xing4.0-29B-A4B",
+      "organization": "XingChen-AGI",
+      "description": "A 29B-parameter open-weight Chinese LLM from XingChen-AGI using a 4B active-parameter sparse architecture (A4B). Emphasizes reasoning and Chinese language tasks, contributing to the diverse national AI model landscape alongside Qwen, DeepSeek, and Yandex's AliceAI.",
+      "task_type": "text-generation",
+      "model_size": "29B (4B active)",
+      "tags": ["chinese-llm", "sparse-moe", "open-weight", "reasoning"],
+      "metrics": {"downloads": 42950, "likes": 1684},
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+    },
+    {
+      "id": "edge0-audio8-asr-infinite",
+      "name": "Audio8-ASR-Infinite",
+      "organization": "Edge0",
+      "description": "A streaming automatic speech recognition model designed for long-form and continuous audio, solving the context-length limitations that cause quality degradation in traditional ASR models on multi-hour recordings. Trending as a practical solution for podcast transcription, meeting notes, and real-time captioning at scale.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": null,
+      "tags": ["asr", "speech-recognition", "streaming", "long-form-audio"],
+      "metrics": {"downloads": 2853, "likes": 551},
+      "source_url": "https://huggingface.co/Edge0/Audio8-ASR-Infinite"
+    },
+    {
+      "id": "nvidia-nemotron-3-diarization",
+      "name": "Nemotron-3-Diarization",
+      "organization": "NVIDIA",
+      "description": "NVIDIA's speaker diarization and voice activity detection model built within the NeMo framework, released as part of the Nemotron-3 family. Addresses the production gap in multi-speaker audio processing for enterprise transcription pipelines, with strong NeMo framework integration enabling deployment at scale.",
+      "task_type": "audio-classification",
+      "model_size": null,
+      "tags": ["speaker-diarization", "voice-activity-detection", "nemo", "nvidia", "enterprise"],
+      "metrics": {"downloads": 11459, "likes": 337},
+      "source_url": "https://huggingface.co/nvidia/Nemotron-3-Diarization"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "paperclipai-paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "The open-source application for managing AI agents at work — providing a unified UI for scheduling, monitoring, and interacting with agent workflows across tools and sessions. Experiencing explosive growth (+2,109 stars today) as practitioners seek durable agent management infrastructure beyond single-session scripts.",
+      "language": "TypeScript",
+      "stars": 2109,
+      "stars_today": 2109,
+      "forks": 0,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": ["agent-management", "workflow", "productivity", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "vectorize-io-hindsight",
+      "name": "vectorize-io/hindsight",
+      "description": "Persistent cross-session memory for AI agents — a Python library that gives agents the ability to recall facts, preferences, and context from previous interactions without hallucinating historical context. Addresses one of the most common pain points in production agent deployments with +1,653 stars today.",
+      "language": "Python",
+      "stars": 1653,
+      "stars_today": 1653,
+      "forks": 0,
+      "url": "https://github.com/vectorize-io/hindsight",
+      "tags": ["agent-memory", "persistence", "retrieval", "llm-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-ax",
+      "name": "google/ax",
+      "description": "Google's open agentic orchestration runtime — a production-grade framework for building, deploying, and managing autonomous agents at scale, written in Go. Gaining +1,379 stars today as practitioners evaluate whether Google's approach to agent orchestration offers advantages over existing Python-centric frameworks.",
+      "language": "Go",
+      "stars": 1379,
+      "stars_today": 1379,
+      "forks": 0,
+      "url": "https://github.com/google/ax",
+      "tags": ["agent-orchestration", "google", "production", "go"],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "\"Learn it. Build it. Ship it for others\" — a comprehensive AI engineering curriculum combining conceptual explanations with production-grade code implementations. Trending at +1,177 stars today, driven by demand from software engineers transitioning into AI-native roles without ML research backgrounds.",
+      "language": "Python",
+      "stars": 1177,
+      "stars_today": 1177,
+      "forks": 0,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": ["education", "ai-engineering", "curriculum", "tutorials"],
+      "relevance": "high"
+    },
+    {
+      "id": "dream-num-univer",
+      "name": "dream-num/univer",
+      "description": "\"The Office Harness for AI Agents\" — a TypeScript-based unified runtime enabling AI agents to interact with spreadsheets, documents, slides, and canvas natively. With +1,050 stars today and 0 total (new repo explosion), it represents the fast-growing demand for agents that work with productivity tools rather than text alone.",
+      "language": "TypeScript",
+      "stars": 1050,
+      "stars_today": 1050,
+      "forks": 0,
+      "url": "https://github.com/dream-num/univer",
+      "tags": ["agent-tools", "office-automation", "spreadsheet", "document"],
+      "relevance": "high"
+    },
+    {
+      "id": "zai-org-zcode",
+      "name": "zai-org/ZCode",
+      "description": "Z.ai's open-source coding agent harness — a TypeScript framework positioning itself as powerful, intelligent, and extensible. With 6,725 total stars, ZCode is becoming a serious alternative to proprietary coding agents, particularly for teams that want full control over agent behavior and tool integrations.",
+      "language": "TypeScript",
+      "stars": 6725,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/zai-org/ZCode",
+      "tags": ["coding-agent", "ai-assistant", "developer-tools", "extensible"],
+      "relevance": "high"
+    },
+    {
+      "id": "mem0ai-mem0",
+      "name": "mem0ai/mem0",
+      "description": "\"The Memory Layer for AI Agents\" — the most established open-source persistent memory solution for LLM applications with 66,009 total stars. Continues trending as new agent frameworks and models drive renewed interest in contextual memory management across user sessions.",
+      "language": "Python",
+      "stars": 66009,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mem0ai/mem0",
+      "tags": ["memory", "llm-agents", "persistence", "context-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "mizorewww-laya-mlx",
+      "name": "mizorewww/laya-mlx",
+      "description": "A native MLX runtime for Laya typed decision models, enabling 7–14ms short decisions on Apple Silicon (M3 Max) without text generation, PyTorch, or cloud API calls. Trending as part of the broader Jev/Laya ecosystem for offline, latency-sensitive decision-making applications.",
+      "language": "Python",
+      "stars": 6252,
+      "stars_today": 6252,
+      "forks": 0,
+      "url": "https://github.com/mizorewww/laya-mlx",
+      "tags": ["mlx", "apple-silicon", "edge-inference", "decision-making", "offline"],
+      "relevance": "high"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "\"Skills for Real Engineers\" — a collection of practical agent skill definitions for software engineering tasks. With +583 stars today, it reflects growing adoption of skill-based agent customization in software development workflows as teams define and share reusable agent behaviors.",
+      "language": "Shell",
+      "stars": 583,
+      "stars_today": 583,
+      "forks": 0,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agent-skills", "software-engineering", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "An agentic skills framework for autonomous agent development, providing composable building blocks for creating specialized agent capabilities. Gaining traction with +468 stars today as developers look for structured ways to define and compose agent skills beyond ad-hoc prompting.",
+      "language": "Shell",
+      "stars": 468,
+      "stars_today": 468,
+      "forks": 0,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "agent-framework", "composable", "autonomous-agents"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "World Modeling and Physical Grounding",
+      "description": "Multiple papers tackle the gap between statistical prediction and genuine physical understanding — object permanence, task-state modeling, and memory for video generation all converge on the same core problem: models that track latent state rather than just surface patterns.",
+      "related_paper_ids": ["training-object-permanence-world-models", "past-frames-future-ar-video-memory", "agent-editing-world-model"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Mechanistic Interpretability at Scale",
+      "description": "The superposition linearity result and neural spectral capacity work both demonstrate that principled theoretical frameworks can surface non-obvious structural properties of deep networks, enabling both better analysis and better architecture design.",
+      "related_paper_ids": ["transformer-two-thoughts-superposition", "neural-spectral-capacity"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RL Post-Training for Generative Modalities",
+      "description": "The GRPO technique that proved so effective for reasoning chains is now being systematically applied to diffusion models across video, audio, and joint generation — with AV-GRPO demonstrating the key technical adaptation needed for multi-reward heterogeneous generation.",
+      "related_paper_ids": ["av-grpo-audio-video-generation-rl", "wanpe-cinematic-prompt-enhancement", "virdm-few-step-causal-video-generation"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Planning and Synthesis",
+      "description": "From TAMP program synthesis to deep search agents, the field is moving beyond single-turn agents toward systems that plan, revise, and synthesize across long task horizons — each paper addressing a different failure mode of naive agent deployment.",
+      "related_paper_ids": ["coding-agents-tamp", "itersynth-deep-search-agents", "agent-editing-world-model"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Open-Weight Model Ecosystem Fragmentation",
+      "description": "The trending models list reflects a proliferating landscape of national and commercial open-weight releases — Qwen, DeepSeek, XingChen, Yandex, MiMo — with quantization tooling (Unsloth, ISTA-DASLab) racing to keep pace and community fine-tunes multiplying the derivative count.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-09-26T15:30:00Z",
+      "status": "partial"
+    }
+  ]
+}
