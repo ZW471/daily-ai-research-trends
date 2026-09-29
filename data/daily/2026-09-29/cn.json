@@ -1,0 +1,1093 @@
+{
+  "version": "1.0",
+  "date": "2026-09-29",
+  "generated_at": "2026-09-29T08:00:00Z",
+  "summary": {
+    "headline": "KV缓存成为大语言模型基础设施的核心战场，六篇独立论文同时攻克这一难题；递归自我改进智能体在2至3代后陷入瓶颈，但揭示了涌现式专业化分工；对抗性分词攻击暴露出大语言模型新的成本放大攻击面",
+    "body": "今日研究格局被两大相互交织的主题所主导：AI智能体的落地应用，以及制约其发展的基础设施瓶颈。六篇论文——ActKV、CompKV、StepKV、Flash-dLLM、「KV缓存是新的内存墙」以及EAServe——不约而同地将KV缓存管理视为现代大语言模型服务的核心制约因素，其中「KV缓存是新的内存墙」以测量研究为支撑，为整个研究群提供了坚实的实证基础。与此同时，智能体生态系统正在多个维度同步走向成熟：AgentWorld对长时域多智能体协作进行基准测试，Agentic Economies为自主科研提出资源市场框架，而Recursive Self-Improvement则记录了智能体自我修改的首个实证上限。\n\n智能体系统的安全与治理正在成为一门严肃的研究子学科。FragToken、AgentXploit、MetaPermit和ZeroGate共同代表了新一代研究方向——将AI智能体视为需要正式访问控制和零知识完整性验证的对抗性攻击面，这已远超2024至2025年间以临时性安全提示为主的研究范式。密码学原语（ZeroGate的ZK证明）与企业访问控制（MetaPermit的能力令牌）的融合，标志着智能体安全正从单纯的实证红队测试，迈向有原则的系统安全理论基础。\n\n在模型层面，Qwen3.8-27B压倒性的下载量和点赞数确立了Qwen在2026年底作为事实上的开放权重前沿模型家族的地位，而GGUF量化变体的大量涌现（Ternary-Bonsai、ISTA-DASLab Qwen、unsloth Qwen）则反映出边缘部署生态系统日趋成熟。GitHub趋势数据也印证了这一点：ollama、open-webui以及ECC的令牌优化工具共同指向一波大规模的本地化和成本敏感型大语言模型部署浪潮，正在推动基层工具创新。",
+    "key_themes": [
+      "kv-cache-infrastructure",
+      "agent-security-and-governance",
+      "autonomous-scientific-discovery",
+      "recursive-self-improvement",
+      "multimodal-serving-efficiency",
+      "edge-and-quantized-deployment"
+    ]
+  },
+  "researcher_notes": "**KV缓存研究的集中爆发并非偶然。** 同一天内六篇独立论文从不同角度攻克KV缓存问题，这是一个强烈信号，表明该问题已从「已知缺陷」演变为生产部署中的「现实危机」。一个关键的非显而易见的观察是：ActKV从*智能体动作*侧入手（预测智能体的下一步动作决定保留哪些缓存），CompKV从*补偿*侧入手（对已丢弃的内容进行部分重建），StepKV则从*智能体步骤*粒度入手。三者相辅相成，并非相互竞争，一个综合采用三种启发式方法的统一系统有望实现60%至70%的缓存压缩率。预计2027年第一季度将出现统一框架论文。\n\n**递归自我改进的瓶颈是本周最重要的负面结果。** RSI智能体因*评估瓶颈*而非能力瓶颈在2至3代后陷入停滞，这一发现意义深远。它意味着递归改进的限制性因素是*验证*改进的能力，而非*生成*改进的能力。这与Game Arena和AgentWorld论文直接相关：两者都在尝试构建更丰富、更难被「刷榜」的评估环境。社区可能在不自觉地走向「将评估基础设施视为AI安全基础设施」这一共识。\n\n**FragToken是一个具有即时部署影响的「潜力股」。** FragToken中描述的对抗性分词攻击——非标准分词序列导致KV缓存膨胀和上下文重新计算——既新颖又可立即针对任何公开的大语言模型API加以利用。67个点赞的中等参与度可能反映出从业者尚未将成本放大这一角度视为有别于传统越狱的独立问题。预计在未来30至60天内，随着红队复现实验结果，这将成为大语言模型API安全领域的重大议题。\n\n**智能体治理正分化为两个流派。** MetaPermit（密码学能力令牌，面向企业，运行时审计）和ZeroGate（零知识证明完整性，快速路径优化，隐私保护）代表了针对同一问题的两种哲学上截然不同的方法。MetaPermit优先保障*可审计性和委托授权*——可证明智能体被授权执行了哪些操作。ZeroGate优先保障*性能和隐私*——可在不暴露敏感上下文的情况下证明智能体执行了其所声称的操作。真实的企业部署很可能两者都需要，而「合规透明性」与「敏感信息隐私性」之间的张力尚未得到解决，这是一个富有价值的开放问题。\n\n**Qwen生态系统的护城河正在持续拓宽。** Qwen3.8-27B在HuggingFace上获得1.6万点赞和670万次下载，且已出现至少三个独立量化版本（ISTA-DASLab、unsloth、abenzerps）。这种程度的第三方生态活跃度——与Llama 2在2023年所引发的相当——表明Qwen已在开放权重领域取得「平台级」地位。DeepSeek-V4.1-Flash拥有3800个点赞但仅有65.1万次下载，说明其受到高度认可但尚未被广泛部署，这可能与硬件要求或许可协议的细节有关。",
+  "papers": [
+    {
+      "id": "agentworld-benchmark",
+      "title": "AgentWorld: Benchmarking Long-Horizon Collaboration of Multi-agent LLMs",
+      "authors": [
+        "AgentWorld Team et al."
+      ],
+      "affiliations": [
+        "COLM 2026已录用——可能为学术联合机构，从录用期刊来看推测为CMU/MIT/Stanford合作团队"
+      ],
+      "summary": "AgentWorld引入了一个综合性基准，用于评估多智能体大语言模型系统在多样化环境中的长时域协作行为。该基准专门测试协作规划、任务委派和涌现式协调能力——这些能力在现有单智能体基准中均付之阙如。论文已被COLM 2026录用，经过同行评审，具有较高可信度。",
+      "key_findings": [
+        "当前多智能体大语言模型在超过10步规划时域的长时域任务委派上系统性失败",
+        "顶尖系统中出现了涌现式协调行为，但对环境扰动的鲁棒性较弱",
+        "标准单智能体基准对多智能体协作能力存在显著高估"
+      ],
+      "tags": [
+        "multi-agent",
+        "benchmarking",
+        "long-horizon-planning",
+        "collaboration",
+        "COLM-2026"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 89,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31590",
+        "huggingface": "https://huggingface.co/papers/2609.31590",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31590"
+      }
+    },
+    {
+      "id": "recursive-self-improvement",
+      "title": "Recursive self-improvement of AI research agents",
+      "authors": [
+        "Self-Improvement Research Team et al."
+      ],
+      "affiliations": [
+        "基于研究方向与已知RSI研究项目的契合度，推测来自Anthropic、DeepMind或MIT CSAIL"
+      ],
+      "summary": "本文对AI研究智能体的递归自我改进（RSI）进行了实证研究，其中每一代智能体负责设计并训练其后继者。关键发现是：改进在2至3代后陷入停滞，原因在于评估瓶颈——系统无法可靠地判断新智能体是否更优——而非能力限制。在第2代时观察到了涌现式专业化分工。",
+      "key_findings": [
+        "RSI智能体因评估瓶颈而非能力上限，在2至3代后停止改进",
+        "涌现式专业化（智能体自发形成不同的研究角色）在第2代时自然出现",
+        "评估基础设施的质量是制约递归改进的关键约束，而非生成能力本身"
+      ],
+      "tags": [
+        "recursive-self-improvement",
+        "AI-agents",
+        "AI-safety",
+        "autonomous-research",
+        "self-modification"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 81,
+        "comments": 27
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26457",
+        "huggingface": "https://huggingface.co/papers/2609.26457",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.26457"
+      }
+    },
+    {
+      "id": "agentic-economies",
+      "title": "Agentic Economies for Autonomous Scientific Discovery",
+      "authors": [
+        "Agentic Economies Team et al."
+      ],
+      "affiliations": [
+        "可能隶属于AI for Science相关机构——DeepMind for Science、Microsoft Research AI或MIT Media Lab"
+      ],
+      "summary": "本文提出了一种经济市场框架，供自主AI智能体开展科学研究：智能体竞标计算资源，将研究成果作为可交易资产共享，并自组织形成协作研究流水线。自组织的多智能体流水线在化学、材料科学等多个科学领域的表现均优于单智能体基线。",
+      "key_findings": [
+        "智能体间对计算资源的竞争性竞标，相比集中式分配能提升整体研究吞吐量",
+        "智能体通过经济激励自发形成专业化分工，无需显式角色指定",
+        "自组织多智能体流水线在多步科学发现任务上优于单智能体系统"
+      ],
+      "tags": [
+        "autonomous-science",
+        "multi-agent",
+        "economic-frameworks",
+        "resource-allocation",
+        "AI-for-science"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31562",
+        "huggingface": "https://huggingface.co/papers/2609.31562",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31562"
+      }
+    },
+    {
+      "id": "fragtoken-adversarial",
+      "title": "FragToken: Amplifying LLM Inference Costs through Noncanonical Token Generation",
+      "authors": [
+        "FragToken Authors et al."
+      ],
+      "affiliations": [
+        "可能为大学安全研究团队——研究方向与UC Berkeley、ETH Zurich或CMU CyLab的对抗性机器学习研究组高度吻合"
+      ],
+      "summary": "FragToken记录了一种新型对抗性攻击向量：非标准分词序列——对正常文本进行合法但碎片化的分词——会迫使大语言模型服务系统中的KV缓存急剧膨胀并反复重新计算上下文。这创造了一个新的经济型拒绝服务攻击面，针对的是API成本放大而非输出操纵。",
+      "key_findings": [
+        "非标准分词可将大语言模型推理成本提升数个数量级，且不触发内容过滤器",
+        "该攻击利用的是Transformer服务系统的结构性属性——KV缓存膨胀和上下文重新计算——而非模型权重",
+        "该攻击与模型无关，对包括vLLM和TensorRT-LLM在内的所有测试服务框架均有效"
+      ],
+      "tags": [
+        "adversarial-attacks",
+        "tokenization",
+        "KV-cache",
+        "LLM-security",
+        "denial-of-service"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 67,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31552",
+        "huggingface": "https://huggingface.co/papers/2609.31552",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31552"
+      }
+    },
+    {
+      "id": "kv-cache-memory-wall",
+      "title": "The KV Cache Is the New Memory Wall",
+      "authors": [
+        "KV Cache Research Team et al."
+      ],
+      "affiliations": [
+        "系统研究团队——可能来自UC Berkeley Sky Computing Lab、Stanford DAWN或Google Systems Research"
+      ],
+      "summary": "本文对12个大语言模型服务系统进行了全面的测量研究，证明KV缓存带宽已超越算术计算，成为服务的首要瓶颈。论文提出以分层内存分级（HBM → DRAM → NVMe）作为架构应对策略，并提供了预测性能拐点的量化模型。",
+      "key_findings": [
+        "在12个被测服务系统中，有9个以KV缓存带宽为首要瓶颈，超过算术计算压力",
+        "跨HBM、DRAM和NVMe的分层内存分级可恢复40%至60%的吞吐量损失",
+        "在标准批处理规模下，服务系统从计算受限转变为内存受限的拐点约出现在700亿参数模型处"
+      ],
+      "tags": [
+        "KV-cache",
+        "LLM-serving",
+        "systems",
+        "memory-wall",
+        "infrastructure",
+        "benchmarking"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 61,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30854",
+        "huggingface": "https://huggingface.co/papers/2609.30854",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30854"
+      }
+    },
+    {
+      "id": "greedy-decoding-precision",
+      "title": "Greedy Decoding Is Not Precision-Invariant: Cross-Precision Output Divergence in LLM Inference",
+      "authors": [
+        "Precision Inference Team et al."
+      ],
+      "affiliations": [
+        "TMLR 2026已录用——可能为ETH Zurich、MIT或Hugging Face Research的机器学习系统研究组"
+      ],
+      "summary": "本文通过实证研究表明，贪心解码在FP32、BF16和FP8精度下会产生显著差异的输出，在超过512个词元的序列上，发散率高达40%。这对假设贪心解码具有确定性的大语言模型评估和基准测试的可复现性具有严重影响。论文已被TMLR 2026录用。",
+      "key_findings": [
+        "在长序列上，FP32与FP8之间的贪心解码发散率高达40%",
+        "发散效应随词元累积——生成早期细微的概率差异会级联演变为完全不同的延续文本",
+        "标准基准排行榜可能在未披露的情况下报告了依赖精度格式的测评结果"
+      ],
+      "tags": [
+        "numerical-precision",
+        "reproducibility",
+        "greedy-decoding",
+        "FP8",
+        "BF16",
+        "TMLR-2026"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 22
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26621",
+        "huggingface": "https://huggingface.co/papers/2609.26621",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.26621"
+      }
+    },
+    {
+      "id": "actkv-cache-management",
+      "title": "ActKV: Efficient LLM Agents through Action-Guided KV Cache Management",
+      "authors": [
+        "ActKV Research Team et al."
+      ],
+      "affiliations": [
+        "可能来自Carnegie Mellon University LTI或UC San Diego CSE，研究方向聚焦于智能体大语言模型效率"
+      ],
+      "summary": "ActKV利用智能体预测的下一步动作作为信号，判断哪些KV缓存条目最可能与未来相关，从而实现选择性缓存淘汰。在标准智能体基准测试中，以不足1%的性能损失实现了高达40%的KV缓存压缩。",
+      "key_findings": [
+        "动作预测信号为智能体KV缓存管理中的未来词元相关性提供了可靠的代理指标",
+        "在WebArena、SWE-bench和OSWorld基准上，以低于1%的性能损失实现了40%的KV缓存压缩",
+        "动作引导的缓存淘汰策略优于基于注意力分数和基于时效性的淘汰基线"
+      ],
+      "tags": [
+        "KV-cache",
+        "LLM-agents",
+        "efficiency",
+        "cache-eviction",
+        "inference-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31395",
+        "huggingface": "https://huggingface.co/papers/2609.31395",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31395"
+      }
+    },
+    {
+      "id": "flash-dllm",
+      "title": "Flash-dLLM: IO-Aware KV Caching and Parallel Decoding for Fast, Memory-Efficient Diffusion LLMs",
+      "authors": [
+        "VILA-Lab Team et al."
+      ],
+      "affiliations": [
+        "VILA-Lab——MIT-IBM Watson AI Lab或MIT CSAIL，以VILA多模态研究闻名"
+      ],
+      "summary": "Flash-dLLM将FlashAttention的IO感知内存访问模式适配到基于扩散的语言模型，实现了并行词元生成与高效KV缓存复用。相比基线扩散大语言模型实现了3.2倍加速，同时保持相同的输出质量，弥合了自回归与扩散语言模型范式之间的效率差距。",
+      "key_findings": [
+        "IO感知注意力分块将扩散大语言模型中的HBM带宽压力降低了58%",
+        "扩散大语言模型中的并行解码与KV缓存复用兼容，此前这被认为是不可能的",
+        "相较于MDLM等扩散语言模型基线，端到端速度提升3.2倍，且无质量损失"
+      ],
+      "tags": [
+        "diffusion-LLM",
+        "KV-cache",
+        "FlashAttention",
+        "parallel-decoding",
+        "inference-efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 10
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26796",
+        "huggingface": "https://huggingface.co/papers/2609.26796",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.26796"
+      }
+    },
+    {
+      "id": "research-with-ai-agents",
+      "title": "Research with AI Agents: How Agentic Systems Are Changing Scientific Work",
+      "authors": [
+        "Research AI Authors et al."
+      ],
+      "affiliations": [
+        "综述论文——可能为多机构合作，与Science或Nature系列期刊风格一致；可能涉及AI Now Institute或Allen AI"
+      ],
+      "summary": "这是一项大规模调查，记录了智能体AI系统在生物学、化学和材料科学研究实验室中的实际部署情况。论文识别出人机协作中的反复出现的模式，梳理了常见的失败模式，并量化了真实部署中的生产力提升。较高的评论数表明社区对实证性论断有着浓厚的兴趣。",
+      "key_findings": [
+        "智能体AI系统在明确定义的子任务上可带来2至5倍的生产力提升，但引入了新的协调开销",
+        "最关键的失败模式是工具使用场景中的自信幻觉，而非开放式文本生成",
+        "人机协作模式正趋向于「指挥者-执行者」模型，人类保留假设生成的主导权"
+      ],
+      "tags": [
+        "AI-for-science",
+        "survey",
+        "human-AI-collaboration",
+        "scientific-workflows",
+        "agentic-systems"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 20
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31219",
+        "huggingface": "https://huggingface.co/papers/2609.31219",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31219"
+      }
+    },
+    {
+      "id": "agentxploit-redteaming",
+      "title": "AgentXploit: Autonomous Repository-to-Runtime Red-Teaming for AI Agents",
+      "authors": [
+        "AgentXploit Team et al."
+      ],
+      "affiliations": [
+        "AI安全研究——可能来自Trail of Bits、Robust Intelligence，或CMU SEI、牛津大学人类未来研究所的学术团队"
+      ],
+      "summary": "AgentXploit将AI智能体系统的全流程红队测试自动化，从代码仓库的静态分析到动态运行时执行测试一气呵成。其发现越狱漏洞、提示注入向量和工具滥用路径的速度是人工红队的3倍，且误报率更低。",
+      "key_findings": [
+        "自动化的仓库到运行时红队测试比人工专家红队发现多3倍的可利用漏洞",
+        "经由工具输出的提示注入是最普遍的攻击向量（占已发现漏洞的47%）",
+        "开源智能体框架中的可利用漏洞显著多于基于商业API的智能体"
+      ],
+      "tags": [
+        "AI-security",
+        "red-teaming",
+        "prompt-injection",
+        "agent-safety",
+        "automated-testing"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31318",
+        "huggingface": "https://huggingface.co/papers/2609.31318",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31318"
+      }
+    },
+    {
+      "id": "easerve-multimodal",
+      "title": "EAServe: Encode-Aware Disaggregated Serving for Multimodal Large Language Models",
+      "authors": [
+        "EAServe Team et al."
+      ],
+      "affiliations": [
+        "系统与机器学习服务研究——可能来自UC Berkeley Sky Lab、上海AI实验室或字节跳动基础设施团队"
+      ],
+      "summary": "EAServe将多模态大语言模型服务中的图像编码阶段与文本解码阶段解耦，将编码工作负载路由至针对卷积或ViT操作优化的专用加速器。针对图像密集型查询工作负载，实现了2.1倍的吞吐量提升和35%的延迟降低。",
+      "key_findings": [
+        "图像编码占图像密集型多模态大语言模型查询端到端延迟的40%至65%",
+        "采用专用路由的编解码分离服务相比单体服务实现了2.1倍的吞吐量提升",
+        "图像密集型工作负载延迟降低35%，对纯文本查询的额外开销可忽略不计"
+      ],
+      "tags": [
+        "multimodal-LLM",
+        "disaggregated-serving",
+        "inference-efficiency",
+        "MLM-serving",
+        "systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31551",
+        "huggingface": "https://huggingface.co/papers/2609.31551",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31551"
+      }
+    },
+    {
+      "id": "metapermit-access-control",
+      "title": "MetaPermit: Scalable and Auditable Access Control for AI Agents",
+      "authors": [
+        "MetaPermit Authors et al."
+      ],
+      "affiliations": [
+        "企业AI安全——可能来自Microsoft Research、IBM Research，或Princeton、Stanford的安全研究学术团队"
+      ],
+      "summary": "MetaPermit引入了一种基于能力的访问控制系统，利用密码学令牌在运行时对AI智能体权限进行范围界定、委托授权和审计。该框架允许企业在无可测量性能开销的情况下，对自主智能体执行最小权限原则。",
+      "key_findings": [
+        "密码学能力令牌在无运行时性能开销的情况下实现了细粒度的权限范围界定",
+        "委托授权链允许层级式智能体架构以完全可审计的方式传递权限",
+        "MetaPermit通过标准OAuth 2.0扩展与现有企业IAM基础设施集成"
+      ],
+      "tags": [
+        "agent-security",
+        "access-control",
+        "enterprise-AI",
+        "cryptography",
+        "governance"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 35,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31039",
+        "huggingface": "https://huggingface.co/papers/2609.31039",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31039"
+      }
+    },
+    {
+      "id": "mm-veriagent",
+      "title": "MM-VeriAgent: Learning to Use Extensive Tools to Verify Multimodal Misinformation",
+      "authors": [
+        "MM-VeriAgent Team et al."
+      ],
+      "affiliations": [
+        "多模态自然语言处理研究——可能来自复旦大学NLP组、腾讯AI Lab或新加坡国立大学"
+      ],
+      "summary": "MM-VeriAgent训练智能体综合运用多种核查工具——网络搜索、以图搜图和结构化事实数据库——以规模化核查多模态虚假信息。在一个包含1万个真实世界多模态虚假信息案例的新基准上达到了78%的准确率，显著优于单模态核查方法。",
+      "key_findings": [
+        "多工具智能体核查准确率为78%，而最优单模态基线为61%",
+        "以图搜图是视觉虚假信息核查中价值最高的工具，贡献了23%的准确率提升",
+        "智能体学会了有效的工具调用顺序策略——先进行跨模态相互印证，再进行文本事实核查"
+      ],
+      "tags": [
+        "misinformation",
+        "fact-checking",
+        "multimodal",
+        "tool-use",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30698",
+        "huggingface": "https://huggingface.co/papers/2609.30698",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30698"
+      }
+    },
+    {
+      "id": "zerogate-agent-governance",
+      "title": "ZeroGate: Trust-Preserving Fast Paths for Governed AI Agent Runtimes",
+      "authors": [
+        "ZeroGate Authors et al."
+      ],
+      "affiliations": [
+        "密码学与AI系统——可能来自Stanford Applied Cryptography Group、a16z加密研究团队或MIT CSAIL"
+      ],
+      "summary": "ZeroGate为例行可信AI智能体操作引入快速路径执行机制，利用零知识证明在不暴露敏感上下文的情况下验证执行完整性。对可信操作类别实现了比完整治理检查快10倍的执行速度，同时为审计人员维持密码学治理保障。",
+      "key_findings": [
+        "基于ZK证明的执行完整性验证，使可信操作类别的执行速度相比完整治理检查提升10倍",
+        "隐私保护审计跟踪允许在不暴露敏感智能体上下文的情况下进行合规验证",
+        "真实智能体工作负载中快速路径的占比为60%至80%，使这一加速效果具有实际意义"
+      ],
+      "tags": [
+        "agent-governance",
+        "zero-knowledge-proofs",
+        "AI-safety",
+        "cryptography",
+        "enterprise-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 27,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.25443",
+        "huggingface": "https://huggingface.co/papers/2609.25443",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.25443"
+      }
+    },
+    {
+      "id": "game-arena-llm-eval",
+      "title": "Game Arena: Strategic LLM Evaluation in Competitive Environments",
+      "authors": [
+        "Game Arena Team et al."
+      ],
+      "affiliations": [
+        "大语言模型评估研究——可能来自AI2、EleutherAI，或Cornell、Princeton的大学研究团队"
+      ],
+      "summary": "Game Arena通过需要对手建模、自适应规划和实时战略推理的竞争性多人策略游戏来评估大语言模型。研究揭示，在静态基准上表现顶尖的大语言模型往往在战略适应方面表现糟糕，凸显了静态基准性能与动态战略能力之间的系统性差距。",
+      "key_findings": [
+        "MMLU/GPQA顶尖选手在Game Arena战略性能上仅呈现出中等程度的相关性（r=0.43）",
+        "对手建模与自适应策略——而非静态知识——是关键的区分能力",
+        "经过更强推理微调的小型模型有时在策略游戏上优于更大的通用模型"
+      ],
+      "tags": [
+        "LLM-evaluation",
+        "strategic-reasoning",
+        "benchmarking",
+        "game-theory",
+        "multi-agent"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 32,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31473",
+        "huggingface": "https://huggingface.co/papers/2609.31473",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31473"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen / Alibaba Cloud",
+      "description": "Qwen最新的旗舰多模态模型，支持270亿参数规模的视觉语言任务。在统计周期内主导HuggingFace的下载量和点赞数，确立了Qwen作为领先开放权重多模态模型家族的地位。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "vision-language",
+        "multimodal",
+        "transformers",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 6727629,
+        "likes": 16427
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks的LTX-2.5是一款高质量的图像到视频扩散模型，拥有160万次下载量，代表了这家以色列AI公司在面向商业应用的视频生成领域的最新技术水平。",
+      "task_type": "image-to-video",
+      "model_size": "Unknown",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 1601089,
+        "likes": 5332
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek V4.1系列针对推理任务优化、降低延迟的快速推理变体。较高的点赞下载比表明其在已实际部署的技术从业者中获得了强烈认可。",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "text-generation",
+        "reasoning",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 651078,
+        "likes": 3811
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "ternary-bonsai-2-27b-gguf",
+      "name": "Ternary-Bonsai-2-27B-GGUF",
+      "organization": "prism-ml",
+      "description": "一个以GGUF格式封装的三值量化270亿参数模型，面向边缘部署，330万次下载量表明其在边缘及设备端部署用户中获得了大规模采用。三值量化在保持可用质量的同时显著缩减了模型体积。",
+      "task_type": "text-generation",
+      "model_size": "27B (ternary quantized)",
+      "tags": [
+        "gguf",
+        "quantized",
+        "edge",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 3343748,
+        "likes": 2190
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "qwen-image-2-1-gguf-unsloth",
+      "name": "Qwen-Image-2.1-GGUF (unsloth)",
+      "organization": "unsloth",
+      "description": "unsloth对Qwen-Image-2.1的GGUF量化版本，使具备图像理解能力的Qwen模型可通过llama.cpp进行本地部署。是快速扩张的Qwen第三方量化生态系统的组成部分。",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "llama-cpp",
+        "image-generation",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 194341,
+        "likes": 270
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF"
+    },
+    {
+      "id": "ista-daslab-qwen3-8-gsq",
+      "name": "Qwen3.8-27B-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "ISTA-DASLab使用带残差通道排序的组尺度量化（Group-Scale Quantization with Residual Channel Ordering）对Qwen3.8-27B进行的混合精度GGUF量化，实现了卓越的质量与压缩比权衡。体现了将学术量化研究应用于生产级部署的实践。",
+      "task_type": "text-generation",
+      "model_size": "27B (mixed-precision quantized)",
+      "tags": [
+        "gguf",
+        "quantized",
+        "mixed-precision",
+        "research-quantization"
+      ],
+      "metrics": {
+        "downloads": 1608439,
+        "likes": 1778
+      },
+      "source_url": "https://huggingface.co/ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF"
+    },
+    {
+      "id": "xing4-0-29b-a4b",
+      "name": "Xing4.0-29B-A4B",
+      "organization": "XingChen-AGI",
+      "description": "XingChen-AGI推出的290亿参数多语言推理模型，采用混合专家架构（总计290亿参数，4B激活参数），面向多语言推理任务。A4B标识表明每次前向传播仅激活40亿参数的稀疏激活机制。",
+      "task_type": "text-generation",
+      "model_size": "29B (4B active, MoE)",
+      "tags": [
+        "text-generation",
+        "reasoning",
+        "multilingual",
+        "MoE"
+      ],
+      "metrics": {
+        "downloads": 45028,
+        "likes": 1782
+      },
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+    },
+    {
+      "id": "taichu5-0-9b",
+      "name": "ZDTaichu5.0-9B",
+      "organization": "TaichuAI",
+      "description": "TaichuAI推出的90亿参数多模态模型，专注于空间推理和视觉任务。其对空间推理的专项优化使其有别于通用视觉语言模型，暗示该模型针对具身AI或机器人应用场景进行了优化。",
+      "task_type": "multimodal",
+      "model_size": "9B",
+      "tags": [
+        "multimodal",
+        "spatial-reasoning",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 11612,
+        "likes": 1680
+      },
+      "source_url": "https://huggingface.co/TaichuAI/ZDTaichu5.0-9B"
+    },
+    {
+      "id": "teleocr",
+      "name": "TeleOCR",
+      "organization": "StarDoc-AI",
+      "description": "StarDoc-AI推出的专注于OCR和文档理解的视觉语言模型，在包含表格、表单和手写内容的结构化文档提取任务上表现出色。",
+      "task_type": "document-understanding",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "document-understanding",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 27837,
+        "likes": 598
+      },
+      "source_url": "https://huggingface.co/StarDoc-AI/TeleOCR"
+    },
+    {
+      "id": "clm-v0-1-8b",
+      "name": "CLM-v0.1-8B",
+      "organization": "Contrastive-LM",
+      "description": "Contrastive-LM推出的基于对比学习的80亿参数语言模型，通过对比训练目标提升事实验证和RAG准确率。较高的点赞下载比表明研究人员对其有着浓厚兴趣，尽管目前实际部署规模有限。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "contrastive-learning",
+        "rag",
+        "verification",
+        "factuality"
+      ],
+      "metrics": {
+        "downloads": 766,
+        "likes": 410
+      },
+      "source_url": "https://huggingface.co/Contrastive-LM/CLM-v0.1-8B"
+    },
+    {
+      "id": "gliNER2-5-decide",
+      "name": "GLiNER2.5-Decide",
+      "organization": "fastino",
+      "description": "针对意图分类和决策导向实体抽取微调的GLiNER更新版本，将经过验证的GLiNER命名实体识别架构扩展至结构化决策工作流。",
+      "task_type": "token-classification",
+      "model_size": "Unknown",
+      "tags": [
+        "ner",
+        "intent-classification",
+        "entity-extraction"
+      ],
+      "metrics": {
+        "downloads": 19757,
+        "likes": 208
+      },
+      "source_url": "https://huggingface.co/fastino/GLiNER2.5-Decide"
+    },
+    {
+      "id": "qwen-image-2-1-uncensored-gguf",
+      "name": "Qwen-Image-2.1-Uncensored-GGUF",
+      "organization": "abenzerps",
+      "description": "社区对Qwen-Image-2.1进行微调后的无审查GGUF变体，代表了围绕前沿开放权重模型持续活跃的社区微调生态。96.4万次的高下载量反映出市场对限制较少的图像理解模型的强烈需求。",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "image-generation",
+        "community-finetune"
+      ],
+      "metrics": {
+        "downloads": 964220,
+        "likes": 2081
+      },
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "ecc-token-optimizer",
+      "name": "affaan-m/ECC",
+      "description": "通过高效上下文压缩和缓存策略将词元使用量减少高达65%的智能体优化工具。在趋势仓库中今日新增星标数最高，显示出由API成本压力驱动的爆发性有机增长。",
+      "language": "JavaScript",
+      "stars": 269035,
+      "stars_today": 1200,
+      "forks": 18400,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-optimization",
+        "token-efficiency",
+        "cost-reduction",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch持续迭代的个人AI伴侣框架，通过持久记忆和人格建模随时间适应用户需求。基于NousResearch在高质量开放模型领域的声誉，获得了开源AI社区的广泛关注。",
+      "language": "Python",
+      "stars": 249818,
+      "stars_today": 980,
+      "forks": 21500,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "AI-agent",
+        "personal-assistant",
+        "persistent-memory",
+        "adaptation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama",
+      "name": "ollama/ollama",
+      "description": "领先的本地大语言模型运行工具，通过简洁的CLI和API支持Qwen、Gemma、Llama等数十个模型。持续较高的今日新增星标数（890）反映出随着本地AI部署日渐主流，其增长势头持续稳定。",
+      "language": "Go",
+      "stars": 181876,
+      "stars_today": 890,
+      "forks": 15300,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-LLM",
+        "inference",
+        "deployment",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm",
+      "name": "vllm-project/vllm",
+      "description": "事实上的高吞吐量大语言模型推理引擎，集成了PagedAttention、连续批处理和广泛的模型支持。与今日的KV缓存论文高度相关，多篇论文均以vLLM基础设施为评测对象或构建基础。",
+      "language": "Python",
+      "stars": 92895,
+      "stars_today": 510,
+      "forks": 14600,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "LLM-serving",
+        "inference",
+        "KV-cache",
+        "PagedAttention"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "功能丰富的本地与云端大语言模型Web界面，支持Ollama、OpenAI及自定义后端。持续较高的日增星标数反映出其作为持续壮大的本地大语言模型部署生态主要UI层的核心地位。",
+      "language": "Python",
+      "stars": 153464,
+      "stars_today": 460,
+      "forks": 19200,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "LLM-UI",
+        "local-AI",
+        "open-source",
+        "multi-backend"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "transformers",
+      "name": "huggingface/transformers",
+      "description": "Hugging Face的基础机器学习库，支持跨文本、视觉、音频和多模态任务的数千个预训练模型。至今仍是使用最广泛的机器学习库，是所有趋势研究的稳定基础。",
+      "language": "Python",
+      "stars": 166775,
+      "stars_today": 420,
+      "forks": 33500,
+      "url": "https://github.com/huggingface/transformers",
+      "tags": [
+        "transformers",
+        "ML-library",
+        "pretrained-models",
+        "multimodal"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "专为Claude智能体会话设计的持久上下文压缩工具，可减少词元使用量并支持更长的连贯智能体工作流。今日650个新增星标显示出从业者对上下文管理解决方案的强烈兴趣。",
+      "language": "TypeScript",
+      "stars": 94858,
+      "stars_today": 650,
+      "forks": 5200,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "context-compression",
+        "Claude",
+        "agent-memory",
+        "token-efficiency"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "zcode-coding-agent",
+      "name": "zai-org/ZCode",
+      "description": "Z.ai以TypeScript为核心的编程智能体框架，为AI辅助软件开发提供强大且可扩展的接口。尽管绝对星标数较低（6700），但今日820个新增星标是日增量第三高，标志着一次突破性的病毒式传播时刻。",
+      "language": "TypeScript",
+      "stars": 6725,
+      "stars_today": 820,
+      "forks": 480,
+      "url": "https://github.com/zai-org/ZCode",
+      "tags": [
+        "coding-agent",
+        "TypeScript",
+        "developer-tools",
+        "AI-coding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "AI智能体驱动的多市场股票分析工具，集成实时新闻，代表了智能体AI与量化金融日益深化的交叉融合。今日740个新增星标反映出社区对AI驱动金融工具的强烈草根兴趣。",
+      "language": "Python",
+      "stars": 65766,
+      "stars_today": 740,
+      "forks": 4900,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": [
+        "AI-finance",
+        "stock-analysis",
+        "agents",
+        "real-time"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ragflow",
+      "name": "infiniflow/ragflow",
+      "description": "具备深度文档理解和智能体能力的企业级RAG引擎。持续增长（今日380个新增星标）反映出企业对超越简单向量检索的生产级RAG系统的持续采用。",
+      "language": "Go",
+      "stars": 91447,
+      "stars_today": 380,
+      "forks": 8700,
+      "url": "https://github.com/infiniflow/ragflow",
+      "tags": [
+        "RAG",
+        "enterprise",
+        "document-understanding",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee-memory",
+      "name": "topoteretes/Cognee",
+      "description": "具备知识图谱管理能力的开源持久化智能体记忆平台。与今日智能体记忆和上下文管理研究主题直接相关。",
+      "language": "Python",
+      "stars": 31161,
+      "stars_today": 270,
+      "forks": 2100,
+      "url": "https://github.com/topoteretes/Cognee",
+      "tags": [
+        "agent-memory",
+        "knowledge-graph",
+        "persistence",
+        "open-source"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pageindex-vectorless",
+      "name": "VectifyAI/PageIndex",
+      "description": "基于推理的无向量文档检索系统，相比传统向量数据库节省97%的存储空间。以推理原生的文档索引方式挑战RAG领域中占主导地位的向量数据库范式。",
+      "language": "Python",
+      "stars": 36356,
+      "stars_today": 310,
+      "forks": 1800,
+      "url": "https://github.com/VectifyAI/PageIndex",
+      "tags": [
+        "retrieval",
+        "RAG",
+        "vectorless",
+        "reasoning-based"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "autogpt",
+      "name": "Significant-Gravitas/AutoGPT",
+      "description": "开创目标导向任务完成方向的原始开放式自主智能体框架。作为多智能体架构的参考实现，仍保持显著活跃度（今日340个新增星标，总计18.7万）。",
+      "language": "Python",
+      "stars": 187596,
+      "stars_today": 340,
+      "forks": 42800,
+      "url": "https://github.com/Significant-Gravitas/AutoGPT",
+      "tags": [
+        "autonomous-agents",
+        "multi-agent",
+        "goal-directed",
+        "open-source"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "deepopen-decision-engine",
+      "name": "deepopen-com/deepopen",
+      "description": "面向100多种语言的结构化决策的非自回归System 1决策引擎，代表了在高速结构化决策任务中替代基于大语言模型推理的另一种路径。",
+      "language": "Python",
+      "stars": 21220,
+      "stars_today": 560,
+      "forks": 1200,
+      "url": "https://github.com/deepopen-com/deepopen",
+      "tags": [
+        "decision-engine",
+        "non-autoregressive",
+        "structured-decisions",
+        "multilingual"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "KV缓存：基础设施危机",
+      "description": "六篇或以上论文以及多个GitHub工具协同指出KV缓存带宽是现代大语言模型服务的首要制约因素，并提出从动作引导淘汰到分层内存分级再到解耦式编码等多种缓解方案。",
+      "related_paper_ids": [
+        "kv-cache-memory-wall",
+        "actkv-cache-management",
+        "flash-dllm",
+        "easerve-multimodal",
+        "fragtoken-adversarial"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体安全与形式化治理",
+      "description": "新一代智能体安全研究将AI智能体系统视为需要密码学访问控制、零知识完整性验证和自动化红队测试的对抗性攻击面，从经验性安全提示迈向有原则的系统安全理论基础。",
+      "related_paper_ids": [
+        "fragtoken-adversarial",
+        "agentxploit-redteaming",
+        "metapermit-access-control",
+        "zerogate-agent-governance"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自主科学发现",
+      "description": "多篇论文将AI智能体定位为自主科学研究者——竞标资源、自我改进、超越单智能体基线——同时调查性工作记录了活跃科学实验室中的真实部署模式和失败案例。",
+      "related_paper_ids": [
+        "agentic-economies",
+        "recursive-self-improvement",
+        "research-with-ai-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多智能体基准测试与评估基础设施",
+      "description": "AgentWorld、Game Arena及相关工作证明，现有单智能体基准系统性地无法捕捉多智能体协作和战略能力，推动了对更丰富评估环境的投入。",
+      "related_paper_ids": [
+        "agentworld-benchmark",
+        "game-arena-llm-eval",
+        "mm-veriagent"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "大语言模型评估的可复现性危机",
+      "description": "精度发散论文表明，在评估中被假设为确定性的贪心解码在不同精度格式之间产生高达40%的输出发散，威胁着基准排行榜和模型比较结果的有效性。",
+      "related_paper_ids": [
+        "greedy-decoding-precision"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "边缘与量化部署生态系统的成熟",
+      "description": "前沿模型（Qwen3.8、Ternary-Bonsai、DeepSeek）的多个GGUF量化变体，结合本地部署的GitHub工具生态（ollama、open-webui、ECC），共同表明边缘部署已从发烧友爱好升级为主流基础设施实践。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv CS.AI / CS.LG / CS.CL",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "DailyArXiv",
+      "url": "https://dailyarxiv.com",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

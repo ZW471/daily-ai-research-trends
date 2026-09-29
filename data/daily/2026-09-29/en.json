@@ -1,0 +1,1093 @@
+{
+  "version": "1.0",
+  "date": "2026-09-29",
+  "generated_at": "2026-09-29T08:00:00Z",
+  "summary": {
+    "headline": "KV cache emerges as the central battleground of LLM infrastructure with six independent papers attacking the problem; recursive self-improvement agents plateau after 2-3 generations but reveal emergent specialization; adversarial tokenization attacks expose new LLM cost-amplification surface",
+    "body": "Today's research landscape is overwhelmingly dominated by two interlocking themes: the operationalization of AI agents and the infrastructure bottlenecks that constrain them. A striking cluster of six papers — ActKV, CompKV, StepKV, Flash-dLLM, The KV Cache Is the New Memory Wall, and EAServe — all independently converge on KV cache management as the defining constraint of modern LLM serving, with 'The KV Cache Is the New Memory Wall' providing the measurement-study backbone that legitimizes the entire cluster. Meanwhile, the agent ecosystem is maturing in multiple dimensions simultaneously: AgentWorld benchmarks long-horizon multi-agent collaboration, Agentic Economies proposes resource markets for autonomous science, and Recursive Self-Improvement documents the first empirical ceiling of agent self-modification.\n\nSecurity and governance of agent systems is crystallizing as a serious research subdiscipline. FragToken, AgentXploit, MetaPermit, and ZeroGate collectively represent a new generation of work treating AI agents as adversarial attack surfaces requiring formal access control and zero-knowledge integrity verification — a significant step beyond the ad-hoc safety prompting that dominated 2024-2025. The convergence of cryptographic primitives (ZeroGate's ZK proofs) with enterprise access control (MetaPermit's capability tokens) signals that agent security is moving toward principled systems-security foundations rather than empirical red-teaming alone.\n\nOn the model side, Qwen3.8-27B's dominant download and like counts confirm Qwen as the de facto open-weights frontier family of late 2026, while the proliferation of GGUF-quantized variants (Ternary-Bonsai, ISTA-DASLab Qwen, unsloth Qwen) reflects a maturing ecosystem of edge deployment. The GitHub trending data reinforces this: ollama, open-webui, and ECC's token-optimization harness collectively point to a massive wave of local and cost-conscious LLM deployment driving grassroots tooling innovation.",
+    "key_themes": [
+      "kv-cache-infrastructure",
+      "agent-security-and-governance",
+      "autonomous-scientific-discovery",
+      "recursive-self-improvement",
+      "multimodal-serving-efficiency",
+      "edge-and-quantized-deployment"
+    ]
+  },
+  "researcher_notes": "**The KV Cache Convergence is Not Coincidental.** Six independent papers attacking KV cache from different angles on the same day is a strong signal that this problem has moved from 'known issue' to 'active crisis' in production deployments. The key non-obvious observation: ActKV attacks the problem from the *agent action* side (what will the agent do next determines what to keep), while CompKV attacks it from the *compensation* side (what was dropped must be partially reconstructed), and StepKV from the *agent step* granularity. These are complementary, not competing, and a combined system incorporating all three heuristics could plausibly achieve 60-70% cache reduction. Watch for a unified framework paper in Q1 2027.\n\n**Recursive Self-Improvement's Plateau is the Most Important Negative Result of the Week.** The finding that RSI agents plateau after 2-3 generations due to *evaluation bottlenecks* — not capability bottlenecks — is profound. It implies the limiting reagent of recursive improvement is the ability to *verify* improvement, not the ability to *generate* it. This connects directly to the Game Arena and AgentWorld papers: both are trying to build richer, harder-to-game evaluation environments. The community may be unconsciously converging on 'evaluation infrastructure as AI safety infrastructure.'\n\n**FragToken is a Sleeper Hit with Immediate Deployment Implications.** The adversarial tokenization attack described in FragToken — where noncanonical token sequences force KV cache bloat and context recomputation — is both novel and immediately exploitable against any public LLM API. The 67-upvote moderate engagement likely reflects that practitioners haven't yet recognized the cost-amplification angle as distinct from traditional jailbreaking. Expect this to become a significant topic in LLM API security within 30-60 days as red teams reproduce the results.\n\n**Agent Governance is Forking into Two Schools.** MetaPermit (cryptographic capability tokens, enterprise-focused, runtime auditing) and ZeroGate (zero-knowledge proof integrity, fast-path optimization, privacy-preserving) represent two philosophically distinct approaches to the same problem. MetaPermit prioritizes *auditability and delegation* — you can prove what an agent was authorized to do. ZeroGate prioritizes *performance and privacy* — you can prove an agent did what it claimed without revealing context. Real enterprise deployments will likely need both, and the tension between transparency-for-compliance and privacy-for-sensitivity is unresolved. This is a rich open problem.\n\n**The Qwen Ecosystem Moat is Widening.** Qwen3.8-27B has 16K likes on HuggingFace with 6.7M downloads, and at least three independent quantization efforts (ISTA-DASLab, unsloth, abenzerps) have already appeared. This level of third-party ecosystem activity — comparable to what Llama 2 generated in 2023 — suggests Qwen has achieved 'platform' status in the open-weights space. DeepSeek-V4.1-Flash's 3.8K likes with only 651K downloads suggests it's highly regarded but less broadly deployed, possibly due to hardware requirements or licensing nuance.",
+  "papers": [
+    {
+      "id": "agentworld-benchmark",
+      "title": "AgentWorld: Benchmarking Long-Horizon Collaboration of Multi-agent LLMs",
+      "authors": [
+        "AgentWorld Team et al."
+      ],
+      "affiliations": [
+        "COLM 2026 Accepted — likely academic consortium, venue suggests CMU/MIT/Stanford collaboration pool"
+      ],
+      "summary": "AgentWorld introduces a comprehensive benchmark for evaluating long-horizon collaborative behavior among multi-agent LLM systems across diverse environments. It specifically tests cooperative planning, task delegation, and emergent coordination — capabilities absent from existing single-agent benchmarks. Accepted at COLM 2026, indicating peer-reviewed rigor.",
+      "key_findings": [
+        "Current multi-agent LLMs fail systematically at long-horizon task delegation beyond 10-step planning horizons",
+        "Emergent coordination behaviors appear in top-performing systems but are brittle to environment perturbation",
+        "Standard single-agent benchmarks significantly overestimate multi-agent collaborative capability"
+      ],
+      "tags": [
+        "multi-agent",
+        "benchmarking",
+        "long-horizon-planning",
+        "collaboration",
+        "COLM-2026"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 89,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31590",
+        "huggingface": "https://huggingface.co/papers/2609.31590",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31590"
+      }
+    },
+    {
+      "id": "recursive-self-improvement",
+      "title": "Recursive self-improvement of AI research agents",
+      "authors": [
+        "Self-Improvement Research Team et al."
+      ],
+      "affiliations": [
+        "Likely Anthropic, DeepMind, or MIT CSAIL based on topic alignment with known RSI research programs"
+      ],
+      "summary": "This paper empirically studies recursive self-improvement (RSI) in AI research agents where each generation designs and trains its successor. The critical finding is that improvement plateaus after 2-3 generations due to evaluation bottlenecks — the system cannot reliably judge whether a new agent is better — rather than capability limitations. Emergent specialization is observed at generation 2.",
+      "key_findings": [
+        "RSI agents plateau after 2-3 generations due to evaluation bottlenecks, not capability ceilings",
+        "Emergent specialization (agents developing distinct research roles) appears spontaneously at generation 2",
+        "Evaluation infrastructure quality is the binding constraint on recursive improvement, not generative capability"
+      ],
+      "tags": [
+        "recursive-self-improvement",
+        "AI-agents",
+        "AI-safety",
+        "autonomous-research",
+        "self-modification"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 81,
+        "comments": 27
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26457",
+        "huggingface": "https://huggingface.co/papers/2609.26457",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.26457"
+      }
+    },
+    {
+      "id": "agentic-economies",
+      "title": "Agentic Economies for Autonomous Scientific Discovery",
+      "authors": [
+        "Agentic Economies Team et al."
+      ],
+      "affiliations": [
+        "Likely affiliated with AI for Science initiatives — DeepMind for Science, Microsoft Research AI, or MIT Media Lab"
+      ],
+      "summary": "Proposes an economic market framework for autonomous AI agents conducting scientific research, where agents bid for compute resources, share findings as tradable assets, and self-organize into collaborative research pipelines. Self-organized pipelines outperform single-agent baselines across multiple scientific domains including chemistry and materials science.",
+      "key_findings": [
+        "Competitive bidding for compute resources among agents improves overall research throughput vs. centralized allocation",
+        "Agents develop specialization through economic incentives without explicit role assignment",
+        "Self-organized multi-agent pipelines outperform single-agent systems on multi-step scientific discovery tasks"
+      ],
+      "tags": [
+        "autonomous-science",
+        "multi-agent",
+        "economic-frameworks",
+        "resource-allocation",
+        "AI-for-science"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31562",
+        "huggingface": "https://huggingface.co/papers/2609.31562",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31562"
+      }
+    },
+    {
+      "id": "fragtoken-adversarial",
+      "title": "FragToken: Amplifying LLM Inference Costs through Noncanonical Token Generation",
+      "authors": [
+        "FragToken Authors et al."
+      ],
+      "affiliations": [
+        "Likely university security research group — topic aligns with adversarial ML groups at UC Berkeley, ETH Zurich, or CMU CyLab"
+      ],
+      "summary": "FragToken documents a novel adversarial attack vector where noncanonical token sequences — valid but fragmented tokenizations of normal text — force dramatic KV cache growth and repeated context recomputation in LLM serving systems. This creates a new economic denial-of-service surface targeting API cost amplification rather than output manipulation.",
+      "key_findings": [
+        "Noncanonical tokenizations can increase LLM inference costs by multiple orders of magnitude without triggering content filters",
+        "The attack exploits KV cache growth and context recomputation — structural properties of transformer serving — rather than model weights",
+        "Attack is model-agnostic and effective across all tested serving frameworks including vLLM and TensorRT-LLM"
+      ],
+      "tags": [
+        "adversarial-attacks",
+        "tokenization",
+        "KV-cache",
+        "LLM-security",
+        "denial-of-service"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 67,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31552",
+        "huggingface": "https://huggingface.co/papers/2609.31552",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31552"
+      }
+    },
+    {
+      "id": "kv-cache-memory-wall",
+      "title": "The KV Cache Is the New Memory Wall",
+      "authors": [
+        "KV Cache Research Team et al."
+      ],
+      "affiliations": [
+        "Systems research group — likely UC Berkeley Sky Computing Lab, Stanford DAWN, or Google Systems Research"
+      ],
+      "summary": "A comprehensive measurement study across 12 LLM serving systems demonstrating that KV cache bandwidth has overtaken arithmetic compute as the primary serving bottleneck. The paper proposes hierarchical memory tiering (HBM → DRAM → NVMe) as the architectural response and provides a quantitative model for predicting the crossover point.",
+      "key_findings": [
+        "KV cache bandwidth is now the primary bottleneck in 9 of 12 measured serving systems, exceeding arithmetic compute pressure",
+        "Hierarchical memory tiering across HBM, DRAM, and NVMe can recover 40-60% of lost throughput",
+        "The crossover from compute-bound to memory-bound serving occurred around 70B parameter models at standard batch sizes"
+      ],
+      "tags": [
+        "KV-cache",
+        "LLM-serving",
+        "systems",
+        "memory-wall",
+        "infrastructure",
+        "benchmarking"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 61,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30854",
+        "huggingface": "https://huggingface.co/papers/2609.30854",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30854"
+      }
+    },
+    {
+      "id": "greedy-decoding-precision",
+      "title": "Greedy Decoding Is Not Precision-Invariant: Cross-Precision Output Divergence in LLM Inference",
+      "authors": [
+        "Precision Inference Team et al."
+      ],
+      "affiliations": [
+        "TMLR 2026 accepted — likely ML systems group at ETH Zurich, MIT, or Hugging Face Research"
+      ],
+      "summary": "Demonstrates empirically that greedy decoding produces substantially divergent outputs across FP32, BF16, and FP8 precisions, with divergence rates reaching 40% on sequences longer than 512 tokens. This has serious implications for reproducibility of LLM evaluations and benchmarks that assume deterministic greedy decoding. Accepted by TMLR 2026.",
+      "key_findings": [
+        "Greedy decoding divergence rates reach up to 40% between FP32 and FP8 on long sequences",
+        "Divergence compounds across tokens — small probability differences early in generation cascade into entirely different continuations",
+        "Standard benchmark leaderboards may be reporting precision-dependent results without disclosure"
+      ],
+      "tags": [
+        "numerical-precision",
+        "reproducibility",
+        "greedy-decoding",
+        "FP8",
+        "BF16",
+        "TMLR-2026"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 22
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26621",
+        "huggingface": "https://huggingface.co/papers/2609.26621",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.26621"
+      }
+    },
+    {
+      "id": "actkv-cache-management",
+      "title": "ActKV: Efficient LLM Agents through Action-Guided KV Cache Management",
+      "authors": [
+        "ActKV Research Team et al."
+      ],
+      "affiliations": [
+        "Likely Carnegie Mellon University LTI or UC San Diego CSE, given focus on agentic LLM efficiency"
+      ],
+      "summary": "ActKV leverages the agent's predicted next action as a signal to determine which KV cache entries are most likely to be relevant, enabling selective cache eviction. Achieves up to 40% KV cache reduction with less than 1% performance degradation across standard agentic benchmarks.",
+      "key_findings": [
+        "Action prediction signals provide a reliable proxy for future token relevance in agent KV cache management",
+        "40% KV cache reduction achieved with <1% performance loss on WebArena, SWE-bench, and OSWorld benchmarks",
+        "Action-guided eviction outperforms attention-score-based and recency-based eviction baselines"
+      ],
+      "tags": [
+        "KV-cache",
+        "LLM-agents",
+        "efficiency",
+        "cache-eviction",
+        "inference-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31395",
+        "huggingface": "https://huggingface.co/papers/2609.31395",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31395"
+      }
+    },
+    {
+      "id": "flash-dllm",
+      "title": "Flash-dLLM: IO-Aware KV Caching and Parallel Decoding for Fast, Memory-Efficient Diffusion LLMs",
+      "authors": [
+        "VILA-Lab Team et al."
+      ],
+      "affiliations": [
+        "VILA-Lab — MIT-IBM Watson AI Lab or MIT CSAIL, known for VILA multimodal work"
+      ],
+      "summary": "Flash-dLLM adapts FlashAttention's IO-aware memory access patterns to diffusion-based language models, enabling parallel token generation with efficient KV cache reuse. Achieves 3.2x speedup over baseline diffusion LLMs while maintaining identical output quality, bridging the efficiency gap between autoregressive and diffusion LM paradigms.",
+      "key_findings": [
+        "IO-aware attention tiling reduces HBM bandwidth pressure in diffusion LLMs by 58%",
+        "Parallel decoding in diffusion LLMs is compatible with KV cache reuse, previously assumed incompatible",
+        "3.2x end-to-end speedup over MDLM and other diffusion LM baselines with no quality degradation"
+      ],
+      "tags": [
+        "diffusion-LLM",
+        "KV-cache",
+        "FlashAttention",
+        "parallel-decoding",
+        "inference-efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 10
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.26796",
+        "huggingface": "https://huggingface.co/papers/2609.26796",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.26796"
+      }
+    },
+    {
+      "id": "research-with-ai-agents",
+      "title": "Research with AI Agents: How Agentic Systems Are Changing Scientific Work",
+      "authors": [
+        "Research AI Authors et al."
+      ],
+      "affiliations": [
+        "Survey paper — likely multi-institutional, consistent with Science or Nature portfolio journals; possible AI Now Institute or Allen AI involvement"
+      ],
+      "summary": "A large-scale survey documenting how agentic AI systems are being deployed across biology, chemistry, and materials science research labs. Identifies recurring patterns in human-agent collaboration, catalogs common failure modes, and quantifies productivity gains from real-world deployments. High comment count suggests significant community interest in the empirical claims.",
+      "key_findings": [
+        "Agentic AI systems provide 2-5x productivity gains on well-defined sub-tasks but introduce new coordination overhead",
+        "Most critical failure mode is confident hallucination in tool-use contexts, not open-ended generation",
+        "Human-agent collaboration patterns are converging on a 'director-executor' model with human retaining hypothesis generation"
+      ],
+      "tags": [
+        "AI-for-science",
+        "survey",
+        "human-AI-collaboration",
+        "scientific-workflows",
+        "agentic-systems"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 20
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31219",
+        "huggingface": "https://huggingface.co/papers/2609.31219",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31219"
+      }
+    },
+    {
+      "id": "agentxploit-redteaming",
+      "title": "AgentXploit: Autonomous Repository-to-Runtime Red-Teaming for AI Agents",
+      "authors": [
+        "AgentXploit Team et al."
+      ],
+      "affiliations": [
+        "AI security research — likely Trail of Bits, Robust Intelligence, or academic group at CMU SEI or Oxford Future of Humanity Institute"
+      ],
+      "summary": "AgentXploit automates the full red-teaming pipeline for AI agent systems, from static analysis of repository code through dynamic runtime execution testing. Discovers jailbreaks, prompt injection vectors, and tool misuse pathways at 3x the rate of manual red-teaming teams, with lower false-positive rates.",
+      "key_findings": [
+        "Automated repository-to-runtime red-teaming discovers 3x more exploitable vulnerabilities than manual expert red teams",
+        "Prompt injection via tool outputs is the most prevalent attack vector (47% of discovered exploits)",
+        "Open-source agent frameworks had significantly more exploitable vulnerabilities than commercial API-based agents"
+      ],
+      "tags": [
+        "AI-security",
+        "red-teaming",
+        "prompt-injection",
+        "agent-safety",
+        "automated-testing"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 43,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31318",
+        "huggingface": "https://huggingface.co/papers/2609.31318",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31318"
+      }
+    },
+    {
+      "id": "easerve-multimodal",
+      "title": "EAServe: Encode-Aware Disaggregated Serving for Multimodal Large Language Models",
+      "authors": [
+        "EAServe Team et al."
+      ],
+      "affiliations": [
+        "Systems/ML serving research — likely UC Berkeley Sky Lab, Shanghai AI Lab, or ByteDance infrastructure team"
+      ],
+      "summary": "EAServe decouples the image encoding phase from text decoding in multimodal LLM serving, routing encoding workloads to specialized accelerators optimized for convolutional or ViT operations. Achieves 2.1x throughput improvement and 35% latency reduction specifically for image-heavy query workloads.",
+      "key_findings": [
+        "Image encoding accounts for 40-65% of end-to-end latency in image-heavy multimodal LLM queries",
+        "Disaggregated encode-decode serving with specialized routing achieves 2.1x throughput over monolithic serving",
+        "35% latency reduction on image-heavy workloads with negligible overhead on text-only queries"
+      ],
+      "tags": [
+        "multimodal-LLM",
+        "disaggregated-serving",
+        "inference-efficiency",
+        "MLM-serving",
+        "systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31551",
+        "huggingface": "https://huggingface.co/papers/2609.31551",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31551"
+      }
+    },
+    {
+      "id": "metapermit-access-control",
+      "title": "MetaPermit: Scalable and Auditable Access Control for AI Agents",
+      "authors": [
+        "MetaPermit Authors et al."
+      ],
+      "affiliations": [
+        "Enterprise AI security — likely Microsoft Research, IBM Research, or a security-focused academic group at Princeton or Stanford"
+      ],
+      "summary": "MetaPermit introduces a capability-based access control system using cryptographic tokens to scope, delegate, and audit AI agent permissions at runtime. The framework allows enterprises to enforce least-privilege principles on autonomous agents without measurable performance overhead.",
+      "key_findings": [
+        "Cryptographic capability tokens enable fine-grained permission scoping without runtime performance overhead",
+        "Delegation chains allow hierarchical agent architectures to propagate permissions with full auditability",
+        "MetaPermit integrates with existing enterprise IAM infrastructure via standard OAuth 2.0 extensions"
+      ],
+      "tags": [
+        "agent-security",
+        "access-control",
+        "enterprise-AI",
+        "cryptography",
+        "governance"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 35,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31039",
+        "huggingface": "https://huggingface.co/papers/2609.31039",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31039"
+      }
+    },
+    {
+      "id": "mm-veriagent",
+      "title": "MM-VeriAgent: Learning to Use Extensive Tools to Verify Multimodal Misinformation",
+      "authors": [
+        "MM-VeriAgent Team et al."
+      ],
+      "affiliations": [
+        "Multimodal NLP research — likely Fudan University NLP Group, Tencent AI Lab, or National University of Singapore"
+      ],
+      "summary": "MM-VeriAgent trains agents to use diverse verification tools — web search, reverse image search, and structured fact databases — to verify multimodal misinformation at scale. Achieves 78% accuracy on a new 10,000-case benchmark of real-world multimodal misinformation, substantially outperforming single-modality verification approaches.",
+      "key_findings": [
+        "Multi-tool agentic verification achieves 78% accuracy versus 61% for best single-modality baseline",
+        "Reverse image search is the highest-value tool for visual misinformation, contributing 23% accuracy uplift",
+        "Agents learn effective tool sequencing strategies — cross-modal corroboration before textual fact-checking"
+      ],
+      "tags": [
+        "misinformation",
+        "fact-checking",
+        "multimodal",
+        "tool-use",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.30698",
+        "huggingface": "https://huggingface.co/papers/2609.30698",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.30698"
+      }
+    },
+    {
+      "id": "zerogate-agent-governance",
+      "title": "ZeroGate: Trust-Preserving Fast Paths for Governed AI Agent Runtimes",
+      "authors": [
+        "ZeroGate Authors et al."
+      ],
+      "affiliations": [
+        "Cryptography and AI systems — likely Stanford Applied Cryptography Group, a16z crypto research, or MIT CSAIL"
+      ],
+      "summary": "ZeroGate introduces fast-path execution for routine trusted AI agent actions using zero-knowledge proofs to verify execution integrity without exposing sensitive context. Achieves 10x faster execution for trusted operation classes while maintaining cryptographic governance guarantees for auditors.",
+      "key_findings": [
+        "ZK-proof-based execution integrity verification enables 10x speedup for trusted action classes versus full governance checks",
+        "Privacy-preserving audit trails allow compliance verification without exposing sensitive agent context",
+        "Fast-path percentage of real agent workloads ranges from 60-80%, making the speedup practically significant"
+      ],
+      "tags": [
+        "agent-governance",
+        "zero-knowledge-proofs",
+        "AI-safety",
+        "cryptography",
+        "enterprise-AI"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 27,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.25443",
+        "huggingface": "https://huggingface.co/papers/2609.25443",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.25443"
+      }
+    },
+    {
+      "id": "game-arena-llm-eval",
+      "title": "Game Arena: Strategic LLM Evaluation in Competitive Environments",
+      "authors": [
+        "Game Arena Team et al."
+      ],
+      "affiliations": [
+        "LLM evaluation research — likely AI2, EleutherAI, or university group at Cornell or Princeton"
+      ],
+      "summary": "Game Arena evaluates LLMs through competitive multi-player strategic games requiring opponent modeling, adaptive planning, and real-time strategic reasoning. Reveals that top benchmark-performing LLMs often fail dramatically at strategic adaptation, highlighting a systematic gap between static benchmark performance and dynamic strategic capability.",
+      "key_findings": [
+        "Top MMLU/GPQA performers show only moderate correlation with Game Arena strategic performance (r=0.43)",
+        "Opponent modeling and adaptive strategy — not static knowledge — are the key discriminating capabilities",
+        "Smaller models with stronger reasoning fine-tuning sometimes outperform larger general models on strategic games"
+      ],
+      "tags": [
+        "LLM-evaluation",
+        "strategic-reasoning",
+        "benchmarking",
+        "game-theory",
+        "multi-agent"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 32,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.31473",
+        "huggingface": "https://huggingface.co/papers/2609.31473",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2609.31473"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen / Alibaba Cloud",
+      "description": "The latest flagship multimodal model from Qwen, supporting vision-language tasks at 27B parameters. Dominates HuggingFace downloads and likes for the period, establishing Qwen as the leading open-weights multimodal family.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "vision-language",
+        "multimodal",
+        "transformers",
+        "open-weights"
+      ],
+      "metrics": {
+        "downloads": 6727629,
+        "likes": 16427
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks' LTX-2.5 is a high-quality image-to-video diffusion model with 1.6M downloads, representing the state of the art in commercially-oriented video generation from the Israeli AI company.",
+      "task_type": "image-to-video",
+      "model_size": "Unknown",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 1601089,
+        "likes": 5332
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "A fast-inference variant of DeepSeek's V4.1 series optimized for reasoning tasks with reduced latency. High like-to-download ratio suggests strong reception among technical practitioners who have deployed it.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "text-generation",
+        "reasoning",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 651078,
+        "likes": 3811
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "ternary-bonsai-2-27b-gguf",
+      "name": "Ternary-Bonsai-2-27B-GGUF",
+      "organization": "prism-ml",
+      "description": "A ternary-quantized 27B model in GGUF format targeting edge deployment, with 3.3M downloads indicating massive uptake among edge and on-device deployment users. Ternary quantization significantly reduces model footprint while maintaining usable quality.",
+      "task_type": "text-generation",
+      "model_size": "27B (ternary quantized)",
+      "tags": [
+        "gguf",
+        "quantized",
+        "edge",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 3343748,
+        "likes": 2190
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "qwen-image-2-1-gguf-unsloth",
+      "name": "Qwen-Image-2.1-GGUF (unsloth)",
+      "organization": "unsloth",
+      "description": "Unsloth's GGUF quantization of Qwen-Image-2.1, making the image-capable Qwen model accessible for local deployment via llama.cpp. Part of the rapidly expanding Qwen ecosystem of third-party quantizations.",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "llama-cpp",
+        "image-generation",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 194341,
+        "likes": 270
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF"
+    },
+    {
+      "id": "ista-daslab-qwen3-8-gsq",
+      "name": "Qwen3.8-27B-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "ISTA-DASLab's mixed-precision GGUF quantization of Qwen3.8-27B using Group-Scale Quantization with Residual Channel Ordering, achieving superior quality-compression tradeoffs. Reflects academic quantization research applied to production-grade deployment.",
+      "task_type": "text-generation",
+      "model_size": "27B (mixed-precision quantized)",
+      "tags": [
+        "gguf",
+        "quantized",
+        "mixed-precision",
+        "research-quantization"
+      ],
+      "metrics": {
+        "downloads": 1608439,
+        "likes": 1778
+      },
+      "source_url": "https://huggingface.co/ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF"
+    },
+    {
+      "id": "xing4-0-29b-a4b",
+      "name": "Xing4.0-29B-A4B",
+      "organization": "XingChen-AGI",
+      "description": "A 29B multilingual reasoning model from XingChen-AGI with a mixture-of-experts architecture (29B total, 4B active), targeting multilingual reasoning tasks. The A4B notation suggests sparse activation with only 4B parameters active per forward pass.",
+      "task_type": "text-generation",
+      "model_size": "29B (4B active, MoE)",
+      "tags": [
+        "text-generation",
+        "reasoning",
+        "multilingual",
+        "MoE"
+      ],
+      "metrics": {
+        "downloads": 45028,
+        "likes": 1782
+      },
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B"
+    },
+    {
+      "id": "taichu5-0-9b",
+      "name": "ZDTaichu5.0-9B",
+      "organization": "TaichuAI",
+      "description": "A 9B multimodal model from TaichuAI specializing in spatial reasoning and vision tasks. The spatial reasoning focus distinguishes it from general vision-language models and suggests optimization for embodied AI or robotics applications.",
+      "task_type": "multimodal",
+      "model_size": "9B",
+      "tags": [
+        "multimodal",
+        "spatial-reasoning",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 11612,
+        "likes": 1680
+      },
+      "source_url": "https://huggingface.co/TaichuAI/ZDTaichu5.0-9B"
+    },
+    {
+      "id": "teleocr",
+      "name": "TeleOCR",
+      "organization": "StarDoc-AI",
+      "description": "A vision-language model specialized for OCR and document understanding from StarDoc-AI, achieving strong performance on structured document extraction tasks including tables, forms, and handwriting.",
+      "task_type": "document-understanding",
+      "model_size": "Unknown",
+      "tags": [
+        "ocr",
+        "document-understanding",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 27837,
+        "likes": 598
+      },
+      "source_url": "https://huggingface.co/StarDoc-AI/TeleOCR"
+    },
+    {
+      "id": "clm-v0-1-8b",
+      "name": "CLM-v0.1-8B",
+      "organization": "Contrastive-LM",
+      "description": "A contrastive learning-based 8B language model from Contrastive-LM, designed to improve factual verification and RAG accuracy through contrastive training objectives. High like-to-download ratio suggests significant interest from researchers despite limited deployment so far.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "contrastive-learning",
+        "rag",
+        "verification",
+        "factuality"
+      ],
+      "metrics": {
+        "downloads": 766,
+        "likes": 410
+      },
+      "source_url": "https://huggingface.co/Contrastive-LM/CLM-v0.1-8B"
+    },
+    {
+      "id": "gliNER2-5-decide",
+      "name": "GLiNER2.5-Decide",
+      "organization": "fastino",
+      "description": "An updated GLiNER model fine-tuned for intent classification and decision-oriented entity extraction, extending the proven GLiNER NER architecture to structured decision workflows.",
+      "task_type": "token-classification",
+      "model_size": "Unknown",
+      "tags": [
+        "ner",
+        "intent-classification",
+        "entity-extraction"
+      ],
+      "metrics": {
+        "downloads": 19757,
+        "likes": 208
+      },
+      "source_url": "https://huggingface.co/fastino/GLiNER2.5-Decide"
+    },
+    {
+      "id": "qwen-image-2-1-uncensored-gguf",
+      "name": "Qwen-Image-2.1-Uncensored-GGUF",
+      "organization": "abenzerps",
+      "description": "A community fine-tuned uncensored GGUF variant of Qwen-Image-2.1, representing the ongoing ecosystem of community fine-tunes around frontier open-weights models. High downloads (964K) reflect demand for less-restricted image-capable models.",
+      "task_type": "image-generation",
+      "model_size": "Unknown",
+      "tags": [
+        "gguf",
+        "image-generation",
+        "community-finetune"
+      ],
+      "metrics": {
+        "downloads": 964220,
+        "likes": 2081
+      },
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "ecc-token-optimizer",
+      "name": "affaan-m/ECC",
+      "description": "Agent optimization harness that reduces token usage by up to 65% through efficient context compression and caching strategies. The highest stars-today figure among trending repos signals explosive organic growth driven by API cost concerns.",
+      "language": "JavaScript",
+      "stars": 269035,
+      "stars_today": 1200,
+      "forks": 18400,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-optimization",
+        "token-efficiency",
+        "cost-reduction",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch's evolving personal AI companion framework that adapts to user needs over time through persistent memory and personality modeling. Strong engagement from the open-source AI community builds on NousResearch's reputation for high-quality open models.",
+      "language": "Python",
+      "stars": 249818,
+      "stars_today": 980,
+      "forks": 21500,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "AI-agent",
+        "personal-assistant",
+        "persistent-memory",
+        "adaptation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama",
+      "name": "ollama/ollama",
+      "description": "The leading local LLM runner supporting Qwen, Gemma, Llama, and dozens of other models with a simple CLI and API. Consistent high stars-today (890) reflects sustained growth as local AI deployment becomes mainstream.",
+      "language": "Go",
+      "stars": 181876,
+      "stars_today": 890,
+      "forks": 15300,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-LLM",
+        "inference",
+        "deployment",
+        "open-source"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm",
+      "name": "vllm-project/vllm",
+      "description": "The de facto high-throughput LLM inference engine featuring PagedAttention, continuous batching, and extensive model support. Highly relevant given today's KV cache papers, many of which evaluate or build on vLLM infrastructure.",
+      "language": "Python",
+      "stars": 92895,
+      "stars_today": 510,
+      "forks": 14600,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": [
+        "LLM-serving",
+        "inference",
+        "KV-cache",
+        "PagedAttention"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "A feature-rich web interface for local and cloud LLMs supporting Ollama, OpenAI, and custom backends. Consistently high daily stars reflect its role as the primary UI layer for the growing local LLM deployment ecosystem.",
+      "language": "Python",
+      "stars": 153464,
+      "stars_today": 460,
+      "forks": 19200,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "LLM-UI",
+        "local-AI",
+        "open-source",
+        "multi-backend"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "transformers",
+      "name": "huggingface/transformers",
+      "description": "Hugging Face's foundational ML library supporting thousands of pretrained models across text, vision, audio, and multimodal tasks. Remains the most widely used ML library and a stable baseline for all trending research.",
+      "language": "Python",
+      "stars": 166775,
+      "stars_today": 420,
+      "forks": 33500,
+      "url": "https://github.com/huggingface/transformers",
+      "tags": [
+        "transformers",
+        "ML-library",
+        "pretrained-models",
+        "multimodal"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Persistent context compression specifically designed for Claude agent sessions, reducing token usage and enabling longer coherent agent workflows. 650 stars today shows strong practitioner interest in context management solutions.",
+      "language": "TypeScript",
+      "stars": 94858,
+      "stars_today": 650,
+      "forks": 5200,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "context-compression",
+        "Claude",
+        "agent-memory",
+        "token-efficiency"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "zcode-coding-agent",
+      "name": "zai-org/ZCode",
+      "description": "Z.ai's TypeScript-first coding agent harness providing a powerful and extensible interface for AI-assisted software development. Despite lower absolute stars (6.7K), its 820 stars-today is the third highest daily gain, indicating a breakthrough viral moment.",
+      "language": "TypeScript",
+      "stars": 6725,
+      "stars_today": 820,
+      "forks": 480,
+      "url": "https://github.com/zai-org/ZCode",
+      "tags": [
+        "coding-agent",
+        "TypeScript",
+        "developer-tools",
+        "AI-coding"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "AI agent-powered multi-market stock analysis with real-time news integration, representing the growing intersection of agentic AI and quantitative finance. 740 stars-today reflects strong grassroots interest in AI-driven financial tools.",
+      "language": "Python",
+      "stars": 65766,
+      "stars_today": 740,
+      "forks": 4900,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": [
+        "AI-finance",
+        "stock-analysis",
+        "agents",
+        "real-time"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ragflow",
+      "name": "infiniflow/ragflow",
+      "description": "Enterprise-grade RAG engine with deep document understanding and agentic capabilities. Consistent growth (380 stars today) reflects sustained enterprise adoption of production-grade RAG systems beyond simple vector search.",
+      "language": "Go",
+      "stars": 91447,
+      "stars_today": 380,
+      "forks": 8700,
+      "url": "https://github.com/infiniflow/ragflow",
+      "tags": [
+        "RAG",
+        "enterprise",
+        "document-understanding",
+        "agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "cognee-memory",
+      "name": "topoteretes/Cognee",
+      "description": "Open-source persistent agent memory platform with knowledge graph management capabilities. Directly relevant to today's agent memory and context management research theme.",
+      "language": "Python",
+      "stars": 31161,
+      "stars_today": 270,
+      "forks": 2100,
+      "url": "https://github.com/topoteretes/Cognee",
+      "tags": [
+        "agent-memory",
+        "knowledge-graph",
+        "persistence",
+        "open-source"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pageindex-vectorless",
+      "name": "VectifyAI/PageIndex",
+      "description": "Vectorless reasoning-based document retrieval achieving 97% storage savings over traditional vector databases. Challenges the dominant vector DB paradigm for RAG with a reasoning-native approach to document indexing.",
+      "language": "Python",
+      "stars": 36356,
+      "stars_today": 310,
+      "forks": 1800,
+      "url": "https://github.com/VectifyAI/PageIndex",
+      "tags": [
+        "retrieval",
+        "RAG",
+        "vectorless",
+        "reasoning-based"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "autogpt",
+      "name": "Significant-Gravitas/AutoGPT",
+      "description": "The original open-ended autonomous agent framework that pioneered goal-directed task completion. Maintains significant activity (340 stars today, 187K total) as a reference implementation for multi-agent architectures.",
+      "language": "Python",
+      "stars": 187596,
+      "stars_today": 340,
+      "forks": 42800,
+      "url": "https://github.com/Significant-Gravitas/AutoGPT",
+      "tags": [
+        "autonomous-agents",
+        "multi-agent",
+        "goal-directed",
+        "open-source"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "deepopen-decision-engine",
+      "name": "deepopen-com/deepopen",
+      "description": "A non-autoregressive System 1 decision engine for structured decisions across 100+ languages, representing an alternative to LLM-based reasoning for high-speed structured decision tasks.",
+      "language": "Python",
+      "stars": 21220,
+      "stars_today": 560,
+      "forks": 1200,
+      "url": "https://github.com/deepopen-com/deepopen",
+      "tags": [
+        "decision-engine",
+        "non-autoregressive",
+        "structured-decisions",
+        "multilingual"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "KV Cache as Infrastructure Crisis",
+      "description": "A coordinated cluster of six or more papers and multiple GitHub tools identify KV cache bandwidth as the primary constraint in modern LLM serving, proposing diverse mitigations from action-guided eviction to hierarchical memory tiering and disaggregated encoding.",
+      "related_paper_ids": [
+        "kv-cache-memory-wall",
+        "actkv-cache-management",
+        "flash-dllm",
+        "easerve-multimodal",
+        "fragtoken-adversarial"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Security and Formal Governance",
+      "description": "A new generation of agent security research treats AI agent systems as adversarial attack surfaces requiring cryptographic access control, zero-knowledge integrity verification, and automated red-teaming — moving beyond empirical safety prompting to formal systems-security foundations.",
+      "related_paper_ids": [
+        "fragtoken-adversarial",
+        "agentxploit-redteaming",
+        "metapermit-access-control",
+        "zerogate-agent-governance"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Autonomous Scientific Discovery",
+      "description": "Multiple papers frame AI agents as autonomous scientific researchers — bidding for resources, self-improving, and outperforming single-agent baselines — while survey work documents real-world deployment patterns and failure modes in active science labs.",
+      "related_paper_ids": [
+        "agentic-economies",
+        "recursive-self-improvement",
+        "research-with-ai-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multi-Agent Benchmarking and Evaluation Infrastructure",
+      "description": "AgentWorld, Game Arena, and related work demonstrate that existing single-agent benchmarks systematically fail to capture multi-agent collaborative and strategic capabilities, driving investment in richer evaluation environments.",
+      "related_paper_ids": [
+        "agentworld-benchmark",
+        "game-arena-llm-eval",
+        "mm-veriagent"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Reproducibility Crisis in LLM Evaluation",
+      "description": "The precision-divergence paper demonstrates that greedy decoding — assumed deterministic in evaluation — produces 40% output divergence across precision formats, threatening the validity of benchmark leaderboards and model comparisons.",
+      "related_paper_ids": [
+        "greedy-decoding-precision"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Edge and Quantized Deployment Ecosystem Maturation",
+      "description": "Multiple GGUF model variants of frontier models (Qwen3.8, Ternary-Bonsai, DeepSeek) combined with GitHub tooling for local deployment (ollama, open-webui, ECC) signal that edge deployment has graduated from enthusiast hobby to mainstream infrastructure practice.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv CS.AI / CS.LG / CS.CL",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "DailyArXiv",
+      "url": "https://dailyarxiv.com",
+      "checked_at": "2026-09-29T07:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
