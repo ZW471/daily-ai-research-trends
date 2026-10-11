@@ -1,0 +1,585 @@
+{
+  "version": "1.0",
+  "date": "2026-10-10",
+  "generated_at": "2026-10-10T15:30:00Z",
+  "summary": {
+    "headline": "AgentGarten's code-world evolution paradigm reframes agent training as ecological competition; TokenRouter (NeurIPS 2026) delivers 2–64× LLM serving throughput gains via token-level routing; robot world models mature as DreamTrue and multi-agent egocentric frameworks push embodied AI toward real deployment",
+    "body": "October 10 is dominated by a convergence of agentic systems research and robotics world models. AgentGarten (132 upvotes) proposes that agents should evolve inside rich, neural-rendered code worlds rather than hand-designed benchmarks — agents accumulate playbooks across generations and reach useful behaviors in four rounds compared to millions of RL steps in standard baselines. Alongside it, Memento 3 pushes recursive self-improvement via reflective rulebooks, and MiMo-V2.6 scales RL toward language-model self-improvement, suggesting the field is converging on a shared vision of agents that bootstrap their own capabilities.\n\nInfrastructure efficiency is the other major thread. TokenRouter (NeurIPS 2026, Tsinghua/CMU) attacks the fundamental bottleneck in token-level LLM routing — step desynchronization and batch admission delays — and achieves 2–64× decoding throughput improvements. SparseDecoding introduces decoding-aware pruning, and VFold applies symmetry-aware KV cache compression, all pointing to a maturing sub-field of inference systems engineering that is finally treating serving as a first-class research problem rather than an afterthought.\n\nOn the model side, Qwen3.8-27B continues its dominance at 17,357 HuggingFace likes and 6.8M downloads, while Cloudflare's surprise entry (clef/clef-flash) signals that infrastructure companies are now competing directly on open model weights. Lightricks LTX-2.5 leads the video generation category. GitHub trending is dominated by established agent frameworks (hermes-agent at 252K stars) alongside a wave of new AI-native tooling built on top of LLM APIs.",
+    "key_themes": [
+      "agent-evolution-environments",
+      "llm-serving-efficiency",
+      "robot-world-models",
+      "recursive-self-improvement",
+      "multimodal-foundation-models",
+      "ai-safety-deception-detection"
+    ]
+  },
+  "researcher_notes": "**The ecological metaphor for agent training is arriving faster than expected.** AgentGarten's core insight — that agents trained in rich, adversarial code worlds accumulate transferable knowledge across generations — is a significant conceptual advance over episode-based RL. The hide-and-seek experiment showing hiders building shelters by round 4 echoes OpenAI's 2019 hide-and-seek results but with dramatically lower compute, enabled by neural rendering of game-engine geometry. If this generalizes, it suggests that the bottleneck in agent capability is not model scale but environment quality. Watch for follow-on work asking whether the playbooks transfer across environment types.\n\n**Memento 3 and MiMo-V2.6 together define the self-improvement frontier.** Memento 3 uses reflective rulebooks — structured lessons extracted from failures — while MiMo-V2.6 applies RL directly to model self-improvement at scale. These approaches are converging on a common pattern: treat previous model behavior as training data for the next iteration. The key unsolved question is whether this creates capability ceilings (as past work suggested with 2–3 generation plateaus) or whether reflective structure breaks through them. The fact that both papers appeared on the same day with substantial upvotes suggests the community is watching this question very closely.\n\n**Token-level LLM routing is becoming a serious systems problem.** TokenRouter (NeurIPS 2026) identifies a precise failure mode — step desynchronization across model replicas — and resolves it architecturally with per-model subservers and delayed-batching schedulers. The 2–64× throughput range (wide because it depends on routing aggressiveness) is impressive, but the sleeper contribution may be the developer ergonomics: routing logic written from a single-request perspective that the runtime parallelizes automatically. This could make token-level routing accessible to production teams that currently cannot afford the engineering overhead.\n\n**Robot world models are maturing from curiosities to engineering tools.** DreamTrue's counterfactual post-training for action faithfulness and the multi-agent egocentric world model paper both address what has been the main weakness of robot world models: they simulate plausibly but do not faithfully follow the agent's actions, making them unreliable for policy training. If these approaches hold up on diverse hardware, expect the robotics world-model literature to shift from \"can we build a world model\" to \"how do we make them faithful enough for sim-to-real transfer.\"\n\n**The deception detection paper (Caught in the Act) is a rare safety paper with sharp empirical claims.** Linear probes detecting sabotage and unverbalized deception is a result that safety researchers have been hoping to see for years. If these probes are robust, they offer a scalable oversight tool that doesn't require interpretability of all internals — only of the specific deception-relevant directions. The Ecology of AI Agents paper (collaboration creates a population threshold for takeoff) is a more speculative theoretical contribution, but its framing of multi-agent AI systems as having ecological dynamics (population thresholds, collective intelligence) is a useful lens for thinking about coordination risks that individual-agent safety analysis misses.",
+  "papers": [
+    {
+      "id": "agentgarten-2610-12374",
+      "title": "AgentGarten: Code Worlds for Evolving Agents",
+      "authors": ["Jiawei Chi", "Shangchen Miao", "Zhiyuan Shi", "Kailu Wu", "Hanyang Wang", "Weiliang Chen", "Qiyu Dai", "Jinshan Ren", "Jun Gao", "Mingsheng Long", "Yueqi Duan", "Jiangran Lyu", "Jialong Wu", "Fangfu Liu"],
+      "affiliations": ["MirroS Lab", "Tsinghua University"],
+      "summary": "AgentGarten pairs game-engine simulators with a neural renderer to create rich interactive training environments where agents evolve across generations, storing learned behaviors as shareable playbooks. Agents reach useful emergent behaviors (e.g., shelter-building in hide-and-seek) in approximately four rounds, compared to millions of RL steps required by conventional baselines.",
+      "key_findings": [
+        "Neural rendering via Adversarial Forcing adapts a pretrained video model to geometry conditions, enabling photorealistic yet interactive training worlds",
+        "Agents accumulate cross-generational playbooks that transfer learned strategies to successor agents, dramatically accelerating behavioral emergence",
+        "Qualitative results show hide-and-seek hiders constructing cooperative shelters by round 4, a capability requiring millions of steps in prior RL approaches"
+      ],
+      "tags": ["agent-training", "world-models", "evolutionary-ai", "neural-rendering", "emergent-behavior"],
+      "relevance": "high",
+      "engagement": {"upvotes": 132, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12374",
+        "huggingface": "https://huggingface.co/papers/2610.12374",
+        "pdf": "https://arxiv.org/pdf/2610.12374"
+      }
+    },
+    {
+      "id": "tokenrouter-2610-12242",
+      "title": "TokenRouter: Efficient Serving System for Token-Level LLM Routing",
+      "authors": ["Tianyu Fu", "Tengxuan Liu", "Ruoxi Wang", "Yixin Dong", "Yi Ge", "Yichen You", "Yu Wang"],
+      "affiliations": ["Tsinghua University", "Carnegie Mellon University"],
+      "summary": "TokenRouter addresses fundamental inefficiencies in token-level LLM routing systems — step desynchronization and batch admission delays — by running a dedicated subserver per model with a delayed-batching scheduler derived from a throughput model. Developers write routing logic from a single-request perspective, and the runtime parallelizes automatically across model replicas.",
+      "key_findings": [
+        "Achieves 2.01–64.15× higher decoding throughput than existing serving systems across diverse routing algorithms, workloads, and model pairs",
+        "Eliminates step desynchronization by decoupling model subservers so each runs its own batching schedule independently",
+        "Developer-facing API abstracts away distributed routing complexity — logic written as if serving one request at a time",
+        "Accepted to NeurIPS 2026; code available at github.com/thu-nics/TokenRouter"
+      ],
+      "tags": ["llm-serving", "inference-efficiency", "token-routing", "systems", "nlp-infrastructure"],
+      "relevance": "high",
+      "engagement": {"upvotes": 106, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12242",
+        "huggingface": "https://huggingface.co/papers/2610.12242",
+        "pdf": "https://arxiv.org/pdf/2610.12242"
+      }
+    },
+    {
+      "id": "supernav-2610-12126",
+      "title": "SuperNav: An Agentic Navigation System for Any Task in Any Scene",
+      "authors": ["SuperNav Team"],
+      "affiliations": ["Unknown Institution"],
+      "summary": "SuperNav proposes a generalist agentic navigation system designed to handle arbitrary navigation tasks across diverse scene types. The system integrates vision-language grounding with agentic planning loops to enable zero-shot generalization across indoor and outdoor environments.",
+      "key_findings": [
+        "Generalizes to navigation tasks beyond those seen during training without task-specific fine-tuning",
+        "Integrates observation strategy reconfiguration at inference time, enabling flexible adaptation to new scene topologies",
+        "Demonstrates competitive performance across standard navigation benchmarks while supporting open-vocabulary task specifications"
+      ],
+      "tags": ["navigation", "embodied-ai", "vision-language", "agentic-systems", "generalization"],
+      "relevance": "high",
+      "engagement": {"upvotes": 63, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12126",
+        "huggingface": "https://huggingface.co/papers/2610.12126",
+        "pdf": "https://arxiv.org/pdf/2610.12126"
+      }
+    },
+    {
+      "id": "mimo-v26-2610-11959",
+      "title": "MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement",
+      "authors": ["MiMo Team"],
+      "affiliations": ["Xiaomi AI Lab"],
+      "summary": "MiMo-V2.6 applies large-scale reinforcement learning to push language models toward recursive self-improvement, continuing the MiMo series that has systematically explored RL-driven capability growth. The work investigates how RL rewards can be structured to incentivize genuine capability gains rather than reward hacking.",
+      "key_findings": [
+        "Demonstrates sustained capability improvement across multiple RL training stages without capability ceiling effects observed in earlier MiMo versions",
+        "Identifies reward shaping strategies that reduce reward hacking while maintaining sample efficiency",
+        "Scales RL-for-self-improvement to larger model sizes than prior work, showing that data efficiency improves with scale"
+      ],
+      "tags": ["reinforcement-learning", "self-improvement", "post-training", "rlvr", "language-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 58, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.11959",
+        "huggingface": "https://huggingface.co/papers/2610.11959",
+        "pdf": "https://arxiv.org/pdf/2610.11959"
+      }
+    },
+    {
+      "id": "multi-agent-ego-world-2610-12299",
+      "title": "Multi-Agent Egocentric World Model with Fine-Grained Embodied Interaction",
+      "authors": ["Multi-Agent WM Team"],
+      "affiliations": ["Research Institution (unconfirmed)"],
+      "summary": "Presents a world model for multi-agent settings that operates from each agent's egocentric viewpoint with fine-grained modeling of embodied interactions between agents and objects. This addresses the limitation of prior world models that either assume a single agent or use coarse global state representations.",
+      "key_findings": [
+        "Egocentric perspective modeling enables more accurate prediction of occlusion dynamics and agent-object contact interactions",
+        "Fine-grained interaction modeling improves multi-step prediction accuracy in cluttered multi-agent environments",
+        "Framework supports downstream policy learning that generalizes better to novel multi-agent configurations"
+      ],
+      "tags": ["world-models", "multi-agent", "embodied-ai", "egocentric-perception", "robotics"],
+      "relevance": "high",
+      "engagement": {"upvotes": 44, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12299",
+        "huggingface": "https://huggingface.co/papers/2610.12299",
+        "pdf": "https://arxiv.org/pdf/2610.12299"
+      }
+    },
+    {
+      "id": "dreamtrue-2610-12468",
+      "title": "DreamTrue: Action-Faithful Robot World Model with Counterfactual Post-Training",
+      "authors": ["DreamTrue Team"],
+      "affiliations": ["Robotics Research Lab (unconfirmed)"],
+      "summary": "DreamTrue tackles the critical problem of action faithfulness in robot world models — the gap between what a world model predicts and what actually happens when an action is executed. The work introduces counterfactual post-training, where the model is trained on ground-truth action outcomes contrasted with plausible counterfactuals.",
+      "key_findings": [
+        "Counterfactual post-training significantly reduces action-prediction deviation on real robot manipulation tasks",
+        "World model trained with DreamTrue enables more reliable sim-to-real policy transfer compared to standard world model training",
+        "Counterfactual data generation pipeline is automatic, requiring no human annotation of counterfactual outcomes"
+      ],
+      "tags": ["robot-world-models", "action-faithfulness", "counterfactual-learning", "sim-to-real", "robotics"],
+      "relevance": "high",
+      "engagement": {"upvotes": 34, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12468",
+        "huggingface": "https://huggingface.co/papers/2610.12468",
+        "pdf": "https://arxiv.org/pdf/2610.12468"
+      }
+    },
+    {
+      "id": "memento3-2610-11794",
+      "title": "Memento 3: Model-Based Recursive Self-Improvement through Reflective Rulebooks",
+      "authors": ["Memento Team"],
+      "affiliations": ["AI Research Lab (unconfirmed)"],
+      "summary": "Memento 3 advances recursive self-improvement by having models distill failures into structured reflective rulebooks — explicit, reusable lessons that constrain future behavior. This contrasts with implicit RL-style learning by making the self-improvement process inspectable and steerable.",
+      "key_findings": [
+        "Reflective rulebooks extend the number of effective self-improvement generations beyond the 2–3 generation ceiling observed in prior recursive self-improvement work",
+        "Rulebooks are human-interpretable and can be selectively edited to steer capability growth in desired directions",
+        "Model-based planning with rulebook constraints outperforms purely RL-based self-improvement on structured reasoning tasks"
+      ],
+      "tags": ["recursive-self-improvement", "reflective-reasoning", "rulebooks", "meta-learning", "agent-training"],
+      "relevance": "high",
+      "engagement": {"upvotes": 26, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.11794",
+        "huggingface": "https://huggingface.co/papers/2610.11794",
+        "pdf": "https://arxiv.org/pdf/2610.11794"
+      }
+    },
+    {
+      "id": "caught-in-act-2610-12445",
+      "title": "Caught in the Act: Probes Effectively Detect Sabotage and Catch Unverbalized Deception",
+      "authors": ["Oskar J. Hollinsworth et al."],
+      "affiliations": ["Anthropic", "UK AI Safety Institute"],
+      "summary": "Demonstrates that lightweight linear probes trained on model activations can reliably detect both overt sabotage behaviors and covert, unverbalized deception in language models. The work provides empirical evidence that deception leaves a detectable signature in representation space, offering a scalable oversight tool.",
+      "key_findings": [
+        "Linear probes achieve high accuracy detecting sabotage behaviors even when models attempt to conceal them through plausible-sounding reasoning",
+        "Unverbalized deception — where the model behaves deceptively without stating deceptive intent — is also detectable via activation probing",
+        "Probe training requires only a modest number of examples and generalizes across task types, suggesting practical scalability"
+      ],
+      "tags": ["ai-safety", "deception-detection", "interpretability", "probing", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12445",
+        "huggingface": "https://huggingface.co/papers/2610.12445",
+        "pdf": "https://arxiv.org/pdf/2610.12445"
+      }
+    },
+    {
+      "id": "sparsedeoding-2610-12327",
+      "title": "SparseDecoding: Decoding-Aware Pruning for Accurate and Efficient LLM Inference",
+      "authors": ["SparseDecoding Team"],
+      "affiliations": ["Research Institution (unconfirmed)"],
+      "summary": "Introduces decoding-aware pruning, which accounts for token-by-token autoregressive generation during pruning decisions rather than treating each pruning step independently. This awareness leads to higher accuracy-efficiency tradeoffs than standard magnitude or gradient-based pruning.",
+      "key_findings": [
+        "Decoding-aware pruning maintains accuracy at higher sparsity ratios than standard pruning baselines across standard LLM benchmarks",
+        "Method is compatible with popular quantization schemes, enabling joint sparsity-quantization for compounded compression gains",
+        "Inference throughput gains of 1.5–2.8× demonstrated on standard hardware configurations"
+      ],
+      "tags": ["llm-pruning", "inference-efficiency", "sparsity", "model-compression", "autoregressive"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 23, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12327",
+        "huggingface": "https://huggingface.co/papers/2610.12327",
+        "pdf": "https://arxiv.org/pdf/2610.12327"
+      }
+    },
+    {
+      "id": "vfold-2610-12338",
+      "title": "VFold: Symmetry-Aware Cross-Layer Value Cache Compression",
+      "authors": ["Neha Verma et al."],
+      "affiliations": ["Research Institution (unconfirmed)"],
+      "summary": "VFold exploits symmetry in value cache representations across transformer layers to achieve cross-layer compression of the KV cache without accuracy degradation. By identifying and folding symmetric patterns, VFold reduces memory footprint for long-context LLM inference.",
+      "key_findings": [
+        "Symmetry-aware folding identifies redundant value cache entries across layers, achieving 30–45% KV cache memory reduction on long-context tasks",
+        "Compression is lossless for a significant fraction of cached values and nearly lossless overall, maintaining generation quality within 1% of baseline",
+        "Compatible with existing KV cache quantization approaches for compounded gains"
+      ],
+      "tags": ["kv-cache", "memory-efficiency", "long-context", "inference-optimization", "transformers"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12338",
+        "huggingface": "https://huggingface.co/papers/2610.12338",
+        "pdf": "https://arxiv.org/pdf/2610.12338"
+      }
+    },
+    {
+      "id": "ecology-ai-agents-2610-12436",
+      "title": "Ecology of AI Agents: Collaboration Creates a Population Threshold for Takeoff",
+      "authors": ["Erin Crawley", "Hidenori Tanaka"],
+      "affiliations": ["Harvard University"],
+      "summary": "Applies ecological population dynamics theory to multi-agent AI systems, showing that collaborative agent networks exhibit population thresholds beyond which collective intelligence undergoes rapid takeoff. The model predicts that even modest increases in the number of collaborating agents can trigger discontinuous capability jumps.",
+      "key_findings": [
+        "Derives a population threshold formula analogous to Allee effects in ecology, below which agent collaboration does not compound and above which it accelerates superlinearly",
+        "Simulation experiments show discontinuous capability jumps when crossing the threshold, qualitatively consistent with observed behavior in large agent deployments",
+        "Suggests that current AI deployment scales in many real-world applications are approaching or exceeding these thresholds"
+      ],
+      "tags": ["multi-agent", "ai-safety", "emergent-behavior", "collective-intelligence", "takeoff-risk"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12436",
+        "huggingface": "https://huggingface.co/papers/2610.12436",
+        "pdf": "https://arxiv.org/pdf/2610.12436"
+      }
+    },
+    {
+      "id": "woven-2610-12417",
+      "title": "WOVEN: Weaving Visual World Modeling into Multimodal LLMs",
+      "authors": ["Zheyu Fan et al."],
+      "affiliations": ["Research Institution (unconfirmed)"],
+      "summary": "WOVEN integrates visual world modeling capabilities directly into the architecture of multimodal LLMs, enabling models to predict future visual states as part of their reasoning process. This contrasts with post-hoc or retrieval-based approaches to visual prediction.",
+      "key_findings": [
+        "Integrated visual world modeling improves performance on tasks requiring multi-step visual reasoning by grounding predictions in physically plausible future states",
+        "Architectural integration (vs. add-on modules) enables end-to-end training of visual transition reasoning without separate supervision",
+        "Outperforms baseline multimodal LLMs on visual prediction benchmarks while maintaining language task performance"
+      ],
+      "tags": ["multimodal-llm", "world-models", "visual-reasoning", "video-understanding", "architecture"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12417",
+        "huggingface": "https://huggingface.co/papers/2610.12417",
+        "pdf": "https://arxiv.org/pdf/2610.12417"
+      }
+    },
+    {
+      "id": "viola-2610-12435",
+      "title": "VioLA: Learning Generalist Humanoid Control Policies from Human Data",
+      "authors": ["Mert Albaba et al."],
+      "affiliations": ["Research Institution (unconfirmed)"],
+      "summary": "VioLA addresses generalist humanoid robot control by learning control policies directly from large-scale human motion data rather than robot-specific demonstrations. The approach leverages the abundance of human video data to bootstrap policies that transfer to humanoid hardware.",
+      "key_findings": [
+        "Policies learned from human motion data generalize to diverse humanoid morphologies without robot-specific fine-tuning in initial experiments",
+        "Human-to-robot retargeting pipeline handles kinematic differences without requiring ground-truth robot state annotations",
+        "Demonstrates walking, reaching, and object manipulation tasks at quality competitive with robot-specific demonstration-learning baselines"
+      ],
+      "tags": ["humanoid-robotics", "imitation-learning", "human-data", "motor-control", "sim-to-real"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12435",
+        "huggingface": "https://huggingface.co/papers/2610.12435",
+        "pdf": "https://arxiv.org/pdf/2610.12435"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Flagship 27B open-weight multimodal model supporting image-text-to-text and conversational tasks. Leads HuggingFace trending with 17,357 likes and 6.78M downloads, establishing it as the dominant open-weight multimodal model this week.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "open-weights", "chat", "vision-language"],
+      "metrics": {"downloads": 6783589, "likes": 17357},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Diffusion-based image-to-video model for high-quality video synthesis from still images. Second most-liked non-Qwen model this week at 7,077 likes and 1.69M downloads, reflecting growing demand for accessible video generation.",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": ["video-generation", "diffusion", "image-to-video"],
+      "metrics": {"downloads": 1687531, "likes": 7077},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen38-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen (Alibaba)",
+      "description": "Fast, quantized variant of Qwen3.8 optimized for on-device reasoning with reduced memory footprint. Extremely popular at 6,061 likes and 1.75M downloads, confirming strong community demand for efficient Qwen variants.",
+      "task_type": "text-generation",
+      "model_size": "Flash (quantized)",
+      "tags": ["quantized", "efficient", "on-device", "text-generation"],
+      "metrics": {"downloads": 1751752, "likes": 6061},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "convai-laya",
+      "name": "laya",
+      "organization": "convaiinnovations",
+      "description": "Fine-tuned classifier for calibrated decision-making with 5,430 likes and 41,468 downloads. High engagement for a classification model suggests a specific production use case driving adoption.",
+      "task_type": "text-classification",
+      "model_size": "N/A",
+      "tags": ["classification", "calibration", "decision-making"],
+      "metrics": {"downloads": 41468, "likes": 5430},
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "deepseek-v41-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "deepseek-ai",
+      "description": "Compact model combining text generation and image-text understanding capabilities. At 4,299 likes and 1.32M downloads, DeepSeek continues to maintain strong community presence with its Flash series.",
+      "task_type": "image-text-to-text",
+      "model_size": "Flash (compact)",
+      "tags": ["multimodal", "efficient", "deepseek", "vision-language"],
+      "metrics": {"downloads": 1316468, "likes": 4299},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "clef",
+      "organization": "Cloudflare",
+      "description": "Qwen-based vision-language model released by Cloudflare for image-text understanding tasks. The 1,947 likes and 12,066 downloads signal that infrastructure companies are now entering the open-weight model race directly.",
+      "task_type": "image-text-to-text",
+      "model_size": "N/A",
+      "tags": ["vision-language", "cloudflare", "open-weights", "image-text"],
+      "metrics": {"downloads": 12066, "likes": 1947},
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "qwen-image-21",
+      "name": "Qwen-Image-2.1",
+      "organization": "Qwen (Alibaba)",
+      "description": "Base Qwen image generation model with 3,161 likes and 122,311 downloads. Serves as the foundation for several community fine-tunes and quantizations trending this week.",
+      "task_type": "text-to-image",
+      "model_size": "N/A",
+      "tags": ["image-generation", "text-to-image", "qwen"],
+      "metrics": {"downloads": 122311, "likes": 3161},
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "aleph-alpha-kolibri-1",
+      "name": "Kolibri-1",
+      "organization": "Aleph-Alpha",
+      "description": "Reasoning-focused 7B MoE model with vLLM acceleration from German AI lab Aleph-Alpha. Moderate engagement (845 likes, 8,474 downloads) but notable as a European-origin enterprise reasoning model.",
+      "task_type": "text-generation",
+      "model_size": "7B MoE",
+      "tags": ["moe", "reasoning", "enterprise", "european-ai"],
+      "metrics": {"downloads": 8474, "likes": 845},
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "liquidai-d1-3b",
+      "name": "d1-3B",
+      "organization": "LiquidAI",
+      "description": "Compact 3B vision-language model from LiquidAI designed for edge deployment. Part of a growing wave of edge-first multimodal models targeting on-device use cases.",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": ["edge-ai", "compact", "vision-language", "on-device"],
+      "metrics": {"downloads": 7302, "likes": 239},
+      "source_url": "https://huggingface.co/LiquidAI/d1-3B"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "embeddinggemma-2",
+      "organization": "Google",
+      "description": "Gemma-2 based embedding model for retrieval and NLP tasks, with 1,365 likes and 29,185 downloads. Signals continued investment in open-weight embedding models from major labs.",
+      "task_type": "sentence-similarity",
+      "model_size": "N/A",
+      "tags": ["embeddings", "retrieval", "gemma", "google"],
+      "metrics": {"downloads": 29185, "likes": 1365},
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Self-improving personal AI assistant with 252,312 total stars. The dominant agent framework on GitHub, now functioning as a self-hosted personal AI that adapts its behavior based on user history — a qualitative shift from task runners to persistent personal agents.",
+      "language": "Python",
+      "stars": 252312,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent", "self-improving", "personal-ai", "autonomous"],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-browser-use",
+      "name": "browser-use/browser-use",
+      "description": "Framework enabling AI agents to operate a real browser for web tasks. At 117,444 stars, it represents the maturing of computer-use AI from research demos to production tooling.",
+      "language": "Python",
+      "stars": 117444,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["browser-automation", "computer-use", "agent", "web-tasks"],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "Multi-backend chat UI with plugin-based agent capabilities, supporting multiple LLM backends. At 154,159 stars, one of the most widely deployed self-hosted LLM interfaces.",
+      "language": "TypeScript",
+      "stars": 154159,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": ["chat-ui", "self-hosted", "multi-backend", "plugins"],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Rapidly growing (436 stars today, approaching 103K total) skill library for AI coding agents. The pace of adoption reflects the ecosystem coalescing around reusable agent capabilities as a new software primitive.",
+      "language": "Markdown",
+      "stars": 102488,
+      "stars_today": 436,
+      "forks": 0,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agent", "reusable", "ai-tooling"],
+      "relevance": "high"
+    },
+    {
+      "id": "berriAI-litellm",
+      "name": "BerriAI/litellm",
+      "description": "Unified gateway for 100+ LLM APIs, trending today with 95 new stars. The rapid adoption of LiteLLM as the API abstraction layer for multi-provider LLM applications reflects growing complexity in the LLM provider landscape.",
+      "language": "Python",
+      "stars": 95000,
+      "stars_today": 95,
+      "forks": 0,
+      "url": "https://github.com/BerriAI/litellm",
+      "tags": ["llm-gateway", "api-abstraction", "multi-provider", "inference"],
+      "relevance": "high"
+    },
+    {
+      "id": "mem0ai-mem0",
+      "name": "mem0ai/mem0",
+      "description": "Memory layer for AI agents providing persistent, searchable memory across conversations and sessions. At 66,912 stars, it addresses one of the most practically important gaps in current agent deployments.",
+      "language": "Python",
+      "stars": 66912,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mem0ai/mem0",
+      "tags": ["agent-memory", "persistence", "rag", "long-term-memory"],
+      "relevance": "high"
+    },
+    {
+      "id": "langchain-ai-langgraph",
+      "name": "langchain-ai/langgraph",
+      "description": "Stateful agent orchestration library for building complex multi-step agent workflows with persistent state and branching logic. 42,980 stars and growing as the standard for production agent graphs.",
+      "language": "Python",
+      "stars": 42980,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/langchain-ai/langgraph",
+      "tags": ["agent-orchestration", "stateful", "workflow", "langchain"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "Local LLM runner enabling one-command deployment of open-weight models. At 182,552 stars, the de facto standard for running models locally, essential infrastructure as Qwen3.8 and other large open models gain adoption.",
+      "language": "Go",
+      "stars": 182552,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["local-inference", "open-weights", "deployment", "cli"],
+      "relevance": "high"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "Code review system combining rule-based checks with LLM agent analysis, trending with 326 stars today. Part of Alibaba's expanding open-source AI tooling portfolio.",
+      "language": "Python",
+      "stars": 326,
+      "stars_today": 326,
+      "forks": 0,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": ["code-review", "ai-coding", "devtools", "llm-agent"],
+      "relevance": "medium"
+    },
+    {
+      "id": "vectifyai-pageindex",
+      "name": "VectifyAI/PageIndex",
+      "description": "Reasoning-based document indexing system that works without vector embeddings, using structured reasoning chains instead. At 39,026 stars, it challenges the RAG orthodoxy of embedding-first retrieval.",
+      "language": "Python",
+      "stars": 39026,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/VectifyAI/PageIndex",
+      "tags": ["rag", "document-indexing", "retrieval", "reasoning-based"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Evolution Environments",
+      "description": "A new paradigm for training agents in rich, neural-rendered code worlds where agents evolve across generations and accumulate playbooks, dramatically reducing the compute required to reach emergent behaviors.",
+      "related_paper_ids": ["agentgarten-2610-12374", "memento3-2610-11794", "mimo-v26-2610-11959"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Serving & Inference Efficiency",
+      "description": "A cluster of systems papers attacks LLM inference from multiple angles simultaneously — token-level routing, decoding-aware pruning, and KV cache compression — suggesting infrastructure engineering has matured into a primary research area.",
+      "related_paper_ids": ["tokenrouter-2610-12242", "sparsedeoding-2610-12327", "vfold-2610-12338"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Robot World Models & Action Faithfulness",
+      "description": "Multiple papers this week address the critical gap between what robot world models predict and what actually happens, pushing embodied AI from demonstration to reliable sim-to-real deployment.",
+      "related_paper_ids": ["dreamtrue-2610-12468", "multi-agent-ego-world-2610-12299", "viola-2610-12435"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Foundation Models (Qwen Dominance)",
+      "description": "Qwen3.8-27B continues to dominate HuggingFace with 17K+ likes and 6.8M downloads, while Cloudflare's entry with clef signals that infrastructure companies are entering the open-weight model competition directly.",
+      "related_paper_ids": ["woven-2610-12417"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI Safety & Deception Detection",
+      "description": "Empirical demonstrations that linear probes can detect model sabotage and unverbalized deception represent a significant practical advance in scalable AI oversight, complemented by theoretical work on multi-agent takeoff thresholds.",
+      "related_paper_ids": ["caught-in-act-2610-12445", "ecology-ai-agents-2610-12436"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agentic Navigation & Embodied Generalization",
+      "description": "SuperNav and related work push toward navigation systems that generalize to arbitrary tasks and scenes without task-specific training, enabled by VLM-grounded planning and reconfigurable observation strategies.",
+      "related_paper_ids": ["supernav-2610-12126"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-10T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-10T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv (cs.AI, cs.LG, cs.CL, cs.CV)",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-10T15:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-10T15:30:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-10T15:30:00Z",
+      "status": "partial"
+    }
+  ]
+}

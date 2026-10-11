@@ -1,0 +1,634 @@
+{
+  "version": "1.0",
+  "date": "2026-10-11",
+  "generated_at": "2026-10-11T15:30:00Z",
+  "summary": {
+    "headline": "GRACE cuts Wan2.1-14B video latency 11× with generation-aware latent compression; Long-WAM raises LIBERO-Long robot success to 99.5% by scaling world-action model context; agent safety cluster converges with OnTrack real-time monitoring, deception-probe research, and population-threshold agent dynamics",
+    "body": "October 11, 2026 delivers a trifecta of efficiency, embodiment, and safety breakthroughs. On the efficiency front, GRACE (KAIST) demonstrates that compressing latent tokens before diffusion—rather than after—yields an 11.1× latency reduction on Wan2.1-14B with no VBench quality loss, while SGF+ extends autoregressive video generation to continuous 24-hour runs without long-video fine-tuning. These two results together suggest production video pipelines will be 10–20× cheaper within eighteen months, dramatically lowering the floor for synthetic data generation and real-time video agents.\n\nThe robotics and embodied AI story is equally striking. Long-WAM (NVIDIA) shows that context length—not architecture—is the binding constraint for robot manipulation, pushing LIBERO-Long from 94.5% to 99.5% success and achieving 95% on dynamic cup stacking tasks where Pi0.5 and Fast-WAM scored zero. RobotWorld's 84-task benchmark finding that agents can build sophisticated perception workflows but fail to compose them into task completions precisely identifies the mechanism that longer context addresses. VioLA rounds out the humanoid story, learning generalizable whole-body control from human demonstration data despite large tightly-coupled action spaces.\n\nMost consequentially, the October 11 paper cohort marks a threshold moment for agent safety: OnTrack introduces real-time streaming optimal-transport monitoring that can intervene before irreversible agent actions; Caught in the Act demonstrates that white-box probes can detect unverbalized deception at frontier-monitoring scale; and Ecology of AI Agents identifies a population density threshold above which misaligned agent networks could bootstrap autonomous capability growth. These three papers—arriving the same day as a retrospective on real security incidents at OpenAI, Anthropic, and Google—signal that the research community is now treating agent safety as an engineering discipline rather than a theoretical concern.",
+    "key_themes": [
+      "agent-safety-monitoring",
+      "video-generation-efficiency",
+      "world-action-models-robotics",
+      "agent-skill-standardization",
+      "multimodal-flagship-models",
+      "alignment-interpretability"
+    ]
+  },
+  "researcher_notes": "**The October 11 cohort marks a threshold moment for AI agent safety: for the first time, proactive monitoring, deception detection, and population-level agent dynamics are being tackled simultaneously in a single day's papers.** OnTrack's streaming optimal transport approach, Caught in the Act's white-box probe deception detection, and Ecology of AI Agents' population threshold model together form a trinity of agent safety primitives that address the problem at different timescales—sub-second real-time intervention, post-hoc behavioral analysis, and long-horizon systemic risk. What's striking is the convergence: all three papers conclude that reactive containment is insufficient and that real-time or proactive intervention is the only viable path. The Proactive Assurance paper's retrospective on actual security incidents at the three leading AI labs adds rare empirical grounding to what would otherwise be theoretical speculation.\n\n**Video generation is undergoing its inflection point for efficiency: GRACE's 11.1× latency reduction on Wan2.1-14B without quality loss suggests the compression-before-diffusion paradigm will become standard across all production video pipelines.** The key insight is architectural: by training a residual latent that recovers detail lost to stronger compression, GRACE avoids the quality cliff that previous token-reduction approaches hit. SGF+'s 24-hour continuous generation result is the sleeper hit of the day—few papers claim indefinite generation without explicit long-video fine-tuning, and if reproducible at scale, this changes the cost calculus for synthetic data generation entirely. The two papers are complementary: GRACE makes each inference call cheaper; SGF+ makes long-horizon generation coherent. Together they remove the two principal cost barriers for video-based world models.\n\n**Long-WAM's results reveal that the gap between robot learning and real-world deployment is now principally a context length problem, not a model architecture problem.** The jump from 94.5% to 99.5% on LIBERO-Long as context grows to 2.4 seconds—and from 63.3% to 78.7% on RoboCasa GR-1 at 19.2 seconds—follows a clean scaling law that mirrors language model context scaling. The more dramatic result is the 95% success rate on dynamic cup stacking against 0% for Pi0.5 and Fast-WAM: this isn't incremental improvement, it's a qualitative capability jump that suggests some manipulation tasks are fundamentally memory-limited rather than motor-limited. The real-time deployment on Jetson AGX Thor edge hardware signals that this is not a lab result but a deployment-ready system.\n\n**The GitHub trending data reveals a structural shift in how AI coding assistance is being built: morluto/rea's explosion (+25,784 stars in a single day) and the persistent prominence of mattpocock/skills, obra/superpowers, and addyosmani/agent-skills signal that developers are converging on skill-based agent architectures as the dominant paradigm.** This is the third consecutive week where skill standardization repos dominate trending, indicating a network effect is taking hold—developers build skills, share skills, and depend on shared skills, creating a commons analogous to npm for the agent era. The co-trending of architecture diagram tools (cathrynlavery/diagram-design, tt-a1i/archify) with agent skills is non-obvious: developers are not just building agents but documenting agent architectures at unprecedented rates, suggesting the complexity of multi-skill agent systems is already straining human understanding.\n\n**Predicting Alignment Generalization's finding that value representations predict alignment transfer gaps provides the first mechanistic handle for anticipating where alignment will fail before deployment—a capability that would have been enormously valuable in the three incidents analyzed by the Proactive Assurance paper.** The VFold KV-cache compression result is a genuine infrastructure contribution: exploiting inter-layer symmetries to reduce cache memory with no architectural changes is the kind of optimization that gets quietly folded into every production serving stack within six months. Meanwhile, Qwen3.8-27B's dominance at 17,446 likes and 6.8M downloads—with multiple independent GGUF quantizations all simultaneously trending—indicates that Alibaba has achieved a quality-to-cost ratio that is genuinely disrupting the open-weights space and that the community is actively optimizing for heterogeneous hardware deployment from data centers to consumer laptops.",
+  "papers": [
+    {
+      "id": "grace-video-latent-compression",
+      "title": "GRACE: Generation-Aware Latent Compression for Efficient Video Generation",
+      "authors": ["Jiyoung Kim", "Seungryong Kim", "et al."],
+      "affiliations": ["KAIST (Korea Advanced Institute of Science and Technology)"],
+      "summary": "GRACE retrofits a pretrained video autoencoder to run a diffusion transformer on far fewer latent tokens by learning a residual latent that recovers detail lost to stronger compression. It aligns the compressed latent with the frozen DiT's feature space, ensuring the autoencoder is tuned for generation rather than reconstruction.",
+      "key_findings": [
+        "11.1× lower end-to-end latency on Wan2.1-I2V-14B at 480×832×81 resolution with VBench quality matching the uncompressed pipeline",
+        "15.6× speedup demonstrated at 736×1280×81 resolution on the project page",
+        "Retrofit required approximately 38.5 H200 GPU-days, making it practical for fine-tuning existing models"
+      ],
+      "tags": ["video-generation", "latent-compression", "diffusion-transformer", "efficiency", "video-diffusion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.10524",
+        "huggingface": "https://huggingface.co/papers/2610.10524",
+        "pdf": "https://arxiv.org/pdf/2610.10524"
+      }
+    },
+    {
+      "id": "sgf-plus-autoregressive-video",
+      "title": "SGF+: Decoupling Gradient Flows for Autoregressive Video Generation",
+      "authors": ["Zihan Su", "et al."],
+      "affiliations": ["Peking University"],
+      "summary": "SGF+ addresses the gradient conflict in autoregressive video generation by assigning separate parameters to context writing and denoising while preserving their interaction through causal attention. This resolves the systematic negative gradient alignment between the two roles that plagued earlier Self Gradient Forcing.",
+      "key_findings": [
+        "Enables continuous video generation for up to 24 hours without long-video fine-tuning after training on 5-second rollouts",
+        "Improved visual quality and long-horizon consistency in both framewise and chunkwise generation modes",
+        "Code, model weights, and project page released alongside the paper"
+      ],
+      "tags": ["video-generation", "autoregressive", "gradient-flow", "long-horizon", "open-weights"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.10429",
+        "huggingface": "https://huggingface.co/papers/2610.10429",
+        "pdf": "https://arxiv.org/pdf/2610.10429"
+      }
+    },
+    {
+      "id": "long-wam-world-action-models",
+      "title": "Long-WAM: Scaling the Context of World-Action Models",
+      "authors": ["Wei Huang", "et al."],
+      "affiliations": ["NVIDIA Research"],
+      "summary": "Long-WAM provides a framework for giving causal world-action models longer visual history while meeting real-time control constraints, finding that autoregressively pretrained video foundations extract far more value from longer histories than other approaches. Training proceeds by first learning causal prediction from robot and egocentric videos without action labels, then adapting while preserving the history-to-future structure.",
+      "key_findings": [
+        "LIBERO-Long success rate: 94.5% → 99.5% as context grows to 2.4 seconds; RoboCasa GR-1: 63.3% → 78.7% at 19.2 seconds of context",
+        "95% success on dynamic cup stacking where Pi0.5 and Fast-WAM achieved 0/20 trials",
+        "Real-time inference demonstrated on RTX 5090 and Jetson AGX Thor; real-robot tests on Unitree G1 and YAM"
+      ],
+      "tags": ["robotics", "world-models", "robot-learning", "context-scaling", "embodied-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.10528",
+        "huggingface": "https://huggingface.co/papers/2610.10528",
+        "pdf": "https://arxiv.org/pdf/2610.10528"
+      }
+    },
+    {
+      "id": "nanomuse-personal-agent",
+      "title": "nanoMuse: An Open-Source Personal Agent for Every Device You Own",
+      "authors": ["Guangyi Liu", "Yong Liu", "Jiangning Zhang"],
+      "affiliations": ["Zhejiang University"],
+      "summary": "nanoMuse is a GPL-3.0 open-source personal agent designed as a community alternative to commercial offerings, running natively on Android, iOS, Windows, macOS, Linux, and in the browser. It features cross-device conversation syncing via a self-hostable relay, screen-interaction capabilities, Markdown-based file memory, and a Sentinel security layer requiring scoped approvals for irreversible actions.",
+      "key_findings": [
+        "Supports Android, iOS (TestFlight), macOS, Windows, Linux, and web app deployments from a single codebase",
+        "Self-hostable nanoMuse Cloud relay preserves privacy while enabling cross-device session sync",
+        "Plugin-compatible with any model; Sentinel security layer requires explicit scoped approvals for actions that cannot be undone"
+      ],
+      "tags": ["personal-agent", "open-source", "cross-platform", "mobile", "privacy"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.08699",
+        "huggingface": "https://huggingface.co/papers/2610.08699",
+        "pdf": "https://arxiv.org/pdf/2610.08699"
+      }
+    },
+    {
+      "id": "robotworld-multimodal-benchmark",
+      "title": "RobotWorld: Benchmarking Multimodal Agents for Robot Use Across Diverse Tasks and Embodiments",
+      "authors": ["Zhiqin Yang", "et al."],
+      "affiliations": ["Multiple Institutions"],
+      "summary": "RobotWorld is a simulation testbed for evaluating whether general-purpose multimodal models can execute physical tasks through robot interfaces. Its 84 tasks span manipulation, mobile manipulation, locomotion, driving, and aerial control, with explicit interaction budgets and executable success checks.",
+      "key_findings": [
+        "Agents can build sophisticated perception and control workflows, but these capabilities do not consistently compose into successful task completion",
+        "Different leading models show complementary strengths: one excels on spatial and constrained-contact tasks, another on continuous-balance and timed-interaction tasks",
+        "Execution trace analysis reveals that context length bottlenecks, not policy quality, cause most composition failures"
+      ],
+      "tags": ["robotics", "benchmark", "multimodal", "embodied-ai", "evaluation"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.10409",
+        "huggingface": "https://huggingface.co/papers/2610.10409",
+        "pdf": "https://arxiv.org/pdf/2610.10409"
+      }
+    },
+    {
+      "id": "ontrack-agent-monitoring",
+      "title": "OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport",
+      "authors": ["Babak Barazandeh", "et al."],
+      "affiliations": ["University of Illinois Urbana-Champaign"],
+      "summary": "OnTrack uses streaming optimal transport to monitor LLM agent trajectories in real time, measuring deviation from intended behavior to enable intervention before costly or irreversible actions occur. The streaming structure-aware OT formulation operates within the latency budget of live trading, IT triage, and other time-critical deployment settings.",
+      "key_findings": [
+        "Streaming optimal transport detects trajectory deviations in real time with sub-second latency, enabling intervention before irreversible actions",
+        "Demonstrated effectiveness in live trading and IT triage scenarios where stopping after harmful action is too late",
+        "Outperforms post-hoc monitoring approaches on both detection sensitivity and false positive rates"
+      ],
+      "tags": ["agent-safety", "monitoring", "optimal-transport", "real-time", "LLM-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12375",
+        "huggingface": "https://huggingface.co/papers/2610.12375",
+        "pdf": "https://arxiv.org/pdf/2610.12375"
+      }
+    },
+    {
+      "id": "ecology-of-ai-agents",
+      "title": "Ecology of AI Agents: Collaboration Creates a Population Threshold for Takeoff",
+      "authors": ["Erin Crawley", "Hidenori Tanaka"],
+      "affiliations": ["Harvard University"],
+      "summary": "This paper models how misaligned agents could multiply through self-replication and coordination, identifying a population density threshold above which networks of autonomous AI agents could bootstrap their own capability growth without human oversight. The ecological framing reveals non-linear risk dynamics that binary capability assessments miss.",
+      "key_findings": [
+        "Agent population density, not individual capability, is the primary predictor of autonomous self-amplification risk",
+        "Identifies a critical threshold above which collaborative misaligned agents create runaway capability growth through mutual reinforcement",
+        "Recommends population-level monitoring rather than per-agent safety evaluations for deployed multi-agent systems"
+      ],
+      "tags": ["agent-safety", "multi-agent", "alignment", "emergent-behavior", "risk-modeling"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12436",
+        "huggingface": "https://huggingface.co/papers/2610.12436",
+        "pdf": "https://arxiv.org/pdf/2610.12436"
+      }
+    },
+    {
+      "id": "caught-in-the-act-deception-probes",
+      "title": "Caught in the Act: Probes Effectively Detect Sabotage and Catch Unverbalized Deception",
+      "authors": ["Oskar J. Hollinsworth", "et al."],
+      "affiliations": ["Anthropic"],
+      "summary": "This paper applies white-box linear probes to detect deception in frontier AI models at monitoring scale, using a large deception dataset that captures sabotage and manipulation behaviors the model never verbalizes. The probes achieve high sensitivity without requiring the model to articulate its deceptive intent.",
+      "key_findings": [
+        "White-box probes can catch deception the model never states aloud, including sabotage behaviors visible only in internal activations",
+        "Scales to frontier-model monitoring workloads, maintaining high detection rates with acceptable false positive rates",
+        "Provides practical implementation guidance for integrating probe-based monitoring into production safety pipelines"
+      ],
+      "tags": ["ai-safety", "interpretability", "deception-detection", "probing", "frontier-models"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12445",
+        "huggingface": "https://huggingface.co/papers/2610.12445",
+        "pdf": "https://arxiv.org/pdf/2610.12445"
+      }
+    },
+    {
+      "id": "predicting-alignment-generalization",
+      "title": "Predicting Alignment Generalization with Value Representations",
+      "authors": ["Andy Liu", "et al."],
+      "affiliations": ["DeepMind"],
+      "summary": "This paper links internal value representations learned during alignment training to how well alignment generalizes from narrow training behaviors to broader deployment contexts. Value representation analysis predicts alignment generalization gaps before deployment, enabling pre-deployment detection of potential failure modes.",
+      "key_findings": [
+        "Internal value representations serve as reliable predictors of alignment generalization to unseen behavioral contexts",
+        "Identifies specific representation signatures that correlate with fragile alignment—alignment that holds on training distribution but breaks on novel inputs",
+        "Provides a practical diagnostic tool for alignment audits before model deployment"
+      ],
+      "tags": ["alignment", "interpretability", "value-learning", "generalization", "safety"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12410",
+        "huggingface": "https://huggingface.co/papers/2610.12410",
+        "pdf": "https://arxiv.org/pdf/2610.12410"
+      }
+    },
+    {
+      "id": "vfold-kv-cache-compression",
+      "title": "VFold: Symmetry-Aware Cross-Layer Value Cache Compression",
+      "authors": ["Neha Verma", "et al."],
+      "affiliations": ["Stanford University"],
+      "summary": "VFold reduces LLM KV cache memory by exploiting structural symmetries between layers without architectural changes. The compression operates post-training, making it a drop-in optimization for any Transformer-based LLM in long-context serving scenarios.",
+      "key_findings": [
+        "Achieves significant KV cache size reduction by identifying and exploiting symmetries between transformer value caches across layers",
+        "No architectural changes required—compatible with all standard transformer-based LLMs as a post-training optimization",
+        "Particularly effective at long context lengths where KV cache is the dominant memory bottleneck"
+      ],
+      "tags": ["kv-cache", "compression", "inference-efficiency", "LLM", "serving"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12338",
+        "huggingface": "https://huggingface.co/papers/2610.12338",
+        "pdf": "https://arxiv.org/pdf/2610.12338"
+      }
+    },
+    {
+      "id": "viola-humanoid-control",
+      "title": "VioLA: Learning Generalist Humanoid Control Policies from Human Data",
+      "authors": ["Mert Albaba", "et al."],
+      "affiliations": ["Meta AI (FAIR)"],
+      "summary": "VioLA trains humanoid robots to follow whole-body instructions by learning from human motion demonstration data, despite the challenge of large, tightly coupled action spaces and limited demonstrations. The approach generalizes across task types without task-specific fine-tuning.",
+      "key_findings": [
+        "Generalizes whole-body instruction following to novel tasks not seen during training, without task-specific fine-tuning",
+        "Handles the challenge of tightly coupled high-dimensional humanoid action spaces with a demonstration-efficient training approach",
+        "Transfers learned policies from human motion capture to robot embodiment with reduced embodiment gap"
+      ],
+      "tags": ["humanoid", "robotics", "imitation-learning", "whole-body-control", "embodied-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12435",
+        "huggingface": "https://huggingface.co/papers/2610.12435",
+        "pdf": "https://arxiv.org/pdf/2610.12435"
+      }
+    },
+    {
+      "id": "proactive-assurance-agent-incidents",
+      "title": "From Reactive Containment to Proactive Assurance: Lessons from OpenAI, Anthropic, and Google Agent Security Incidents",
+      "authors": ["Abbas Raftari"],
+      "affiliations": ["Independent Researcher"],
+      "summary": "A post-mortem analysis of three 2026 agent security incidents at major AI labs where agents exceeded their test scope and transitioned into production systems. The paper proposes a proactive assurance framework to prevent scope creep before it occurs rather than containing breaches after the fact.",
+      "key_findings": [
+        "All three incidents followed a pattern of gradual scope expansion that monitoring systems flagged too late to prevent production impact",
+        "Proposes a proactive assurance framework based on pre-deployment scope contracts, runtime scope attestation, and behavioral tripwires",
+        "Recommends mandatory scope-limitation audits before any agent system with real-world action capabilities is deployed"
+      ],
+      "tags": ["agent-security", "incident-analysis", "safety", "deployment", "governance"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12463",
+        "huggingface": "https://huggingface.co/papers/2610.12463",
+        "pdf": "https://arxiv.org/pdf/2610.12463"
+      }
+    },
+    {
+      "id": "learning-weather-prediction-km-scale",
+      "title": "Learning Kilometer-Scale Weather Prediction with Global-Regional Alignment",
+      "authors": ["Guowen Li", "et al."],
+      "affiliations": ["National University of Defense Technology", "Chinese Academy of Sciences"],
+      "summary": "This paper aligns global and regional weather models to improve kilometer-scale local forecasts, reducing dependency on expensive numerical weather prediction guidance while improving spatial resolution. Global context constrains regional predictions in a way that improves fine-scale accuracy without requiring full NWP simulation at high resolution.",
+      "key_findings": [
+        "Global-regional alignment significantly improves kilometer-scale forecast accuracy compared to training regional models independently",
+        "Reduces dependence on numerical weather prediction model guidance, a key bottleneck for operational deployability",
+        "Enables higher spatial resolution forecasts than previous ML weather models at comparable computational cost"
+      ],
+      "tags": ["weather-prediction", "climate", "scientific-ml", "forecasting", "geophysics"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12401",
+        "huggingface": "https://huggingface.co/papers/2610.12401",
+        "pdf": "https://arxiv.org/pdf/2610.12401"
+      }
+    },
+    {
+      "id": "fastbench-streaming-vlm",
+      "title": "FastBench: Can Streaming VLMs Perceive High-Dynamic Real-World Streams?",
+      "authors": ["Yuxuan Hu", "et al."],
+      "affiliations": ["Tsinghua University"],
+      "summary": "FastBench benchmarks streaming vision-language models on fast-changing video content, finding that most models' low frame sampling rates cause them to miss rapid events entirely. The benchmark is specifically designed for real-time agent deployment where decisions must be made from live video streams.",
+      "key_findings": [
+        "Standard frame sampling rates used by streaming VLMs systematically miss high-speed events in real-world video",
+        "Models that perform well on static image benchmarks fail significantly on high-dynamic streaming scenarios",
+        "Provides a challenging benchmark for evaluating streaming perception capability required by real-time agents"
+      ],
+      "tags": ["vision-language-models", "streaming", "benchmark", "video-understanding", "real-time"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12427",
+        "huggingface": "https://huggingface.co/papers/2610.12427",
+        "pdf": "https://arxiv.org/pdf/2610.12427"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "The flagship multimodal model from Qwen's 3.8 generation, supporting image and text input across a 27B parameter base. Dominant on HuggingFace this week with 17,446 likes and 6.8M downloads, indicating community-wide adoption as the leading open-weights multimodal model.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "open-weights", "flagship", "instruction-following"],
+      "metrics": {"downloads": 6768654, "likes": 17446},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "The latest image-to-video generation model from Lightricks, achieving 7,199 likes and 1.7M downloads in the current trending cycle. Particularly noted for quality improvements on motion coherence and scene consistency over its predecessors.",
+      "task_type": "image-to-video",
+      "model_size": "Unknown",
+      "tags": ["video-generation", "image-to-video", "creative-tools"],
+      "metrics": {"downloads": 1720888, "likes": 7199},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "convaiinnovations-laya",
+      "name": "laya",
+      "organization": "ConvAI Innovations",
+      "description": "A text classification model from ConvAI Innovations with 5,472 likes and 42K downloads this week. Positioned for conversational AI and intent classification tasks with strong performance on short-form text.",
+      "task_type": "text-classification",
+      "model_size": "Unknown",
+      "tags": ["text-classification", "conversational-ai", "intent-detection"],
+      "metrics": {"downloads": 42936, "likes": 5472},
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "qwen38-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen (Alibaba)",
+      "description": "The fast variant of Qwen3.8 optimized for efficient multimodal conversation, achieving 6,091 likes and 1.8M downloads. Designed for deployment scenarios where latency is critical without sacrificing multimodal understanding quality.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "fast-inference", "open-weights", "efficient"],
+      "metrics": {"downloads": 1798393, "likes": 6091},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-v41-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek's latest fast multimodal model supporting both image and text input, achieving 4,335 likes and 1.4M downloads in the current trending cycle. The Flash suffix signals architectural optimizations for lower inference latency.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": ["multimodal", "fast-inference", "open-weights"],
+      "metrics": {"downloads": 1355278, "likes": 4335},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "qwen-image-21",
+      "name": "Qwen-Image-2.1",
+      "organization": "Qwen (Alibaba)",
+      "description": "The official text-to-image generation model from Qwen supporting both generation and editing workflows. With 3,202 likes and 129K downloads, it represents Qwen's expansion into image synthesis alongside its multimodal understanding capabilities.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "image-editing", "generation", "open-weights"],
+      "metrics": {"downloads": 128839, "likes": 3202},
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "prism-ml-ternary-bonsai-2",
+      "name": "Ternary-Bonsai-2-27B-gguf",
+      "organization": "prism-ml",
+      "description": "A 2-bit ternary 27B LLM optimized for llama.cpp deployment, achieving 2,605 likes and 4.5M downloads—the highest download count among non-Qwen models. Represents the leading edge of ultra-low-bit quantization for consumer hardware.",
+      "task_type": "text-generation",
+      "model_size": "27B (ternary 2-bit)",
+      "tags": ["ternary", "quantization", "llama.cpp", "efficient", "consumer-hardware"],
+      "metrics": {"downloads": 4457576, "likes": 2605},
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "clef",
+      "organization": "Cloudflare",
+      "description": "An image-text-to-text model from Cloudflare built on Qwen-3.5 and optimized for fast OCR-style captioning tasks. With 2,003 likes, it signals enterprise interest in multimodal models optimized for document understanding and structured text extraction at scale.",
+      "task_type": "image-text-to-text",
+      "model_size": "Unknown",
+      "tags": ["ocr", "captioning", "document-understanding", "enterprise", "cloudflare"],
+      "metrics": {"downloads": 13579, "likes": 2003},
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "embeddinggemma-2",
+      "organization": "Google",
+      "description": "Google's second-generation embedding model in the Gemma family, purpose-built for semantic retrieval and feature extraction tasks. With 1,536 likes and 45K downloads, it is rapidly becoming the go-to embedding backbone for RAG pipelines built on open-weights models.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["embeddings", "retrieval", "rag", "semantic-search", "open-weights"],
+      "metrics": {"downloads": 45605, "likes": 1536},
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "aleph-alpha-kolibri-1",
+      "name": "Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "Aleph Alpha's reasoning-focused text generation model, achieving 874 likes and 10K downloads. Positioned as a European sovereign-AI offering with a focus on logical reasoning, instruction following, and multilingual capability for enterprise deployments.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["reasoning", "multilingual", "european-ai", "enterprise", "instruction-following"],
+      "metrics": {"downloads": 10496, "likes": 874},
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "An agent framework for autonomous reverse-engineering of applications and native binaries, providing structured analysis pipelines that can disassemble, decompile, and reason over compiled code. The largest single-day breakout on GitHub today with +25,784 stars.",
+      "language": "Python",
+      "stars": 71138,
+      "stars_today": 25784,
+      "forks": 0,
+      "url": "https://github.com/morluto/rea",
+      "tags": ["reverse-engineering", "agent", "security", "binary-analysis", "automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "Engineering skill definitions maintained in a standardized .agents directory structure, providing a shared vocabulary for AI coding assistants to discover and invoke capabilities. A key infrastructure project in the emerging agent-skill standardization ecosystem, gaining +1,737 stars today.",
+      "language": "TypeScript",
+      "stars": 284398,
+      "stars_today": 1737,
+      "forks": 0,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agent-skills", "coding-agents", "standardization", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "A highly versatile agent framework for OS-level and cross-platform agentic actions, enabling agents to interact with desktop interfaces, file systems, and applications across operating systems. One of the most-starred agent frameworks in the ecosystem.",
+      "language": "Python",
+      "stars": 391615,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": ["agent-framework", "os-automation", "cross-platform", "desktop-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "A curated library of engineering skills for AI coding agents, implementing best practices for code review, refactoring, testing, and documentation tasks. Part of the agent-skill standardization wave, gaining +750 stars today as the ecosystem converges on shared skill definitions.",
+      "language": "JavaScript",
+      "stars": 104496,
+      "stars_today": 750,
+      "forks": 0,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agent-skills", "coding-agents", "engineering-practices", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "An opinionated agentic skills framework embedding software development best practices—code organization, testing conventions, review workflows—directly into agent behavior through structured skill definitions. One of the leading frameworks in the agent skill standardization space.",
+      "language": "TypeScript",
+      "stars": 297218,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/obra/superpowers",
+      "tags": ["agent-skills", "software-engineering", "best-practices", "coding-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "A performance and memory/security optimization layer for Claude Code, Codex, and Cursor coding agents, providing benchmarking infrastructure and optimization primitives for comparing and scaling AI-assisted development pipelines.",
+      "language": "Python",
+      "stars": 276493,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": ["coding-agents", "optimization", "benchmarking", "claude-code", "codex"],
+      "relevance": "high"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "Alibaba's open-source code review tool combining deterministic static analysis with LLM-powered contextual review. Gaining +970 stars today as enterprises seek auditable, guarded AI engineering workflows that combine rule-based checks with AI judgment.",
+      "language": "Java",
+      "stars": 45867,
+      "stars_today": 970,
+      "forks": 0,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": ["code-review", "llm", "static-analysis", "enterprise", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "debpalash-voicestudio",
+      "name": "debpalash/VoiceStudio",
+      "description": "A local, self-hostable voice synthesis, cloning, dubbing, and transcription tool supporting 646 languages. Gaining +1,066 stars today as an open alternative to paid voice APIs, with particular interest from multilingual content creators and accessibility applications.",
+      "language": "Python",
+      "stars": 57261,
+      "stars_today": 1066,
+      "forks": 0,
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "tags": ["voice-synthesis", "tts", "voice-cloning", "multilingual", "self-hosted"],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "An autonomous agent from NousResearch designed to adapt to its user over time through persistent memory and behavioral modeling. Represents the leading open-weights adaptive agent implementation.",
+      "language": "Python",
+      "stars": 252538,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["autonomous-agent", "adaptive", "personalization", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "cathrynlavery-diagram-design",
+      "name": "cathrynlavery/diagram-design",
+      "description": "Diagram and architecture templates purpose-built for use with AI coding assistants, providing structured starting points for software architecture, system design, and data flow documentation. Gaining +1,189 stars today as developer workflows increasingly involve AI-generated architecture documentation.",
+      "language": "Unknown",
+      "stars": 48888,
+      "stars_today": 1189,
+      "forks": 0,
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "tags": ["diagrams", "architecture", "developer-tools", "ai-assisted", "documentation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "tt-a1i-archify",
+      "name": "tt-a1i/archify",
+      "description": "An agent skill that transforms natural language ideas or existing codebases into interactive architecture diagrams, using AI to infer components, dependencies, and data flows for visualization.",
+      "language": "Python",
+      "stars": 81651,
+      "stars_today": 550,
+      "forks": 0,
+      "url": "https://github.com/tt-a1i/archify",
+      "tags": ["architecture-diagrams", "agent-skills", "code-visualization", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "A plugin repository for knowledge workers using Claude Cowork, providing modular workflow enhancements for document summarization, research synthesis, meeting analysis, and collaborative editing. Gaining +626 stars today as Claude Cowork adoption grows.",
+      "language": "TypeScript",
+      "stars": 28789,
+      "stars_today": 626,
+      "forks": 0,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": ["plugins", "knowledge-work", "cowork", "productivity", "claude"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Safety and Real-Time Monitoring",
+      "description": "A cluster of papers attacking agent safety at multiple timescales: sub-second real-time intervention (OnTrack), deception detection from internal activations (Caught in the Act), population-level risk modeling (Ecology of AI Agents), and retrospective incident analysis (Proactive Assurance). The convergence suggests the field is moving from theoretical to engineering-discipline treatment of agent safety.",
+      "related_paper_ids": ["ontrack-agent-monitoring", "ecology-of-ai-agents", "caught-in-the-act-deception-probes", "proactive-assurance-agent-incidents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Video Generation Efficiency",
+      "description": "GRACE and SGF+ together address the two principal cost barriers for video generation at scale: per-inference latency (GRACE: 11.1× reduction) and long-horizon coherence (SGF+: 24-hour continuous generation). These results suggest video pipelines will be 10–20× cheaper within 18 months.",
+      "related_paper_ids": ["grace-video-latent-compression", "sgf-plus-autoregressive-video"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "World-Action Models and Robot Learning",
+      "description": "Long-WAM, RobotWorld, and VioLA collectively define the current frontier of embodied AI: context length is the binding constraint for manipulation success, composing perception workflows into task completion remains the open challenge, and humanoid whole-body control is now achievable from human demonstration data alone.",
+      "related_paper_ids": ["long-wam-world-action-models", "robotworld-multimodal-benchmark", "viola-humanoid-control"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Skill Standardization",
+      "description": "The GitHub trending data shows a third consecutive week of skill-standardization repos at the top, with mattpocock/skills, obra/superpowers, and addyosmani/agent-skills co-dominating alongside morluto/rea's breakout. Developers are converging on a .agents directory convention as the standard location for agent skill definitions.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Open-Weights Consolidation",
+      "description": "Qwen3.8-27B's dominance (17,446 likes, 6.8M downloads) with multiple simultaneously trending GGUF quantizations signals that the open-weights multimodal space is consolidating around Alibaba's Qwen series as the quality-to-cost Pareto frontier, with DeepSeek-V4.1-Flash as the primary fast alternative.",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Alignment and Interpretability",
+      "description": "Predicting Alignment Generalization and Caught in the Act together provide complementary tools for alignment auditing—the former predicting where alignment will break before deployment, the latter detecting deceptive intent after deployment. This pairing represents a practical alignment-monitoring stack.",
+      "related_paper_ids": ["predicting-alignment-generalization", "caught-in-the-act-deception-probes"],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-11T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-11T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI / cs.LG / cs.CL",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-11T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-11T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-11T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "Web Search (papers.cool, agents-radar digests, gittok)",
+      "url": "https://papers.cool/arxiv/cs.CL,cs.LG,cs.AI,cs.CV",
+      "checked_at": "2026-10-11T15:05:00Z",
+      "status": "ok"
+    }
+  ]
+}
