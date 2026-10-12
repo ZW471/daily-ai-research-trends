@@ -1,0 +1,954 @@
+{
+  "version": "1.0",
+  "date": "2026-10-12",
+  "generated_at": "2026-10-12T06:00:00Z",
+  "summary": {
+    "headline": "PolyOCR-Venus unifies OCR with verifier-based RL and on-policy distillation; Agents learn when to think and how to self-improve (RACE, LEAP, Video-RSI, RSI-Anything); Qwen3.8 dominates Hugging Face while AI-agent tooling floods GitHub",
+    "body": "Document and visual intelligence led the day. **PolyOCR-Venus** (46 upvotes) presents a family of OCR foundation models trained with shared instruction-following, verifier-based RL and on-policy distillation, and ships OCRBench v2.1. **VisionWeave** (34 upvotes) shows that an MLLM can cut visual tokens by 43.0% while retaining 98.9% of benchmark performance, making efficiency a native capability instead of a post-hoc trick.\n\nThe second story is agent efficiency and self-improvement. **RACE** teaches agents when to reason and when to act directly, and **LEAP** learns compact action-proposal distributions to speed up rollouts. **Video-RSI**, **RSI-Anything** and the AlphaXiv-trending **Dream-RSI** all treat recursive self-improvement as something done through harnesses and world models, not weight updates. **SWE-Duel** applies the same logic to evaluation, with coding agents generating tasks for each other.\n\nOn the open-source side, the Qwen3.8 family (base, GGUF, quantized variants and Flash-Next) holds five of the top trending slots on Hugging Face, with video (LTX-2.5), image (Qwen-Image-2.1) and compact on-device models close behind. On GitHub, agent infrastructure dominates: reverse-engineering agents, skill libraries, gateways and monitoring tools for coding agents.",
+    "key_themes": [
+      "adaptive-agent-reasoning",
+      "recursive-self-improvement",
+      "efficient-multimodal-representations",
+      "unified-ocr-and-document-intelligence",
+      "self-scaling-agent-evaluation",
+      "agent-tooling-ecosystem"
+    ]
+  },
+  "researcher_notes": "**The recursive self-improvement cluster is moving away from weight updates.** Video-RSI evolves the evaluation harness, RSI-Anything substitutes world-model simulation for real interaction, and AlphaXiv's trending Dream-RSI pursues evolving worlds. SWE-Duel, where coding agents author tasks for one another, is the same idea applied to benchmarks. Each of these papers has low upvotes (0 to 6 on Hugging Face), but together they point at a single design pattern: the harness is the thing that improves. This fits the broader agent-harness direction we have tracked in recent literature reviews.\n\n**Adaptive compute is converging across modalities.** RACE decides per turn whether to think, LEAP narrows the action space, VisionWeave routes visual granularity, and MixTok-style adaptive tokenization does the same for images. The common move is a learned router or gate that spends compute only where it matters. The 43.0% visual-token reduction at 98.9% retained performance in VisionWeave is the most concrete number of the day. I expect cost-per-task, not peak accuracy, to become the headline metric for agents over the coming weeks.\n\n**Sleeper hits: LatentGRM and TIPS.** Both attack the cost of supervision for RL. LatentGRM compresses rubric-based reward reasoning into latent states, and TIPS derives process supervision from outcome-only rewards. Engagement is near zero (1 and 0 upvotes), but both are on AlphaXiv's trending list, which suggests practitioners are noticing. If they hold up, they remove two of the most expensive parts of post-training pipelines: step-level annotation and long-form judge generation.\n\n**Contradiction to watch: unified versus specialized.** PolyOCR-Venus argues for one unified OCR family trained with verifier-based RL, while the model feed shows demand for small specialized systems such as Cloudflare/clef (OCR and captioning), Cactus-Compute/whistle (on-device ASR) and fastino/GLiNER2.5-Decide. My view is that both win in different places: unified models for server-side document pipelines, specialized small models for on-device and latency-bound work. Also notable is prism-ml/Ternary-Bonsai-2-27B-gguf with 4.46M downloads, which shows 2-bit and ternary quantization is already mainstream among local users.\n\n**Prediction: agent tooling consolidates around skills and gateways.** morluto/rea gained 25,599 stars in a day, an unusually sharp spike that is worth verifying against organic growth. More durable signals are addyosmani/agent-skills, Agent-Reach and litellm, which all standardize how agents get capabilities and model access. Expect more projects that monitor and audit coding agents, as coucou does, as agents run unattended for longer.",
+  "papers": [
+    {
+      "id": "polyocr-venus",
+      "title": "PolyOCR-Venus: Unified OCR Foundation Models for Text-Centric Visual Intelligence",
+      "authors": [
+        "GuangJian Team",
+        "Kaili Huang",
+        "Yongshuo Zhang",
+        "Bingtao Fu",
+        "Changjiang Jiang et al."
+      ],
+      "affiliations": [
+        "GuangJian Team (affiliation details not listed in source)"
+      ],
+      "summary": "A family of unified OCR foundation models at several scales, trained with shared instruction-following, verifier-based RL and on-policy distillation. The paper also releases OCRBench v2.1 and reports state-of-the-art results on multiple OCR benchmarks.",
+      "key_findings": [
+        "A single instruction-following recipe covers multiple model scales",
+        "Verifier-based RL combined with on-policy distillation drives the gains",
+        "Releases OCRBench v2.1 and reports SOTA on several OCR benchmarks"
+      ],
+      "tags": [
+        "ocr",
+        "multimodal",
+        "reinforcement-learning",
+        "distillation",
+        "benchmark"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 46,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.37712",
+        "huggingface": "https://huggingface.co/papers/2609.37712",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.37712",
+        "pdf": "https://arxiv.org/pdf/2609.37712"
+      }
+    },
+    {
+      "id": "visionweave",
+      "title": "VisionWeave: Weaving Elastic Visual Representations as a Native Capability of MLLMs",
+      "authors": [
+        "Yuan Feng",
+        "and 11 co-authors"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "VisionWeave makes visual-token granularity elastic inside an MLLM using a gated spatial pooler and a granularity router. It cuts visual tokens by 43.0% on average while keeping 98.9% of performance across 8 benchmarks.",
+      "key_findings": [
+        "43.0% average visual-token reduction",
+        "98.9% of performance retained across 8 benchmarks",
+        "Elasticity is built into the model through a gated spatial pooler and granularity router"
+      ],
+      "tags": [
+        "multimodal",
+        "efficiency",
+        "token-reduction",
+        "mllm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 34,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.07987",
+        "huggingface": "https://huggingface.co/papers/2610.07987",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.07987",
+        "pdf": "https://arxiv.org/pdf/2610.07987"
+      }
+    },
+    {
+      "id": "artisan-articulated-3d",
+      "title": "Towards Physically Grounded Articulated 3D Assets: A Multi-Agent Pipeline and Benchmark",
+      "authors": [
+        "Multiple authors"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "ARTISAN is a multi-agent pipeline in which specialized agents handle geometry, articulation and physics verification to produce physically plausible articulated 3D assets. A new benchmark accompanies the pipeline.",
+      "key_findings": [
+        "Specialized agents split geometry, articulation and physics checking",
+        "Physics verification is part of the generation loop",
+        "Introduces a benchmark for articulated asset quality"
+      ],
+      "tags": [
+        "3d-generation",
+        "multi-agent",
+        "benchmark",
+        "robotics"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13947",
+        "huggingface": "https://huggingface.co/papers/2610.13947",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13947",
+        "pdf": "https://arxiv.org/pdf/2610.13947"
+      }
+    },
+    {
+      "id": "instantfusion",
+      "title": "InstantFusion: A Shared Latent Interface for Heterogeneous Image Generators",
+      "authors": [
+        "Multiple authors"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "InstantFusion defines a shared latent space that aligns internal states across different image-generation architectures. This enables composition and interoperability between otherwise incompatible generators.",
+      "key_findings": [
+        "A shared latent interface bridges heterogeneous generator architectures",
+        "Allows composing components from different generators",
+        "Targets interoperability rather than a single new model"
+      ],
+      "tags": [
+        "image-generation",
+        "diffusion",
+        "interoperability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13944",
+        "huggingface": "https://huggingface.co/papers/2610.13944",
+        "pdf": "https://arxiv.org/pdf/2610.13944"
+      }
+    },
+    {
+      "id": "race-adaptive-reasoning",
+      "title": "When Should Agents Think? Adaptive Reasoning via Cross-Turn Estimation (RACE)",
+      "authors": [
+        "Yiruo Cheng",
+        "Zhicheng Dou",
+        "and co-authors"
+      ],
+      "affiliations": [
+        "Renmin University of China (Gaoling School of Artificial Intelligence)"
+      ],
+      "summary": "RACE trains agents to decide, turn by turn, whether to reason explicitly or act directly, using cross-turn estimation. This reduces unnecessary reasoning overhead in multi-turn agent tasks.",
+      "key_findings": [
+        "Reasoning is treated as a per-turn decision, not a fixed policy",
+        "Cross-turn estimation guides when thinking pays off",
+        "Cuts unnecessary reasoning overhead"
+      ],
+      "tags": [
+        "agents",
+        "adaptive-reasoning",
+        "efficiency",
+        "reinforcement-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12061",
+        "huggingface": "https://huggingface.co/papers/2610.12061",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12061",
+        "pdf": "https://arxiv.org/pdf/2610.12061"
+      }
+    },
+    {
+      "id": "video-rsi",
+      "title": "Video-RSI: Recursive Self-Improvement of Video Understanding Agents via Harness Evolution",
+      "authors": [
+        "Siqi Li",
+        "Bingjun Luo",
+        "GUALIN"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "Video-RSI lets video-understanding agents improve by evolving the evaluation harness, not by updating weights. The harness iteratively generates harder challenges for the agent.",
+      "key_findings": [
+        "Self-improvement happens at the harness level",
+        "The testing harness is evolved to generate harder challenges",
+        "No weight updates are required"
+      ],
+      "tags": [
+        "agents",
+        "self-improvement",
+        "video-understanding",
+        "harness"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.37950",
+        "huggingface": "https://huggingface.co/papers/2609.37950",
+        "pdf": "https://arxiv.org/pdf/2609.37950"
+      }
+    },
+    {
+      "id": "leap-action-proposals",
+      "title": "LEAP: Learning Efficient Action Proposals for LLM Agents",
+      "authors": [
+        "Zhen Xu",
+        "Qizheng Zhang",
+        "Gerry Wan",
+        "Shang Zhu",
+        "Ce Zhang"
+      ],
+      "affiliations": [
+        "Together AI",
+        "University of Chicago"
+      ],
+      "summary": "LEAP learns a compact distribution over action proposals so LLM agents can roll out and explore faster. It is trending on both Hugging Face and AlphaXiv.",
+      "key_findings": [
+        "A learned compact proposal distribution narrows the action space",
+        "Speeds up agent rollouts and exploration",
+        "Appears on AlphaXiv's trending list"
+      ],
+      "tags": [
+        "agents",
+        "efficiency",
+        "exploration",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.02670",
+        "huggingface": "https://huggingface.co/papers/2610.02670",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.02670",
+        "pdf": "https://arxiv.org/pdf/2610.02670"
+      }
+    },
+    {
+      "id": "stereo-video-audio",
+      "title": "Here the World in Stereo: Learning Dynamic Spatial Correspondence for Immersive Joint Video-Audio Generation",
+      "authors": [
+        "Zheyu Zhang",
+        "Tianxiao Chen",
+        "Chengcheng Liu",
+        "Hanmo Chen"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "The paper generates stereo spatial audio jointly with video for AR/VR use. It learns dynamic spatial correspondence between visual motion and audio position.",
+      "key_findings": [
+        "Joint video and stereo-audio generation",
+        "Learns dynamic spatial correspondence between sound sources and visuals",
+        "Targets immersive AR/VR content"
+      ],
+      "tags": [
+        "video-generation",
+        "audio-generation",
+        "multimodal",
+        "ar-vr"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.38748",
+        "huggingface": "https://huggingface.co/papers/2609.38748",
+        "pdf": "https://arxiv.org/pdf/2609.38748"
+      }
+    },
+    {
+      "id": "swe-duel",
+      "title": "SWE-Duel: Towards a Self-Scaling Arena for Coding Agents",
+      "authors": [
+        "Authors not listed in source"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "SWE-Duel has coding agents create tasks for one another at evaluation time, avoiding static, leakable benchmarks. The arena scales as agents improve.",
+      "key_findings": [
+        "Agents author tasks for each other at evaluation time",
+        "Avoids leaked static benchmarks",
+        "The arena scales with agent capability"
+      ],
+      "tags": [
+        "agents",
+        "coding-agents",
+        "evaluation",
+        "benchmark"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12569",
+        "huggingface": "https://huggingface.co/papers/2610.12569",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12569",
+        "pdf": "https://arxiv.org/pdf/2610.12569"
+      }
+    },
+    {
+      "id": "rsi-anything",
+      "title": "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
+      "authors": [
+        "Authors not listed in source"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "RSI-Anything uses world-model simulation so AI systems can recursively self-improve without expensive real-world interaction.",
+      "key_findings": [
+        "World models stand in for costly real-world interaction",
+        "Applies recursive self-improvement across system types",
+        "Related to the AlphaXiv-trending Dream-RSI"
+      ],
+      "tags": [
+        "self-improvement",
+        "world-models",
+        "agents"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13912",
+        "huggingface": "https://huggingface.co/papers/2610.13912",
+        "pdf": "https://arxiv.org/pdf/2610.13912"
+      }
+    },
+    {
+      "id": "sepgen",
+      "title": "SepGen: Multi-Stem Audio-Video Separation and Generation in a Single Model",
+      "authors": [
+        "Lior Wolf",
+        "Idan Szpektor",
+        "Yonatan Bitton",
+        "Rajaei Khatib",
+        "Aviad Dahan"
+      ],
+      "affiliations": [
+        "Tel Aviv University",
+        "Google Research"
+      ],
+      "summary": "SepGen is a unified model that generates video with per-source audio stems and also separates audio stems from existing scenes. One model covers both generation and separation.",
+      "key_findings": [
+        "A single model handles generation and separation",
+        "Produces per-source audio stems",
+        "Unifies audio-video tasks usually handled separately"
+      ],
+      "tags": [
+        "audio-generation",
+        "video-generation",
+        "source-separation",
+        "multimodal"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.11361",
+        "huggingface": "https://huggingface.co/papers/2610.11361",
+        "pdf": "https://arxiv.org/pdf/2610.11361"
+      }
+    },
+    {
+      "id": "latentgrm",
+      "title": "Judging in Latent Space: Efficient Generative Reward Modeling via Semantics-Preserving Compression (LatentGRM)",
+      "authors": [
+        "Zeren Zhang",
+        "Ziwei Chen",
+        "Junwei Yang",
+        "Xiaobo Liang"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "LatentGRM compresses rubric-based reasoning into latent states so generative reward models can judge more cheaply while preserving semantic information.",
+      "key_findings": [
+        "Rubric reasoning is compressed into latent states",
+        "Judging cost drops versus explicit chain-of-thought judges",
+        "Semantic information is preserved"
+      ],
+      "tags": [
+        "reward-modeling",
+        "reinforcement-learning",
+        "efficiency",
+        "alignment"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.09788",
+        "huggingface": "https://huggingface.co/papers/2610.09788",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.09788",
+        "pdf": "https://arxiv.org/pdf/2610.09788"
+      }
+    },
+    {
+      "id": "tips-process-supervision",
+      "title": "Inducing Process Supervision from Outcome-Only Reinforcement Learning (TIPS)",
+      "authors": [
+        "Authors not listed in source"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in source listing"
+      ],
+      "summary": "TIPS trains process reward models using only outcome-level rewards, removing the need for step-by-step annotation.",
+      "key_findings": [
+        "Process supervision is induced from outcome rewards alone",
+        "No step-level human annotation required",
+        "Trending on AlphaXiv despite zero Hugging Face upvotes"
+      ],
+      "tags": [
+        "reward-modeling",
+        "reinforcement-learning",
+        "reasoning",
+        "process-supervision"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.36641",
+        "huggingface": "https://huggingface.co/papers/2609.36641",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.36641",
+        "pdf": "https://arxiv.org/pdf/2609.36641"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "Multimodal image-text-to-text model with 17,446 likes and 6.77M downloads, making it the most-liked model on the feed. Its popularity has spawned many quantized derivatives.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "transformers",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 6768654,
+        "likes": 17446
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "unsloth-qwen3-8-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth",
+      "description": "GGUF quantization of Qwen3.8-27B for local inference, with 6.45M downloads that show strong local-deployment demand.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 6449020,
+        "likes": 5010
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Open diffusion model for video generation and image-to-video, with 7,199 likes and 1.72M downloads, the top open video model on the feed.",
+      "task_type": "image-to-video",
+      "model_size": "Not specified",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 1720888,
+        "likes": 7199
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen3-8-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen",
+      "description": "Fast multimodal variant of the Qwen3.8 line aimed at low-latency image-text-to-text use, with 1.80M downloads.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "fast"
+      ],
+      "metrics": {
+        "downloads": 1798393,
+        "likes": 6091
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-ai-deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "Vision-language Flash variant of DeepSeek V4.1 with 1.36M downloads, showing continued competition with Qwen in fast multimodal models.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 1355278,
+        "likes": 4335
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "prism-ml-ternary-bonsai-2-27b-gguf",
+      "name": "Ternary-Bonsai-2-27B-GGUF",
+      "organization": "prism-ml",
+      "description": "A 2-bit ternary GGUF model with 4.46M downloads, a sign that extreme quantization is going mainstream for local users.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "gguf",
+        "ternary",
+        "2-bit",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 4457576,
+        "likes": 2605
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "qwen-qwen-image-2-1",
+      "name": "Qwen-Image-2.1",
+      "organization": "Qwen",
+      "description": "Text-to-image diffusion model with image-editing capability, extending the Qwen family into generation. It has 3,202 likes.",
+      "task_type": "text-to-image",
+      "model_size": "Not specified",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "image-editing"
+      ],
+      "metrics": {
+        "downloads": 128839,
+        "likes": 3202
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "Embedding model for semantic search and RAG with 1,536 likes. It is relevant for retrieval pipelines that need compact embeddings.",
+      "task_type": "feature-extraction",
+      "model_size": "Not specified",
+      "tags": [
+        "embeddings",
+        "semantic-search",
+        "rag"
+      ],
+      "metrics": {
+        "downloads": 45605,
+        "likes": 1536
+      },
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "clef",
+      "organization": "Cloudflare",
+      "description": "Multimodal OCR and captioning model with 2,003 likes. It aligns with this week's OCR momentum from PolyOCR-Venus.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": [
+        "multimodal",
+        "ocr",
+        "captioning"
+      ],
+      "metrics": {
+        "downloads": 13579,
+        "likes": 2003
+      },
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "aleph-alpha-kolibri-1",
+      "name": "Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "Mixture-of-experts text-generation model focused on reasoning, notable as a European open-weights entry.",
+      "task_type": "text-generation",
+      "model_size": "Not specified",
+      "tags": [
+        "mixture-of-experts",
+        "text-generation",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 10496,
+        "likes": 874
+      },
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "cactus-compute-whistle",
+      "name": "whistle",
+      "organization": "Cactus Compute",
+      "description": "On-device ASR model for mobile speech recognition, part of the push toward small specialized models that run locally.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "Not specified",
+      "tags": [
+        "asr",
+        "speech-recognition",
+        "on-device",
+        "mobile"
+      ],
+      "metrics": {
+        "downloads": 12816,
+        "likes": 316
+      },
+      "source_url": "https://huggingface.co/Cactus-Compute/whistle"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "AI-agent-powered reverse-engineering tool that analyzes applications from high-level behavior down to native code. It gained 25,599 stars today, an unusually sharp spike.",
+      "language": "TypeScript",
+      "stars": 125459,
+      "stars_today": 25599,
+      "forks": 4200,
+      "url": "https://github.com/morluto/rea",
+      "tags": [
+        "agents",
+        "reverse-engineering",
+        "security"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Personal AI agent framework that adapts and improves through interaction. At 252,297 stars it remains one of the largest agent projects.",
+      "language": "Python",
+      "stars": 252297,
+      "stars_today": 180,
+      "forks": 18400,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "personal-assistant",
+        "self-improvement"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Collection of engineering skills for AI coding agents such as Claude Code and GitHub Copilot, trending as skill libraries become a standard way to extend agents.",
+      "language": "JavaScript",
+      "stars": 103500,
+      "stars_today": 436,
+      "forks": 8900,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "coding-agents",
+        "skills",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "Gives AI agents a unified CLI to read, search and interact with Twitter, Reddit and YouTube, which removes per-platform integration work.",
+      "language": "Python",
+      "stars": 95900,
+      "stars_today": 420,
+      "forks": 6200,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agents",
+        "tools",
+        "web-access"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "berriai-litellm",
+      "name": "BerriAI/litellm",
+      "description": "Production AI gateway with a unified interface to 100+ LLM APIs, cost tracking and load balancing. It stays relevant as teams juggle many model providers.",
+      "language": "Python",
+      "stars": 52000,
+      "stars_today": 95,
+      "forks": 4800,
+      "url": "https://github.com/BerriAI/litellm",
+      "tags": [
+        "llm-gateway",
+        "infrastructure",
+        "llmops"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "lyogavin-airllm",
+      "name": "lyogavin/airllm",
+      "description": "Runs 70B-parameter LLM inference on a single 4GB GPU via layer-by-layer offloading, trending alongside strong interest in local quantized models.",
+      "language": "Jupyter Notebook",
+      "stars": 36869,
+      "stars_today": 548,
+      "forks": 2100,
+      "url": "https://github.com/lyogavin/airllm",
+      "tags": [
+        "inference",
+        "local-llm",
+        "offloading"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Plugins for knowledge workers in Claude Cowork covering AI-assisted research and writing workflows. It added 709 stars today.",
+      "language": "Python",
+      "stars": 28500,
+      "stars_today": 709,
+      "forks": 1200,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "plugins",
+        "agents",
+        "productivity"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "Code review that combines deterministic static analysis with an LLM agent for contextual understanding, a hybrid design that limits LLM-only false positives.",
+      "language": "Go",
+      "stars": 18200,
+      "stars_today": 326,
+      "forks": 1500,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": [
+        "code-review",
+        "static-analysis",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pytorch-pytorch",
+      "name": "pytorch/pytorch",
+      "description": "The foundational deep learning framework, steadily trending with 315 stars today.",
+      "language": "Python",
+      "stars": 104680,
+      "stars_today": 315,
+      "forks": 28500,
+      "url": "https://github.com/pytorch/pytorch",
+      "tags": [
+        "deep-learning",
+        "framework"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "robbyant-lingbot-map",
+      "name": "Robbyant/lingbot-map",
+      "description": "Streaming 3D reconstruction built on a Geometric Context Transformer, described as an ECCV 2026 Best Paper candidate.",
+      "language": "Python",
+      "stars": 8900,
+      "stars_today": 110,
+      "forks": 780,
+      "url": "https://github.com/Robbyant/lingbot-map",
+      "tags": [
+        "3d-reconstruction",
+        "computer-vision",
+        "transformers"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "louis-cfm-coucou",
+      "name": "Louis-CFM/coucou",
+      "description": "Lightweight cross-platform widget that monitors AI coding agents like Claude Code and Codex in real time, answering the need to supervise long-running agents.",
+      "language": "TypeScript",
+      "stars": 3041,
+      "stars_today": 280,
+      "forks": 120,
+      "url": "https://github.com/Louis-CFM/coucou",
+      "tags": [
+        "coding-agents",
+        "monitoring",
+        "developer-tools"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "kkkkhazix-aihot",
+      "name": "KKKKhazix/AIHOT",
+      "description": "Self-hosted framework that automatically finds and writes daily industry news digests, adding 380 stars today.",
+      "language": "Python",
+      "stars": 5016,
+      "stars_today": 380,
+      "forks": 420,
+      "url": "https://github.com/KKKKhazix/AIHOT",
+      "tags": [
+        "news-digest",
+        "automation",
+        "llm-applications"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Adaptive Agent Reasoning and Efficiency",
+      "description": "Learned routers and proposal distributions decide when to think, what to try, and how much to compute, cutting agent overhead.",
+      "related_paper_ids": [
+        "race-adaptive-reasoning",
+        "leap-action-proposals",
+        "visionweave"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Recursive Self-Improvement via Harnesses and World Models",
+      "description": "Agents improve by evolving evaluation harnesses or training in simulated worlds, rather than through weight updates.",
+      "related_paper_ids": [
+        "video-rsi",
+        "rsi-anything",
+        "swe-duel"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Multimodal Representations",
+      "description": "Elastic visual tokens and unified latent interfaces aim to cut compute while preserving quality across modalities.",
+      "related_paper_ids": [
+        "visionweave",
+        "instantfusion"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Unified OCR and Document Intelligence",
+      "description": "Unified OCR model families trained with verifier-based RL and distillation set new benchmark results, and small OCR models are also trending.",
+      "related_paper_ids": [
+        "polyocr-venus"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Cheaper Reward Modeling and Supervision",
+      "description": "Latent-space judging and outcome-only process supervision reduce the cost of RL post-training signals.",
+      "related_paper_ids": [
+        "latentgrm",
+        "tips-process-supervision"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Audio-Visual and 3D Generation",
+      "description": "Joint video-audio generation and agentic 3D asset pipelines extend generative models into spatial and physical domains.",
+      "related_paper_ids": [
+        "stereo-video-audio",
+        "sepgen",
+        "artisan-articulated-3d"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    }
+  ]
+}

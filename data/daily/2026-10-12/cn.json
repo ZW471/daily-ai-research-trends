@@ -1,0 +1,954 @@
+{
+  "version": "1.0",
+  "date": "2026-10-12",
+  "generated_at": "2026-10-12T06:00:00Z",
+  "summary": {
+    "headline": "PolyOCR-Venus 以基于验证器的强化学习和在线策略蒸馏统一 OCR；智能体学会何时思考以及如何自我改进（RACE、LEAP、Video-RSI、RSI-Anything）；Qwen3.8 称霸 Hugging Face，AI 智能体工具涌入 GitHub",
+    "body": "文档与视觉智能是今天的主角。**PolyOCR-Venus**（46 个点赞）提出了一个 OCR 基础模型家族，采用共享的指令遵循、基于验证器的强化学习和在线策略蒸馏进行训练，并发布了 OCRBench v2.1。**VisionWeave**（34 个点赞）表明，多模态大模型（MLLM）可以将视觉 token 削减 43.0%，同时保留 98.9% 的基准性能，让效率成为模型的原生能力，而不是事后补救的技巧。\n\n第二个故事是智能体的效率与自我改进。**RACE** 教会智能体何时推理、何时直接行动，**LEAP** 则学习紧凑的动作提议分布以加速 rollout。**Video-RSI**、**RSI-Anything** 以及在 AlphaXiv 上走红的 **Dream-RSI** 都把递归自我改进视为通过运行框架（harness）和世界模型实现的过程，而不是权重更新。**SWE-Duel** 把同样的逻辑用于评测，让编程智能体互相为对方出题。\n\n在开源方面，Qwen3.8 家族（基础版、GGUF、量化版本和 Flash-Next）占据了 Hugging Face 趋势榜前五名中的五席，视频模型（LTX-2.5）、图像模型（Qwen-Image-2.1）和紧凑的端侧模型紧随其后。在 GitHub 上，智能体基础设施占据主导：逆向工程智能体、技能库、网关，以及面向编程智能体的监控工具。",
+    "key_themes": [
+      "adaptive-agent-reasoning",
+      "recursive-self-improvement",
+      "efficient-multimodal-representations",
+      "unified-ocr-and-document-intelligence",
+      "self-scaling-agent-evaluation",
+      "agent-tooling-ecosystem"
+    ]
+  },
+  "researcher_notes": "**递归自我改进这一簇工作正在远离权重更新。** Video-RSI 演化的是评测框架，RSI-Anything 用世界模型模拟取代真实交互，AlphaXiv 上走红的 Dream-RSI 则追求不断演化的世界。SWE-Duel 让编程智能体互相出题，是同一思路在基准测试上的应用。这些论文在 Hugging Face 上的点赞数都很低（0 到 6），但合在一起指向同一种设计模式：真正在改进的是框架本身。这与我们在近期文献综述中追踪的智能体框架（agent harness）方向相吻合。\n\n**自适应计算正在跨模态收敛。** RACE 逐轮决定是否思考，LEAP 收窄动作空间，VisionWeave 路由视觉粒度，而 MixTok 式的自适应分词对图像做的是同样的事。共同的做法是用一个学习得到的路由器或门控，只在真正重要的地方花费算力。VisionWeave 在保留 98.9% 性能的同时削减 43.0% 视觉 token，是今天最具体的数字。我预计在未来几周，每任务成本而非峰值精度，将成为智能体的头条指标。\n\n**潜力股：LatentGRM 和 TIPS。** 两者都瞄准强化学习中监督信号的成本问题。LatentGRM 把基于评分细则的奖励推理压缩进潜在状态，TIPS 则从仅有结果的奖励中推导出过程监督。它们的热度接近于零（分别为 1 和 0 个点赞），但都出现在 AlphaXiv 的趋势榜上，说明从业者已经注意到它们。如果效果经得起检验，它们将去掉后训练流程中最昂贵的两个环节：步骤级标注和长篇幅的评审生成。\n\n**值得关注的矛盾：统一与专用。** PolyOCR-Venus 主张用一个以基于验证器的强化学习训练的统一 OCR 家族，而模型榜单显示，市场对小型专用系统同样有需求，例如 Cloudflare/clef（OCR 与图像描述）、Cactus-Compute/whistle（端侧 ASR）和 fastino/GLiNER2.5-Decide。我的看法是两者会在不同场景胜出：统一模型适合服务端的文档处理流水线，小型专用模型适合端侧和对延迟敏感的工作。另一个值得注意的是 prism-ml/Ternary-Bonsai-2-27B-gguf 拥有 446 万次下载，表明 2 比特和三值量化在本地用户中已成为主流。\n\n**预测：智能体工具将围绕技能和网关整合。** morluto/rea 一天内新增 25,599 颗星，这是异常陡峭的飙升，值得核查其是否为自然增长。更持久的信号来自 addyosmani/agent-skills、Agent-Reach 和 litellm，它们都在规范智能体获取能力和模型访问的方式。随着智能体无人值守运行的时间越来越长，预计会出现更多像 coucou 这样监控和审计编程智能体的项目。",
+  "papers": [
+    {
+      "id": "polyocr-venus",
+      "title": "PolyOCR-Venus: Unified OCR Foundation Models for Text-Centric Visual Intelligence",
+      "authors": [
+        "GuangJian Team",
+        "Kaili Huang",
+        "Yongshuo Zhang",
+        "Bingtao Fu",
+        "Changjiang Jiang et al."
+      ],
+      "affiliations": [
+        "GuangJian Team（来源中未列出所属机构详情）"
+      ],
+      "summary": "这是一个多种规模的统一 OCR 基础模型家族，采用共享的指令遵循、基于验证器的强化学习和在线策略蒸馏进行训练。论文还发布了 OCRBench v2.1，并在多个 OCR 基准上报告了最先进的结果。",
+      "key_findings": [
+        "单一的指令遵循训练方案可覆盖多种模型规模",
+        "基于验证器的强化学习与在线策略蒸馏相结合带来了性能提升",
+        "发布 OCRBench v2.1，并在多个 OCR 基准上取得 SOTA"
+      ],
+      "tags": [
+        "ocr",
+        "multimodal",
+        "reinforcement-learning",
+        "distillation",
+        "benchmark"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 46,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.37712",
+        "huggingface": "https://huggingface.co/papers/2609.37712",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.37712",
+        "pdf": "https://arxiv.org/pdf/2609.37712"
+      }
+    },
+    {
+      "id": "visionweave",
+      "title": "VisionWeave: Weaving Elastic Visual Representations as a Native Capability of MLLMs",
+      "authors": [
+        "Yuan Feng",
+        "等另外 11 位共同作者"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "VisionWeave 借助门控空间池化器和粒度路由器，让多模态大模型内部的视觉 token 粒度具备弹性。它在 8 个基准上平均削减 43.0% 的视觉 token，同时保留 98.9% 的性能。",
+      "key_findings": [
+        "视觉 token 平均减少 43.0%",
+        "在 8 个基准上保留 98.9% 的性能",
+        "通过门控空间池化器和粒度路由器，将弹性能力内置于模型之中"
+      ],
+      "tags": [
+        "multimodal",
+        "efficiency",
+        "token-reduction",
+        "mllm"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 34,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.07987",
+        "huggingface": "https://huggingface.co/papers/2610.07987",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.07987",
+        "pdf": "https://arxiv.org/pdf/2610.07987"
+      }
+    },
+    {
+      "id": "artisan-articulated-3d",
+      "title": "Towards Physically Grounded Articulated 3D Assets: A Multi-Agent Pipeline and Benchmark",
+      "authors": [
+        "多位作者"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "ARTISAN 是一个多智能体流水线，由各司其职的智能体分别负责几何、关节结构和物理验证，从而生成物理上合理的可动 3D 资产。论文同时提出了配套的新基准。",
+      "key_findings": [
+        "由专门的智能体分别负责几何、关节结构和物理检查",
+        "物理验证被纳入生成循环",
+        "提出了用于衡量可动资产质量的基准"
+      ],
+      "tags": [
+        "3d-generation",
+        "multi-agent",
+        "benchmark",
+        "robotics"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13947",
+        "huggingface": "https://huggingface.co/papers/2610.13947",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13947",
+        "pdf": "https://arxiv.org/pdf/2610.13947"
+      }
+    },
+    {
+      "id": "instantfusion",
+      "title": "InstantFusion: A Shared Latent Interface for Heterogeneous Image Generators",
+      "authors": [
+        "多位作者"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "InstantFusion 定义了一个共享潜在空间，用于对齐不同图像生成架构的内部状态，使原本互不兼容的生成器之间可以组合与互操作。",
+      "key_findings": [
+        "共享的潜在接口打通了异构生成器架构",
+        "允许组合来自不同生成器的组件",
+        "目标是实现互操作，而非提出单一的新模型"
+      ],
+      "tags": [
+        "image-generation",
+        "diffusion",
+        "interoperability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 9,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13944",
+        "huggingface": "https://huggingface.co/papers/2610.13944",
+        "pdf": "https://arxiv.org/pdf/2610.13944"
+      }
+    },
+    {
+      "id": "race-adaptive-reasoning",
+      "title": "When Should Agents Think? Adaptive Reasoning via Cross-Turn Estimation (RACE)",
+      "authors": [
+        "Yiruo Cheng",
+        "Zhicheng Dou",
+        "等共同作者"
+      ],
+      "affiliations": [
+        "Renmin University of China (Gaoling School of Artificial Intelligence)"
+      ],
+      "summary": "RACE 训练智能体利用跨轮估计，逐轮决定是进行显式推理还是直接行动，从而减少多轮智能体任务中不必要的推理开销。",
+      "key_findings": [
+        "将推理视为逐轮的决策，而非固定策略",
+        "跨轮估计指导何时思考才有回报",
+        "削减了不必要的推理开销"
+      ],
+      "tags": [
+        "agents",
+        "adaptive-reasoning",
+        "efficiency",
+        "reinforcement-learning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 8,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12061",
+        "huggingface": "https://huggingface.co/papers/2610.12061",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12061",
+        "pdf": "https://arxiv.org/pdf/2610.12061"
+      }
+    },
+    {
+      "id": "video-rsi",
+      "title": "Video-RSI: Recursive Self-Improvement of Video Understanding Agents via Harness Evolution",
+      "authors": [
+        "Siqi Li",
+        "Bingjun Luo",
+        "GUALIN"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "Video-RSI 让视频理解智能体通过演化评测框架而非更新权重来自我改进。该框架会迭代地为智能体生成更难的挑战。",
+      "key_findings": [
+        "自我改进发生在运行框架层面",
+        "测试框架不断演化，以生成更难的挑战",
+        "无需任何权重更新"
+      ],
+      "tags": [
+        "agents",
+        "self-improvement",
+        "video-understanding",
+        "harness"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.37950",
+        "huggingface": "https://huggingface.co/papers/2609.37950",
+        "pdf": "https://arxiv.org/pdf/2609.37950"
+      }
+    },
+    {
+      "id": "leap-action-proposals",
+      "title": "LEAP: Learning Efficient Action Proposals for LLM Agents",
+      "authors": [
+        "Zhen Xu",
+        "Qizheng Zhang",
+        "Gerry Wan",
+        "Shang Zhu",
+        "Ce Zhang"
+      ],
+      "affiliations": [
+        "Together AI",
+        "University of Chicago"
+      ],
+      "summary": "LEAP 学习一个紧凑的动作提议分布，使大语言模型智能体能够更快地 rollout 和探索。它同时登上了 Hugging Face 和 AlphaXiv 的趋势榜。",
+      "key_findings": [
+        "学习得到的紧凑提议分布收窄了动作空间",
+        "加快了智能体的 rollout 和探索",
+        "出现在 AlphaXiv 的趋势榜上"
+      ],
+      "tags": [
+        "agents",
+        "efficiency",
+        "exploration",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 5,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.02670",
+        "huggingface": "https://huggingface.co/papers/2610.02670",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.02670",
+        "pdf": "https://arxiv.org/pdf/2610.02670"
+      }
+    },
+    {
+      "id": "stereo-video-audio",
+      "title": "Here the World in Stereo: Learning Dynamic Spatial Correspondence for Immersive Joint Video-Audio Generation",
+      "authors": [
+        "Zheyu Zhang",
+        "Tianxiao Chen",
+        "Chengcheng Liu",
+        "Hanmo Chen"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "该论文面向 AR/VR 应用，联合生成视频与立体声空间音频，并学习视觉运动与声音位置之间的动态空间对应关系。",
+      "key_findings": [
+        "联合生成视频与立体声音频",
+        "学习声源与画面之间的动态空间对应关系",
+        "面向沉浸式 AR/VR 内容"
+      ],
+      "tags": [
+        "video-generation",
+        "audio-generation",
+        "multimodal",
+        "ar-vr"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 4,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.38748",
+        "huggingface": "https://huggingface.co/papers/2609.38748",
+        "pdf": "https://arxiv.org/pdf/2609.38748"
+      }
+    },
+    {
+      "id": "swe-duel",
+      "title": "SWE-Duel: Towards a Self-Scaling Arena for Coding Agents",
+      "authors": [
+        "来源中未列出作者"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "SWE-Duel 让编程智能体在评测时互相创建任务，避免使用静态且容易泄露的基准。该竞技场会随着智能体能力的提升而扩展。",
+      "key_findings": [
+        "智能体在评测时互相编写任务",
+        "避免了基准泄露的问题",
+        "竞技场规模随智能体能力同步扩展"
+      ],
+      "tags": [
+        "agents",
+        "coding-agents",
+        "evaluation",
+        "benchmark"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 3,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12569",
+        "huggingface": "https://huggingface.co/papers/2610.12569",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12569",
+        "pdf": "https://arxiv.org/pdf/2610.12569"
+      }
+    },
+    {
+      "id": "rsi-anything",
+      "title": "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
+      "authors": [
+        "来源中未列出作者"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "RSI-Anything 利用世界模型模拟，使 AI 系统无需昂贵的真实世界交互即可递归地自我改进。",
+      "key_findings": [
+        "世界模型替代了成本高昂的真实世界交互",
+        "将递归自我改进应用于不同类型的系统",
+        "与 AlphaXiv 上走红的 Dream-RSI 相关"
+      ],
+      "tags": [
+        "self-improvement",
+        "world-models",
+        "agents"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13912",
+        "huggingface": "https://huggingface.co/papers/2610.13912",
+        "pdf": "https://arxiv.org/pdf/2610.13912"
+      }
+    },
+    {
+      "id": "sepgen",
+      "title": "SepGen: Multi-Stem Audio-Video Separation and Generation in a Single Model",
+      "authors": [
+        "Lior Wolf",
+        "Idan Szpektor",
+        "Yonatan Bitton",
+        "Rajaei Khatib",
+        "Aviad Dahan"
+      ],
+      "affiliations": [
+        "Tel Aviv University",
+        "Google Research"
+      ],
+      "summary": "SepGen 是一个统一模型，既能生成带有分声源音轨的视频，也能从现有场景中分离出各个音轨。一个模型即可同时覆盖生成与分离。",
+      "key_findings": [
+        "单一模型同时处理生成与分离",
+        "可输出按声源划分的音轨",
+        "统一了通常分开处理的音视频任务"
+      ],
+      "tags": [
+        "audio-generation",
+        "video-generation",
+        "source-separation",
+        "multimodal"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 2,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.11361",
+        "huggingface": "https://huggingface.co/papers/2610.11361",
+        "pdf": "https://arxiv.org/pdf/2610.11361"
+      }
+    },
+    {
+      "id": "latentgrm",
+      "title": "Judging in Latent Space: Efficient Generative Reward Modeling via Semantics-Preserving Compression (LatentGRM)",
+      "authors": [
+        "Zeren Zhang",
+        "Ziwei Chen",
+        "Junwei Yang",
+        "Xiaobo Liang"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "LatentGRM 把基于评分细则的推理压缩进潜在状态，使生成式奖励模型能够以更低成本进行评判，同时保留语义信息。",
+      "key_findings": [
+        "评分细则推理被压缩进潜在状态",
+        "与显式思维链评审器相比，评判成本下降",
+        "语义信息得以保留"
+      ],
+      "tags": [
+        "reward-modeling",
+        "reinforcement-learning",
+        "efficiency",
+        "alignment"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 1,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.09788",
+        "huggingface": "https://huggingface.co/papers/2610.09788",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.09788",
+        "pdf": "https://arxiv.org/pdf/2610.09788"
+      }
+    },
+    {
+      "id": "tips-process-supervision",
+      "title": "Inducing Process Supervision from Outcome-Only Reinforcement Learning (TIPS)",
+      "authors": [
+        "来源中未列出作者"
+      ],
+      "affiliations": [
+        "来源列表中未披露所属机构"
+      ],
+      "summary": "TIPS 仅利用结果级奖励来训练过程奖励模型，无需逐步骤的标注。",
+      "key_findings": [
+        "仅凭结果奖励即可推导出过程监督",
+        "无需步骤级人工标注",
+        "尽管在 Hugging Face 上点赞数为零，仍登上 AlphaXiv 趋势榜"
+      ],
+      "tags": [
+        "reward-modeling",
+        "reinforcement-learning",
+        "reasoning",
+        "process-supervision"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.36641",
+        "huggingface": "https://huggingface.co/papers/2609.36641",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.36641",
+        "pdf": "https://arxiv.org/pdf/2609.36641"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "多模态图文到文本模型，拥有 17,446 个点赞和 677 万次下载，是榜单上获赞最多的模型。它的热度催生了大量量化衍生版本。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "transformers",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 6768654,
+        "likes": 17446
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "unsloth-qwen3-8-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth",
+      "description": "Qwen3.8-27B 的 GGUF 量化版本，面向本地推理，645 万次下载反映出强劲的本地部署需求。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "gguf",
+        "text-generation",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 6449020,
+        "likes": 5010
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "用于视频生成和图生视频的开源扩散模型，拥有 7,199 个点赞和 172 万次下载，是榜单上排名最高的开源视频模型。",
+      "task_type": "image-to-video",
+      "model_size": "未说明",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 1720888,
+        "likes": 7199
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen3-8-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen",
+      "description": "Qwen3.8 系列的快速多模态变体，面向低延迟的图文到文本场景，下载量达 180 万次。",
+      "task_type": "image-text-to-text",
+      "model_size": "未说明",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "fast"
+      ],
+      "metrics": {
+        "downloads": 1798393,
+        "likes": 6091
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-ai-deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4.1 的视觉语言 Flash 变体，下载量达 136 万次，显示出其在快速多模态模型领域与 Qwen 的持续竞争。",
+      "task_type": "image-text-to-text",
+      "model_size": "未说明",
+      "tags": [
+        "multimodal",
+        "image-text-to-text",
+        "vision-language"
+      ],
+      "metrics": {
+        "downloads": 1355278,
+        "likes": 4335
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "prism-ml-ternary-bonsai-2-27b-gguf",
+      "name": "Ternary-Bonsai-2-27B-GGUF",
+      "organization": "prism-ml",
+      "description": "一个 2 比特三值 GGUF 模型，下载量达 446 万次，表明极端量化正在成为本地用户的主流选择。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "gguf",
+        "ternary",
+        "2-bit",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 4457576,
+        "likes": 2605
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "qwen-qwen-image-2-1",
+      "name": "Qwen-Image-2.1",
+      "organization": "Qwen",
+      "description": "具备图像编辑能力的文生图扩散模型，将 Qwen 家族延伸到生成领域，拥有 3,202 个点赞。",
+      "task_type": "text-to-image",
+      "model_size": "未说明",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "image-editing"
+      ],
+      "metrics": {
+        "downloads": 128839,
+        "likes": 3202
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "用于语义搜索和 RAG 的嵌入模型，拥有 1,536 个点赞，适合需要紧凑嵌入向量的检索流水线。",
+      "task_type": "feature-extraction",
+      "model_size": "未说明",
+      "tags": [
+        "embeddings",
+        "semantic-search",
+        "rag"
+      ],
+      "metrics": {
+        "downloads": 45605,
+        "likes": 1536
+      },
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "clef",
+      "organization": "Cloudflare",
+      "description": "多模态 OCR 与图像描述模型，拥有 2,003 个点赞，与本周 PolyOCR-Venus 带动的 OCR 热度相呼应。",
+      "task_type": "image-text-to-text",
+      "model_size": "未说明",
+      "tags": [
+        "multimodal",
+        "ocr",
+        "captioning"
+      ],
+      "metrics": {
+        "downloads": 13579,
+        "likes": 2003
+      },
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "aleph-alpha-kolibri-1",
+      "name": "Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "专注于推理的混合专家（MoE）文本生成模型，是欧洲开放权重模型中值得关注的一员。",
+      "task_type": "text-generation",
+      "model_size": "未说明",
+      "tags": [
+        "mixture-of-experts",
+        "text-generation",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 10496,
+        "likes": 874
+      },
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "cactus-compute-whistle",
+      "name": "whistle",
+      "organization": "Cactus Compute",
+      "description": "面向移动端语音识别的端侧 ASR 模型，是推动小型专用模型本地运行这一趋势的一部分。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "未说明",
+      "tags": [
+        "asr",
+        "speech-recognition",
+        "on-device",
+        "mobile"
+      ],
+      "metrics": {
+        "downloads": 12816,
+        "likes": 316
+      },
+      "source_url": "https://huggingface.co/Cactus-Compute/whistle"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "由 AI 智能体驱动的逆向工程工具，可从高层行为一路分析到原生代码。今天新增 25,599 颗星，涨幅异常陡峭。",
+      "language": "TypeScript",
+      "stars": 125459,
+      "stars_today": 25599,
+      "forks": 4200,
+      "url": "https://github.com/morluto/rea",
+      "tags": [
+        "agents",
+        "reverse-engineering",
+        "security"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "可通过交互不断适应和改进的个人 AI 智能体框架。拥有 252,297 颗星，仍是规模最大的智能体项目之一。",
+      "language": "Python",
+      "stars": 252297,
+      "stars_today": 180,
+      "forks": 18400,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "personal-assistant",
+        "self-improvement"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "面向 Claude Code 和 GitHub Copilot 等 AI 编程智能体的工程技能合集，随着技能库成为扩展智能体的标准方式而走红。",
+      "language": "JavaScript",
+      "stars": 103500,
+      "stars_today": 436,
+      "forks": 8900,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "coding-agents",
+        "skills",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "为 AI 智能体提供统一的命令行工具，可读取、搜索 Twitter、Reddit 和 YouTube 并与之交互，省去了逐个平台的集成工作。",
+      "language": "Python",
+      "stars": 95900,
+      "stars_today": 420,
+      "forks": 6200,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agents",
+        "tools",
+        "web-access"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "berriai-litellm",
+      "name": "BerriAI/litellm",
+      "description": "生产级 AI 网关，为 100 多个大模型 API 提供统一接口，并支持成本追踪和负载均衡。随着团队需要同时对接众多模型提供商，它依然热度不减。",
+      "language": "Python",
+      "stars": 52000,
+      "stars_today": 95,
+      "forks": 4800,
+      "url": "https://github.com/BerriAI/litellm",
+      "tags": [
+        "llm-gateway",
+        "infrastructure",
+        "llmops"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "lyogavin-airllm",
+      "name": "lyogavin/airllm",
+      "description": "通过逐层卸载，在单块 4GB GPU 上运行 700 亿参数大模型推理，与大众对本地量化模型的浓厚兴趣一同走红。",
+      "language": "Jupyter Notebook",
+      "stars": 36869,
+      "stars_today": 548,
+      "forks": 2100,
+      "url": "https://github.com/lyogavin/airllm",
+      "tags": [
+        "inference",
+        "local-llm",
+        "offloading"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "面向 Claude Cowork 知识工作者的插件，覆盖 AI 辅助的研究与写作工作流。今天新增 709 颗星。",
+      "language": "Python",
+      "stars": 28500,
+      "stars_today": 709,
+      "forks": 1200,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "plugins",
+        "agents",
+        "productivity"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "将确定性静态分析与大模型智能体的上下文理解相结合的代码审查工具，这种混合设计可减少纯大模型方案的误报。",
+      "language": "Go",
+      "stars": 18200,
+      "stars_today": 326,
+      "forks": 1500,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": [
+        "code-review",
+        "static-analysis",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pytorch-pytorch",
+      "name": "pytorch/pytorch",
+      "description": "深度学习的基础框架，今天稳定地新增 315 颗星。",
+      "language": "Python",
+      "stars": 104680,
+      "stars_today": 315,
+      "forks": 28500,
+      "url": "https://github.com/pytorch/pytorch",
+      "tags": [
+        "deep-learning",
+        "framework"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "robbyant-lingbot-map",
+      "name": "Robbyant/lingbot-map",
+      "description": "基于几何上下文 Transformer（Geometric Context Transformer）的流式 3D 重建，被描述为 ECCV 2026 最佳论文候选。",
+      "language": "Python",
+      "stars": 8900,
+      "stars_today": 110,
+      "forks": 780,
+      "url": "https://github.com/Robbyant/lingbot-map",
+      "tags": [
+        "3d-reconstruction",
+        "computer-vision",
+        "transformers"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "louis-cfm-coucou",
+      "name": "Louis-CFM/coucou",
+      "description": "轻量级跨平台小组件，可实时监控 Claude Code 和 Codex 等 AI 编程智能体，回应了监督长时间运行智能体的需求。",
+      "language": "TypeScript",
+      "stars": 3041,
+      "stars_today": 280,
+      "forks": 120,
+      "url": "https://github.com/Louis-CFM/coucou",
+      "tags": [
+        "coding-agents",
+        "monitoring",
+        "developer-tools"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "kkkkhazix-aihot",
+      "name": "KKKKhazix/AIHOT",
+      "description": "可自托管的框架，能自动发现并撰写每日行业新闻摘要，今天新增 380 颗星。",
+      "language": "Python",
+      "stars": 5016,
+      "stars_today": 380,
+      "forks": 420,
+      "url": "https://github.com/KKKKhazix/AIHOT",
+      "tags": [
+        "news-digest",
+        "automation",
+        "llm-applications"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "自适应智能体推理与效率",
+      "description": "学习得到的路由器和提议分布决定何时思考、尝试什么以及投入多少算力，从而削减智能体的开销。",
+      "related_paper_ids": [
+        "race-adaptive-reasoning",
+        "leap-action-proposals",
+        "visionweave"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "基于运行框架与世界模型的递归自我改进",
+      "description": "智能体通过演化评测框架或在模拟世界中训练来改进自身，而不是依靠权重更新。",
+      "related_paper_ids": [
+        "video-rsi",
+        "rsi-anything",
+        "swe-duel"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效的多模态表示",
+      "description": "弹性视觉 token 和统一潜在接口旨在削减算力的同时，保持跨模态的质量。",
+      "related_paper_ids": [
+        "visionweave",
+        "instantfusion"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "统一 OCR 与文档智能",
+      "description": "以基于验证器的强化学习和蒸馏训练的统一 OCR 模型家族刷新了基准结果，同时小型 OCR 模型也在走红。",
+      "related_paper_ids": [
+        "polyocr-venus"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "更低成本的奖励建模与监督",
+      "description": "潜在空间评判和仅依赖结果的过程监督，降低了强化学习后训练信号的成本。",
+      "related_paper_ids": [
+        "latentgrm",
+        "tips-process-supervision"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "音视频与 3D 生成",
+      "description": "联合视频音频生成和智能体化的 3D 资产流水线，把生成式模型延伸到空间与物理领域。",
+      "related_paper_ids": [
+        "stereo-video-audio",
+        "sepgen",
+        "artisan-articulated-3d"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-12T05:30:00Z",
+      "status": "ok"
+    }
+  ]
+}
