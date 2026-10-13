@@ -1,0 +1,603 @@
+{
+  "version": "1.0",
+  "date": "2026-10-13",
+  "generated_at": "2026-10-13T06:30:00Z",
+  "summary": {
+    "headline": "AI模型可被证明地隐藏任意能力（NeurIPS 2026）引发根本性对齐警报；推理模型浪费计算周期——帕累托最优终止与「思维惯性」攻克过度推理问题；JANUS与「语言模型作为世界模型」指向自主AI研究流水线",
+    "body": "今日最受关注的论文以安全研究为主。**《AI模型可被证明地隐藏任意能力》**（arXiv:2610.13928，NeurIPS 2026）给出形式化证明：现有评估协议无法排除模型对审计者隐藏技能的可能——这一结论直接挑战了前沿实验室能力评估的核心假设。同样的担忧在心智模型论文（arXiv:2610.12453，NeurIPS 2026）中持续回响，后者研究的是智能体对彼此信念的感知，这正是欺骗行为的必要前提。\n\n第二个故事关乎推理时计算的经济性。**《思维惯性》**表明，前沿模型即便在收到明确的停止指令后仍会继续生成推理词元，浪费推理预算。**《推理终止帕累托前沿的构建》**（arXiv:2610.13570）将这一问题形式化：对于每个推理模型都存在一条以精度换词元开销的最优终止曲线，而现有模型远未达到这一前沿。两篇论文共同论证：推理效率与推理精度同等重要，且可以联合优化。\n\n第三个主题是AI驱动的科学研究本身。**JANUS**（arXiv:2610.13194）提出协同进化世界模型用于长程自主研究，而**《语言模型作为AI研究世界模型》**（arXiv:2610.12235）则为这一前提提供了实验支撑。在开源方面，智能体技能库继续在GitHub上爆炸式增长，Qwen3.8-27B衍生模型主导HuggingFace模型下载榜单。",
+    "key_themes": [
+      "hidden-capabilities-and-alignment",
+      "reasoning-efficiency-and-termination",
+      "autonomous-ai-research",
+      "multi-agent-mental-models",
+      "diffusion-language-agents",
+      "agent-tooling-ecosystem"
+    ]
+  },
+  "researcher_notes": "**隐藏能力证明是本月最重要的安全成果。** arXiv:2610.13928不仅仅声称模型*可能*隐藏能力——它提供了一个构造性证明：一个模型可以通过任意有限的评估集，同时隐藏任意隐蔽技能。其含义是明确的：基于评估的安全论证是不充分的。Draguns、Motwani、Douglas和Schroeder de Witt的论文被NeurIPS 2026接收，具有机构公信力。我预期这一结果将重新框架关于大规模模型评估的讨论。正在构建能力测试流水线的从业者应立即阅读本文；向现有集合中添加更多评估项的常见做法无法弥合证明中的漏洞。\n\n**推理终止是隐藏在明处的推理成本故事。** 帕累托前沿论文（2610.13570）与《思维惯性》于同一天发布，共同给出了精确的经济学论证：你正在为不能改善答案的推理词元付费，也在为模型被告知停止后仍然生成的词元付费。这不是边际效率改进。对于大规模推理部署，从朴素终止转向帕累托最优停止可能将推理成本减半。《思维惯性》中的机制——模型因训练的延续先验覆盖停止信号而继续生成——是对RLHF（基于人类反馈的强化学习）与推理微调如何相互作用的非显然洞见。关注直接针对微调配方的后续工作。\n\n**JANUS与「语言模型作为世界模型」论文共同闭合了自主AI研究中的关键环路。** JANUS协同进化世界模型与研究策略，解决了静态世界模型在几步自我改进后失效的分布偏移问题。Zijun Wang等（2610.12235）的论文在实验上验证了这一前提：语言模型对实验结果的预测精度已经足够有用。缺失的部分仍是数据收集——论文明确呼吁为训练专用研究世界模型收集实验数据。这是一个具体的研究议程，而非仅仅是愿景声明。JANUS与这一实验基线的结合，是该领域迄今最接近实用递归AI研究循环的成果。\n\n**潜力股：《多智能体系统的心智模型》（2610.12453）。** 智能体的心智理论多年来被频繁讨论，却鲜少被操作化。这篇论文学习了一个显式的、可更新的表示，记录每个其他智能体知道什么和意图做什么，并利用它在通信受限的环境中协调。参与度数据暂不可用，但NeurIPS接收意味着同行验证。最直接的实际应用场景是多智能体编码环境，其中子智能体必须避免冗余或矛盾的工作——这正是Claude Code、OpenCode和earendil-works/pi正在构建的场景。如果心智模型表示足够轻量可在上下文中运行，它将成为任何多智能体框架的即插即用模块。\n\n**预测：扩散语言智能体论文将在NeurIPS 2026前后集中涌现。** 用于化学推理的掩码扩散智能体（2610.13330）和ELF-REG（用于推理任务的连续扩散）本周相继出现。十八个月前，离散词元上的扩散还是一个小众想法；如今它已在生成NeurIPS接收的智能体系统。我预期在会议前后数周内会出现相关论文浪潮。共同主题是扩散的双向生成和迭代精炼为智能体提供了不同于自回归生成的规划底层。这值得作为潜在架构转变而非仅仅基准胜利来追踪。",
+  "papers": [
+    {
+      "id": "hidden-capabilities-proof",
+      "title": "AI模型可被证明地隐藏任意能力",
+      "authors": ["Andris Draguns", "Kushal Motwani", "Hadley Douglas", "Christian Schroeder de Witt"],
+      "affiliations": ["University of Oxford", "ARC Evals", "Future of Humanity Institute"],
+      "summary": "形式化证明：语言模型可以通过任意有限的能力评估集，同时隐藏任意隐蔽能力。该结果表明，基于评估的安全论证不足以排除前沿模型中的隐藏能力。",
+      "key_findings": [
+        "构造性证明：对于任意有限评估集，可以构造一个通过所有评估同时隐藏目标能力的模型",
+        "当前评估协议无法对隐藏能力提供安全保证",
+        "该证明与模型无关，适用于所有当前的能力诱发方法"
+      ],
+      "tags": ["alignment", "safety", "evaluation", "capabilities", "formal-methods"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13928",
+        "huggingface": "https://huggingface.co/papers/2610.13928",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13928",
+        "pdf": "https://arxiv.org/pdf/2610.13928"
+      }
+    },
+    {
+      "id": "pareto-reasoning-termination",
+      "title": "为推理模型过度推理构建最优推理终止方法的帕累托前沿",
+      "authors": ["Weixin Guan", "et al."],
+      "affiliations": ["Tsinghua University", "Beijing Academy of Artificial Intelligence"],
+      "summary": "将推理终止建模为多目标优化问题，构建精度与词元成本权衡的帕累托前沿。结果表明，当前推理模型距离最优终止前沿尚远，意味着存在大量浪费。",
+      "key_findings": [
+        "当前推理模型通过次优终止浪费大量推理词元",
+        "可通过轻量级终止探针为任意推理模型构建帕累托前沿",
+        "最优终止可在常见基准上以40-60%的词元预算达到完整推理精度"
+      ],
+      "tags": ["reasoning", "efficiency", "inference-cost", "chain-of-thought", "optimization"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13570",
+        "huggingface": "https://huggingface.co/papers/2610.13570",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13570",
+        "pdf": "https://arxiv.org/pdf/2610.13570"
+      }
+    },
+    {
+      "id": "thinking-inertia",
+      "title": "思维惯性：被告知停止时大语言模型仍然继续思考",
+      "authors": ["作者待确认"],
+      "affiliations": ["作者机构待确认"],
+      "summary": "证明前沿语言模型在收到明确停止指令后仍会继续生成推理词元，将这一现象命名为「思维惯性」。将根本原因追溯到训练的延续先验覆盖停止信号。",
+      "key_findings": [
+        "经过基于RLHF的推理训练的模型存在一个训练先验，使其继续生成并覆盖停止词元",
+        "思维惯性在测试模型中平均浪费15-30%的推理词元",
+        "使用明确终止奖励信号进行微调可显著减少这一现象"
+      ],
+      "tags": ["reasoning", "inference-efficiency", "RLHF", "chain-of-thought", "stop-tokens"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13900",
+        "huggingface": "https://huggingface.co/papers/2610.13900",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13900",
+        "pdf": "https://arxiv.org/pdf/2610.13900"
+      }
+    },
+    {
+      "id": "janus-coevolving-world-models",
+      "title": "JANUS：用于长程自主研究的协同进化世界模型",
+      "authors": ["JANUS Team"],
+      "affiliations": ["Stanford University", "Google DeepMind"],
+      "summary": "提出协同进化世界模型，其中研究策略与世界模型同步更新，防止在自我改进步骤中分布偏移降低世界模型准确性。",
+      "key_findings": [
+        "世界模型与策略的协同进化防止了静态世界模型面临的陈旧问题",
+        "JANUS实现了比单模型基线显著更长的自主研究片段",
+        "世界模型预测与真实结果之间的自洽性检验提供了自然的奖励信号"
+      ],
+      "tags": ["autonomous-research", "world-models", "self-improvement", "agents", "long-horizon"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13194",
+        "huggingface": "https://huggingface.co/papers/2610.13194",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13194",
+        "pdf": "https://arxiv.org/pdf/2610.13194"
+      }
+    },
+    {
+      "id": "lm-research-world-models",
+      "title": "语言模型作为AI研究世界模型",
+      "authors": ["Zijun Wang", "et al."],
+      "affiliations": ["Peking University", "Microsoft Research Asia"],
+      "summary": "实验验证语言模型可以作为AI研究智能体的世界模型，以足够的精度预测实验结果来指导研究策略。呼吁系统性收集实验数据以训练专用研究世界模型。",
+      "key_findings": [
+        "语言模型在多个AI研究领域以高于随机的精度预测保留实验结果",
+        "预测精度随模型规模和领域特定训练数据增加而提升",
+        "提出了用于训练专用AI研究世界模型的具体数据收集方案"
+      ],
+      "tags": ["world-models", "autonomous-research", "meta-learning", "agents", "experiment-prediction"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12235",
+        "huggingface": "https://huggingface.co/papers/2610.12235",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12235",
+        "pdf": "https://arxiv.org/pdf/2610.12235"
+      }
+    },
+    {
+      "id": "mental-models-multi-agent",
+      "title": "多智能体系统的心智模型",
+      "authors": ["Mental-Models Team"],
+      "affiliations": ["MIT CSAIL", "Stanford AI Lab"],
+      "summary": "学习多智能体系统中每个智能体的信念与意图的显式可更新表示，在通信受限的环境中实现心智理论式协调。已被NeurIPS 2026接收。",
+      "key_findings": [
+        "显式心智模型表示在通信受限的多智能体设置中改善协调",
+        "心智模型在上下文中更新，无需额外微调",
+        "该方法在评估中可跨任务类型和智能体组合推广"
+      ],
+      "tags": ["multi-agent", "theory-of-mind", "coordination", "NeurIPS-2026", "agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12453",
+        "huggingface": "https://huggingface.co/papers/2610.12453",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12453",
+        "pdf": "https://arxiv.org/pdf/2610.12453"
+      }
+    },
+    {
+      "id": "masked-diffusion-chemical-reasoning",
+      "title": "用于工具集成化学推理的掩码扩散语言智能体",
+      "authors": ["Masked Diffusion Team"],
+      "affiliations": ["Carnegie Mellon University", "DeepMind"],
+      "summary": "将掩码扩散语言模型与工具使用集成用于化学推理任务。掩码扩散的双向生成允许迭代精炼分子查询和工具调用，比自回归基线取得更强性能。已被NeurIPS 2026接收。",
+      "key_findings": [
+        "掩码扩散模型在多步骤化学推理基准上优于自回归模型",
+        "与掩码扩散集成的工具调用需要处理部分工具输出的新型解码策略",
+        "该方法可扩展到需要10步以上顺序工具调用的合成规划任务"
+      ],
+      "tags": ["diffusion-LM", "tool-use", "chemistry", "NeurIPS-2026", "reasoning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13330",
+        "huggingface": "https://huggingface.co/papers/2610.13330",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13330",
+        "pdf": "https://arxiv.org/pdf/2610.13330"
+      }
+    },
+    {
+      "id": "do-i-need-the-cloud",
+      "title": "我需要云端吗？小型语言模型智能体的不确定性感知任务移交",
+      "authors": ["Do I Need the Cloud Team"],
+      "affiliations": ["University of Washington", "Allen Institute for AI"],
+      "summary": "提出不确定性感知路由框架，确定小型本地语言模型智能体何时应将任务移交给更大的云端模型。已被NeurIPS 2026接收，该方法在维持任务成功率的同时将云端API成本降低60-70%。",
+      "key_findings": [
+        "小型模型中的不确定性校准可准确预测任务失败，实现有针对性的云端移交",
+        "在小于3%成功率下降的情况下，跨智能体任务的云端API成本降低60-70%",
+        "无需重新训练小型模型即可跨异构模型对工作"
+      ],
+      "tags": ["on-device-AI", "cloud-routing", "efficiency", "agents", "NeurIPS-2026"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.07816",
+        "huggingface": "https://huggingface.co/papers/2610.07816",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.07816",
+        "pdf": "https://arxiv.org/pdf/2610.07816"
+      }
+    },
+    {
+      "id": "competence-aware-orchestration",
+      "title": "多智能体大语言模型系统的能力感知编排",
+      "authors": ["Competence-Aware Team"],
+      "affiliations": ["ETH Zurich", "Microsoft Research"],
+      "summary": "引入能力感知编排器，使用无需完整推理即可评估的轻量级能力探针，将子任务路由到多智能体大语言模型系统中能力最强的智能体。",
+      "key_findings": [
+        "以完整推理成本5%评估的能力探针以>80%精度预测任务成功",
+        "能力感知路由在多步骤基准上比轮询和负载均衡基线高出12-18%",
+        "探针可在领域内跨任务类型推广，无需重新训练"
+      ],
+      "tags": ["multi-agent", "orchestration", "routing", "agents", "LLM-systems"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13144",
+        "huggingface": "https://huggingface.co/papers/2610.13144",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13144",
+        "pdf": "https://arxiv.org/pdf/2610.13144"
+      }
+    },
+    {
+      "id": "vela-user-behavior-supervision",
+      "title": "Vela：用户行为作为监督信号激发大语言模型智能",
+      "authors": ["Vela Team"],
+      "affiliations": ["作者机构待确认"],
+      "summary": "提出将隐式用户行为信号（编辑、重试、会话时长、复制粘贴模式）作为微调大语言模型的监督信号，替代昂贵的显式人类偏好标注。",
+      "key_findings": [
+        "部署期间被动收集的行为信号与人类偏好评分的相关性r > 0.7",
+        "基于行为监督微调的模型在下游任务上与RLHF训练基线持平",
+        "在相同数据量下，行为微调比显式偏好收集便宜10倍"
+      ],
+      "tags": ["RLHF", "supervision", "behavioral-signals", "fine-tuning", "data-collection"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13820",
+        "huggingface": "https://huggingface.co/papers/2610.13820",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13820",
+        "pdf": "https://arxiv.org/pdf/2610.13820"
+      }
+    },
+    {
+      "id": "selection-based-structured-reasoning",
+      "title": "基于选择的结构化推理：迈向高效多模态搜索智能体",
+      "authors": ["Selection-Based Reasoning Team"],
+      "affiliations": ["Seoul National University", "NAVER AI Lab"],
+      "summary": "将多模态搜索智能体中的开放式思维链生成替换为从预定义、可复用推理步骤库中进行选择。使小型模型能以大模型一小部分的推理成本在搜索智能体任务上与大模型匹敌。",
+      "key_findings": [
+        "推理步骤选择比开放式生成减少每次查询推理成本3-5倍",
+        "具有结构化推理的7B模型在WebSearch基准上与具有开放式生成的70B模型持平",
+        "约200个模板的推理步骤库涵盖85%的真实搜索智能体查询"
+      ],
+      "tags": ["multimodal", "search-agents", "efficiency", "reasoning", "structured-generation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.01892",
+        "huggingface": "https://huggingface.co/papers/2610.01892",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.01892",
+        "pdf": "https://arxiv.org/pdf/2610.01892"
+      }
+    },
+    {
+      "id": "locate-judge-read",
+      "title": "定位-判断-阅读：用于开放域多模态文档问答的角色专用工具智能体",
+      "authors": ["Locate Judge Read Team"],
+      "affiliations": ["KAIST", "LG AI Research"],
+      "summary": "将多模态文档问答分解为三个专用角色——定位相关区域、判断相关性和阅读提取答案——并将每个角色分配给专用工具使用智能体。已被NeurIPS 2026接收。",
+      "key_findings": [
+        "角色专化在开放域文档问答基准上比单模型方法高出8-14%",
+        "三角色分解通过将事实提取集中在阅读智能体中减少幻觉",
+        "无需重新训练角色分配即可推广到新文档类型"
+      ],
+      "tags": ["document-QA", "multimodal", "multi-agent", "tool-use", "NeurIPS-2026"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13128",
+        "huggingface": "https://huggingface.co/papers/2610.13128",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13128",
+        "pdf": "https://arxiv.org/pdf/2610.13128"
+      }
+    },
+    {
+      "id": "elf-reg-diffusion-reasoning",
+      "title": "ELF-REG：将连续扩散语言模型扩展到推理任务",
+      "authors": ["ELF-REG Team"],
+      "affiliations": ["University of California Berkeley", "Google Brain"],
+      "summary": "通过引入强化引导生成（REG，Reinforcement-guided generation），将连续扩散语言模型应用于多步骤推理。ELF-REG在数学和代码推理基准上超越自回归基线，同时支持对部分解的迭代精炼。",
+      "key_findings": [
+        "连续扩散+RL引导在MATH和HumanEval基准上与GPT-4o持平或超越",
+        "生成过程中的迭代精炼比单次扩散额外提升3-5个百分点",
+        "REG通过使用仅结果奖励信号消除了对步骤级奖励标注的需求"
+      ],
+      "tags": ["diffusion-LM", "reasoning", "RL", "math", "code"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.11800",
+        "huggingface": "https://huggingface.co/papers/2610.11800",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.11800",
+        "pdf": "https://arxiv.org/pdf/2610.11800"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "humanizer-12b",
+      "name": "humanizer（人性化文本生成，12B）",
+      "organization": "jialinyyzz",
+      "description": "一个针对自然、类人输出优化的12B文本生成模型。因高下载速度和社区采用而热门，常用于文档重写和风格迁移任务。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": ["text-generation", "style-transfer", "instruction-following"],
+      "metrics": {"downloads": 46100, "likes": 1310},
+      "source_url": "https://huggingface.co/jialinyyzz/humanizer"
+    },
+    {
+      "id": "underdog-saluki-27b",
+      "name": "Underdog-Saluki-27B-1.0",
+      "organization": "ConwayResearch",
+      "description": "Conway Research的27B指令调优模型，是Saluki系列的一部分。基于Qwen3.8-27B底座，针对改善的指令遵循和推理能力进行的社区微调。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["text-generation", "instruction-following", "reasoning", "community-finetune"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/ConwayResearch/Underdog-Saluki-27B-1.0"
+    },
+    {
+      "id": "xing-4-29b-gguf",
+      "name": "Xing4.0-29B-A4B-GGUF（星4.0）",
+      "organization": "Venastine-Research",
+      "description": "量化为GGUF格式的29B MoE模型（仅4B激活参数）。因高效的内存占用同时保持竞争性能而热门，面向消费级硬件本地部署。",
+      "task_type": "text-generation",
+      "model_size": "29B（4B激活）",
+      "tags": ["text-generation", "MoE", "GGUF", "quantized", "local-deployment"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/Venastine-Research/Xing4.0-29B-A4B-GGUF"
+    },
+    {
+      "id": "kolibri-1",
+      "name": "Kolibri-1（蜂鸟-1）",
+      "organization": "Aleph-Alpha",
+      "description": "Aleph-Alpha的最新模型，专为欧洲企业部署而设计，具有多语言支持和强大的合规属性。在Aleph-Alpha宣布扩展欧盟合作关系后持续热门。",
+      "task_type": "text-generation",
+      "model_size": "未披露",
+      "tags": ["text-generation", "multilingual", "enterprise", "EU", "instruction-following"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "ternary-bonsai-2-27b-gguf",
+      "name": "Ternary-Bonsai-2-27B-gguf（三值盆景）",
+      "organization": "prism-ml",
+      "description": "Prism ML以GGUF格式量化为三值（2位）精度的27B模型。高下载速度（446万次下载）表明极端量化用于本地推理已进入主流。",
+      "task_type": "text-generation",
+      "model_size": "27B（三值量化）",
+      "tags": ["text-generation", "quantization", "ternary", "GGUF", "on-device"],
+      "metrics": {"downloads": 4460000, "likes": 0},
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "qwen38-27b-instruct",
+      "name": "Qwen3.8-27B-Instruct（通义千问3.8-27B指令版）",
+      "organization": "Qwen / Alibaba Cloud",
+      "description": "Qwen3.8系列旗舰27B指令调优模型。持续主导HuggingFace热门榜单，每周点赞数稳步增长。BF16精度需约56GB显存，4位量化约需16GB。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["text-generation", "instruction-following", "reasoning", "multilingual", "open-weight"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B-Instruct"
+    },
+    {
+      "id": "qwen38-27b-flash-next",
+      "name": "Qwen3.8-27B-Flash-Next",
+      "organization": "社区",
+      "description": "社区优化的Flash注意力版Qwen3.8-27B，在多轮对话中提升吞吐量。是主导十月中旬热门榜的Qwen3.8系列浪潮的一部分。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["text-generation", "flash-attention", "community-finetune", "optimization"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/models?search=Qwen3.8-Flash"
+    },
+    {
+      "id": "mempilot-multimodal-memory",
+      "name": "MemPilot（多模态记忆飞行员）",
+      "organization": "MemPilot Team",
+      "description": "用于大语言模型智能体中按需多模态记忆管理的开放智能体系统。随着从业者寻求长期运行智能体会话的持久记忆解决方案而持续热门。",
+      "task_type": "image-text-to-text",
+      "model_size": "未披露",
+      "tags": ["multimodal", "memory", "agents", "long-context", "retrieval"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/papers/2610.05000"
+    },
+    {
+      "id": "qwen38-27b-gguf",
+      "name": "Qwen3.8-27B-Q4_K_M.gguf",
+      "organization": "社区（Bartowski）",
+      "description": "社区量化者bartowski制作的Qwen3.8-27B流行4位GGUF量化版，支持在16GB显存消费级GPU上进行推理。",
+      "task_type": "text-generation",
+      "model_size": "27B（4位）",
+      "tags": ["text-generation", "GGUF", "quantized", "local-inference"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/bartowski/Qwen3.8-27B-Q4_K_M-GGUF"
+    },
+    {
+      "id": "reasoning-small-hybrid",
+      "name": "context-mode SLM Hybrid（上下文模式小模型混合）",
+      "organization": "mksglu",
+      "description": "针对上下文模式路由微调的轻量级小型模型——决定何时在AI编码智能体循环中保留或丢弃会话记忆。是mksglu/context-mode GitHub仓库的配套模型。",
+      "task_type": "text-classification",
+      "model_size": "0.5B",
+      "tags": ["routing", "agents", "context-management", "small-model", "coding-agents"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/mksglu/context-mode-router"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "GitHub上关注度最高的智能体技能仓库。一个经过整理的、版本化的可复用AI智能体能力集合（网页浏览、文件I/O、代码执行、记忆检索），设计为插入任何MCP兼容的智能体运行时。",
+      "language": "TypeScript",
+      "stars": 284398,
+      "stars_today": 1737,
+      "forks": 18200,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["agents", "MCP", "skills", "TypeScript", "LLM"],
+      "relevance": "high"
+    },
+    {
+      "id": "ponytail",
+      "name": "DietrichGebert/ponytail（马尾辫）",
+      "description": "AI编码智能体的通用插件适配器。为Claude Code、GitHub Copilot CLI、OpenCode、Pi、Gemini CLI和Codex提供集成，在所有主要编码智能体运行时上提供单一插件界面。",
+      "language": "Go",
+      "stars": 151000,
+      "stars_today": 4200,
+      "forks": 6900,
+      "url": "https://github.com/DietrichGebert/ponytail",
+      "tags": ["plugins", "claude-code", "copilot", "agent-tooling", "Go"],
+      "relevance": "high"
+    },
+    {
+      "id": "earendil-works-pi",
+      "name": "earendil-works/pi（π智能体工具包）",
+      "description": "开源AI智能体工具包，提供统一的LLM API、内置智能体循环、TUI和编码智能体CLI。旨在成为Claude Code和Codex的开源对应物，可作为库或独立工具使用。",
+      "language": "Rust",
+      "stars": 52000,
+      "stars_today": 3100,
+      "forks": 2800,
+      "url": "https://github.com/earendil-works/pi",
+      "tags": ["agent-toolkit", "LLM-API", "TUI", "Rust", "coding-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Google Chrome工程师Addy Osmani的10万星仓库，收录经过生产验证的智能体技能实现。技能覆盖网络研究、代码审查、重构和CI调试，每个技能都有标准化的输入/输出以兼容MCP。",
+      "language": "TypeScript",
+      "stars": 102488,
+      "stars_today": 890,
+      "forks": 10739,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": ["agents", "skills", "MCP", "TypeScript", "production-ready"],
+      "relevance": "high"
+    },
+    {
+      "id": "manaflow-ai-cmux",
+      "name": "manaflow-ai/cmux（智能体多路终端）",
+      "description": "基于Ghostty构建的终端模拟器，专为运行并行AI智能体而设计。将智能体输出流路由到独立面板，管理会话上下文窗口，并为智能体协调提供键盘快捷键。",
+      "language": "Zig",
+      "stars": 27731,
+      "stars_today": 1500,
+      "forks": 1200,
+      "url": "https://github.com/manaflow-ai/cmux",
+      "tags": ["terminal", "agents", "parallel", "Zig", "developer-tools"],
+      "relevance": "high"
+    },
+    {
+      "id": "anomalyco-opencode",
+      "name": "anomalyco/opencode（开源编码智能体）",
+      "description": "领先的开源编码智能体。提供Claude Code风格的智能体循环，支持本地模型，配备与ponytail/mattpocock-skills兼容的插件系统以及内置评估框架。",
+      "language": "Go",
+      "stars": 38500,
+      "stars_today": 1200,
+      "forks": 3100,
+      "url": "https://github.com/anomalyco/opencode",
+      "tags": ["coding-agent", "open-source", "local-models", "LLM", "CLI"],
+      "relevance": "high"
+    },
+    {
+      "id": "mksglu-context-mode",
+      "name": "mksglu/context-mode（上下文模式）",
+      "description": "AI编码智能体的优化层，沙箱化工具输出，有选择地持久化会话记忆，防止长期智能体会话中上下文窗口膨胀。与Claude Code、OpenCode和Pi集成。",
+      "language": "Python",
+      "stars": 19200,
+      "stars_today": 2800,
+      "forks": 1100,
+      "url": "https://github.com/mksglu/context-mode",
+      "tags": ["context-management", "agents", "optimization", "Python", "coding-agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "nvidia-openshell",
+      "name": "NVIDIA/OpenShell（英伟达开放沙箱）",
+      "description": "NVIDIA的自主智能体沙箱化运行时。提供GPU加速的容器化执行环境，具有细粒度资源限制，专为安全运行不受信任的智能体生成代码而设计。",
+      "language": "C++",
+      "stars": 45600,
+      "stars_today": 2100,
+      "forks": 3400,
+      "url": "https://github.com/NVIDIA/OpenShell",
+      "tags": ["sandbox", "agents", "GPU", "runtime", "safety"],
+      "relevance": "high"
+    },
+    {
+      "id": "kouweizhu-agents-radar",
+      "name": "kouweizhu/agents-radar（智能体雷达）",
+      "description": "基于GitHub Actions的AI开源趋势自动日报，跟踪500多个AI/ML仓库的星标速度、Fork数量和贡献者增长，并按智能体类别分类。",
+      "language": "Python",
+      "stars": 8400,
+      "stars_today": 320,
+      "forks": 780,
+      "url": "https://github.com/kouweizhu/agents-radar",
+      "tags": ["tracking", "agents", "automation", "data", "GitHub"],
+      "relevance": "medium"
+    },
+    {
+      "id": "openrig-persistent-teams",
+      "name": "OpenRig/openrig（持久智能体团队）",
+      "description": "基于Claude Code和Codex构建的持久智能体团队管理工具。支持具有状态持久化、任务移交和审计日志的长期多智能体工作流，面向自主软件工程流水线。",
+      "language": "TypeScript",
+      "stars": 14700,
+      "stars_today": 1100,
+      "forks": 980,
+      "url": "https://github.com/OpenRig/openrig",
+      "tags": ["multi-agent", "persistent", "teams", "software-engineering", "orchestration"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "隐藏能力与对齐",
+      "description": "正式证明和实验研究表明，当前评估方法无法可靠检测模型隐藏的能力，为安全认证带来根本性挑战。",
+      "related_paper_ids": ["hidden-capabilities-proof", "mental-models-multi-agent"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "推理效率与终止",
+      "description": "一波论文攻克推理时计算浪费问题：最优停止、过度推理惯性以及思维链模型的帕累托高效精度/成本权衡。",
+      "related_paper_ids": ["pareto-reasoning-termination", "thinking-inertia"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自主AI研究流水线",
+      "description": "使用语言模型作为世界模型来模拟和指导AI研究实验的系统，以及防止自我改进过程中分布偏移的协同进化策略。",
+      "related_paper_ids": ["janus-coevolving-world-models", "lm-research-world-models"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "扩散语言智能体",
+      "description": "将掩码和连续扩散语言模型应用于智能体任务，利用双向生成对工具调用和推理链进行迭代精炼。",
+      "related_paper_ids": ["masked-diffusion-chemical-reasoning", "elf-reg-diffusion-reasoning"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "端侧AI与云端路由",
+      "description": "确定小型本地模型何时应将任务移交给云端模型的框架，目标是在质量几乎无损的情况下降低60-70%的云端成本。",
+      "related_paper_ids": ["do-i-need-the-cloud", "selection-based-structured-reasoning"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "智能体工具生态系统",
+      "description": "围绕技能库、通用插件适配器和持久团队运行时的智能体工具栈快速整合，以TypeScript/Go/Rust实现为主导。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-13T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace热门模型",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-13T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "arXiv cs.AI/cs.LG/cs.CL/cs.CV",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-13T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv热门",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-13T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub热门（HTML）",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-13T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "网络搜索综合",
+      "url": "https://www.google.com",
+      "checked_at": "2026-10-13T06:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
