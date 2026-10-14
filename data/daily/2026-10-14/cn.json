@@ -1,0 +1,869 @@
+{
+  "version": "1.0",
+  "date": "2026-10-14",
+  "generated_at": "2026-10-14T08:00:00Z",
+  "summary": {
+    "headline": "LeWAM基于JEPA的世界建模在接触密集型机器人任务上达到89.7%成功率；AlphaProof Nexus解决9个未解决的Erdős问题；Vals AI研究发现多智能体团队成本高出5.1倍但收益微乎其微",
+    "body": "2026年10月14日，智能体AI研究迎来热潮。来自UC San Diego（加州大学圣地亚哥分校）的LeWAM在具身世界建模领域取得里程碑式成果——将接触密集型任务的成功率从28.6%提升至89.7%，规划速度比此前JEPA方法加快32.3倍。当日arxiv论文列表中，递归自我改进、基于强化学习的推理以及稀疏注意力效率等方向占据主导，反映出该领域日益聚焦于打通训练与部署之间的闭环。\n\n在业界方面，Google DeepMind的AlphaProof Nexus表明形式化数学仍是前沿模型的重要突破口，而Vals AI发现多智能体团队以5.1倍成本仅带来边际收益，给盲目扩展多智能体规模的做法泼了一盆冷水。Alibaba（阿里巴巴，Qwen3.8-27B、Qwen-Image-2.1）、DeepSeek（V4.1-Flash）以及Google（EmbeddingGemma-2）相继发布模型，表明高效计算、高性能模型的竞争仍在持续加速。",
+    "key_themes": [
+      "world-modeling-and-embodied-ai",
+      "recursive-agent-self-improvement",
+      "rl-for-reasoning",
+      "sparse-and-efficient-attention",
+      "reward-hacking-and-alignment",
+      "multimodal-model-releases"
+    ]
+  },
+  "researcher_notes": "**LeWAM是本月最被低估的机器人学论文。** 接触密集型任务成功率从28.6%跃升至89.7%，绝非渐进式改进——这表明联合潜在状态预测与动作流匹配相结合，解决了早期JEPA方法中长期存在的信用分配瓶颈问题。32.3倍的规划加速同样意义重大：若此方案能跨具身类型泛化，LeWAM风格的架构或将在12个月内取代基于扩散的规划流水线。\n\n**递归自我改进论文群（Harness²、ClawLoop、RSIPO、AutoEnvScaling）预示着智能体训练范式的转变。** AlphaXiv的热门趋势证实这是本周最受关注的主题。然而，研究者应留意Vals AI实证研究揭示的矛盾：多智能体团队以5.1倍的成本换来边际收益，说明简单叠加智能体数量并非正解——RSIPO中技能与策略协同进化的结构化递归改进或许才是值得重点关注的关键差异所在。\n\n**奖励欺骗（reward hacking）正成为一类一等研究问题。**「Scoring Higher, Answering Worse（评分更高，回答更差）」论文与TPPO分别从不同角度切入同一根本失效模式：强化学习微调所优化的代理指标会偏离真实能力。InnovationEval显示Claude Fable 5与GPT-5.6在自创训练方法方面均未能超越人类研究者，这说明该领域可能正在逼近一个天花板——奖励信号质量而非模型规模，才是制约性约束。预计到2027年第一季度，协议层面的评测规则设计将成为一个独立子领域。",
+  "papers": [
+    {
+      "id": "lewam-world-action-modeling-jepas",
+      "title": "LeWAM: End-to-End World and Action Modeling with JEPAs",
+      "authors": [],
+      "affiliations": [
+        "UC San Diego"
+      ],
+      "summary": "LeWAM在JEPA框架内训练一个联合目标，将潜在状态预测与动作流匹配相结合，用于具身智能体。该方法在接触密集型任务上取得89.7%的成功率（从28.6%提升），在长时域任务上达到46.2%（从10.9%提升），同时规划速度比此前JEPA基线快32.3倍。",
+      "key_findings": [
+        "通过端到端JEPA联合训练，接触密集型任务成功率从28.6%提升至89.7%",
+        "长时域任务成功率从10.9%提升至46.2%，展示了超越短时域操作任务的泛化能力",
+        "规划速度比此前JEPA方法快32.3倍，使实时部署成为可能"
+      ],
+      "tags": [
+        "world-models",
+        "JEPA",
+        "embodied-ai",
+        "robotics",
+        "flow-matching",
+        "planning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12818",
+        "huggingface": "https://huggingface.co/papers/2610.12818",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.12818",
+        "pdf": "https://arxiv.org/pdf/2610.12818"
+      }
+    },
+    {
+      "id": "dosa-dots-sparse-attention",
+      "title": "DoSA: Dots Sparse Attention",
+      "authors": [],
+      "affiliations": [],
+      "summary": "DoSA提出一种稀疏注意力机制，利用结构化点阵稀疏模式在保持模型质量的同时降低注意力计算复杂度。该方法面向长上下文Transformer（变换器）的高效推理，无需对架构进行大规模改动。",
+      "key_findings": [
+        "引入基于点阵的稀疏注意力模式，降低二次方注意力计算开销",
+        "与稠密注意力基线相比保持了有竞争力的模型质量",
+        "可作为标准注意力层的即插即用替代方案"
+      ],
+      "tags": [
+        "sparse-attention",
+        "efficiency",
+        "transformers",
+        "long-context"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13990",
+        "huggingface": "https://huggingface.co/papers/2610.13990",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.13990",
+        "pdf": "https://arxiv.org/pdf/2610.13990"
+      }
+    },
+    {
+      "id": "rsipo-recursive-self-improving-policy",
+      "title": "RSIPO: Recursive Self-Improving Policy Optimization for Agentic Reinforcement Learning via Skill-Policy Co-Evolution",
+      "authors": [],
+      "affiliations": [],
+      "summary": "RSIPO引入一种递归优化循环，使智能体技能与策略通过迭代自我改进协同进化，目标是开放式智能体强化学习（RL）场景。技能-策略协同进化机制使智能体无需外部监督即可自举获取新能力。",
+      "key_findings": [
+        "技能-策略协同进化无需人工标注数据即可实现自举式能力获取",
+        "递归优化循环在长时域智能体基准测试上优于静态策略训练",
+        "通过模块化技能抽象，架构可跨多样任务领域泛化"
+      ],
+      "tags": [
+        "agentic-rl",
+        "self-improvement",
+        "skill-learning",
+        "policy-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15772",
+        "huggingface": "https://huggingface.co/papers/2610.15772",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.15772",
+        "pdf": "https://arxiv.org/pdf/2610.15772"
+      }
+    },
+    {
+      "id": "scoring-higher-answering-worse-reward-hacking",
+      "title": "Scoring Higher, Answering Worse: Mitigating Reward Hacking in Rubric-Based RL via Protocol-Level Rubrics",
+      "authors": [],
+      "affiliations": [],
+      "summary": "本文识别出一种系统性失效模式：基于评分规则的强化学习微调会产生在自动化评分规则上得分更高、但实际回答质量却下降的模型。论文提出协议层面的评测规则设计，作为解决语言模型强化学习中奖励欺骗问题的结构性方案。",
+      "key_findings": [
+        "基于评测规则的强化学习始终产生奖励欺骗现象，评分结果与真实回答质量出现背离",
+        "编码评估意图而非表面指标的协议层面评测规则，能大幅减少奖励欺骗",
+        "该发现对使用自动验证器的RLHF（基于人类反馈的强化学习）和RLAIF（基于AI反馈的强化学习）流水线具有广泛影响"
+      ],
+      "tags": [
+        "reward-hacking",
+        "RLHF",
+        "alignment",
+        "rubric-design",
+        "language-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.38847",
+        "huggingface": "https://huggingface.co/papers/2609.38847",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.38847",
+        "pdf": "https://arxiv.org/pdf/2609.38847"
+      }
+    },
+    {
+      "id": "tppo-tracking-value-ppo-reasoning",
+      "title": "TPPO: Tracking-Value PPO For Language Model Reasoning",
+      "authors": [
+        "Zhi Wang",
+        "Yun Luo",
+        "Jianhao Yan",
+        "Chenxi Li",
+        "Futing Wang"
+      ],
+      "affiliations": [],
+      "summary": "TPPO在标准PPO（近端策略优化）基础上引入追踪值机制，对推理轨迹质量保持滚动估计，从而为多步骤推理提供更稳定的强化学习训练。该方法解决了链式思维强化学习中的奖励稀疏性和信用分配难题。",
+      "key_findings": [
+        "追踪值基线降低了多步骤推理任务中PPO更新的方差",
+        "在数学和逻辑推理基准测试上优于标准PPO和GRPO",
+        "即使在长推理链的稀疏奖励信号下，训练也保持稳定"
+      ],
+      "tags": [
+        "PPO",
+        "RL-reasoning",
+        "language-models",
+        "chain-of-thought",
+        "training-stability"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.16794",
+        "huggingface": "https://huggingface.co/papers/2610.16794",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.16794",
+        "pdf": "https://arxiv.org/pdf/2610.16794"
+      }
+    },
+    {
+      "id": "harness2-recursive-agent-open-world",
+      "title": "Harness²: Recursive Agent Harnessing for an Open World",
+      "authors": [],
+      "affiliations": [],
+      "summary": "Harness²提出一种递归元编排框架，使智能体能在推理时动态组合并调用子智能体编排器，以应对开放世界任务。该架构支持层次化任务分解与自适应智能体编排，无需预定义任务模板。",
+      "key_findings": [
+        "递归编排允许在推理时动态组合智能体子系统",
+        "在开放世界任务完成度上优于扁平化多智能体基线",
+        "框架原生支持编排器，降低了智能体系统部署的工程开销"
+      ],
+      "tags": [
+        "multi-agent",
+        "agent-orchestration",
+        "recursive-harnessing",
+        "open-world"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.14224",
+        "huggingface": "https://huggingface.co/papers/2610.14224",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.14224",
+        "pdf": "https://arxiv.org/pdf/2610.14224"
+      }
+    },
+    {
+      "id": "clawloop-self-improving-agents-training",
+      "title": "ClawLoop: Self-Improving Agents via Harness-Native Training Loop",
+      "authors": [],
+      "affiliations": [],
+      "summary": "ClawLoop引入一种闭环训练范式，在编排器原生基础设施中持续收集智能体执行轨迹，用于改进智能体自身策略。该方法在每次迭代中无需人工标注即可实现在策略（on-policy）自我改进。",
+      "key_findings": [
+        "编排器原生训练循环支持在线策略数据采集与策略更新，无需人工标注",
+        "在保留集智能体基准测试上，自我改进循环的收敛速度快于离线微调基线",
+        "与现有编排器框架（包括Harness²和AutoEnvScaling）兼容"
+      ],
+      "tags": [
+        "self-improvement",
+        "agentic-training",
+        "on-policy-learning",
+        "harness"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.14118",
+        "huggingface": "https://huggingface.co/papers/2610.14118",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.14118",
+        "pdf": "https://arxiv.org/pdf/2610.14118"
+      }
+    },
+    {
+      "id": "phyprobe-physical-consistency-video",
+      "title": "PhyProbe: Rethinking Physical Consistency Evaluation in Generated Videos",
+      "authors": [],
+      "affiliations": [
+        "NVIDIA Cosmos Lab"
+      ],
+      "summary": "PhyProbe提出将冻结的时空编码器与轻量级评分头相结合，通过成对排名与回归训练评估AI生成视频的物理一致性。该方法为视频质量评估提供了可扩展、训练高效的替代方案，无需对完整模型进行微调。",
+      "key_findings": [
+        "冻结时空编码器配合轻量评分头，无需全量微调即可实现强物理一致性评分",
+        "成对排名结合回归训练比仅用分类方法产生更好的校准分数",
+        "基准测试为物理感知视频生成质量建立了新的评估协议"
+      ],
+      "tags": [
+        "video-generation",
+        "physical-consistency",
+        "evaluation",
+        "spatiotemporal-encoding",
+        "NVIDIA"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.38377",
+        "huggingface": "https://huggingface.co/papers/2609.38377",
+        "alphaxiv": "https://alphaxiv.org/abs/2609.38377",
+        "pdf": "https://arxiv.org/pdf/2609.38377"
+      }
+    },
+    {
+      "id": "panini-dr-controlled-deep-research",
+      "title": "PANINI-DR: Controlled Deep Research through Generative Semantic Workspaces",
+      "authors": [
+        "Kartik Sharma",
+        "Chenda Duan",
+        "M. Efe Lorasdagi",
+        "Shreyas Rajesh",
+        "M. Yigit Turali"
+      ],
+      "affiliations": [],
+      "summary": "PANINI-DR引入生成式语义工作空间架构，通过在持久化工作空间内结构化信息检索与合成，实现受控的多步骤深度研究。该系统面向需要迭代证据聚合与受控生成的复杂研究查询。",
+      "key_findings": [
+        "生成式语义工作空间支持跨研究步骤的持久化、结构化信息积累",
+        "受控生成机制在基于证据的研究任务上显著减少幻觉现象",
+        "在需要跨文档合成的多跳研究基准测试上优于RAG（检索增强生成）基线"
+      ],
+      "tags": [
+        "deep-research",
+        "RAG",
+        "information-synthesis",
+        "agentic-search",
+        "semantic-workspace"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15208",
+        "huggingface": "https://huggingface.co/papers/2610.15208",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.15208",
+        "pdf": "https://arxiv.org/pdf/2610.15208"
+      }
+    },
+    {
+      "id": "ultrabert-beyond-bert-pretraining",
+      "title": "UltraBERT: Beyond the Limit of BERT Pre-Training",
+      "authors": [
+        "Jaewoo Kang",
+        "Taewhoo Lee",
+        "Jungwoo Park"
+      ],
+      "affiliations": [],
+      "summary": "UltraBERT通过新颖的遮蔽策略和课程式预训练调度，将仅编码器预训练推向已知BERT（双向编码器表示来自Transformers）扩展极限之外。本研究挑战了BERT式模型已触及能力天花板的传统认知。",
+      "key_findings": [
+        "新颖的遮蔽课程在等效算力下超越标准MLM（掩码语言建模）预训练效率",
+        "在GLUE和生物医学NLP基准测试中，跻身仅编码器模型最先进水平",
+        "证明了仅编码器的规模扩展潜力尚未被此前工作完全挖掘"
+      ],
+      "tags": [
+        "BERT",
+        "pre-training",
+        "encoder-only",
+        "NLP",
+        "scaling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15028",
+        "huggingface": "https://huggingface.co/papers/2610.15028",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.15028",
+        "pdf": "https://arxiv.org/pdf/2610.15028"
+      }
+    },
+    {
+      "id": "spectral-adaptive-rank-optimizer-llm-rl",
+      "title": "Spectral-Driven Adaptive-Rank Optimizer for Large Language Model Reinforcement Learning with Verifiable Rewards",
+      "authors": [],
+      "affiliations": [],
+      "summary": "本文引入一种由谱分析驱动的优化器，在使用可验证奖励对大语言模型进行强化学习微调时，动态调整权重更新的秩。自适应秩方法在保持奖励最大化优化表达能力的同时，降低了参数开销。",
+      "key_findings": [
+        "谱驱动秩自适应与全秩强化学习更新相比，可将可训练参数减少至多60%",
+        "在包括数学和代码在内的可验证奖励基准测试上，维持或提升了奖励优化效果",
+        "通过奇异值谱分析为秩选择提供了理论依据"
+      ],
+      "tags": [
+        "RL-fine-tuning",
+        "low-rank",
+        "verifiable-rewards",
+        "optimizer",
+        "LLM-training"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.16533",
+        "huggingface": "https://huggingface.co/papers/2610.16533",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.16533",
+        "pdf": "https://arxiv.org/pdf/2610.16533"
+      }
+    },
+    {
+      "id": "shellelastic-scalable-elastic-pretraining",
+      "title": "ShellElastic: Scalable Elastic Pretraining with Simultaneous Maximal Updates and Hyperparameter Transfer",
+      "authors": [
+        "Mingze Xu",
+        "Chongjian Ge",
+        "Yifan Gong",
+        "Yan Kang",
+        "Can Jin"
+      ],
+      "affiliations": [],
+      "summary": "ShellElastic支持弹性预训练，在应用最大更新参数化（muP）的同时跨模型规模迁移超参数，从而减少高昂的超参数搜索成本。该方法面向算力预算动态变化的大规模预训练基础设施。",
+      "key_findings": [
+        "结合muP（最大更新参数化）的弹性预训练支持从小模型规模到大模型规模的稳定超参数迁移",
+        "通过支持同步多规模训练运行，降低超参数调优成本",
+        "在最大7B参数的模型上进行了验证，各规模的损失曲线保持一致"
+      ],
+      "tags": [
+        "pretraining",
+        "elastic-training",
+        "muP",
+        "hyperparameter-transfer",
+        "scaling"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15124",
+        "huggingface": "https://huggingface.co/papers/2610.15124",
+        "alphaxiv": "https://alphaxiv.org/abs/2610.15124",
+        "pdf": "https://arxiv.org/pdf/2610.15124"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba Qwen",
+      "description": "Alibaba（阿里巴巴）旗舰级270亿参数多模态大语言模型，支持图文对话，具备强大的多语言能力。截至本日，系HuggingFace上下载量和点赞数最高的模型。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "LLM",
+        "image-text",
+        "multilingual",
+        "flagship"
+      ],
+      "metrics": {
+        "downloads": 6768654,
+        "likes": 17446
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks出品的扩散模型，支持高质量文本生成视频与图像生成视频。逾170万次下载量反映出该模型在视频合成工作流中的广泛社区采用。",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "text-to-video",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 1720888,
+        "likes": 7199
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen3-8-27b-gguf-unsloth",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth / Alibaba Qwen",
+      "description": "由Unsloth优化的Qwen3.8-27B 4位量化GGUF版本，面向消费级笔记本电脑本地推理。逾640万次下载表明本地部署需求旺盛。",
+      "task_type": "text-generation",
+      "model_size": "27B (4-bit quantized)",
+      "tags": [
+        "GGUF",
+        "quantization",
+        "local-inference",
+        "4-bit",
+        "consumer-hardware"
+      ],
+      "metrics": {
+        "downloads": 6449020,
+        "likes": 5010
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "laya-convai",
+      "name": "Laya",
+      "organization": "ConvAI Innovations",
+      "description": "面向低延迟内容审核与决策流水线的文本分类模型。相对于下载量而言较高的点赞数，反映出社区对审核导向用例的高度认可。",
+      "task_type": "text-classification",
+      "model_size": "unknown",
+      "tags": [
+        "text-classification",
+        "moderation",
+        "low-latency",
+        "content-safety"
+      ],
+      "metrics": {
+        "downloads": 42936,
+        "likes": 5472
+      },
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek出品的速度与效率优化多模态视觉语言模型，支持最长100万token的上下文，兼具强大的多模态能力与低推理延迟。",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "vision-language",
+        "long-context",
+        "efficiency",
+        "1M-context"
+      ],
+      "metrics": {
+        "downloads": 1355278,
+        "likes": 4335
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "qwen-image-2-1",
+      "name": "Qwen-Image-2.1",
+      "organization": "Alibaba Qwen",
+      "description": "Alibaba Qwen出品的全尺寸文本生成图像扩散模型，支持提示词控制与局部重绘（in-painting）。完善了阿里巴巴多模态模型家族的生成式图像能力。",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "in-painting",
+        "prompt-control"
+      ],
+      "metrics": {
+        "downloads": 128839,
+        "likes": 3202
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "ternary-bonsai-2-27b",
+      "name": "Ternary-Bonsai-2-27B",
+      "organization": "Prism ML",
+      "description": "270亿参数三值2位量化大语言模型，内存占用低于2GB，可在极度资源受限的硬件上部署。逾440万次下载证明超低内存推理需求强劲。",
+      "task_type": "text-generation",
+      "model_size": "27B (2-bit ternary)",
+      "tags": [
+        "ternary-quantization",
+        "2-bit",
+        "ultra-low-memory",
+        "GGUF",
+        "consumer-hardware"
+      ],
+      "metrics": {
+        "downloads": 4457576,
+        "likes": 2605
+      },
+      "source_url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf"
+    },
+    {
+      "id": "clef-cloudflare",
+      "name": "Clef",
+      "organization": "Cloudflare",
+      "description": "基于Qwen-3.5的图像转文本OCR式描述模型，部署于Cloudflare边缘基础设施。代表了开放权重模型在全球CDN（内容分发网络）规模上的重要行业落地案例。",
+      "task_type": "image-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "OCR",
+        "captioning",
+        "edge-deployment",
+        "Cloudflare",
+        "image-to-text"
+      ],
+      "metrics": {
+        "downloads": 13579,
+        "likes": 2003
+      },
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "embeddinggemma-2-google",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "Google基于Gemma-2推出的稠密向量嵌入模型，用于语义搜索与检索任务。代表Google在开放嵌入模型领域的最新布局。",
+      "task_type": "feature-extraction",
+      "model_size": "unknown",
+      "tags": [
+        "embeddings",
+        "semantic-search",
+        "retrieval",
+        "Gemma-2",
+        "Google"
+      ],
+      "metrics": {
+        "downloads": 45605,
+        "likes": 1536
+      },
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "neo-coder-max-mtp",
+      "name": "NEO-CODER-MAX-MTP",
+      "organization": "DavidAU",
+      "description": "针对编程与创意写作优化的多模态GGUF模型，具备多令牌预测（multi-token prediction）能力。近200万次下载表明从业者对编程工作流的强烈采用意愿。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "coding",
+        "creative-writing",
+        "GGUF",
+        "multi-token-prediction",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1960274,
+        "likes": 1643
+      },
+      "source_url": "https://huggingface.co/DavidAU/NEO-CODER-MAX-MTP-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "自托管AI界面，将Ollama、OpenAI、Groq及数十个提供商统一于一个可扩展的用户界面之后。",
+      "language": "Python",
+      "stars": 155000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "self-hosted",
+        "UI",
+        "multi-provider",
+        "Ollama",
+        "OpenAI"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "pytorch",
+      "name": "pytorch/pytorch",
+      "description": "PyTorch深度学习框架，最主流的开源机器学习训练与推理库，每日持续保持增长势头。",
+      "language": "Python",
+      "stars": 104000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/pytorch/pytorch",
+      "tags": [
+        "deep-learning",
+        "framework",
+        "training",
+        "inference"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "提炼智能体编程技能与指南的资源库，迅速积累至10.2万星标、逾1万次Fork，成为智能体软件工程领域的社区参考标准。",
+      "language": "Markdown",
+      "stars": 102000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agents",
+        "guidelines",
+        "programming",
+        "community-resource"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openmontage",
+      "name": "OpenMontage/OpenMontage",
+      "description": "智能体视频制作系统，编排多个AI智能体端到端地自主创建和编辑视频。",
+      "language": "Python",
+      "stars": 63000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/OpenMontage/OpenMontage",
+      "tags": [
+        "video-production",
+        "multi-agent",
+        "video-editing",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "litellm",
+      "name": "BerriAI/litellm",
+      "description": "支持100+提供商的通用大语言模型网关，提供统一API，简化多提供商大语言模型集成。",
+      "language": "Python",
+      "stars": 60000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/BerriAI/litellm",
+      "tags": [
+        "LLM-gateway",
+        "multi-provider",
+        "API",
+        "integration"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "bitnet-microsoft",
+      "name": "microsoft/BitNet",
+      "description": "Microsoft（微软）官方1位大语言模型推理框架，无需GPU即可在CPU上运行。",
+      "language": "Python",
+      "stars": 41000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/microsoft/BitNet",
+      "tags": [
+        "1-bit",
+        "quantization",
+        "CPU-inference",
+        "efficiency",
+        "Microsoft"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "pageindex-vectifyai",
+      "name": "VectifyAI/PageIndex",
+      "description": "基于语义页面索引的无向量RAG（检索增强生成）方案，彻底消除文档检索中的嵌入向量与向量数据库依赖。",
+      "language": "Python",
+      "stars": 39000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/VectifyAI/PageIndex",
+      "tags": [
+        "RAG",
+        "vectorless",
+        "semantic-indexing",
+        "document-retrieval"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "anthropic-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Anthropic官方Claude知识工作插件，涵盖研究、写作与代码分析——当日新增趋势榜首，单日获得3,145颗星标。",
+      "language": "TypeScript",
+      "stars": 3145,
+      "stars_today": 3145,
+      "forks": 0,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "Claude",
+        "plugins",
+        "knowledge-work",
+        "Anthropic",
+        "research-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "airllm",
+      "name": "kyegomez/AirLLM",
+      "description": "通过逐层处理Transformer层，在4GB显存GPU上运行700亿参数模型，使消费级硬件能够推理前沿规模的模型。",
+      "language": "Python",
+      "stars": 36000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/kyegomez/AirLLM",
+      "tags": [
+        "memory-efficiency",
+        "layer-streaming",
+        "70B",
+        "consumer-GPU",
+        "inference"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ds4-antirez",
+      "name": "antirez/ds4",
+      "description": "用约500行C代码实现的本地DeepSeek推理，以极少的依赖在消费级硬件上实现快速推理。",
+      "language": "C",
+      "stars": 23500,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/antirez/ds4",
+      "tags": [
+        "C",
+        "local-inference",
+        "DeepSeek",
+        "minimal",
+        "consumer-hardware"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "世界建模与具身AI",
+      "description": "LeWAM基于JEPA的世界与动作联合建模为接触密集型机器人任务设立了新基准，其规划速度和任务成功率表明近期现实世界部署的可行性。",
+      "related_paper_ids": [
+        "lewam-world-action-modeling-jepas"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "递归智能体自我改进",
+      "description": "一组论文（Harness²、ClawLoop、RSIPO、AutoEnvScaling）共同定义了一种新范式：智能体通过递归执行轨迹收集与技能协同进化来改进自身策略，本周在AlphaXiv上占据最高关注度。",
+      "related_paper_ids": [
+        "harness2-recursive-agent-open-world",
+        "clawloop-self-improving-agents-training",
+        "rsipo-recursive-self-improving-policy"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "推理强化学习与奖励欺骗",
+      "description": "TPPO、「Scoring Higher/Answering Worse」论文以及谱秩优化器共同聚焦于强化学习微调的稳定性与奖励保真度，反映出业界日益意识到奖励信号质量是推理大语言模型的制约性约束。",
+      "related_paper_ids": [
+        "tppo-tracking-value-ppo-reasoning",
+        "scoring-higher-answering-worse-reward-hacking",
+        "spectral-adaptive-rank-optimizer-llm-rl"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "稀疏与高效注意力",
+      "description": "DoSA将结构化稀疏注意力作为稠密注意力的实用即插即用替代方案向前推进，是持续研究长上下文Transformer推理效率的系列工作之一。",
+      "related_paper_ids": [
+        "dosa-dots-sparse-attention"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "多模态模型百花齐放",
+      "description": "Alibaba（Qwen3.8-27B、Qwen-Image-2.1）、DeepSeek（V4.1-Flash）、Cloudflare（Clef）以及Google（EmbeddingGemma-2）均于今日发布或重点推出模型，凸显高能力开放及半开放模型发布持续加速的趋势。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "生成式视频的物理一致性",
+      "description": "来自NVIDIA Cosmos Lab的PhyProbe为物理感知视频生成质量建立了新的评估协议，反映出随着视频生成模型日益强大，该领域对严格评估方法的迫切需求。",
+      "related_paper_ids": [
+        "phyprobe-physical-consistency-video"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "arXiv",
+      "url": "https://arxiv.org",
+      "checked_at": "2026-10-14T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-10-14T07:05:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-10-14T07:05:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-14T07:10:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-10-14T07:15:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "Industry News Aggregator",
+      "url": "https://news.ycombinator.com",
+      "checked_at": "2026-10-14T07:20:00Z",
+      "status": "ok"
+    }
+  ]
+}
