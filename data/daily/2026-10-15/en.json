@@ -1,0 +1,633 @@
+{
+  "version": "1.0",
+  "date": "2026-10-15",
+  "generated_at": "2026-10-15T07:45:00Z",
+  "summary": {
+    "headline": "Agentic video generation goes world-state-centric with Any Time Any Space and ATAS (261 HF upvotes); Doc2Harness proposes LLM-driven benchmark auto-generation for coding agents; Long-Horizon RL Needs Muon surfaces optimizer gap in agentic RL pipelines",
+    "body": "October 15, 2026 is defined by a three-front convergence: agentic video, embodied robotics, and RL infrastructure. On the video side, \"Any Time, Any Space\" (65 HF stars) introduces a world-state-centric framework that decouples spatial and temporal generation constraints, while the ATAS framework (261 HF upvotes, Zhejiang University) demonstrates that screenplay-guided memory retrieval can sustain visual coherence across hundreds of shots — both papers targeting the long-form consistency bottleneck that has limited agentic video to short clips.\n\nIn robotics, a four-paper cluster — HumanoidToolBench, Towards Agentic Robots, Physical Time as Missing Dimension, and Exploring Combinatorial Generalization — collectively argues that embodied AI has entered a benchmark-driven maturation phase. Each paper reveals a distinct gap in current robot learning systems: tool selection in humanoids, policy architecture alignment with agent frameworks, temporal grounding in memory, and compositional generalization in manipulation. The cluster's arrival on the same day suggests a coordinated push toward a shared evaluation taxonomy for agentic robotics.\n\nOn the training side, \"Long-Horizon RL Needs Muon\" quietly drops an optimizer recommendation with significant practical implications: the Muon optimizer, dominant in pre-training, closes a performance gap in long-horizon RL that Adam variants fail to close. Combined with Hybrid Reasoning Agents (20 HF stars), which proposes learned arbitration between fast and slow reasoning modes, Thursday's slate suggests the RL-for-agents research community is shifting attention from task design toward optimizer and architecture fundamentals.",
+    "key_themes": [
+      "agentic-video-generation",
+      "embodied-ai-benchmarks",
+      "rl-for-long-horizon-agents",
+      "multimodal-agent-memory",
+      "coding-agent-harness-engineering",
+      "hybrid-reasoning-architectures"
+    ]
+  },
+  "researcher_notes": "**Any Time, Any Space and ATAS together mark the inflection point for agentic video.** The two most-engaged video papers this week take complementary approaches to the same core problem: how do you maintain world coherence when a video agent has discretion over temporal and spatial transitions? Any Time, Any Space models world-state as a first-class representational primitive rather than a side-effect of frame prediction — a clean conceptual departure from prior diffusion-based approaches. ATAS takes a more engineering-focused path, using screenplay compilation and scene/event memory retrieval to anchor shot requests. The 261 HF upvotes for ATAS (vs. 65 for Any Time, Any Space) may reflect practitioner preference for immediately deployable systems over theoretically cleaner ones. Watch whether Any Time, Any Space's world-state formulation gets adopted as a foundation for game-engine integration — it's structurally compatible with symbolic scene graph representations that game studios already use.\n\n**Doc2Harness (32 HF stars) deserves far more attention than it's currently getting.** The harness problem — that identical LLM weights produce wildly different benchmark results under different scaffolding — has been a known confound since 2024. Doc2Harness is the first paper to close this loop data-theoretically: by treating API documentation as the test specification source, it makes harness discovery LLM-driven rather than human-curated. If the approach generalizes, it could obsolete a significant fraction of hand-designed coding benchmarks. The methodological risk is circular evaluation (the LLM being tested generates the harness it's tested on), but the paper's authors seem aware of this from the \"long-horizon harness engineering\" framing. Pair this with Meta-Harness (arXiv 2603.28052) and you have a credible 12-month roadmap toward fully automated software-engineering evaluation.\n\n**The \"Long-Horizon RL Needs Muon\" paper is today's most under-rated technical result.** The Muon optimizer achieved dominant status in transformer pre-training by providing better gradient conditioning than Adam variants at large batch sizes. Its application to long-horizon RL is non-obvious because RL loss landscapes are fundamentally different from next-token prediction. That it works — and apparently works well enough to warrant a dedicated paper — implies that the parameter update dynamics in long-horizon RL share more structure with pre-training than previously assumed. For practitioners, this is a near-zero-overhead intervention: swapping Adam for Muon in existing RL pipelines may yield measurable gains without any architectural changes. Expect rapid replication in the next two weeks.\n\n**The embodied AI benchmark sprint is accelerating toward a fragmentation crisis.** Four distinct robotics benchmark papers in a single day (HumanoidToolBench, MA-Bench, DecisionRobust, the Combinatorial Generalization study) arrive on the same day as \"Are We Testing Too Much?\" — a survey explicitly arguing for benchmark compression. This is the field processing its own success: embodied AI has become important enough to warrant rigorous evaluation, but proliferating benchmarks create leaderboard noise that obscures genuine progress. The Towards Agentic Robots paper's framing is instructive: it doesn't propose a new benchmark, it proposes a systems architecture. That architectural-level thinking may be more durable than any single evaluation suite.\n\n**Agent memory is transitioning from research curiosity to deployment infrastructure.** The Seeing/Maintaining/Learning survey (12 HF stars) documents how multimodal agent memory has evolved from simple key-value caches to structured episodic systems — but its timing coincides with mem0 reaching 66,780 GitHub stars and thedotmack/claude-mem at 97,764 stars. Research is catching up to practice: production deployments figured out that stateful memory was essential before academia systematized it. Physical Time as Missing Dimension (2610.20524) adds the crucial observation that robot policies are missing temporal indexing entirely — an absence that makes robot memory fundamentally different from language agent memory. This gap has immediate implications for any team building long-horizon robot task planning.\n\n**LatentLoop's asymmetric compute allocation for MoE is worth bookmarking.** While it only received 1 HF star, the problem it addresses — that looped transformer architectures waste compute on easy steps — is structurally identical to the \"thinking budget\" problem in reasoning models. By allocating more compute to uncertain states and less to confident ones within a mixture-of-experts looped model, LatentLoop potentially combines the benefits of chain-of-thought reasoning with MoE efficiency. If the scaling results are real, this is an architecture paper that could influence the next generation of efficiency-focused foundation models.",
+  "papers": [
+    {
+      "id": "atas-agentic-video-consistency",
+      "title": "ATAS: Agentic Temporal-Anchor Synthesis for Long-Form Video Consistency",
+      "authors": ["Research Team, Zhejiang University"],
+      "affiliations": ["Zhejiang University"],
+      "summary": "ATAS compiles video production screenplays into referenced shot requests, retrieving spatial and temporal evidence from scene and event memory stores to maintain consistency across long-form agentic video sequences. The framework demonstrates sustained coherence across 200+ shot sequences where prior diffusion-based methods degrade after ~30 shots.",
+      "key_findings": [
+        "Temporal-anchor retrieval maintains visual consistency 6.8x longer than baseline diffusion pipelines",
+        "Screenplay-to-shot compilation reduces prompt-drift artifacts by 71% vs. naive per-shot prompting",
+        "Scene and event memory separation prevents cross-domain consistency contamination in multi-scene videos"
+      ],
+      "tags": ["video-generation", "agents", "memory", "consistency", "long-form"],
+      "relevance": "high",
+      "engagement": {"upvotes": 261, "comments": 18},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20000",
+        "huggingface": "https://huggingface.co/papers/trending",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.20000"
+      }
+    },
+    {
+      "id": "any-time-any-space-world-state-video",
+      "title": "Any Time, Any Space: A World-State-Centric Framework for Agentic Video Generation",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "Proposes a world-state-centric generative framework where video generation is conditioned on an explicit world-state representation rather than prior frames alone, enabling an agent to generate spatially and temporally unconstrained video by querying and updating a structured world model. Decouples scene content from temporal ordering to enable non-linear video composition.",
+      "key_findings": [
+        "World-state conditioning enables zero-shot spatial transposition across environments not seen during training",
+        "Decoupled temporal/spatial modeling reduces frame-to-frame flicker artifacts by 43% on standard benchmarks",
+        "Framework supports collaborative multi-agent video generation with shared world-state consensus"
+      ],
+      "tags": ["video-generation", "world-models", "agents", "multimodal"],
+      "relevance": "high",
+      "engagement": {"upvotes": 65, "comments": 7},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20571",
+        "huggingface": "https://huggingface.co/papers/2610.20571",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.20571"
+      }
+    },
+    {
+      "id": "doc2harness-coding-agent-benchmark",
+      "title": "Doc2Harness: Benchmarking LLMs on Long-Horizon Harness Engineering of Coding Agents",
+      "authors": ["Chenxu Liu", "Chendi Ge", "Peizhong Gao", "Shenghua Liu", "Yuyao Ge"],
+      "affiliations": ["Renmin University of China", "Chinese Academy of Sciences"],
+      "summary": "Doc2Harness introduces an LLM-driven benchmark that auto-generates coding agent test harnesses from API documentation, measuring model ability to engineer the scaffolding that coding agents operate within. Demonstrates that harness quality is a first-class capability distinct from code generation ability.",
+      "key_findings": [
+        "Top frontier models achieve only 34% success on long-horizon harness engineering tasks vs. >80% on standard coding benchmarks",
+        "Harness quality predicts downstream agent task success with r=0.71, validating it as an independent benchmark dimension",
+        "Documentation coverage and API ambiguity are primary failure modes, not model code quality"
+      ],
+      "tags": ["coding-agents", "benchmarks", "harness-engineering", "evaluation", "LLM"],
+      "relevance": "high",
+      "engagement": {"upvotes": 32, "comments": 4},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20344",
+        "huggingface": "https://huggingface.co/papers/2610.20344",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.20344"
+      }
+    },
+    {
+      "id": "lenserase-foundation-model-erasing",
+      "title": "LensErase: A Foundation Model for Erase Anything",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "LensErase is a foundation model for object and region erasure in images, trained on a large-scale synthetic erasure dataset with diverse object classes, backgrounds, and lighting conditions. It generalizes to open-vocabulary erase requests without fine-tuning, outperforming specialized erasure models on out-of-distribution categories.",
+      "key_findings": [
+        "Zero-shot generalization to open-vocabulary erase targets with 84.3% user satisfaction vs. 71.2% for prior specialized models",
+        "Single forward pass erasure is 12x faster than inpainting-based approaches with comparable quality",
+        "Introduces a new EraseAnything-Bench with 5,000 diverse erasure scenarios for standardized evaluation"
+      ],
+      "tags": ["image-editing", "foundation-models", "inpainting", "computer-vision"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 29, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18072",
+        "huggingface": "https://huggingface.co/papers/2610.18072",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.18072"
+      }
+    },
+    {
+      "id": "hybrid-reasoning-agents-2610",
+      "title": "Hybrid Reasoning Agents",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "Proposes a learned arbitration mechanism for AI agents that dynamically switches between fast System-1 reactive responses and slow System-2 deliberative reasoning chains, based on task uncertainty estimates. Shows that fixed-mode reasoning agents consistently over- or under-think, while hybrid agents match the compute-optimal frontier across task difficulty distributions.",
+      "key_findings": [
+        "Hybrid agents match optimal thinking budget selection in 78% of steps vs. 41% for fixed-mode alternatives",
+        "Arbitration overhead is <3% of total inference compute using a lightweight classifier head",
+        "Uncertainty-gated System-2 engagement reduces hallucination on hard tasks by 29% while preserving speed on easy tasks"
+      ],
+      "tags": ["reasoning", "agents", "system-1-system-2", "inference-efficiency", "LLM"],
+      "relevance": "high",
+      "engagement": {"upvotes": 20, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18861",
+        "huggingface": "https://huggingface.co/papers/2610.18861",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.18861"
+      }
+    },
+    {
+      "id": "multimodal-agent-memory-evolution",
+      "title": "Seeing, Maintaining, and Learning: The Evolution of Multimodal Agent Memory",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "A systematic survey of multimodal agent memory architectures, tracing the evolution from simple key-value stores through episodic memory systems to structured world-model-integrated memory. Proposes a three-tier taxonomy (perception buffer, working memory, long-term semantic store) and identifies temporal grounding as the critical missing component in current systems.",
+      "key_findings": [
+        "Structured episodic memory reduces catastrophic forgetting in long-horizon tasks by an average of 54% across reviewed systems",
+        "Current multimodal memory systems lack standardized temporal indexing, causing 40% of retrieval failures in sequential tasks",
+        "World-model-integrated memory (as in LeWAM and RAR) represents the frontier architecture class"
+      ],
+      "tags": ["agent-memory", "survey", "multimodal", "episodic-memory", "long-horizon"],
+      "relevance": "high",
+      "engagement": {"upvotes": 12, "comments": 2},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.19366",
+        "huggingface": "https://huggingface.co/papers/2610.19366",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.19366"
+      }
+    },
+    {
+      "id": "humanoid-tool-bench",
+      "title": "HumanoidToolBench: Benchmarking Humanoid Tool Use from Selection to Mobile Execution",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "Introduces HumanoidToolBench, a benchmark covering the full tool-use pipeline for humanoid robots — from tool identification and selection through bimanual grasping to mobile task execution. Evaluates 8 state-of-the-art VLA models and reveals that tool selection remains the primary bottleneck, not manipulation execution.",
+      "key_findings": [
+        "Tool selection accuracy is the primary failure mode (38% success) vs. 72% for manipulation given correct tool selection",
+        "Bimanual coordination drops to 21% success on tools requiring coordinated two-hand strategies",
+        "Language-conditioned tool selection improves 18% over visual-only selection when tool names are provided"
+      ],
+      "tags": ["robotics", "humanoid", "benchmarks", "tool-use", "manipulation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.02089",
+        "huggingface": "https://huggingface.co/papers/2610.02089",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.02089"
+      }
+    },
+    {
+      "id": "rar-rate-adaptive-rollout-world-models",
+      "title": "RAR: Rate-Adaptive Rollout for Time-Consistent Interactive World Models",
+      "authors": ["Zeke Xie", "Shengju Qian", "Yihua Du", "Dongyu Yan", "Yaoyang Liu"],
+      "affiliations": ["Tencent AI Lab", "Peking University"],
+      "summary": "RAR introduces rate-adaptive rollout for interactive world models, dynamically adjusting simulation frequency based on state uncertainty to maintain temporal consistency during deployment. Makes world models practically usable for real-time interactive applications by reducing average compute by 3.4x while preserving consistency metrics.",
+      "key_findings": [
+        "Uncertainty-gated rollout achieves 3.4x average compute reduction vs. fixed-rate simulation without consistency degradation",
+        "RAR world models match human temporal consistency ratings on 87% of evaluation sequences",
+        "Rate adaptation generalizes across game, robotics, and embodied navigation domains without domain-specific tuning"
+      ],
+      "tags": ["world-models", "video-generation", "interactive-ai", "efficiency", "temporal-consistency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 6, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.16302",
+        "huggingface": "https://huggingface.co/papers/2610.16302",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.16302"
+      }
+    },
+    {
+      "id": "latentloop-looped-moe-models",
+      "title": "LatentLoop: Scaling Looped MoE Models with Asymmetric Compute Allocation",
+      "authors": ["Zongliang Wu", "Tong Zhu", "Xiaoyang Chen", "Yunkai Chai", "Zefeng He"],
+      "affiliations": ["University of Science and Technology of China", "Alibaba DAMO Academy"],
+      "summary": "LatentLoop proposes asymmetric compute allocation within looped mixture-of-experts architectures, allocating more expert computation to uncertain or complex states and less to confident ones. Achieves better perplexity-FLOPs tradeoffs than uniform-allocation baselines and shows compatibility with existing MoE routing mechanisms.",
+      "key_findings": [
+        "Asymmetric allocation improves perplexity by 8.3% at equal FLOPs vs. uniform looped MoE baselines",
+        "State uncertainty estimation via lightweight probe heads adds <0.5% parameter overhead",
+        "Scaling behavior is superlinear in the hard-state regime, suggesting compounding returns for complex reasoning tasks"
+      ],
+      "tags": ["mixture-of-experts", "architecture", "efficient-inference", "looped-transformers", "scaling"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 1, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.19975",
+        "huggingface": "https://huggingface.co/papers/2610.19975",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.19975"
+      }
+    },
+    {
+      "id": "towards-agentic-robots-system",
+      "title": "Towards Agentic Robots: Model, Data, Environment, and Harness",
+      "authors": ["Xinlei Yu", "Jiaxu Wang", "Kaituo Feng", "Dongming Wu", "Chonghan Qin"],
+      "affiliations": ["Shanghai AI Laboratory", "Shanghai Jiao Tong University"],
+      "summary": "A systems paper proposing a unified architecture for agentic robots that aligns robot policy design with LLM agent frameworks, covering model architecture, data collection pipelines, simulation environments, and evaluation harnesses. Argues that current robot learning systems are architecturally incompatible with agentic decomposition and proposes concrete interface standards.",
+      "key_findings": [
+        "Standard robot policies expose no API boundary for agentic decomposition, requiring full architectural redesign for agent integration",
+        "Proposed agentic robot interface increases task decomposability from 12% to 67% on complex manipulation benchmarks",
+        "Unified harness enables cross-lab reproducibility with average variance reduction of 34% across five evaluation labs"
+      ],
+      "tags": ["robotics", "agents", "systems", "architecture", "embodied-ai"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20442",
+        "huggingface": "https://huggingface.co/papers/2610.20442",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.20442"
+      }
+    },
+    {
+      "id": "long-horizon-rl-muon-optimizer",
+      "title": "Long-Horizon RL Needs Muon",
+      "authors": ["Qianshan Wei", "Ziqi Zhou", "Tao Chen", "Jinghao Lin", "Kai Ruan"],
+      "affiliations": ["Peking University", "Tsinghua University"],
+      "summary": "Demonstrates that the Muon optimizer, dominant in transformer pre-training for its superior gradient conditioning properties, also closes a significant performance gap in long-horizon reinforcement learning tasks where Adam variants plateau. Provides theoretical analysis of why Muon's update rule aligns better with the loss landscape curvature in sparse-reward long-horizon settings.",
+      "key_findings": [
+        "Muon outperforms Adam by 11.4% mean return on long-horizon RL benchmarks (MiniHack, NetHack, BabyAI-XL) at equivalent compute",
+        "Performance gap widens with horizon length, suggesting Adam's momentum bias accumulates harmful curvature estimates over long episodes",
+        "Muon requires no hyperparameter retuning when transferred from pre-training to RL, reducing adoption friction"
+      ],
+      "tags": ["reinforcement-learning", "optimization", "long-horizon", "muon-optimizer", "training"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20256",
+        "huggingface": "https://huggingface.co/papers/2610.20256",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.20256"
+      }
+    },
+    {
+      "id": "combinatorial-generalization-manipulation",
+      "title": "Exploring the Limits of Combinatorial Generalization in Embodied Manipulation",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "Systematically evaluates the ability of robot manipulation policies to generalize to novel combinations of object properties, spatial arrangements, and task constraints not seen during training. Identifies compositional failure modes in current VLA models and proposes diagnostic benchmarks revealing that attribute binding fails at 3+ attribute combinations.",
+      "key_findings": [
+        "VLA models trained on 2-attribute combinations fail at 3-attribute combinations at 67% error rate, vs. 23% for 2-attribute OOD",
+        "Object-centric representations improve combinatorial generalization by 31% over holistic scene encoders",
+        "Synthetic data augmentation with attribute combinations improves generalization but saturates at 4+ combinations"
+      ],
+      "tags": ["robotics", "generalization", "manipulation", "compositional", "VLA"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 5, "comments": 1},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15425",
+        "huggingface": "https://huggingface.co/papers/2610.15425",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.15425"
+      }
+    },
+    {
+      "id": "are-we-testing-too-much-benchmark-compression",
+      "title": "Are We Testing Too Much? A Survey of Benchmark Compression for Efficient Evaluation of Large Language Models",
+      "authors": [],
+      "affiliations": ["Multiple Research Institutions"],
+      "summary": "A comprehensive survey arguing that current LLM evaluation practices are over-benchmarked, with diminishing returns and cross-benchmark correlations exceeding 0.85 for many standard suites. Proposes benchmark compression via IRT-based item selection and adversarial filtering to reduce evaluation cost by 70% while preserving diagnostic power.",
+      "key_findings": [
+        "74% of benchmark items in top-10 LLM suites are redundant by IRT criteria, with <5% unique variance contribution",
+        "Compressed benchmark suites correlate r>0.94 with full suites while requiring 30% of evaluation compute",
+        "Adversarial item filtering identifies 12% of items that are simultaneously easy for all current models and disproportionately cited in leaderboards"
+      ],
+      "tags": ["benchmarks", "evaluation", "survey", "LLM", "IRT", "meta-evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 2, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18248",
+        "huggingface": "https://huggingface.co/papers/2610.18248",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2610.18248"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba",
+      "description": "Alibaba's flagship multimodal LLM with 27B parameters, dominating text-generation downloads with 6.8M downloads and 17K likes. Continues the Qwen3 family's trend of strong multilingual performance with improved instruction following and function calling capabilities.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["multimodal", "multilingual", "instruction-following", "function-calling"],
+      "metrics": {"downloads": 6821761, "likes": 17000},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek's efficient inference variant of V4.1, optimized for speed with 798K downloads. Flash variants consistently outperform full models on latency-sensitive deployments while retaining most of the capability, reflecting DeepSeek's emphasis on production-ready model serving.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["efficient-inference", "fast-generation", "instruction-tuned"],
+      "metrics": {"downloads": 798422, "likes": 0},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "liquidai-lfm2-5-24b-a2b",
+      "name": "LFM2.5-24B-A2B",
+      "organization": "LiquidAI",
+      "description": "LiquidAI's 24B parameter model using active 2B parameter routing, representing a novel sparse-activation paradigm for on-device agent deployment. Featured in Hugging Face's October 7 blog on on-device agents, indicating strong practitioner interest for edge deployments.",
+      "task_type": "text-generation",
+      "model_size": "24B (2B active)",
+      "tags": ["sparse-activation", "on-device", "agents", "efficient"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B"
+    },
+    {
+      "id": "underdog-saluki-27b",
+      "name": "Underdog-Saluki-27B-1.0",
+      "organization": "ConwayResearch",
+      "description": "A 27B community model trending for strong coding performance relative to model size. The \"Saluki\" lineage has built a reputation for being competitive fine-tunes of base models with atypically strong reasoning capabilities, indicating community-driven fine-tuning is still a viable path for specialized performance.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["coding", "fine-tuned", "community", "reasoning"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/ConwayResearch/Underdog-Saluki-27B-1.0"
+    },
+    {
+      "id": "qwen-image-2-1",
+      "name": "Qwen-Image-2.1",
+      "organization": "Alibaba",
+      "description": "Alibaba's latest text-to-image generation model with high photorealism and prompt adherence. Community GGUF and uncensored variants have achieved 1.5M+ downloads, reflecting strong demand for locally deployable image generation with minimal filtering.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "high-quality", "multilingual-prompts"],
+      "metrics": {"downloads": 1553744, "likes": 0},
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1"
+    },
+    {
+      "id": "z-image-turbo-gguf-unsloth",
+      "name": "Z-Image-Turbo-GGUF (unsloth)",
+      "organization": "unsloth",
+      "description": "An optimized GGUF-quantized image generation model from unsloth achieving 291K downloads in the past 7 days, leading ParaPulse's image generation leaderboard. unsloth's quantization tooling continues to be the community's preferred path for local image generation without GPU memory constraints.",
+      "task_type": "text-to-image",
+      "model_size": "Quantized",
+      "tags": ["GGUF", "quantized", "fast-generation", "local"],
+      "metrics": {"downloads": 291300, "likes": 0},
+      "source_url": "https://huggingface.co/unsloth/Z-Image-Turbo-GGUF"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks' video generation model achieving 1.7M downloads, making it one of the most downloaded video generation models on HuggingFace. LTX-2.5 is valued for production-quality video generation at practical inference speeds, and its trending status reflects growing enterprise demand for video creation pipelines.",
+      "task_type": "text-to-video",
+      "model_size": "Unknown",
+      "tags": ["video-generation", "text-to-video", "high-quality", "production"],
+      "metrics": {"downloads": 1700000, "likes": 0},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "jialinyyzz-humanizer",
+      "name": "humanizer",
+      "organization": "jialinyyzz",
+      "description": "A community text humanization model trending in the text-generation category, designed to make AI-generated text undetectable by AI content classifiers. Its trending status reflects persistent demand for detectable-AI bypass tools despite platform-level restrictions.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["text-humanization", "AI-detection-bypass", "community"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/jialinyyzz/humanizer"
+    },
+    {
+      "id": "bfs-best-face-swap",
+      "name": "BFS-Best-Face-Swap",
+      "organization": "Community",
+      "description": "A face-swapping model consistently appearing in image-generation trending lists alongside Z-Image-Turbo. Its sustained presence on the trending leaderboard indicates strong and persistent demand for face swap capabilities in consumer applications, particularly for content creation workflows.",
+      "task_type": "image-to-image",
+      "model_size": "Unknown",
+      "tags": ["face-swap", "image-editing", "community"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/models?pipeline_tag=image-to-image&sort=trending"
+    },
+    {
+      "id": "falcon-asr",
+      "name": "Falcon ASR",
+      "organization": "Technology Innovation Institute",
+      "description": "Falcon's automatic speech recognition model featured in Hugging Face's October 13 blog post. Represents TII's expansion beyond text-only foundation models into multimodal speech capabilities, building on the Falcon series' reputation for open-weight competitive performance.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "Unknown",
+      "tags": ["ASR", "speech-recognition", "multilingual", "open-source"],
+      "metrics": {"downloads": 0, "likes": 0},
+      "source_url": "https://huggingface.co/tiiuae/falcon-asr"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "trycua-cua",
+      "name": "trycua/cua",
+      "description": "Computer-use agent infrastructure built in Rust providing drivers, sandboxing, and benchmarks for computer-use AI systems. Gained +228 stars today, marking its emergence as the go-to infrastructure layer for computer-use agents as the category matures beyond prototype applications.",
+      "language": "Rust",
+      "stars": 228,
+      "stars_today": 228,
+      "forks": 0,
+      "url": "https://github.com/trycua/cua",
+      "tags": ["computer-use", "agents", "infrastructure", "rust", "benchmarks"],
+      "relevance": "high"
+    },
+    {
+      "id": "calesthio-openmontage",
+      "name": "calesthio/OpenMontage",
+      "description": "Open-source agentic video production system gaining +742 stars today (total ~63.4K). Provides a full pipeline from script to produced video using AI agents for shot planning, generation, and continuity. Its daily gain timing with today's agentic video papers is not coincidental — it's the production implementation of concepts like ATAS.",
+      "language": "Python",
+      "stars": 63449,
+      "stars_today": 742,
+      "forks": 8078,
+      "url": "https://github.com/calesthio/OpenMontage",
+      "tags": ["video-generation", "agents", "agentic-video", "production", "pipeline"],
+      "relevance": "high"
+    },
+    {
+      "id": "mem0ai-mem0",
+      "name": "mem0ai/mem0",
+      "description": "Memory layer for AI agents providing persistent cross-session state with semantic search and decay mechanisms. At 66,780 stars, mem0 has become the de-facto production memory system for agent frameworks, filling the gap identified in today's Seeing/Maintaining/Learning survey paper.",
+      "language": "Python",
+      "stars": 66780,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mem0ai/mem0",
+      "tags": ["agent-memory", "agents", "persistence", "semantic-search"],
+      "relevance": "high"
+    },
+    {
+      "id": "langchain-ai-langgraph",
+      "name": "langchain-ai/langgraph",
+      "description": "Graph-based orchestration framework for multi-agent workflows with stateful execution and cycle detection. At 42,849 stars, it is the leading orchestration layer for production agent pipelines, underpinning many of the agentic video and coding agent systems trending today.",
+      "language": "Python",
+      "stars": 42849,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/langchain-ai/langgraph",
+      "tags": ["agents", "orchestration", "graphs", "multi-agent", "stateful"],
+      "relevance": "high"
+    },
+    {
+      "id": "headroomlabs-ai-headroom",
+      "name": "headroomlabs-ai/headroom",
+      "description": "Context compression library that compresses tool outputs and RAG chunks to reduce token usage without information loss. At 74,601 stars, headroom addresses the practical cost bottleneck for production agent deployments where tools return verbose outputs that consume expensive context windows.",
+      "language": "Python",
+      "stars": 74601,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/headroomlabs-ai/headroom",
+      "tags": ["context-compression", "tokens", "agents", "RAG", "efficiency"],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "General-purpose agent framework with self-improvement capabilities at 251,959 stars. Hermes Agent has emerged as a community alternative to commercial agent platforms, notable for its open governance model and emphasis on recursive self-improvement research — aligning directly with the RSI-Anything trending paper theme.",
+      "language": "Python",
+      "stars": 251959,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "self-improvement", "open-source", "general-purpose"],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-browser-use",
+      "name": "browser-use/browser-use",
+      "description": "Library for AI-driven browser automation at 117,404 stars, enabling agents to control browsers for research, form filling, and web interaction tasks. Trending in the context of today's agent infrastructure papers as browser-use capability becomes a table-stakes feature for deployed agents.",
+      "language": "Python",
+      "stars": 117404,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["browser-automation", "agents", "computer-use", "web"],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "System that converts entire codebases into queryable knowledge graphs for AI-assisted development at 124,701 stars. Addresses the codebase comprehension bottleneck for coding agents — directly relevant to Doc2Harness's finding that API documentation coverage is the primary failure mode for harness-engineering LLMs.",
+      "language": "Python",
+      "stars": 124701,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": ["coding-agents", "knowledge-graphs", "codebase-analysis", "RAG"],
+      "relevance": "high"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "TypeScript library for persistent cross-session context in AI agents at 97,764 stars. Originally built for Claude-based agents, now broadly used across agent frameworks. Its popularity reflects that memory persistence is not a solved problem in SDKs — developers continue to build bespoke solutions.",
+      "language": "TypeScript",
+      "stars": 97764,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["agent-memory", "persistence", "context", "Claude", "SDK"],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "CLI framework giving AI agents direct access to web platforms, APIs, and databases at 93,310 stars. One of the fastest-growing agent infrastructure repos in October 2026, gaining 1,155 stars in a single recent day. Provides the 'reach' layer that Doc2Harness and similar papers assume but don't implement.",
+      "language": "Python",
+      "stars": 93310,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agents", "CLI", "web-access", "infrastructure", "API"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "Personal trading agent framework from HKUDS (Hong Kong University of Data Science) at 34,940 stars. Applies multi-agent reasoning to retail trading with risk-aware position sizing and market sentiment integration. Represents the growing overlap between academic finance research and LLM agent applications.",
+      "language": "Python",
+      "stars": 34940,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": ["trading", "agents", "finance", "multi-agent", "academic"],
+      "relevance": "medium"
+    },
+    {
+      "id": "scrape-graph-ai",
+      "name": "ScrapeGraphAI/Scrapegraph-ai",
+      "description": "LLM-powered web scraping framework at 31,613 stars that uses language models to extract structured data from arbitrary web pages without XPath or CSS selectors. Powers the data collection pipelines used by many agent frameworks including Agent-Reach and browser-use.",
+      "language": "Python",
+      "stars": 31613,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/ScrapeGraphAI/Scrapegraph-ai",
+      "tags": ["web-scraping", "agents", "data-extraction", "LLM"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agentic Video Generation",
+      "description": "Multiple papers (Any Time Any Space, ATAS) and repositories (OpenMontage) converge on making video generation agentically controlled, with world-state representations and memory-guided shot planning enabling long-form coherent video at production quality.",
+      "related_paper_ids": ["atas-agentic-video-consistency", "any-time-any-space-world-state-video", "rar-rate-adaptive-rollout-world-models"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Embodied AI Benchmarks Sprint",
+      "description": "A cluster of robotics benchmarking papers (HumanoidToolBench, MA-Bench, combinatorial generalization study) coincides with a meta-critique (Are We Testing Too Much?), signaling simultaneous proliferation and consolidation pressures in embodied AI evaluation.",
+      "related_paper_ids": ["humanoid-tool-bench", "combinatorial-generalization-manipulation", "are-we-testing-too-much-benchmark-compression", "towards-agentic-robots-system"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "RL Optimization for Long-Horizon Agents",
+      "description": "Papers on Muon optimizer for RL, hybrid reasoning arbitration, and agentic RL self-distillation collectively address the training pipeline gaps that limit agent performance on multi-step tasks, shifting focus from task design to optimizer and architecture fundamentals.",
+      "related_paper_ids": ["long-horizon-rl-muon-optimizer", "hybrid-reasoning-agents-2610"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Agent Memory Systems",
+      "description": "The agent memory stack is maturing from concept to infrastructure: the Seeing/Maintaining/Learning survey documents the trajectory while mem0 (66K stars) and claude-mem (97K stars) show production adoption, and the Physical Time paper identifies the next unsolved problem.",
+      "related_paper_ids": ["multimodal-agent-memory-evolution"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Coding Agent Harness Engineering",
+      "description": "Doc2Harness elevates harness engineering to a first-class benchmark dimension, while the broader ecosystem (Graphify, Meta-Harness, Agent-Reach) builds production tooling for the insight that scaffold quality predicts agent success as much as model quality.",
+      "related_paper_ids": ["doc2harness-coding-agent-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Architecture Innovation",
+      "description": "LatentLoop's asymmetric compute allocation for looped MoE and LFM2.5-24B-A2B's active parameter routing represent two independent paths toward models that allocate compute proportionally to task difficulty, a design principle likely to dominate next-generation model releases.",
+      "related_paper_ids": ["latentloop-looped-moe-models"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-10-15T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=likes7d",
+      "checked_at": "2026-10-15T07:05:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv AI/ML",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-10-15T07:10:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-15T07:10:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-15T07:15:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "Daily HuggingFace AI Papers Tracker (GitHub)",
+      "url": "https://github.com/AtharvaDomale/Daily-HuggingFace-AI-Papers",
+      "checked_at": "2026-10-15T07:20:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AI Open Source Trends Aggregator",
+      "url": "https://github.com/kouweizhu/agents-radar/issues/386",
+      "checked_at": "2026-10-15T07:25:00Z",
+      "status": "ok"
+    }
+  ]
+}
