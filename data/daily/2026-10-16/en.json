@@ -1,0 +1,803 @@
+{
+  "version": "1.0",
+  "date": "2026-10-16",
+  "generated_at": "2026-10-16T06:00:00Z",
+  "summary": {
+    "headline": "RSI-Anything uses world models to make recursive self-improvement practical across code, GUI and lab tasks; Agent environments and harnesses become the new scaling lever, with simulated worlds and adapted harnesses cutting agent cost and training time; Agentic skills repos and open MoE models dominate GitHub and HuggingFace trending",
+    "body": "**RSI-Anything** (187 upvotes) tops today's HuggingFace papers. It uses a predictive world model to decide which candidate actions deserve costly external evaluation, and a compatibility checker keeps updated policy-model pairs only when they improve. Reported gains span code repair (26.3% to 31.2%), GUI automation (39.4% fewer actions), lab planning (21.8 to 46.0) and reaction optimization (96.15% mean best yield vs 82.16% for Bayesian optimization). Its official repo is also trending on GitHub, gaining 876 stars today.\n\nA second cluster concerns the **environment and harness around the agent** rather than the model itself. AgentGarten pairs code-defined environments with a neural renderer and reports agents learning in 4 rounds instead of millions. The Xiaomi MiMo group proposes language models as learned world simulators. A CMU paper shows automatically adapted harnesses let small language models match large-model performance at roughly 90% lower cost. A complementary study catalogs how orchestrators misplace trust in sub-agents.\n\nOn the open-weight side, MoE and efficient architectures dominate trending models: DeepSeek-V4.1-Flash, MiniCPM-V-4.7-35B-A3B, LFM2.5-24B-A2B and MiMo-V2.6-Pro-RL. On GitHub, agent skill and harness repositories (mattpocock/skills, obra/superpowers, affaan-m/ECC, addyosmani/agent-skills) lead the star-gain charts alongside the agent runtimes openclaw and hermes-agent.",
+    "key_themes": [
+      "recursive-self-improvement",
+      "world-models-for-agents",
+      "agent-harness-optimization",
+      "multi-agent-reliability",
+      "efficient-open-weight-models",
+      "multimodal-benchmarks-and-3d"
+    ]
+  },
+  "researcher_notes": "**World models are becoming the cost-control layer for self-improving systems.** RSI-Anything, AgentGarten and the MiMo agentic language world model all replace expensive real-environment interaction with a learned or code-defined simulator. RSI-Anything uses the world model as a gate on which actions deserve real evaluation, while AgentGarten and MiMo use it as the training environment itself. The shared bet is that a good enough predictor of environment dynamics is cheaper than more rollouts. Watch whether the gains hold when the world model is wrong, since a self-improvement loop that trusts a flawed predictor can compound errors.\n\n**The harness is now a first-class optimization target.** The CMU result (harness adaptation closes the SLM-LLM gap entirely in 7 of 21 task-model pairs, with gains in 16 of 21) pairs naturally with GitHub, where skills and harness repos such as mattpocock/skills, obra/superpowers and affaan-m/ECC are gaining over 600 to 1,700 stars a day. Practitioners are hand-writing what the CMU meta-agent learns to discover automatically. I expect hand-curated skill libraries to become seed inputs for automated harness search within weeks. The caveat from the paper is that gains are largest for repetitive workflows and for models with enough baseline capability, so this is not a universal substitute for model quality.\n\n**Sleeper hit: the sub-agent delegation failures study.** At 58 upvotes it is modest in engagement, but its taxonomy (capability overestimation, task decomposition errors, context loss in handoffs) across 12 orchestration frameworks describes exactly the failure modes that the cheaper-agent and self-improvement papers will run into at scale. It also sits in tension with the CMU result: if small models in adapted harnesses become the default sub-agents, orchestrator over-trust becomes a bigger risk, not a smaller one.\n\n**Open-weight models are converging on sparse and hybrid designs.** Three of the twelve trending models advertise active-parameter counts far below total size (MiniCPM-V-4.7-35B-A3B, LFM2.5-24B-A2B, DeepSeek-V4.1-Flash as an MoE), and Ollama's rise (987 stars today) with explicit MiMo V2.6 and LFM2.5 support shows local deployment is keeping pace. Prediction: the next wave of agent harness papers will benchmark against these sparse local models rather than against frontier APIs.\n\n**Benchmarks keep exposing the audio-visual gap.** OmniCompass evaluates 50 MLLMs and finds open-source models lag specifically on audio-visual grounding, while precise grounding remains hard for every system. With JEV-27B-VL and MiniCPM-V trending, expect open vision-language releases to start reporting on omni-modal grounding tracks like this one.",
+  "papers": [
+    {
+      "id": "rsi-anything-world-models",
+      "title": "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
+      "authors": [
+        "Taoyong Cui",
+        "Hao Chen",
+        "Yiming Li",
+        "Zhenghao Liu",
+        "et al."
+      ],
+      "affiliations": [
+        "Gen-Verse"
+      ],
+      "summary": "RSI-Anything uses a predictive world model to decide which candidate actions merit costly external evaluation, while a compatibility checker keeps updated policy-model pairs only when they improve performance. It is evaluated on code repair, GUI automation, lab planning and reaction optimization.",
+      "key_findings": [
+        "Code repair improves from 26.3% to 31.2%",
+        "GUI tasks need 39.4% fewer actions; lab planning rises from 21.8 to 46.0",
+        "Reaction optimization reaches 96.15% mean best yield vs 82.16% for Bayesian optimization"
+      ],
+      "tags": [
+        "self-improvement",
+        "world-models",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 187,
+        "comments": 24
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13912",
+        "huggingface": "https://huggingface.co/papers/2610.13912",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13912",
+        "pdf": "https://arxiv.org/pdf/2610.13912"
+      }
+    },
+    {
+      "id": "omnicompass-benchmark",
+      "title": "OmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding",
+      "authors": [
+        "Xuyang Liu",
+        "Shihao Wang",
+        "Yichen Xu",
+        "et al."
+      ],
+      "affiliations": [
+        "Multi-institution academic collaboration (affiliations not listed in source data)"
+      ],
+      "summary": "A two-track benchmark for video grounding covering vision-language (820 videos, 2,460 instances) and audio-visual omni-modal (240 videos, 720 instances) settings. It evaluates 50 multimodal LLMs on temporal grounding, spatial grounding and QA.",
+      "key_findings": [
+        "Evaluates 50 MLLMs across two tracks",
+        "Open-source models lag notably on audio-visual tasks",
+        "Precise grounding remains hard for all systems"
+      ],
+      "tags": [
+        "benchmark",
+        "multimodal",
+        "video-grounding"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 143,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15443",
+        "huggingface": "https://huggingface.co/papers/2610.15443",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.15443",
+        "pdf": "https://arxiv.org/pdf/2610.15443"
+      }
+    },
+    {
+      "id": "infinisplat-v2",
+      "title": "InfiniSplat v2: Analyzing and Improving Feed-Forward 3DGS from Any Views",
+      "authors": [
+        "Jiawei Wang",
+        "Hao Yu",
+        "Sida Peng",
+        "et al."
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "Addresses the surface-alignment problem in feed-forward 3D Gaussian Splatting by using geometry-guided sampling to place Gaussian supports on depth-derived surfaces, then a query-conditioned implicit decoder to predict Gaussian attributes.",
+      "key_findings": [
+        "State-of-the-art zero-shot results on ETH3D, ScanNet++, Tanks and Temples and DL3DV",
+        "Geometry-guided sampling fixes surface misalignment",
+        "Accepted to SIGGRAPH Asia 2026 (Journal Track)"
+      ],
+      "tags": [
+        "3d-gaussian-splatting",
+        "view-synthesis",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 122,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.02437",
+        "huggingface": "https://huggingface.co/papers/2608.02437",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.02437",
+        "pdf": "https://arxiv.org/pdf/2608.02437"
+      }
+    },
+    {
+      "id": "agentgarten-code-worlds",
+      "title": "AgentGarten: Code Worlds for Evolving Agents",
+      "authors": [
+        "Mingsheng Long",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Peking University",
+        "MirroS lab"
+      ],
+      "summary": "Pairs simulators and game engines with a shared neural renderer to create real-time interactive environments with persistent world state. New environments are written as code and rendered through the same interface by an adapted pretrained video model.",
+      "key_findings": [
+        "Reports agents learning in 4 rounds versus millions for conventional RL",
+        "New environments can be added as code and rendered uniformly",
+        "Environments scale in number and difficulty alongside the agents"
+      ],
+      "tags": [
+        "agents",
+        "world-models",
+        "environments"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 98,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12374",
+        "huggingface": "https://huggingface.co/papers/2610.12374",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12374",
+        "pdf": "https://arxiv.org/pdf/2610.12374"
+      }
+    },
+    {
+      "id": "better-harnesses-smaller-models",
+      "title": "Better Harnesses, Smaller Models: Building 90% Cheaper Agents via Automated Harness Adaptation",
+      "authors": [
+        "Carnegie Mellon University researchers"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "Shows that small language model agents can match large-model performance at about 90% lower cost when paired with a harness discovered automatically by a meta-agent optimizer.",
+      "key_findings": [
+        "Optimized harnesses improve performance on 16 of 21 task-SLM pairs",
+        "The SLM-LLM gap closes entirely in 7 pairs",
+        "Gains are largest for repetitive workflows and SLMs with sufficient baseline capability"
+      ],
+      "tags": [
+        "agents",
+        "harness",
+        "small-language-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 87,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08938",
+        "huggingface": "https://huggingface.co/papers/2607.08938",
+        "pdf": "https://arxiv.org/pdf/2607.08938"
+      }
+    },
+    {
+      "id": "traces-to-agentic-worlds",
+      "title": "From Traces to Agentic Worlds: Agentic Language World Models for Interactive Environment Simulation",
+      "authors": [
+        "MiMo group researchers"
+      ],
+      "affiliations": [
+        "Xiaomi (MiMo group)"
+      ],
+      "summary": "Proposes language models as world simulators for agent training. Instead of hard-coded simulators, an agentic language world model learns from interaction traces to generate faithful environment transitions.",
+      "key_findings": [
+        "Learns environment transitions from interaction traces",
+        "Replaces hand-built simulators with generated worlds",
+        "Enables diverse, scalable training environments"
+      ],
+      "tags": [
+        "agents",
+        "world-models",
+        "language-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.35432",
+        "huggingface": "https://huggingface.co/papers/2609.35432",
+        "pdf": "https://arxiv.org/pdf/2609.35432"
+      }
+    },
+    {
+      "id": "scope-semantic-bounded-credit",
+      "title": "SCOPE: Semantic Bounded Credit Optimization for Prompt Engineering in Text-to-Image Generation",
+      "authors": [
+        "Anas Mohamed",
+        "Ahmad Faraz Khan",
+        "Shuwen Ge",
+        "Ali Anwar",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Minnesota"
+      ],
+      "summary": "Addresses semantic drift in DPO-based prompt optimization for text-to-image generation by reweighting the DPO loss by semantic distance from the original prompt, with an analytical bound on drift.",
+      "key_findings": [
+        "8-12% higher CLIP similarity than standard DPO",
+        "5-9% higher HPSv2.1 and PickScore",
+        "Analytical bound on semantic drift; published in ACL 2026 Findings"
+      ],
+      "tags": [
+        "text-to-image",
+        "dpo",
+        "prompt-optimization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 64,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.10091",
+        "huggingface": "https://huggingface.co/papers/2610.10091",
+        "pdf": "https://arxiv.org/pdf/2610.10091"
+      }
+    },
+    {
+      "id": "sub-agent-delegation-failures",
+      "title": "Sub-Agent Delegation Failures: When Orchestrators Misplace Trust",
+      "authors": [
+        "Multiple researchers"
+      ],
+      "affiliations": [
+        "Multi-institution research collaboration (affiliations not listed in source data)"
+      ],
+      "summary": "A systematic study of delegation failures in multi-agent LLM systems, covering capability overestimation, task decomposition errors and context loss in handoffs. It provides a taxonomy and a benchmark across 12 orchestration frameworks.",
+      "key_findings": [
+        "Taxonomy of orchestrator-to-sub-agent trust failures",
+        "Benchmark spanning 12 orchestration frameworks",
+        "Identifies capability overestimation, decomposition errors and handoff context loss as core failure modes"
+      ],
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "reliability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 58,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.09223",
+        "huggingface": "https://huggingface.co/papers/2610.09223",
+        "pdf": "https://arxiv.org/pdf/2610.09223"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "Top trending model by likes (4,821), a multimodal MoE with function calling, which suits it to agent workloads.",
+      "task_type": "text-generation",
+      "model_size": "MoE (size not stated in source)",
+      "tags": [
+        "text-generation",
+        "vision",
+        "function-calling",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 2140000,
+        "likes": 4821
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "gemma-3-12b-it",
+      "name": "Gemma 3 12B Instruct",
+      "organization": "Google",
+      "description": "Instruction-tuned open model with strong download volume (1.34M), popular as a mid-size local and fine-tuning base.",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "text-generation",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 1340000,
+        "likes": 3890
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-12b-it"
+    },
+    {
+      "id": "qwen-image-2-1-turbo",
+      "name": "Qwen-Image-2.1-Turbo",
+      "organization": "Qwen",
+      "description": "Fast multimodal image model with 1.89M downloads, the second most downloaded model on today's list.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not stated in source",
+      "tags": [
+        "image-text-to-text",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1890000,
+        "likes": 3654
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1-Turbo"
+    },
+    {
+      "id": "muse-glimmer-8b",
+      "name": "Muse-Glimmer-8B",
+      "organization": "Meta",
+      "description": "Open-weight 8B model tagged for agents, trending alongside the surge in agent harness and skills tooling.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "text-generation",
+        "agents",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 1200000,
+        "likes": 3210
+      },
+      "source_url": "https://huggingface.co/meta-llama/Muse-Glimmer-8B"
+    },
+    {
+      "id": "minicpm-v-4-7-35b-a3b",
+      "name": "MiniCPM-V-4.7-35B-A3B",
+      "organization": "OpenBMB",
+      "description": "Efficient vision-language MoE with only about 3B active parameters out of 35B, attractive for local multimodal deployment.",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (A3B active)",
+      "tags": [
+        "image-text-to-text",
+        "efficient",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 980000,
+        "likes": 2987
+      },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B"
+    },
+    {
+      "id": "flux-2-klein-base-4b",
+      "name": "FLUX.2-klein-base-4B",
+      "organization": "Black Forest Labs",
+      "description": "Compact 4B text-to-image base model aimed at fast generation, trending as a fine-tuning starting point.",
+      "task_type": "text-to-image",
+      "model_size": "4B",
+      "tags": [
+        "text-to-image",
+        "image-generation",
+        "fast"
+      ],
+      "metrics": {
+        "downloads": 890000,
+        "likes": 2876
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B"
+    },
+    {
+      "id": "bitnet-b1-58-3b-4t",
+      "name": "BitNet b1.58 3B 4T",
+      "organization": "Microsoft",
+      "description": "A 1-bit-weight (1.58-bit) language model trained on 4T tokens, trending as a low-memory option for efficient inference.",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "text-generation",
+        "1-bit",
+        "efficient"
+      ],
+      "metrics": {
+        "downloads": 780000,
+        "likes": 2134
+      },
+      "source_url": "https://huggingface.co/microsoft/bitnet-b1.58-3B-4T"
+    },
+    {
+      "id": "lfm2-5-24b-a2b",
+      "name": "LFM2.5-24B-A2B",
+      "organization": "Liquid AI",
+      "description": "Hybrid-architecture reasoning model with about 2B active parameters out of 24B, also supported in Ollama for local use.",
+      "task_type": "text-generation",
+      "model_size": "24B (A2B active)",
+      "tags": [
+        "text-generation",
+        "hybrid-architecture",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 760000,
+        "likes": 2341
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Open text-to-video model with strong momentum (1,987 likes), the leading video generation entry in this week's trending list.",
+      "task_type": "text-to-video",
+      "model_size": "Not stated in source",
+      "tags": [
+        "text-to-video",
+        "video-generation"
+      ],
+      "metrics": {
+        "downloads": 650000,
+        "likes": 1987
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "stable-diffusion-4-turbo",
+      "name": "Stable Diffusion 4 Turbo",
+      "organization": "Stability AI",
+      "description": "Distilled turbo variant of Stable Diffusion 4 for few-step image generation.",
+      "task_type": "text-to-image",
+      "model_size": "Not stated in source",
+      "tags": [
+        "text-to-image",
+        "turbo"
+      ],
+      "metrics": {
+        "downloads": 560000,
+        "likes": 1876
+      },
+      "source_url": "https://huggingface.co/stabilityai/stable-diffusion-4-turbo"
+    },
+    {
+      "id": "jev-27b-vl",
+      "name": "JEV-27B-VL",
+      "organization": "AutoTrustAI",
+      "description": "Open-weight 27B vision-language model tagged for visual question answering and decision-making.",
+      "task_type": "visual-question-answering",
+      "model_size": "27B",
+      "tags": [
+        "visual-question-answering",
+        "decision-making",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 540000,
+        "likes": 1654
+      },
+      "source_url": "https://huggingface.co/AutoTrustAI/JEV-27B-VL"
+    },
+    {
+      "id": "mimo-v2-6-pro-rl",
+      "name": "MiMo-V2.6-Pro-RL",
+      "organization": "Xiaomi MiMo",
+      "description": "RL-tuned multimodal MoE reasoning model from the same group behind today's agentic language world model paper.",
+      "task_type": "text-generation",
+      "model_size": "MoE (size not stated in source)",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "moe",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 430000,
+        "likes": 1543
+      },
+      "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "AI agent framework for executing OS-level and cross-platform actions. It continues to gain over 1,200 stars a day as agent runtimes go mainstream.",
+      "language": "Python",
+      "stars": 391615,
+      "stars_today": 1243,
+      "forks": 38921,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "agents",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "Opinionated agentic skills framework for software development, part of the wave of reusable skill libraries for coding agents.",
+      "language": "Markdown",
+      "stars": 297218,
+      "stars_today": 876,
+      "forks": 21543,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "coding-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "Production-grade engineering skills for agentic development setups. It has the largest daily star gain on the list (1,737).",
+      "language": "Shell",
+      "stars": 284398,
+      "stars_today": 1737,
+      "forks": 19872,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "Agent harness performance layer for Claude Code, Codex and Cursor, directly relevant to today's harness-optimization papers.",
+      "language": "TypeScript",
+      "stars": 276493,
+      "stars_today": 654,
+      "forks": 17234,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-harness",
+        "coding-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Autonomous agent designed to adapt and learn with the user, trending alongside the self-improvement research theme.",
+      "language": "Python",
+      "stars": 252538,
+      "stars_today": 543,
+      "forks": 14567,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "self-improvement"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "n8n-io-n8n",
+      "name": "n8n-io/n8n",
+      "description": "Workflow automation platform with self-hostable AI capabilities, steady growth as teams wire agents into existing automations.",
+      "language": "TypeScript",
+      "stars": 206936,
+      "stars_today": 428,
+      "forks": 28741,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tensorflow-tensorflow",
+      "name": "tensorflow/tensorflow",
+      "description": "Foundational ML framework, trending on TPU v6 and JAX interoperability improvements.",
+      "language": "C++",
+      "stars": 200714,
+      "stars_today": 156,
+      "forks": 83291,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "tags": [
+        "ml-framework",
+        "tpu"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "firecrawl-dev-firecrawl",
+      "name": "firecrawl-dev/firecrawl",
+      "description": "Web-scraping library for AI agents that outputs clean markdown, gaining 743 stars today as agents need reliable web context.",
+      "language": "TypeScript",
+      "stars": 190216,
+      "stars_today": 743,
+      "forks": 13421,
+      "url": "https://github.com/firecrawl-dev/firecrawl",
+      "tags": [
+        "web-scraping",
+        "agents",
+        "rag"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "significant-gravitas-autogpt",
+      "name": "Significant-Gravitas/AutoGPT",
+      "description": "Tools for autonomous AI task execution with multi-agent coordination; a long-running project still gaining steadily.",
+      "language": "Python",
+      "stars": 187518,
+      "stars_today": 234,
+      "forks": 47123,
+      "url": "https://github.com/Significant-Gravitas/AutoGPT",
+      "tags": [
+        "agents",
+        "multi-agent"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "Local runtime for open models, now including MiMo V2.6 and LFM2.5, which explains its 987 stars today.",
+      "language": "Go",
+      "stars": 182658,
+      "stars_today": 987,
+      "forks": 14321,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-inference",
+        "llm-runtime"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Curated engineering skills for AI coding agents, another entry in the skills-library trend.",
+      "language": "Markdown",
+      "stars": 104496,
+      "stars_today": 432,
+      "forks": 8712,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "LLM-powered code review combining deterministic pipelines with agent analysis.",
+      "language": "Python",
+      "stars": 45867,
+      "stars_today": 234,
+      "forks": 3421,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": [
+        "code-review",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Official plugin repository for Claude Cowork, trending as plugin ecosystems for knowledge-work agents grow.",
+      "language": "TypeScript",
+      "stars": 28789,
+      "stars_today": 321,
+      "forks": 2341,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "plugins",
+        "agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "gen-verse-rsi-anything",
+      "name": "Gen-Verse/RSI-Anything",
+      "description": "Official implementation of RSI-Anything. It is gaining 876 stars today on only 3,241 total, riding the paper's release.",
+      "language": "Python",
+      "stars": 3241,
+      "stars_today": 876,
+      "forks": 287,
+      "url": "https://github.com/Gen-Verse/RSI-Anything",
+      "tags": [
+        "self-improvement",
+        "world-models"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Recursive Self-Improvement",
+      "description": "World-model-guided self-improvement loops that gate costly evaluation and keep only verified gains, with the paper and its repo both trending.",
+      "related_paper_ids": [
+        "rsi-anything-world-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "World Models and Simulated Environments for Agents",
+      "description": "Code-defined or language-model-generated worlds replace expensive real-environment interaction for agent training.",
+      "related_paper_ids": [
+        "agentgarten-code-worlds",
+        "traces-to-agentic-worlds",
+        "rsi-anything-world-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Harness Optimization and Cheaper Agents",
+      "description": "Automatically adapted harnesses let small models rival large ones, mirrored by the boom in hand-written skills and harness repos on GitHub.",
+      "related_paper_ids": [
+        "better-harnesses-smaller-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multi-Agent Reliability",
+      "description": "Systematic study of how orchestrators misplace trust in sub-agents, an emerging concern as agent systems grow more layered.",
+      "related_paper_ids": [
+        "sub-agent-delegation-failures"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Multimodal Benchmarks and 3D Vision",
+      "description": "Omni-modal grounding benchmarks expose audio-visual gaps in open models, while feed-forward 3DGS continues to improve zero-shot view synthesis.",
+      "related_paper_ids": [
+        "omnicompass-benchmark",
+        "infinisplat-v2"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Preference Optimization for Generation",
+      "description": "DPO-style methods are being refined to control semantic drift in text-to-image prompt optimization.",
+      "related_paper_ids": [
+        "scope-semantic-bounded-credit"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

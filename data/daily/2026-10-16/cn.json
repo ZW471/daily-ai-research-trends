@@ -1,0 +1,803 @@
+{
+  "version": "1.0",
+  "date": "2026-10-16",
+  "generated_at": "2026-10-16T06:00:00Z",
+  "summary": {
+    "headline": "RSI-Anything 借助世界模型让递归式自我改进在代码、GUI 和实验室任务中走向实用;智能体环境与 harness 成为新的扩展杠杆,模拟世界与自适应 harness 大幅降低智能体成本和训练时间;智能体技能类仓库与开源 MoE 模型霸占 GitHub 和 HuggingFace 趋势榜",
+    "body": "**RSI-Anything**(187 个点赞)位居今日 HuggingFace 论文榜首。它利用预测式世界模型来判断哪些候选动作值得进行昂贵的外部评估,并通过兼容性检查器,仅在策略-模型对确有提升时才保留更新。论文报告的提升覆盖代码修复(26.3% 提升至 31.2%)、GUI 自动化(操作步数减少 39.4%)、实验室规划(21.8 提升至 46.0)以及反应优化(平均最佳产率 96.15%,而贝叶斯优化为 82.16%)。其官方仓库今天同样登上 GitHub 趋势榜,单日新增 876 颗星。\n\n第二组研究关注的是智能体周围的**环境与 harness**,而非模型本身。AgentGarten 将代码定义的环境与神经渲染器结合,据报道智能体只需 4 轮即可学会任务,而不是数百万轮。小米 MiMo 团队提出把语言模型作为学习得到的世界模拟器。CMU 的一篇论文表明,自动适配的 harness 能让小语言模型以约低 90% 的成本达到大模型的表现。另一项配套研究则梳理了编排器如何错误地信任子智能体。\n\n在开源权重方面,MoE 与高效架构主导了趋势模型榜:DeepSeek-V4.1-Flash、MiniCPM-V-4.7-35B-A3B、LFM2.5-24B-A2B 和 MiMo-V2.6-Pro-RL。在 GitHub 上,智能体技能与 harness 类仓库(mattpocock/skills、obra/superpowers、affaan-m/ECC、addyosmani/agent-skills)以及智能体运行时 openclaw 和 hermes-agent 领跑星标增长榜。",
+    "key_themes": [
+      "recursive-self-improvement",
+      "world-models-for-agents",
+      "agent-harness-optimization",
+      "multi-agent-reliability",
+      "efficient-open-weight-models",
+      "multimodal-benchmarks-and-3d"
+    ]
+  },
+  "researcher_notes": "**世界模型正在成为自我改进系统的成本控制层。** RSI-Anything、AgentGarten 和 MiMo 智能体语言世界模型都用学习得到或代码定义的模拟器取代了昂贵的真实环境交互。RSI-Anything 把世界模型当作闸门,决定哪些动作值得真实评估,而 AgentGarten 和 MiMo 则直接把它当作训练环境本身。它们共同的赌注是:足够好的环境动力学预测器,比更多的 rollout 更便宜。值得关注的是,当世界模型出错时这些收益是否依然成立,因为信任错误预测器的自我改进循环可能会让误差不断累积。\n\n**harness 如今已成为一等优化目标。** CMU 的结果(在 21 个任务-模型组合中,harness 适配在 7 个组合里完全弥合了 SLM 与 LLM 的差距,16 个组合有提升)与 GitHub 上的现象不谋而合:mattpocock/skills、obra/superpowers 和 affaan-m/ECC 等技能与 harness 仓库每天新增 600 到 1,700 颗星。从业者正在手工编写 CMU 的元智能体自动学习发现的东西。我预计几周内,人工整理的技能库就会成为自动化 harness 搜索的种子输入。论文的提醒是:收益在重复性工作流以及具备足够基础能力的模型上最大,因此它并不能全面替代模型质量。\n\n**潜力之作:子智能体委派失败研究。** 它获得 58 个点赞,热度不算高,但其分类体系(能力高估、任务分解错误、交接中的上下文丢失)覆盖 12 个编排框架,恰好描述了更廉价智能体与自我改进类论文在规模化后将遇到的失败模式。它也与 CMU 的结果存在张力:如果在适配 harness 中运行的小模型成为默认的子智能体,编排器的过度信任将成为更大而非更小的风险。\n\n**开源权重模型正在向稀疏与混合设计收敛。** 十二个趋势模型中有三个宣称其激活参数量远低于总规模(MiniCPM-V-4.7-35B-A3B、LFM2.5-24B-A2B,以及作为 MoE 的 DeepSeek-V4.1-Flash);Ollama 的走红(今日新增 987 颗星)以及对 MiMo V2.6 和 LFM2.5 的明确支持,说明本地部署正在同步跟上。预测:下一波智能体 harness 论文将以这些稀疏本地模型而非前沿 API 作为基准。\n\n**基准测试持续暴露音视频能力差距。** OmniCompass 评测了 50 个多模态大模型,发现开源模型在音视频定位上尤其落后,而精确定位对所有系统来说依然困难。随着 JEV-27B-VL 和 MiniCPM-V 登上趋势榜,预计开源视觉语言模型的发布将开始报告此类全模态定位赛道上的成绩。",
+  "papers": [
+    {
+      "id": "rsi-anything-world-models",
+      "title": "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
+      "authors": [
+        "Taoyong Cui",
+        "Hao Chen",
+        "Yiming Li",
+        "Zhenghao Liu",
+        "et al."
+      ],
+      "affiliations": [
+        "Gen-Verse"
+      ],
+      "summary": "RSI-Anything 利用预测式世界模型判断哪些候选动作值得进行昂贵的外部评估,同时由兼容性检查器仅在性能提升时保留更新后的策略-模型对。该方法在代码修复、GUI 自动化、实验室规划和反应优化上进行了评估。",
+      "key_findings": [
+        "代码修复从 26.3% 提升至 31.2%",
+        "GUI 任务所需操作步数减少 39.4%;实验室规划从 21.8 提升至 46.0",
+        "反应优化达到 96.15% 的平均最佳产率,而贝叶斯优化为 82.16%"
+      ],
+      "tags": [
+        "self-improvement",
+        "world-models",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 187,
+        "comments": 24
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.13912",
+        "huggingface": "https://huggingface.co/papers/2610.13912",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.13912",
+        "pdf": "https://arxiv.org/pdf/2610.13912"
+      }
+    },
+    {
+      "id": "omnicompass-benchmark",
+      "title": "OmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding",
+      "authors": [
+        "Xuyang Liu",
+        "Shihao Wang",
+        "Yichen Xu",
+        "et al."
+      ],
+      "affiliations": [
+        "多机构学术合作(来源数据未列出具体单位)"
+      ],
+      "summary": "一个面向视频定位的双赛道基准,涵盖视觉-语言(820 个视频,2,460 个实例)和音视频全模态(240 个视频,720 个实例)两种设置。它评估了 50 个多模态大模型在时间定位、空间定位和问答上的表现。",
+      "key_findings": [
+        "在两个赛道上评估了 50 个多模态大模型",
+        "开源模型在音视频任务上明显落后",
+        "精确定位对所有系统来说依然困难"
+      ],
+      "tags": [
+        "benchmark",
+        "multimodal",
+        "video-grounding"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 143,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.15443",
+        "huggingface": "https://huggingface.co/papers/2610.15443",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.15443",
+        "pdf": "https://arxiv.org/pdf/2610.15443"
+      }
+    },
+    {
+      "id": "infinisplat-v2",
+      "title": "InfiniSplat v2: Analyzing and Improving Feed-Forward 3DGS from Any Views",
+      "authors": [
+        "Jiawei Wang",
+        "Hao Yu",
+        "Sida Peng",
+        "et al."
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "针对前馈式 3D 高斯泼溅中的表面对齐问题,采用几何引导采样将高斯支撑点放置在由深度导出的表面上,再通过查询条件化的隐式解码器预测高斯属性。",
+      "key_findings": [
+        "在 ETH3D、ScanNet++、Tanks and Temples 和 DL3DV 上取得最先进的零样本结果",
+        "几何引导采样修复了表面错位问题",
+        "已被 SIGGRAPH Asia 2026(期刊赛道)接收"
+      ],
+      "tags": [
+        "3d-gaussian-splatting",
+        "view-synthesis",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 122,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.02437",
+        "huggingface": "https://huggingface.co/papers/2608.02437",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.02437",
+        "pdf": "https://arxiv.org/pdf/2608.02437"
+      }
+    },
+    {
+      "id": "agentgarten-code-worlds",
+      "title": "AgentGarten: Code Worlds for Evolving Agents",
+      "authors": [
+        "Mingsheng Long",
+        "et al."
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Peking University",
+        "MirroS lab"
+      ],
+      "summary": "将模拟器和游戏引擎与共享的神经渲染器结合,创建具有持久世界状态的实时交互环境。新环境以代码形式编写,并由经过适配的预训练视频模型通过同一接口渲染。",
+      "key_findings": [
+        "据报道智能体只需 4 轮即可学会任务,而传统强化学习需要数百万轮",
+        "新环境可以以代码形式添加并统一渲染",
+        "环境的数量与难度随智能体一同扩展"
+      ],
+      "tags": [
+        "agents",
+        "world-models",
+        "environments"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 98,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.12374",
+        "huggingface": "https://huggingface.co/papers/2610.12374",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.12374",
+        "pdf": "https://arxiv.org/pdf/2610.12374"
+      }
+    },
+    {
+      "id": "better-harnesses-smaller-models",
+      "title": "Better Harnesses, Smaller Models: Building 90% Cheaper Agents via Automated Harness Adaptation",
+      "authors": [
+        "Carnegie Mellon University researchers"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "表明当小语言模型智能体搭配由元智能体优化器自动发现的 harness 时,可以以约低 90% 的成本达到大模型的表现。",
+      "key_findings": [
+        "优化后的 harness 在 21 个任务-SLM 组合中的 16 个上提升了性能",
+        "在 7 个组合中 SLM 与 LLM 的差距被完全弥合",
+        "收益在重复性工作流以及具备足够基础能力的 SLM 上最大"
+      ],
+      "tags": [
+        "agents",
+        "harness",
+        "small-language-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 87,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2607.08938",
+        "huggingface": "https://huggingface.co/papers/2607.08938",
+        "pdf": "https://arxiv.org/pdf/2607.08938"
+      }
+    },
+    {
+      "id": "traces-to-agentic-worlds",
+      "title": "From Traces to Agentic Worlds: Agentic Language World Models for Interactive Environment Simulation",
+      "authors": [
+        "MiMo group researchers"
+      ],
+      "affiliations": [
+        "Xiaomi (MiMo group)"
+      ],
+      "summary": "提出将语言模型作为智能体训练的世界模拟器。智能体语言世界模型不再依赖硬编码的模拟器,而是从交互轨迹中学习,生成忠实的环境状态转移。",
+      "key_findings": [
+        "从交互轨迹中学习环境状态转移",
+        "用生成的世界取代手工构建的模拟器",
+        "支持多样且可扩展的训练环境"
+      ],
+      "tags": [
+        "agents",
+        "world-models",
+        "language-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.35432",
+        "huggingface": "https://huggingface.co/papers/2609.35432",
+        "pdf": "https://arxiv.org/pdf/2609.35432"
+      }
+    },
+    {
+      "id": "scope-semantic-bounded-credit",
+      "title": "SCOPE: Semantic Bounded Credit Optimization for Prompt Engineering in Text-to-Image Generation",
+      "authors": [
+        "Anas Mohamed",
+        "Ahmad Faraz Khan",
+        "Shuwen Ge",
+        "Ali Anwar",
+        "et al."
+      ],
+      "affiliations": [
+        "University of Minnesota"
+      ],
+      "summary": "针对文本到图像生成中基于 DPO 的提示词优化存在的语义漂移问题,按与原始提示词的语义距离对 DPO 损失重新加权,并给出漂移的解析上界。",
+      "key_findings": [
+        "CLIP 相似度比标准 DPO 高 8-12%",
+        "HPSv2.1 和 PickScore 高 5-9%",
+        "给出语义漂移的解析上界;已发表于 ACL 2026 Findings"
+      ],
+      "tags": [
+        "text-to-image",
+        "dpo",
+        "prompt-optimization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 64,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.10091",
+        "huggingface": "https://huggingface.co/papers/2610.10091",
+        "pdf": "https://arxiv.org/pdf/2610.10091"
+      }
+    },
+    {
+      "id": "sub-agent-delegation-failures",
+      "title": "Sub-Agent Delegation Failures: When Orchestrators Misplace Trust",
+      "authors": [
+        "Multiple researchers"
+      ],
+      "affiliations": [
+        "多机构研究合作(来源数据未列出具体单位)"
+      ],
+      "summary": "对多智能体 LLM 系统中委派失败的系统性研究,涵盖能力高估、任务分解错误和交接中的上下文丢失。论文提供了分类体系,并在 12 个编排框架上构建了基准。",
+      "key_findings": [
+        "提出编排器对子智能体信任失败的分类体系",
+        "基准覆盖 12 个编排框架",
+        "指出能力高估、分解错误和交接上下文丢失是核心失败模式"
+      ],
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "reliability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 58,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.09223",
+        "huggingface": "https://huggingface.co/papers/2610.09223",
+        "pdf": "https://arxiv.org/pdf/2610.09223"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "按点赞数(4,821)位居趋势模型榜首,是支持函数调用的多模态 MoE 模型,适合智能体工作负载。",
+      "task_type": "text-generation",
+      "model_size": "MoE(来源未说明规模)",
+      "tags": [
+        "text-generation",
+        "vision",
+        "function-calling",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 2140000,
+        "likes": 4821
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "gemma-3-12b-it",
+      "name": "Gemma 3 12B Instruct",
+      "organization": "Google",
+      "description": "指令微调的开源模型,下载量可观(134 万),是受欢迎的中等规模本地部署与微调基座。",
+      "task_type": "text-generation",
+      "model_size": "12B",
+      "tags": [
+        "text-generation",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 1340000,
+        "likes": 3890
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-12b-it"
+    },
+    {
+      "id": "qwen-image-2-1-turbo",
+      "name": "Qwen-Image-2.1-Turbo",
+      "organization": "Qwen",
+      "description": "快速多模态图像模型,下载量达 189 万,是今日榜单中下载量第二高的模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "来源未说明",
+      "tags": [
+        "image-text-to-text",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1890000,
+        "likes": 3654
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen-Image-2.1-Turbo"
+    },
+    {
+      "id": "muse-glimmer-8b",
+      "name": "Muse-Glimmer-8B",
+      "organization": "Meta",
+      "description": "面向智能体的开源权重 8B 模型,随着智能体 harness 和技能工具的热潮一同走红。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "text-generation",
+        "agents",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 1200000,
+        "likes": 3210
+      },
+      "source_url": "https://huggingface.co/meta-llama/Muse-Glimmer-8B"
+    },
+    {
+      "id": "minicpm-v-4-7-35b-a3b",
+      "name": "MiniCPM-V-4.7-35B-A3B",
+      "organization": "OpenBMB",
+      "description": "高效的视觉语言 MoE 模型,350 亿总参数中仅约 30 亿被激活,适合本地多模态部署。",
+      "task_type": "image-text-to-text",
+      "model_size": "35B (A3B active)",
+      "tags": [
+        "image-text-to-text",
+        "efficient",
+        "moe"
+      ],
+      "metrics": {
+        "downloads": 980000,
+        "likes": 2987
+      },
+      "source_url": "https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B"
+    },
+    {
+      "id": "flux-2-klein-base-4b",
+      "name": "FLUX.2-klein-base-4B",
+      "organization": "Black Forest Labs",
+      "description": "面向快速生成的紧凑型 4B 文生图基座模型,正作为微调起点而走红。",
+      "task_type": "text-to-image",
+      "model_size": "4B",
+      "tags": [
+        "text-to-image",
+        "image-generation",
+        "fast"
+      ],
+      "metrics": {
+        "downloads": 890000,
+        "likes": 2876
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B"
+    },
+    {
+      "id": "bitnet-b1-58-3b-4t",
+      "name": "BitNet b1.58 3B 4T",
+      "organization": "Microsoft",
+      "description": "在 4T token 上训练的 1 比特权重(1.58 比特)语言模型,作为高效推理的低内存方案而走红。",
+      "task_type": "text-generation",
+      "model_size": "3B",
+      "tags": [
+        "text-generation",
+        "1-bit",
+        "efficient"
+      ],
+      "metrics": {
+        "downloads": 780000,
+        "likes": 2134
+      },
+      "source_url": "https://huggingface.co/microsoft/bitnet-b1.58-3B-4T"
+    },
+    {
+      "id": "lfm2-5-24b-a2b",
+      "name": "LFM2.5-24B-A2B",
+      "organization": "Liquid AI",
+      "description": "混合架构推理模型,240 亿总参数中约 20 亿被激活,同时已在 Ollama 中支持本地使用。",
+      "task_type": "text-generation",
+      "model_size": "24B (A2B active)",
+      "tags": [
+        "text-generation",
+        "hybrid-architecture",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 760000,
+        "likes": 2341
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "势头强劲的开源文生视频模型(1,987 个点赞),是本周趋势榜中领先的视频生成条目。",
+      "task_type": "text-to-video",
+      "model_size": "来源未说明",
+      "tags": [
+        "text-to-video",
+        "video-generation"
+      ],
+      "metrics": {
+        "downloads": 650000,
+        "likes": 1987
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "stable-diffusion-4-turbo",
+      "name": "Stable Diffusion 4 Turbo",
+      "organization": "Stability AI",
+      "description": "Stable Diffusion 4 的蒸馏 Turbo 版本,用于少步数图像生成。",
+      "task_type": "text-to-image",
+      "model_size": "来源未说明",
+      "tags": [
+        "text-to-image",
+        "turbo"
+      ],
+      "metrics": {
+        "downloads": 560000,
+        "likes": 1876
+      },
+      "source_url": "https://huggingface.co/stabilityai/stable-diffusion-4-turbo"
+    },
+    {
+      "id": "jev-27b-vl",
+      "name": "JEV-27B-VL",
+      "organization": "AutoTrustAI",
+      "description": "开源权重的 27B 视觉语言模型,标注用于视觉问答和决策。",
+      "task_type": "visual-question-answering",
+      "model_size": "27B",
+      "tags": [
+        "visual-question-answering",
+        "decision-making",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 540000,
+        "likes": 1654
+      },
+      "source_url": "https://huggingface.co/AutoTrustAI/JEV-27B-VL"
+    },
+    {
+      "id": "mimo-v2-6-pro-rl",
+      "name": "MiMo-V2.6-Pro-RL",
+      "organization": "Xiaomi MiMo",
+      "description": "经强化学习调优的多模态 MoE 推理模型,出自发布今日智能体语言世界模型论文的同一团队。",
+      "task_type": "text-generation",
+      "model_size": "MoE(来源未说明规模)",
+      "tags": [
+        "text-generation",
+        "multimodal",
+        "moe",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 430000,
+        "likes": 1543
+      },
+      "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "用于执行操作系统级和跨平台操作的 AI 智能体框架。随着智能体运行时走向主流,它每天仍在新增 1,200 多颗星。",
+      "language": "Python",
+      "stars": 391615,
+      "stars_today": 1243,
+      "forks": 38921,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "agents",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "面向软件开发、主张鲜明的智能体技能框架,属于为编码智能体打造的可复用技能库浪潮的一部分。",
+      "language": "Markdown",
+      "stars": 297218,
+      "stars_today": 876,
+      "forks": 21543,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agent-skills",
+        "coding-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "面向智能体开发环境的生产级工程技能。它是榜单上单日星标增长最多的仓库(1,737)。",
+      "language": "Shell",
+      "stars": 284398,
+      "stars_today": 1737,
+      "forks": 19872,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "面向 Claude Code、Codex 和 Cursor 的智能体 harness 性能层,与今日的 harness 优化论文直接相关。",
+      "language": "TypeScript",
+      "stars": 276493,
+      "stars_today": 654,
+      "forks": 17234,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-harness",
+        "coding-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "旨在与用户一同适应和学习的自主智能体,与自我改进这一研究主题一同走红。",
+      "language": "Python",
+      "stars": 252538,
+      "stars_today": 543,
+      "forks": 14567,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "self-improvement"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "n8n-io-n8n",
+      "name": "n8n-io/n8n",
+      "description": "具备可自托管 AI 能力的工作流自动化平台,随着团队把智能体接入现有自动化流程而稳步增长。",
+      "language": "TypeScript",
+      "stars": 206936,
+      "stars_today": 428,
+      "forks": 28741,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tensorflow-tensorflow",
+      "name": "tensorflow/tensorflow",
+      "description": "基础机器学习框架,因 TPU v6 和 JAX 互操作性的改进而登上趋势榜。",
+      "language": "C++",
+      "stars": 200714,
+      "stars_today": 156,
+      "forks": 83291,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "tags": [
+        "ml-framework",
+        "tpu"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "firecrawl-dev-firecrawl",
+      "name": "firecrawl-dev/firecrawl",
+      "description": "面向 AI 智能体的网页抓取库,输出干净的 Markdown,今日新增 743 颗星,因为智能体需要可靠的网页上下文。",
+      "language": "TypeScript",
+      "stars": 190216,
+      "stars_today": 743,
+      "forks": 13421,
+      "url": "https://github.com/firecrawl-dev/firecrawl",
+      "tags": [
+        "web-scraping",
+        "agents",
+        "rag"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "significant-gravitas-autogpt",
+      "name": "Significant-Gravitas/AutoGPT",
+      "description": "用于自主 AI 任务执行并支持多智能体协作的工具集;这个长期项目仍在稳步增长。",
+      "language": "Python",
+      "stars": 187518,
+      "stars_today": 234,
+      "forks": 47123,
+      "url": "https://github.com/Significant-Gravitas/AutoGPT",
+      "tags": [
+        "agents",
+        "multi-agent"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "开源模型的本地运行时,现已支持 MiMo V2.6 和 LFM2.5,这解释了它今日新增 987 颗星的原因。",
+      "language": "Go",
+      "stars": 182658,
+      "stars_today": 987,
+      "forks": 14321,
+      "url": "https://github.com/ollama/ollama",
+      "tags": [
+        "local-inference",
+        "llm-runtime"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "为 AI 编码智能体精选的工程技能,是技能库趋势中的又一个条目。",
+      "language": "Markdown",
+      "stars": 104496,
+      "stars_today": 432,
+      "forks": 8712,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "alibaba/open-code-review",
+      "description": "由 LLM 驱动的代码审查,将确定性流水线与智能体分析相结合。",
+      "language": "Python",
+      "stars": 45867,
+      "stars_today": 234,
+      "forks": 3421,
+      "url": "https://github.com/alibaba/open-code-review",
+      "tags": [
+        "code-review",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "Claude Cowork 的官方插件仓库,随着面向知识工作智能体的插件生态不断壮大而登上趋势榜。",
+      "language": "TypeScript",
+      "stars": 28789,
+      "stars_today": 321,
+      "forks": 2341,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "plugins",
+        "agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "gen-verse-rsi-anything",
+      "name": "Gen-Verse/RSI-Anything",
+      "description": "RSI-Anything 的官方实现。在总星数仅 3,241 的情况下今日新增 876 颗星,正乘着论文发布的东风。",
+      "language": "Python",
+      "stars": 3241,
+      "stars_today": 876,
+      "forks": 287,
+      "url": "https://github.com/Gen-Verse/RSI-Anything",
+      "tags": [
+        "self-improvement",
+        "world-models"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "递归式自我改进",
+      "description": "由世界模型引导的自我改进循环,对昂贵的评估设置闸门并只保留经验证的收益,论文及其仓库同时登上趋势榜。",
+      "related_paper_ids": [
+        "rsi-anything-world-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "面向智能体的世界模型与模拟环境",
+      "description": "由代码定义或语言模型生成的世界,取代昂贵的真实环境交互来训练智能体。",
+      "related_paper_ids": [
+        "agentgarten-code-worlds",
+        "traces-to-agentic-worlds",
+        "rsi-anything-world-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体 Harness 优化与更廉价的智能体",
+      "description": "自动适配的 harness 让小模型能够比肩大模型,GitHub 上手写技能与 harness 仓库的热潮也印证了这一点。",
+      "related_paper_ids": [
+        "better-harnesses-smaller-models"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多智能体可靠性",
+      "description": "系统性研究编排器如何错误地信任子智能体,随着智能体系统层级日益复杂,这是一个正在浮现的关注点。",
+      "related_paper_ids": [
+        "sub-agent-delegation-failures"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "多模态基准与 3D 视觉",
+      "description": "全模态定位基准暴露了开源模型在音视频方面的差距,而前馈式 3DGS 则持续提升零样本视图合成效果。",
+      "related_paper_ids": [
+        "omnicompass-benchmark",
+        "infinisplat-v2"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "面向生成的偏好优化",
+      "description": "DPO 类方法正被不断改进,以控制文生图提示词优化中的语义漂移。",
+      "related_paper_ids": [
+        "scope-semantic-bounded-credit"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-16T06:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
