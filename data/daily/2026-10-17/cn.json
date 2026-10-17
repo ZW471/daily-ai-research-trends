@@ -1,0 +1,714 @@
+{
+  "version": "1.0",
+  "date": "2026-10-17",
+  "generated_at": "2026-10-17T07:45:00Z",
+  "summary": {
+    "headline": "NVIDIA Nemotron 3.5 Super VL 120B MoE 发布，支持百万Token上下文与开箱即用的 vLLM 集成；LLM 智能体交付基准揭示静默微调失败问题；在策蒸馏论文集群主导当日论文推送",
+    "body": "NVIDIA 于10月15日发布了 Nemotron 3.5 Super VL 120B，这是一款混合 Mamba-Transformer MoE 模型，每个 Token 仅激活 12B 参数，支持百万 Token 上下文，并具备广泛的多模态能力（文本、图像、文档、视频）。该模型面向智能体工作负载，包括 GUI（图形用户界面）理解与文档分析，提供 BF16 和 NVFP4 两种精度格式，并在 OpenMDW 1.1 协议下即时支持 vLLM。与此同时，阿里巴巴的 Qwen3.8 系列持续主导开放权重排行榜，Qwen3.8-Max 在 Artificial Analysis Intelligence Index（人工分析智能指数）中跻身开放权重第2名，Qwen3.8-27B 下载量突破680万次。\n\n在研究层面，EMNLP 2026 工业赛道论文「Trains but Doesn't Learn（训练了但没有学会）」引入了一个包含10个阶段的受控基准，揭示了一种关键的静默失败模式：微调损失下降，但交付的模型表现与基础模型毫无差异。该工作将机器学习工程与软件交付相结合，与任何运行 LLM 微调流水线的组织直接相关。一个配套的早期仓库 deeplethe/fde-gym 的出现，表明围绕这一评估范式的实践者社区正在形成。\n\n三篇同步发表的在策蒸馏论文（CLOOPD、OPD+ 与「RL Starts before RL」）代表着一次协调性的研究推进，共同确立了在策蒸馏（OPD）作为强化学习前置基础阶段的地位。结合 ΔVLA 与 UniMPA 在视觉-语言-动作模型方面的进展，今日的论文推送信号表明，语言模型推理与具身机器人控制之间的融合正在加速。",
+    "key_themes": [
+      "在策蒸馏作为强化学习初始化手段",
+      "LLM 智能体交付与静默失败基准测试",
+      "稀疏激活的多模态 MoE 模型扩展",
+      "视觉-语言-动作模型的接地能力",
+      "智能体安全与防护面"
+    ]
+  },
+  "researcher_notes": "**今日最值得关注的隐性关联，在于「Trains but Doesn't Learn」与 deeplethe/fde-gym 之间的关系**：论文定义了基准，而仓库将其落地为实践训练平台。仅有92颗星的该仓库是一个真正的潜力黑马——在生产环境中部署微调 LLM 的组织应密切关注这一方向，因为论文所描述的静默失败模式（损失下降，下游指标零改善）在工业界流水线中几乎肯定被严重低估了。该包含验收门控与运行中途损坏检测的10阶段受控基准，对于工业赛道论文而言严谨程度异乎寻常，未来有望成为 LLMOps 审计的事实标准。\n\n**同时出现的三篇在策蒸馏论文，几乎可以确定是一次协调性的投稿集群**，很可能来自存在交叉的研究团队。CLOOPD 的 TOP-D 信任域路标点构建方法、OPD+ 对 KL 散度设计的修正，以及「RL Starts before RL」将 OPD 定位为强化学习前置预热阶段的框架，三者是互补而非竞争的贡献。综合来看，这表明社区正在向 OPD 作为位于 SFT 与完整 RL 之间的一类独立训练范式收敛——这是2026年第四季度值得重点追踪的潜在范式转变。\n\n**NVIDIA Nemotron 3.5 Super VL 120B 的架构价值远不止于规模本身**：混合 Mamba-Transformer 骨干网络在总计120B参数中仅激活12B，以 MoE 推理成本实现接近密集模型的质量。C-RADIO v4-H 视觉编码器的选择，加上对 GUI 理解工作负载的明确定向，使其在智能体桌面任务领域与 Qwen3.8-Max 及前沿专有模型形成直接竞争。开箱即用的 vLLM 支持与宽松的许可证（OpenMDW 1.1），消除了新开放权重模型发布后通常存在的部署摩擦，加速了企业采用。\n\n**NeurIPS 2026 智能体安全论文「Language Is a Security Surface for Agent Guards」与 MAIAM 的前沿 AI 安全分级访问模型，共同代表着一种日趋成熟的「安全即基础设施」论题**：语言不仅是能力面，更是攻击面，治理结构（如 MAIAM 的分级访问）需要与之匹配。将这些与「Trains but Doesn't Learn」的验收门控相结合，可以看出业界正在悄然构建企业 AI 采用所需的合规与审计层。morluto/rea 仓库（261K 颗星，通过 AI 智能体进行逆向工程）是一个具体的威胁模型演示，说明了这一问题的重要性——有能力的智能体降低了二进制逆向工程的门槛，而这恰恰是上述安全论文所预见的双重用途风险。",
+  "papers": [
+    {
+      "id": "trains-but-doesnt-learn",
+      "title": "Trains but Doesn't Learn：面向 LLM 智能体前沿部署工程师的训练后交付基准",
+      "authors": [
+        "Weihang Ding",
+        "Junfei Zhan"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "提出了一个包含10个阶段的受控基准，用于衡量 LLM 智能体能否可靠地端到端交付微调模型，而不仅仅是降低训练损失。该研究揭示了一种关键的静默失败模式：训练损失下降，但交付的模型表现与基础模型完全相同。评估在计费制 L40S、A100 和 H200 GPU 实例上进行，使用8B至70B基础模型，测试了包括 Claude Opus 5 在内的四个前沿智能体，并以人类前沿部署工程师作为基线。",
+      "key_findings": [
+        "训练损失降低并不意味着交付成功；在所有测试的前沿智能体中，静默失败普遍存在",
+        "包含验收门控与运行中途损坏检测的10阶段基准，能够捕获损失曲线无法呈现的失败模式",
+        "人类前沿部署工程师基线在端到端交付任务上优于所有测试的前沿智能体",
+        "Claude Opus 5 在前沿智能体中表现最佳，但在治理密集型阶段仍落后于人类基线"
+      ],
+      "tags": [
+        "agents",
+        "LLM",
+        "evaluation",
+        "benchmarking",
+        "fine-tuning",
+        "MLOps"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.25237",
+        "huggingface": "https://huggingface.co/papers/2609.25237",
+        "pdf": "https://arxiv.org/pdf/2609.25237"
+      }
+    },
+    {
+      "id": "cloopd",
+      "title": "CLOOPD：在策蒸馏中闭合学习者循环",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "提出了一种面向在策蒸馏的信任域感知路标点构建方法，在教师策略与行为策略之间构建中间目标。TOP-D 方法选取能使训练批次保持在信任域约束内的最大混合权重，从而提升蒸馏过程的稳定性与样本效率。",
+      "key_findings": [
+        "在教师策略与行为策略之间构建路标点，有效缩小了在策蒸馏中的分布差距",
+        "TOP-D 在批次级信任域约束下选取最大混合权重",
+        "与标准在策蒸馏基线相比，减少了策略散度的积累"
+      ],
+      "tags": [
+        "distillation",
+        "RL",
+        "LLM",
+        "policy-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.24141",
+        "huggingface": "https://huggingface.co/papers/2609.24141",
+        "pdf": "https://arxiv.org/pdf/2609.24141"
+      }
+    },
+    {
+      "id": "rl-starts-before-rl",
+      "title": "RL Starts before RL：以在策蒸馏提升强化学习效果",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "将在策蒸馏（OPD）定位为完整强化学习训练之前的预备阶段。研究表明，经 OPD 初始化的学生模型在最终强化学习性能上始终高于直接 RL 训练或 SFT+RL 训练的模型，这表明 OPD 为后续 RL 优化提供了更优越的初始化状态。",
+      "key_findings": [
+        "OPD 初始化在最终强化学习性能上优于直接 RL 和 SFT+RL 两个基线",
+        "该优势归因于强化学习启动时更优的策略几何形态，而非额外的计算量",
+        "将 OPD 定位为训练流水线中 SFT 与 RL 之间的一等公民阶段"
+      ],
+      "tags": [
+        "distillation",
+        "RL",
+        "LLM",
+        "reasoning",
+        "training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28145",
+        "huggingface": "https://huggingface.co/papers/2609.28145",
+        "pdf": "https://arxiv.org/pdf/2609.28145"
+      }
+    },
+    {
+      "id": "opd-plus",
+      "title": "OPD+：重新审视在策蒸馏中的优势函数设计",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "重新审视了在策蒸馏中使用的 KL 散度公式，并发现了对数比奖励项中梯度流的问题。提出在对数比奖励分量上禁用梯度这一关键设计修正，在不改变优化目标的前提下提升了训练稳定性与最终模型质量。",
+      "key_findings": [
+        "OPD 中标准 KL 散度的选择会产生有害的梯度交互",
+        "在对数比奖励分量上禁用梯度，可在不改变目标函数的情况下解决不稳定性",
+        "OPD+ 变体在多个推理基准上优于普通 OPD"
+      ],
+      "tags": [
+        "distillation",
+        "RL",
+        "LLM",
+        "training",
+        "optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.01039",
+        "huggingface": "https://huggingface.co/papers/2606.01039",
+        "pdf": "https://arxiv.org/pdf/2606.01039"
+      }
+    },
+    {
+      "id": "delta-vla",
+      "title": "ΔVLA：基于世界知识变化的先验引导视觉-语言-动作模型",
+      "authors": [
+        "Yijie Zhu"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "提出以相对于当前状态先验的世界状态变化量（delta）进行预测，而非直接预测绝对的未来状态。引入面向可操作区域与空间关系的先验引导提取器，并使用离散码本对世界变化信息进行编码，从而提升机器人控制任务中的操作精度。",
+      "key_findings": [
+        "相对于当前状态先验的 delta 预测，在 VLA（视觉-语言-动作）模型中优于绝对未来状态预测",
+        "先验引导提取器比基线注意力机制更准确地识别可操作区域与空间关系",
+        "对世界变化信息进行离散码本编码，提升了样本效率与泛化能力"
+      ],
+      "tags": [
+        "VLA",
+        "robotics",
+        "multimodal",
+        "embodied-AI",
+        "world-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.08361",
+        "huggingface": "https://huggingface.co/papers/2603.08361",
+        "pdf": "https://arxiv.org/pdf/2603.08361"
+      }
+    },
+    {
+      "id": "unimpa",
+      "title": "UniMPA：基于动作接地转移建模的统一记忆-预测-动作模型",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "提出了一种用于视觉-语言-动作模型的统一架构，显式建模策略如何将预期的未来视觉变化转化为可执行动作。动作接地转移模型通过共享潜空间，将世界模型预测与底层运动指令相连接。",
+      "key_findings": [
+        "动作接地转移建模弥合了高层世界预测与底层运动执行之间的鸿沟",
+        "统一的记忆-预测-动作架构减少了对独立世界模型与策略模块的依赖",
+        "在分布外操作任务上，相比模块化基线展现出更优的泛化能力"
+      ],
+      "tags": [
+        "VLA",
+        "robotics",
+        "embodied-AI",
+        "world-models",
+        "multimodal"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.11875",
+        "huggingface": "https://huggingface.co/papers/2609.11875",
+        "pdf": "https://arxiv.org/pdf/2609.11875"
+      }
+    },
+    {
+      "id": "language-security-surface",
+      "title": "语言是智能体防护的安全攻击面",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Stanford University"
+      ],
+      "summary": "研究语言作为基于 LLM 的智能体主要攻击面，将提示注入、对抗性指令跟随和越狱模式归类为需要专用智能体级防护的安全威胁。发表于 NeurIPS 2026 智能体安全性研讨会。",
+      "key_findings": [
+        "针对 LLM 智能体的语言攻击在性质上不同于传统软件漏洞",
+        "智能体防护需要对指令来源与权限进行推理，以抵御提示注入攻击",
+        "语言攻击面分类涵盖注入、冒充和策略绕过三类"
+      ],
+      "tags": [
+        "safety",
+        "agents",
+        "alignment",
+        "security",
+        "LLM"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22244",
+        "huggingface": "https://huggingface.co/papers/2610.22244",
+        "pdf": "https://arxiv.org/pdf/2610.22244"
+      }
+    },
+    {
+      "id": "maiam",
+      "title": "MAIAM：前沿 AI 安全的分级访问模型",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Center for AI Safety（AI 安全中心）"
+      ],
+      "summary": "提出了一种针对前沿 AI 系统的多层级访问治理模型，通过区分模型能力级别、用户信任度与部署场景，来确定适当的访问控制与安全约束。旨在解决治理高能力 AI 系统所面临的监管与制度设计挑战。",
+      "key_findings": [
+        "分级访问框架在不进行全面能力限制的情况下降低了滥用风险",
+        "访问层级分配应综合考量模型能力、部署场景与可验证的用户资质",
+        "提出了具体的层级验证与撤销制度机制"
+      ],
+      "tags": [
+        "safety",
+        "alignment",
+        "governance",
+        "frontier-AI"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20921",
+        "huggingface": "",
+        "pdf": "https://arxiv.org/pdf/2610.20921"
+      }
+    },
+    {
+      "id": "opencua",
+      "title": "OpenCUA：计算机使用智能体的开放基础框架",
+      "authors": [
+        "Xlang Team"
+      ],
+      "affiliations": [
+        "University of Hong Kong"
+      ],
+      "summary": "发布了 OpenCUA-72B，在 OSWorld-Verified 上取得45.0%的成绩，为发布时最先进的开源计算机使用智能体。引入了覆盖3个操作系统、200余款应用与网站的 AgentNet 数据集，并包含反思性长链式推理。vLLM 支持于2026年1月加入；持续在计算机使用智能体（CUA）实践者中保持热度。",
+      "key_findings": [
+        "OpenCUA-72B 在 OSWorld-Verified 上取得45.0%的成绩，居开源 CUA 模型之首",
+        "AgentNet 数据集提供跨操作系统、跨应用的大规模反思性思维链训练数据",
+        "反思性长思维链推理轨迹显著提升了智能体从错误中恢复的能力"
+      ],
+      "tags": [
+        "computer-use",
+        "agents",
+        "LLM",
+        "multimodal",
+        "evaluation",
+        "reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2508.09123",
+        "huggingface": "https://huggingface.co/papers/2508.09123",
+        "pdf": "https://arxiv.org/pdf/2508.09123"
+      }
+    },
+    {
+      "id": "alphadiana",
+      "title": "AlphaDiana：可验证推理任务中的智能体测量系统",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "DeepMind"
+      ],
+      "summary": "提出了 AlphaDiana，一套用于在可验证推理任务上评估 LLM 智能体的测量框架，其中任务的真实正确性可被自动验证。重点覆盖数学、逻辑与代码生成任务，并配备形式化验证后端。",
+      "key_findings": [
+        "可验证推理任务比依赖人工判断的基准，能提供更可靠的智能体能力测量",
+        "AlphaDiana 测量系统包含校准协议，以降低基准污染效应",
+        "发现智能体在同构问题变体间的推理一致性存在显著方差"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "evaluation",
+        "LLM",
+        "benchmarking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "",
+        "huggingface": "",
+        "pdf": ""
+      }
+    },
+    {
+      "id": "safevla-bench",
+      "title": "SafeVLA-Bench：视觉-语言-动作模型的安全性基准",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "提出了一个专用于视觉-语言-动作（VLA）模型的安全评估基准，涵盖不安全动作生成、对抗性视觉输入下的指令跟随，以及机器人操作策略的失效模式刻画。",
+      "key_findings": [
+        "现有 VLA 模型在对抗性视觉扰动下存在显著的安全缺口",
+        "SafeVLA-Bench 在操作、导航与交互任务类别中提供标准化的安全指标",
+        "安全性与任务性能存在部分解耦，支持有针对性的安全微调"
+      ],
+      "tags": [
+        "safety",
+        "VLA",
+        "robotics",
+        "evaluation",
+        "benchmarking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "",
+        "huggingface": "",
+        "pdf": ""
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nemotron-35-super-vl-120b",
+      "name": "NVIDIA Nemotron 3.5 Super VL 120B A12B",
+      "organization": "NVIDIA",
+      "description": "总参数量120B的 MoE 模型，每个 Token 仅激活12B参数，采用混合 Mamba-Transformer 骨干网络与 C-RADIO v4-H 视觉编码器。支持百万 Token 上下文及多模态输入，包括文本、图像、文档和视频。面向智能体工作负载，如 GUI（图形用户界面）理解、文档分析和视频问答。提供 BF16 和 NVFP4 两种格式，在 OpenMDW 1.1 协议下即时支持 vLLM。",
+      "task_type": "multimodal-text-generation",
+      "model_size": "120B (12B active)",
+      "tags": [
+        "multimodal",
+        "MoE",
+        "agents",
+        "inference-optimization",
+        "video",
+        "GUI"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16"
+    },
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba",
+      "description": "270亿参数的视觉-语言模型，在 Apache 2.0 协议下原生支持图像、视频与文本。在 Terminal Bench 2.1 上得分73.0，在 SWE-bench Pro 上得分61.7，是一款在编码与推理领域表现强劲的开源模型。",
+      "task_type": "multimodal-text-generation",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "LLM",
+        "reasoning",
+        "agents",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 6843108,
+        "likes": 17530
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "qwen38-max",
+      "name": "Qwen3.8-Max",
+      "organization": "Alibaba",
+      "description": "阿里巴巴旗舰 MoE 模型，总参数量2.4T，激活参数95B，上下文窗口最长支持983,616个 Token。在 Artificial Analysis Intelligence Index（人工分析智能指数）中排名综合第5、开放权重第2。",
+      "task_type": "text-generation",
+      "model_size": "2.4T (95B active)",
+      "tags": [
+        "LLM",
+        "MoE",
+        "reasoning",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Max"
+    },
+    {
+      "id": "ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "当前趋势最热的开源视频生成模型，在 HuggingFace 上下载量超过170万次，获得7,325个点赞，在开源视频生成模型中处于领先地位。",
+      "task_type": "video-generation",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1700000,
+        "likes": 7325
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "kolibri-1",
+      "name": "Aleph-Alpha/Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "欧洲推理导向的 MoE 文本生成模型，支持 vLLM。定位为面向推理密集型企业工作负载的欧洲主权替代方案，以抗衡来自美国和中国的开放权重模型。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "LLM",
+        "MoE",
+        "reasoning",
+        "inference-optimization"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "qwen38-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Alibaba",
+      "description": "Qwen3.8 系列针对低延迟部署优化的快速推理变体。6,122个点赞与187万次下载表明其在实践者群体中已获得广泛采用。",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "LLM",
+        "inference-optimization",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 1870465,
+        "likes": 6122
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-v41-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "DeepSeek 出品的多模态模型，支持文本与图像理解，定位为 V4.1 代际的快速推理变体。",
+      "task_type": "multimodal-text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "LLM",
+        "inference-optimization"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "Cloudflare Clef",
+      "organization": "Cloudflare",
+      "description": "基于 Qwen3.5 的边缘可部署多模态图文转文本模型，专为网络边缘的快速推理而设计，可在延迟受限的部署场景中实现多模态能力。",
+      "task_type": "multimodal-text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "inference-optimization",
+        "edge-deployment"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/cloudflare/clef"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "利用 AI 智能体对任意目标进行逆向工程，从应用程序行为分析到原生二进制反编译与重建。本周期增长最快的 AI 仓库，新增约34,300颗星。",
+      "language": "Python",
+      "stars": 261700,
+      "stars_today": 34300,
+      "forks": 0,
+      "url": "https://github.com/morluto/rea",
+      "tags": [
+        "agents",
+        "security",
+        "reverse-engineering",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "NousResearch 出品的旗舰 AI 智能体框架，用于构建具备工具调用、记忆与多步推理能力的自主智能体。是 GitHub 上星标数最多的智能体框架之一。",
+      "language": "Python",
+      "stars": 254000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "LLM",
+        "reasoning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Agent-Reach",
+      "description": "为 LLM 智能体提供可靠互联网访问能力的 Python 工具包，集成托管式浏览、搜索与 API 调用。持续维护，具有广泛的生态兼容性。",
+      "language": "Python",
+      "stars": 89174,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/agent-reach/agent-reach",
+      "tags": [
+        "agents",
+        "LLM",
+        "computer-use"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openmontage",
+      "name": "OpenMontage",
+      "description": "开源智能体视频制作系统，通过 LLM 驱动的编排实现自动化多片段剪辑、旁白配音与合成。",
+      "language": "Python",
+      "stars": 63449,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/openmontage/openmontage",
+      "tags": [
+        "agents",
+        "video-generation",
+        "multimodal"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tokenspeed",
+      "name": "lightseekorg/TokenSpeed",
+      "description": "针对下一代 NVIDIA GPU 优化的高速 LLM 推理库。处于早期阶段但增长迅猛，已获2,608颗星，目标是在 H200 及后续硬件上实现最大吞吐量。",
+      "language": "Python",
+      "stars": 2608,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/lightseekorg/TokenSpeed",
+      "tags": [
+        "inference-optimization",
+        "LLM"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "deeplethe-fde-gym",
+      "name": "deeplethe/fde-gym",
+      "description": "每个案例均为真实客户模型交付场景、由编码智能体裁判的实践平台。系 EMNLP 2026 基准论文「Trains but Doesn't Learn」的配套仓库，是面向 LLMOps 实践者的早期潜力黑马。",
+      "language": "Python",
+      "stars": 92,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/deeplethe/fde-gym",
+      "tags": [
+        "agents",
+        "evaluation",
+        "LLM",
+        "MLOps",
+        "fine-tuning"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "在策蒸馏作为强化学习的基础阶段",
+      "description": "三篇同步发表的论文（CLOOPD、OPD+、「RL Starts before RL」）共同确立了在策蒸馏作为 SFT 与 RL 之间一类独立训练阶段的地位。这一协调性论文集群表明，社区正向 OPD 作为标准实践收敛，信任域约束（CLOOPD）、梯度设计修正（OPD+）与 RL 初始化的实证收益（「RL Starts before RL」）共同构成了一套完整的方法论体系。",
+      "related_paper_ids": [
+        "cloopd",
+        "rl-starts-before-rl",
+        "opd-plus"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM 智能体交付与静默失败检测",
+      "description": "「Trains but Doesn't Learn」基准与配套的 fde-gym 仓库定义了一个全新的评估维度：不是模型是否取得更低的损失，而是完整的交付流水线是否能产出功能上有所改善的制品。静默失败——损失下降而交付模型质量毫无提升——被首次作为一类生产风险明确提出。",
+      "related_paper_ids": [
+        "trains-but-doesnt-learn"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "视觉-语言-动作模型的接地能力",
+      "description": "ΔVLA 与 UniMPA 均致力于弥合高层世界知识表征与底层机器人动作执行之间的鸿沟。ΔVLA 的 delta 预测方法与 UniMPA 的动作接地转移建模，代表了将语言模型推理接地到物理控制的互补架构策略。SafeVLA-Bench 则为这一新兴模型类别增添了安全评估维度。",
+      "related_paper_ids": [
+        "delta-vla",
+        "unimpa",
+        "safevla-bench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体安全与治理基础设施",
+      "description": "NeurIPS 2026 语言安全攻击面论文与 MAIAM 的分级访问治理模型，共同构成了面向智能体 AI 的新兴「安全即基础设施」论题。结合交付基准中的验收门控，该领域似乎正在构建企业级 AI 部署所需的合规与审计层。",
+      "related_paper_ids": [
+        "language-security-surface",
+        "maiam",
+        "trains-but-doesnt-learn"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "面向智能体工作负载的稀疏 MoE 多模态模型",
+      "description": "NVIDIA Nemotron 3.5 Super VL 120B 与 Qwen3.8-Max 均表明，采用稀疏激活的大规模 MoE 架构已成为前沿开放权重多模态模型的主流扩展策略。两者均明确面向智能体使用场景，标志着模型提供方层面正在将「智能体就绪性」作为首要设计标准加以收敛。",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-10-17T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-10-17T07:05:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending/python",
+      "checked_at": "2026-10-17T07:10:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-10-17T07:15:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.LG",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-10-17T07:20:00Z",
+      "status": "partial"
+    }
+  ]
+}

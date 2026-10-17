@@ -1,0 +1,714 @@
+{
+  "version": "1.0",
+  "date": "2026-10-17",
+  "generated_at": "2026-10-17T07:45:00Z",
+  "summary": {
+    "headline": "NVIDIA Nemotron 3.5 Super VL 120B MoE lands with 1M-token context and day-0 vLLM support; LLM agent delivery benchmark reveals silent fine-tuning failures; On-policy distillation cluster dominates paper feed",
+    "body": "NVIDIA released Nemotron 3.5 Super VL 120B on October 15, a hybrid Mamba-Transformer MoE model with only 12B active parameters per token, 1M-token context, and broad multimodal coverage (text, images, documents, video). Targeting agentic workloads including GUI understanding and document analysis, it ships in BF16 and NVFP4 with immediate vLLM support under OpenMDW 1.1. Meanwhile, Alibaba's Qwen3.8 family continues to dominate open-weights leaderboards, with Qwen3.8-Max ranking #2 open-weights on the Artificial Analysis Intelligence Index and Qwen3.8-27B crossing 6.8M downloads.\n\nOn the research side, the EMNLP 2026 Industry Track paper 'Trains but Doesn't Learn' introduces a 10-stage governed benchmark exposing a critical silent failure mode: fine-tuning loss decreases while the delivered model performs no better than the base model. The work bridges ML engineering and software delivery, directly relevant to any organization running LLM fine-tuning pipelines. A companion early-stage repo, deeplethe/fde-gym, suggests a practitioner community is forming around this evaluation paradigm.\n\nThree concurrent on-policy distillation papers (CLOOPD, OPD+, and 'RL Starts before RL') represent a coordinated research push establishing OPD as a foundational pre-RL preparation stage. Taken together with ΔVLA and UniMPA's advances in vision-language-action models, today's feed signals accelerating convergence between language-model reasoning and embodied robotics control.",
+    "key_themes": [
+      "On-policy distillation as RL initialization",
+      "LLM agent delivery and silent failure benchmarking",
+      "Multimodal MoE scaling with sparse activation",
+      "Vision-language-action model grounding",
+      "Agent security and safety surfaces"
+    ]
+  },
+  "researcher_notes": "**The most non-obvious connection today is between 'Trains but Doesn't Learn' and deeplethe/fde-gym**: the paper defines the benchmark and the repo operationalizes it as a practice gym. With only 92 stars the repo is a genuine sleeper hit — organizations deploying fine-tuned LLMs in production should watch this space closely, as the silent failure mode described (loss drops, zero downstream improvement) is almost certainly underreported in industry pipelines. The 10-stage governed benchmark with acceptance gating and mid-run corruption detection is unusually rigorous for an industry track paper and may become a de-facto standard for LLMOps audits.\n\n**The three on-policy distillation papers appearing simultaneously are almost certainly a coordinated submission cluster**, likely from overlapping research groups. CLOOPD's TOP-D method for trust-region waypoint construction, OPD+'s revision of KL divergence design, and 'RL Starts before RL' framing OPD as a pre-RL warmup stage are complementary rather than competitive contributions. Collectively they suggest the community is converging on OPD as a first-class training paradigm sitting between SFT and full RL — a potential paradigm shift worth tracking carefully in Q4 2026.\n\n**NVIDIA's Nemotron 3.5 Super VL 120B is architecturally interesting for reasons beyond raw scale**: the hybrid Mamba-Transformer backbone with 12B active parameters out of 120B total achieves near-dense-model quality at MoE inference cost. The C-RADIO v4-H vision encoder choice, combined with explicit targeting of GUI understanding workloads, positions this directly against Qwen3.8-Max and frontier proprietary models for agentic desktop tasks. Day-0 vLLM support under a permissive license (OpenMDW 1.1) removes the usual deployment friction that delays enterprise adoption of new open-weight releases.\n\n**The agent security paper 'Language Is a Security Surface for Agent Guards' at NeurIPS 2026 and MAIAM's tiered access model for frontier AI safety represent a maturing safety-as-infrastructure thesis**: language is not just a capability surface but an attack surface, and governance structures (MAIAM's tiered access) need to match. Pairing these with 'Trains but Doesn't Learn's acceptance gates suggests the field is quietly building the compliance and audit layer that enterprise AI adoption requires. The morluto/rea repo (261K stars, reverse engineering via AI agents) is a concrete threat-model demonstration of why this matters — capable agents lowering the barrier to binary reverse engineering is precisely the dual-use risk these safety papers are anticipating.",
+  "papers": [
+    {
+      "id": "trains-but-doesnt-learn",
+      "title": "Trains but Doesn't Learn: A Post-Training Delivery Benchmark for LLM Agents as Forward-Deployed Engineers",
+      "authors": [
+        "Weihang Ding",
+        "Junfei Zhan"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "Introduces a 10-stage governed benchmark measuring whether an LLM agent can reliably deliver a fine-tuned model end-to-end, not merely reduce training loss. Exposes a critical silent failure mode where training loss decreases but the delivered model performs identically to the base model. Evaluated on metered L40S, A100, and H200 GPU instances with 8B to 70B base models using four frontier agents including Claude Opus 5, with human forward-deployed engineers as baseline.",
+      "key_findings": [
+        "Training loss reduction does not imply delivery success; silent failures are common across all tested frontier agents",
+        "10-stage benchmark with acceptance gates and mid-run corruption detection catches failure modes invisible to loss curves",
+        "Human FDE baseline outperforms all tested frontier agents on end-to-end delivery tasks",
+        "Claude Opus 5 performed best among frontier agents but still fell short of human baseline on governance-heavy stages"
+      ],
+      "tags": [
+        "agents",
+        "LLM",
+        "evaluation",
+        "benchmarking",
+        "fine-tuning",
+        "MLOps"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.25237",
+        "huggingface": "https://huggingface.co/papers/2609.25237",
+        "pdf": "https://arxiv.org/pdf/2609.25237"
+      }
+    },
+    {
+      "id": "cloopd",
+      "title": "CLOOPD: Closing the Learner Loop in On-Policy Distillation",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "Proposes a trust-region-aware waypoint construction method for on-policy distillation that builds intermediate targets between the teacher and behavior policy. The TOP-D method selects the largest mixing weight that keeps the training batch within trust region limits, improving stability and sample efficiency of the distillation process.",
+      "key_findings": [
+        "Waypoint construction between teacher and behavior policy closes the distributional gap in on-policy distillation",
+        "TOP-D selects maximum mixing weight subject to batch-level trust region constraints",
+        "Reduces policy divergence accumulation compared to standard on-policy distillation baselines"
+      ],
+      "tags": [
+        "distillation",
+        "RL",
+        "LLM",
+        "policy-optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.24141",
+        "huggingface": "https://huggingface.co/papers/2609.24141",
+        "pdf": "https://arxiv.org/pdf/2609.24141"
+      }
+    },
+    {
+      "id": "rl-starts-before-rl",
+      "title": "RL Starts before RL: On Policy Distillation for Better Reinforcement Learning",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "Frames on-policy distillation as a preparation stage preceding full RL training. Demonstrates that OPD-initialized student models consistently reach higher final RL performance than models trained with direct RL or SFT+RL, suggesting OPD provides a superior initialization landscape for subsequent RL optimization.",
+      "key_findings": [
+        "OPD initialization yields higher final RL performance than both direct RL and SFT+RL baselines",
+        "The benefit is attributed to better policy geometry at RL onset rather than additional compute",
+        "Positions OPD as a first-class stage in the training pipeline between SFT and RL"
+      ],
+      "tags": [
+        "distillation",
+        "RL",
+        "LLM",
+        "reasoning",
+        "training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.28145",
+        "huggingface": "https://huggingface.co/papers/2609.28145",
+        "pdf": "https://arxiv.org/pdf/2609.28145"
+      }
+    },
+    {
+      "id": "opd-plus",
+      "title": "OPD+: Rethinking the Advantage Design for On-Policy Distillation",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Revisits the KL divergence formulation used in on-policy distillation and identifies issues with gradient flow through the log-ratio reward term. Proposes disabling gradients on the log-ratio reward component as a key design correction that improves training stability and final model quality.",
+      "key_findings": [
+        "Standard KL divergence choice in OPD creates harmful gradient interactions",
+        "Disabling gradients on log-ratio reward component resolves instability without changing the objective",
+        "OPD+ variants outperform vanilla OPD across multiple reasoning benchmarks"
+      ],
+      "tags": [
+        "distillation",
+        "RL",
+        "LLM",
+        "training",
+        "optimization"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2606.01039",
+        "huggingface": "https://huggingface.co/papers/2606.01039",
+        "pdf": "https://arxiv.org/pdf/2606.01039"
+      }
+    },
+    {
+      "id": "delta-vla",
+      "title": "ΔVLA: Prior-Guided Vision-Language-Action Models via World Knowledge Variation",
+      "authors": [
+        "Yijie Zhu"
+      ],
+      "affiliations": [
+        "Zhejiang University"
+      ],
+      "summary": "Proposes predicting changes in world state (deltas) relative to a current-state prior rather than predicting absolute future states directly. Incorporates a prior-guided extractor for manipulable regions and spatial relations, and uses a discrete codebook to encode world-change information, improving manipulation accuracy in robotic control tasks.",
+      "key_findings": [
+        "Delta prediction relative to current-state prior outperforms absolute future-state prediction in VLA models",
+        "Prior-guided extractor identifies manipulable regions and spatial relations more accurately than baseline attention",
+        "Discrete codebook encoding of world-change information improves sample efficiency and generalization"
+      ],
+      "tags": [
+        "VLA",
+        "robotics",
+        "multimodal",
+        "embodied-AI",
+        "world-models"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2603.08361",
+        "huggingface": "https://huggingface.co/papers/2603.08361",
+        "pdf": "https://arxiv.org/pdf/2603.08361"
+      }
+    },
+    {
+      "id": "unimpa",
+      "title": "UniMPA: A Unified Memory-Prediction-Action Model via Action-Grounded Transition Modeling",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "Presents a unified architecture for vision-language-action models that explicitly models how a policy translates intended future visual changes into executable actions. The action-grounded transition model connects world model predictions to low-level motor commands through a shared latent space.",
+      "key_findings": [
+        "Action-grounded transition modeling bridges the gap between high-level world predictions and low-level motor execution",
+        "Unified memory-prediction-action architecture reduces the need for separate world-model and policy modules",
+        "Demonstrates improved generalization on out-of-distribution manipulation tasks compared to modular baselines"
+      ],
+      "tags": [
+        "VLA",
+        "robotics",
+        "embodied-AI",
+        "world-models",
+        "multimodal"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.11875",
+        "huggingface": "https://huggingface.co/papers/2609.11875",
+        "pdf": "https://arxiv.org/pdf/2609.11875"
+      }
+    },
+    {
+      "id": "language-security-surface",
+      "title": "Language Is a Security Surface for Agent Guards",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Stanford University"
+      ],
+      "summary": "Studies language as a primary attack surface for LLM-based agents, characterizing prompt injection, adversarial instruction following, and jailbreak patterns as security threats requiring dedicated agent-level defenses. Presented at NeurIPS 2026 workshop on agent safety and security.",
+      "key_findings": [
+        "Language-based attacks on LLM agents are qualitatively different from traditional software vulnerabilities",
+        "Agent guards must reason about instruction provenance and authority to resist prompt injection",
+        "Taxonomy of language-surface attacks covers injection, impersonation, and policy-bypass categories"
+      ],
+      "tags": [
+        "safety",
+        "agents",
+        "alignment",
+        "security",
+        "LLM"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22244",
+        "huggingface": "https://huggingface.co/papers/2610.22244",
+        "pdf": "https://arxiv.org/pdf/2610.22244"
+      }
+    },
+    {
+      "id": "maiam",
+      "title": "MAIAM: Tiered Access Model for Frontier AI Safety",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Center for AI Safety"
+      ],
+      "summary": "Proposes a multi-tiered access governance model for frontier AI systems, distinguishing levels of model capability, user trust, and deployment context to determine appropriate access controls and safety constraints. Addresses regulatory and institutional design challenges for governing very capable AI systems.",
+      "key_findings": [
+        "Tiered access frameworks reduce misuse risk without blanket capability restrictions",
+        "Access tier assignment should consider model capability, deployment context, and verifiable user credentials",
+        "Proposes concrete institutional mechanisms for tier verification and revocation"
+      ],
+      "tags": [
+        "safety",
+        "alignment",
+        "governance",
+        "frontier-AI"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20921",
+        "huggingface": "",
+        "pdf": "https://arxiv.org/pdf/2610.20921"
+      }
+    },
+    {
+      "id": "opencua",
+      "title": "OpenCUA: Open Foundations for Computer-Use Agents",
+      "authors": [
+        "Xlang Team"
+      ],
+      "affiliations": [
+        "University of Hong Kong"
+      ],
+      "summary": "Releases OpenCUA-72B, achieving 45.0% on OSWorld-Verified as the state-of-the-art open-source computer-use agent at time of publication. Introduces the AgentNet dataset spanning 3 operating systems and 200+ applications and websites with reflective long chain-of-thought reasoning. vLLM support added January 2026; continues trending among CUA practitioners.",
+      "key_findings": [
+        "OpenCUA-72B achieves 45.0% on OSWorld-Verified, best among open-source CUA models",
+        "AgentNet dataset provides cross-OS, cross-app reflective CoT training data at scale",
+        "Reflective long CoT reasoning traces significantly improve agent recovery from errors"
+      ],
+      "tags": [
+        "computer-use",
+        "agents",
+        "LLM",
+        "multimodal",
+        "evaluation",
+        "reasoning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2508.09123",
+        "huggingface": "https://huggingface.co/papers/2508.09123",
+        "pdf": "https://arxiv.org/pdf/2508.09123"
+      }
+    },
+    {
+      "id": "alphadiana",
+      "title": "AlphaDiana: A Measurement System for Agents in Verifiable Reasoning Tasks",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "DeepMind"
+      ],
+      "summary": "Presents AlphaDiana, a measurement framework for evaluating LLM agents on verifiable reasoning tasks where ground-truth correctness can be checked automatically. Focuses on mathematical, logical, and code-generation tasks with formal verification backends.",
+      "key_findings": [
+        "Verifiable reasoning tasks enable more reliable agent capability measurement than human-judgment benchmarks",
+        "AlphaDiana measurement system includes calibration protocols to reduce benchmark contamination effects",
+        "Identifies significant variance in agent reasoning consistency across isomorphic problem variants"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "evaluation",
+        "LLM",
+        "benchmarking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "",
+        "huggingface": "",
+        "pdf": ""
+      }
+    },
+    {
+      "id": "safevla-bench",
+      "title": "SafeVLA-Bench: A Safety Benchmark for Vision-Language-Action Models",
+      "authors": [
+        "Unknown Authors"
+      ],
+      "affiliations": [
+        "Tsinghua University"
+      ],
+      "summary": "Introduces a dedicated safety evaluation benchmark for vision-language-action models, covering unsafe action generation, instruction-following under adversarial visual inputs, and failure-mode characterization for robotic manipulation policies.",
+      "key_findings": [
+        "Existing VLA models show significant safety gaps under adversarial visual perturbation",
+        "SafeVLA-Bench provides standardized safety metrics across manipulation, navigation, and interaction task categories",
+        "Safety and task performance are partially decoupled, enabling targeted safety fine-tuning"
+      ],
+      "tags": [
+        "safety",
+        "VLA",
+        "robotics",
+        "evaluation",
+        "benchmarking"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "",
+        "huggingface": "",
+        "pdf": ""
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nemotron-35-super-vl-120b",
+      "name": "NVIDIA Nemotron 3.5 Super VL 120B A12B",
+      "organization": "NVIDIA",
+      "description": "120B parameter MoE model with only 12B active parameters per token, using a hybrid Mamba-Transformer backbone with C-RADIO v4-H vision encoder. Supports 1M token context and multimodal inputs including text, images, documents, and video. Targets agentic workloads such as GUI understanding, document analysis, and video QA. Available in BF16 and NVFP4 with day-0 vLLM support under OpenMDW 1.1 license.",
+      "task_type": "multimodal-text-generation",
+      "model_size": "120B (12B active)",
+      "tags": [
+        "multimodal",
+        "MoE",
+        "agents",
+        "inference-optimization",
+        "video",
+        "GUI"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16"
+    },
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba",
+      "description": "27B parameter vision-language model with native support for images, video, and text under Apache 2.0 license. Achieves 73.0 on Terminal Bench 2.1 and 61.7 on SWE-bench Pro, making it a strong open-source coding and reasoning model.",
+      "task_type": "multimodal-text-generation",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "LLM",
+        "reasoning",
+        "agents",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 6843108,
+        "likes": 17530
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "qwen38-max",
+      "name": "Qwen3.8-Max",
+      "organization": "Alibaba",
+      "description": "Alibaba's flagship MoE model with 2.4T total parameters, 95B active parameters, and up to 983,616-token context. Ranks #5 overall and #2 open-weights on the Artificial Analysis Intelligence Index.",
+      "task_type": "text-generation",
+      "model_size": "2.4T (95B active)",
+      "tags": [
+        "LLM",
+        "MoE",
+        "reasoning",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Max"
+    },
+    {
+      "id": "ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Top-trending open-source video generation model with over 1.7M downloads and 7,325 likes on HuggingFace. State-of-the-art among open video generation models.",
+      "task_type": "video-generation",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 1700000,
+        "likes": 7325
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "kolibri-1",
+      "name": "Aleph-Alpha/Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "European reasoning-focused MoE text-generation model with vLLM support. Positioned as a sovereign European alternative to US and Chinese open-weight models for reasoning-intensive enterprise workloads.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "LLM",
+        "MoE",
+        "reasoning",
+        "inference-optimization"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "qwen38-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Alibaba",
+      "description": "Fast inference variant of the Qwen3.8 family optimized for low-latency deployment. 6,122 likes and 1.87M downloads indicate strong practitioner adoption.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "LLM",
+        "inference-optimization",
+        "open-source"
+      ],
+      "metrics": {
+        "downloads": 1870465,
+        "likes": 6122
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "deepseek-v41-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek AI",
+      "description": "Multimodal model from DeepSeek supporting text and image understanding, positioned as a fast inference variant of the V4.1 generation.",
+      "task_type": "multimodal-text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "LLM",
+        "inference-optimization"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "Cloudflare Clef",
+      "organization": "Cloudflare",
+      "description": "Edge-deployable multimodal image-text-to-text model based on Qwen3.5, designed for fast inference at the network edge. Enables multimodal capabilities in latency-constrained deployment scenarios.",
+      "task_type": "multimodal-text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "inference-optimization",
+        "edge-deployment"
+      ],
+      "metrics": {
+        "downloads": 0,
+        "likes": 0
+      },
+      "source_url": "https://huggingface.co/cloudflare/clef"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "Reverse engineering anything with AI agents, from application behavior analysis to native binary decompilation and reconstruction. The fastest-growing AI repo this period with ~34,300 stars gained.",
+      "language": "Python",
+      "stars": 261700,
+      "stars_today": 34300,
+      "forks": 0,
+      "url": "https://github.com/morluto/rea",
+      "tags": [
+        "agents",
+        "security",
+        "reverse-engineering",
+        "LLM"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Flagship AI agent framework from NousResearch, designed for building capable autonomous agents with tool use, memory, and multi-step reasoning. One of the most starred agent frameworks on GitHub.",
+      "language": "Python",
+      "stars": 254000,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "LLM",
+        "reasoning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "agent-reach",
+      "name": "Agent-Reach",
+      "description": "Python toolkit giving LLM agents reliable internet access with managed browsing, search, and API integration. Actively maintained with broad ecosystem compatibility.",
+      "language": "Python",
+      "stars": 89174,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/agent-reach/agent-reach",
+      "tags": [
+        "agents",
+        "LLM",
+        "computer-use"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "openmontage",
+      "name": "OpenMontage",
+      "description": "Open-source agentic video production system enabling automated multi-clip editing, narration, and composition using LLM-driven orchestration.",
+      "language": "Python",
+      "stars": 63449,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/openmontage/openmontage",
+      "tags": [
+        "agents",
+        "video-generation",
+        "multimodal"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tokenspeed",
+      "name": "lightseekorg/TokenSpeed",
+      "description": "Fast LLM inference library optimized for next-generation NVIDIA GPUs. Early-stage but fast-rising with 2,608 stars, targeting maximum throughput on H200 and successor hardware.",
+      "language": "Python",
+      "stars": 2608,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/lightseekorg/TokenSpeed",
+      "tags": [
+        "inference-optimization",
+        "LLM"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "deeplethe-fde-gym",
+      "name": "deeplethe/fde-gym",
+      "description": "Practice platform where every case is a real customer model delivery scenario, judged by a coding agent. Companion to the 'Trains but Doesn't Learn' EMNLP 2026 benchmark paper. Early-stage sleeper hit for LLMOps practitioners.",
+      "language": "Python",
+      "stars": 92,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/deeplethe/fde-gym",
+      "tags": [
+        "agents",
+        "evaluation",
+        "LLM",
+        "MLOps",
+        "fine-tuning"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "On-Policy Distillation as RL Foundation",
+      "description": "Three concurrent papers (CLOOPD, OPD+, 'RL Starts before RL') collectively establish on-policy distillation as a first-class training stage between SFT and RL. The coordinated cluster suggests community convergence on OPD as standard practice, with trust-region constraints (CLOOPD), gradient design fixes (OPD+), and empirical RL initialization benefits ('RL Starts before RL') forming a complete methodological package.",
+      "related_paper_ids": [
+        "cloopd",
+        "rl-starts-before-rl",
+        "opd-plus"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Agent Delivery and Silent Failure Detection",
+      "description": "The 'Trains but Doesn't Learn' benchmark and companion fde-gym repo define a new evaluation axis: not whether a model achieves lower loss, but whether the complete delivery pipeline produces a functionally improved artifact. Silent failures — where loss drops but delivered model quality does not improve — are newly foregrounded as a production risk category.",
+      "related_paper_ids": [
+        "trains-but-doesnt-learn"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Vision-Language-Action Model Grounding",
+      "description": "ΔVLA and UniMPA both address the gap between high-level world knowledge representation and low-level robotic action execution. ΔVLA's delta-prediction approach and UniMPA's action-grounded transition modeling represent complementary architectural strategies for grounding language-model reasoning in physical control. SafeVLA-Bench adds a safety evaluation dimension to this emerging model class.",
+      "related_paper_ids": [
+        "delta-vla",
+        "unimpa",
+        "safevla-bench"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Safety and Governance Infrastructure",
+      "description": "The NeurIPS 2026 language-security-surface paper and MAIAM's tiered access governance model together constitute an emerging safety-as-infrastructure thesis for agentic AI. Combined with acceptance gating in the delivery benchmark, the field appears to be building the compliance and audit layer that enterprise deployment requires.",
+      "related_paper_ids": [
+        "language-security-surface",
+        "maiam",
+        "trains-but-doesnt-learn"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Sparse MoE Multimodal Models for Agentic Workloads",
+      "description": "NVIDIA Nemotron 3.5 Super VL 120B and Qwen3.8-Max both demonstrate that large-scale MoE architectures with sparse activation are now the dominant scaling strategy for frontier open-weight multimodal models. Both explicitly target agentic use cases, signaling that the model provider layer is converging on agent-readiness as a first-order design criterion.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "checked_at": "2026-10-17T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models?sort=trending",
+      "checked_at": "2026-10-17T07:05:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending/python",
+      "checked_at": "2026-10-17T07:10:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI",
+      "url": "https://arxiv.org/list/cs.AI/recent",
+      "checked_at": "2026-10-17T07:15:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.LG",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "checked_at": "2026-10-17T07:20:00Z",
+      "status": "partial"
+    }
+  ]
+}
