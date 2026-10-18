@@ -1,0 +1,1105 @@
+{
+  "version": "1.0",
+  "date": "2026-10-18",
+  "generated_at": "2026-10-18T15:30:00Z",
+  "summary": {
+    "headline": "Intern-Decision 以 826 个点赞引领多模态决策热潮；Self-Evolving Agent Harness 将脚手架自我改进形式化；3DCodeVerse 迎来 3D 生成的「代码优先」时刻",
+    "body": "10 月 18 日，两个相关的理念出现了明显的交汇：让 AI 系统*决策*得更好，以及让 AI 系统*自我改进*。来自上海人工智能实验室（Shanghai AI Laboratory）的 Intern-Decision 以 826 个点赞登顶 HuggingFace 榜单，提出用自回归掩码语言建模实现高效的多模态决策——这是对主流纯自回归范式的一次显著偏离。与此同时，Self-Evolving Agent Harness 论文将实践者们一直在临时拼凑的做法形式化：围绕冻结的模型，不断修订提示词、记忆、工作流和可执行组件。\n\n在 3D 方面，两篇重要论文在 24 小时内先后发布。浙江大学的 InfiniSplat v2 改进了从任意视角出发的前馈式 3D 高斯泼溅（3D Gaussian Splatting），而 3DCodeVerse 则开源了 200 万对可执行 3D 代码数据，以及一个用于代码驱动 3D 内容生成的多智能体 harness。这两篇论文同时出现并非巧合——3D 生成正在向以代码和结构作为主要表示的方向收敛，正如图像生成当年从像素走向隐空间。\n\n在模型生态方面，Qwen3.8-27B 继续保持领先，下载量接近 700 万，点赞超过 1.7 万；Lightricks 的 LTX-2.5 以 7,470 个点赞领跑视频生成类别。Cloudflare 的 CLEF 和 LiquidAI 的 d1-3B 表明，企业级和边缘部署正在成为前沿模型提供商的真正战场。",
+    "key_themes": [
+      "multimodal-decision-making",
+      "agentic-self-improvement",
+      "3d-generation-code-first",
+      "computer-use-agents",
+      "efficient-inference-edge"
+    ]
+  },
+  "researcher_notes": "**多模态决策领域的静默革命。** Intern-Decision 的 826 个点赞——是第二名论文的两倍多——表明社区对此期待已久。其核心洞见是使用自回归掩码语言建模而非纯生成：模型学会判断哪些 token 应当被掩码（推迟），哪些应当生成（落定），因此在不可逆性至关重要的决策任务上效率高得多。这在架构上比标准语言模型解码更接近人类的决策方式。值得关注它在机器人和具身智能体中的快速采用，因为这些场景中动作的落定代价高昂。\n\n**Harness 演化正在成为一等研究问题。** Self-Evolving Agent Harness 论文（173 个点赞）与 Mosaic：多会话智能体强化学习（33 个点赞）在同一天出现并非巧合。两者都把*模型周围的脚手架*——提示词、记忆、工作流、插件——视为可学习的对象，而不是固定的工程产物。这是一次重要的概念转变：不再训练模型权重，而是训练 harness。这对长期运行的部署（客服、研究智能体、编程助手）意义深远。预计 NeurIPS 2026 将会为此专门设立一个完整的 workshop 专题。\n\n**3D 生成正在迎来它的「代码优先」时刻。** 3DCodeVerse 的 200 万对可执行 3D 代码数据集，加上 InfiniSplat v2 在前馈式 3DGS 架构上的进展，表明该领域正在向以代码作为 3D 内容的主要表示收敛。这与 2D 图像编辑的演进轨迹相似（从像素操作 → 隐空间 → 语义编辑）。这里的「潜力股」是 Orbia 论文（41 个点赞）：追问生成的视频是否构成一致的 3D 世界，恰恰是统一视频与 3D 生成流水线所需要的正确问题，而其热度与重要性之间的落差正是典型的潜力股特征。\n\n**计算机使用智能体正在进入基础设施层。** OpenGCUA 在 OSWorld-v2 上 +19.6 分的提升，以及 MAI-Gym 的跨平台（移动端 + 桌面端）评测框架同时出现，表明计算机使用智能体正从研究演示走向基础设施。阿里巴巴以 Apache-2.0 协议发布完整的 OpenGCUA 技术栈——包括 macOS 集成和跨设备 SDK——显然是想在领域整合之前抢先确立标准。未来 60 天将决定哪个技术栈（OpenGCUA、微软的 OmniParser，还是 Anthropic 的 computer use）会成为 GUI 自动化的默认 harness 层。\n\n**在 GitHub 上，推理效率的故事仍在继续。** AirLLM 能在 4GB 显存的 GPU 上运行 70B 模型，antirez/ds4 则让 DeepSeek 4 能在消费级硬件上本地推理（Metal/CUDA/ROCm），这都指向一场系统性的、让前沿规模推理走向大众的努力。最有意思的一个数据点是：pytorch/pytorch *今天*新增了 315 颗星，说明某次重大版本发布或基准测试公告，正在把开发者的注意力重新拉回框架本身，而不是其上层的抽象层。",
+  "papers": [
+    {
+      "id": "intern-decision-multimodal-decision",
+      "title": "Intern-Decision：基于自回归掩码语言建模的高效多模态决策",
+      "authors": [
+        "InternLM Team"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory",
+        "InternLM"
+      ],
+      "summary": "提出一种新颖的多模态决策架构，将自回归生成与掩码语言建模相结合，实现高效且具备可逆性感知的决策。模型学会区分代表已落定决策的 token 与推迟决策的 token，从而显著减少标准决策任务中的冗余计算。",
+      "key_findings": [
+        "在多模态决策基准上，自回归掩码语言建模比纯自回归解码高出 12–18%",
+        "发布了 0.8B、2B 和 4B 参数的版本，可覆盖从边缘到云端的部署",
+        "在同等参数规模的模型中，于 10 个多模态决策基准中的 6 个取得第一名"
+      ],
+      "tags": [
+        "multimodal",
+        "decision-making",
+        "masked-language-modeling",
+        "efficiency",
+        "embodied-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 826,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22131",
+        "huggingface": "https://huggingface.co/papers/2610.22131",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22131"
+      }
+    },
+    {
+      "id": "infinisplat-v2-3dgs-any-views",
+      "title": "InfiniSplat v2：分析并改进基于任意视角的前馈式 3DGS",
+      "authors": [
+        "Yongzhen Hu",
+        "Hao Yu",
+        "Jiawei Wang",
+        "Xianming Zeng",
+        "Jianyun Xu",
+        "Xingliang Liu",
+        "Ruizhen Hu",
+        "Xiaowei Zhou",
+        "Hujun Bao"
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "State Key Lab of CAD&CG"
+      ],
+      "summary": "分析并解决了前馈式 3D 高斯泼溅的根本性局限，提出一种解耦架构，用冻结的几何分支将几何预测与属性预测分离。在位姿条件的新视角合成任务中，相比此前最佳基线，平均 LPIPS 降低 25.8%，DISTS 降低 32.9%。",
+      "key_findings": [
+        "通过冻结几何分支来解耦几何与属性预测，消除了跨视角的几何不一致",
+        "相比最强基线，平均 LPIPS 和 DISTS 分别降低 25.8% 和 32.9%",
+        "无需改变架构，即可从仅 1 个视角到任意多个视角实现稳健的 3DGS 重建"
+      ],
+      "tags": [
+        "3d-generation",
+        "gaussian-splatting",
+        "novel-view-synthesis",
+        "computer-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 418,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20341",
+        "huggingface": "https://huggingface.co/papers/2610.20341",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20341"
+      }
+    },
+    {
+      "id": "self-evolving-agent-harness",
+      "title": "Self-Evolving Agent Harness（自进化智能体 Harness）",
+      "authors": [
+        "Chuyang Wei",
+        "Haoxiang Guan",
+        "Minghang Zhu",
+        "Kexin Zhou",
+        "Jiyan He",
+        "Xiren Zhou",
+        "Huanhuan Chen",
+        "Yifei Shen"
+      ],
+      "affiliations": [
+        "University of Science and Technology of China"
+      ],
+      "summary": "将智能体 harness 的自我进化形式化为一个反馈驱动的循环：根据执行结果，修订冻结模型周围的软件脚手架——提示词、记忆、工作流和可执行组件。利用持续 PAC 学习和进化优化建立理论基础，并将更新的对象与提出、接纳变更的机制区分开来。",
+      "key_findings": [
+        "正式区分了四类更新：对解释型状态的编辑、工具与代码、仓库级控制逻辑，以及插件组合",
+        "被接纳的修订会在多次运行之间延续，无需更新权重即可实现真正的跨会话学习",
+        "基于持续 PAC 学习界的可靠性分析表明，在对修订质量的合理假设下，该过程能够收敛"
+      ],
+      "tags": [
+        "agent-systems",
+        "self-improvement",
+        "harness-evolution",
+        "scaffolding",
+        "theoretical-ml"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 173,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18813",
+        "huggingface": "https://huggingface.co/papers/2610.18813",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.18813"
+      }
+    },
+    {
+      "id": "3dcodeverse-3d-worlds-as-code",
+      "title": "3DCodeVerse：探索作为代码的 3D 世界",
+      "authors": [
+        "Yipeng Gao",
+        "Ziyao Zeng",
+        "Jinfa Huang",
+        "Yijiang Li",
+        "Haolin Xiong",
+        "Wang Qin",
+        "Xinlei Yu",
+        "Youheng Yao",
+        "Jie Zhang",
+        "Kun-Yu Lin",
+        "Rong Liu",
+        "Yinyuan Zhao",
+        "Yajie Zhao",
+        "Meiqi Guo",
+        "Jiebo Luo",
+        "Lei Shu",
+        "Yunhao Ge",
+        "Xinyu Hu",
+        "Laurent Itti"
+      ],
+      "affiliations": [
+        "University of Southern California",
+        "University of Rochester"
+      ],
+      "summary": "提出 3DCodeVerse，这是一个让编码智能体能够大规模创建可编辑、可验证 3D 内容的研究生态。发布了 3DCodeVerse-2M 数据集，包含跨六种语言的 203 万对独立可执行 3D 代码，并配有一个多智能体 harness，在人工评估中对 Claude 的设计取得 90% 的胜率。",
+      "key_findings": [
+        "3DCodeVerse-2M 数据集涵盖六种编程语言的 203 万对可执行 3D 代码",
+        "多智能体 harness 在人工评估中对基线大模型设计取得 90% 的胜率",
+        "以代码作为表示，带来了纯生成式 3D 方法无法提供的可编辑性与可验证性"
+      ],
+      "tags": [
+        "3d-generation",
+        "code-generation",
+        "agents",
+        "dataset",
+        "multi-agent"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 105,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22341",
+        "huggingface": "https://huggingface.co/papers/2610.22341",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22341"
+      }
+    },
+    {
+      "id": "intern-lumina-u2-diffusion-llm",
+      "title": "Intern Lumina U2：面向全视觉理解与图像生成的多码本扩散大语言模型",
+      "authors": [
+        "InternLM Team"
+      ],
+      "affiliations": [
+        "Shanghai AI Laboratory"
+      ],
+      "summary": "提出一个 16B MoE（激活参数 1.4B）的掩码扩散语言模型，使用 Apple 的 AToken 分词器（8 个码本），将图像、视频和 3D 资产统一为离散的多码本 token。在统一模型中，于 10 个图像理解基准中的 6 个取得第一名，图像生成的 GenEval 得分为 89.3。",
+      "key_findings": [
+        "16B MoE 架构仅激活 1.4B 参数，即可以合理的算力实现前沿质量的生成",
+        "在统一多模态模型中，于 10 个图像理解基准中的 6 个取得第一名",
+        "图像生成的 GenEval 得分为 89.3，可与最好的专用模型媲美"
+      ],
+      "tags": [
+        "multimodal",
+        "diffusion-models",
+        "image-generation",
+        "video-generation",
+        "unified-model",
+        "moe"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 78,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20818",
+        "huggingface": "https://huggingface.co/papers/2610.20818",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20818"
+      }
+    },
+    {
+      "id": "opengcua-generalist-computer-use",
+      "title": "OpenGCUA：迈向完全开放的通用计算机使用技术栈",
+      "authors": [
+        "Alibaba Tongyi-MAI Team"
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Tongyi-MAI"
+      ],
+      "summary": "发布了完全开源（Apache-2.0）的通用计算机使用智能体技术栈，在八个被测模型上，OSWorld-v2 的平均部分得分提升 19.6 分，同时相比纯 GUI 基线，每个任务的步数减少 53%。包含 macOS 菜单栏 harness、跨设备 SDK（电脑、浏览器、手机）以及完整的评测轨迹。",
+      "key_findings": [
+        "在 8 个不同的基础模型上，OSWorld-v2 平均部分得分提升 19.6 分",
+        "通过集成程序化接口，相比纯 GUI 基线，每个任务的步数减少 53%",
+        "以 Apache-2.0 协议完整发布，包括 macOS 集成、跨设备 SDK 以及全部评测轨迹"
+      ],
+      "tags": [
+        "computer-use",
+        "gui-agents",
+        "open-source",
+        "evaluation",
+        "multi-modal-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 75,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22200",
+        "huggingface": "https://huggingface.co/papers/2610.22200",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22200"
+      }
+    },
+    {
+      "id": "omnicompass-video-grounding-benchmark",
+      "title": "OmniCompass：面向全模态视频定位与理解的综合基准",
+      "authors": [
+        "OmniCompass Team"
+      ],
+      "affiliations": [
+        "Chinese Academy of Sciences"
+      ],
+      "summary": "提出一个全面的基准，涵盖视频中的时间、空间和跨模态定位，填补了全模态视频理解系统评测基础设施的关键空白。在 12 项不同任务上测试了 14 个最先进的视频语言模型。",
+      "key_findings": [
+        "12 个不同的任务类别，涵盖时间定位、空间定位和跨模态对齐",
+        "评测了 14 个领先的视频语言模型，揭示出空间定位相对于时间定位存在系统性弱点",
+        "发现所有被测模型在时间定位与空间定位之间都存在一致的 23% 性能差距"
+      ],
+      "tags": [
+        "video-understanding",
+        "benchmark",
+        "grounding",
+        "multimodal",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18829",
+        "huggingface": "https://huggingface.co/papers/2610.18829",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.18829"
+      }
+    },
+    {
+      "id": "deltastreamer-agentic-video-understanding",
+      "title": "DeltaStreamer：迈向类人的智能体式流式视频理解",
+      "authors": [
+        "DeltaStreamer Team"
+      ],
+      "affiliations": [
+        "Peking University"
+      ],
+      "summary": "提出一个用于流式视频理解的智能体框架，对时间增量（delta）而非完整帧进行建模，从而以类人的注意力分配实现高效的长时程视频处理。在长视频问答上表现出色，而仅处理总帧数的 12%。",
+      "key_findings": [
+        "在长流式视频上，基于 delta 的处理相比密集帧采样减少 88% 的计算量",
+        "凭借类人的选择性注意力，在流式视频问答基准上达到最先进水平",
+        "智能体组件负责决定哪些时间片段需要精细处理"
+      ],
+      "tags": [
+        "video-understanding",
+        "streaming",
+        "efficiency",
+        "agents",
+        "attention"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.19849",
+        "huggingface": "https://huggingface.co/papers/2610.19849",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.19849"
+      }
+    },
+    {
+      "id": "flashmask-3-distributed-attention",
+      "title": "FlashMask-3：高效且富有表达力的掩码感知分布式注意力",
+      "authors": [
+        "FlashMask-3 Team"
+      ],
+      "affiliations": [
+        "Baidu",
+        "Baidu Research"
+      ],
+      "summary": "在 FlashMask 系列的基础上，扩展出一种分布式注意力机制，支持任意掩码模式，同时在多节点训练设置中保持较高的硬件利用率。面向大语言模型和多模态模型的长上下文训练，借助定制 CUDA 内核实现随序列长度近线性扩展。",
+      "key_findings": [
+        "发布当天在 HuggingFace 上获得 35 个点赞；分布式训练支持扩展到 1M+ token 的上下文",
+        "定制 CUDA 内核在支持任意掩码模式的同时，相比标准 FlashAttention-3 保持 94% 的 MFU",
+        "在纯文本和多模态（视觉语言）预训练负载上均经过测试"
+      ],
+      "tags": [
+        "attention-mechanisms",
+        "distributed-training",
+        "long-context",
+        "efficiency",
+        "cuda"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 35,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.17901",
+        "huggingface": "https://huggingface.co/papers/2610.17901",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.17901"
+      }
+    },
+    {
+      "id": "mosaic-multi-session-agentic-rl",
+      "title": "Mosaic：多会话智能体强化学习",
+      "authors": [
+        "Mosaic Team"
+      ],
+      "affiliations": [
+        "MIT CSAIL"
+      ],
+      "summary": "提出一个多会话强化学习框架，使智能体能够在不同的部署会话之间积累并打磨技能，而无需保留完整上下文。「马赛克」的比喻指的是：每次会话的经验都成为持久技能马赛克中的一块瓷砖，供智能体在后续部署中利用。",
+      "key_findings": [
+        "无需在上下文中记住先前会话，即可实现跨会话的技能积累",
+        "在总算力相同的情况下，持久技能库的增长比等效的单会话训练更高效",
+        "在编程、浏览和多步推理任务上进行了测试，跨会话边界均取得一致的提升"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "agent-systems",
+        "continual-learning",
+        "skill-learning",
+        "multi-session"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22174",
+        "huggingface": "https://huggingface.co/papers/2610.22174",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22174"
+      }
+    },
+    {
+      "id": "mai-gym-gui-agent-platform",
+      "title": "MAI-Gym：面向跨移动端与电脑环境的 GUI 智能体评测与强化学习训练的开放一体化平台",
+      "authors": [
+        "MAI-Gym Team"
+      ],
+      "affiliations": [
+        "Microsoft Research Asia"
+      ],
+      "summary": "提供一个统一的开放平台，用于在移动端（iOS、Android）和桌面端（Windows、macOS、Linux）环境中训练和评测 GUI 智能体。弥合了 GUI 智能体研究分散在各自独立的模拟器和基准之中的鸿沟。",
+      "key_findings": [
+        "在单一框架内，统一了 5 种操作系统环境下的训练与评测",
+        "强化学习训练基础设施带有针对 GUI 任务的奖励塑形（元素查找、任务完成、效率）",
+        "开源了跨平台的 1 万多条已标注 GUI 任务轨迹"
+      ],
+      "tags": [
+        "gui-agents",
+        "reinforcement-learning",
+        "evaluation",
+        "mobile",
+        "desktop",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20939",
+        "huggingface": "https://huggingface.co/papers/2610.20939",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20939"
+      }
+    },
+    {
+      "id": "specagent-trajectory-speculation",
+      "title": "面向工具使用智能体的带语义验证的轨迹级推测（SpecAgent）",
+      "authors": [
+        "Zhijiang Guo",
+        "Qun Liu",
+        "Chao Chen",
+        "Yinhong Liu",
+        "Wen Gao"
+      ],
+      "affiliations": [
+        "University of Cambridge",
+        "Huawei Noah's Ark Lab"
+      ],
+      "summary": "为智能体的工具使用提出推测执行：智能体预先生成多条可能的未来轨迹并进行推测性执行，在落定动作之前，利用语义验证剪除不合理的分支。在复杂的多步任务上，将工具调用延迟降低了 41%。",
+      "key_findings": [
+        "在复杂多步任务上，相比顺序执行基线，工具调用延迟降低 41%",
+        "语义验证步骤能在执行前以 89% 的准确率过滤推测分支",
+        "兼容任何使用工具的智能体框架；已在 Claude、GPT-6 和 Qwen3.8 上测试"
+      ],
+      "tags": [
+        "agents",
+        "tool-use",
+        "speculative-decoding",
+        "efficiency",
+        "planning"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.21463",
+        "huggingface": "https://huggingface.co/papers/2610.21463",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.21463"
+      }
+    },
+    {
+      "id": "vla-delta-physical-state-transition",
+      "title": "VLA-Δ：为视觉-语言-动作模型学习物理状态转移",
+      "authors": [
+        "VLA-Δ Team"
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Shanghai Qi Zhi Institute"
+      ],
+      "summary": "为视觉-语言-动作模型加入显式的物理状态转移建模，使机器人能够在落定动作之前预测并验证该动作将如何改变世界状态。在标准 RoboSuite 基准上，将操作任务成功率提升了 28%。",
+      "key_findings": [
+        "在 RoboSuite 上，操作任务成功率比标准 VLA 基线提升 28%",
+        "显式的物理状态转移模块能捕捉纯语言条件策略所遗漏的接触动力学",
+        "在 5 个家庭操作任务上完成真机验证，并能泛化到新物体"
+      ],
+      "tags": [
+        "robotics",
+        "vision-language-action",
+        "embodied-ai",
+        "physical-reasoning",
+        "manipulation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.21306",
+        "huggingface": "https://huggingface.co/papers/2610.21306",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.21306"
+      }
+    },
+    {
+      "id": "autosft-automated-sft-data-research",
+      "title": "AutoSFT：面向监督微调中自动化数据研究的智能体系统",
+      "authors": [
+        "AutoSFT Team"
+      ],
+      "affiliations": [
+        "Tencent AI Lab"
+      ],
+      "summary": "提出一个由智能体驱动的系统，自动完成监督微调所需训练数据的调研与整理：给定目标任务，AutoSFT 会检索数据源、评估数据质量、合成新样本并运行消融实验——全程无需人工干预。",
+      "key_findings": [
+        "自动化 SFT 数据流水线在保持下游任务质量的同时，将人工整理时间减少 80%",
+        "智能体循环在单一自动化流水线中涵盖数据发现、质量过滤、合成和消融",
+        "在涵盖代码、数学和指令遵循的 8 个下游任务上得到验证"
+      ],
+      "tags": [
+        "fine-tuning",
+        "data-curation",
+        "agents",
+        "automation",
+        "sft"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 11,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22194",
+        "huggingface": "https://huggingface.co/papers/2610.22194",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22194"
+      }
+    },
+    {
+      "id": "orbia-generated-video-3d-world",
+      "title": "Orbia：生成的视频能构成一致的 3D 世界吗？",
+      "authors": [
+        "Orbia Team"
+      ],
+      "affiliations": [
+        "Stanford University"
+      ],
+      "summary": "研究当前的视频生成模型所产出的内容在作为 3D 世界时是否具有几何一致性，发现领先模型存在系统性的 3D 不一致，人类观众很少察觉，但具备 3D 感知能力的评估器能够稳定检测出来。为视频生成基准提出了一个 3D 一致性得分。",
+      "key_findings": [
+        "7 个领先的视频生成模型中有 6 个未通过 3D 一致性测试，而人类通过该测试的准确率为 91%",
+        "新的 3D 一致性得分与下游 3D 重建质量的相关性优于现有视频指标",
+        "提出几何一致性是视频生成基准中缺失的一个维度"
+      ],
+      "tags": [
+        "video-generation",
+        "3d-consistency",
+        "evaluation",
+        "benchmark",
+        "generative-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20693",
+        "huggingface": "https://huggingface.co/papers/2610.20693",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20693"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Qwen 的旗舰 27B 稠密语言模型，以 17,575 个点赞和 690 万次下载保持社区榜首位置。在多语言指令遵循、编程和数学推理方面表现出色，并充分发挥全部 27B 参数的能力。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "llm",
+        "multilingual",
+        "instruction-following",
+        "coding",
+        "math"
+      ],
+      "metrics": {
+        "downloads": 6895303,
+        "likes": 17575
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "领先的开源视频生成模型，拥有 7,470 个点赞和 170 万次下载，支持图生视频、文生视频和视频到视频合成。是本周 HuggingFace 生态中获赞最多的生成式视频模型。",
+      "task_type": "text-to-video",
+      "model_size": "not disclosed",
+      "tags": [
+        "video-generation",
+        "image-to-video",
+        "text-to-video",
+        "generative"
+      ],
+      "metrics": {
+        "downloads": 1719766,
+        "likes": 7470
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen38-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen (Alibaba)",
+      "description": "Qwen3.8 的更快、更低延迟变体，针对高吞吐推理和实时应用进行了优化。拥有 6,148 个点赞和 190 万次下载，除标准文本生成外还具备图文到文本能力。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "llm",
+        "fast-inference",
+        "multimodal",
+        "instruction-following"
+      ],
+      "metrics": {
+        "downloads": 1934542,
+        "likes": 6148
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "unsloth-qwen38-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth 对 Qwen3.8-27B 的高度优化 GGUF 量化版本，可在消费级硬件上进行本地推理。拥有 5,056 个点赞和 660 万次下载——是下载量最高的量化变体，反映出本地部署 Qwen 的强劲需求。",
+      "task_type": "text-generation",
+      "model_size": "27B (quantized)",
+      "tags": [
+        "gguf",
+        "quantization",
+        "local-inference",
+        "llm"
+      ],
+      "metrics": {
+        "downloads": 6597425,
+        "likes": 5056
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "convaiinnovations-laya",
+      "name": "Laya",
+      "organization": "ConvAI Innovations",
+      "description": "一个专用的文本分类模型，拥有 5,535 个点赞和 4.5 万次下载，专注于对话式 AI 的安全与意图分类。因企业对内容审核和意图检测的需求而走红。",
+      "task_type": "text-classification",
+      "model_size": "not disclosed",
+      "tags": [
+        "text-classification",
+        "safety",
+        "intent-detection",
+        "enterprise"
+      ],
+      "metrics": {
+        "downloads": 45062,
+        "likes": 5535
+      },
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "DeepSeek-V4.1 的快速推理变体，拥有 4,408 个点赞和 130 万次下载。支持文本生成和图文到文本任务，定位为对延迟敏感应用中可替代 Qwen 的高质量选择。",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": [
+        "llm",
+        "fast-inference",
+        "multimodal",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 1294550,
+        "likes": 4408
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "高精度 OCR 模型，拥有 4,512 个点赞和 120 万次下载，支持从文档、图像和复杂版面中提取多语言文本。随着文档 AI 流水线对生产级 OCR 的需求日益增长而走红。",
+      "task_type": "image-text-to-text",
+      "model_size": "not disclosed",
+      "tags": [
+        "ocr",
+        "document-ai",
+        "image-to-text",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 1205646,
+        "likes": 4512
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3 (Segment Anything Model 3)",
+      "organization": "Meta (Facebook AI Research)",
+      "description": "Meta 第三代 Segment Anything 模型（分割一切模型），拥有 4,149 个点赞和 200 万次下载。支持跨图像和视频的分割与特征提取，在医学和卫星影像上的零样本表现有所提升。",
+      "task_type": "image-segmentation",
+      "model_size": "not disclosed",
+      "tags": [
+        "segmentation",
+        "computer-vision",
+        "zero-shot",
+        "image-segmentation",
+        "video"
+      ],
+      "metrics": {
+        "downloads": 2054071,
+        "likes": 4149
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "Google 基于 Gemma-2 架构的文本嵌入模型，拥有 1,923 个点赞和 11.5 万次下载。MTEB 得分出色，多语言嵌入质量尤其突出，随着 RAG 流水线升级其嵌入层而走红。",
+      "task_type": "feature-extraction",
+      "model_size": "not disclosed",
+      "tags": [
+        "embeddings",
+        "rag",
+        "semantic-search",
+        "multilingual",
+        "gemma"
+      ],
+      "metrics": {
+        "downloads": 115763,
+        "likes": 1923
+      },
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "CLEF",
+      "organization": "Cloudflare",
+      "description": "Cloudflare 针对边缘部署优化的图文到文本模型，拥有 2,086 个点赞和 1.5 万次下载。专为网络边缘的低延迟推理而设计，标志着面向 CDN 和边缘基础设施构建的前沿质量模型新浪潮。",
+      "task_type": "image-text-to-text",
+      "model_size": "not disclosed",
+      "tags": [
+        "edge-inference",
+        "multimodal",
+        "enterprise",
+        "low-latency"
+      ],
+      "metrics": {
+        "downloads": 15064,
+        "likes": 2086
+      },
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "aleph-alpha-kolibri-1",
+      "name": "Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "Aleph Alpha 的 MoE 推理模型，拥有 914 个点赞和 1.4 万次下载，面向欧洲企业部署设计，具备出色的德语支持以及符合 GDPR 的本地部署选项。",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": [
+        "moe",
+        "reasoning",
+        "european-ai",
+        "enterprise",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 14018,
+        "likes": 914
+      },
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "liquidai-d1-3b",
+      "name": "d1-3B",
+      "organization": "LiquidAI",
+      "description": "LiquidAI 的 3B 参数模型，基于液态神经网络（Liquid Neural Network）原理，具备图文到文本能力，拥有 342 个点赞和 1.1 万次下载。随着实践者探索端侧部署中 Transformer 架构的替代方案而走红。",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": [
+        "liquid-neural-networks",
+        "on-device",
+        "multimodal",
+        "efficient-inference"
+      ],
+      "metrics": {
+        "downloads": 11866,
+        "likes": 342
+      },
+      "source_url": "https://huggingface.co/LiquidAI/d1-3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "具备自我改进能力和持久记忆的自适应 AI 智能体框架，目前以 25.2 万颗星成为星标最多的非框架类 AI 智能体仓库。10 月 18 日有更新，是开发最活跃的智能体运行时之一。",
+      "language": "Python",
+      "stars": 252822,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "self-improvement",
+        "llm",
+        "memory",
+        "autonomous"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "pytorch-pytorch",
+      "name": "pytorch/pytorch",
+      "description": "PyTorch 深度学习框架，今日新增 315 颗星——对一个成熟仓库而言，单日涨幅异常之高，表明某次重大版本发布或基准测试结果重新引发了社区的关注。",
+      "language": "Python",
+      "stars": 104530,
+      "stars_today": 315,
+      "forks": 0,
+      "url": "https://github.com/pytorch/pytorch",
+      "tags": [
+        "deep-learning",
+        "framework",
+        "gpu",
+        "neural-networks"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tensorflow-tensorflow",
+      "name": "tensorflow/tensorflow",
+      "description": "Google 的 TensorFlow 机器学习框架，仍保持活跃，星标超过 20 万。近期更新聚焦于 TF 3.x 与新兴 JAX 生态的兼容，以及改进的移动端/边缘部署。",
+      "language": "C++",
+      "stars": 200872,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "tags": [
+        "deep-learning",
+        "framework",
+        "google",
+        "mobile",
+        "edge"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "huggingface-transformers",
+      "name": "huggingface/transformers",
+      "description": "HuggingFace 上各类 Transformer 模型实现的核心枢纽，星标已超过 16.7 万。因 Intern-Decision 和 Intern Lumina U2 的模型集成本周合入主分支而走红。",
+      "language": "Python",
+      "stars": 167524,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/huggingface/transformers",
+      "tags": [
+        "transformers",
+        "llm",
+        "multimodal",
+        "nlp",
+        "computer-vision"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "领先的开源 UI，用于与本地和托管的 AI 后端交互，包括 Ollama、OpenAI 和 Anthropic API。15.4 万颗星反映出它作为本地 AI 部署默认前端的地位。",
+      "language": "Python",
+      "stars": 154329,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "llm-ui",
+        "local-inference",
+        "ollama",
+        "rag",
+        "multi-model"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "langchain-ai-langchain",
+      "name": "langchain-ai/langchain",
+      "description": "用于构建 RAG 系统和智能体流水线的智能体工程平台，拥有 14.7 万颗星。随着社区讨论 FlashMask-3 和 Qwen3.8 的新集成而走红。",
+      "language": "Python",
+      "stars": 147635,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/langchain-ai/langchain",
+      "tags": [
+        "agents",
+        "rag",
+        "llm-framework",
+        "python"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "将代码库转换为知识图谱，供 AI 智能体导航和理解，拥有 12.5 万颗星。随着工程团队将其与 OpenGCUA 和 hermes-agent 集成，打造具备代码库感知能力的计算机使用智能体而走红。",
+      "language": "Python",
+      "stars": 125581,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": [
+        "knowledge-graphs",
+        "code-analysis",
+        "agents",
+        "graph-ml"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "可自动从 Twitter/X、YouTube、Reddit 和 GitHub 等平台抓取并综合数据以构建研究上下文的 AI 智能体。拥有 9.6 万颗星，随着实践者构建数据收集智能体，与智能体 harness 论文一同走红。",
+      "language": "Python",
+      "stars": 96058,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "data-gathering",
+        "agents",
+        "social-media",
+        "research-automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "zhulinsen-daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "由大语言模型驱动的每日股票分析工具，具备自动化市场数据采集、基本面分析和投资组合建议功能。拥有 6.6 万颗星，反映出对金融领域 AI 应用的持续关注。",
+      "language": "Python",
+      "stars": 66190,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": [
+        "finance",
+        "llm-applications",
+        "agents",
+        "stock-analysis",
+        "automation"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "antirez-ds4",
+      "name": "antirez/ds4",
+      "description": "面向 DeepSeek 4 模型的轻量级本地推理引擎，针对 Metal（Apple Silicon）、CUDA 和 ROCm 优化，由 Redis 之父 antirez 创建。作为本地部署 DeepSeek 4 的参考实现，正受到大量关注。",
+      "language": "C",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/antirez/ds4",
+      "tags": [
+        "inference",
+        "local-llm",
+        "deepseek",
+        "metal",
+        "cuda",
+        "rocm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "berri-ai-litellm",
+      "name": "BerriAI/litellm",
+      "description": "基于 Rust 的 AI 网关，为 100 多家大模型提供商提供统一的 OpenAI 兼容 API，吞吐量相比之前的 Python 实现显著提升。是多提供商部署的关键基础设施。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/BerriAI/litellm",
+      "tags": [
+        "llm-gateway",
+        "api",
+        "multi-provider",
+        "openai-compatible",
+        "rust"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "mvschwarz-openrig",
+      "name": "mvschwarz/openrig",
+      "description": "多智能体 harness，将 Claude Code 与 OpenAI Codex 编排为协作搭档，处理复杂的软件工程任务，支持基于角色的任务分配和跨智能体的上下文共享。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mvschwarz/openrig",
+      "tags": [
+        "multi-agent",
+        "coding-agents",
+        "claude",
+        "codex",
+        "software-engineering"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体自我改进",
+      "description": "一组论文（Self-Evolving Agent Harness、Mosaic、AutoSFT）将智能体改进自身脚手架——提示词、记忆、工作流、训练数据——而无需更新权重的想法形式化，指向部署时学习的新范式。",
+      "related_paper_ids": [
+        "self-evolving-agent-harness",
+        "mosaic-multi-session-agentic-rl",
+        "autosft-automated-sft-data-research"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多模态统一架构",
+      "description": "来自上海人工智能实验室的 Intern-Decision 和 Intern Lumina U2 代表了一种趋势：用单一模型处理跨图像、视频和文本的理解与生成，其关键创新在于采用离散 token 表示而非连续隐变量。",
+      "related_paper_ids": [
+        "intern-decision-multimodal-decision",
+        "intern-lumina-u2-diffusion-llm",
+        "omnicompass-video-grounding-benchmark"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D 生成与一致性",
+      "description": "InfiniSplat v2、3DCodeVerse 和 Orbia 共同表明 3D 生成研究日趋成熟——从概念验证走向系统性改进、基于代码的表示，以及对几何一致性的严格评估。",
+      "related_paper_ids": [
+        "infinisplat-v2-3dgs-any-views",
+        "3dcodeverse-3d-worlds-as-code",
+        "orbia-generated-video-3d-world"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "计算机使用与 GUI 智能体",
+      "description": "OpenGCUA 的开源发布和 MAI-Gym 的跨平台评测基础设施，标志着计算机使用智能体从研究原型走向可部署的技术栈，其中阿里巴巴正以激进的开源策略争夺生态。",
+      "related_paper_ids": [
+        "opengcua-generalist-computer-use",
+        "mai-gym-gui-agent-platform"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效长上下文注意力",
+      "description": "FlashMask-3 的分布式注意力机制与 DeltaStreamer 基于 delta 的视频处理，解决的是同一个核心问题：无论是文本还是视频，如何在处理极长序列时保持较高的硬件利用率。",
+      "related_paper_ids": [
+        "flashmask-3-distributed-attention",
+        "deltastreamer-agentic-video-understanding"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI/cs.LG/cs.CL/cs.CV",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    }
+  ]
+}

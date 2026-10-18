@@ -1,0 +1,678 @@
+{
+  "version": "1.0",
+  "date": "2026-10-18",
+  "generated_at": "2026-10-18T15:30:00Z",
+  "summary": {
+    "headline": "Intern-Decision leads a multimodal decision-making surge with 826 upvotes; Self-Evolving Agent Harnesses formalize scaffold self-improvement; 3D generation finds its code-first moment with 3DCodeVerse",
+    "body": "October 18 brings a striking convergence around two related ideas: making AI systems that *decide* better, and making AI systems that *improve themselves*. Intern-Decision from Shanghai AI Laboratory tops the HuggingFace charts with 826 upvotes, introducing autoregressive masked language modeling for efficient multimodal decision-making — a notable departure from the dominant autoregressive-only paradigm. Meanwhile, the Self-Evolving Agent Harness paper formalizes what practitioners have been doing ad-hoc: revising prompts, memory, workflows, and executable components around a frozen model.\n\nOn the 3D front, two significant papers landed within 24 hours. InfiniSplat v2 from Zhejiang University improves feed-forward 3D Gaussian Splatting from arbitrary views, while 3DCodeVerse opens 2M executable 3D code pairs and a multi-agent harness for code-driven 3D content generation. The co-arrival of these papers isn't coincidence — 3D generation is converging toward code and structure as the primary representation, mirroring how image generation moved from pixels to latents.\n\nIn the model ecosystem, Qwen3.8-27B continues its dominance with nearly 7M downloads and 17K+ likes, while Lightricks LTX-2.5 leads the video generation category with 7,470 likes. Cloudflare's CLEF and LiquidAI's d1-3B signal that enterprise and edge deployments are becoming a real battleground for frontier model providers.",
+    "key_themes": [
+      "multimodal-decision-making",
+      "agentic-self-improvement",
+      "3d-generation-code-first",
+      "computer-use-agents",
+      "efficient-inference-edge"
+    ]
+  },
+  "researcher_notes": "**The quiet revolution in multimodal decision-making.** Intern-Decision's 826 upvotes — more than double the next paper — signals the community has been waiting for this. The key insight is using autoregressive masked language modeling rather than pure generation: the model learns *which* tokens to mask (defer) versus generate (commit), making it far more efficient on decision tasks where irreversibility matters. This is architecturally closer to how humans decide than standard language model decoding. Watch for rapid adoption in robotics and embodied agents where action commitment is costly.\n\n**Harness evolution is becoming a first-class research problem.** The Self-Evolving Agent Harness paper (173 upvotes) and Mosaic: Multi-Session Agentic RL (33 upvotes) arriving the same day is not coincidence. Both treat the *scaffolding around the model* — prompts, memory, workflows, plugins — as a learnable object rather than a fixed engineering artifact. This is a significant conceptual shift: instead of training model weights, you train the harness. The implications for long-running deployments (customer service, research agents, coding assistants) are profound. Expect NeurIPS 2026 to have an entire workshop track on this.\n\n**3D generation is finding its code-first moment.** 3DCodeVerse's 2M executable 3D code pairs dataset, combined with InfiniSplat v2's architectural advances in feed-forward 3DGS, suggest the field is converging on code as the primary representation for 3D content. This mirrors the trajectory of 2D image editing (from pixel manipulation → latent space → semantic editing). The sleeper hit here is the Orbia paper (41 upvotes): asking whether generated videos form a consistent 3D world is exactly the right question for unifying video and 3D generation pipelines, and the low engagement relative to its importance is a classic sleeper-hit pattern.\n\n**Computer-use agents are entering the infrastructure layer.** OpenGCUA's +19.6 point improvement on OSWorld-v2 and MAI-Gym's cross-platform evaluation framework (mobile + desktop) arriving together signal that computer-use agents are transitioning from research demos to infrastructure. Alibaba's Apache-2.0 release of the full OpenGCUA stack — including macOS integration and a cross-device SDK — is a clear play to set the standard before the space consolidates. The next 60 days will be decisive for which stack (OpenGCUA vs. Microsoft's OmniParser vs. Anthropic's computer use) becomes the default harness layer for GUI automation.\n\n**On GitHub, the inference efficiency story continues.** AirLLM running 70B models on 4GB GPUs and antirez/ds4 enabling local DeepSeek 4 inference on consumer hardware (Metal/CUDA/ROCm) point to a systematic effort to democratize frontier-scale inference. The most interesting data point: pytorch/pytorch gained 315 stars *today*, suggesting a major release or benchmark announcement is driving fresh developer attention back to the framework itself rather than the abstraction layers above it.",
+  "papers": [
+    {
+      "id": "intern-decision-multimodal-decision",
+      "title": "Intern-Decision: Efficient Multimodal Decision Making with Autoregressive Masked Language Modeling",
+      "authors": ["InternLM Team"],
+      "affiliations": ["Shanghai AI Laboratory", "InternLM"],
+      "summary": "Introduces a novel multimodal decision-making architecture that combines autoregressive generation with masked language modeling to enable efficient, reversibility-aware decision making. The model learns to distinguish tokens representing committed decisions from deferred ones, dramatically reducing redundant computation on standard decision tasks.",
+      "key_findings": [
+        "Autoregressive masked language modeling outperforms pure autoregressive decoding on multimodal decision benchmarks by 12–18%",
+        "0.8B, 2B, and 4B parameter variants released, enabling deployment across edge to cloud",
+        "Achieves first-place results on 6 of 10 multimodal decision-making benchmarks among comparable parameter models"
+      ],
+      "tags": ["multimodal", "decision-making", "masked-language-modeling", "efficiency", "embodied-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 826, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22131",
+        "huggingface": "https://huggingface.co/papers/2610.22131",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22131"
+      }
+    },
+    {
+      "id": "infinisplat-v2-3dgs-any-views",
+      "title": "InfiniSplat v2: Analyzing and Improving Feed-Forward 3DGS from Any Views",
+      "authors": ["Yongzhen Hu", "Hao Yu", "Jiawei Wang", "Xianming Zeng", "Jianyun Xu", "Xingliang Liu", "Ruizhen Hu", "Xiaowei Zhou", "Hujun Bao"],
+      "affiliations": ["Zhejiang University", "State Key Lab of CAD&CG"],
+      "summary": "Analyzes and addresses fundamental limitations in feed-forward 3D Gaussian Splatting, introducing a decoupled architecture that separates geometry prediction from attribute prediction with a frozen geometry branch. Achieves 25.8% reduction in mean LPIPS and 32.9% reduction in DISTS over prior best baselines in pose-conditioned novel view synthesis.",
+      "key_findings": [
+        "Decoupling geometry and attribute prediction with a frozen geometry branch eliminates geometric inconsistency across viewpoints",
+        "25.8% and 32.9% reductions in mean LPIPS and DISTS respectively vs. strongest baselines",
+        "Enables robust 3DGS reconstruction from as few as 1 view or as many as arbitrary views without architecture changes"
+      ],
+      "tags": ["3d-generation", "gaussian-splatting", "novel-view-synthesis", "computer-vision"],
+      "relevance": "high",
+      "engagement": {"upvotes": 418, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20341",
+        "huggingface": "https://huggingface.co/papers/2610.20341",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20341"
+      }
+    },
+    {
+      "id": "self-evolving-agent-harness",
+      "title": "Self-Evolving Agent Harness",
+      "authors": ["Chuyang Wei", "Haoxiang Guan", "Minghang Zhu", "Kexin Zhou", "Jiyan He", "Xiren Zhou", "Huanhuan Chen", "Yifei Shen"],
+      "affiliations": ["University of Science and Technology of China"],
+      "summary": "Formalizes agent harness self-evolution as a feedback-driven loop that revises the software scaffolding around a frozen model — prompts, memory, workflows, and executable components — based on execution outcomes. Establishes the theoretical foundations using continual PAC-learning and evolutionary optimization, separating the targets of update from the mechanisms that propose and admit changes.",
+      "key_findings": [
+        "Formally distinguishes edits to interpreted state, tools and code, repository-level control logic, and plugin composition as four distinct update classes",
+        "Accepted revisions carry over between runs, enabling genuine cross-session learning without weight updates",
+        "Reliability analysis using continual PAC-learning bounds shows convergence under reasonable assumptions about revision quality"
+      ],
+      "tags": ["agent-systems", "self-improvement", "harness-evolution", "scaffolding", "theoretical-ml"],
+      "relevance": "high",
+      "engagement": {"upvotes": 173, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18813",
+        "huggingface": "https://huggingface.co/papers/2610.18813",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.18813"
+      }
+    },
+    {
+      "id": "3dcodeverse-3d-worlds-as-code",
+      "title": "3DCodeVerse: Exploring 3D Worlds as Code",
+      "authors": ["Yipeng Gao", "Ziyao Zeng", "Jinfa Huang", "Yijiang Li", "Haolin Xiong", "Wang Qin", "Xinlei Yu", "Youheng Yao", "Jie Zhang", "Kun-Yu Lin", "Rong Liu", "Yinyuan Zhao", "Yajie Zhao", "Meiqi Guo", "Jiebo Luo", "Lei Shu", "Yunhao Ge", "Xinyu Hu", "Laurent Itti"],
+      "affiliations": ["University of Southern California", "University of Rochester"],
+      "summary": "Introduces 3DCodeVerse, a research ecosystem that enables coding agents to create editable and verifiable 3D content at scale. Releases 3DCodeVerse-2M, a dataset of 2.03M standalone executable 3D code pairs across six languages, along with a multi-agent harness that achieves 90% win rate over Claude's design on human evaluation.",
+      "key_findings": [
+        "3DCodeVerse-2M dataset covers 2.03M executable 3D code pairs across six programming languages",
+        "Multi-agent harness achieves 90% win rate over baseline large model design on human evaluation",
+        "Code-as-representation enables editability and verifiability that purely generative 3D methods cannot provide"
+      ],
+      "tags": ["3d-generation", "code-generation", "agents", "dataset", "multi-agent"],
+      "relevance": "high",
+      "engagement": {"upvotes": 105, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22341",
+        "huggingface": "https://huggingface.co/papers/2610.22341",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22341"
+      }
+    },
+    {
+      "id": "intern-lumina-u2-diffusion-llm",
+      "title": "Intern Lumina U2: A Multi-Codebook Diffusion LLM for Omni-Visual Understanding and Image Generation",
+      "authors": ["InternLM Team"],
+      "affiliations": ["Shanghai AI Laboratory"],
+      "summary": "Presents a 16B MoE (1.4B active parameters) masked diffusion language model that unifies image, video, and 3D assets as discrete multi-codebook tokens using Apple's AToken tokenizer with 8 codebooks. Achieves first-place on 6 of 10 image-understanding benchmarks among unified models and GenEval 89.3 for image generation.",
+      "key_findings": [
+        "16B MoE architecture with only 1.4B active parameters enables frontier-quality generation at reasonable compute",
+        "First-place on 6 of 10 image-understanding benchmarks among unified multimodal models",
+        "GenEval score of 89.3 for image generation, competitive with best specialist models"
+      ],
+      "tags": ["multimodal", "diffusion-models", "image-generation", "video-generation", "unified-model", "moe"],
+      "relevance": "high",
+      "engagement": {"upvotes": 78, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20818",
+        "huggingface": "https://huggingface.co/papers/2610.20818",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20818"
+      }
+    },
+    {
+      "id": "opengcua-generalist-computer-use",
+      "title": "OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use",
+      "authors": ["Alibaba Tongyi-MAI Team"],
+      "affiliations": ["Alibaba Group", "Tongyi-MAI"],
+      "summary": "Releases a fully open-source (Apache-2.0) generalist computer-use agent stack that achieves +19.6 points mean partial-score improvement on OSWorld-v2 across eight tested models, while reducing steps per task by 53% vs. GUI-only baselines. Includes a macOS menu-bar harness, cross-device SDK (computer, browser, phone), and full evaluation trajectories.",
+      "key_findings": [
+        "+19.6 point mean partial-score improvement on OSWorld-v2 across 8 different foundation models",
+        "53% reduction in steps per task vs. GUI-only baselines through programmatic interface integration",
+        "Full Apache-2.0 release including macOS integration, cross-device SDK, and all evaluation trajectories"
+      ],
+      "tags": ["computer-use", "gui-agents", "open-source", "evaluation", "multi-modal-agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 75, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22200",
+        "huggingface": "https://huggingface.co/papers/2610.22200",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22200"
+      }
+    },
+    {
+      "id": "omnicompass-video-grounding-benchmark",
+      "title": "OmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding",
+      "authors": ["OmniCompass Team"],
+      "affiliations": ["Chinese Academy of Sciences"],
+      "summary": "Introduces a comprehensive benchmark covering temporal, spatial, and cross-modal grounding in video, filling a critical gap in evaluation infrastructure for omni-modal video understanding systems. Tests 14 state-of-the-art video-language models across 12 distinct tasks.",
+      "key_findings": [
+        "12 distinct task categories spanning temporal grounding, spatial grounding, and cross-modal alignment",
+        "14 leading video-language models evaluated, revealing systematic weaknesses in spatial grounding vs. temporal grounding",
+        "Identifies a consistent 23% performance gap between temporal and spatial grounding across all tested models"
+      ],
+      "tags": ["video-understanding", "benchmark", "grounding", "multimodal", "evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 76, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.18829",
+        "huggingface": "https://huggingface.co/papers/2610.18829",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.18829"
+      }
+    },
+    {
+      "id": "deltastreamer-agentic-video-understanding",
+      "title": "DeltaStreamer: Towards Human-Like Agentic Streaming Video Understanding",
+      "authors": ["DeltaStreamer Team"],
+      "affiliations": ["Peking University"],
+      "summary": "Proposes an agentic framework for streaming video understanding that models temporal increments (deltas) rather than full frames, enabling efficient long-horizon video processing with human-like attention allocation. Demonstrates strong performance on long-form video QA while processing only 12% of total frames.",
+      "key_findings": [
+        "Delta-based processing reduces computation by 88% on long streaming video vs. dense frame sampling",
+        "Achieves state-of-the-art on streaming video QA benchmarks with human-like selective attention",
+        "Agentic component decides which temporal segments require detailed processing"
+      ],
+      "tags": ["video-understanding", "streaming", "efficiency", "agents", "attention"],
+      "relevance": "high",
+      "engagement": {"upvotes": 74, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.19849",
+        "huggingface": "https://huggingface.co/papers/2610.19849",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.19849"
+      }
+    },
+    {
+      "id": "flashmask-3-distributed-attention",
+      "title": "FlashMask-3: Efficient and Expressive Mask-Aware Distributed Attention",
+      "authors": ["FlashMask-3 Team"],
+      "affiliations": ["Baidu", "Baidu Research"],
+      "summary": "Extends the FlashMask line with a distributed attention mechanism that supports arbitrary mask patterns while maintaining high hardware utilization across multi-node training setups. Targets long-context training of large language and multimodal models, achieving near-linear scaling in sequence length with custom CUDA kernels.",
+      "key_findings": [
+        "35 upvotes on HuggingFace on the day of release; distributed training support extending to 1M+ token contexts",
+        "Custom CUDA kernels maintain 94% MFU vs. standard FlashAttention-3 while supporting arbitrary mask patterns",
+        "Tested on both text-only and multimodal (vision-language) pretraining workloads"
+      ],
+      "tags": ["attention-mechanisms", "distributed-training", "long-context", "efficiency", "cuda"],
+      "relevance": "high",
+      "engagement": {"upvotes": 35, "comments": 3},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.17901",
+        "huggingface": "https://huggingface.co/papers/2610.17901",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.17901"
+      }
+    },
+    {
+      "id": "mosaic-multi-session-agentic-rl",
+      "title": "Mosaic: Multi-Session Agentic Reinforcement Learning",
+      "authors": ["Mosaic Team"],
+      "affiliations": ["MIT CSAIL"],
+      "summary": "Introduces a multi-session RL framework where an agent accumulates and refines skills across separate deployment sessions rather than requiring full context retention. The mosaic metaphor refers to individual session experiences becoming tiles in a persistent skill mosaic that the agent leverages in subsequent deployments.",
+      "key_findings": [
+        "Cross-session skill accumulation without requiring in-context memory of prior sessions",
+        "Persistent skill library grows more efficiently than equivalent single-session training with same total compute",
+        "Tested on coding, browsing, and multi-step reasoning tasks with consistent improvements across session boundaries"
+      ],
+      "tags": ["reinforcement-learning", "agent-systems", "continual-learning", "skill-learning", "multi-session"],
+      "relevance": "high",
+      "engagement": {"upvotes": 33, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22174",
+        "huggingface": "https://huggingface.co/papers/2610.22174",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22174"
+      }
+    },
+    {
+      "id": "mai-gym-gui-agent-platform",
+      "title": "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+      "authors": ["MAI-Gym Team"],
+      "affiliations": ["Microsoft Research Asia"],
+      "summary": "Provides a unified open platform for training and evaluating GUI agents across mobile (iOS, Android) and desktop (Windows, macOS, Linux) environments. Bridges the gap between GUI agent research fragmented across separate simulators and benchmarks.",
+      "key_findings": [
+        "Unified training and evaluation across 5 operating system environments in a single framework",
+        "RL training infrastructure with reward shaping specific to GUI tasks (element finding, task completion, efficiency)",
+        "Open-sourced with 10K+ annotated GUI task trajectories across platforms"
+      ],
+      "tags": ["gui-agents", "reinforcement-learning", "evaluation", "mobile", "desktop", "open-source"],
+      "relevance": "high",
+      "engagement": {"upvotes": 24, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20939",
+        "huggingface": "https://huggingface.co/papers/2610.20939",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20939"
+      }
+    },
+    {
+      "id": "specagent-trajectory-speculation",
+      "title": "Trajectory-Level Speculation with Semantic Verification for Tool-Using Agents (SpecAgent)",
+      "authors": ["Zhijiang Guo", "Qun Liu", "Chao Chen", "Yinhong Liu", "Wen Gao"],
+      "affiliations": ["University of Cambridge", "Huawei Noah's Ark Lab"],
+      "summary": "Proposes speculative execution for agentic tool-use: the agent pre-generates multiple possible future trajectories and speculatively executes them, using semantic verification to prune implausible branches before committing to actions. Reduces tool-call latency by 41% on complex multi-step tasks.",
+      "key_findings": [
+        "41% reduction in tool-call latency on complex multi-step tasks vs. sequential baseline",
+        "Semantic verification step filters speculative branches with 89% accuracy before execution",
+        "Compatible with any tool-using agent framework; tested on Claude, GPT-6, and Qwen3.8"
+      ],
+      "tags": ["agents", "tool-use", "speculative-decoding", "efficiency", "planning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 22, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.21463",
+        "huggingface": "https://huggingface.co/papers/2610.21463",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.21463"
+      }
+    },
+    {
+      "id": "vla-delta-physical-state-transition",
+      "title": "VLA-Δ: Learning Physical State Transition for Vision-Language-Action Models",
+      "authors": ["VLA-Δ Team"],
+      "affiliations": ["Tsinghua University", "Shanghai Qi Zhi Institute"],
+      "summary": "Augments vision-language-action models with explicit physical state transition modeling, enabling robots to predict and verify how actions change the world state before committing. Improves manipulation task success rates by 28% on standard RoboSuite benchmarks.",
+      "key_findings": [
+        "28% improvement in manipulation task success rate vs. standard VLA baselines on RoboSuite",
+        "Explicit physical state transition module captures contact dynamics that pure language-conditioned policies miss",
+        "Real-robot validation on 5 household manipulation tasks with generalization to novel objects"
+      ],
+      "tags": ["robotics", "vision-language-action", "embodied-ai", "physical-reasoning", "manipulation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 16, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.21306",
+        "huggingface": "https://huggingface.co/papers/2610.21306",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.21306"
+      }
+    },
+    {
+      "id": "autosft-automated-sft-data-research",
+      "title": "AutoSFT: An Agentic System for Automated Data Research in Supervised Fine-Tuning",
+      "authors": ["AutoSFT Team"],
+      "affiliations": ["Tencent AI Lab"],
+      "summary": "Introduces an agent-driven system that automates the research and curation of training data for supervised fine-tuning: given a target task, AutoSFT searches data sources, evaluates data quality, synthesizes new examples, and runs ablations — all without human intervention.",
+      "key_findings": [
+        "Automated SFT data pipeline reduces human curation time by 80% while maintaining downstream task quality",
+        "Agent loop covers data discovery, quality filtering, synthesis, and ablation in a single automated pipeline",
+        "Demonstrated on 8 downstream tasks spanning code, math, and instruction following"
+      ],
+      "tags": ["fine-tuning", "data-curation", "agents", "automation", "sft"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 11, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.22194",
+        "huggingface": "https://huggingface.co/papers/2610.22194",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.22194"
+      }
+    },
+    {
+      "id": "orbia-generated-video-3d-world",
+      "title": "Orbia: Do Generated Videos Form a Consistent 3D World?",
+      "authors": ["Orbia Team"],
+      "affiliations": ["Stanford University"],
+      "summary": "Investigates whether current video generation models produce outputs that are geometrically consistent as 3D worlds, finding that leading models exhibit systematic 3D inconsistencies that human viewers rarely notice but 3D-aware evaluators reliably detect. Proposes a 3D consistency score for video generation benchmarks.",
+      "key_findings": [
+        "6 of 7 leading video generation models fail 3D consistency tests that humans pass at 91% accuracy",
+        "New 3D consistency score correlates better with downstream 3D reconstruction quality than existing video metrics",
+        "Proposes geometric consistency as a missing dimension in video generation benchmarks"
+      ],
+      "tags": ["video-generation", "3d-consistency", "evaluation", "benchmark", "generative-models"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 41, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.20693",
+        "huggingface": "https://huggingface.co/papers/2610.20693",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2610.20693"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Flagship 27B dense language model from Qwen, sustaining its top position in the community with 17,575 likes and 6.9M downloads. Excels at multilingual instruction following, coding, and math reasoning across its full 27B parameter count.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["llm", "multilingual", "instruction-following", "coding", "math"],
+      "metrics": {"downloads": 6895303, "likes": 17575},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Leading open video generation model with 7,470 likes and 1.7M downloads, supporting image-to-video, text-to-video, and video-to-video synthesis. The most-liked generative video model in the HuggingFace ecosystem this week.",
+      "task_type": "text-to-video",
+      "model_size": "not disclosed",
+      "tags": ["video-generation", "image-to-video", "text-to-video", "generative"],
+      "metrics": {"downloads": 1719766, "likes": 7470},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "qwen-qwen38-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "organization": "Qwen (Alibaba)",
+      "description": "Faster, lower-latency variant of Qwen3.8 optimized for high-throughput inference and real-time applications. 6,148 likes and 1.9M downloads, with image-text-to-text capability in addition to standard text generation.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["llm", "fast-inference", "multimodal", "instruction-following"],
+      "metrics": {"downloads": 1934542, "likes": 6148},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    },
+    {
+      "id": "unsloth-qwen38-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth's highly optimized GGUF quantization of Qwen3.8-27B, enabling local inference on consumer hardware. 5,056 likes and 6.6M downloads — the most-downloaded quantized variant, reflecting strong demand for local Qwen deployment.",
+      "task_type": "text-generation",
+      "model_size": "27B (quantized)",
+      "tags": ["gguf", "quantization", "local-inference", "llm"],
+      "metrics": {"downloads": 6597425, "likes": 5056},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "convaiinnovations-laya",
+      "name": "Laya",
+      "organization": "ConvAI Innovations",
+      "description": "A specialized text-classification model with 5,535 likes and 45K downloads, focused on conversational AI safety and intent classification. Trending due to enterprise demand for content moderation and intent detection.",
+      "task_type": "text-classification",
+      "model_size": "not disclosed",
+      "tags": ["text-classification", "safety", "intent-detection", "enterprise"],
+      "metrics": {"downloads": 45062, "likes": 5535},
+      "source_url": "https://huggingface.co/convaiinnovations/laya"
+    },
+    {
+      "id": "deepseek-v4-1-flash",
+      "name": "DeepSeek-V4.1-Flash",
+      "organization": "DeepSeek",
+      "description": "Fast inference variant of DeepSeek-V4.1 with 4,408 likes and 1.3M downloads. Supports text generation and image-text-to-text tasks, positioned as a high-quality alternative to Qwen for latency-sensitive applications.",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": ["llm", "fast-inference", "multimodal", "reasoning"],
+      "metrics": {"downloads": 1294550, "likes": 4408},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "baidu-unlimited-ocr",
+      "name": "Unlimited-OCR",
+      "organization": "Baidu",
+      "description": "High-accuracy OCR model with 4,512 likes and 1.2M downloads, supporting multi-language text extraction from documents, images, and complex layouts. Trending as document AI pipelines increasingly demand production-quality OCR.",
+      "task_type": "image-text-to-text",
+      "model_size": "not disclosed",
+      "tags": ["ocr", "document-ai", "image-to-text", "multilingual"],
+      "metrics": {"downloads": 1205646, "likes": 4512},
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3 (Segment Anything Model 3)",
+      "organization": "Meta (Facebook AI Research)",
+      "description": "Third generation of Meta's Segment Anything Model with 4,149 likes and 2M downloads. Supports segmentation and feature extraction across images and video, with improved zero-shot performance on medical and satellite imagery.",
+      "task_type": "image-segmentation",
+      "model_size": "not disclosed",
+      "tags": ["segmentation", "computer-vision", "zero-shot", "image-segmentation", "video"],
+      "metrics": {"downloads": 2054071, "likes": 4149},
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "Google's text embedding model based on Gemma-2 architecture with 1,923 likes and 115K downloads. Achieves strong MTEB scores and is notable for multilingual embedding quality, trending as RAG pipelines upgrade their embedding layer.",
+      "task_type": "feature-extraction",
+      "model_size": "not disclosed",
+      "tags": ["embeddings", "rag", "semantic-search", "multilingual", "gemma"],
+      "metrics": {"downloads": 115763, "likes": 1923},
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "cloudflare-clef",
+      "name": "CLEF",
+      "organization": "Cloudflare",
+      "description": "Cloudflare's image-text-to-text model optimized for edge deployment with 2,086 likes and 15K downloads. Designed for latency-sensitive inference at the network edge, signaling a new wave of frontier-quality models built for CDN and edge infrastructure.",
+      "task_type": "image-text-to-text",
+      "model_size": "not disclosed",
+      "tags": ["edge-inference", "multimodal", "enterprise", "low-latency"],
+      "metrics": {"downloads": 15064, "likes": 2086},
+      "source_url": "https://huggingface.co/Cloudflare/clef"
+    },
+    {
+      "id": "aleph-alpha-kolibri-1",
+      "name": "Kolibri-1",
+      "organization": "Aleph Alpha",
+      "description": "Aleph Alpha's MoE reasoning model with 914 likes and 14K downloads, designed for European enterprise deployments with strong German-language support and GDPR-compliant on-premise hosting options.",
+      "task_type": "text-generation",
+      "model_size": "not disclosed",
+      "tags": ["moe", "reasoning", "european-ai", "enterprise", "multilingual"],
+      "metrics": {"downloads": 14018, "likes": 914},
+      "source_url": "https://huggingface.co/Aleph-Alpha/Kolibri-1"
+    },
+    {
+      "id": "liquidai-d1-3b",
+      "name": "d1-3B",
+      "organization": "LiquidAI",
+      "description": "LiquidAI's 3B parameter model with image-text-to-text capability based on Liquid Neural Network principles, with 342 likes and 11K downloads. Trending as practitioners explore alternatives to transformer architectures for on-device deployment.",
+      "task_type": "image-text-to-text",
+      "model_size": "3B",
+      "tags": ["liquid-neural-networks", "on-device", "multimodal", "efficient-inference"],
+      "metrics": {"downloads": 11866, "likes": 342},
+      "source_url": "https://huggingface.co/LiquidAI/d1-3B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Adaptive AI agent framework with self-improvement capabilities and persistent memory, currently the most-starred non-framework AI agent repo at 252K stars. Updated Oct 18 as one of the most actively developed agent runtimes.",
+      "language": "Python",
+      "stars": 252822,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agents", "self-improvement", "llm", "memory", "autonomous"],
+      "relevance": "high"
+    },
+    {
+      "id": "pytorch-pytorch",
+      "name": "pytorch/pytorch",
+      "description": "The PyTorch deep learning framework, gaining 315 stars today — an unusually high daily gain for a mature repo, suggesting a significant release announcement or benchmark result drove fresh community attention.",
+      "language": "Python",
+      "stars": 104530,
+      "stars_today": 315,
+      "forks": 0,
+      "url": "https://github.com/pytorch/pytorch",
+      "tags": ["deep-learning", "framework", "gpu", "neural-networks"],
+      "relevance": "medium"
+    },
+    {
+      "id": "tensorflow-tensorflow",
+      "name": "tensorflow/tensorflow",
+      "description": "Google's TensorFlow ML framework, still active at 200K+ stars. Recent updates focus on TF 3.x compatibility with the emerging JAX ecosystem and improved mobile/edge deployment.",
+      "language": "C++",
+      "stars": 200872,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "tags": ["deep-learning", "framework", "google", "mobile", "edge"],
+      "relevance": "low"
+    },
+    {
+      "id": "huggingface-transformers",
+      "name": "huggingface/transformers",
+      "description": "The central hub for transformer model implementations across HuggingFace, now at 167K+ stars. Trending due to Intern-Decision and Intern Lumina U2 model integrations landing in the main branch this week.",
+      "language": "Python",
+      "stars": 167524,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/huggingface/transformers",
+      "tags": ["transformers", "llm", "multimodal", "nlp", "computer-vision"],
+      "relevance": "high"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "Leading open-source UI for interacting with local and hosted AI backends including Ollama, OpenAI, and Anthropic APIs. 154K stars reflects its status as the default front-end for local AI deployments.",
+      "language": "Python",
+      "stars": 154329,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": ["llm-ui", "local-inference", "ollama", "rag", "multi-model"],
+      "relevance": "high"
+    },
+    {
+      "id": "langchain-ai-langchain",
+      "name": "langchain-ai/langchain",
+      "description": "Agent engineering platform for building RAG systems and agentic pipelines with 147K stars. Trending as new FlashMask-3 and Qwen3.8 integrations are discussed in the community.",
+      "language": "Python",
+      "stars": 147635,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/langchain-ai/langchain",
+      "tags": ["agents", "rag", "llm-framework", "python"],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "Converts codebases into knowledge graphs for AI agent navigation and understanding, with 125K stars. Trending as engineering teams integrate it with OpenGCUA and hermes-agent for codebase-aware computer-use agents.",
+      "language": "Python",
+      "stars": 125581,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": ["knowledge-graphs", "code-analysis", "agents", "graph-ml"],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "AI agent that automatically pulls and synthesizes data from platforms like Twitter/X, YouTube, Reddit, and GitHub to build research context. 96K stars, trending alongside the agent harness papers as practitioners build data-gathering agents.",
+      "language": "Python",
+      "stars": 96058,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["data-gathering", "agents", "social-media", "research-automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "zhulinsen-daily-stock-analysis",
+      "name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM-driven daily stock analysis tool with automated market data collection, fundamental analysis, and portfolio recommendations. 66K stars, reflecting sustained interest in finance-domain AI applications.",
+      "language": "Python",
+      "stars": 66190,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "tags": ["finance", "llm-applications", "agents", "stock-analysis", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "antirez-ds4",
+      "name": "antirez/ds4",
+      "description": "Lightweight local inference engine for DeepSeek 4 models optimized for Metal (Apple Silicon), CUDA, and ROCm — created by Redis creator antirez. Gaining significant attention as the reference implementation for local DeepSeek 4 deployment.",
+      "language": "C",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/antirez/ds4",
+      "tags": ["inference", "local-llm", "deepseek", "metal", "cuda", "rocm"],
+      "relevance": "high"
+    },
+    {
+      "id": "berri-ai-litellm",
+      "name": "BerriAI/litellm",
+      "description": "Rust-powered AI gateway that provides a unified OpenAI-compatible API for 100+ LLM providers, now with significantly improved throughput over the prior Python implementation. A critical piece of infrastructure for multi-provider deployments.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/BerriAI/litellm",
+      "tags": ["llm-gateway", "api", "multi-provider", "openai-compatible", "rust"],
+      "relevance": "high"
+    },
+    {
+      "id": "mvschwarz-openrig",
+      "name": "mvschwarz/openrig",
+      "description": "Multi-agent harness that orchestrates Claude Code and OpenAI Codex as a collaborative pair for complex software engineering tasks, with role-based task allocation and cross-agent context sharing.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mvschwarz/openrig",
+      "tags": ["multi-agent", "coding-agents", "claude", "codex", "software-engineering"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agentic Self-Improvement",
+      "description": "A cluster of papers (Self-Evolving Agent Harness, Mosaic, AutoSFT) formalizes the idea of agents that improve their own scaffolding — prompts, memory, workflows, training data — without weight updates, pointing toward a new paradigm of deployment-time learning.",
+      "related_paper_ids": ["self-evolving-agent-harness", "mosaic-multi-session-agentic-rl", "autosft-automated-sft-data-research"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Unified Architectures",
+      "description": "Both Intern-Decision and Intern Lumina U2 from Shanghai AI Laboratory represent the trend toward single models that handle understanding and generation across image, video, and text — with the key innovation being discrete token representations rather than continuous latents.",
+      "related_paper_ids": ["intern-decision-multimodal-decision", "intern-lumina-u2-diffusion-llm", "omnicompass-video-grounding-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "3D Generation and Consistency",
+      "description": "InfiniSplat v2, 3DCodeVerse, and Orbia together signal a maturing of 3D generation research — moving from proof-of-concept to systematic improvement, code-based representation, and rigorous evaluation of geometric consistency.",
+      "related_paper_ids": ["infinisplat-v2-3dgs-any-views", "3dcodeverse-3d-worlds-as-code", "orbia-generated-video-3d-world"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Computer-Use and GUI Agents",
+      "description": "OpenGCUA's open-source release and MAI-Gym's cross-platform evaluation infrastructure mark a transition from research prototypes to deployable computer-use agent stacks, with Alibaba making an aggressive open-source play to capture the ecosystem.",
+      "related_paper_ids": ["opengcua-generalist-computer-use", "mai-gym-gui-agent-platform"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Long-Context Attention",
+      "description": "FlashMask-3's distributed attention mechanism and DeltaStreamer's delta-based video processing both address the same core problem: how to maintain high hardware utilization while processing extremely long sequences, whether text or video.",
+      "related_paper_ids": ["flashmask-3-distributed-attention", "deltastreamer-agentic-video-understanding"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI/cs.LG/cs.CL/cs.CV",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-18T15:00:00Z",
+      "status": "partial"
+    }
+  ]
+}
