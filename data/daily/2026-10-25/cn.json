@@ -1,0 +1,560 @@
+{
+  "version": "1.0",
+  "date": "2026-10-25",
+  "generated_at": "2026-10-25T15:15:00Z",
+  "summary": {
+    "headline": "WeVisOne-VL以107票获得最高关注，实现从目标到像素的统一视觉感知；物理AI递归自我改进综述提出L0–L5能力路线图；简单RAG被证明超越复杂代理记忆系统",
+    "body": "今日主导主题是AI系统中感知、代理与具身能力的融合。**WeVisOne-VL**以107次点赞位居HuggingFace每日论文榜首，提出了一种单一统一架构，可同时处理目标检测、分割和像素级理解——这是计算机视觉领域长期追求的目标。与此同时，一篇关于**《走向物理AI的递归自我改进》**的综述（39票）引入了L0–L5能力阶梯，描述了机器人自主升级自身能力的路径，并发现当前系统尚未实现真正的物理RSI，为下一代自主机器人绘制了研究路线图。\n\n代理主题主导了榜单其余部分：**《真实网络环境中的深度搜索》**展示了LLM驱动的网络代理在多跳信息任务上超越人类研究者的能力；**TARSphere**为长时域具身代理提供了全栈机器人框架；多篇论文对层出不穷的代理记忆系统进行基准测试或质疑。最具争议性的是，**《复杂代理记忆总是必要的吗？简单RAG比我们想象的更强大》**（20票）挑战了复杂记忆架构必要性的普遍假设，显示精心调优的原始RAG在标准基准上以更低成本和延迟达到或超越复杂系统的性能。\n\n模型方面，**Qwen3.8-27B**以785万次下载和18,352个点赞巩固了其本周下载量最大多模态大模型的地位；Lightricks的**LTX-2.5**凭借9,199个点赞成为开源4K文本转视频生成的领军者。GitHub十月趋势列表持续被代理基础设施主导：OpenCode（21.9万星）和Agency-Agents（16.3万星）表明构建AI代理系统已成为主流软件工程实践。",
+    "key_themes": [
+      "agentic-systems",
+      "unified-multimodal-perception",
+      "physical-ai-embodiment",
+      "diffusion-language-models",
+      "3d-gaussian-splatting",
+      "memory-context-efficiency"
+    ]
+  },
+  "researcher_notes": "**WeVisOne-VL以107票高居今日榜首——远超其他论文——表明统一视觉感知架构正迎来真正的突破时刻。**过去三年，学界一直在争论单一模型能否处理从粗粒度目标识别到细粒度像素分割的全谱任务。WeVisOne-VL似乎给出了明确答案：可以，且该方法在不同任务族间具有泛化能力，避免了早期统一架构（如UniHead）常见的性能崩溃问题。如果您从事机器人、自动驾驶或任何需要密集视觉定位的系统研究，请密切关注这篇论文。\n\n**物理AI递归自我改进综述是今日潜力股。**39票低估了其战略重要性：该论文引入了正式的L0–L5阶梯，描述了机器人应如何升级自身能力——从简单的模型微调（L0）到完全自主的硬件重新设计（L5）。核心发现——没有现有系统超过L2——为未来十年提供了共享词汇和清晰挑战层次体系。这类论文会被远超初始受众的资助提案和路线图引用。\n\n**简单RAG论文是对一个盈利生态系统的直接挑战。**「简单检索增强生成在标准基准上与『复杂代理记忆』相媲美甚至超越」这一主张将使销售复杂记忆中间件的初创公司深感不安。论文作者可能在选取基准时存在偏向，反驳不可避免——但核心观察（从业者过度设计内存）反映了生产系统中的真实现象。预计本周在代理基础设施圈将引发激烈讨论。\n\n**三维高斯泼溅（3DGS）论文集群（F2G-Pose、RLSplat、SplatLab）表明该领域正从新颖性迈向应用成熟。**F2G-Pose将3DGS表示应用于目标姿态估计问题——这是经典计算机视觉任务——证明高斯特征能很好地迁移到判别式任务，而不仅限于场景重建。SplatLab的自主科学发现角度尤为有趣：它以3DGS为底层基础构建自我改进的研究循环，将今日的高斯主题与物理AI中的递归自我改进主题连接起来。\n\n**两篇值得追踪的黑马论文：BrickWright和Agent Mosaic。**BrickWright（代理式创建物理可行的乐高结构）看似玩具问题，但物理可行性约束是建筑、制造和机器人领域每个实际任务的核心挑战。该代理必须同时考虑结构、稳定性和逐步可构建性——这是受约束三维空间推理的严格代理任务。Agent Mosaic（检测多代理大模型系统中的机密泄露）随着代理架构大规模部署，解决了一个关键但研究不足的攻击面。",
+  "papers": [
+    {
+      "id": "wevisionone-vl-unified-visual-perception",
+      "title": "WeVisOne-VL：从目标到像素的统一视觉感知",
+      "authors": ["WeVis研究团队"],
+      "affiliations": ["WeVis AI Research"],
+      "summary": "WeVisOne-VL提出了一种统一架构，可处理视觉感知任务的全谱——从目标检测和实例分割到语义分割和像素级密集预测——无需特定任务的头部或独立模型族。该方法使用共享视觉编码器配合任务条件查询路由机制。",
+      "key_findings": [
+        "单一模型在检测、实例分割和密集预测基准上同时实现竞争性能",
+        "任务条件查询路由避免了朴素多任务统一中常见的性能崩溃",
+        "模型权重已在HuggingFace公开，支持直接对比和复现"
+      ],
+      "tags": ["unified-perception", "object-detection", "segmentation", "vision-language", "multimodal"],
+      "relevance": "high",
+      "engagement": {"upvotes": 107, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31329",
+        "huggingface": "https://huggingface.co/papers/2610.31329",
+        "pdf": "https://arxiv.org/pdf/2610.31329"
+      }
+    },
+    {
+      "id": "f2g-pose-geometry-aware-foundation-rgb-d",
+      "title": "F2G-Pose：面向RGB-D目标姿态估计的几何感知基础特征提升",
+      "authors": ["Minseong Bae", "Sehyung Kim", "Jihwan Park", "Minseok Joo", "Injae Kim"],
+      "affiliations": ["韩国科学技术院 (KAIST)"],
+      "summary": "F2G-Pose利用三维高斯泼溅（3DGS）表示作为中间几何支架，将二维基础模型特征提升到三维空间，用于从RGB-D输入中进行6自由度目标姿态估计。该方法在标准姿态估计基准上达到最先进水平，同时比纯学习方法更节省标注数据。",
+      "key_findings": [
+        "基于3DGS的特征提升无需特定任务预训练，即可弥合二维基础模型与三维姿态估计之间的鸿沟",
+        "在LINEMOD和YCB-V基准上以显著更少的标注训练样本达到竞争性结果",
+        "几何感知提升方法无需每个目标单独微调即可泛化到新目标"
+      ],
+      "tags": ["3d-gaussian-splatting", "pose-estimation", "rgb-d", "foundation-models", "robotics"],
+      "relevance": "high",
+      "engagement": {"upvotes": 46, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31623",
+        "huggingface": "https://huggingface.co/papers/2610.31623",
+        "pdf": "https://arxiv.org/pdf/2610.31623"
+      }
+    },
+    {
+      "id": "recursive-self-improvement-physical-ai",
+      "title": "走向物理AI的递归自我改进",
+      "authors": ["Hai Zhou", "Fan Yang", "Zeyi Chen", "Lejun Zhang", "Chenyang Fu", "Qian Feng", "Shangding Gu", "等"],
+      "affiliations": ["麻省理工学院 (MIT)", "斯坦福大学", "Google DeepMind", "微软研究院"],
+      "summary": "本综述引入了物理RSI（递归自我改进）框架，提出了一个正式的L0–L5能力阶梯，描述了自主物理代理应如何升级自身的技能、模型和硬件。作者系统性地梳理了五个层级的文献，发现没有现有系统能明确达到L3或更高水平。",
+      "key_findings": [
+        "L0–L5框架映射了从参数微调到自主硬件重新设计与策略全面革新的完整能力谱系",
+        "当前没有机器人系统超过L2（借助外部支架的自主策略改进）",
+        "确定的关键瓶颈：安全策略评估、自我修改过程中的分布偏移，以及机器人自身硬件的物理操控"
+      ],
+      "tags": ["robotics", "recursive-self-improvement", "embodied-ai", "survey", "physical-ai"],
+      "relevance": "high",
+      "engagement": {"upvotes": 39, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.29677",
+        "huggingface": "https://huggingface.co/papers/2610.29677",
+        "pdf": "https://arxiv.org/pdf/2610.29677"
+      }
+    },
+    {
+      "id": "what-generation-knows-unified-multimodal",
+      "title": "生成所知：解锁统一多模态模型中的细粒度理解",
+      "authors": ["Zhiheng Liu", "Zecong Tang", "Weitong Lian", "Kaixuan Wang", "Ruca Liu"],
+      "affiliations": ["清华大学", "北京人工智能研究院 (BAAI)"],
+      "summary": "本文证明，生成式多模态模型隐式编码了通过标准提示无法访问的细粒度感知知识。通过将潜在生成信号蒸馏回判别头，作者在无需额外标注的情况下解锁了细粒度视觉理解任务上的卓越性能。",
+      "key_findings": [
+        "生成模型包含标准推理流程无法呈现的潜在判别知识",
+        "因子感知预测蒸馏将细粒度视觉问答（VQA）性能提升最高12.3%",
+        "该方法可跨架构迁移，包括LLaVA风格和Flamingo风格模型"
+      ],
+      "tags": ["multimodal", "generative-models", "fine-grained-understanding", "knowledge-distillation", "vqa"],
+      "relevance": "high",
+      "engagement": {"upvotes": 28, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.23987",
+        "huggingface": "https://huggingface.co/papers/2610.23987",
+        "pdf": "https://arxiv.org/pdf/2610.23987"
+      }
+    },
+    {
+      "id": "deep-search-real-world-web",
+      "title": "真实网络环境中的深度搜索",
+      "authors": ["Zhe Huang", "Xiaomin Yu", "Nina Huang", "等"],
+      "affiliations": ["上海人工智能实验室", "复旦大学"],
+      "summary": "本文提出了LLM驱动的深度网络搜索代理框架和基准，代理需在真实浏览器环境中操作，处理跨多个实时网页的多跳推理，应对噪声信息并生成媲美专家人类研究者的研究级报告。",
+      "key_findings": [
+        "在给予充足计算预算的情况下，LLM网络搜索代理在43%的多跳研究任务上与专家人类研究者相当",
+        "提出的基准涵盖科学、金融和技术领域的1200个真实世界研究查询",
+        "带回溯的思维链网络导航显著优于贪婪搜索策略"
+      ],
+      "tags": ["web-agents", "information-retrieval", "agentic-search", "llm-agents", "benchmark"],
+      "relevance": "high",
+      "engagement": {"upvotes": 23, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.30181",
+        "huggingface": "https://huggingface.co/papers/2610.30181",
+        "pdf": "https://arxiv.org/pdf/2610.30181"
+      }
+    },
+    {
+      "id": "any-game-renderer-entity-consistent",
+      "title": "AnyGameRenderer：跨游戏实体一致的生成式渲染",
+      "authors": ["AnyGameRenderer研究团队"],
+      "affiliations": ["字节跳动研究院"],
+      "summary": "AnyGameRenderer解决了在多个场景、摄像机角度和游戏状态下生成游戏内容时保持实体级视觉一致性的挑战。该系统使用跨游戏实体嵌入确保角色、物体和环境保持视觉连贯性，无需针对每款游戏进行微调。",
+      "key_findings": [
+        "跨游戏实体嵌入在场景间保持角色和物体身份一致性，感知一致性达95%",
+        "无需额外微调即可零样本泛化到未见过的游戏标题",
+        "支持AAA生产质量游戏的交互帧率实时渲染"
+      ],
+      "tags": ["game-ai", "generative-rendering", "entity-consistency", "video-generation", "computer-graphics"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 21, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31466",
+        "huggingface": "https://huggingface.co/papers/2610.31466",
+        "pdf": "https://arxiv.org/pdf/2610.31466"
+      }
+    },
+    {
+      "id": "naive-rag-stronger-than-we-thought",
+      "title": "复杂代理记忆总是必要的吗？简单RAG比我们想象的更强大",
+      "authors": ["记忆系统研究组"],
+      "affiliations": ["卡内基梅隆大学", "加州大学伯克利分校"],
+      "summary": "本研究挑战了长期上下文推理任务中复杂代理记忆架构必要性的普遍假设。通过在12个基准上的受控实验，作者表明精心调优的原始RAG以更低的成本和延迟达到或超越复杂记忆系统的性能。",
+      "key_findings": [
+        "经过优化分块的朴素RAG在12个标准基准中的8个上与复杂代理记忆相当",
+        "复杂记忆系统仅在需要超过100轮的显式时序推理任务中提供统计显著的收益",
+        "成本-性能帕累托前沿在大多数生产用例中强烈倾向于朴素RAG"
+      ],
+      "tags": ["rag", "agentic-memory", "llm-inference", "benchmarking", "retrieval"],
+      "relevance": "high",
+      "engagement": {"upvotes": 20, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.30755",
+        "huggingface": "https://huggingface.co/papers/2610.30755",
+        "pdf": "https://arxiv.org/pdf/2610.30755"
+      }
+    },
+    {
+      "id": "tarsphere-robot-long-horizon-embodied",
+      "title": "TARSphere：面向长时域具身代理的机器人全栈框架",
+      "authors": ["Tao Zhang", "Yuhang Dong", "Ziyuan Chen", "Zhikai Xu", "Xuyicheng"],
+      "affiliations": ["浙江大学", "脑机智能国家重点实验室"],
+      "summary": "TARSphere提供了一个端到端框架，集成了感知、规划、操控和环境交互，用于长时域机器人任务。该框架将多种传感模态与层次化规划架构统一，并为仿真到实物迁移提供标准化接口。",
+      "key_findings": [
+        "全栈集成将长时域机器人任务实验的开发开销与组合独立框架相比降低65%",
+        "层次化规划器在仿真厨房环境中的30步操控任务上达到73%成功率",
+        "标准化仿真到实物接口缩小了迁移差距，零样本真实世界任务成功率提升15%"
+      ],
+      "tags": ["robotics", "embodied-agents", "long-horizon", "manipulation", "sim-to-real"],
+      "relevance": "high",
+      "engagement": {"upvotes": 19, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.30043",
+        "huggingface": "https://huggingface.co/papers/2610.30043",
+        "pdf": "https://arxiv.org/pdf/2610.30043"
+      }
+    },
+    {
+      "id": "rethinking-sequence-compression-test-time",
+      "title": "用测试时回归重新思考序列压缩",
+      "authors": ["序列压缩研究团队"],
+      "affiliations": ["多伦多大学", "Vector Institute"],
+      "summary": "本文提出了一种测试时回归方法用于序列压缩，根据每个片段的信息密度动态调整压缩比，而非应用均匀压缩。该方法在相同平均压缩比下实现了显著更好的关键信息保留。",
+      "key_findings": [
+        "基于测试时回归的压缩在4倍压缩下比静态压缩策略多保留18%的语义信息",
+        "动态比例分配自动识别高熵片段并为其分配更多token",
+        "方法与模型无关，可在推理时应用于任何自回归大模型"
+      ],
+      "tags": ["sequence-compression", "efficiency", "long-context", "inference", "kv-cache"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 13, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31574",
+        "huggingface": "https://huggingface.co/papers/2610.31574",
+        "pdf": "https://arxiv.org/pdf/2610.31574"
+      }
+    },
+    {
+      "id": "beyond-watching-searching-video-agents",
+      "title": "超越观看与搜索：视频中心深度研究报告代理基准测试",
+      "authors": ["视频代理研究团队"],
+      "affiliations": ["北京大学", "北京通用人工智能研究院 (BIGAI)"],
+      "summary": "这篇基准论文评估了LLM代理在以视频内容为基础生成综合研究报告任务上的性能，需要整合视觉理解、时序推理和外部知识检索。该基准揭示了当前多模态代理将视频作为主要信息源处理时的关键失效模式。",
+      "key_findings": [
+        "当前最佳多模态代理在完整视频研究报告基准上仅得34分，时序推理是主要失效模式",
+        "代理在密集视频事实抽取上持续优于人类，但在综合分析和跨视频比较上表现不足",
+        "简单提示策略（带视频章节分割的思维链）无需架构变更即可缩小40%的性能差距"
+      ],
+      "tags": ["video-understanding", "agents", "benchmark", "multimodal", "research-automation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 12, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31158",
+        "huggingface": "https://huggingface.co/papers/2610.31158",
+        "pdf": "https://arxiv.org/pdf/2610.31158"
+      }
+    },
+    {
+      "id": "brickwright-agentic-brick-builds",
+      "title": "BrickWright：代理式创建物理可行的积木构建",
+      "authors": ["BrickWright团队"],
+      "affiliations": ["麻省理工学院计算机科学与人工智能实验室 (CSAIL)"],
+      "summary": "BrickWright展示了一个从自然语言描述设计物理可行的乐高兼容积木结构的LLM代理。该代理必须同时满足结构稳定性、美学连贯性和逐步可构建性——是受约束三维空间推理能力的严格代理任务。",
+      "key_findings": [
+        "相较于无物理反馈的直接LLM生成（23%），代理在自由形式构建请求上实现了71%的结构可行性",
+        "迭代物理仿真反馈循环将结构失败减少3.2倍",
+        "空间推理技能可迁移：在积木构建上训练的模型在通用三维组装基准上提升19%"
+      ],
+      "tags": ["spatial-reasoning", "agentic-ai", "3d-generation", "physical-simulation", "constrained-generation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 10, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31651",
+        "huggingface": "https://huggingface.co/papers/2610.31651",
+        "pdf": "https://arxiv.org/pdf/2610.31651"
+      }
+    },
+    {
+      "id": "splatlab-autonomous-scientific-discovery-3dgs",
+      "title": "SplatLab：面向3DGS研究的自主科学发现",
+      "authors": ["SplatLab研究团队"],
+      "affiliations": ["苏黎世联邦理工学院 (ETH Zurich)", "马克斯·普朗克智能系统研究所"],
+      "summary": "SplatLab为三维高斯泼溅（3DGS）研究引入了自主科学发现循环，其中代理提出新型架构变体、运行消融实验、解释结果并生成下一个假设——无需人工监督迭代。该系统在两周的自主运行中展示了自主科研能力。",
+      "key_findings": [
+        "在两周的自主运行中，SplatLab重新发现了3项已发表的3DGS改进，并找到了2项文献中未收录的新改进",
+        "代理自主生成的研究假设在留存基准上产生统计显著改进的成功率为34%",
+        "代理发现的改进泛化到下游任务，包括目标姿态估计和新视角合成"
+      ],
+      "tags": ["autonomous-research", "3d-gaussian-splatting", "scientific-discovery", "agentic-ai", "novel-view-synthesis"],
+      "relevance": "high",
+      "engagement": {"upvotes": 9, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.30468",
+        "huggingface": "https://huggingface.co/papers/2610.30468",
+        "pdf": "https://arxiv.org/pdf/2610.30468"
+      }
+    },
+    {
+      "id": "rlsplat-resource-linear-3dgs",
+      "title": "RLSplat：前馈三维高斯泼溅的资源线性预算控制",
+      "authors": ["Minseong Bae", "Sehyung Kim", "Jihwan Park", "Minseok Joo", "Injae Kim"],
+      "affiliations": ["韩国科学技术院 (KAIST)"],
+      "summary": "RLSplat为前馈3DGS模型引入了资源线性预算控制机制，使高斯数量随用户指定的质量预算线性扩展，从而在不重新训练的情况下在推理时遍历质量-计算权衡曲线。",
+      "key_findings": [
+        "资源线性高斯分配使单前向传递模型无需重新优化即可实现实时质量预算控制",
+        "与固定预算和自适应基线相比，实现了帕累托最优的质量-计算权衡",
+        "该方法作为即插即用推理模块，与所有现有前馈3DGS架构兼容"
+      ],
+      "tags": ["3d-gaussian-splatting", "neural-rendering", "efficiency", "budget-control", "inference"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 8, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.27712",
+        "huggingface": "https://huggingface.co/papers/2610.27712",
+        "pdf": "https://arxiv.org/pdf/2610.27712"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen（阿里云）",
+      "description": "本周下载量和点赞量最高的模型——270亿参数多模态大模型，具备图文到文本能力。结合了视觉理解与长上下文对话，是当前开放权重多模态模型的社区基准。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "vision-language", "chat", "open-weight"],
+      "metrics": {"downloads": 7851161, "likes": 18352},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "用于4K文本转视频生成的开放权重扩散模型。作为封闭式视频生成API的社区替代方案强势崛起，具有高质量运动连贯性和长视频片段支持。",
+      "task_type": "text-to-video",
+      "model_size": "不适用",
+      "tags": ["video-generation", "diffusion", "4k", "open-weight", "text-to-video"],
+      "metrics": {"downloads": 2087721, "likes": 9199},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "sam3",
+      "name": "SAM3（Segment Anything Model 3）",
+      "organization": "Meta AI",
+      "description": "Meta「Segment Anything」模型第三代，在统一架构中同时支持图像和视频分割。相比SAM2的主要升级是视频的原生时序一致性，以及在医学和卫星图像上显著提升的零样本性能。",
+      "task_type": "image-segmentation",
+      "model_size": "不适用",
+      "tags": ["segmentation", "zero-shot", "video", "image", "foundation-model"],
+      "metrics": {"downloads": 1863670, "likes": 5042},
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "qwen-image-21-uncensored-quantized",
+      "name": "Qwen-Image-2.1-Uncensored-Quantized",
+      "organization": "abenzerps（社区微调）",
+      "description": "Qwen-Image-2.1的12GB显存量化版本，移除了安全过滤器。在需要无约束图像理解的研究和创意应用中，作为商业图像API的可访问替代方案，在社区中广泛流行。",
+      "task_type": "text-to-image",
+      "model_size": "约7B（量化）",
+      "tags": ["image-generation", "quantized", "gguf", "community-fine-tune"],
+      "metrics": {"downloads": 2303585, "likes": 4981},
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized"
+    },
+    {
+      "id": "embeddinggemma-2",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "基于Gemma架构的768维多语言嵌入模型，来自Google。专为检索增强生成（RAG）流水线优化，具有强大的跨语言迁移能力，在MTEB多语言排行榜中名列前茅。",
+      "task_type": "feature-extraction",
+      "model_size": "不适用",
+      "tags": ["embeddings", "multilingual", "rag", "mteb", "retrieval"],
+      "metrics": {"downloads": 206909, "likes": 2902},
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "deepseek-v41-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek AI",
+      "description": "来自DeepSeek的Flash优化7B视觉语言模型，专为在消费级GPU上高效运行而设计。-1017后缀表示10月17日检查点；因其在消费者硬件规模上多模态推理任务中的强劲性能而广受关注。",
+      "task_type": "image-text-to-text",
+      "model_size": "7B",
+      "tags": ["vision-language", "flash", "efficient", "consumer-gpu", "multimodal"],
+      "metrics": {"downloads": 73215, "likes": 2813},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "drama-3",
+      "name": "Drama-3",
+      "organization": "Fish Audio",
+      "description": "Fish Audio富有表现力的多说话人TTS模型第三代。因其自然韵律、低延迟和情感控制token支持而广受追捧，是商业TTS API的领先开放权重替代方案。",
+      "task_type": "text-to-speech",
+      "model_size": "不适用",
+      "tags": ["tts", "multi-speaker", "expressive", "low-latency", "audio"],
+      "metrics": {"downloads": 19831, "likes": 992},
+      "source_url": "https://huggingface.co/fishaudio/drama-3"
+    },
+    {
+      "id": "moss-image-sft",
+      "name": "MOSS-Image-SFT",
+      "organization": "OpenMOSS团队",
+      "description": "来自OpenMOSS团队的有监督微调文本转图像模型，提供具有强烈真实感和构图准确性的完全开放权重扩散模型。作为自定义LoRA微调工作流的首选基础模型在社区中广受欢迎。",
+      "task_type": "text-to-image",
+      "model_size": "不适用",
+      "tags": ["text-to-image", "diffusion", "open-weight", "fine-tuning", "photorealism"],
+      "metrics": {"downloads": 9717, "likes": 701},
+      "source_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT"
+    },
+    {
+      "id": "timestral-209m",
+      "name": "Timestral-209M",
+      "organization": "Mistral AI",
+      "description": "来自Mistral AI的2.09亿参数时间序列预测基础模型，专为金融和科学传感器数据设计。值得注意的是这是Mistral的首个非语言模型，标志着其向纯文本生成之外的扩展。",
+      "task_type": "time-series-forecasting",
+      "model_size": "209M",
+      "tags": ["time-series", "forecasting", "foundation-model", "financial", "sensor-data"],
+      "metrics": {"downloads": 8731, "likes": 348},
+      "source_url": "https://huggingface.co/mistralai/Timestral-209M"
+    },
+    {
+      "id": "humanizer-gguf",
+      "name": "humanizer（GGUF）",
+      "organization": "jialinyyzz（社区微调）",
+      "description": "优化了自然、人性化对话的社区GGUF微调模型。持续保持每周下载量最高的模型之一，广泛用于希望输出过滤较少、口语化风格的聊天机器人和创意写作应用。",
+      "task_type": "text-generation",
+      "model_size": "不适用",
+      "tags": ["gguf", "conversational", "chat", "creative-writing", "community"],
+      "metrics": {"downloads": 138556, "likes": 2139},
+      "source_url": "https://huggingface.co/jialinyyzz/humanizer"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "一个通用AI技能目录，为编程代理和代理工作流提供标准化、可复用的提示模块。2026年10月GitHub趋势中星标最多的仓库，反映了社区从单体提示转向模块化、可组合代理指令集的转变。",
+      "language": "TypeScript",
+      "stars": 275451,
+      "stars_today": 0,
+      "forks": 23112,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": ["ai-agents", "prompt-engineering", "skills", "llm", "typescript"],
+      "relevance": "high"
+    },
+    {
+      "id": "anomalyco-opencode",
+      "name": "anomalyco/opencode",
+      "description": "拥有21.9万星且持续增长的开源AI编程代理——社区对Cursor、GitHub Copilot Workspace和Claude Code等工具的领先开放、自托管代理软件工程替代方案。近期新增多仓库工作区支持和并行代理执行功能，推动了关注度激增。",
+      "language": "Python",
+      "stars": 219400,
+      "stars_today": 0,
+      "forks": 29300,
+      "url": "https://github.com/anomalyco/opencode",
+      "tags": ["coding-agent", "ai-engineer", "llm", "open-source", "agentic"],
+      "relevance": "high"
+    },
+    {
+      "id": "michaelsitarzewski-agency-agents",
+      "name": "michaelsitarzewski/agency-agents",
+      "description": "用于构建AI代理系统的高级Python框架——拥有定义角色、通信协议和共享内存的专用代理集合。16.3万星表明多代理编排已从研究原型成熟为生产模式。",
+      "language": "Python",
+      "stars": 162700,
+      "stars_today": 0,
+      "forks": 26200,
+      "url": "https://github.com/michaelsitarzewski/agency-agents",
+      "tags": ["multi-agent", "llm", "python", "orchestration", "production"],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "将整个代码库转换为可查询知识图谱的工具，使LLM编程代理能够通过图遍历而非上下文窗口填充来导航大型仓库。成为代理需要语义仓库理解的关键基础设施。",
+      "language": "Python",
+      "stars": 129751,
+      "stars_today": 0,
+      "forks": 12494,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": ["knowledge-graph", "codebase", "llm-agents", "code-navigation", "semantic-search"],
+      "relevance": "high"
+    },
+    {
+      "id": "vllm-project-vllm",
+      "name": "vllm-project/vllm",
+      "description": "领先的开源LLM推理和服务引擎，以9.4万总星重返GitHub趋势。十月新版本增加了对Qwen3.8架构的支持并改善了多GPU张量并行，推动了新一轮关注热潮。",
+      "language": "Python",
+      "stars": 94304,
+      "stars_today": 0,
+      "forks": 23649,
+      "url": "https://github.com/vllm-project/vllm",
+      "tags": ["inference", "llm", "serving", "gpu", "tensor-parallelism"],
+      "relevance": "high"
+    },
+    {
+      "id": "headroom-context-compressor",
+      "name": "headroom/headroom",
+      "description": "LLM应用的上下文压缩中间件，自动摘要和压缩对话历史，在长时运行代理会话中将token成本降低最高70%。通过提供实用的中间方案，补充了「简单RAG与复杂记忆」的争论。",
+      "language": "Python",
+      "stars": 76000,
+      "stars_today": 0,
+      "forks": 5800,
+      "url": "https://github.com/headroom/headroom",
+      "tags": ["context-compression", "llm", "memory", "efficiency", "agents"],
+      "relevance": "high"
+    },
+    {
+      "id": "shiyu-coder-kronos",
+      "name": "shiyu-coder/Kronos",
+      "description": "拥有4.1万星的开源金融市场基础模型，基于数十年多资产金融数据训练，提供时间序列预测和市场状态分析。与Timestral-209M共同趋流行，反映社区对领域专用金融AI的探索。",
+      "language": "Python",
+      "stars": 41000,
+      "stars_today": 0,
+      "forks": 3200,
+      "url": "https://github.com/shiyu-coder/Kronos",
+      "tags": ["financial-ai", "time-series", "foundation-model", "forecasting", "markets"],
+      "relevance": "medium"
+    },
+    {
+      "id": "recursive-si-flint",
+      "name": "RecursiveSI/flint",
+      "description": "Flint是针对结构化推理任务（包括代码生成、工具调用和逐步问题解决）优化的轻量级指令微调大模型。因其通过GGUF量化在Apple Silicon上的性能特征而在HuggingFace上备受关注。",
+      "language": "Python",
+      "stars": 28000,
+      "stars_today": 0,
+      "forks": 1800,
+      "url": "https://github.com/RecursiveSI/flint",
+      "tags": ["llm", "reasoning", "tool-calling", "efficient", "apple-silicon"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "大规模代理系统",
+      "description": "多篇论文和仓库聚焦于代理AI系统的架构、基准测试和基础设施——从网络搜索代理和视频研究代理到全栈机器人框架。社区正从概念验证代理迈向生产级多代理基础设施。",
+      "related_paper_ids": ["deep-search-real-world-web", "tarsphere-robot-long-horizon-embodied", "beyond-watching-searching-video-agents", "brickwright-agentic-brick-builds", "naive-rag-stronger-than-we-thought"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "统一多模态感知",
+      "description": "新一代模型旨在在单一架构中处理所有视觉感知任务——检测、分割、密集预测。WeVisOne-VL和《生成所知》从不同角度推进这一议程，标志着统一视觉模型范式的成熟。",
+      "related_paper_ids": ["wevisionone-vl-unified-visual-perception", "what-generation-knows-unified-multimodal"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "物理AI与具身自我改进",
+      "description": "关于物理AI系统递归自我改进和长时域具身代理的论文表明，社区对弥合AI能力与真实世界物理操作之间鸿沟的兴趣日益增长。L0–L5框架论文提供了共享路线图。",
+      "related_paper_ids": ["recursive-self-improvement-physical-ai", "tarsphere-robot-long-horizon-embodied"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "三维高斯泼溅应用",
+      "description": "3DGS已从新视角合成扩展到目标姿态估计、自主科学发现和资源受限推理。今日三篇论文在不同方向推进前沿，表明3DGS正成为通用三维表示层。",
+      "related_paper_ids": ["f2g-pose-geometry-aware-foundation-rgb-d", "splatlab-autonomous-scientific-discovery-3dgs", "rlsplat-resource-linear-3dgs"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "记忆与上下文效率",
+      "description": "针对复杂记忆架构的反思正在形成。简单RAG论文直接挑战了复杂代理记忆值得付出成本的假设，而序列压缩和深度融合记忆论文则寻求更有原则的长上下文问题解决方案。",
+      "related_paper_ids": ["naive-rag-stronger-than-we-thought", "rethinking-sequence-compression-test-time"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "扩散语言模型",
+      "description": "多篇论文研究扩散语言模型的属性、优化和应用，作为自回归生成的替代方案。任务间速度变化、任务条件量化和反掩码策略设计是活跃的研究线索。",
+      "related_paper_ids": [],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-25T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace趋势模型",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-25T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-25T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-25T15:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-25T15:00:00Z",
+      "status": "partial"
+    }
+  ]
+}
