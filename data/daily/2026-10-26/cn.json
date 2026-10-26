@@ -1,0 +1,585 @@
+{
+  "version": "1.0",
+  "date": "2026-10-26",
+  "generated_at": "2026-10-26T15:10:00Z",
+  "summary": {
+    "headline": "RSIHub可组合智能体演化框架以186票领跑；Google Research修复十年旧患——softmax/交叉熵数值漏洞；Omni-Woodpecker靶向全模态大模型幻觉问题",
+    "body": "今日研究格局由两股汇聚的压力所定义：一是让AI智能体具备更强的自我改进能力，二是让其运行的底层基础设施更加数值正确。**RSIHub**（186票）高居热度榜首——这是一个用于智能体演化方法的可组合框架，将智能体修改自身行为的各种机制（LoRA微调、技能蒸馏、工具选择课程）抽象为统一的实验流水线。其高票数反映了社区在递归自我改进研究日益繁荣之际，对原则性工具链的迫切需求。\n\n与抢眼的智能体论文形成对照的是Google Research带来的**《Softmax与交叉熵的修复》**——这篇低调却极具爆炸性的论文记录了几乎所有主流深度学习框架中这两个操作的两处数值漏洞。这些漏洞在极端logit值处通过浮点消去引发梯度错误，导致模型在激活分布尾部出现无声的性能下降，而既不触发NaN也不触发溢出告警。本文将在数周内落地至PyTorch、JAX和TensorFlow的热修复分支；其实际影响远超当前引用量所显示的量级。\n\n具身AI方面，**RynnUnify**提出了统一具身脑架构，尝试将感觉运动感知、规划与执行整合进单一跨模态表示——这是自RT-X以来机器人领域最具雄心的统一化尝试。与此同时，**HoloBoxing**证明类人机器人仅需7分钟单GPU训练即可习得竞技性拳击动作，大幅降低了动态操作技能学习的算力门槛。模型方面，**Qwen3.8-27B**以18,394个点赞和776万次下载继续稳居最热门开源多模态模型宝座；Lightricks的**LTX-2.5**以9,336个点赞领跑文本生成视频领域；**facebook/sam3**以5,108个点赞将Segment Anything血脉延伸至视频领域。",
+    "key_themes": [
+      "agent-evolution-frameworks",
+      "numerical-correctness-infrastructure",
+      "embodied-ai-robotics",
+      "hallucination-mitigation-omni-llms",
+      "ai-safety-evaluation",
+      "test-time-reasoning-efficiency"
+    ]
+  },
+  "researcher_notes": "**RSIHub以186票登顶框架类论文——而非基准或模型——这才是今日最真实的信号。**框架论文很少统治HuggingFace日报榜，因为它缺少新SOTA结果那般耀眼的数字。RSIHub能够突围，说明社区对智能体演化方法的共享基础设施极为渴望。其可组合性设计是关键：各家实验室一直在为智能体自我修改构建一次性脚手架（反馈驱动的LoRA微调、技能蒸馏、工具选择课程），而RSIHub似乎提供了一套将这些方法映射至统一实验流水线的公共抽象。且看它能否像Gym曾经标准化强化学习环境那样，成为递归自我改进研究议程的事实标准。\n\n**Google Research的softmax/交叉熵修复是今日——乃至本周——实践影响最深远的论文。**Jonathan Barron及其同事——曾贡献mip-NeRF、Zip-NeRF等高影响力工程成果——发现了存在于几乎每个主流框架的两处漏洞。病理所在：标准实现在极端logit量级处的浮点消去产生错误梯度，悄然损害模型在激活分布尾部的校准质量。这不是理论猜想；大语言模型在训练早期和处理异常token序列时会频繁遭遇极端logit。预计未来几个月将涌现一批「用修复后softmax重训」的消融实验，各家实验室将争相量化此前悄然流失的性能。\n\n**三篇信度分配与推理效率论文（直接Pass@k剪枝、双世界信度分配、因果思维链）构成一个被低估的研究簇。**三者从不同角度攻克同一根本问题：当前推理链要么浪费，要么因果无效，我们需要更好地归因哪些步骤真正驱动了正确答案。Pass@k剪枝通过多样性感知的束选择实现；双世界信度分配用共享随机种子的反事实分支来隔离决策级贡献；因果思维链引入步间上下文隔离，防止后续推理步骤「预看」答案。三者合力提示该领域正在逼近推理链价值的原则性理论——对训练数据生成、RLVR奖励设计和推理时算力预算均有直接影响。\n\n**具身AI今日在多条战线悄然积蓄动能。**RynnUnify瞄准统一具身脑（感知+规划+执行于一体），感觉运动对齐提出离线代理指标以无需昂贵闭环测试即可预测机器人策略成功率，HoloBoxing展示类人动态技能学习的算力效率飞跃，DuoCook基准则引入了带物理资源竞争的多智能体协调评测。单独来看，每一项都非范式转换；但它们同日涌现，说明机器人社区已进入集成阶段——从孤立能力展示迈向整体系统评估。\n\n**两篇安全与治理论文值得超出其当前票数的关注。**VERA的EU AI法案合规仪表盘罕见地在治理实际发生之处落地：企业合规工作流，而非抽象原则。若它成为《人工智能法》18项技术要求的参考实现，将影响数百家组织在欧洲部署大语言模型的方式。EpiSEM-Bench同样被低估：它测试工具型智能体在工具本身隐藏安全相关证据时能否抵制被禁止的行为——这是现有安全基准几乎完全忽视的现实对抗场景。两篇论文的影响力将在12个月后远超今日。",
+  "papers": [
+    {
+      "id": "rsihub-agent-evolution-framework",
+      "title": "RSIHub：面向智能体演化方法的可组合框架",
+      "authors": ["RSIHub Team"],
+      "affiliations": ["上海人工智能实验室"],
+      "summary": "RSIHub提供了一个可组合、模块化的框架，将智能体演化方法（包括微调、技能蒸馏和工具使用课程）抽象为统一的实验流水线。其设计目标是通过将智能体更新机制与环境交互循环解耦，推动递归自我改进架构的可复现研究。",
+      "key_findings": [
+        "可组合抽象支持10余种不同的智能体演化策略（LoRA微调、基于PPO的自博弈、技能蒸馏），共享统一接口",
+        "已在编程、数学推理和多跳问答环境中进行基准测试，具备一致的性能追踪机制",
+        "开源版本包含面向HuggingFace模型、vLLM推理引擎和标准强化学习环境的预置连接器"
+      ],
+      "tags": ["agent-evolution", "recursive-self-improvement", "framework", "reinforcement-learning", "agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 186, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.32253",
+        "huggingface": "https://huggingface.co/papers/2610.32253",
+        "pdf": "https://arxiv.org/pdf/2610.32253"
+      }
+    },
+    {
+      "id": "omni-woodpecker-hallucination-omni-llms",
+      "title": "Omni-Woodpecker：基于证据先验再平衡的全模态大模型幻觉修正",
+      "authors": ["Omni-Woodpecker Team"],
+      "affiliations": ["北京大学", "字节跳动Research"],
+      "summary": "Omni-Woodpecker通过再平衡证据先验来解决全模态（音频、视频、图像、文本）大语言模型的幻觉问题：这是一种无需训练的推理时方法，在解码过程中下调模态不匹配的证据贡献权重，在无需模型重训的前提下，在全模态大模型基准上实现显著的幻觉率降低。",
+      "key_findings": [
+        "证据先验再平衡在OmniBench上减少23%幻觉率，在MMBench-Omni上减少18%，均无需微调",
+        "方法与模型无关，已在GPT-4o、Gemini-2.5及开源全模态模型上得到验证",
+        "揭示模态来源混淆（将文本内容归因于音频证据）是全模态大模型幻觉的主要机制"
+      ],
+      "tags": ["hallucination", "multimodal", "omni-llm", "inference", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 94, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.27103",
+        "huggingface": "https://huggingface.co/papers/2610.27103",
+        "pdf": "https://arxiv.org/pdf/2610.27103"
+      }
+    },
+    {
+      "id": "fix-softmax-cross-entropy-google",
+      "title": "Softmax与交叉熵的修复",
+      "authors": ["Jonathan T. Barron", "Dan Gnanapragasam", "Michael Tschannen"],
+      "affiliations": ["Google Research"],
+      "summary": "本文记录并修正了标准softmax、log-softmax与交叉熵损失实现中的两处数值漏洞——这些操作被用于几乎所有神经网络训练流水线。这两处漏洞在极端logit值处通过浮点消去引发梯度错误，在不触发任何NaN或溢出警告的情况下，悄然损害模型校准质量与收敛效果。",
+      "key_findings": [
+        "漏洞一：log-sum-exp技巧在大正logit处引入消去误差，传播至交叉熵梯度",
+        "漏洞二：单独计算的softmax与log-softmax在float32精度下与解析正确值偏差高达1e-3",
+        "提供了针对PyTorch和JAX的即插即用替换函数；消融实验显示语言模型预训练困惑度可测量提升"
+      ],
+      "tags": ["numerical-stability", "optimization", "infrastructure", "training", "pytorch", "jax"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31642",
+        "huggingface": "https://huggingface.co/papers/2610.31642",
+        "pdf": "https://arxiv.org/pdf/2610.31642"
+      }
+    },
+    {
+      "id": "rynnunify-unified-embodied-brain",
+      "title": "RynnUnify：迈向统一具身脑",
+      "authors": ["Yinzhou Tang", "Zixuan Wang", "Kun Xiang", "Bohan Hou", "Minghao Zhu"],
+      "affiliations": ["浙江大学", "腾讯AI Lab"],
+      "summary": "RynnUnify提出了一种统一具身脑架构，将感觉运动感知、语言引导规划与实时运动控制整合进单一跨模态Transformer。与将感知和动作视为独立子系统的传统机器人基础模型不同，RynnUnify学习联合表示，实现操作、导航与对话任务之间的无缝迁移。",
+      "key_findings": [
+        "单一架构在FurnitureBench（装配）、LIBERO（桌面操作）和VLN-CE（具身导航）上均达到竞争性结果",
+        "感觉运动输入与语言指令之间的跨模态注意力，在长时程任务完成率上比流水线方法高出14%",
+        "在85万条具身交互轨迹上预训练后，可少样本适应新任务类别"
+      ],
+      "tags": ["embodied-ai", "robotics", "unified-architecture", "vision-language-action", "multimodal"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.32965",
+        "huggingface": "https://huggingface.co/papers/2610.32965",
+        "pdf": "https://arxiv.org/pdf/2610.32965"
+      }
+    },
+    {
+      "id": "direct-passk-thought-pruning",
+      "title": "面向思维链剪枝的直接Pass@k优化：平衡测试时推理的质量与多样性",
+      "authors": ["Mahdi Salmani", "Adel Javanmard", "Devansh Gupta", "et al."],
+      "affiliations": ["南加州大学", "加州大学伯克利分校"],
+      "summary": "本文提出一种直接优化目标，用于在测试时扩展中剪除冗余推理路径。通过直接优化Pass@k目标（衡量k个采样解中至少有一个正确），而非使用代理指标，该方法在最小化精度损失的同时将推理成本降低35–50%。",
+      "key_findings": [
+        "直接Pass@k优化在MATH-500和AIME基准上优于基于熵的剪枝和束搜索变体",
+        "多样性感知剪枝保留了更多结构上不同的推理路径，提升解空间覆盖率",
+        "在可比精度下，每个问题生成的token数减少35–50%"
+      ],
+      "tags": ["test-time-compute", "reasoning", "chain-of-thought", "efficiency", "inference-scaling"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31667",
+        "huggingface": "https://huggingface.co/papers/2610.31667",
+        "pdf": "https://arxiv.org/pdf/2610.31667"
+      }
+    },
+    {
+      "id": "causal-chain-of-thought-attention-leakage",
+      "title": "因果思维链：通过上下文隔离缓解注意力泄漏",
+      "authors": ["Gabriele Dominici", "Teague McMillan", "Fazl Barez", "et al."],
+      "affiliations": ["牛津大学", "英国AI安全研究所"],
+      "summary": "因果思维链揭示并修正了标准思维链推理的一个根本缺陷：后续步骤对最终答案token的注意力泄漏，使模型能够「倒推」推理过程而非真正推导答案。步间上下文隔离强制每个步骤因果地影响后续步骤，从而产生更具可信度的推理轨迹。",
+      "key_findings": [
+        "对最终答案token的注意力泄漏在5B–70B参数范围内所有测试Transformer模型中均具有可测量性和系统性",
+        "上下文隔离在CausalBench上将因果忠实度得分提升31%，且不损失任务精度",
+        "可信推理轨迹使RLVR训练中的过程奖励建模更为可靠"
+      ],
+      "tags": ["chain-of-thought", "reasoning", "interpretability", "causal-ai", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31639",
+        "huggingface": "https://huggingface.co/papers/2610.31639",
+        "pdf": "https://arxiv.org/pdf/2610.31639"
+      }
+    },
+    {
+      "id": "twin-world-credit-assignment-agentic-rl",
+      "title": "同运相异选：面向智能体强化学习的双世界信度分配",
+      "authors": ["Zeropy Surio", "Tobias Engel", "Mei-Lin Chou", "et al."],
+      "affiliations": ["苏黎世联邦理工学院 (ETH Zurich)", "卡内基梅隆大学"],
+      "summary": "双世界信度分配解决了长时程智能体强化学习中极难处理的个体决策信度归因问题。通过运行共享相同随机种子（同运）但在特定决策点发散（相异选）的反事实「双胞胎」轨迹，该方法在不引发标准REINFORCE方差爆炸的前提下，隔离出每个动作的因果贡献。",
+      "key_findings": [
+        "双世界反事实在SciWorld和WebArena任务上将信度分配方差相比逐步REINFORCE降低62%",
+        "方法与现有PPO和GRPO训练流水线兼容，额外开销极小",
+        "编程智能体实验显示，在相同算力预算下SWE-bench-verified绝对提升8.4%"
+      ],
+      "tags": ["reinforcement-learning", "credit-assignment", "agents", "agentic-rl", "counterfactual"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31544",
+        "huggingface": "https://huggingface.co/papers/2610.31544",
+        "pdf": "https://arxiv.org/pdf/2610.31544"
+      }
+    },
+    {
+      "id": "sensorimotor-alignment-embodied-policy",
+      "title": "感觉运动对齐：具身策略成功率的柏拉图代理指标",
+      "authors": ["Yunfei Xie", "Howard H. Qian", "Shiyi Lan", "et al."],
+      "affiliations": ["加州大学圣地亚哥分校", "斯坦福大学"],
+      "summary": "感觉运动对齐提出了一种基于视觉语言表示对齐的离线指标，无需代价高昂的闭环机器人测试即可预测机器人策略成功率。该指标衡量策略的视觉表示与任务目标语言描述之间的对齐程度——一种与下游任务成功率高度相关的表示质量「柏拉图理想」。",
+      "key_findings": [
+        "感觉运动对齐得分（SAS）在12项操作和导航任务中与真实机器人成功率相关系数r=0.87",
+        "SAS评测比等效的闭环测试快50倍",
+        "预训练数据质量被识别为策略成功率的首要预测因子，优先于模型架构"
+      ],
+      "tags": ["robotics", "embodied-ai", "evaluation", "vision-language", "representation-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31670",
+        "huggingface": "https://huggingface.co/papers/2610.31670",
+        "pdf": "https://arxiv.org/pdf/2610.31670"
+      }
+    },
+    {
+      "id": "episem-bench-agent-safety-missing-evidence",
+      "title": "EpiSEM-Bench：评估证据缺失条件下大模型智能体的安全性与证据恢复",
+      "authors": ["Qijin Zhang", "Hanzhen Wang", "Yuehan Zhao", "et al."],
+      "affiliations": ["清华大学", "北京人工智能研究院"],
+      "summary": "EpiSEM-Bench引入了一个专为证据不完整条件下工具型智能体设计的安全基准：它测试当所用工具返回的输出省略了安全相关事实时，智能体能否正确拒绝安全策略所禁止的动作。基准覆盖医疗诊断、金融建议和内容审核等12个安全关键领域。",
+      "key_findings": [
+        "所有被测前沿模型（GPT-4o、Claude 4、Gemini 2.5）在工具输出隐藏关键证据时，至少23%的情况下违反安全约束",
+        "具备显式不确定性推理的智能体比标准工具使用提示策略减少41%的违规率",
+        "安全失败集中于模型对被禁止动作具有高先验置信度的领域"
+      ],
+      "tags": ["safety", "agents", "tool-use", "benchmark", "evaluation", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31650",
+        "huggingface": "https://huggingface.co/papers/2610.31650",
+        "pdf": "https://arxiv.org/pdf/2610.31650"
+      }
+    },
+    {
+      "id": "holoboxing-humanoid-boxing-training",
+      "title": "HoloBoxing：7分钟单GPU训练实现类人机器人拳击的简单方案",
+      "authors": ["Ziyue Liu", "Yuhan Bao", "Boxiong Li", "Bo Zhang", "Xihan Ma"],
+      "affiliations": ["上海交通大学", "致远学院"],
+      "summary": "HoloBoxing展示了类人机器人仅需7分钟单GPU训练，结合运动重定向与基于模型的强化学习，即可习得动态、物理上合理的拳击动作（包括直拳、勾拳和防御动作）。该方法大幅降低了学习动态全身操作技能的算力门槛。",
+      "key_findings": [
+        "7分钟单GPU训练即可实现可迁移至Unitree H1硬件的真实类人拳击动作",
+        "来自人类视频演示的运动重定向提供了强力初始化，将强化学习探索时间减少94%",
+        "可泛化至训练中未见的对手行为，表明习得的是鲁棒运动基元而非记忆序列"
+      ],
+      "tags": ["robotics", "humanoid", "reinforcement-learning", "motion-learning", "embodied-ai"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.32909",
+        "huggingface": "https://huggingface.co/papers/2610.32909",
+        "pdf": "https://arxiv.org/pdf/2610.32909"
+      }
+    },
+    {
+      "id": "vera-responsible-ai-dashboard-eu-ai-act",
+      "title": "VERA：面向《欧盟人工智能法案》的大模型部署责任AI评估仪表盘",
+      "authors": ["Robin Quériaux", "Solveig Bachellery", "Léa Déléris", "et al."],
+      "affiliations": ["法国巴黎银行AI研究院 (BNP Paribas AI Research)", "索邦大学"],
+      "summary": "VERA是一个实用仪表盘，将《欧盟人工智能法案》18项要求所需的技术证据进行系统整理，将抽象的监管义务转化为可量化的技术指标。它将现有评测基准和红队测试协议映射至法案的具体条款，帮助合规团队构建具有可辩护性的技术档案。",
+      "key_findings": [
+        "VERA覆盖《欧盟人工智能法案》第9–15条下所有18项高风险AI系统要求",
+        "已针对5个企业级大模型部署进行基准测试，发现透明度和数据治理要求方面的覆盖空缺",
+        "开源仪表盘内置标准安全基准（HELM、BIG-bench、MMLU变体）的评测连接器"
+      ],
+      "tags": ["governance", "compliance", "eu-ai-act", "responsible-ai", "evaluation", "llm"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31588",
+        "huggingface": "https://huggingface.co/papers/2610.31588",
+        "pdf": "https://arxiv.org/pdf/2610.31588"
+      }
+    },
+    {
+      "id": "spectralcanary-t2i-dataset-auditing",
+      "title": "SpectralCanary：极简低频痕迹实现文生图数据集使用审计",
+      "authors": ["Sy-Tuyen Ho", "Anirudh Satheesh", "Soham Chawathe", "et al."],
+      "affiliations": ["新加坡国立大学", "MIT计算机科学与人工智能实验室 (CSAIL)"],
+      "summary": "SpectralCanary在图像数据集公开发布前植入不可感知的低频频谱信号，使数据集所有者能够检测其后的未授权微调行为。与修改模型权重的水印方法不同，SpectralCanary在数据层面起效，可在包括随机裁剪、颜色抖动和JPEG压缩在内的标准数据增强流水线中存活。",
+      "key_findings": [
+        "低频金丝雀信号在98.7%的标准数据增强流水线中完整保留",
+        "在持出微调模型上的检测准确率96.2%，误报率低于0.1%",
+        "方法适用于任意图像数据集，无需与模型训练方协调"
+      ],
+      "tags": ["data-provenance", "intellectual-property", "watermarking", "text-to-image", "audit"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31659",
+        "huggingface": "https://huggingface.co/papers/2610.31659",
+        "pdf": "https://arxiv.org/pdf/2610.31659"
+      }
+    },
+    {
+      "id": "metta-memory-meta-rl",
+      "title": "METTA：面向元强化学习的记忆增强测试时适应",
+      "authors": ["Ali Najar", "Hosein Hasani", "Amir Kooshan Fattah", "et al."],
+      "affiliations": ["MIT计算机科学与人工智能实验室 (CSAIL)", "MIT-IBM Watson AI实验室"],
+      "summary": "METTA为元强化学习智能体配备了一个跨回合、跨任务持久保存的结构化外部记忆，以更少的交互次数实现对未见任务的快速适应。该记忆架构区分情节性记忆（近期发生了什么）与语义记忆（普遍适用的规律），减少了编码任务相关信息所需的上下文长度。",
+      "key_findings": [
+        "相较MAML和Transformer元学习器基线，METTA在分布外任务上的适应速度提升3.2倍",
+        "记忆增强智能体在新任务类别上所需适应试次减少70%",
+        "情节-语义记忆分离在需要多时间尺度推理的任务上优于扁平记忆架构"
+      ],
+      "tags": ["meta-learning", "reinforcement-learning", "memory", "few-shot", "agents"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31656",
+        "huggingface": "https://huggingface.co/papers/2610.31656",
+        "pdf": "https://arxiv.org/pdf/2610.31656"
+      }
+    },
+    {
+      "id": "duocook-multiagent-coordination-benchmark",
+      "title": "DuoCook：受《Overcooked》启发的视觉规划与协作基准",
+      "authors": ["Ziyi Jiao", "Heng Zhang", "Drishti Regmi", "et al."],
+      "affiliations": ["密歇根大学", "佐治亚理工学院"],
+      "summary": "DuoCook将多智能体协调范式扩展到虚幻引擎真实感环境中的视觉语言智能体，要求两个智能体在没有明确通信信道的情况下，协调完成带有共享物理资源约束的限时烹饪任务，以测试有根视觉规划、隐式协调和资源竞争下的自适应策略。",
+      "key_findings": [
+        "所有被测视觉语言模型组合（GPT-4V、Gemini 2.5、LLaVA-NeXT）在中等难度任务上完成率均低于40%",
+        "资源竞争从低到高时成功率下降55%，揭示协调失败（而非规划失败）是主要瓶颈",
+        "当两个智能体同时使用思维链提示时，协调成功率反而下降"
+      ],
+      "tags": ["multi-agent", "benchmark", "coordination", "vision-language", "embodied-ai", "planning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31511",
+        "huggingface": "https://huggingface.co/papers/2610.31511",
+        "pdf": "https://arxiv.org/pdf/2610.31511"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-38-27b",
+      "name": "Qwen3.8-27B（通义千问3.8-27B）",
+      "organization": "Qwen（阿里云）",
+      "description": "本周最热门开源视觉语言模型，18,394个点赞，776万次下载。支持多模态推理、图像理解与对话，参数量27B。持续成为社区微调与量化的首选基础模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "vision-language", "instruction-tuned", "open-weight"],
+      "metrics": {"downloads": 7762014, "likes": 18394},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-25-lightricks",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "最具统治力的开源文本生成视频模型，9,336个点赞，210万次下载。从文本提示生成高保真4K视频，在时间一致性和提示遵循方面领跑开源视频生成赛道。",
+      "task_type": "text-to-video",
+      "model_size": "未知",
+      "tags": ["text-to-video", "generative", "video", "open-weight"],
+      "metrics": {"downloads": 2107108, "likes": 9336},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM3（Segment Anything Model 3，万物分割模型3）",
+      "organization": "Meta AI（Facebook）",
+      "description": "Meta最新一代Segment Anything模型，将原始零样本分割能力扩展至具有时序一致性的视频处理。5,108个点赞，185万次下载，已成为社区默认的视频分割骨干网络。",
+      "task_type": "image-segmentation",
+      "model_size": "未知",
+      "tags": ["segmentation", "zero-shot", "video", "computer-vision", "open-weight"],
+      "metrics": {"downloads": 1849059, "likes": 5108},
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "qwen-image-21-uncensored-quantized",
+      "name": "Qwen-Image-2.1-Uncensored-Quantized（通义千问图像2.1去审查量化版）",
+      "organization": "abenzerps（社区）",
+      "description": "移除安全过滤器的本地推理GGUF量化通义千问图像2.1版本。5,040个点赞，224万次下载。持续热榜反映社区对去审查本地多模态生成模型的强烈需求。",
+      "task_type": "text-to-image",
+      "model_size": "量化版",
+      "tags": ["text-to-image", "quantized", "gguf", "uncensored", "local-inference"],
+      "metrics": {"downloads": 2235846, "likes": 5040},
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "EmbeddingGemma-2（嵌入Gemma-2）",
+      "organization": "Google",
+      "description": "Google基于Gemma架构的稠密嵌入模型，专为语义相似度、检索和RAG（检索增强生成）应用设计。2,921个点赞，21万次下载。是Google针对OpenAI文本嵌入模型的开源回应。",
+      "task_type": "feature-extraction",
+      "model_size": "未知",
+      "tags": ["embeddings", "retrieval", "rag", "semantic-search", "google"],
+      "metrics": {"downloads": 212769, "likes": 2921},
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "qwen38-27b-turbo-gguf-uncensored",
+      "name": "Qwen3.8-27B-TURBO-Fable-Cold-Fusion-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+      "organization": "DavidAU（社区）",
+      "description": "融合多次合并的Qwen3.8-27B社区GGUF微调版，专为去审查编程和创意生成优化。2,091个点赞，167万次下载——Qwen3.8-27B社区衍生版中下载量最高，体现了活跃的GGUF微调生态。",
+      "task_type": "text-generation",
+      "model_size": "27B（量化版）",
+      "tags": ["gguf", "quantized", "uncensored", "coding", "community"],
+      "metrics": {"downloads": 1671015, "likes": 2091},
+      "source_url": "https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF"
+    },
+    {
+      "id": "jialinyyzz-humanizer",
+      "name": "Humanizer（人性化写作模型）",
+      "organization": "jialinyyzz（社区）",
+      "description": "基于Gemma微调的GGUF模型，专为生成自然、人性化的文本而设计，主要用于规避AI文本检测。2,154个点赞，14万次下载。其持续热榜反映了对使AI生成内容更难被检测工具识别的旺盛需求。",
+      "task_type": "text-generation",
+      "model_size": "未知",
+      "tags": ["text-generation", "writing", "human-like", "gguf"],
+      "metrics": {"downloads": 143152, "likes": 2154},
+      "source_url": "https://huggingface.co/jialinyyzz/humanizer"
+    },
+    {
+      "id": "flux-3-image-klein-comfy",
+      "name": "FLUX-3-image-klein-comfy",
+      "organization": "Black Forest Labs",
+      "description": "FLUX-3的ComfyUI优化版本，用于文生图生成与编辑。1,603个点赞，66万次下载。Black Forest Labs凭借高效、原生ComfyUI发布，持续统治文生图赛道。",
+      "task_type": "text-to-image",
+      "model_size": "未知",
+      "tags": ["text-to-image", "comfyui", "diffusion", "image-editing"],
+      "metrics": {"downloads": 660874, "likes": 1603},
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "comfy-org-moss-image",
+      "name": "MOSS-Image（ComfyUI版）",
+      "organization": "Comfy-Org",
+      "description": "OpenMOSS团队MOSS-Image Base扩散Transformer的ComfyUI封装版本。451个点赞，216万次下载——相对点赞量的下载量异常高，暗示是自动化流水线批量采用而非用户手动使用。",
+      "task_type": "text-to-image",
+      "model_size": "未知",
+      "tags": ["text-to-image", "diffusion-transformer", "comfyui", "moss"],
+      "metrics": {"downloads": 2161961, "likes": 451},
+      "source_url": "https://huggingface.co/Comfy-Org/MOSS-Image"
+    },
+    {
+      "id": "deepseek-v41-flash-gguf",
+      "name": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "使用GSQ（分组尺度量化）和RCO（旋转校正离群值）技术的DeepSeek-V4.1混合精度GGUF量化版本，在4比特精度下提供更优质量。280个点赞，41万次下载。",
+      "task_type": "text-generation",
+      "model_size": "未知（DeepSeek-V4.1尺寸）",
+      "tags": ["quantized", "gguf", "deepseek", "local-inference"],
+      "metrics": {"downloads": 412392, "likes": 280},
+      "source_url": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "cloudflare-security-audit-skill",
+      "name": "cloudflare/security-audit-skill",
+      "description": "面向Claude Code的多阶段安全审计技能，自动化跨代码库的OWASP式漏洞扫描、依赖审计和密钥检测。今日新增2,878颗星——榜单中日增最高——反映了Claude Code技能生态的蓬勃发展和自动化安全工具的旺盛需求。",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 2878,
+      "forks": 0,
+      "url": "https://github.com/cloudflare/security-audit-skill",
+      "tags": ["security", "claude-code", "skill", "static-analysis", "devsecops"],
+      "relevance": "high"
+    },
+    {
+      "id": "debpalash-voicestudio",
+      "name": "debpalash/VoiceStudio",
+      "description": "完全本地运行的声音克隆、声音设计与视频配音工具，无需任何API调用。今日新增1,592颗星。热榜折射出用户对不依赖云服务商的完全私密本地语音AI的强烈需求。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 1592,
+      "forks": 0,
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "tags": ["voice-cloning", "tts", "local-ai", "video-dubbing", "privacy"],
+      "relevance": "high"
+    },
+    {
+      "id": "nutlope-hallmark",
+      "name": "Nutlope/hallmark",
+      "description": "面向Claude Code的反AI风格滥用设计技能，强制执行设计质量标准——间距一致性、字体层级、无障碍对比度——并标记AI生成的视觉痕迹（过度对称、通用比喻图标）。今日新增1,317颗星。",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 1317,
+      "forks": 0,
+      "url": "https://github.com/Nutlope/hallmark",
+      "tags": ["design", "claude-code", "skill", "ui", "quality"],
+      "relevance": "medium"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "面向金融交易的多智能体大模型框架，协调技术分析、基本面研究、风险管理和下单执行等专业子智能体。金融AI领域明星高星项目。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": ["trading", "agents", "finance", "llm", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "pollen-robotics-microduck",
+      "name": "pollen-robotics/microduck",
+      "description": "开源微型双足鸭形机器人，专为类人步态研究设计的学习平台。Pollen Robotics（Reachy机器人制造商）持续推动平价机器人硬件，此次上榜热门显示社区对低成本类人研究平台的浓厚兴趣。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/pollen-robotics/microduck",
+      "tags": ["robotics", "humanoid", "open-hardware", "locomotion", "education"],
+      "relevance": "high"
+    },
+    {
+      "id": "jetbrains-thinkrail",
+      "name": "JetBrains/thinkrail",
+      "description": "JetBrains推出的轻量级AI原生IDE，专为与本地AI模型进行「氛围编程（vibe coding）」而优化。趋势反映JetBrains在与Cursor和Zed的AI原生IDE竞争中的入场布局。",
+      "language": "Kotlin",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/JetBrains/thinkrail",
+      "tags": ["ide", "coding", "ai-native", "jetbrains", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "通过标准化工具注册协议将大模型触达范围扩展至外部系统（API、数据库、文件系统）的智能体框架。本月累计新增8,800余颗星，折射出十月对智能体基础设施的强劲需求。",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agents", "tool-use", "framework", "llm", "integration"],
+      "relevance": "high"
+    },
+    {
+      "id": "tigerless-labs-autoharness",
+      "name": "tigerless-labs/autoharness",
+      "description": "面向Claude Code的自学习技能层，通过观察编程模式并从重复动作中自动生成可复用技能。本月累计新增5,000余颗星——是围绕AI编程智能体元编程生态的重要组成部分。",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/tigerless-labs/autoharness",
+      "tags": ["claude-code", "skill", "automation", "meta-programming", "ai-coding"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "智能体演化与自我改进框架",
+      "description": "RSIHub在今日HuggingFace论文中的绝对优势，以及双世界信度分配论文，共同表明智能体自我改进正从临时性实验走向拥有共享工具链、形式化目标和可复现基准的原则性工程学科。",
+      "related_paper_ids": ["rsihub-agent-evolution-framework", "twin-world-credit-assignment-agentic-rl", "metta-memory-meta-rl"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "数值正确性与基础设施卫生",
+      "description": "Google Research的softmax/交叉熵修复与低比特n-gram嵌入压缩，都在解决机器学习软件栈中长期存在的数值卫生问题——这一主题在历史上总是在领域规模足够大、小的正确性漏洞产生可量化的聚合成本时才浮出水面。",
+      "related_paper_ids": ["fix-softmax-cross-entropy-google"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "具身AI集成与评估",
+      "description": "RynnUnify、感觉运动对齐、HoloBoxing与DuoCook共同代表机器人领域从孤立能力展示迈向整体评估指标的转变——该领域正在进入整合阶段。",
+      "related_paper_ids": ["rynnunify-unified-embodied-brain", "sensorimotor-alignment-embodied-policy", "holoboxing-humanoid-boxing-training", "duocook-multiagent-coordination-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "测试时推理效率",
+      "description": "直接Pass@k剪枝和因果思维链都在减少推理链中的浪费——前者通过消除冗余路径，后者通过确保每个步骤在因果上有效。随着推理成本主导前沿模型部署，这些技术在经济上日益关键。",
+      "related_paper_ids": ["direct-passk-thought-pruning", "causal-chain-of-thought-attention-leakage"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI安全与治理工具化",
+      "description": "EpiSEM-Bench和VERA代表了安全工作的一个新类别——在治理实际发生之处落地：智能体工具使用循环和企业合规工作流。两者均是工程产物而非理论分析，表明安全领域正务实地面向部署场景。",
+      "related_paper_ids": ["episem-bench-agent-safety-missing-evidence", "vera-responsible-ai-dashboard-eu-ai-act"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "规模化幻觉缓解",
+      "description": "Omni-Woodpecker将幻觉修正扩展至全模态模型，SpectralCanary则关注多模态训练的数据溯源维度——两者共同表明随着模型扩展至音频和视频，幻觉与数据完整性正成为主要质量关切。",
+      "related_paper_ids": ["omni-woodpecker-hallucination-omni-llms", "spectralcanary-t2i-dataset-auditing"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "直接API因网络策略受阻；数据来源于GitHub镜像（AtharvaDomale/Daily-HuggingFace-AI-Papers）"
+    },
+    {
+      "name": "HuggingFace热门模型",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "直接API因网络策略受阻；数据来源于GitHub摘要（duanyytop/agents-radar issue #3974）"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "直接API因网络策略受阻；论文来源于每周摘要（kakapez/agents-radar issue #1682）"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "error",
+      "note": "直接API因网络策略受阻；无替代来源"
+    },
+    {
+      "name": "GitHub热门",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "直接抓取受阻；数据来源于GitHub摘要（kouweizhu/agents-radar issue #658）和网络搜索"
+    }
+  ]
+}

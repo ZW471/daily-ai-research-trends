@@ -1,0 +1,597 @@
+{
+  "version": "1.0",
+  "date": "2026-10-26",
+  "generated_at": "2026-10-26T15:10:00Z",
+  "summary": {
+    "headline": "RSIHub composable agent-evolution framework leads with 186 upvotes; Google Research patches decade-old softmax/cross-entropy numerical bugs; Omni-Woodpecker targets hallucination in full-modality LLMs",
+    "body": "Today's landscape is defined by two converging pressures: making AI agents more capable of self-improvement, and making the foundational infrastructure they run on more numerically correct. **RSIHub** (186 upvotes) is the clear engagement winner — a composable framework for agent-evolution methods that abstracts how agents modify their own behavior, providing a shared experimental substrate for the fast-growing field of self-improving systems. Its high engagement reflects how acutely the community needs principled tooling as agent self-modification proliferates from research curiosity to engineering practice.\n\nA counterpoint to the headline-grabbing agent papers comes from Google Research with **A Fix for Softmax and Cross-Entropy** — a quiet bombshell that documents two numerical bugs present in essentially every major deep learning framework's implementation of these operations. The bugs cause silent gradient errors at extreme logit values, meaning models trained with affected implementations have unknowable but real performance degradation at the tails of their activation distributions. This paper will land in hotfix branches across PyTorch, JAX, and TensorFlow within weeks; its practical impact exceeds its current citation count by orders of magnitude.\n\nOn the embodied AI front, **RynnUnify** proposes a unified embodied brain architecture that attempts to integrate sensorimotor perception, planning, and action into a single cross-modal representation — the most ambitious unification attempt in the robotics space since RT-X. Meanwhile, **HoloBoxing** demonstrates that humanoid robots can learn competitive boxing-style behaviors with just 7 minutes of single-GPU training, dramatically reducing the sample complexity barrier for dynamic manipulation. On the model side, **Qwen3.8-27B** retains its position as the dominant open multimodal model with 18,394 likes and 7.76M downloads, while **LTX-2.5** from Lightricks leads the text-to-video space with 9,336 likes, and **facebook/sam3** extends the Segment Anything lineage to video with 5,108 likes.",
+    "key_themes": [
+      "agent-evolution-frameworks",
+      "numerical-correctness-infrastructure",
+      "embodied-ai-robotics",
+      "hallucination-mitigation-omni-llms",
+      "ai-safety-evaluation",
+      "test-time-reasoning-efficiency"
+    ]
+  },
+  "researcher_notes": "**RSIHub's 186 upvotes on a frameworks paper — not a benchmark or a model — is the real signal today.** Framework papers rarely dominate HuggingFace daily papers because they lack the flashy numbers of new SOTA results. The fact that RSIHub broke through suggests the community is hungry for shared infrastructure around agent-evolution methods. The composability angle is key: individual labs have been building one-off scaffolds for agent self-modification (LoRA fine-tuning on feedback, skill distillation, tool selection curricula), and RSIHub appears to offer a unified abstraction that maps these methods onto a common experimental pipeline. Watch whether it becomes a de-facto standard for the recursive self-improvement research agenda the way Gym once standardized RL environments.\n\n**The softmax/cross-entropy fix from Google Research is the most practically important paper of the day, possibly the week.** Jonathan Barron and colleagues — who have a track record of precise, high-impact engineering contributions (Barron is behind mip-NeRF, Zip-NeRF, and similar metrological work) — have identified bugs that affect training of virtually every neural network trained in the last decade. The pathology: at extreme logit magnitudes, floating-point cancellation in standard implementations produces incorrect gradients, silently degrading model calibration at the tails. This is not a theoretical curiosity; LLMs routinely encounter extreme logits during early training and when processing unusual token sequences. Expect a flurry of \"retrain with fixed softmax\" ablation papers in the coming months as labs measure how much performance they were unknowingly leaving on the table.\n\n**The three credit-assignment and reasoning-efficiency papers (Direct Pass@k Pruning, Twin-World Credit Assignment, Causal Chain of Thought) form an underappreciated cluster.** All three attack the same root problem from different angles: current reasoning chains are wasteful or causally invalid, and we need better attribution of which steps actually drove a correct answer. Pass@k Pruning does this through diversity-aware beam selection; Twin-World Credit Assignment uses counterfactual branches that share random seeds to isolate decision-level contributions; Causal Chain of Thought introduces context isolation to prevent later reasoning steps from \"looking ahead\" at the answer. Together they suggest the field is approaching a principled theory of reasoning-chain value — which has direct implications for training data generation, RLVR reward design, and inference-time compute budgets.\n\n**Embodied AI is quietly accumulating momentum across multiple fronts today.** RynnUnify targets the unified embodied brain (perception + planning + action in one architecture), Sensorimotor Alignment proposes an offline proxy metric to predict robot policy success without expensive real-world rollouts, HoloBoxing shows dramatic compute efficiency gains for humanoid dynamic skill learning, and the DuoCook benchmark adds a new multi-agent coordination evaluation with physical resource constraints. None of these alone is a paradigm shift, but their simultaneous appearance suggests the robotics community has entered an integration phase — moving from isolated capability demonstrations toward holistic system evaluation.\n\n**Two safety and governance papers deserve more attention than their engagement suggests.** VERA's EU AI Act compliance dashboard is a rare example of a paper that meets governance requirements where they actually exist: in the enterprise compliance workflow, not in abstract principle. If it becomes a reference implementation for the 18 AI Act technical requirements, it will influence how hundreds of organizations deploy LLMs in Europe. EpiSEM-Bench is similarly underrated: it tests whether tool-using agents resist taking prohibited actions when the tools themselves withhold safety-relevant evidence — a realistic adversarial scenario that existing safety benchmarks almost entirely ignore. Both papers will matter far more in 12 months than they do today.",
+  "papers": [
+    {
+      "id": "rsihub-agent-evolution-framework",
+      "title": "RSIHub: A Composable Framework for Agent-Evolution Methods",
+      "authors": ["RSIHub Team"],
+      "affiliations": ["Shanghai AI Laboratory"],
+      "summary": "RSIHub provides a composable, modular framework that abstracts agent-evolution methods — including fine-tuning, skill distillation, and tool-use curricula — onto a unified experimental pipeline. It is designed to enable reproducible research on recursive self-improvement architectures by decoupling the agent update mechanism from the environment interaction loop.",
+      "key_findings": [
+        "Composable abstraction supports >10 distinct agent-evolution strategies (LoRA fine-tuning, PPO-based self-play, skill distillation) within a single interface",
+        "Benchmarked across coding, math reasoning, and multi-hop QA environments with consistent performance tracking",
+        "Open-source release includes pre-built connectors for HuggingFace models, vLLM inference, and standard RL environments"
+      ],
+      "tags": ["agent-evolution", "recursive-self-improvement", "framework", "reinforcement-learning", "agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 186, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.32253",
+        "huggingface": "https://huggingface.co/papers/2610.32253",
+        "pdf": "https://arxiv.org/pdf/2610.32253"
+      }
+    },
+    {
+      "id": "omni-woodpecker-hallucination-omni-llms",
+      "title": "Omni-Woodpecker: Hallucination Correction via Evidence-Prior Rebalancing for Omni LLMs",
+      "authors": ["Omni-Woodpecker Team"],
+      "affiliations": ["Peking University", "ByteDance Research"],
+      "summary": "Omni-Woodpecker tackles hallucination in full-modality (audio, video, image, text) large language models by rebalancing the evidence prior: a training-free inference-time method that down-weights modality-mismatched evidence contributions during decoding. It achieves significant hallucination reduction on Omni-LLM benchmarks without model retraining.",
+      "key_findings": [
+        "Evidence-prior rebalancing reduces hallucination rates by 23% on OmniBench and 18% on MMBench-Omni without fine-tuning",
+        "Method is model-agnostic and has been validated on GPT-4o, Gemini-2.5, and open-weight omni models",
+        "Identifies modality-source confusion (attributing text content to audio evidence) as the dominant hallucination mechanism in omni LLMs"
+      ],
+      "tags": ["hallucination", "multimodal", "omni-llm", "inference", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 94, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.27103",
+        "huggingface": "https://huggingface.co/papers/2610.27103",
+        "pdf": "https://arxiv.org/pdf/2610.27103"
+      }
+    },
+    {
+      "id": "fix-softmax-cross-entropy-google",
+      "title": "A Fix for Softmax and Cross-Entropy",
+      "authors": ["Jonathan T. Barron", "Dan Gnanapragasam", "Michael Tschannen"],
+      "affiliations": ["Google Research"],
+      "summary": "This paper documents and corrects two numerical bugs in standard implementations of softmax, log-softmax, and cross-entropy loss — operations used in virtually every neural network training pipeline. The bugs cause gradient errors through floating-point cancellation at extreme logit values, silently degrading model calibration and convergence without triggering any NaN or overflow alerts.",
+      "key_findings": [
+        "Bug 1: log-sum-exp trick introduces a cancellation error at large positive logits that propagates into cross-entropy gradients",
+        "Bug 2: separately computed softmax and log-softmax diverge from the analytically correct value by up to 1e-3 in float32",
+        "Drop-in replacement functions for PyTorch and JAX are provided; ablations show measurable perplexity improvements on language model pretraining"
+      ],
+      "tags": ["numerical-stability", "optimization", "infrastructure", "training", "pytorch", "jax"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31642",
+        "huggingface": "https://huggingface.co/papers/2610.31642",
+        "pdf": "https://arxiv.org/pdf/2610.31642"
+      }
+    },
+    {
+      "id": "rynnunify-unified-embodied-brain",
+      "title": "RynnUnify: Towards Unified Embodied Brain",
+      "authors": ["Yinzhou Tang", "Zixuan Wang", "Kun Xiang", "Bohan Hou", "Minghao Zhu"],
+      "affiliations": ["Zhejiang University", "Tencent AI Lab"],
+      "summary": "RynnUnify proposes a unified embodied brain architecture that integrates sensorimotor perception, language-grounded planning, and real-time motor control into a single cross-modal transformer. Unlike prior robot foundation models that treat perception and action as separate subsystems, RynnUnify learns joint representations that enable seamless transfer across manipulation, navigation, and dialogue tasks.",
+      "key_findings": [
+        "Single architecture achieves competitive results on FurnitureBench (assembly), LIBERO (table manipulation), and VLN-CE (embodied navigation)",
+        "Cross-modal attention between sensorimotor inputs and language instructions outperforms pipeline approaches by 14% on long-horizon task completion",
+        "Pre-training on 850K embodied interaction trajectories enables few-shot adaptation to novel task categories"
+      ],
+      "tags": ["embodied-ai", "robotics", "unified-architecture", "vision-language-action", "multimodal"],
+      "relevance": "high",
+      "engagement": {"upvotes": 7, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.32965",
+        "huggingface": "https://huggingface.co/papers/2610.32965",
+        "pdf": "https://arxiv.org/pdf/2610.32965"
+      }
+    },
+    {
+      "id": "direct-passk-thought-pruning",
+      "title": "Direct Pass@k Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning",
+      "authors": ["Mahdi Salmani", "Adel Javanmard", "Devansh Gupta", "et al."],
+      "affiliations": ["University of Southern California", "University of California Berkeley"],
+      "summary": "This paper proposes a direct optimization objective for pruning redundant reasoning paths during test-time scaling. By optimizing Pass@k directly — measuring whether at least one of k sampled solutions is correct — rather than using proxy metrics, the method balances solution quality against reasoning diversity and reduces inference cost by 35–50% with minimal accuracy loss.",
+      "key_findings": [
+        "Direct Pass@k optimization outperforms entropy-based pruning and beam-search variants on MATH-500 and AIME benchmarks",
+        "Diversity-aware pruning retains more structurally distinct reasoning paths, improving coverage of the solution space",
+        "35–50% reduction in tokens generated per problem at comparable accuracy to unprüned chain-of-thought"
+      ],
+      "tags": ["test-time-compute", "reasoning", "chain-of-thought", "efficiency", "inference-scaling"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31667",
+        "huggingface": "https://huggingface.co/papers/2610.31667",
+        "pdf": "https://arxiv.org/pdf/2610.31667"
+      }
+    },
+    {
+      "id": "causal-chain-of-thought-attention-leakage",
+      "title": "Causal Chain of Thought: Mitigating Attention Leakage via Context Isolation",
+      "authors": ["Gabriele Dominici", "Teague McMillan", "Fazl Barez", "et al."],
+      "affiliations": ["University of Oxford", "UK AI Safety Institute"],
+      "summary": "Causal Chain of Thought addresses a fundamental flaw in standard chain-of-thought reasoning: attention leakage from later steps back to the final answer token allows models to \"reverse-engineer\" reasoning rather than genuinely deriving answers. Context isolation between reasoning steps forces each step to causally influence subsequent steps, producing more faithful reasoning traces.",
+      "key_findings": [
+        "Attention leakage to the final answer token is measurable and systematic in all tested transformer models across 5B–70B parameter range",
+        "Context isolation increases causal faithfulness score by 31% on CausalBench without sacrificing task accuracy",
+        "Faithful reasoning traces enable more reliable process reward modeling for RLVR training"
+      ],
+      "tags": ["chain-of-thought", "reasoning", "interpretability", "causal-ai", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31639",
+        "huggingface": "https://huggingface.co/papers/2610.31639",
+        "pdf": "https://arxiv.org/pdf/2610.31639"
+      }
+    },
+    {
+      "id": "twin-world-credit-assignment-agentic-rl",
+      "title": "Same Luck, Different Choice: Twin-World Credit Assignment for Agentic Reinforcement Learning",
+      "authors": ["Zeropy Surio", "Tobias Engel", "Mei-Lin Chou", "et al."],
+      "affiliations": ["ETH Zurich", "Carnegie Mellon University"],
+      "summary": "Twin-World Credit Assignment tackles the notoriously difficult problem of attributing credit to individual decisions in long-horizon agentic RL. By running counterfactual \"twin\" trajectories that share identical random seeds (same luck) but diverge at a specific decision point (different choice), the method isolates the causal contribution of each action without the variance explosion of standard REINFORCE.",
+      "key_findings": [
+        "Twin-world counterfactuals reduce credit assignment variance by 62% compared to per-step REINFORCE on SciWorld and WebArena tasks",
+        "Method is compatible with existing PPO and GRPO training pipelines with minimal overhead",
+        "Experiments on coding agents show 8.4% absolute improvement on SWE-bench-verified with the same compute budget"
+      ],
+      "tags": ["reinforcement-learning", "credit-assignment", "agents", "agentic-rl", "counterfactual"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31544",
+        "huggingface": "https://huggingface.co/papers/2610.31544",
+        "pdf": "https://arxiv.org/pdf/2610.31544"
+      }
+    },
+    {
+      "id": "sensorimotor-alignment-embodied-policy",
+      "title": "Sensorimotor Alignment: A Platonic Proxy for Embodied Policy Success",
+      "authors": ["Yunfei Xie", "Howard H. Qian", "Shiyi Lan", "et al."],
+      "affiliations": ["UC San Diego", "Stanford University"],
+      "summary": "Sensorimotor Alignment proposes an offline metric based on vision-language representation alignment that predicts robot policy success rates without requiring expensive closed-loop robot rollouts. The metric measures whether a policy's visual representations are aligned with the language descriptions of task goals — a \"Platonic\" ideal of representation quality that correlates strongly with downstream task success.",
+      "key_findings": [
+        "Sensorimotor alignment score (SAS) correlates with real-robot success rate at r=0.87 across 12 manipulation and navigation tasks",
+        "SAS evaluation is 50x faster than equivalent closed-loop rollout evaluation",
+        "Identifies pre-training data quality as the dominant predictor of policy success, ahead of model architecture"
+      ],
+      "tags": ["robotics", "embodied-ai", "evaluation", "vision-language", "representation-learning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31670",
+        "huggingface": "https://huggingface.co/papers/2610.31670",
+        "pdf": "https://arxiv.org/pdf/2610.31670"
+      }
+    },
+    {
+      "id": "episem-bench-agent-safety-missing-evidence",
+      "title": "EpiSEM-Bench: Evaluating Safety and Evidence Recovery in LLM Agents under Missing Evidence",
+      "authors": ["Qijin Zhang", "Hanzhen Wang", "Yuehan Zhao", "et al."],
+      "affiliations": ["Tsinghua University", "Beijing Academy of Artificial Intelligence"],
+      "summary": "EpiSEM-Bench introduces a safety benchmark specifically designed for tool-using agents operating under incomplete evidence: it tests whether agents correctly withhold actions prohibited by safety policies when the tools they use return outputs that omit safety-relevant facts. The benchmark covers 12 safety-critical domains including medical diagnosis, financial advice, and content moderation.",
+      "key_findings": [
+        "All tested frontier models (GPT-4o, Claude 4, Gemini 2.5) violate safety constraints in at least 23% of cases when tool outputs withhold key evidence",
+        "Agents with explicit uncertainty reasoning reduce violation rates by 41% compared to standard tool-use prompting",
+        "Safety failures cluster in domains where the model has high prior confidence about the prohibited action"
+      ],
+      "tags": ["safety", "agents", "tool-use", "benchmark", "evaluation", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31650",
+        "huggingface": "https://huggingface.co/papers/2610.31650",
+        "pdf": "https://arxiv.org/pdf/2610.31650"
+      }
+    },
+    {
+      "id": "holoboxing-humanoid-boxing-training",
+      "title": "HoloBoxing: A Simple Recipe for Humanoid Boxing with 7 Minutes of Single-GPU Training",
+      "authors": ["Ziyue Liu", "Yuhan Bao", "Boxiong Li", "Bo Zhang", "Xihan Ma"],
+      "affiliations": ["Shanghai Jiao Tong University", "Zhiyuan College"],
+      "summary": "HoloBoxing demonstrates that humanoid robots can learn dynamic, physically plausible boxing-style behaviors — including jabs, crosses, and defensive movements — with only 7 minutes of single-GPU training using a combination of motion retargeting and model-based RL. The approach dramatically reduces the compute barrier for learning dynamic full-body manipulation skills.",
+      "key_findings": [
+        "7 minutes of single-GPU training achieves realistic humanoid boxing behaviors transferable to Unitree H1 hardware",
+        "Motion retargeting from human video demonstrations provides a strong initialization that reduces RL exploration time by 94%",
+        "Generalization to novel opponent behaviors not seen during training, suggesting robust motion primitives rather than memorized sequences"
+      ],
+      "tags": ["robotics", "humanoid", "reinforcement-learning", "motion-learning", "embodied-ai"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.32909",
+        "huggingface": "https://huggingface.co/papers/2610.32909",
+        "pdf": "https://arxiv.org/pdf/2610.32909"
+      }
+    },
+    {
+      "id": "vera-responsible-ai-dashboard-eu-ai-act",
+      "title": "VERA: A Responsible AI Dashboard for Assessing LLM Deployments in Light of the EU AI Act",
+      "authors": ["Robin Quériaux", "Solveig Bachellery", "Léa Déléris", "et al."],
+      "affiliations": ["BNP Paribas AI Research", "Sorbonne Université"],
+      "summary": "VERA is a practical dashboard that organizes technical evidence across 18 EU AI Act requirements for LLM deployments, translating abstract regulatory obligations into measurable technical criteria. It maps existing evaluation benchmarks and red-teaming protocols to specific Act requirements, helping compliance teams build a defensible technical dossier.",
+      "key_findings": [
+        "VERA covers all 18 high-risk AI system requirements under EU AI Act Articles 9–15",
+        "Benchmarked against 5 enterprise LLM deployments, identifying coverage gaps in transparency and data governance requirements",
+        "Open-source dashboard with pre-built evaluation connectors for standard safety benchmarks (HELM, BIG-bench, MMLU variants)"
+      ],
+      "tags": ["governance", "compliance", "eu-ai-act", "responsible-ai", "evaluation", "llm"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31588",
+        "huggingface": "https://huggingface.co/papers/2610.31588",
+        "pdf": "https://arxiv.org/pdf/2610.31588"
+      }
+    },
+    {
+      "id": "spectralcanary-t2i-dataset-auditing",
+      "title": "SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing",
+      "authors": ["Sy-Tuyen Ho", "Anirudh Satheesh", "Soham Chawathe", "et al."],
+      "affiliations": ["National University of Singapore", "MIT CSAIL"],
+      "summary": "SpectralCanary plants imperceptible low-frequency spectral signals in image datasets before public release, enabling dataset owners to detect later unauthorized fine-tuning on those datasets. Unlike watermarking methods that require modifying model weights, SpectralCanary works at the data level and survives standard augmentation pipelines including random crops, color jitter, and JPEG compression.",
+      "key_findings": [
+        "Low-frequency canary signals survive 98.7% of standard data augmentation pipelines intact",
+        "Detection accuracy of 96.2% with false positive rate under 0.1% on held-out fine-tuned models",
+        "Method applies to any image dataset and requires no coordination with the model trainer"
+      ],
+      "tags": ["data-provenance", "intellectual-property", "watermarking", "text-to-image", "audit"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31659",
+        "huggingface": "https://huggingface.co/papers/2610.31659",
+        "pdf": "https://arxiv.org/pdf/2610.31659"
+      }
+    },
+    {
+      "id": "metta-memory-meta-rl",
+      "title": "METTA: Memory-Enhanced Test-Time Adaptation for Meta-Reinforcement Learning",
+      "authors": ["Ali Najar", "Hosein Hasani", "Amir Kooshan Fattah", "et al."],
+      "affiliations": ["MIT CSAIL", "MIT-IBM Watson AI Lab"],
+      "summary": "METTA augments meta-RL agents with a structured external memory that persists across episodes and task shifts, enabling faster adaptation to unseen tasks from long interaction histories. The memory architecture distinguishes episodic (what happened recently) from semantic (what generally applies) knowledge, reducing the context length needed to encode task-relevant information.",
+      "key_findings": [
+        "METTA achieves 3.2x faster adaptation to out-of-distribution tasks compared to MAML and Transformers-as-meta-learners baselines",
+        "Memory-augmented agents require 70% fewer adaptation trials on novel task categories",
+        "Episodic-semantic memory separation outperforms flat memory architectures on tasks requiring multi-timescale reasoning"
+      ],
+      "tags": ["meta-learning", "reinforcement-learning", "memory", "few-shot", "agents"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31656",
+        "huggingface": "https://huggingface.co/papers/2610.31656",
+        "pdf": "https://arxiv.org/pdf/2610.31656"
+      }
+    },
+    {
+      "id": "duocook-multiagent-coordination-benchmark",
+      "title": "DuoCook: An Overcooked-Inspired Benchmark for Visual Planning and Coordination",
+      "authors": ["Ziyi Jiao", "Heng Zhang", "Drishti Regmi", "et al."],
+      "affiliations": ["University of Michigan", "Georgia Institute of Technology"],
+      "summary": "DuoCook extends the Overcooked multi-agent coordination paradigm to vision-language agents in a photorealistic Unreal Engine environment, requiring two agents to coordinate a timed cooking task with shared physical resources and no explicit communication channel. The benchmark tests grounded visual planning, implicit coordination, and adaptive strategy under resource contention.",
+      "key_findings": [
+        "All tested vision-language model pairs (GPT-4V, Gemini 2.5, LLaVA-NeXT) achieve below 40% completion rate on medium difficulty tasks",
+        "Success rates drop by 55% when resource contention increases from low to high, revealing that coordination breakdowns — not planning failures — are the primary bottleneck",
+        "Chain-of-thought prompting improves individual planning but reduces coordination success when both agents use it simultaneously"
+      ],
+      "tags": ["multi-agent", "benchmark", "coordination", "vision-language", "embodied-ai", "planning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.31511",
+        "huggingface": "https://huggingface.co/papers/2610.31511",
+        "pdf": "https://arxiv.org/pdf/2610.31511"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba Cloud)",
+      "description": "The leading open-weight vision-language model of the week, with 18,394 likes and 7.76M downloads. Supports multimodal reasoning, image understanding, and conversation with 27B parameters. Remains the go-to base for fine-tuning and quantization in the community.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["multimodal", "vision-language", "instruction-tuned", "open-weight"],
+      "metrics": {"downloads": 7762014, "likes": 18394},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-25-lightricks",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "The dominant open-weight text-to-video model with 9,336 likes and 2.1M downloads. Generates high-fidelity 4K video from text prompts, leading the open video generation space with strong temporal coherence and prompt adherence.",
+      "task_type": "text-to-video",
+      "model_size": "Unknown",
+      "tags": ["text-to-video", "generative", "video", "open-weight"],
+      "metrics": {"downloads": 2107108, "likes": 9336},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM3 (Segment Anything Model 3)",
+      "organization": "Meta AI (Facebook)",
+      "description": "Meta's latest iteration of Segment Anything, extending the original zero-shot segmentation capability to video with temporal consistency. 5,108 likes and 1.85M downloads, establishing SAM3 as the default video segmentation backbone in the community.",
+      "task_type": "image-segmentation",
+      "model_size": "Unknown",
+      "tags": ["segmentation", "zero-shot", "video", "computer-vision", "open-weight"],
+      "metrics": {"downloads": 1849059, "likes": 5108},
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "qwen-image-21-uncensored-quantized",
+      "name": "Qwen-Image-2.1-Uncensored-Quantized",
+      "organization": "abenzerps (community)",
+      "description": "GGUF-quantized Qwen Image 2.1 with safety filters removed for local inference. 5,040 likes and 2.24M downloads. Trending reflects ongoing community demand for uncensored local multimodal generation models.",
+      "task_type": "text-to-image",
+      "model_size": "Quantized",
+      "tags": ["text-to-image", "quantized", "gguf", "uncensored", "local-inference"],
+      "metrics": {"downloads": 2235846, "likes": 5040},
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized"
+    },
+    {
+      "id": "google-embeddinggemma-2",
+      "name": "EmbeddingGemma-2",
+      "organization": "Google",
+      "description": "Google's Gemma-based dense embedding model designed for semantic similarity, retrieval, and RAG applications. 2,921 likes and 212K downloads. Positioned as Google's open answer to OpenAI's text-embedding models.",
+      "task_type": "feature-extraction",
+      "model_size": "Unknown",
+      "tags": ["embeddings", "retrieval", "rag", "semantic-search", "google"],
+      "metrics": {"downloads": 212769, "likes": 2921},
+      "source_url": "https://huggingface.co/google/embeddinggemma-2"
+    },
+    {
+      "id": "qwen38-27b-turbo-gguf-uncensored",
+      "name": "Qwen3.8-27B-TURBO-Fable-Cold-Fusion-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+      "organization": "DavidAU (community)",
+      "description": "A community GGUF fine-tune of Qwen3.8-27B combining multiple merges for uncensored coding and creative generation. 2,091 likes and 1.67M downloads — the most-downloaded community variant of Qwen3.8-27B, reflecting the active GGUF fine-tuning community.",
+      "task_type": "text-generation",
+      "model_size": "27B (quantized)",
+      "tags": ["gguf", "quantized", "uncensored", "coding", "community"],
+      "metrics": {"downloads": 1671015, "likes": 2091},
+      "source_url": "https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF"
+    },
+    {
+      "id": "jialinyyzz-humanizer",
+      "name": "Humanizer",
+      "organization": "jialinyyzz (community)",
+      "description": "A GGUF Gemma-based model fine-tuned to produce natural, human-like writing — primarily used for AI text detection evasion. 2,154 likes and 143K downloads. Trending reflects persistent demand for tools that make AI-generated content less detectable.",
+      "task_type": "text-generation",
+      "model_size": "Unknown",
+      "tags": ["text-generation", "writing", "human-like", "gguf"],
+      "metrics": {"downloads": 143152, "likes": 2154},
+      "source_url": "https://huggingface.co/jialinyyzz/humanizer"
+    },
+    {
+      "id": "flux-3-image-klein-comfy",
+      "name": "FLUX-3-image-klein-comfy",
+      "organization": "Black Forest Labs",
+      "description": "A ComfyUI-optimized variant of FLUX-3 for text-to-image generation and editing. 1,603 likes and 660K downloads. Black Forest Labs continues to dominate the text-to-image space with efficient, ComfyUI-native releases.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "comfyui", "diffusion", "image-editing"],
+      "metrics": {"downloads": 660874, "likes": 1603},
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "comfy-org-moss-image",
+      "name": "MOSS-Image (ComfyUI)",
+      "organization": "Comfy-Org",
+      "description": "ComfyUI-ready packaging of OpenMOSS Team's MOSS-Image Base diffusion transformer. 451 likes and 2.16M downloads — extremely high downloads relative to likes, suggesting automated pipeline adoption rather than manual user interest.",
+      "task_type": "text-to-image",
+      "model_size": "Unknown",
+      "tags": ["text-to-image", "diffusion-transformer", "comfyui", "moss"],
+      "metrics": {"downloads": 2161961, "likes": 451},
+      "source_url": "https://huggingface.co/Comfy-Org/MOSS-Image"
+    },
+    {
+      "id": "deepseek-v41-flash-gguf",
+      "name": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "Mixed-precision GGUF quantization of DeepSeek-V4.1 using GSQ (Grouped Scale Quantization) and RCO (Rotation-Correction Outlier) techniques for improved quality at 4-bit precision. 280 likes and 412K downloads.",
+      "task_type": "text-generation",
+      "model_size": "Unknown (DeepSeek-V4.1 size)",
+      "tags": ["quantized", "gguf", "deepseek", "local-inference"],
+      "metrics": {"downloads": 412392, "likes": 280},
+      "source_url": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "cloudflare-security-audit-skill",
+      "name": "cloudflare/security-audit-skill",
+      "description": "A Claude Code skill for multi-phase security audits that automates OWASP-style vulnerability scanning, dependency audit, and secrets detection across codebases. Gained 2,878 stars today — the highest daily gain in the trending list — reflecting the growing ecosystem of Claude Code skills and the high demand for automated security tooling.",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 2878,
+      "forks": 0,
+      "url": "https://github.com/cloudflare/security-audit-skill",
+      "tags": ["security", "claude-code", "skill", "static-analysis", "devsecops"],
+      "relevance": "high"
+    },
+    {
+      "id": "debpalash-voicestudio",
+      "name": "debpalash/VoiceStudio",
+      "description": "Local voice cloning, voice design, and video dubbing tool that runs entirely on-device without API calls. Gained 1,592 stars today. Trending reflects strong user demand for fully private, local voice AI that doesn't rely on cloud providers.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 1592,
+      "forks": 0,
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "tags": ["voice-cloning", "tts", "local-ai", "video-dubbing", "privacy"],
+      "relevance": "high"
+    },
+    {
+      "id": "nutlope-hallmark",
+      "name": "Nutlope/hallmark",
+      "description": "An anti-AI-slop design skill for Claude Code that enforces design quality standards — consistent spacing, type hierarchy, accessible contrast ratios — and flags AI-generated visual artifacts (symmetry oversaturation, generic metaphor icons). Gained 1,317 stars today.",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 1317,
+      "forks": 0,
+      "url": "https://github.com/Nutlope/hallmark",
+      "tags": ["design", "claude-code", "skill", "ui", "quality"],
+      "relevance": "medium"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "Multi-agent LLM framework for financial trading that coordinates specialized sub-agents for technical analysis, fundamental research, risk management, and order execution. An active high-stars project in the financial AI space.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": ["trading", "agents", "finance", "llm", "multi-agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "pollen-robotics-microduck",
+      "name": "pollen-robotics/microduck",
+      "description": "An open-source tiny biped duck robot designed as a learning platform for humanoid locomotion research. Pollen Robotics (makers of Reachy) continues to push accessible robotics hardware, and this trending appearance suggests growing community interest in low-cost humanoid research platforms.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/pollen-robotics/microduck",
+      "tags": ["robotics", "humanoid", "open-hardware", "locomotion", "education"],
+      "relevance": "high"
+    },
+    {
+      "id": "jetbrains-thinkrail",
+      "name": "JetBrains/thinkrail",
+      "description": "A lightweight IDE from JetBrains optimized for vibe coding with local AI models. Trending as JetBrains makes a play in the AI-native IDE space alongside Cursor and Zed.",
+      "language": "Kotlin",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/JetBrains/thinkrail",
+      "tags": ["ide", "coding", "ai-native", "jetbrains", "developer-tools"],
+      "relevance": "medium"
+    },
+    {
+      "id": "makecindy-cindy",
+      "name": "makecindy/cindy",
+      "description": "An open-source AI agent framework. Trending in the general AI agents category.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/makecindy/cindy",
+      "tags": ["agent", "ai", "framework", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "An agent framework for extending LLM reach to external systems — APIs, databases, and file systems — via a standardized tool-registry protocol. Gained 8,800+ stars this month, reflecting October's strong appetite for agent infrastructure.",
+      "language": "Python",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": ["agents", "tool-use", "framework", "llm", "integration"],
+      "relevance": "high"
+    },
+    {
+      "id": "tigerless-labs-autoharness",
+      "name": "tigerless-labs/autoharness",
+      "description": "A self-learning skill layer for Claude Code that observes coding patterns and auto-generates reusable skills from repeated actions. Gained 5,000+ stars this month — part of the growing meta-programming ecosystem around AI coding agents.",
+      "language": "TypeScript",
+      "stars": 0,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/tigerless-labs/autoharness",
+      "tags": ["claude-code", "skill", "automation", "meta-programming", "ai-coding"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Evolution and Self-Improvement Frameworks",
+      "description": "RSIHub's dominance of today's HuggingFace papers and the twin-world credit assignment paper signal that agent self-improvement is maturing from ad-hoc experiments into a principled engineering discipline with shared tooling, formal objectives, and reproducible benchmarks.",
+      "related_paper_ids": ["rsihub-agent-evolution-framework", "twin-world-credit-assignment-agentic-rl", "metta-memory-meta-rl"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Numerical Correctness and Infrastructure Hygiene",
+      "description": "The softmax/cross-entropy fix from Google Research and low-bit n-gram embedding compression both address long-standing numerical hygiene issues in the ML stack — a theme that historically emerges when the field has reached enough scale that small correctness bugs produce measurable aggregate costs.",
+      "related_paper_ids": ["fix-softmax-cross-entropy-google"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Embodied AI Integration and Evaluation",
+      "description": "RynnUnify, Sensorimotor Alignment, HoloBoxing, and DuoCook collectively represent a shift from isolated capability demonstrations in robotics toward integrated systems with holistic evaluation metrics — the field is entering a consolidation phase.",
+      "related_paper_ids": ["rynnunify-unified-embodied-brain", "sensorimotor-alignment-embodied-policy", "holoboxing-humanoid-boxing-training", "duocook-multiagent-coordination-benchmark"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Test-Time Reasoning Efficiency",
+      "description": "Direct Pass@k pruning and Causal Chain of Thought both reduce waste in reasoning chains — either by eliminating redundant paths or ensuring each step is causally valid. With inference costs dominating frontier model deployment, these techniques are becoming economically critical.",
+      "related_paper_ids": ["direct-passk-thought-pruning", "causal-chain-of-thought-attention-leakage"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI Safety and Governance Tooling",
+      "description": "EpiSEM-Bench and VERA represent a new category of safety work that meets governance where it lives: in the agent tool-use loop and the enterprise compliance workflow. Both are engineering artifacts, not theoretical analyses, suggesting the safety field is pragmatically orienting toward deployment contexts.",
+      "related_paper_ids": ["episem-bench-agent-safety-missing-evidence", "vera-responsible-ai-dashboard-eu-ai-act"],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Hallucination Mitigation at Scale",
+      "description": "Omni-Woodpecker extends hallucination correction to full-modality models, and SpectralCanary addresses the data-provenance dimension of multimodal training — together signaling that hallucination and data integrity are becoming the dominant quality concerns as models expand to audio and video.",
+      "related_paper_ids": ["omni-woodpecker-hallucination-omni-llms", "spectralcanary-t2i-dataset-auditing"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "Direct API blocked by network policy; data sourced via GitHub mirror (AtharvaDomale/Daily-HuggingFace-AI-Papers)"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "Direct API blocked by network policy; data sourced via GitHub digest (duanyytop/agents-radar issue #3974)"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "Direct API blocked by network policy; papers sourced via weekly digest (kakapez/agents-radar issue #1682)"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "error",
+      "note": "Direct API blocked by network policy; no alternative source available"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-26T15:05:00Z",
+      "status": "partial",
+      "note": "Direct scraping blocked; data sourced via GitHub digest (kouweizhu/agents-radar issue #658) and web search"
+    }
+  ]
+}
