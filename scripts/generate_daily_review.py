@@ -441,7 +441,12 @@ def _make_anthropic_client():
         except ImportError:
             ca_bundle = None
 
-    http_client = httpx.Client(verify=ca_bundle) if ca_bundle else None
+    # anthropic SDK >= 2.x uses httpx2 internally; use httpx2.Client when available
+    try:
+        import httpx2 as _httpx_sdk
+    except ImportError:
+        _httpx_sdk = httpx  # type: ignore[assignment]
+    http_client = _httpx_sdk.Client(verify=ca_bundle) if ca_bundle else None
 
     def _client(**kwargs):
         if http_client is not None:
