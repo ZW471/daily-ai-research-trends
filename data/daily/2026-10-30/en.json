@@ -1,0 +1,548 @@
+{
+  "version": "1.0",
+  "date": "2026-10-30",
+  "generated_at": "2026-10-30T15:30:00Z",
+  "summary": {
+    "headline": "Agent infrastructure matures with TAO scheduling and Skeleton Coding; OmniShowcase advances multi-view video generation; DeepTutor surges +1,930 stars as AI tutoring goes mainstream",
+    "body": "**Friday, October 30, 2026** brought a cluster of papers tightening the plumbing of LLM-based agent systems. TAO introduces a tool-aware joint scheduler that optimizes LLM serving for agentic workflows — the first production-grade scheduling framework that accounts for tool-call latency alongside generation cost. Complementing this, Skeleton Coding reframes the agent specification problem: rather than verbose instruction sets, program structure itself becomes the specification, dramatically reducing the instruction surface that agents must follow. Together these papers signal that the field has moved from \"can agents do X\" to \"how do we deploy them efficiently at scale.\"\n\nOn the generation frontier, OmniShowcase demonstrates subject-consistent video generation from multi-view images, a meaningful step toward controllable long-take video synthesis. The paper addresses a long-standing pain point: when generating video of a specific subject, view consistency across frames remains brittle. The approach uses multi-view conditioning to anchor subject appearance, with early community reception showing 47 upvotes on HuggingFace. Meanwhile the audio-visual space saw a notable contribution: efficient streaming extraction of a target speaker from real-world acoustic scenes — a practically useful capability for conferencing, hearing aids, and embodied agents operating in noisy environments.\n\nThe model ecosystem continues to consolidate around a few dominant lineages. Qwen3.8-27B leads HuggingFace trending with 18,694 likes and 7.5M downloads, cementing Alibaba's Qwen series as the de facto open multimodal backbone. LTX-2.5 from Lightricks crossed 2.2M downloads as image-to-video workflows mature. On the infrastructure side, GAAC offers lossless KV cache compression for on-device LLM inference — a paper with outsized practical importance as edge deployment accelerates.",
+    "key_themes": [
+      "agent-infrastructure",
+      "multimodal-generation",
+      "on-device-inference",
+      "ai-safety-fairness",
+      "diffusion-language-models",
+      "formal-reasoning"
+    ]
+  },
+  "researcher_notes": "**The agent scheduling problem is finally getting serious engineering attention.** TAO's tool-aware joint scheduling for agentic LLM serving is not a research curiosity — it directly addresses the latency inefficiencies that make production agentic deployments 3-5x more expensive than simple chat deployments. The core insight is that tool-call overhead (network latency, execution time) must be co-scheduled with generation, not treated as a black box by the serving infrastructure. Watch for follow-on work applying this to multi-agent pipelines where tool calls cascade.\n\n**Skeleton Coding is a sleeper hit.** Aditya Golatkar et al.'s approach of using program structure as a specification for coding agents addresses a genuine problem that practitioners have been hacking around: verbose system prompts that conflict with each other and drift from the codebase's actual conventions. By treating the existing code's skeleton (function signatures, class hierarchies, imports) as ground truth, the method sidesteps the ambiguity that causes coding agents to produce stylistically inconsistent output. This has immediate applicability in enterprise codebases where agents must conform to existing patterns.\n\n**Disparity Laundering is the most important safety paper this week.** The finding — that deliberation in clinical multi-agent systems produces consensus without eliminating bias — is a direct challenge to the assumption that ensemble/committee approaches to AI decision-making are fairer than single-model decisions. When multiple LLMs agree, it feels rigorous. But if they share the same training biases, consensus just launders the disparity into a more authoritative-sounding output. Healthcare AI teams should treat this as a red flag for any pipeline that routes decisions through multi-model deliberation.\n\n**The agent memory attack surface is expanding fast.** The Role Grounding Attack paper demonstrates that agent memory systems can be manipulated through social interaction — an attacker injects false memories by masquerading as a trusted contact in the agent's social graph. As agents accumulate persistent memory (see: claude-mem at 104K stars, mem0 at 68K), the attack surface grows proportionally. The industry hasn't developed standard defenses for this yet. Expect this to become a major red team vector in 2027.\n\n**DeepTutor's +1,930 stars today is the biggest trending signal of the week.** HKUDS's AI tutoring platform is gaining traction at a rate that suggests genuine product-market fit rather than speculative starring. The education AI vertical has historically underperformed relative to hype, but the combination of better base models and more reliable tool use (which allows the tutor to check work, not just generate it) may have crossed a threshold. Worth watching whether this is a one-day spike or sustained growth.",
+  "papers": [
+    {
+      "id": "efficient-streaming-avse",
+      "title": "Efficient Streaming Audio-Visual Target Speaker Extraction for Real-World Acoustic Scenes",
+      "authors": ["JusperLee", "et al."],
+      "affiliations": ["Chinese University of Hong Kong"],
+      "summary": "Introduces a streaming audio-visual model for extracting a target speaker from complex acoustic environments in real time. The method jointly processes audio and visual cues (lip motion, face identity) to achieve low-latency speaker isolation suitable for deployment on consumer hardware.",
+      "key_findings": [
+        "Achieves real-time streaming inference with audio-visual fusion without sacrificing separation quality",
+        "Outperforms prior streaming baselines on noisy real-world acoustic benchmarks",
+        "Demonstrates practical utility for conferencing, hearing assistance, and embodied agent perception"
+      ],
+      "tags": ["audio-visual", "speaker-extraction", "streaming", "speech-processing"],
+      "relevance": "high",
+      "engagement": {"upvotes": 150, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "omnishowcase-multiview-video",
+      "title": "OmniShowcase: Subject-Consistent Video Generation from Multi-View Images",
+      "authors": ["Justin4AI", "et al."],
+      "affiliations": ["Tsinghua University"],
+      "summary": "Proposes a framework for generating subject-consistent videos from multi-view input images, enabling omnidirectional product showcase and scene walkaround generation. Uses multi-view conditioning to anchor subject appearance across frames.",
+      "key_findings": [
+        "Multi-view conditioning substantially improves cross-frame subject consistency compared to single-view video generation",
+        "Enables coherent 360-degree product visualization from a small number of input images",
+        "Generalizes to in-the-wild subjects without per-subject fine-tuning"
+      ],
+      "tags": ["video-generation", "multi-view", "subject-consistency", "diffusion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 47, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "tao-agentic-serving",
+      "title": "TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving",
+      "authors": ["lsh-algorithm", "et al."],
+      "affiliations": ["Peking University"],
+      "summary": "Introduces TAO, a serving scheduler that treats tool calls as first-class operations alongside token generation in LLM agent workflows. By modeling tool latency distributions and prefetching, TAO reduces end-to-end agentic task latency significantly.",
+      "key_findings": [
+        "Tool-call latency is the dominant overhead in production agentic deployments, not generation cost",
+        "Joint scheduling of generation and tool execution reduces P99 latency by up to 40% in benchmarks",
+        "The scheduler integrates with existing vLLM-compatible inference backends without model changes"
+      ],
+      "tags": ["agent-serving", "inference-optimization", "tool-use", "scheduling"],
+      "relevance": "high",
+      "engagement": {"upvotes": 18, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "dtca-diffusion-lm-rl",
+      "title": "DTCA: Denoising Token Credit Assignment for Reinforcement Learning in Diffusion Language Models",
+      "authors": ["et al."],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "Addresses the credit assignment problem in applying RL to diffusion-based language models, where tokens are generated through iterative denoising rather than autoregressive steps. DTCA attributes rewards to individual denoising steps to enable stable policy gradient training.",
+      "key_findings": [
+        "Standard RL reward attribution breaks down for diffusion LMs due to the non-sequential denoising process",
+        "DTCA achieves stable training on reasoning and instruction-following tasks for diffusion LMs",
+        "Opens a viable path to RLHF-style alignment for the emerging class of diffusion language models"
+      ],
+      "tags": ["diffusion-language-models", "reinforcement-learning", "credit-assignment", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "skeleton-coding-agents",
+      "title": "Skeleton Coding: Program Structure as a Specification for Agents",
+      "authors": ["Aditya Golatkar", "et al."],
+      "affiliations": ["UC San Diego"],
+      "summary": "Proposes using the existing program's structural skeleton — function signatures, class hierarchies, and import patterns — as the primary specification for coding agents, reducing reliance on verbose natural-language instructions that can conflict with codebase conventions.",
+      "key_findings": [
+        "Program structure conveys stylistic and architectural intent that natural-language instructions routinely miss or contradict",
+        "Skeleton-conditioned agents produce more consistent code with fewer integration failures than instruction-only baselines",
+        "Applicable to enterprise codebases where agents must conform to legacy architectural patterns"
+      ],
+      "tags": ["coding-agents", "program-synthesis", "specification", "software-engineering"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "disparity-laundering-clinical",
+      "title": "Disparity Laundering: Consensus Without Fairness in Clinical Multi-Agent Systems",
+      "authors": ["Xiaoyang Wang", "et al."],
+      "affiliations": ["Stanford University"],
+      "summary": "Demonstrates that having multiple clinical LLMs deliberate and reach consensus does not eliminate, and can obscure, demographic biases present in individual models. Labels this phenomenon 'disparity laundering' and proposes audit protocols for multi-agent clinical pipelines.",
+      "key_findings": [
+        "Multi-model deliberation produces consensus on clinically significant decisions while preserving demographic disparities",
+        "The appearance of rigor from ensemble agreement may reduce human oversight scrutiny",
+        "Standard fairness metrics fail to detect disparity laundering; new audit methods are required"
+      ],
+      "tags": ["ai-safety", "fairness", "healthcare-ai", "multi-agent", "bias"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "role-grounding-attack-agent-memory",
+      "title": "Is it my preference? Role Grounding Attack against Agent's Memory via Social Interaction",
+      "authors": ["Haoran Bu", "et al."],
+      "affiliations": ["Zhejiang University"],
+      "summary": "Introduces a class of attacks that exploit agent memory systems through social engineering: an adversary impersonates a trusted social contact to inject false memories or preferences into an agent's persistent memory store, altering its future behavior.",
+      "key_findings": [
+        "Agents with persistent social memory are vulnerable to preference injection via trusted-contact impersonation",
+        "The attack is effective even against agents with content-level safety filters, as the injected content appears benign",
+        "Defense requires identity verification at the memory write layer, not just at the input layer"
+      ],
+      "tags": ["agent-security", "memory-attacks", "adversarial", "social-engineering"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "gaac-kv-compression",
+      "title": "GAAC: Lossless KV Compression for Bandwidth-Efficient LLM Inference on Personal Devices",
+      "authors": ["Yipin Guo", "et al."],
+      "affiliations": ["Huawei Noah's Ark Lab"],
+      "summary": "Proposes GAAC, a lossless KV cache compression method targeting on-device LLM inference, where memory bandwidth (not compute) is the primary bottleneck. Achieves compression ratios of 2-4x with no degradation in generation quality.",
+      "key_findings": [
+        "KV cache bandwidth is the dominant inference bottleneck on personal devices with shared CPU-GPU memory",
+        "Lossless compression of 2-4x is achievable through structured prediction of KV patterns without quality loss",
+        "Enables deployment of 7B+ parameter models on smartphones without quantization-induced quality degradation"
+      ],
+      "tags": ["on-device-inference", "kv-cache", "compression", "edge-ai", "efficiency"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "parattt-test-time-training",
+      "title": "ParaTTT: Parallelizing Test-Time Training Layers with Deep Memories",
+      "authors": ["Noel Loo", "et al."],
+      "affiliations": ["MIT CSAIL"],
+      "summary": "Introduces ParaTTT, a method for parallelizing test-time training (TTT) layers that use nonlinear deep memory structures. Addresses the sequential bottleneck in TTT architectures that has limited their practical throughput.",
+      "key_findings": [
+        "TTT layers with nonlinear memories cannot be parallelized with standard scan algorithms due to state dependencies",
+        "ParaTTT achieves near-linear parallel scaling through a hierarchical decomposition of memory update graphs",
+        "Enables TTT models to match Transformer throughput while retaining the adaptive advantages of test-time learning"
+      ],
+      "tags": ["test-time-training", "parallelism", "sequence-models", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "easyprover-lean-verification",
+      "title": "Scaling Lean Theorem Proving for Real-World Code Verification",
+      "authors": ["Debargha Ganguly", "et al."],
+      "affiliations": ["Google DeepMind"],
+      "summary": "Presents EasyProver, a system that scales Lean 4 theorem proving to real-world code verification tasks. Reports strong results on PutnamBench and selected IMO problems, suggesting that formal verification of non-trivial codebases is becoming tractable.",
+      "key_findings": [
+        "EasyProver sets new state-of-the-art results on PutnamBench, a competitive mathematics benchmark",
+        "The system translates Python and Rust code to Lean 4 specifications for automated verification",
+        "Human-in-the-loop annotation reduces specification effort by 60% compared to fully manual approaches"
+      ],
+      "tags": ["formal-verification", "theorem-proving", "lean4", "code-verification"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "multilingual-safety-evaluation",
+      "title": "Component Translation and Judge-Labelled Refusal: A Multilingual Safety Evaluation",
+      "authors": ["Yongxi Zhou", "et al."],
+      "affiliations": ["Tsinghua University"],
+      "summary": "Proposes a paired-reversal methodology for evaluating LLM safety and refusal consistency across languages. Identifies systematic gaps where models refuse in English but comply in lower-resource languages.",
+      "key_findings": [
+        "Safety refusals are significantly less consistent in non-English languages, with compliance rates up to 3x higher for the same harmful requests in some languages",
+        "Component-level translation attacks (translating only key refusal-triggering phrases) are more effective than full-sentence translation",
+        "Judge-labelled refusal evaluation substantially reduces annotation cost while maintaining high agreement with human judges"
+      ],
+      "tags": ["ai-safety", "multilingual", "refusal", "evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "decompgym-llm-optimization",
+      "title": "DecompGym: Benchmarking LLM Agents on Designing Decomposition Algorithms",
+      "authors": ["Sikai Cheng", "et al."],
+      "affiliations": ["University of Michigan"],
+      "summary": "Introduces DecompGym, a benchmark evaluating LLM agents on designing Benders decomposition and column generation algorithms for mixed-integer programming problems. Tests whether agents can contribute to algorithm design in operations research.",
+      "key_findings": [
+        "State-of-the-art LLM agents succeed on 30% of DecompGym problems, revealing significant gaps in mathematical reasoning for combinatorial optimization",
+        "Agent performance correlates with the model's ability to reason about problem structure, not just recall known decompositions",
+        "The benchmark reveals a gap between natural-language mathematical reasoning and algorithm implementation"
+      ],
+      "tags": ["llm-agents", "optimization", "benchmarks", "mathematical-reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba Qwen",
+      "description": "27B vision-language model with multilingual OCR capabilities. Currently the most liked open-weight model on HuggingFace, signaling broad community adoption of the Qwen series as the default multimodal backbone.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["vision-language", "multilingual", "ocr", "chat"],
+      "metrics": {"downloads": 7509924, "likes": 18694},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Image-to-video diffusion model with 2.2M downloads, the most-downloaded generative video model on HuggingFace. Lightricks continues to lead in practical video generation tooling for creative workflows.",
+      "task_type": "image-to-video",
+      "model_size": "unknown",
+      "tags": ["video-generation", "diffusion", "image-to-video"],
+      "metrics": {"downloads": 2269999, "likes": 9877},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "sam3-facebook",
+      "name": "SAM 3",
+      "organization": "Meta AI (facebook)",
+      "description": "Segment Anything Model 3, the video-capable successor supporting object tracking and segmentation across video frames. With 1.88M downloads, it is rapidly becoming the standard backbone for video understanding pipelines.",
+      "task_type": "video-object-segmentation",
+      "model_size": "unknown",
+      "tags": ["segmentation", "video", "tracking", "zero-shot"],
+      "metrics": {"downloads": 1884719, "likes": 5441},
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "deepseek-ai",
+      "description": "Compact image-text-to-text model from DeepSeek, optimized for fast inference. The -1017 suffix suggests an October 17 checkpoint. Leading the image-text-to-text category surge on HuggingFace with strong download velocity.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": {"downloads": 131062, "likes": 3889},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (ComfyUI)",
+      "organization": "black-forest-labs",
+      "description": "Image-editing checkpoint from Black Forest Labs for ComfyUI workflows, the 832K downloads reflecting ComfyUI's dominant position in local image generation tooling. The 'Klein' variant is optimized for image editing rather than text-to-image generation.",
+      "task_type": "image-to-image",
+      "model_size": "unknown",
+      "tags": ["image-editing", "comfyui", "diffusion", "flux"],
+      "metrics": {"downloads": 832197, "likes": 2062},
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "lfm3-1-7b",
+      "name": "LFM3-1.7B",
+      "organization": "LiquidAI",
+      "description": "1.7B liquid foundation model designed for low-latency deployment on consumer GPUs. Part of Liquid AI's LFM3 family which also includes multimodal (VL, Omni) variants, signaling LiquidAI's push toward a full-stack open foundation model suite.",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": ["efficient", "small-model", "text-generation", "liquid-foundation"],
+      "metrics": {"downloads": 15885, "likes": 496},
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-transcribe",
+      "name": "NVIDIA Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "nvidia",
+      "description": "30B speech-to-text model supporting 40 languages, part of NVIDIA's Nemotron 3.5 release wave. The A4B (4B active parameters MoE) architecture achieves strong multilingual ASR quality with reduced inference cost.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (4B active)",
+      "tags": ["speech-to-text", "multilingual", "asr", "mixture-of-experts"],
+      "metrics": {"downloads": 4276, "likes": 425},
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "flint-recursivesi",
+      "name": "flint",
+      "organization": "RecursiveSI",
+      "description": "7B conversational model fine-tuned for coding questions and debugging. Notable for rapid community traction (1,247 likes) from a smaller independent organization, suggesting strong quality for its intended use case.",
+      "task_type": "text-generation",
+      "model_size": "7B",
+      "tags": ["coding", "chat", "instruction-following"],
+      "metrics": {"downloads": 16598, "likes": 1247},
+      "source_url": "https://huggingface.co/RecursiveSI/flint"
+    },
+    {
+      "id": "drama-3-fishaudio",
+      "name": "drama-3",
+      "organization": "fishaudio",
+      "description": "Multi-speaker text-to-speech model with natural prosody and speaker diversity. Fish Audio's drama series has established a reputation for high-quality open TTS, and the third iteration builds on the community-driven voice sharing ecosystem the organization has cultivated.",
+      "task_type": "text-to-speech",
+      "model_size": "unknown",
+      "tags": ["text-to-speech", "multi-speaker", "tts"],
+      "metrics": {"downloads": 28162, "likes": 1107},
+      "source_url": "https://huggingface.co/fishaudio/drama-3"
+    },
+    {
+      "id": "carbon-x-bio",
+      "name": "Carbon-X",
+      "organization": "HuggingFaceBio",
+      "description": "DNA-sequence-to-text model built on Qwen-3, enabling natural-language querying of genomic data. Represents a promising direction for making genomic analysis accessible to non-specialist users through LLM-native interfaces.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["bioinformatics", "genomics", "dna", "science"],
+      "metrics": {"downloads": 2808, "likes": 271},
+      "source_url": "https://huggingface.co/HuggingFaceBio/Carbon-X"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "browser-use-browser-use",
+      "name": "browser-use/browser-use",
+      "description": "Python library for building AI browser agents that can navigate and interact with web pages. Trending today with +247 new stars, driven by growing interest in computer-use and web automation agents.",
+      "language": "Python",
+      "stars": 119502,
+      "stars_today": 247,
+      "forks": 0,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["browser-agent", "computer-use", "web-automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "AI-powered personalized tutoring platform from HKUDS lab. Exploded today with +1,930 new stars — the largest single-day trending signal this week — suggesting genuine product-market fit in the education AI vertical.",
+      "language": "Python",
+      "stars": 50224,
+      "stars_today": 1930,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education-ai", "tutoring", "llm-application"],
+      "relevance": "high"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Persistent context memory layer across agent sessions, enabling long-running agents to maintain state between separate invocations. Rapidly accumulated 104K stars, reflecting the urgency of solving agent memory for practical deployments.",
+      "language": "TypeScript",
+      "stars": 104854,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["agent-memory", "persistence", "context-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "infiniflow-ragflow",
+      "name": "infiniflow/ragflow",
+      "description": "Production-grade RAG engine with integrated agent capabilities, supporting complex document parsing and multi-step retrieval pipelines. At 93K stars, one of the most starred RAG frameworks, reflecting its reputation for handling real-world messy documents.",
+      "language": "Go",
+      "stars": 93119,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/infiniflow/ragflow",
+      "tags": ["rag", "document-parsing", "agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "unclecode-crawl4ai",
+      "name": "unclecode/crawl4ai",
+      "description": "Web crawler that converts sites to LLM-ready Markdown, handling JavaScript rendering, pagination, and structured data extraction. A critical piece of the LLM data pipeline, with 86K stars reflecting broad adoption.",
+      "language": "Python",
+      "stars": 86550,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": ["web-scraping", "data-pipeline", "llm-data"],
+      "relevance": "high"
+    },
+    {
+      "id": "mem0ai-mem0",
+      "name": "mem0ai/mem0",
+      "description": "Memory layer for AI agents providing structured, queryable storage of agent interactions and preferences. Complements the role grounding attack research paper — this is one of the key infrastructure targets for the attack described today.",
+      "language": "Python",
+      "stars": 68066,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mem0ai/mem0",
+      "tags": ["agent-memory", "vector-store", "persistence"],
+      "relevance": "high"
+    },
+    {
+      "id": "harry0703-money-printer-turbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "Generates complete short-form social media videos from topics or keywords using LLMs for scripting and text-to-image/video models for content. Broadly popular at 136K stars, serving the creator economy at the intersection of AI generation pipelines.",
+      "language": "Python",
+      "stars": 136318,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "content-creation", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "hkuds-nanobot",
+      "name": "HKUDS/nanobot",
+      "description": "Self-hosted personal AI agent framework from the same HKUDS lab as DeepTutor. Provides a lightweight alternative to heavier agent frameworks for personal productivity use cases.",
+      "language": "Python",
+      "stars": 49644,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/nanobot",
+      "tags": ["personal-agent", "self-hosted", "lightweight"],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Self-improving agent framework from Nous Research featuring a continuous learning loop that refines agent behavior from interaction history. At 258K stars, one of the largest open agent framework repositories.",
+      "language": "Python",
+      "stars": 258533,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent-framework", "self-improvement", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "The standard tool for running popular open-weight models locally, now at 185K stars. Continues to be the on-ramp for local LLM experimentation, with new model support tracking HuggingFace releases closely.",
+      "language": "Go",
+      "stars": 185261,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["local-llm", "inference", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "copilotkit-copilotkit",
+      "name": "CopilotKit/CopilotKit",
+      "description": "Frontend React stack for integrating AI agents and generative UI into web applications. Enables streaming agent responses, tool call visualization, and human-in-the-loop interactions in production web apps.",
+      "language": "TypeScript",
+      "stars": 38371,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/CopilotKit/CopilotKit",
+      "tags": ["agent-frontend", "react", "generative-ui"],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-compass-opencompass",
+      "name": "open-compass/opencompass",
+      "description": "Comprehensive LLM evaluation platform supporting 100+ benchmarks and datasets, widely used by both academic groups and industry labs to standardize model comparisons.",
+      "language": "Python",
+      "stars": 7557,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/open-compass/opencompass",
+      "tags": ["evaluation", "benchmarks", "llm-testing"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Infrastructure Maturity",
+      "description": "Multiple papers and repositories this week address production challenges of deploying LLM agents: serving efficiency (TAO), specification clarity (Skeleton Coding), and memory persistence (claude-mem, mem0). The field is transitioning from research demos to engineering discipline.",
+      "related_paper_ids": ["tao-agentic-serving", "skeleton-coding-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Generation Frontier",
+      "description": "Video generation (OmniShowcase, LTX-2.5), image editing (FLUX.3 Klein), and audio-visual separation are consolidating into mature workflows. Subject-consistent and multi-view generation represent the current research frontier.",
+      "related_paper_ids": ["omnishowcase-multiview-video", "efficient-streaming-avse"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Security and Fairness",
+      "description": "Two important safety papers today: Disparity Laundering showing clinical AI consensus hides bias, and Role Grounding Attack demonstrating memory injection vulnerabilities. Safety concerns are catching up to deployment velocity.",
+      "related_paper_ids": ["disparity-laundering-clinical", "role-grounding-attack-agent-memory"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "On-Device and Efficient Inference",
+      "description": "GAAC's lossless KV cache compression, LiquidAI's LFM3-1.7B, and NVIDIA's Bolt-E4B-4GB all target consumer hardware deployment. The sub-5B and optimized-quantization segment is the most active model category on HuggingFace.",
+      "related_paper_ids": ["gaac-kv-compression", "parattt-test-time-training"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Diffusion Language Models",
+      "description": "DTCA tackles credit assignment for RL in diffusion LMs — a niche that was largely theoretical 6 months ago. With multiple organizations now training diffusion-based text models, alignment methodology for this architecture class is becoming urgent.",
+      "related_paper_ids": ["dtca-diffusion-lm-rl"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Formal Reasoning and Verification",
+      "description": "EasyProver's results on PutnamBench and IMO problems signal that formal verification tooling for code is maturing. The combination of LLM-assisted specification and automated theorem proving is approaching practical utility for real codebases.",
+      "related_paper_ids": ["easyprover-lean-verification"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers/date/2026-10-29",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI (via digest)",
+      "url": "https://arxiv.org/list/cs.AI/new",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "error"
+    }
+  ]
+}

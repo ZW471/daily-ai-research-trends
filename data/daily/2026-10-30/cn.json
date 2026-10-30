@@ -1,0 +1,548 @@
+{
+  "version": "1.0",
+  "date": "2026-10-30",
+  "generated_at": "2026-10-30T15:30:00Z",
+  "summary": {
+    "headline": "TAO调度框架与Skeleton Coding推动Agent基础设施成熟；OmniShowcase推进多视角视频生成；DeepTutor单日涨星+1930，AI教育赛道进入主流视野",
+    "body": "**2026年10月30日（周五）**，一批论文聚焦于加固大语言模型（LLM）Agent系统的底层管道。TAO提出了一种工具感知的联合调度器，针对Agent工作流中的LLM服务进行优化——这是首个在生成成本之外同时考虑工具调用延迟的生产级调度框架。与此形成呼应的是Skeleton Coding，它重新定义了Agent规范问题：不再依赖冗长的指令集，而是将程序结构本身作为规范，大幅缩小了Agent需要遵循的指令边界。这两篇论文共同表明，该领域已从「Agent能否完成X」转向「如何大规模高效部署Agent」。\n\n在生成技术前沿，OmniShowcase展示了从多视角输入图像生成主体一致性视频的能力，是可控长镜头视频合成的重要进展。该论文解决了一个长期痛点：在生成特定主体的视频时，跨帧的视角一致性仍然脆弱。该方法通过多视角条件来锚定主体外观，在HuggingFace上已获得47票。与此同时，音视频领域也出现了值得关注的贡献：从真实声学场景中高效流式提取目标说话人——这对视频会议、助听设备以及在嘈杂环境中运行的具身Agent而言具有直接实用价值。\n\n模型生态系统持续向少数主导系列收敛。Qwen3.8-27B以18,694个点赞和750万次下载领跑HuggingFace榜单，进一步巩固了阿里巴巴Qwen系列作为开源多模态基础模型事实标准的地位。Lightricks的LTX-2.5突破220万次下载，图生视频工作流日趋成熟。在基础设施层面，GAAC提出了一种用于端侧LLM推理的无损KV缓存压缩方法——随着边缘部署加速，这篇论文的实际重要性不容小觑。",
+    "key_themes": [
+      "agent-infrastructure",
+      "multimodal-generation",
+      "on-device-inference",
+      "ai-safety-fairness",
+      "diffusion-language-models",
+      "formal-reasoning"
+    ]
+  },
+  "researcher_notes": "**Agent调度问题终于得到了认真的工程关注。** TAO针对Agent LLM服务的工具感知联合调度并非学术探索——它直接解决了生产级Agent部署比简单对话部署成本高3至5倍的延迟低效问题。核心洞见在于：工具调用开销（网络延迟、执行时间）必须与生成过程协同调度，而非被服务基础设施当作黑盒处理。值得关注后续将其应用于工具调用级联的多Agent流水线的相关工作。\n\n**Skeleton Coding是本周最值得关注的潜力股。** Aditya Golatkar等人将程序结构作为编码Agent规范的方法，解决了从业者长期绕行的一个真实问题：冗长的系统提示词相互冲突，并与代码库的实际约定产生漂移。通过将现有代码的骨架（函数签名、类层次、导入关系）作为基准事实，该方法规避了导致编码Agent输出风格不一致的歧义。这对于Agent必须遵循已有模式的企业代码库具有直接的应用价值。\n\n**《偏差漂白》（Disparity Laundering）是本周最重要的安全论文。** 这一发现——临床多Agent系统的审议过程能达成共识，却无法消除偏见——直接挑战了集成/委员会式AI决策天然更公平的假设。当多个LLM达成一致时，感觉上更为严谨。但如果它们共享同样的训练偏见，共识只是将偏差包装进了一个听起来更权威的输出。医疗AI团队应将此视为任何通过多模型审议进行决策的流水线的危险信号。\n\n**Agent内存攻击面正在快速扩大。** 角色接地攻击（Role Grounding Attack）论文表明，Agent内存系统可通过社会工程学手段被操控——攻击者通过冒充Agent社交图中的可信联系人，将虚假记忆或偏好注入其持久内存库，改变其未来行为。随着Agent积累持久内存（参见：claude-mem的10.4万星，mem0的6.8万星），攻击面也成比例扩大。业界尚未为此开发标准防御措施，预计这将在2027年成为重要的红队攻击向量。\n\n**DeepTutor今日+1930星是本周最强劲的趋势信号。** HKUDS的AI辅导平台以这种速度获得关注，更像是真实的产品市场契合（PMF），而非投机性关注。教育AI赛道的历史表现一直低于炒作预期，但更强的基础模型与更可靠的工具使用能力（允许辅导系统检验解题过程而非仅生成答案）的组合，可能已越过了某个阈值。值得持续关注这是单日峰值还是持续增长。",
+  "papers": [
+    {
+      "id": "efficient-streaming-avse",
+      "title": "面向真实声学场景的高效流式音视频目标说话人提取",
+      "authors": ["JusperLee", "等"],
+      "affiliations": ["香港中文大学"],
+      "summary": "提出了一种用于从复杂声学环境中实时提取目标说话人的流式音视频模型。该方法联合处理音频和视觉线索（唇部运动、人脸身份），实现适合消费硬件部署的低延迟说话人分离。",
+      "key_findings": [
+        "通过音视频融合实现实时流式推理，同时不牺牲分离质量",
+        "在嘈杂真实声学基准测试中优于先前的流式基线方法",
+        "在视频会议、听力辅助和具身Agent感知等场景中展示了实用价值"
+      ],
+      "tags": ["audio-visual", "speaker-extraction", "streaming", "speech-processing"],
+      "relevance": "high",
+      "engagement": {"upvotes": 150, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "omnishowcase-multiview-video",
+      "title": "OmniShowcase：从多视角图像生成主体一致性视频",
+      "authors": ["Justin4AI", "等"],
+      "affiliations": ["清华大学"],
+      "summary": "提出了一个从多视角输入图像生成主体一致性视频的框架，支持全向产品展示和场景环视生成。使用多视角条件来锚定跨帧的主体外观。",
+      "key_findings": [
+        "与单视角视频生成相比，多视角条件显著提升了跨帧主体一致性",
+        "支持从少量输入图像生成连贯的360度产品可视化",
+        "无需针对特定主体微调，可泛化至野外主体"
+      ],
+      "tags": ["video-generation", "multi-view", "subject-consistency", "diffusion"],
+      "relevance": "high",
+      "engagement": {"upvotes": 47, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "tao-agentic-serving",
+      "title": "TAO：面向LLM Agent服务的工具感知联合调度",
+      "authors": ["lsh-algorithm", "等"],
+      "affiliations": ["北京大学"],
+      "summary": "提出TAO，一种在LLM Agent工作流中将工具调用视为与令牌生成并列的一等操作的服务调度器。通过建模工具延迟分布并进行预取，TAO显著降低了端到端Agent任务延迟。",
+      "key_findings": [
+        "在生产级Agent部署中，工具调用延迟是主要开销，而非生成成本",
+        "在基准测试中，生成与工具执行的联合调度将P99延迟降低了高达40%",
+        "该调度器无需修改模型即可与现有vLLM兼容的推理后端集成"
+      ],
+      "tags": ["agent-serving", "inference-optimization", "tool-use", "scheduling"],
+      "relevance": "high",
+      "engagement": {"upvotes": 18, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "dtca-diffusion-lm-rl",
+      "title": "DTCA：扩散语言模型强化学习中的去噪令牌信用分配",
+      "authors": ["等"],
+      "affiliations": ["卡内基梅隆大学"],
+      "summary": "针对将强化学习（RL）应用于基于扩散的语言模型时的信用分配问题，这类模型通过迭代去噪而非自回归步骤生成令牌。DTCA将奖励归因到各个去噪步骤，以实现稳定的策略梯度训练。",
+      "key_findings": [
+        "由于扩散语言模型的非顺序去噪过程，标准RL奖励归因方法失效",
+        "DTCA在扩散语言模型的推理和指令跟随任务上实现了稳定训练",
+        "为新兴的扩散语言模型类别开辟了类RLHF对齐的可行路径"
+      ],
+      "tags": ["diffusion-language-models", "reinforcement-learning", "credit-assignment", "alignment"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {
+        "huggingface": "https://huggingface.co/papers/date/2026-10-29"
+      }
+    },
+    {
+      "id": "skeleton-coding-agents",
+      "title": "Skeleton Coding：将程序结构作为Agent的规范",
+      "authors": ["Aditya Golatkar", "等"],
+      "affiliations": ["加州大学圣地亚哥分校"],
+      "summary": "提出将现有程序的结构骨架——函数签名、类层次和导入模式——作为编码Agent的主要规范，减少对可能与代码库约定相冲突的冗长自然语言指令的依赖。",
+      "key_findings": [
+        "程序结构传达了自然语言指令经常遗漏或与之矛盾的风格和架构意图",
+        "与纯指令基线相比，骨架条件Agent生成的代码一致性更高，集成失败更少",
+        "适用于Agent必须遵循既有架构模式的企业代码库"
+      ],
+      "tags": ["coding-agents", "program-synthesis", "specification", "software-engineering"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "disparity-laundering-clinical",
+      "title": "偏差漂白：临床多Agent系统中无公平性的共识",
+      "authors": ["Xiaoyang Wang", "等"],
+      "affiliations": ["斯坦福大学"],
+      "summary": "证明了让多个临床LLM审议并达成共识并不能消除（甚至可能掩盖）各个模型中存在的人口统计偏见。将这一现象命名为「偏差漂白」，并提出针对多Agent临床流水线的审计协议。",
+      "key_findings": [
+        "多模型审议在具有临床意义的决策上达成共识，同时保留了人口统计差异",
+        "集成一致的表象可能降低人工监督的审查力度",
+        "标准公平性指标无法检测偏差漂白，需要新的审计方法"
+      ],
+      "tags": ["ai-safety", "fairness", "healthcare-ai", "multi-agent", "bias"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "role-grounding-attack-agent-memory",
+      "title": "这是我的偏好吗？通过社交互动对Agent内存的角色接地攻击",
+      "authors": ["Haoran Bu", "等"],
+      "affiliations": ["浙江大学"],
+      "summary": "引入了一类通过社会工程学利用Agent内存系统的攻击：攻击者冒充可信社交联系人，向Agent的持久内存库注入虚假记忆或偏好，从而改变其未来行为。",
+      "key_findings": [
+        "具有持久社交记忆的Agent容易通过可信联系人冒充遭受偏好注入攻击",
+        "即使对具有内容级安全过滤器的Agent，该攻击也有效，因为注入的内容看起来无害",
+        "防御需要在内存写入层而非输入层进行身份验证"
+      ],
+      "tags": ["agent-security", "memory-attacks", "adversarial", "social-engineering"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "gaac-kv-compression",
+      "title": "GAAC：面向个人设备上带宽高效LLM推理的无损KV压缩",
+      "authors": ["Yipin Guo", "等"],
+      "affiliations": ["华为诺亚方舟实验室"],
+      "summary": "提出GAAC，一种针对端侧LLM推理的无损KV缓存压缩方法，目标是内存带宽（而非算力）为主要瓶颈的设备。在不降低生成质量的情况下实现2到4倍的压缩比。",
+      "key_findings": [
+        "KV缓存带宽是共享CPU-GPU内存的个人设备上推理的主要瓶颈",
+        "通过对KV模式进行结构化预测，可以实现2到4倍的无损压缩，且无质量损失",
+        "支持在不引入量化质量损失的情况下，在智能手机上部署70亿参数以上的模型"
+      ],
+      "tags": ["on-device-inference", "kv-cache", "compression", "edge-ai", "efficiency"],
+      "relevance": "high",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "parattt-test-time-training",
+      "title": "ParaTTT：并行化具有深度记忆的测试时训练层",
+      "authors": ["Noel Loo", "等"],
+      "affiliations": ["MIT CSAIL"],
+      "summary": "提出ParaTTT，一种并行化使用非线性深度记忆结构的测试时训练（TTT）层的方法。解决了TTT架构中限制其实际吞吐量的顺序瓶颈问题。",
+      "key_findings": [
+        "由于状态依赖性，具有非线性记忆的TTT层无法用标准扫描算法并行化",
+        "ParaTTT通过对内存更新图进行层次分解实现近线性并行扩展",
+        "使TTT模型在保留测试时学习自适应优势的同时，达到与Transformer相当的吞吐量"
+      ],
+      "tags": ["test-time-training", "parallelism", "sequence-models", "efficiency"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "easyprover-lean-verification",
+      "title": "面向真实世界代码验证的精益（Lean）定理证明扩展",
+      "authors": ["Debargha Ganguly", "等"],
+      "affiliations": ["Google DeepMind"],
+      "summary": "提出EasyProver系统，将Lean 4定理证明扩展到真实世界代码验证任务。在PutnamBench和部分IMO问题上报告了强劲成绩，表明对非平凡代码库的形式验证正变得可行。",
+      "key_findings": [
+        "EasyProver在PutnamBench（一项竞争性数学基准）上创下新的最优成绩",
+        "该系统将Python和Rust代码转换为Lean 4规范进行自动化验证",
+        "与完全手动方法相比，人机协同标注使规范工作量减少60%"
+      ],
+      "tags": ["formal-verification", "theorem-proving", "lean4", "code-verification"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "multilingual-safety-evaluation",
+      "title": "组件翻译与评判标注拒绝：多语言安全评估",
+      "authors": ["Yongxi Zhou", "等"],
+      "affiliations": ["清华大学"],
+      "summary": "提出了一种跨语言评估LLM安全性和拒绝一致性的配对反转方法。识别出系统性差距：模型在英语中拒绝，但在资源较少的语言中对相同请求进行响应。",
+      "key_findings": [
+        "安全拒绝在非英语语言中一致性显著更低，某些语言中对相同有害请求的合规率高达3倍",
+        "仅翻译关键拒绝触发短语的组件级翻译攻击比全句翻译更有效",
+        "评判标注拒绝评估在保持与人工评判高度一致的同时大幅降低了标注成本"
+      ],
+      "tags": ["ai-safety", "multilingual", "refusal", "evaluation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    },
+    {
+      "id": "decompgym-llm-optimization",
+      "title": "DecompGym：在设计分解算法上对LLM Agent进行基准测试",
+      "authors": ["Sikai Cheng", "等"],
+      "affiliations": ["密歇根大学"],
+      "summary": "引入DecompGym，一个评估LLM Agent在为混合整数规划问题设计Benders分解和列生成算法方面能力的基准。测试Agent能否在运筹学中贡献算法设计。",
+      "key_findings": [
+        "最先进的LLM Agent在30%的DecompGym问题上取得成功，揭示了组合优化数学推理的显著差距",
+        "Agent性能与模型对问题结构的推理能力相关，而非仅仅依赖已知分解的记忆",
+        "该基准揭示了自然语言数学推理与算法实现之间的差距"
+      ],
+      "tags": ["llm-agents", "optimization", "benchmarks", "mathematical-reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 0, "comments": 0},
+      "sources": {}
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "阿里巴巴 Qwen",
+      "description": "270亿参数视觉语言模型，具备多语言OCR能力。目前HuggingFace点赞数最高的开源模型，标志着Qwen系列在社区中被广泛采用，逐渐成为多模态主干网络的事实标准。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": ["vision-language", "multilingual", "ocr", "chat"],
+      "metrics": {"downloads": 7509924, "likes": 18694},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "图生视频扩散模型，下载量达220万，是HuggingFace上下载量最高的生成式视频模型。Lightricks持续引领面向创意工作流的实用视频生成工具。",
+      "task_type": "image-to-video",
+      "model_size": "未知",
+      "tags": ["video-generation", "diffusion", "image-to-video"],
+      "metrics": {"downloads": 2269999, "likes": 9877},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "sam3-facebook",
+      "name": "SAM 3（Segment Anything Model 3）",
+      "organization": "Meta AI",
+      "description": "支持目标跟踪和跨视频帧分割的视频版分割一切模型第三代。188万下载量使其迅速成为视频理解流水线的标准主干网络。",
+      "task_type": "video-object-segmentation",
+      "model_size": "未知",
+      "tags": ["segmentation", "video", "tracking", "zero-shot"],
+      "metrics": {"downloads": 1884719, "likes": 5441},
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "deepseek-ai",
+      "description": "来自DeepSeek的紧凑型图像文本到文本模型，针对快速推理进行了优化。-1017后缀表明这是10月17日的检查点版本。在HuggingFace图像文本到文本类别中以强劲的下载速度领跑。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": ["multimodal", "vision-language", "efficient"],
+      "metrics": {"downloads": 131062, "likes": 3889},
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein（ComfyUI版）",
+      "organization": "black-forest-labs",
+      "description": "Black Forest Labs为ComfyUI工作流提供的图像编辑检查点，83万次下载反映了ComfyUI在本地图像生成工具中的主导地位。Klein变体针对图像编辑而非文本生成图像进行了优化。",
+      "task_type": "image-to-image",
+      "model_size": "未知",
+      "tags": ["image-editing", "comfyui", "diffusion", "flux"],
+      "metrics": {"downloads": 832197, "likes": 2062},
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "lfm3-1-7b",
+      "name": "LFM3-1.7B",
+      "organization": "LiquidAI",
+      "description": "17亿参数液态基础模型（Liquid Foundation Model），专为消费级GPU上的低延迟部署而设计。属于LiquidAI的LFM3系列，该系列还包括多模态变体（视觉语言版、全模态版），表明LiquidAI正在推进完整的开源基础模型套件。",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": ["efficient", "small-model", "text-generation", "liquid-foundation"],
+      "metrics": {"downloads": 15885, "likes": 496},
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-transcribe",
+      "name": "NVIDIA Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "NVIDIA",
+      "description": "300亿参数支持40种语言的语音转文字模型，是NVIDIA Nemotron 3.5系列发布浪潮的一部分。A4B（40亿活跃参数混合专家）架构以较低的推理成本实现了高质量多语言自动语音识别。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B（4B激活参数）",
+      "tags": ["speech-to-text", "multilingual", "asr", "mixture-of-experts"],
+      "metrics": {"downloads": 4276, "likes": 425},
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "flint-recursivesi",
+      "name": "flint",
+      "organization": "RecursiveSI",
+      "description": "针对编程问题和调试进行微调的70亿参数对话模型。来自规模较小的独立机构却获得了快速的社区关注（1247个点赞），表明其在预期使用场景中质量出众。",
+      "task_type": "text-generation",
+      "model_size": "7B",
+      "tags": ["coding", "chat", "instruction-following"],
+      "metrics": {"downloads": 16598, "likes": 1247},
+      "source_url": "https://huggingface.co/RecursiveSI/flint"
+    },
+    {
+      "id": "drama-3-fishaudio",
+      "name": "drama-3",
+      "organization": "fishaudio",
+      "description": "具有自然韵律和说话人多样性的多说话人文本转语音模型。Fish Audio的drama系列已建立起高质量开源TTS的口碑，第三代产品在该组织培育的社区驱动声音共享生态系统基础上继续进化。",
+      "task_type": "text-to-speech",
+      "model_size": "未知",
+      "tags": ["text-to-speech", "multi-speaker", "tts"],
+      "metrics": {"downloads": 28162, "likes": 1107},
+      "source_url": "https://huggingface.co/fishaudio/drama-3"
+    },
+    {
+      "id": "carbon-x-bio",
+      "name": "Carbon-X",
+      "organization": "HuggingFaceBio",
+      "description": "基于Qwen-3构建的DNA序列到文本模型，支持通过自然语言查询基因组数据。代表了通过LLM原生接口使基因组分析对非专业用户更易用的一个有前景的方向。",
+      "task_type": "text-generation",
+      "model_size": "未知",
+      "tags": ["bioinformatics", "genomics", "dna", "science"],
+      "metrics": {"downloads": 2808, "likes": 271},
+      "source_url": "https://huggingface.co/HuggingFaceBio/Carbon-X"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "browser-use-browser-use",
+      "name": "browser-use/browser-use",
+      "description": "用于构建能够导航和交互网页的AI浏览器Agent的Python库。今日趋势+247新增星标，受到对计算机使用（computer-use）和网页自动化Agent日益增长的兴趣驱动。",
+      "language": "Python",
+      "stars": 119502,
+      "stars_today": 247,
+      "forks": 0,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": ["browser-agent", "computer-use", "web-automation"],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "来自HKUDS实验室的AI驱动个性化辅导平台。今日爆涨+1930新增星标——本周单日趋势最强信号——表明教育AI赛道已出现真实的产品市场契合。",
+      "language": "Python",
+      "stars": 50224,
+      "stars_today": 1930,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": ["education-ai", "tutoring", "llm-application"],
+      "relevance": "high"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "跨Agent会话的持久上下文记忆层，使长期运行的Agent能够在独立调用之间保持状态。迅速积累了10.4万星标，反映出实际部署中解决Agent记忆问题的迫切性。",
+      "language": "TypeScript",
+      "stars": 104854,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": ["agent-memory", "persistence", "context-management"],
+      "relevance": "high"
+    },
+    {
+      "id": "infiniflow-ragflow",
+      "name": "infiniflow/ragflow",
+      "description": "生产级RAG引擎，集成Agent能力，支持复杂文档解析和多步骤检索流水线。9.3万星标，是最受欢迎的RAG框架之一，以处理真实世界杂乱文档的能力著称。",
+      "language": "Go",
+      "stars": 93119,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/infiniflow/ragflow",
+      "tags": ["rag", "document-parsing", "agent"],
+      "relevance": "high"
+    },
+    {
+      "id": "unclecode-crawl4ai",
+      "name": "unclecode/crawl4ai",
+      "description": "将网站转换为LLM就绪Markdown的网络爬虫，处理JavaScript渲染、分页和结构化数据提取。8.6万星标反映出其在LLM数据流水线中的广泛采用。",
+      "language": "Python",
+      "stars": 86550,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": ["web-scraping", "data-pipeline", "llm-data"],
+      "relevance": "high"
+    },
+    {
+      "id": "mem0ai-mem0",
+      "name": "mem0ai/mem0",
+      "description": "为AI Agent提供结构化、可查询的交互记录和偏好存储的记忆层。与今日的角色接地攻击研究论文密切相关——这是该攻击所描述的关键基础设施目标之一。",
+      "language": "Python",
+      "stars": 68066,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/mem0ai/mem0",
+      "tags": ["agent-memory", "vector-store", "persistence"],
+      "relevance": "high"
+    },
+    {
+      "id": "harry0703-money-printer-turbo",
+      "name": "harry0703/MoneyPrinterTurbo",
+      "description": "使用LLM进行脚本创作、使用文本到图像/视频模型生成内容，从话题或关键词自动生成完整短视频。13.6万星标，服务于AI生成流水线与内容创作经济的交叉点。",
+      "language": "Python",
+      "stars": 136318,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "tags": ["video-generation", "content-creation", "automation"],
+      "relevance": "medium"
+    },
+    {
+      "id": "hkuds-nanobot",
+      "name": "HKUDS/nanobot",
+      "description": "来自HKUDS实验室（DeepTutor同一团队）的自托管个人AI Agent框架，为个人生产力使用场景提供比重型Agent框架更轻量的替代方案。",
+      "language": "Python",
+      "stars": 49644,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/nanobot",
+      "tags": ["personal-agent", "self-hosted", "lightweight"],
+      "relevance": "high"
+    },
+    {
+      "id": "nousresearch-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "来自Nous Research的自我改进Agent框架，具备从交互历史中持续优化Agent行为的学习循环。25.8万星标，是最受欢迎的开源Agent框架仓库之一。",
+      "language": "Python",
+      "stars": 258533,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": ["agent-framework", "self-improvement", "open-source"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "本地运行热门开源模型的标准工具，现已累积18.5万星标。继续作为本地LLM实验的入门工具，新模型支持与HuggingFace发布保持紧密同步。",
+      "language": "Go",
+      "stars": 185261,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["local-llm", "inference", "open-source"],
+      "relevance": "medium"
+    },
+    {
+      "id": "copilotkit-copilotkit",
+      "name": "CopilotKit/CopilotKit",
+      "description": "将AI Agent和生成式UI集成到Web应用的前端React技术栈，支持流式Agent响应、工具调用可视化以及生产级Web应用中的人机协同交互。",
+      "language": "TypeScript",
+      "stars": 38371,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/CopilotKit/CopilotKit",
+      "tags": ["agent-frontend", "react", "generative-ui"],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-compass-opencompass",
+      "name": "open-compass/opencompass",
+      "description": "支持100多个基准和数据集的综合LLM评估平台，被学术团体和工业实验室广泛使用，用于标准化模型比较。",
+      "language": "Python",
+      "stars": 7557,
+      "stars_today": 0,
+      "forks": 0,
+      "url": "https://github.com/open-compass/opencompass",
+      "tags": ["evaluation", "benchmarks", "llm-testing"],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent基础设施成熟化",
+      "description": "本周多篇论文和代码库聚焦于LLM Agent部署的生产级挑战：服务效率（TAO）、规范清晰性（Skeleton Coding）以及内存持久化（claude-mem、mem0）。该领域正从研究演示向工程规范转型。",
+      "related_paper_ids": ["tao-agentic-serving", "skeleton-coding-agents"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "多模态生成前沿",
+      "description": "视频生成（OmniShowcase、LTX-2.5）、图像编辑（FLUX.3 Klein）和音视频分离正在整合为成熟工作流。主体一致性和多视角生成代表当前研究前沿。",
+      "related_paper_ids": ["omnishowcase-multiview-video", "efficient-streaming-avse"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI安全与公平性",
+      "description": "今日两篇重要安全论文：《偏差漂白》揭示临床AI共识隐藏偏见，角色接地攻击展示内存注入漏洞。安全问题正在追赶部署速度。",
+      "related_paper_ids": ["disparity-laundering-clinical", "role-grounding-attack-agent-memory"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "端侧与高效推理",
+      "description": "GAAC的无损KV缓存压缩、LiquidAI的LFM3-1.7B以及NVIDIA的Bolt-E4B-4GB均面向消费硬件部署。50亿参数以下和优化量化模型是HuggingFace上最活跃的模型类别。",
+      "related_paper_ids": ["gaac-kv-compression", "parattt-test-time-training"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "扩散语言模型",
+      "description": "DTCA解决了扩散语言模型中RL的信用分配问题——这个领域在6个月前还主要停留在理论层面。随着多个组织开始训练基于扩散的文本模型，这类架构的对齐方法论正变得迫切。",
+      "related_paper_ids": ["dtca-diffusion-lm-rl"],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "形式推理与验证",
+      "description": "EasyProver在PutnamBench和IMO问题上的成绩表明代码形式验证工具正在走向成熟。LLM辅助规范与自动定理证明的结合正接近对真实代码库的实用价值。",
+      "related_paper_ids": ["easyprover-lean-verification"],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/papers/date/2026-10-29",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv cs.AI（通过摘要）",
+      "url": "https://arxiv.org/list/cs.AI/new",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace趋势模型",
+      "url": "https://huggingface.co/models",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://alphaxiv.org",
+      "checked_at": "2026-10-30T15:00:00Z",
+      "status": "error"
+    }
+  ]
+}
