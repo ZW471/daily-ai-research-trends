@@ -1,0 +1,911 @@
+{
+  "version": "1.0",
+  "date": "2026-10-31",
+  "generated_at": "2026-10-31T15:06:45.045008+00:00",
+  "summary": {
+    "headline": "Verification becomes the core primitive for computer-using agents (two VeriCUA papers); free-form and recursive agent orchestration (DynaFlow, Harness²) moves past fixed pipelines; Qwen3.8-27B and open multimodal models dominate HuggingFace trending",
+    "body": "**Agent reliability is now a verification problem.** Two separate VeriCUA papers take different routes to the same goal: one uses agentic exploration to check intermediate GUI steps, the other trains a Judge/Probe pair to produce proactive reward signals. DynaFlow and Harness² push the orchestration side, letting agents write their own workflows or recurse over harnesses rather than follow a fixed scaffold.\n\nOn the efficiency and training side, ParaTTT makes deeper test-time-training memories parallelizable, GAAC delivers lossless KV compression for consumer hardware, and a unified single-algorithm recipe for foundation-model training drew strong interest. Safety-minded work stands out too: Disparity Laundering shows that multi-agent consensus can amplify bias in clinical settings, and a Role Grounding attack shows agent memory can be poisoned through social content.\n\nIn open models, Qwen3.8-27B leads by a wide margin on likes and downloads, with Lightricks LTX-2.5, Meta's SAM 3 and DeepSeek-V4.1-Flash close behind. On GitHub, agent memory and skills repositories (claude-mem, mempalace, cognee, OpenViking) continue to climb. Note that the GitHub snapshot in this run dates from early October, so those counts are older than the rest of the data.",
+    "key_themes": [
+      "agent-verification",
+      "agent-orchestration",
+      "efficient-inference-and-memory",
+      "agent-safety-and-security",
+      "coding-agent-specification",
+      "agent-memory-infrastructure"
+    ]
+  },
+  "researcher_notes": "**Verification is replacing raw capability as the bottleneck for GUI agents.** VeriCUA appears twice in one week, from different groups with different mechanisms: exploration-based self-correction at inference time, and a trained Judge plus frozen Probe that doubles as a reward model. The two are complementary, since the second could supply the training signal the first needs. Expect verifier-as-reward to become standard for computer-use RL, and watch whether the Judge/Probe split generalizes beyond OSWorld.\n\n**Orchestration is moving from hand-built scaffolds to agent-authored ones.** DynaFlow (the main agent writes executable workflows, 88.08% in Forced mode with Qwen3.5-27B across six benchmarks) and Harness² (recursion at the task level and above) both treat the harness as something the model can generate or nest. This extends the agent-harness line of work from recent literature reviews. The open question is cost and debuggability: self-written workflows are hard to audit, which links directly to the verification papers above.\n\n**The sleeper hits are ParaTTT and GAAC.** Both are modest in upvotes relative to the agent papers but address deployment realities. ParaTTT removes the main objection to nonlinear test-time-training memories, which is sequential compute, and GAAC's lossless KV compression targets personal devices where bandwidth, not FLOPs, dominates. If either holds up at scale, they matter more for practitioners than another orchestration framework.\n\n**Two papers undermine comfortable assumptions about multi-agent systems and agent memory.** Disparity Laundering shows that deliberation and majority voting among clinical LLMs can amplify demographic disparities rather than average them out. That directly challenges the premise behind consensus-style orchestration like DynaFlow's. The Role Grounding attack shows that agent memory, now a hot area on GitHub, is an attack surface when it ingests social content. Anyone deploying claude-mem-style persistence should read it.\n\n**Prediction: the next wave pairs specification with verification.** Skeleton Coding (program structure as spec) and Precedent or Intent (what coding agents follow when code history conflicts with instructions) both point to the same gap: agents lack a reliable way to know what the developer actually wants. Expect work that combines structural specs with the verifier-style rewards from VeriCUA and Rubricon, which generates rubrics without human labels and could extend rewards to open-ended tasks.",
+  "papers": [
+    {
+      "id": "vericua-verification-agentic-exploration",
+      "title": "VeriCUA: Verification as Agentic Exploration for Computer-Using Agents",
+      "authors": [
+        "Sun et al."
+      ],
+      "affiliations": [
+        "Academic and industry research collaboration (computer-use agents)"
+      ],
+      "summary": "Proposes exploration-based verification in which computer-using agents actively verify intermediate steps during GUI navigation and self-correct. Reports results on AndroidWorld, OSWorld, and ScienceBoard.",
+      "key_findings": [
+        "Agents verify intermediate steps through active exploration rather than only checking final outcomes",
+        "Evaluated across three GUI benchmarks: AndroidWorld, OSWorld, and ScienceBoard",
+        "Self-correction during navigation improves reliability on multi-step GUI tasks"
+      ],
+      "tags": [
+        "computer-use",
+        "agents",
+        "verification",
+        "gui-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 87,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.40578",
+        "huggingface": "https://huggingface.co/papers/2610.40578",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.40578",
+        "pdf": "https://arxiv.org/pdf/2610.40578"
+      }
+    },
+    {
+      "id": "dynaflow-free-form-multi-agent-orchestration",
+      "title": "DynaFlow: Learning Free-Form Multi-Agent Orchestration",
+      "authors": [
+        "Liu et al."
+      ],
+      "affiliations": [
+        "Academic and industry research collaboration (multi-agent systems)"
+      ],
+      "summary": "A main agent writes executable workflows that coordinate sub-agents dynamically, replacing fixed pipelines. Using Qwen3.5-27B it reaches 88.08% overall accuracy in Forced mode across six benchmarks.",
+      "key_findings": [
+        "88.08% overall accuracy in Forced mode across six benchmarks",
+        "Built on Qwen3.5-27B, an open mid-sized model",
+        "Dynamic, agent-authored workflows replace fixed orchestration pipelines"
+      ],
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "workflows",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.34467",
+        "huggingface": "https://huggingface.co/papers/2610.34467",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.34467",
+        "pdf": "https://arxiv.org/pdf/2610.34467"
+      }
+    },
+    {
+      "id": "harness-squared-recursive-agent-harnessing",
+      "title": "Harness²: Recursive Agent Harnessing for an Open World",
+      "authors": [
+        "Xu et al."
+      ],
+      "affiliations": [
+        "Google Cloud AI Research"
+      ],
+      "summary": "Describes a recursive agent-harnessing framework with task-level and higher-level recursion, enabling agents to handle open-ended tasks beyond fixed structures. Evaluated on WorkBuddy-Bench, JobBench, and Harvey's Legal Agent Benchmark.",
+      "key_findings": [
+        "Recursion operates at both the task level and higher harness levels",
+        "Evaluated on WorkBuddy-Bench, JobBench, and Harvey's Legal Agent Benchmark",
+        "Recursive orchestration handles open-ended real-world tasks that fixed task structures cannot"
+      ],
+      "tags": [
+        "agents",
+        "harness",
+        "orchestration",
+        "recursion"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 68,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.14224",
+        "huggingface": "https://huggingface.co/papers/2610.14224",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.14224",
+        "pdf": "https://arxiv.org/pdf/2610.14224"
+      }
+    },
+    {
+      "id": "training-foundation-models-single-algorithm",
+      "title": "Training Foundation Models with a Single Algorithm",
+      "authors": [
+        "Multiple authors"
+      ],
+      "affiliations": [
+        "Multi-institution academic and industry collaboration"
+      ],
+      "summary": "Proposes a unified algorithm for training foundation models across modalities and objectives. It simplifies multi-task and multi-modal pretraining by unifying training under a single objective function framework.",
+      "key_findings": [
+        "One algorithm covers multiple modalities and training objectives",
+        "Unified objective framework simplifies multi-task and multi-modal pretraining",
+        "Reduces the need for separate, specialized training recipes"
+      ],
+      "tags": [
+        "foundation-models",
+        "pretraining",
+        "multimodal",
+        "training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 62,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.40564",
+        "huggingface": "https://huggingface.co/papers/2610.40564",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.40564",
+        "pdf": "https://arxiv.org/pdf/2610.40564"
+      }
+    },
+    {
+      "id": "paratt-parallel-test-time-training",
+      "title": "ParaTTT: Parallelizing Test-Time Training Layers with Deep Memories",
+      "authors": [
+        "Noel Loo et al."
+      ],
+      "affiliations": [
+        "MIT CSAIL"
+      ],
+      "summary": "Parallelizes test-time training layers that use nonlinear neural memories, which are more expressive than linear fast-weight memories. Delivers significant throughput gains while keeping the quality advantage of TTT layers over standard attention.",
+      "key_findings": [
+        "Parallelizes TTT layers with nonlinear deep memories",
+        "Significant throughput improvement over sequential TTT",
+        "Retains quality advantages over standard attention"
+      ],
+      "tags": [
+        "test-time-training",
+        "sequence-modeling",
+        "efficiency",
+        "architecture"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 58,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38255",
+        "huggingface": "https://huggingface.co/papers/2610.38255",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.38255",
+        "pdf": "https://arxiv.org/pdf/2610.38255"
+      }
+    },
+    {
+      "id": "rubricon-automated-rubric-generation",
+      "title": "Rubricon: Automated Rubric Generation and Refinement for LLM Evaluation and Training",
+      "authors": [
+        "Ulyana Tkachenko et al."
+      ],
+      "affiliations": [
+        "Academic research institution (LLM evaluation)"
+      ],
+      "summary": "Generates discriminative rubrics without human preference labels, providing rewards for tasks that lack verifiable answers. The automated criteria generalize across diverse open-ended tasks.",
+      "key_findings": [
+        "Rubrics are generated and refined without human preference labels",
+        "Enables reward signals for tasks without verifiable answers",
+        "Criteria generalize across diverse open-ended tasks"
+      ],
+      "tags": [
+        "evaluation",
+        "rubrics",
+        "reward-modeling",
+        "llm-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38220",
+        "huggingface": "https://huggingface.co/papers/2610.38220",
+        "pdf": "https://arxiv.org/pdf/2610.38220"
+      }
+    },
+    {
+      "id": "gaac-lossless-kv-compression",
+      "title": "GAAC: Lossless KV Compression for Bandwidth-Efficient LLM Inference on Personal Devices",
+      "authors": [
+        "Yipin Guo et al."
+      ],
+      "affiliations": [
+        "Academic research institution (efficient inference)"
+      ],
+      "summary": "Lossless KV cache compression for long-context inference on memory-limited devices. It cuts bandwidth substantially without quality loss, making long-context LLMs practical on consumer hardware.",
+      "key_findings": [
+        "Lossless compression, so no quality degradation",
+        "Significant memory-bandwidth reduction during long-context inference",
+        "Targets personal and consumer devices"
+      ],
+      "tags": [
+        "kv-cache",
+        "inference",
+        "compression",
+        "on-device"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 51,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38210",
+        "huggingface": "https://huggingface.co/papers/2610.38210",
+        "pdf": "https://arxiv.org/pdf/2610.38210"
+      }
+    },
+    {
+      "id": "precedent-or-intent-coding-agents",
+      "title": "Precedent or Intent? What Coding Agents Follow When Evolving Existing Code",
+      "authors": [
+        "Haichao Zhu et al."
+      ],
+      "affiliations": [
+        "Academic research institution (software engineering and agents)"
+      ],
+      "summary": "Studies whether coding agents follow past implementation decisions or new task instructions when evolving code. It identifies a fundamental tension between code precedent and explicit instructions and proposes mechanisms to resolve it.",
+      "key_findings": [
+        "Agents face a measurable conflict between existing code precedent and new instructions",
+        "The tension appears when evolving existing codebases",
+        "Proposes mechanisms for resolving precedent versus intent"
+      ],
+      "tags": [
+        "coding-agents",
+        "software-engineering",
+        "agents",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38244",
+        "huggingface": "https://huggingface.co/papers/2610.38244",
+        "pdf": "https://arxiv.org/pdf/2610.38244"
+      }
+    },
+    {
+      "id": "disparity-laundering-clinical-multi-agent",
+      "title": "Disparity Laundering: Consensus Without Fairness in Clinical Multi-Agent Systems",
+      "authors": [
+        "Xiaoyang Wang et al."
+      ],
+      "affiliations": [
+        "Academic medical AI research group"
+      ],
+      "summary": "Shows that deliberation among clinical LLM teams does not remove bias, with fairness failures across model families and topologies. Majority voting and consensus can amplify demographic disparities in medical settings.",
+      "key_findings": [
+        "Deliberation does not remove bias in clinical LLM teams",
+        "Fairness failures persist across model families and agent topologies",
+        "Majority voting and consensus can amplify demographic disparities"
+      ],
+      "tags": [
+        "fairness",
+        "multi-agent",
+        "healthcare",
+        "safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38215",
+        "huggingface": "https://huggingface.co/papers/2610.38215",
+        "pdf": "https://arxiv.org/pdf/2610.38215"
+      }
+    },
+    {
+      "id": "skeleton-coding-program-structure-spec",
+      "title": "Skeleton Coding: Program Structure as a Specification for Agents",
+      "authors": [
+        "Aditya Golatkar et al."
+      ],
+      "affiliations": [
+        "Amazon Web Services AI"
+      ],
+      "summary": "Uses program structure (a skeleton or outline) as a behavioral specification for coding agents, reducing the explicit specs developers must write. Structural guidance improves alignment with developer intent.",
+      "key_findings": [
+        "Program skeletons serve as lightweight specifications",
+        "Reduces the explicit specification burden on developers",
+        "Better agent alignment with developer intent"
+      ],
+      "tags": [
+        "coding-agents",
+        "specification",
+        "software-engineering",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38214",
+        "huggingface": "https://huggingface.co/papers/2610.38214",
+        "pdf": "https://arxiv.org/pdf/2610.38214"
+      }
+    },
+    {
+      "id": "variational-consequence-driven-offline-rl",
+      "title": "Variational Consequence-Driven Offline Reinforcement Learning",
+      "authors": [
+        "Wen Jiang et al."
+      ],
+      "affiliations": [
+        "Academic research institution (reinforcement learning)"
+      ],
+      "summary": "Addresses dynamic consistency in offline RL by enforcing the underlying causal structure instead of only constraining action distributions. It outperforms prior offline RL methods on standard benchmarks by modeling consequence chains.",
+      "key_findings": [
+        "Enforces causal and dynamic consistency rather than only action-distribution constraints",
+        "Models consequence chains explicitly",
+        "Outperforms prior offline RL methods on standard benchmarks"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "offline-rl",
+        "causal",
+        "variational"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38238",
+        "huggingface": "https://huggingface.co/papers/2610.38238",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.38238",
+        "pdf": "https://arxiv.org/pdf/2610.38238"
+      }
+    },
+    {
+      "id": "vericua-proactive-verification-gui-rewards",
+      "title": "VeriCUA: Learning Proactive Verification for Reliable GUI Agent Rewards",
+      "authors": [
+        "Wang et al."
+      ],
+      "affiliations": [
+        "Academic and industry research collaboration (GUI agents)"
+      ],
+      "summary": "A trainable Judge decides what to check while a frozen Probe runs the checks, producing proactive verification as a reward signal for GUI agent training. Trained on OSWorld and evaluated on MobileWorld and WebArena-Verified.",
+      "key_findings": [
+        "Trainable Judge selects checks; frozen Probe executes them",
+        "Trained on OSWorld, evaluated on MobileWorld and WebArena-Verified",
+        "Proactive verification yields a more reliable reward signal for GUI agent training"
+      ],
+      "tags": [
+        "computer-use",
+        "reward-modeling",
+        "verification",
+        "gui-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.26469",
+        "huggingface": "https://huggingface.co/papers/2610.26469",
+        "pdf": "https://arxiv.org/pdf/2610.26469"
+      }
+    },
+    {
+      "id": "easyprover-scaling-lean-theorem-proving",
+      "title": "Scaling Lean Theorem Proving for Real-World Code Verification (EasyProver)",
+      "authors": [
+        "Debargha Ganguly et al."
+      ],
+      "affiliations": [
+        "Case Western Reserve University"
+      ],
+      "summary": "Recursive agents with isolated contexts for formal code verification in Lean. Reports 669/672 on PutnamBench and all six IMO 2026 problems solved.",
+      "key_findings": [
+        "669/672 on PutnamBench",
+        "Solved all six IMO 2026 problems",
+        "Recursive agents with isolated contexts scale formal verification"
+      ],
+      "tags": [
+        "theorem-proving",
+        "lean",
+        "formal-verification",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38174",
+        "huggingface": "https://huggingface.co/papers/2610.38174",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.38174",
+        "pdf": "https://arxiv.org/pdf/2610.38174"
+      }
+    },
+    {
+      "id": "role-grounding-attack-agent-memory",
+      "title": "Is it my preference? Role Grounding Attack against Agent's Memory via Social Interaction",
+      "authors": [
+        "Haoran Bu et al."
+      ],
+      "affiliations": [
+        "Academic security research group"
+      ],
+      "summary": "Describes the Role Grounding Misattribution attack, which uses social platforms to alter an agent's memory of user preferences. It exposes vulnerabilities in agent memory systems exposed to social content.",
+      "key_findings": [
+        "Social platforms can be used to rewrite an agent's stored user preferences",
+        "Introduces the Role Grounding Misattribution attack",
+        "Agent memory exposed to social content is a security risk"
+      ],
+      "tags": [
+        "security",
+        "agent-memory",
+        "adversarial",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38209",
+        "huggingface": "https://huggingface.co/papers/2610.38209",
+        "pdf": "https://arxiv.org/pdf/2610.38209"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba Qwen",
+      "description": "Top of the trending list by a wide margin with over 18K likes and 7.5M downloads. A multilingual image-text-to-text model with strong OCR, and the base for several quantized community variants.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "image-text-to-text",
+        "multilingual",
+        "ocr"
+      ],
+      "metrics": {
+        "downloads": 7509924,
+        "likes": 18694
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Image-to-video diffusion model with nearly 10K likes and 2.2M downloads, the strongest open video generation entry on the list.",
+      "task_type": "image-to-video",
+      "model_size": "Not specified",
+      "tags": [
+        "image-to-video",
+        "diffusion"
+      ],
+      "metrics": {
+        "downloads": 2269999,
+        "likes": 9877
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3",
+      "organization": "Meta (FAIR)",
+      "description": "Segmentation model covering mask generation and video segmentation, with 1.9M downloads and 5.4K likes, indicating broad adoption in vision pipelines.",
+      "task_type": "mask-generation",
+      "model_size": "Not specified",
+      "tags": [
+        "mask-generation",
+        "video-segmentation"
+      ],
+      "relevance": "high",
+      "metrics": {
+        "downloads": 1884719,
+        "likes": 5441
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "abenzerps-qwen-image-2-1-uncensored-quantized",
+      "name": "Qwen-Image-2.1-Uncensored-Quantized",
+      "organization": "abenzerps (community)",
+      "description": "Community GGUF-quantized, uncensored text-to-image variant that brings Qwen image generation to consumer hardware; 2.2M downloads.",
+      "task_type": "text-to-image",
+      "model_size": "Not specified",
+      "tags": [
+        "text-to-image",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 2172670,
+        "likes": 5324
+      },
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized"
+    },
+    {
+      "id": "deepseek-ai-deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "Vision-capable Flash release with about 3.9K likes. Its GGUF quantization by ISTA-DASLab has already drawn 1.6M downloads, showing strong local-deployment demand.",
+      "task_type": "image-text-to-text",
+      "model_size": "Not specified",
+      "tags": [
+        "image-text-to-text",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 131062,
+        "likes": 3889
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "black-forest-labs-flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (Comfy)",
+      "organization": "Black Forest Labs",
+      "description": "ComfyUI-ready image-to-image release with 832K downloads, trending on easy integration into existing creative workflows.",
+      "task_type": "image-to-image",
+      "model_size": "Not specified",
+      "tags": [
+        "image-to-image",
+        "comfyui"
+      ],
+      "metrics": {
+        "downloads": 832197,
+        "likes": 2062
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "mistralai-mistral-large-4-1t-a52b",
+      "name": "Mistral-Large-4-1T-A52B",
+      "organization": "Mistral AI",
+      "description": "Trillion-parameter mixture-of-experts vision-language model with 52B active parameters. Downloads are still tiny (278) but 1.2K likes show strong interest on release.",
+      "task_type": "image-text-to-text",
+      "model_size": "1T total (52B active)",
+      "tags": [
+        "image-text-to-text",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 278,
+        "likes": 1238
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
+    },
+    {
+      "id": "recursivesi-flint",
+      "name": "flint",
+      "organization": "RecursiveSI",
+      "description": "Code-focused text-generation model with 1.2K likes despite modest downloads, a possible sleeper for coding-agent use.",
+      "task_type": "text-generation",
+      "model_size": "Not specified",
+      "tags": [
+        "text-generation",
+        "code"
+      ],
+      "metrics": {
+        "downloads": 16598,
+        "likes": 1247
+      },
+      "source_url": "https://huggingface.co/RecursiveSI/flint"
+    },
+    {
+      "id": "fishaudio-drama-3",
+      "name": "drama-3",
+      "organization": "Fish Audio",
+      "description": "Expressive text-to-speech model with 1.1K likes, riding growing demand for open, high-emotion voice synthesis.",
+      "task_type": "text-to-speech",
+      "model_size": "Not specified",
+      "tags": [
+        "text-to-speech",
+        "expressive"
+      ],
+      "metrics": {
+        "downloads": 28162,
+        "likes": 1107
+      },
+      "source_url": "https://huggingface.co/fishaudio/drama-3"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-bolt-e4b-4gb",
+      "name": "NVIDIA-Nemotron-3.5-Bolt-E4B-4GB",
+      "organization": "NVIDIA",
+      "description": "4-bit edge-oriented model fitting in about 4GB, with 57K downloads, aligned with the on-device inference push seen in the papers today.",
+      "task_type": "text-generation",
+      "model_size": "4B (edge)",
+      "tags": [
+        "text-generation",
+        "4-bit",
+        "edge"
+      ],
+      "metrics": {
+        "downloads": 57228,
+        "likes": 259
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "A collection of agent skills taken straight from the author's .agents directory. Trending as skills become the shared unit of reuse for coding agents.",
+      "language": "Shell",
+      "stars": 277846,
+      "stars_today": 312,
+      "forks": 8234,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "msitarzewski-agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "A shareable directory of role-based AI agents, from frontend to marketing. Trending on the appeal of ready-made multi-agent teams.",
+      "language": "Shell",
+      "stars": 157686,
+      "stars_today": 287,
+      "forks": 4521,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "multi-agent",
+        "agent-prompts"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "Self-hosted AI interface supporting Ollama and OpenAI-compatible APIs. Steady growth reflects the strong demand for local LLM front ends.",
+      "language": "Python",
+      "stars": 154094,
+      "stars_today": 198,
+      "forks": 16234,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "llm-interface",
+        "self-hosted",
+        "ollama"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "Lets any AI agent read and search Twitter, Reddit, YouTube, GitHub and the web. Trending as agents need broader internet access.",
+      "language": "Python",
+      "stars": 92511,
+      "stars_today": 174,
+      "forks": 2847,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agent-tools",
+        "web-access"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Captures what an agent does during sessions and synthesizes persistent memory across sessions. Directly relevant to today's agent-memory security findings.",
+      "language": "TypeScript",
+      "stars": 97017,
+      "stars_today": 165,
+      "forks": 2134,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "agent-memory",
+        "context"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "stablyai-orca",
+      "name": "stablyai/orca",
+      "description": "An agentic development environment for running a fleet of parallel coding agents with your own system prompt. Reflects the shift to parallel multi-agent coding workflows.",
+      "language": "TypeScript",
+      "stars": 86394,
+      "stars_today": 143,
+      "forks": 1621,
+      "url": "https://github.com/stablyai/orca",
+      "tags": [
+        "coding-agents",
+        "parallel-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "Learn-build-ship curriculum for AI engineering. Trending as a practical learning resource.",
+      "language": "Python",
+      "stars": 65198,
+      "stars_today": 132,
+      "forks": 4892,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": [
+        "education",
+        "ai-engineering"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "mempalace-mempalace",
+      "name": "MemPalace/mempalace",
+      "description": "Open-source AI memory system that bills itself as the best-benchmarked. Part of the broad agent-memory wave.",
+      "language": "Python",
+      "stars": 59434,
+      "stars_today": 119,
+      "forks": 1876,
+      "url": "https://github.com/MemPalace/mempalace",
+      "tags": [
+        "agent-memory",
+        "benchmarks"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "multica-ai-multica",
+      "name": "multica-ai/multica",
+      "description": "Open-source, self-hostable platform for humans and AI agents to work as one team, matching the orchestration theme in today's papers.",
+      "language": "Go",
+      "stars": 52054,
+      "stars_today": 98,
+      "forks": 987,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": [
+        "multi-agent",
+        "collaboration"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "volcengine-openviking",
+      "name": "volcengine/OpenViking",
+      "description": "Self-evolving context database that unifies agent memory, knowledge RAG and skills. Backed by ByteDance's Volcengine.",
+      "language": "Python",
+      "stars": 39300,
+      "stars_today": 87,
+      "forks": 1234,
+      "url": "https://github.com/volcengine/OpenViking",
+      "tags": [
+        "agent-memory",
+        "rag",
+        "context-database"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "topoteretes-cognee",
+      "name": "topoteretes/cognee",
+      "description": "Open-source AI memory platform giving agents persistent long-term memory, another entry in the agent-memory cluster.",
+      "language": "Python",
+      "stars": 31473,
+      "stars_today": 76,
+      "forks": 1543,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": [
+        "agent-memory",
+        "knowledge-graph"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deepseek-ai-deepgemm",
+      "name": "deepseek-ai/DeepGEMM",
+      "description": "Clean, efficient GPU BLAS kernel library from DeepSeek. Smaller by stars but directly useful for inference and training performance work.",
+      "language": "Cuda",
+      "stars": 8633,
+      "stars_today": 54,
+      "forks": 423,
+      "url": "https://github.com/deepseek-ai/DeepGEMM",
+      "tags": [
+        "gpu-kernels",
+        "cuda",
+        "efficiency"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Verification and Rewards for Computer-Use Agents",
+      "description": "Two VeriCUA papers and Rubricon treat verification and rubric-based rewards as the key to reliable GUI and open-ended agents.",
+      "related_paper_ids": [
+        "vericua-verification-agentic-exploration",
+        "vericua-proactive-verification-gui-rewards",
+        "rubricon-automated-rubric-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent-Authored and Recursive Orchestration",
+      "description": "Agents write their own workflows (DynaFlow) or recurse over harnesses (Harness², EasyProver) instead of using fixed scaffolds.",
+      "related_paper_ids": [
+        "dynaflow-free-form-multi-agent-orchestration",
+        "harness-squared-recursive-agent-harnessing",
+        "easyprover-scaling-lean-theorem-proving"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Efficient Inference and Expressive Memory",
+      "description": "Parallel test-time-training layers and lossless KV compression target throughput and on-device deployment, alongside a push toward unified training recipes.",
+      "related_paper_ids": [
+        "paratt-parallel-test-time-training",
+        "gaac-lossless-kv-compression",
+        "training-foundation-models-single-algorithm"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Safety, Fairness and Memory Security",
+      "description": "Consensus can amplify clinical bias, and agent memory can be rewritten through social interaction, challenging common multi-agent assumptions.",
+      "related_paper_ids": [
+        "disparity-laundering-clinical-multi-agent",
+        "role-grounding-attack-agent-memory"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Specification and Intent in Coding Agents",
+      "description": "Work on code precedent versus instructions and on skeleton-based specs addresses how agents infer what developers want.",
+      "related_paper_ids": [
+        "precedent-or-intent-coding-agents",
+        "skeleton-coding-program-structure-spec"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "partial"
+    }
+  ]
+}

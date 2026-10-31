@@ -1,0 +1,911 @@
+{
+  "version": "1.0",
+  "date": "2026-10-31",
+  "generated_at": "2026-10-31T15:06:45.045008+00:00",
+  "summary": {
+    "headline": "验证成为计算机使用智能体的核心原语（两篇 VeriCUA 论文）；自由形式与递归式智能体编排（DynaFlow、Harness²）超越固定流水线；Qwen3.8-27B 与开源多模态模型霸占 HuggingFace 热门榜",
+    "body": "**智能体可靠性如今本质上是一个验证问题。** 两篇独立的 VeriCUA 论文走了不同的路线，却指向同一目标：一篇利用智能体式探索来检查 GUI 的中间步骤，另一篇则训练 Judge/Probe 组合来产生主动式奖励信号。DynaFlow 与 Harness² 则推进了编排层面的进展，让智能体自行编写工作流，或对 harness 进行递归，而不再沿用固定的脚手架。\n\n在效率与训练方面，ParaTTT 让更深的测试时训练（TTT）记忆模块得以并行化，GAAC 为消费级硬件提供了无损 KV 压缩，而一种面向基础模型训练的统一单算法方案也引起了强烈关注。注重安全的工作同样突出：Disparity Laundering 表明多智能体共识可能在临床场景中放大偏见，Role Grounding 攻击则表明智能体记忆可以通过社交内容被投毒。\n\n在开源模型方面，Qwen3.8-27B 在点赞数和下载量上遥遥领先，Lightricks LTX-2.5、Meta 的 SAM 3 和 DeepSeek-V4.1-Flash 紧随其后。在 GitHub 上，智能体记忆与技能类仓库（claude-mem、mempalace、cognee、OpenViking）继续攀升。需要注意的是，本次运行中的 GitHub 快照来自 10 月初，因此这些数字比其余数据更旧。",
+    "key_themes": [
+      "agent-verification",
+      "agent-orchestration",
+      "efficient-inference-and-memory",
+      "agent-safety-and-security",
+      "coding-agent-specification",
+      "agent-memory-infrastructure"
+    ]
+  },
+  "researcher_notes": "**对 GUI 智能体而言，验证正在取代原始能力，成为新的瓶颈。** VeriCUA 在一周内出现了两次，来自不同团队、采用不同机制：一种是推理时基于探索的自我纠错，另一种是训练出的 Judge 加冻结的 Probe，并兼作奖励模型。二者是互补的，因为后者可以为前者提供所需的训练信号。预计「验证器即奖励」将成为计算机使用强化学习的标配，值得关注 Judge/Probe 的拆分能否推广到 OSWorld 之外。\n\n**编排正在从手工搭建的脚手架转向由智能体自己编写的脚手架。** DynaFlow（主智能体编写可执行工作流，使用 Qwen3.5-27B 在六个基准上的 Forced 模式下达到 88.08%）与 Harness²（任务级及更高层级的递归）都把 harness 视为模型可以生成或嵌套的对象。这延续了近期文献综述中的智能体 harness 研究脉络。悬而未决的问题是成本与可调试性：自行编写的工作流很难审计，这与上述验证类论文直接相关。\n\n**真正的「遗珠」是 ParaTTT 和 GAAC。** 相对于智能体类论文，二者的点赞数不算高，但解决的是部署中的现实问题。ParaTTT 消除了非线性测试时训练记忆最主要的障碍，即顺序计算；GAAC 的无损 KV 压缩瞄准的是带宽而非 FLOPs 占主导的个人设备。如果其中任何一个在大规模下依然成立，对从业者的意义都将超过又一个编排框架。\n\n**有两篇论文动摇了人们对多智能体系统和智能体记忆的舒适假设。** Disparity Laundering 表明，临床 LLM 之间的讨论与多数投票可能放大而非平均掉人口统计学差异，这直接挑战了 DynaFlow 等共识式编排所依据的前提。Role Grounding 攻击则表明，智能体记忆（如今在 GitHub 上是热门方向）在吸收社交内容时会成为攻击面。任何部署 claude-mem 类持久化方案的人都应该读一读。\n\n**预测：下一波工作将把规约与验证结合起来。** Skeleton Coding（以程序结构作为规约）和 Precedent or Intent（当代码历史与指令冲突时编码智能体遵循什么）都指向同一个缺口：智能体缺乏可靠的方式来了解开发者真正想要什么。预计会出现把结构化规约与 VeriCUA、Rubricon 的验证器式奖励相结合的工作，其中 Rubricon 无需人工标注即可生成评分细则，有望把奖励扩展到开放式任务。",
+  "papers": [
+    {
+      "id": "vericua-verification-agentic-exploration",
+      "title": "VeriCUA: Verification as Agentic Exploration for Computer-Using Agents",
+      "authors": [
+        "Sun et al."
+      ],
+      "affiliations": [
+        "学术界与产业界联合研究（计算机使用智能体）"
+      ],
+      "summary": "提出基于探索的验证方法：计算机使用智能体在 GUI 导航过程中主动验证中间步骤并进行自我纠错。在 AndroidWorld、OSWorld 和 ScienceBoard 上报告了结果。",
+      "key_findings": [
+        "智能体通过主动探索验证中间步骤，而不是只检查最终结果",
+        "在三个 GUI 基准上进行评估：AndroidWorld、OSWorld 和 ScienceBoard",
+        "导航过程中的自我纠错提升了多步 GUI 任务的可靠性"
+      ],
+      "tags": [
+        "computer-use",
+        "agents",
+        "verification",
+        "gui-agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 87,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.40578",
+        "huggingface": "https://huggingface.co/papers/2610.40578",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.40578",
+        "pdf": "https://arxiv.org/pdf/2610.40578"
+      }
+    },
+    {
+      "id": "dynaflow-free-form-multi-agent-orchestration",
+      "title": "DynaFlow: Learning Free-Form Multi-Agent Orchestration",
+      "authors": [
+        "Liu et al."
+      ],
+      "affiliations": [
+        "学术界与产业界联合研究（多智能体系统）"
+      ],
+      "summary": "由主智能体编写可执行工作流来动态协调子智能体，取代固定流水线。基于 Qwen3.5-27B，在六个基准上的 Forced 模式下总体准确率达到 88.08%。",
+      "key_findings": [
+        "在六个基准上的 Forced 模式下总体准确率为 88.08%",
+        "基于 Qwen3.5-27B 构建，这是一个开源的中等规模模型",
+        "由智能体动态编写的工作流取代了固定的编排流水线"
+      ],
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "workflows",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.34467",
+        "huggingface": "https://huggingface.co/papers/2610.34467",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.34467",
+        "pdf": "https://arxiv.org/pdf/2610.34467"
+      }
+    },
+    {
+      "id": "harness-squared-recursive-agent-harnessing",
+      "title": "Harness²: Recursive Agent Harnessing for an Open World",
+      "authors": [
+        "Xu et al."
+      ],
+      "affiliations": [
+        "Google Cloud AI Research"
+      ],
+      "summary": "描述了一个递归式智能体 harness 框架，包含任务级及更高层级的递归，使智能体能够处理超出固定结构的开放式任务。在 WorkBuddy-Bench、JobBench 和 Harvey 的 Legal Agent Benchmark 上进行了评估。",
+      "key_findings": [
+        "递归同时作用于任务层级和更高的 harness 层级",
+        "在 WorkBuddy-Bench、JobBench 和 Harvey 的 Legal Agent Benchmark 上进行评估",
+        "递归式编排能够处理固定任务结构无法应对的开放式现实任务"
+      ],
+      "tags": [
+        "agents",
+        "harness",
+        "orchestration",
+        "recursion"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 68,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.14224",
+        "huggingface": "https://huggingface.co/papers/2610.14224",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.14224",
+        "pdf": "https://arxiv.org/pdf/2610.14224"
+      }
+    },
+    {
+      "id": "training-foundation-models-single-algorithm",
+      "title": "Training Foundation Models with a Single Algorithm",
+      "authors": [
+        "Multiple authors"
+      ],
+      "affiliations": [
+        "多机构学术界与产业界合作"
+      ],
+      "summary": "提出一种统一算法，可跨模态、跨目标训练基础模型。通过把训练统一在单一目标函数框架下，简化了多任务与多模态预训练。",
+      "key_findings": [
+        "一个算法即可覆盖多种模态和训练目标",
+        "统一的目标框架简化了多任务与多模态预训练",
+        "减少了对各自独立的专用训练方案的需求"
+      ],
+      "tags": [
+        "foundation-models",
+        "pretraining",
+        "multimodal",
+        "training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 62,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.40564",
+        "huggingface": "https://huggingface.co/papers/2610.40564",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.40564",
+        "pdf": "https://arxiv.org/pdf/2610.40564"
+      }
+    },
+    {
+      "id": "paratt-parallel-test-time-training",
+      "title": "ParaTTT: Parallelizing Test-Time Training Layers with Deep Memories",
+      "authors": [
+        "Noel Loo et al."
+      ],
+      "affiliations": [
+        "MIT CSAIL"
+      ],
+      "summary": "并行化使用非线性神经记忆的测试时训练层，这类记忆比线性快速权重记忆表达能力更强。在保持 TTT 层相对标准注意力的质量优势的同时，显著提升了吞吐量。",
+      "key_findings": [
+        "并行化了带有非线性深度记忆的 TTT 层",
+        "相比顺序 TTT，吞吐量显著提升",
+        "保持了相对标准注意力的质量优势"
+      ],
+      "tags": [
+        "test-time-training",
+        "sequence-modeling",
+        "efficiency",
+        "architecture"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 58,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38255",
+        "huggingface": "https://huggingface.co/papers/2610.38255",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.38255",
+        "pdf": "https://arxiv.org/pdf/2610.38255"
+      }
+    },
+    {
+      "id": "rubricon-automated-rubric-generation",
+      "title": "Rubricon: Automated Rubric Generation and Refinement for LLM Evaluation and Training",
+      "authors": [
+        "Ulyana Tkachenko et al."
+      ],
+      "affiliations": [
+        "学术研究机构（LLM 评估）"
+      ],
+      "summary": "无需人类偏好标注即可生成具有区分度的评分细则，为缺乏可验证答案的任务提供奖励。自动生成的评判标准可泛化到多种开放式任务。",
+      "key_findings": [
+        "无需人类偏好标注即可生成并优化评分细则",
+        "为没有可验证答案的任务提供奖励信号",
+        "评判标准可泛化到多种开放式任务"
+      ],
+      "tags": [
+        "evaluation",
+        "rubrics",
+        "reward-modeling",
+        "llm-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38220",
+        "huggingface": "https://huggingface.co/papers/2610.38220",
+        "pdf": "https://arxiv.org/pdf/2610.38220"
+      }
+    },
+    {
+      "id": "gaac-lossless-kv-compression",
+      "title": "GAAC: Lossless KV Compression for Bandwidth-Efficient LLM Inference on Personal Devices",
+      "authors": [
+        "Yipin Guo et al."
+      ],
+      "affiliations": [
+        "学术研究机构（高效推理）"
+      ],
+      "summary": "面向内存受限设备上长上下文推理的无损 KV 缓存压缩。在不损失质量的前提下大幅降低带宽需求，使长上下文 LLM 在消费级硬件上变得实用。",
+      "key_findings": [
+        "无损压缩，因此不会造成质量下降",
+        "长上下文推理期间显著降低内存带宽占用",
+        "面向个人与消费级设备"
+      ],
+      "tags": [
+        "kv-cache",
+        "inference",
+        "compression",
+        "on-device"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 51,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38210",
+        "huggingface": "https://huggingface.co/papers/2610.38210",
+        "pdf": "https://arxiv.org/pdf/2610.38210"
+      }
+    },
+    {
+      "id": "precedent-or-intent-coding-agents",
+      "title": "Precedent or Intent? What Coding Agents Follow When Evolving Existing Code",
+      "authors": [
+        "Haichao Zhu et al."
+      ],
+      "affiliations": [
+        "学术研究机构（软件工程与智能体）"
+      ],
+      "summary": "研究编码智能体在演进代码时,是遵循过往的实现决策还是新的任务指令。论文指出代码先例与显式指令之间存在根本性张力,并提出了化解该张力的机制。",
+      "key_findings": [
+        "智能体面临现有代码先例与新指令之间可度量的冲突",
+        "这种张力出现在演进既有代码库的过程中",
+        "提出了解决先例与意图冲突的机制"
+      ],
+      "tags": [
+        "coding-agents",
+        "software-engineering",
+        "agents",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 49,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38244",
+        "huggingface": "https://huggingface.co/papers/2610.38244",
+        "pdf": "https://arxiv.org/pdf/2610.38244"
+      }
+    },
+    {
+      "id": "disparity-laundering-clinical-multi-agent",
+      "title": "Disparity Laundering: Consensus Without Fairness in Clinical Multi-Agent Systems",
+      "authors": [
+        "Xiaoyang Wang et al."
+      ],
+      "affiliations": [
+        "学术医学 AI 研究组"
+      ],
+      "summary": "表明临床 LLM 团队之间的讨论并不能消除偏见，公平性失败在不同模型家族和拓扑结构中均存在。多数投票与共识可能在医疗场景中放大人口统计学差异。",
+      "key_findings": [
+        "讨论并不能消除临床 LLM 团队中的偏见",
+        "公平性失败在不同模型家族和智能体拓扑中持续存在",
+        "多数投票和共识可能放大人口统计学差异"
+      ],
+      "tags": [
+        "fairness",
+        "multi-agent",
+        "healthcare",
+        "safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38215",
+        "huggingface": "https://huggingface.co/papers/2610.38215",
+        "pdf": "https://arxiv.org/pdf/2610.38215"
+      }
+    },
+    {
+      "id": "skeleton-coding-program-structure-spec",
+      "title": "Skeleton Coding: Program Structure as a Specification for Agents",
+      "authors": [
+        "Aditya Golatkar et al."
+      ],
+      "affiliations": [
+        "Amazon Web Services AI"
+      ],
+      "summary": "以程序结构（骨架或大纲）作为编码智能体的行为规约，减少开发者需要编写的显式规约。结构化指引提升了与开发者意图的一致性。",
+      "key_findings": [
+        "程序骨架可作为轻量级规约",
+        "降低了开发者编写显式规约的负担",
+        "智能体与开发者意图的对齐更好"
+      ],
+      "tags": [
+        "coding-agents",
+        "specification",
+        "software-engineering",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38214",
+        "huggingface": "https://huggingface.co/papers/2610.38214",
+        "pdf": "https://arxiv.org/pdf/2610.38214"
+      }
+    },
+    {
+      "id": "variational-consequence-driven-offline-rl",
+      "title": "Variational Consequence-Driven Offline Reinforcement Learning",
+      "authors": [
+        "Wen Jiang et al."
+      ],
+      "affiliations": [
+        "学术研究机构（强化学习）"
+      ],
+      "summary": "通过强化底层因果结构而不是仅约束动作分布，来解决离线强化学习中的动态一致性问题。通过对后果链建模，在标准基准上优于以往的离线 RL 方法。",
+      "key_findings": [
+        "强化因果与动态一致性，而不是仅约束动作分布",
+        "显式建模后果链",
+        "在标准基准上优于以往的离线 RL 方法"
+      ],
+      "tags": [
+        "reinforcement-learning",
+        "offline-rl",
+        "causal",
+        "variational"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38238",
+        "huggingface": "https://huggingface.co/papers/2610.38238",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.38238",
+        "pdf": "https://arxiv.org/pdf/2610.38238"
+      }
+    },
+    {
+      "id": "vericua-proactive-verification-gui-rewards",
+      "title": "VeriCUA: Learning Proactive Verification for Reliable GUI Agent Rewards",
+      "authors": [
+        "Wang et al."
+      ],
+      "affiliations": [
+        "学术界与产业界联合研究（GUI 智能体）"
+      ],
+      "summary": "由可训练的 Judge 决定检查什么，由冻结的 Probe 执行检查，从而产生主动式验证，作为 GUI 智能体训练的奖励信号。在 OSWorld 上训练，并在 MobileWorld 和 WebArena-Verified 上评估。",
+      "key_findings": [
+        "可训练的 Judge 选择检查项；冻结的 Probe 负责执行",
+        "在 OSWorld 上训练，在 MobileWorld 和 WebArena-Verified 上评估",
+        "主动式验证为 GUI 智能体训练提供了更可靠的奖励信号"
+      ],
+      "tags": [
+        "computer-use",
+        "reward-modeling",
+        "verification",
+        "gui-agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.26469",
+        "huggingface": "https://huggingface.co/papers/2610.26469",
+        "pdf": "https://arxiv.org/pdf/2610.26469"
+      }
+    },
+    {
+      "id": "easyprover-scaling-lean-theorem-proving",
+      "title": "Scaling Lean Theorem Proving for Real-World Code Verification (EasyProver)",
+      "authors": [
+        "Debargha Ganguly et al."
+      ],
+      "affiliations": [
+        "Case Western Reserve University"
+      ],
+      "summary": "使用上下文相互隔离的递归智能体，在 Lean 中进行形式化代码验证。报告在 PutnamBench 上取得 669/672，并解出全部六道 IMO 2026 题目。",
+      "key_findings": [
+        "在 PutnamBench 上取得 669/672",
+        "解出全部六道 IMO 2026 题目",
+        "上下文隔离的递归智能体使形式化验证得以扩展"
+      ],
+      "tags": [
+        "theorem-proving",
+        "lean",
+        "formal-verification",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38174",
+        "huggingface": "https://huggingface.co/papers/2610.38174",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.38174",
+        "pdf": "https://arxiv.org/pdf/2610.38174"
+      }
+    },
+    {
+      "id": "role-grounding-attack-agent-memory",
+      "title": "Is it my preference? Role Grounding Attack against Agent's Memory via Social Interaction",
+      "authors": [
+        "Haoran Bu et al."
+      ],
+      "affiliations": [
+        "学术安全研究组"
+      ],
+      "summary": "描述了 Role Grounding Misattribution 攻击，利用社交平台篡改智能体对用户偏好的记忆。揭示了暴露于社交内容的智能体记忆系统存在的漏洞。",
+      "key_findings": [
+        "可以利用社交平台改写智能体存储的用户偏好",
+        "提出了 Role Grounding Misattribution 攻击",
+        "暴露于社交内容的智能体记忆是一种安全风险"
+      ],
+      "tags": [
+        "security",
+        "agent-memory",
+        "adversarial",
+        "agents"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.38209",
+        "huggingface": "https://huggingface.co/papers/2610.38209",
+        "pdf": "https://arxiv.org/pdf/2610.38209"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Alibaba Qwen",
+      "description": "以显著优势位居热门榜首，点赞超过 1.8 万，下载量达 750 万。这是一个多语言图文转文本模型，OCR 能力出色，并且是多个社区量化版本的基础模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "image-text-to-text",
+        "multilingual",
+        "ocr"
+      ],
+      "metrics": {
+        "downloads": 7509924,
+        "likes": 18694
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "图生视频扩散模型，点赞近 1 万，下载量 220 万，是榜单上最强的开源视频生成模型。",
+      "task_type": "image-to-video",
+      "model_size": "未说明",
+      "tags": [
+        "image-to-video",
+        "diffusion"
+      ],
+      "metrics": {
+        "downloads": 2269999,
+        "likes": 9877
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3",
+      "organization": "Meta (FAIR)",
+      "description": "涵盖掩码生成与视频分割的分割模型，下载量 190 万，点赞 5.4K，表明其在视觉流水线中被广泛采用。",
+      "task_type": "mask-generation",
+      "model_size": "未说明",
+      "tags": [
+        "mask-generation",
+        "video-segmentation"
+      ],
+      "relevance": "high",
+      "metrics": {
+        "downloads": 1884719,
+        "likes": 5441
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "abenzerps-qwen-image-2-1-uncensored-quantized",
+      "name": "Qwen-Image-2.1-Uncensored-Quantized",
+      "organization": "abenzerps (community)",
+      "description": "社区制作的 GGUF 量化、无审查文生图版本，把 Qwen 的图像生成能力带到消费级硬件上；下载量 220 万。",
+      "task_type": "text-to-image",
+      "model_size": "未说明",
+      "tags": [
+        "text-to-image",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 2172670,
+        "likes": 5324
+      },
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized"
+    },
+    {
+      "id": "deepseek-ai-deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "具备视觉能力的 Flash 版本，点赞约 3.9K。ISTA-DASLab 制作的 GGUF 量化版已获得 160 万下载，显示出强劲的本地部署需求。",
+      "task_type": "image-text-to-text",
+      "model_size": "未说明",
+      "tags": [
+        "image-text-to-text",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 131062,
+        "likes": 3889
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "black-forest-labs-flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (Comfy)",
+      "organization": "Black Forest Labs",
+      "description": "可直接用于 ComfyUI 的图生图版本，下载量 83.2 万，因易于集成到现有创作工作流而走红。",
+      "task_type": "image-to-image",
+      "model_size": "未说明",
+      "tags": [
+        "image-to-image",
+        "comfyui"
+      ],
+      "metrics": {
+        "downloads": 832197,
+        "likes": 2062
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "mistralai-mistral-large-4-1t-a52b",
+      "name": "Mistral-Large-4-1T-A52B",
+      "organization": "Mistral AI",
+      "description": "万亿参数的混合专家视觉语言模型，激活参数为 52B。下载量仍然很少（278），但 1.2K 的点赞显示出发布之初的强烈关注。",
+      "task_type": "image-text-to-text",
+      "model_size": "1T total (52B active)",
+      "tags": [
+        "image-text-to-text",
+        "vision"
+      ],
+      "metrics": {
+        "downloads": 278,
+        "likes": 1238
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
+    },
+    {
+      "id": "recursivesi-flint",
+      "name": "flint",
+      "organization": "RecursiveSI",
+      "description": "专注代码的文本生成模型，下载量不高但点赞达 1.2K，可能是面向编码智能体的潜力之作。",
+      "task_type": "text-generation",
+      "model_size": "未说明",
+      "tags": [
+        "text-generation",
+        "code"
+      ],
+      "metrics": {
+        "downloads": 16598,
+        "likes": 1247
+      },
+      "source_url": "https://huggingface.co/RecursiveSI/flint"
+    },
+    {
+      "id": "fishaudio-drama-3",
+      "name": "drama-3",
+      "organization": "Fish Audio",
+      "description": "富有表现力的文本转语音模型，点赞 1.1K，顺应了市场对开源、高情感语音合成日益增长的需求。",
+      "task_type": "text-to-speech",
+      "model_size": "未说明",
+      "tags": [
+        "text-to-speech",
+        "expressive"
+      ],
+      "metrics": {
+        "downloads": 28162,
+        "likes": 1107
+      },
+      "source_url": "https://huggingface.co/fishaudio/drama-3"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-bolt-e4b-4gb",
+      "name": "NVIDIA-Nemotron-3.5-Bolt-E4B-4GB",
+      "organization": "NVIDIA",
+      "description": "面向边缘设备的 4 比特模型，体积约 4GB，下载量 5.7 万，与今天论文中体现的端侧推理趋势相呼应。",
+      "task_type": "text-generation",
+      "model_size": "4B (edge)",
+      "tags": [
+        "text-generation",
+        "4-bit",
+        "edge"
+      ],
+      "metrics": {
+        "downloads": 57228,
+        "likes": 259
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "直接取自作者 .agents 目录的一组智能体技能集合。随着技能成为编码智能体之间共享复用的基本单元而走红。",
+      "language": "Shell",
+      "stars": 277846,
+      "stars_today": 312,
+      "forks": 8234,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "msitarzewski-agency-agents",
+      "name": "msitarzewski/agency-agents",
+      "description": "一个可共享的、基于角色的 AI 智能体目录，涵盖从前端到市场营销的各类角色。因现成多智能体团队的吸引力而走红。",
+      "language": "Shell",
+      "stars": 157686,
+      "stars_today": 287,
+      "forks": 4521,
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "tags": [
+        "multi-agent",
+        "agent-prompts"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "支持 Ollama 和 OpenAI 兼容 API 的自托管 AI 界面。稳定的增长反映出市场对本地 LLM 前端的强劲需求。",
+      "language": "Python",
+      "stars": 154094,
+      "stars_today": 198,
+      "forks": 16234,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "llm-interface",
+        "self-hosted",
+        "ollama"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "panniantong-agent-reach",
+      "name": "Panniantong/Agent-Reach",
+      "description": "让任意 AI 智能体读取并搜索 Twitter、Reddit、YouTube、GitHub 和网页。因智能体需要更广泛的互联网访问能力而走红。",
+      "language": "Python",
+      "stars": 92511,
+      "stars_today": 174,
+      "forks": 2847,
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "tags": [
+        "agent-tools",
+        "web-access"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "记录智能体在会话期间的操作，并合成跨会话的持久记忆。与今天关于智能体记忆安全的发现直接相关。",
+      "language": "TypeScript",
+      "stars": 97017,
+      "stars_today": 165,
+      "forks": 2134,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "agent-memory",
+        "context"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "stablyai-orca",
+      "name": "stablyai/orca",
+      "description": "一个智能体式开发环境，可使用自定义系统提示词运行一组并行的编码智能体。反映了向并行多智能体编码工作流的转变。",
+      "language": "TypeScript",
+      "stars": 86394,
+      "stars_today": 143,
+      "forks": 1621,
+      "url": "https://github.com/stablyai/orca",
+      "tags": [
+        "coding-agents",
+        "parallel-agents"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "rohitg00-ai-engineering-from-scratch",
+      "name": "rohitg00/ai-engineering-from-scratch",
+      "description": "学习、构建、交付一体的 AI 工程课程。作为实用学习资源而走红。",
+      "language": "Python",
+      "stars": 65198,
+      "stars_today": 132,
+      "forks": 4892,
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "tags": [
+        "education",
+        "ai-engineering"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "mempalace-mempalace",
+      "name": "MemPalace/mempalace",
+      "description": "开源 AI 记忆系统，自称基准测试表现最佳。属于广泛的智能体记忆浪潮的一部分。",
+      "language": "Python",
+      "stars": 59434,
+      "stars_today": 119,
+      "forks": 1876,
+      "url": "https://github.com/MemPalace/mempalace",
+      "tags": [
+        "agent-memory",
+        "benchmarks"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "multica-ai-multica",
+      "name": "multica-ai/multica",
+      "description": "开源、可自托管的平台，让人类与 AI 智能体作为一个团队协同工作，与今天论文中的编排主题相呼应。",
+      "language": "Go",
+      "stars": 52054,
+      "stars_today": 98,
+      "forks": 987,
+      "url": "https://github.com/multica-ai/multica",
+      "tags": [
+        "multi-agent",
+        "collaboration"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "volcengine-openviking",
+      "name": "volcengine/OpenViking",
+      "description": "可自我演进的上下文数据库，统一了智能体记忆、知识 RAG 与技能。由字节跳动旗下火山引擎支持。",
+      "language": "Python",
+      "stars": 39300,
+      "stars_today": 87,
+      "forks": 1234,
+      "url": "https://github.com/volcengine/OpenViking",
+      "tags": [
+        "agent-memory",
+        "rag",
+        "context-database"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "topoteretes-cognee",
+      "name": "topoteretes/cognee",
+      "description": "开源 AI 记忆平台，为智能体提供持久的长期记忆，是智能体记忆集群中的又一员。",
+      "language": "Python",
+      "stars": 31473,
+      "stars_today": 76,
+      "forks": 1543,
+      "url": "https://github.com/topoteretes/cognee",
+      "tags": [
+        "agent-memory",
+        "knowledge-graph"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "deepseek-ai-deepgemm",
+      "name": "deepseek-ai/DeepGEMM",
+      "description": "DeepSeek 推出的简洁高效的 GPU BLAS 内核库。星标数相对较少，但对推理和训练性能优化工作直接有用。",
+      "language": "Cuda",
+      "stars": 8633,
+      "stars_today": 54,
+      "forks": 423,
+      "url": "https://github.com/deepseek-ai/DeepGEMM",
+      "tags": [
+        "gpu-kernels",
+        "cuda",
+        "efficiency"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "计算机使用智能体的验证与奖励",
+      "description": "两篇 VeriCUA 论文与 Rubricon 将验证和基于评分细则的奖励视为实现可靠 GUI 智能体及开放式任务智能体的关键。",
+      "related_paper_ids": [
+        "vericua-verification-agentic-exploration",
+        "vericua-proactive-verification-gui-rewards",
+        "rubricon-automated-rubric-generation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体自编写与递归式编排",
+      "description": "智能体自行编写工作流（DynaFlow）或对 harness 进行递归（Harness²、EasyProver），而不再使用固定脚手架。",
+      "related_paper_ids": [
+        "dynaflow-free-form-multi-agent-orchestration",
+        "harness-squared-recursive-agent-harnessing",
+        "easyprover-scaling-lean-theorem-proving"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "高效推理与高表达力记忆",
+      "description": "并行化的测试时训练层与无损 KV 压缩瞄准吞吐量和端侧部署，同时还出现了统一训练方案的趋势。",
+      "related_paper_ids": [
+        "paratt-parallel-test-time-training",
+        "gaac-lossless-kv-compression",
+        "training-foundation-models-single-algorithm"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体安全、公平性与记忆安全",
+      "description": "共识可能放大临床偏见，智能体记忆可通过社交互动被改写，这对常见的多智能体假设构成挑战。",
+      "related_paper_ids": [
+        "disparity-laundering-clinical-multi-agent",
+        "role-grounding-attack-agent-memory"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "编码智能体中的规约与意图",
+      "description": "关于代码先例与指令之间冲突、以及基于骨架的规约的研究，探讨智能体如何推断开发者的真实意图。",
+      "related_paper_ids": [
+        "precedent-or-intent-coding-agents",
+        "skeleton-coding-program-structure-spec"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-10-31T07:00:00Z",
+      "status": "partial"
+    }
+  ]
+}
