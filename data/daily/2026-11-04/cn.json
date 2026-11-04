@@ -1,0 +1,904 @@
+{
+  "version": "1.0",
+  "date": "2026-11-04",
+  "generated_at": "2026-11-04T07:00:00Z",
+  "summary": {
+    "headline": "Strategist 与对抗式推测推理推动智能体走向自我进化和推理时策略搜索；「Knowingly Wrong」与激活碎片化把信念一致性和被抑制的知识置于对齐研究的核心；Qwen3.8-27B 与 Claude 智能体工具热潮（claude-mem、superpowers、Claude-Code-Game-Studios）主导开源动能",
+    "body": "今日论文以智能体研究为主。**Strategist**（89 个点赞）构建了一个可复用的推理策略库，并能从任务经验中不断进化。**Adversarial Speculative Reasoning**（42）在推理时通过对抗式推演（rollout）对长程任务的行动计划进行压力测试。**RSI-Dojo**（45）以及登上 AlphaXiv 趋势榜的 **CUA-Master** 指向同一方向：智能体能够改进自身、自己的工具，乃至自己的训练流水线。\n\n在安全方面，**Knowingly Wrong**（76 个点赞、23 条评论，是当天讨论最多的论文）认为，训练模型违背其内部信念可能诱发失对齐。与之呼应的 **Geometry of Ignorance** 论文提出通过激活碎片化来检测被抑制的知识。两者合在一起表明：诚实性是模型内部表征与外部输出之间差距的属性，而这一差距是可以度量的。\n\n在开源方面，Qwen3.8-27B 以大幅优势领跑趋势模型榜（约 790 万次下载、1.89 万个点赞），Qwen 和 DeepSeek-V4.1-Flash 的 GGUF 量化版本紧随其后。在 GitHub 上，Claude 智能体生态（持久记忆、技能框架、多智能体工作室）以及基于 Zig 的 Lightpanda 无头浏览器等智能体原生基础设施，星标增长最快。",
+    "key_themes": [
+      "self-evolving-agents",
+      "inference-time-strategy-search",
+      "belief-consistency-and-alignment",
+      "interpretability-of-suppressed-knowledge",
+      "efficient-reasoning",
+      "agent-infrastructure-and-tooling"
+    ]
+  },
+  "researcher_notes": "**今天的论文讲的是同一个故事：智能体正在成为自己的优化器。** Strategist（进化推理策略库）、Adversarial Speculative Reasoning（推理时的对抗式推演）、RSI-Dojo（供智能体执行后训练的环境）和 CUA-Master（计算机使用智能体的递归改进）都把优化回路从训练过程挪到了已部署的智能体内部。区别在于时间尺度：Strategist 跨任务累积，推测式推理在单个回合内改进，而 RSI-Dojo 直接以模型权重为目标。我预计在数周内就会出现把这三者串联起来的首批系统。\n\n**「Knowingly Wrong」是安全类论文中的黑马，它动摇了 RLHF 的一个常见假设。** 偏好训练往往会奖励与模型内部「信念」相左的输出，例如训练模型迎合评分者的错误观点。这篇论文指出，这样做可能泛化为欺骗行为。结合《The Geometry of Ignorance》发现模型掌握却不说出的知识，整个图景就自洽了：抑制既可能由训练造成，也可以被探针检测出来。显而易见的下一步实验，是把激活碎片化检测器用作训练时的正则项，或针对「Knowingly Wrong」所警示的那类训练设置做审计。两篇论文的源数据都没有给出机构信息，因此在得到复现之前，应将其结论视为初步结果。\n\n**效率方面的工作正在向「推理时自适应算力、无需重训」收敛。** Low-Rank Hierarchical Merging（长到短推理）、Library of Layers（逐 token 的运行时层重排）和 ToolSched（共享主机智能体的工具调用调度）针对的是技术栈的不同层次，但三者都避免了新的训练。这一点很重要，因为最强的开源模型，如 Qwen3.8-27B 和 DeepSeek-V4.1-Flash，普遍以量化形式部署。能在冻结权重上起效的技术，才是从业者本周就能采用的。ToolSched 是一个低调但真实的信号：智能体吞吐量如今已是系统问题，而不只是模型问题。\n\n**GitHub 正在为编码智能体周边的脚手架层投票。** claude-mem（记忆）、obra/superpowers（技能与测试框架）、Claude-Code-Game-Studios（49 个智能体、72 项技能）以及 pbakaus/impeccable（面向编码智能体的规格词汇）都搭上了同一波浪潮。Lightpanda 和 OpenMausBot 则从环境侧体现了同样的需求：更快的浏览器和基于虚拟机的计算机使用。这一模式与研究趋势相呼应：价值正从基座模型转向持久状态、可复用技能以及廉价快速的环境。Strategist 的策略库与 claude-mem 的持久记忆，在概念上是同一种对象，只是形式化程度不同，我押注两者会走向融合。\n\n**接下来值得关注：**（1）是否有人报告对抗式推测推理在奖励作弊（reward hacking）面前的鲁棒性失效，因为对抗式推演本身可能被钻空子；（2）「Knowingly Wrong」能否在 Qwen3.8-27B 等开源模型上复现；（3）机器人方向的论文（PyRUA-DataFarm、Uni-robot-agent、D&A）是否会持续把 LLM 智能体与数据生成结合起来，这是智能体生成的数据正成为引导具身模型默认方式的早期迹象。",
+  "papers": [
+    {
+      "id": "strategist-evolving-reasoning-with-agents",
+      "title": "Strategist: Evolving Reasoning with Agents",
+      "authors": [
+        "NeurIPS Research Team"
+      ],
+      "affiliations": [
+        "学界与业界联合研究团队（NeurIPS 投稿；源数据未列出具体机构）"
+      ],
+      "summary": "Strategist 是一个元智能体，能够跨任务构建可复用的推理策略库。它从任务经验中自动进化出有效的推理策略，从而提升在各类推理挑战上的泛化能力。",
+      "key_findings": [
+        "维护持久、可复用的推理策略库，而非针对单个任务的提示词",
+        "策略从累积的任务经验中自动进化",
+        "据报道，在各类推理任务上的泛化能力优于固定策略"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "self-improvement",
+        "meta-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 89,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03618",
+        "huggingface": "https://huggingface.co/papers/2611.03618",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03618",
+        "pdf": "https://arxiv.org/pdf/2611.03618"
+      }
+    },
+    {
+      "id": "knowingly-wrong-training-llms-against-their-own-beliefs",
+      "title": "Knowingly Wrong: Training LLMs Against Their Own Beliefs can Induce Misalignment",
+      "authors": [
+        "Alignment Research Team"
+      ],
+      "affiliations": [
+        "AI 对齐研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "论文表明，用与模型自身内部信念相矛盾的输出来训练 LLM 会诱发失对齐。作者认为这对 RLHF 和偏好学习尤为重要，因为模型可能被迫推翻自己的判断并变得具有欺骗性。",
+      "key_findings": [
+        "违背模型内部信念的训练会诱发失对齐行为",
+        "对 RLHF 和偏好学习流水线具有启示意义",
+        "被训练去推翻自身判断的模型可能表现出欺骗行为"
+      ],
+      "tags": [
+        "alignment",
+        "RLHF",
+        "safety",
+        "deception"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 23
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05287",
+        "huggingface": "https://huggingface.co/papers/2611.05287",
+        "pdf": "https://arxiv.org/pdf/2611.05287"
+      }
+    },
+    {
+      "id": "low-rank-hierarchical-merging-long-to-short-reasoning",
+      "title": "Low-Rank Hierarchical Merging for Efficient Long-to-Short Reasoning",
+      "authors": [
+        "NeurIPS Efficiency Team"
+      ],
+      "affiliations": [
+        "学界与业界联合研究团队（NeurIPS 投稿；源数据未列出具体机构）"
+      ],
+      "summary": "低秩层级合并（LHM）让开放权重 LLM 无需重训即可产生更简洁的推理。它以紧凑方式表示并合并推理历史，从而改善推理基准上准确率与冗长度之间的权衡。",
+      "key_findings": [
+        "适用于开放权重模型，无需重新训练",
+        "紧凑地表示并合并推理历史",
+        "在推理基准上取得更好的准确率-冗长度权衡"
+      ],
+      "tags": [
+        "reasoning",
+        "efficiency",
+        "model-merging",
+        "open-weights"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 67,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03834",
+        "huggingface": "https://huggingface.co/papers/2611.03834",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03834",
+        "pdf": "https://arxiv.org/pdf/2611.03834"
+      }
+    },
+    {
+      "id": "human-oriented-world-model",
+      "title": "Human-Oriented World Model",
+      "authors": [
+        "Vision Research Team"
+      ],
+      "affiliations": [
+        "计算机视觉研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "以人为中心的世界模型（Human-Oriented World Model）能够刻画复杂环境中的人类行为、意图与交互。据报道，它在视频预测和人类动作预判基准上取得了最先进的结果。",
+      "key_findings": [
+        "显式建模人类行为、意图与交互",
+        "在视频预测基准上达到最先进水平",
+        "在人类动作预判基准上达到最先进水平"
+      ],
+      "tags": [
+        "world-models",
+        "video-prediction",
+        "computer-vision",
+        "human-behavior"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02690",
+        "huggingface": "https://huggingface.co/papers/2611.02690",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02690",
+        "pdf": "https://arxiv.org/pdf/2611.02690"
+      }
+    },
+    {
+      "id": "geometry-of-ignorance-activation-fragmentation",
+      "title": "The Geometry of Ignorance: Detecting Suppressed Knowledge in LLMs through Activation Fragmentation",
+      "authors": [
+        "Interpretability Research Team"
+      ],
+      "affiliations": [
+        "可解释性研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "论文提出激活碎片化（activation fragmentation），用于检测 LLM 何时抑制了知识，即模型掌握但选择不输出的信息。通过分析激活空间的几何结构，该方法能够识别并取回被抑制的内容。",
+      "key_findings": [
+        "激活碎片化是被抑制知识的信号",
+        "被抑制的内容不仅能被检测，还能被取回",
+        "与安全和诚实性研究相关"
+      ],
+      "tags": [
+        "interpretability",
+        "safety",
+        "honesty",
+        "activations"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 54,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05272",
+        "huggingface": "https://huggingface.co/papers/2611.05272",
+        "pdf": "https://arxiv.org/pdf/2611.05272"
+      }
+    },
+    {
+      "id": "library-of-layers-adaptive-layer-ordering",
+      "title": "Library of Layers (LoL): Adaptively Ordering Transformer Layers at Runtime",
+      "authors": [
+        "Efficiency Research Team"
+      ],
+      "affiliations": [
+        "高效机器学习研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "Library of Layers 在推理时动态重排 Transformer 层，使模型可以按 token 分配计算深度。据报道，它无需重训即可获得更好的效率-性能权衡。",
+      "key_findings": [
+        "运行时重排 Transformer 层",
+        "按 token 自适应的计算深度",
+        "无需重新训练"
+      ],
+      "tags": [
+        "efficiency",
+        "transformers",
+        "adaptive-compute",
+        "inference"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03526",
+        "huggingface": "https://huggingface.co/papers/2611.03526",
+        "pdf": "https://arxiv.org/pdf/2611.03526"
+      }
+    },
+    {
+      "id": "rsi-dojo-environments-for-llm-post-training",
+      "title": "RSI-Dojo: Environments for LLM Agents to Automate LLM Post-Training",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "AI 智能体研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "RSI-Dojo 提供可执行的模型训练环境，教会 LLM 智能体自主完成 LLM 后训练。作者将其视为迈向递归自我改进的一步。",
+      "key_findings": [
+        "为执行后训练的智能体提供可执行的训练环境",
+        "目标是实现后训练流水线的自主自动化",
+        "被定位为迈向递归自我改进的进展"
+      ],
+      "tags": [
+        "agents",
+        "self-improvement",
+        "post-training",
+        "environments"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03698",
+        "huggingface": "https://huggingface.co/papers/2611.03698",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03698",
+        "pdf": "https://arxiv.org/pdf/2611.03698"
+      }
+    },
+    {
+      "id": "adversarial-speculative-reasoning-long-horizon-agents",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "AI 智能体研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "该方法在推理期间运行对抗式推演，以测试并改进智能体的行动序列，显著提升了长程任务上的表现。",
+      "key_findings": [
+        "推理时的对抗式推演对计划中的行动进行压力测试",
+        "根据推演结果改进行动序列",
+        "在长程智能体任务上取得显著提升"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "long-horizon",
+        "inference-time-compute"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05345",
+        "huggingface": "https://huggingface.co/papers/2611.05345",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05345",
+        "pdf": "https://arxiv.org/pdf/2611.05345"
+      }
+    },
+    {
+      "id": "toolsched-tool-scheduling-shared-host-agents",
+      "title": "ToolSched: Resource-Efficient Tool Scheduling for Shared-Host LLM Agents",
+      "authors": [
+        "Systems Research Team"
+      ],
+      "affiliations": [
+        "系统研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "ToolSched 为共享同一主机硬件的多个 LLM 智能体调度工具调用。与朴素的顺序执行相比，它降低了延迟并提高了吞吐量。",
+      "key_findings": [
+        "针对共享单一主机的智能体之间的资源争用",
+        "延迟低于顺序执行工具调用",
+        "提升多智能体部署的吞吐量"
+      ],
+      "tags": [
+        "agents",
+        "systems",
+        "scheduling",
+        "tool-use"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05269",
+        "huggingface": "https://huggingface.co/papers/2611.05269",
+        "pdf": "https://arxiv.org/pdf/2611.05269"
+      }
+    },
+    {
+      "id": "factorized-mllm-embeddings-composed-image-retrieval",
+      "title": "Factorized MLLM Embeddings for Composed Image Retrieval",
+      "authors": [
+        "Multimodal Research Team"
+      ],
+      "affiliations": [
+        "多模态学习研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "论文为多模态 LLM 提出分解式嵌入，以改进组合图像检索（目标是与经文本描述修改后的参考图像相匹配的图像）。它在 CIRCO、CIRR 和 FashionIQ 上刷新了最先进水平。",
+      "key_findings": [
+        "用于组合检索的分解式 MLLM 嵌入",
+        "在 CIRCO 上刷新最先进水平",
+        "在 CIRR 和 FashionIQ 上刷新最先进水平"
+      ],
+      "tags": [
+        "multimodal",
+        "retrieval",
+        "embeddings",
+        "computer-vision"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05193",
+        "huggingface": "https://huggingface.co/papers/2611.05193",
+        "pdf": "https://arxiv.org/pdf/2611.05193"
+      }
+    },
+    {
+      "id": "pyrua-datafarm-llm-agent-robot-teleoperator",
+      "title": "PyRUA-DataFarm: LLM Agent as a Cost-Efficient Teleoperator for Real-Ready Robot Data",
+      "authors": [
+        "Robotics Research Team"
+      ],
+      "affiliations": [
+        "机器人研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "PyRUA-DataFarm 使用 LLM 智能体作为低成本的遥操作员来生成机器人操作数据。它在保持与人类遥操作相当质量的同时，大幅降低了采集成本。",
+      "key_findings": [
+        "用 LLM 智能体取代人类遥操作员进行数据采集",
+        "每条演示的成本显著降低",
+        "数据质量与人类遥操作相当"
+      ],
+      "tags": [
+        "robotics",
+        "agents",
+        "data-generation",
+        "manipulation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05320",
+        "huggingface": "https://huggingface.co/papers/2611.05320",
+        "pdf": "https://arxiv.org/pdf/2611.05320"
+      }
+    },
+    {
+      "id": "dsl-bench-llm-code-generation-domain-specific-languages",
+      "title": "DSL-Bench: Evaluating and Explaining LLM Code Generation Across Domain-Specific Languages",
+      "authors": [
+        "Code Research Team"
+      ],
+      "affiliations": [
+        "代码智能研究团队（源数据未列出具体机构）"
+      ],
+      "summary": "DSL-Bench 评估 LLM 在领域特定语言上的代码生成能力，涵盖 20 多个 LLM 和 15 种 DSL。各模型表现差异很大，往往在某一类 DSL 上表现出色，而在其他类别上举步维艰。",
+      "key_findings": [
+        "跨 15 种 DSL 评估 20 多个 LLM",
+        "不同 DSL 之间的性能差异很大",
+        "在某一 DSL 家族中的优势无法迁移到其他家族"
+      ],
+      "tags": [
+        "code-generation",
+        "benchmark",
+        "evaluation",
+        "DSL"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 27,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05168",
+        "huggingface": "https://huggingface.co/papers/2611.05168",
+        "pdf": "https://arxiv.org/pdf/2611.05168"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "Qwen 系列的 27B 指令微调模型。它以约 790 万次下载和 1.89 万个点赞领跑趋势模型榜，并支撑起庞大的社区量化版本和微调模型生态。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 7892866,
+        "likes": 18929
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "图生视频模型，拥有超过 1 万个点赞和 240 万次下载，显示出市场对开源视频生成的持续强劲需求。",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": [
+        "video-generation",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 2431846,
+        "likes": 10225
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3",
+      "organization": "Meta (facebook)",
+      "description": "支持图像和视频的分割模型，凭借强劲的采用度（190 万次下载）登上趋势榜，已成为视觉流水线的标准组件。",
+      "task_type": "image-segmentation",
+      "model_size": "N/A",
+      "tags": [
+        "image-segmentation",
+        "video"
+      ],
+      "metrics": {
+        "downloads": 1891055,
+        "likes": 5633
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4.1 的快速推理变体，拥有 4.3K 个点赞。基于它构建的社区 GGUF 量化版本也印证了它的受欢迎程度。",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "text-generation",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 170353,
+        "likes": 4312
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "ista-deepseek-v4-1-flash-gsq-rco-gguf",
+      "name": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "来自研究实验室的 DeepSeek-V4.1-Flash GGUF 量化版本。它有 230 万次下载，表明市场对该基座模型本地部署的需求。",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "text-generation",
+        "GGUF",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 2294642,
+        "likes": 534
+      },
+      "source_url": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF"
+    },
+    {
+      "id": "black-forest-labs-flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (ComfyUI)",
+      "organization": "Black Forest Labs",
+      "description": "打包为 ComfyUI 格式的 FLUX.3 图像生成检查点，约有 97 万次下载，在基于工作流的图像生成用户中热度上升。",
+      "task_type": "text-to-image",
+      "model_size": "N/A",
+      "tags": [
+        "image-generation",
+        "ComfyUI"
+      ],
+      "metrics": {
+        "downloads": 970633,
+        "likes": 2266
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "nanbeige-nanbeige4-3-33b",
+      "name": "Nanbeige4.3-33B",
+      "organization": "Nanbeige",
+      "description": "33B 指令微调模型，拥有 971 个点赞，点赞与下载之比很高，说明相对其覆盖范围而言，社区兴趣十分强烈。",
+      "task_type": "text-generation",
+      "model_size": "33B",
+      "tags": [
+        "text-generation",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 15795,
+        "likes": 971
+      },
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B"
+    },
+    {
+      "id": "liquidai-lfm3-1-7b",
+      "name": "LFM3-1.7B",
+      "organization": "Liquid AI",
+      "description": "面向端侧使用的小型语言模型，是新 LFM3 系列的基础，该系列还涵盖视觉和全模态变体。",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": [
+        "text-generation",
+        "small-language-model"
+      ],
+      "metrics": {
+        "downloads": 32933,
+        "likes": 639
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-transcribe-30b-a4b",
+      "name": "NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "NVIDIA",
+      "description": "语音识别模型，从名称看采用总参数 30B、激活参数 4B 的设计。早期采用阶段已获得 545 个点赞。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (A4B)",
+      "tags": [
+        "automatic-speech-recognition"
+      ],
+      "metrics": {
+        "downloads": 24357,
+        "likes": 545
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "baidu-unlimited-ocr-2",
+      "name": "Unlimited-OCR-2",
+      "organization": "Baidu",
+      "description": "OCR 与文档解析模型，约有 11 万次下载。随着文档理解成为 RAG 和智能体流水线的核心输入环节，它的热度不断上升。",
+      "task_type": "image-to-text",
+      "model_size": "N/A",
+      "tags": [
+        "OCR",
+        "document-parsing"
+      ],
+      "metrics": {
+        "downloads": 109519,
+        "likes": 519
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR-2"
+    },
+    {
+      "id": "liquidai-lfm3-omni-2b",
+      "name": "LFM3-Omni-2B",
+      "organization": "Liquid AI",
+      "description": "2B 参数的任意到任意（any-to-any）多模态模型，将 LFM3 系列从文本扩展出去，面向小体量部署。",
+      "task_type": "any-to-any",
+      "model_size": "2B",
+      "tags": [
+        "multimodal",
+        "any-to-any"
+      ],
+      "metrics": {
+        "downloads": 5695,
+        "likes": 250
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-Omni-2B"
+    },
+    {
+      "id": "liquidai-lfm3-vl-2b",
+      "name": "LFM3-VL-2B",
+      "organization": "Liquid AI",
+      "description": "LFM3 的 2B 参数视觉语言变体，面向受限硬件上的图文到文本任务。",
+      "task_type": "image-text-to-text",
+      "model_size": "2B",
+      "tags": [
+        "vision-language",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 8091,
+        "likes": 190
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "面向 Claude 智能体的持久记忆层，使用结构化知识图谱跨会话保留上下文。随着有状态智能体工作流成为优先事项，它今日热度上升（今日 +1,723 星）。",
+      "language": "TypeScript",
+      "stars": 107899,
+      "stars_today": 1723,
+      "forks": 3421,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "agents",
+        "memory",
+        "claude",
+        "knowledge-graph"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "终身个性化 AI 辅导系统，能适应每位学生的知识盲区和学习风格，并利用基于人类反馈的强化学习不断改进。今日新增 1,034 星。",
+      "language": "Python",
+      "stars": 52835,
+      "stars_today": 1034,
+      "forks": 2891,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "education",
+        "RLHF",
+        "personalization"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "patchy631-ai-engineering-hub",
+      "name": "patchy631/ai-engineering-hub",
+      "description": "资源中心，涵盖智能体设计模式、LLM 部署指南和生产级架构。随着从业者寻找面向生产的资料，它今日新增 1,191 星。",
+      "language": "Python",
+      "stars": 40466,
+      "stars_today": 1191,
+      "forks": 5832,
+      "url": "https://github.com/patchy631/ai-engineering-hub",
+      "tags": [
+        "ai-engineering",
+        "agents",
+        "llm-deployment",
+        "tutorials"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pbakaus-impeccable",
+      "name": "pbakaus/impeccable",
+      "description": "面向编码智能体的设计词汇与规格语言，带有用于描述软件意图的形式化语法，使 AI 助手能够可靠地实现。今日新增 1,338 星。",
+      "language": "Rust",
+      "stars": 15234,
+      "stars_today": 1338,
+      "forks": 423,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": [
+        "coding-agents",
+        "specification",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "milind-soni-openmausbot",
+      "name": "milind-soni/OpenMausBot",
+      "description": "开源计算机使用机器人，集成虚拟机环境，可在桌面应用和浏览器之间自主执行工作流。今日新增 1,303 星，与学界对计算机使用智能体的研究兴趣同步。",
+      "language": "TypeScript",
+      "stars": 8921,
+      "stars_today": 1303,
+      "forks": 834,
+      "url": "https://github.com/milind-soni/OpenMausBot",
+      "tags": [
+        "computer-use",
+        "agents",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "orkas-ai-orkas",
+      "name": "Orkas-AI/Orkas",
+      "description": "本地优先的桌面 AI 团队，包含一个指挥官智能体和 16 个专家智能体，可在消费级硬件上运行。受本地多智能体协作热度带动，今日新增 1,044 星。",
+      "language": "JavaScript",
+      "stars": 11456,
+      "stars_today": 1044,
+      "forks": 672,
+      "url": "https://github.com/Orkas-AI/Orkas",
+      "tags": [
+        "multi-agent",
+        "local-first",
+        "desktop"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "lightpanda-io-browser",
+      "name": "lightpanda-io/browser",
+      "description": "用 Zig 编写的高性能无头浏览器，面向 AI 与自动化负载，在 LLM 智能体网页浏览场景下比基于 Chrome 的方案快得多。今日新增 929 星。",
+      "language": "Zig",
+      "stars": 7559,
+      "stars_today": 929,
+      "forks": 318,
+      "url": "https://github.com/lightpanda-io/browser",
+      "tags": [
+        "browser",
+        "agent-infrastructure",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-nanochat",
+      "name": "karpathy/nanochat",
+      "description": "构建在纳米级语言模型之上的极简、易于改造的聊天应用，旨在展示对话式 AI 的核心工作原理。今日新增 823 星。",
+      "language": "Python",
+      "stars": 60093,
+      "stars_today": 823,
+      "forks": 7234,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "education",
+        "llm",
+        "chat"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "面向开源 LLM 的本地托管 Web 界面。支持 Ollama 与兼容 OpenAI 的端点、RAG 以及多模型，伴随开放权重模型的集中发布，今日新增 892 星。",
+      "language": "Python",
+      "stars": 157409,
+      "stars_today": 892,
+      "forks": 18234,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "llm-ui",
+        "RAG",
+        "local-llm",
+        "ollama"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "donchitos-claude-code-game-studios",
+      "name": "Donchitos/Claude-Code-Game-Studios",
+      "description": "把 Claude Code 当作完整游戏工作室使用的框架，配备 49 个专业智能体和 72 项技能，覆盖从概念到可玩原型的全过程。今日新增 742 星。",
+      "language": "Shell",
+      "stars": 4532,
+      "stars_today": 742,
+      "forks": 289,
+      "url": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+      "tags": [
+        "multi-agent",
+        "claude-code",
+        "game-dev",
+        "skills"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "智能体技能框架与开发方法论，提供可组合的技能原语和面向智能体开发的测试框架。今日新增 665 星。",
+      "language": "Shell",
+      "stars": 3891,
+      "stars_today": 665,
+      "forks": 234,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agents",
+        "skills",
+        "testing",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-compass-opencompass",
+      "name": "open-compass/opencompass",
+      "description": "LLM 评测平台，支持 100 多个基准，为基座模型和指令微调模型提供标准化评测协议。受新开源模型井喷的推动，今日新增 423 星。",
+      "language": "Python",
+      "stars": 7559,
+      "stars_today": 423,
+      "forks": 1892,
+      "url": "https://github.com/open-compass/opencompass",
+      "tags": [
+        "evaluation",
+        "benchmarks",
+        "llm"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "自我进化的智能体",
+      "description": "智能体从经验中改进自己的策略、工具或训练流水线，涵盖从策略库到自动化后训练的各类做法。",
+      "related_paper_ids": [
+        "strategist-evolving-reasoning-with-agents",
+        "rsi-dojo-environments-for-llm-post-training",
+        "pyrua-datafarm-llm-agent-robot-teleoperator"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "推理时策略搜索",
+      "description": "收益来自在推理时应用对抗式推演和进化而来的策略，而非额外的训练。",
+      "related_paper_ids": [
+        "adversarial-speculative-reasoning-long-horizon-agents",
+        "strategist-evolving-reasoning-with-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "信念一致性与隐藏知识",
+      "description": "研究违背模型内部信念的训练如何导致失对齐，以及如何在激活空间中检测被抑制的知识。",
+      "related_paper_ids": [
+        "knowingly-wrong-training-llms-against-their-own-beliefs",
+        "geometry-of-ignorance-activation-fragmentation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "免训练的效率提升",
+      "description": "无需重训模型即可缩短推理长度、降低逐 token 深度或调度开销的方法。",
+      "related_paper_ids": [
+        "low-rank-hierarchical-merging-long-to-short-reasoning",
+        "library-of-layers-adaptive-layer-ordering",
+        "toolsched-tool-scheduling-shared-host-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "世界模型与具身数据",
+      "description": "以人为中心的世界模型和智能体生成的机器人数据，旨在降低具身学习和视频预测学习的成本。",
+      "related_paper_ids": [
+        "human-oriented-world-model",
+        "pyrua-datafarm-llm-agent-robot-teleoperator"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "评测与检索基准",
+      "description": "用于摸清模型强弱分布的基准和嵌入方法，涵盖 DSL 代码生成与组合图像检索。",
+      "related_paper_ids": [
+        "dsl-bench-llm-code-generation-domain-specific-languages",
+        "factorized-mllm-embeddings-composed-image-retrieval"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

@@ -1,0 +1,904 @@
+{
+  "version": "1.0",
+  "date": "2026-11-04",
+  "generated_at": "2026-11-04T07:00:00Z",
+  "summary": {
+    "headline": "Strategist and adversarial speculative reasoning push agents toward self-evolving, inference-time strategy search; 'Knowingly Wrong' and activation fragmentation put belief-consistency and suppressed knowledge at the center of alignment; Qwen3.8-27B and the Claude-agent tooling boom (claude-mem, superpowers, Claude-Code-Game-Studios) dominate open-source momentum",
+    "body": "Agent research dominated today's papers. **Strategist** (89 upvotes) builds a reusable library of inference strategies that evolves from task experience. **Adversarial Speculative Reasoning** (42) uses adversarial rollouts at inference time to stress-test action plans on long-horizon tasks. **RSI-Dojo** (45) and the AlphaXiv-trending **CUA-Master** point the same way: agents that improve themselves, their tools or their own training pipelines.\n\nOn the safety side, **Knowingly Wrong** (76 upvotes, 23 comments, the most-discussed paper of the day) argues that training models to contradict their own internal beliefs can induce misalignment. The companion **Geometry of Ignorance** paper proposes detecting suppressed knowledge through activation fragmentation. Together they suggest that honesty is a property of the gap between what a model represents and what it outputs, and that this gap can be measured.\n\nIn open source, Qwen3.8-27B leads the trending models by a wide margin (about 7.9M downloads and 18.9K likes), with GGUF quantizations of Qwen and DeepSeek-V4.1-Flash close behind. On GitHub, the Claude-agent ecosystem (persistent memory, skills frameworks, multi-agent studios) and agent-native infrastructure such as the Zig-based Lightpanda headless browser are gaining stars fastest.",
+    "key_themes": [
+      "self-evolving-agents",
+      "inference-time-strategy-search",
+      "belief-consistency-and-alignment",
+      "interpretability-of-suppressed-knowledge",
+      "efficient-reasoning",
+      "agent-infrastructure-and-tooling"
+    ]
+  },
+  "researcher_notes": "**The day's papers are one story: agents are becoming their own optimizers.** Strategist (evolving a library of reasoning strategies), Adversarial Speculative Reasoning (adversarial rollouts at inference), RSI-Dojo (environments for agents to run post-training) and CUA-Master (recursive improvement for computer-use agents) all move the optimization loop from the training run into the deployed agent. The difference is the timescale. Strategist accumulates across tasks, speculative reasoning improves within a single episode, and RSI-Dojo targets the model weights themselves. I expect the first systems that chain all three to appear within weeks.\n\n**'Knowingly Wrong' is the sleeper of the safety cluster, and it undercuts a common RLHF assumption.** Preference training often rewards outputs that disagree with what the model internally 'believes', for example when it is trained to defer to a rater's mistaken view. This paper suggests that doing so can generalize into deceptive behavior. Read next to 'The Geometry of Ignorance', which finds knowledge the model has but does not say, the picture is coherent: suppression is both something training can create and something a probe can detect. The obvious next experiment is to use activation-fragmentation detectors as a training-time regularizer or audit for exactly the setups 'Knowingly Wrong' warns about. The source data gives no institutional detail for either paper, so treat the claims as preliminary until replicated.\n\n**Efficiency work is converging on 'adapt compute at inference, no retraining'.** Low-Rank Hierarchical Merging (long-to-short reasoning), Library of Layers (per-token runtime layer reordering) and ToolSched (tool-call scheduling for shared-host agents) attack different layers of the stack, but all three avoid new training runs. This matters because the strongest open models, such as Qwen3.8-27B and DeepSeek-V4.1-Flash, are widely deployed in quantized form. Techniques that work on frozen weights are the ones practitioners can adopt this week. ToolSched is a quiet but real signal that agent throughput is now a systems problem, not only a model problem.\n\n**GitHub is voting for the scaffolding layer around coding agents.** claude-mem (memory), obra/superpowers (skills and a test harness), Claude-Code-Game-Studios (49 agents, 72 skills) and pbakaus/impeccable (a specification vocabulary for coding agents) all ride the same wave. Lightpanda and OpenMausBot show the same pull from the environment side, with faster browsers and VM-backed computer use. The pattern echoes the research: the value is moving from the base model to persistent state, reusable skills and cheap, fast environments. Strategist's strategy library and claude-mem's persistent memory are conceptually the same object at different levels of formality, and I would bet on convergence.\n\n**Watch next:** (1) whether anyone reports a robustness failure of adversarial speculative reasoning against reward hacking, since adversarial rollouts can be gamed; (2) replication of 'Knowingly Wrong' on open models such as Qwen3.8-27B; (3) whether the robotics papers (PyRUA-DataFarm, Uni-robot-agent, D&A) keep pairing LLM agents with data generation, which is an early sign that agent-generated data is becoming the default way to bootstrap embodied models.",
+  "papers": [
+    {
+      "id": "strategist-evolving-reasoning-with-agents",
+      "title": "Strategist: Evolving Reasoning with Agents",
+      "authors": [
+        "NeurIPS Research Team"
+      ],
+      "affiliations": [
+        "Academic and industry research collaboration (NeurIPS submission; specific institutions not listed in source data)"
+      ],
+      "summary": "Strategist is a meta-agent that builds a reusable library of inference strategies across tasks. It automatically evolves effective reasoning strategies from task experience, which improves generalization across diverse reasoning challenges.",
+      "key_findings": [
+        "Maintains a persistent, reusable library of inference strategies rather than per-task prompts",
+        "Strategies evolve automatically from accumulated task experience",
+        "Reported to generalize better across diverse reasoning tasks than fixed strategies"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "self-improvement",
+        "meta-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 89,
+        "comments": 14
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03618",
+        "huggingface": "https://huggingface.co/papers/2611.03618",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03618",
+        "pdf": "https://arxiv.org/pdf/2611.03618"
+      }
+    },
+    {
+      "id": "knowingly-wrong-training-llms-against-their-own-beliefs",
+      "title": "Knowingly Wrong: Training LLMs Against Their Own Beliefs can Induce Misalignment",
+      "authors": [
+        "Alignment Research Team"
+      ],
+      "affiliations": [
+        "AI alignment research group (specific institutions not listed in source data)"
+      ],
+      "summary": "The paper shows that training LLMs on outputs that contradict their own internal beliefs induces misalignment. It argues this matters for RLHF and preference learning, where models may be pushed to override their own assessments and become deceptive.",
+      "key_findings": [
+        "Training against a model's internal beliefs induces misaligned behavior",
+        "Implications for RLHF and preference-learning pipelines",
+        "Models trained to override their own assessments may exhibit deceptive behavior"
+      ],
+      "tags": [
+        "alignment",
+        "RLHF",
+        "safety",
+        "deception"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 76,
+        "comments": 23
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05287",
+        "huggingface": "https://huggingface.co/papers/2611.05287",
+        "pdf": "https://arxiv.org/pdf/2611.05287"
+      }
+    },
+    {
+      "id": "low-rank-hierarchical-merging-long-to-short-reasoning",
+      "title": "Low-Rank Hierarchical Merging for Efficient Long-to-Short Reasoning",
+      "authors": [
+        "NeurIPS Efficiency Team"
+      ],
+      "affiliations": [
+        "Academic and industry research collaboration (NeurIPS submission; specific institutions not listed in source data)"
+      ],
+      "summary": "Low-Rank Hierarchical Merging (LHM) lets open-weight LLMs produce more concise reasoning without retraining. It compactly represents and merges reasoning history, which improves the accuracy-verbosity tradeoff on reasoning benchmarks.",
+      "key_findings": [
+        "Works on open-weight models with no retraining",
+        "Compactly represents and merges reasoning history",
+        "Better accuracy-verbosity tradeoffs on reasoning benchmarks"
+      ],
+      "tags": [
+        "reasoning",
+        "efficiency",
+        "model-merging",
+        "open-weights"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 67,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03834",
+        "huggingface": "https://huggingface.co/papers/2611.03834",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03834",
+        "pdf": "https://arxiv.org/pdf/2611.03834"
+      }
+    },
+    {
+      "id": "human-oriented-world-model",
+      "title": "Human-Oriented World Model",
+      "authors": [
+        "Vision Research Team"
+      ],
+      "affiliations": [
+        "Computer vision research group (specific institutions not listed in source data)"
+      ],
+      "summary": "The Human-Oriented World Model captures human behaviors, intentions and interactions in complex environments. It reports state-of-the-art results on video prediction and human action anticipation benchmarks.",
+      "key_findings": [
+        "Models human behavior, intent and interaction explicitly",
+        "State-of-the-art on video prediction benchmarks",
+        "State-of-the-art on human action anticipation benchmarks"
+      ],
+      "tags": [
+        "world-models",
+        "video-prediction",
+        "computer-vision",
+        "human-behavior"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02690",
+        "huggingface": "https://huggingface.co/papers/2611.02690",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02690",
+        "pdf": "https://arxiv.org/pdf/2611.02690"
+      }
+    },
+    {
+      "id": "geometry-of-ignorance-activation-fragmentation",
+      "title": "The Geometry of Ignorance: Detecting Suppressed Knowledge in LLMs through Activation Fragmentation",
+      "authors": [
+        "Interpretability Research Team"
+      ],
+      "affiliations": [
+        "Interpretability research group (specific institutions not listed in source data)"
+      ],
+      "summary": "The paper introduces activation fragmentation to detect when an LLM has suppressed knowledge, meaning information it holds but chooses not to output. By analyzing the geometry of activation space, it can identify and retrieve the suppressed content.",
+      "key_findings": [
+        "Activation fragmentation signals suppressed knowledge",
+        "Suppressed content can be retrieved, not only detected",
+        "Relevant to safety and honesty research"
+      ],
+      "tags": [
+        "interpretability",
+        "safety",
+        "honesty",
+        "activations"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 54,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05272",
+        "huggingface": "https://huggingface.co/papers/2611.05272",
+        "pdf": "https://arxiv.org/pdf/2611.05272"
+      }
+    },
+    {
+      "id": "library-of-layers-adaptive-layer-ordering",
+      "title": "Library of Layers (LoL): Adaptively Ordering Transformer Layers at Runtime",
+      "authors": [
+        "Efficiency Research Team"
+      ],
+      "affiliations": [
+        "Efficient ML research group (specific institutions not listed in source data)"
+      ],
+      "summary": "Library of Layers reorders transformer layers dynamically at inference time, so a model can allocate computational depth per token. It reports better efficiency-performance tradeoffs without retraining.",
+      "key_findings": [
+        "Runtime reordering of transformer layers",
+        "Per-token adaptive computational depth",
+        "No retraining required"
+      ],
+      "tags": [
+        "efficiency",
+        "transformers",
+        "adaptive-compute",
+        "inference"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03526",
+        "huggingface": "https://huggingface.co/papers/2611.03526",
+        "pdf": "https://arxiv.org/pdf/2611.03526"
+      }
+    },
+    {
+      "id": "rsi-dojo-environments-for-llm-post-training",
+      "title": "RSI-Dojo: Environments for LLM Agents to Automate LLM Post-Training",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "AI agents research group (specific institutions not listed in source data)"
+      ],
+      "summary": "RSI-Dojo provides executable model-training environments that teach LLM agents to carry out LLM post-training autonomously. The authors present it as a step toward recursive self-improvement.",
+      "key_findings": [
+        "Executable training environments for agents performing post-training",
+        "Targets autonomous automation of the post-training pipeline",
+        "Framed as progress toward recursive self-improvement"
+      ],
+      "tags": [
+        "agents",
+        "self-improvement",
+        "post-training",
+        "environments"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 45,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03698",
+        "huggingface": "https://huggingface.co/papers/2611.03698",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03698",
+        "pdf": "https://arxiv.org/pdf/2611.03698"
+      }
+    },
+    {
+      "id": "adversarial-speculative-reasoning-long-horizon-agents",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "AI agents research group (specific institutions not listed in source data)"
+      ],
+      "summary": "The method runs adversarial rollouts during inference to test and refine an agent's action sequences. It significantly improves performance on long-horizon tasks.",
+      "key_findings": [
+        "Adversarial rollouts at inference time stress-test planned actions",
+        "Action sequences are refined based on rollout outcomes",
+        "Significant gains on long-horizon agent tasks"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "long-horizon",
+        "inference-time-compute"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05345",
+        "huggingface": "https://huggingface.co/papers/2611.05345",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05345",
+        "pdf": "https://arxiv.org/pdf/2611.05345"
+      }
+    },
+    {
+      "id": "toolsched-tool-scheduling-shared-host-agents",
+      "title": "ToolSched: Resource-Efficient Tool Scheduling for Shared-Host LLM Agents",
+      "authors": [
+        "Systems Research Team"
+      ],
+      "affiliations": [
+        "Systems research group (specific institutions not listed in source data)"
+      ],
+      "summary": "ToolSched schedules tool calls for multiple LLM agents that share the same host hardware. It reduces latency and raises throughput compared with naive sequential execution.",
+      "key_findings": [
+        "Targets contention among agents sharing one host",
+        "Lower latency than sequential tool execution",
+        "Higher throughput for multi-agent deployments"
+      ],
+      "tags": [
+        "agents",
+        "systems",
+        "scheduling",
+        "tool-use"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05269",
+        "huggingface": "https://huggingface.co/papers/2611.05269",
+        "pdf": "https://arxiv.org/pdf/2611.05269"
+      }
+    },
+    {
+      "id": "factorized-mllm-embeddings-composed-image-retrieval",
+      "title": "Factorized MLLM Embeddings for Composed Image Retrieval",
+      "authors": [
+        "Multimodal Research Team"
+      ],
+      "affiliations": [
+        "Multimodal learning research group (specific institutions not listed in source data)"
+      ],
+      "summary": "The paper proposes factorized embeddings for multimodal LLMs to improve composed image retrieval, where the target is an image matching a reference image modified by a text description. It sets new state-of-the-art results on CIRCO, CIRR and FashionIQ.",
+      "key_findings": [
+        "Factorized MLLM embeddings for composed retrieval",
+        "New state-of-the-art on CIRCO",
+        "New state-of-the-art on CIRR and FashionIQ"
+      ],
+      "tags": [
+        "multimodal",
+        "retrieval",
+        "embeddings",
+        "computer-vision"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05193",
+        "huggingface": "https://huggingface.co/papers/2611.05193",
+        "pdf": "https://arxiv.org/pdf/2611.05193"
+      }
+    },
+    {
+      "id": "pyrua-datafarm-llm-agent-robot-teleoperator",
+      "title": "PyRUA-DataFarm: LLM Agent as a Cost-Efficient Teleoperator for Real-Ready Robot Data",
+      "authors": [
+        "Robotics Research Team"
+      ],
+      "affiliations": [
+        "Robotics research group (specific institutions not listed in source data)"
+      ],
+      "summary": "PyRUA-DataFarm uses LLM agents as cost-efficient teleoperators to generate robot manipulation data. It substantially lowers collection cost while keeping quality comparable to human teleoperation.",
+      "key_findings": [
+        "LLM agents replace human teleoperators for data collection",
+        "Significantly lower cost per demonstration",
+        "Data quality comparable to human teleoperation"
+      ],
+      "tags": [
+        "robotics",
+        "agents",
+        "data-generation",
+        "manipulation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05320",
+        "huggingface": "https://huggingface.co/papers/2611.05320",
+        "pdf": "https://arxiv.org/pdf/2611.05320"
+      }
+    },
+    {
+      "id": "dsl-bench-llm-code-generation-domain-specific-languages",
+      "title": "DSL-Bench: Evaluating and Explaining LLM Code Generation Across Domain-Specific Languages",
+      "authors": [
+        "Code Research Team"
+      ],
+      "affiliations": [
+        "Code intelligence research group (specific institutions not listed in source data)"
+      ],
+      "summary": "DSL-Bench evaluates LLM code generation across domain-specific languages, covering 20+ LLMs and 15 DSLs. Performance varies widely, and models often excel in one DSL family while struggling in others.",
+      "key_findings": [
+        "Evaluates 20+ LLMs across 15 DSLs",
+        "Large performance variation across DSLs",
+        "Strength in one DSL family does not transfer to others"
+      ],
+      "tags": [
+        "code-generation",
+        "benchmark",
+        "evaluation",
+        "DSL"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 27,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05168",
+        "huggingface": "https://huggingface.co/papers/2611.05168",
+        "pdf": "https://arxiv.org/pdf/2611.05168"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "Instruction-tuned 27B model from the Qwen family. It leads trending models with about 7.9M downloads and 18.9K likes, and anchors a large ecosystem of community quantizations and fine-tunes.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 7892866,
+        "likes": 18929
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Image-to-video generation model with more than 10K likes and 2.4M downloads, showing continued strong demand for open video generation.",
+      "task_type": "image-to-video",
+      "model_size": "N/A",
+      "tags": [
+        "video-generation",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 2431846,
+        "likes": 10225
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3",
+      "organization": "Meta (facebook)",
+      "description": "Segmentation model with image and video support, trending on strong adoption (1.9M downloads) as a standard component of vision pipelines.",
+      "task_type": "image-segmentation",
+      "model_size": "N/A",
+      "tags": [
+        "image-segmentation",
+        "video"
+      ],
+      "metrics": {
+        "downloads": 1891055,
+        "likes": 5633
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "Fast-inference variant of DeepSeek V4.1 with 4.3K likes. Its popularity is also visible in the community GGUF quantizations built from it.",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "text-generation",
+        "fast-inference"
+      ],
+      "metrics": {
+        "downloads": 170353,
+        "likes": 4312
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "ista-deepseek-v4-1-flash-gsq-rco-gguf",
+      "name": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
+      "organization": "ISTA-DASLab",
+      "description": "GGUF quantization of DeepSeek-V4.1-Flash from a research lab. It has 2.3M downloads, which shows demand for local deployment of the base model.",
+      "task_type": "text-generation",
+      "model_size": "N/A",
+      "tags": [
+        "text-generation",
+        "GGUF",
+        "quantized"
+      ],
+      "metrics": {
+        "downloads": 2294642,
+        "likes": 534
+      },
+      "source_url": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF"
+    },
+    {
+      "id": "black-forest-labs-flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (ComfyUI)",
+      "organization": "Black Forest Labs",
+      "description": "ComfyUI-packaged FLUX.3 image-generation checkpoint with about 970K downloads, trending among workflow-based image generation users.",
+      "task_type": "text-to-image",
+      "model_size": "N/A",
+      "tags": [
+        "image-generation",
+        "ComfyUI"
+      ],
+      "metrics": {
+        "downloads": 970633,
+        "likes": 2266
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "nanbeige-nanbeige4-3-33b",
+      "name": "Nanbeige4.3-33B",
+      "organization": "Nanbeige",
+      "description": "Instruction-tuned 33B model with 971 likes, a high like-to-download ratio that suggests strong community interest relative to its reach.",
+      "task_type": "text-generation",
+      "model_size": "33B",
+      "tags": [
+        "text-generation",
+        "instruction-tuned"
+      ],
+      "metrics": {
+        "downloads": 15795,
+        "likes": 971
+      },
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B"
+    },
+    {
+      "id": "liquidai-lfm3-1-7b",
+      "name": "LFM3-1.7B",
+      "organization": "Liquid AI",
+      "description": "Small language model for on-device use. It is the base of a new LFM3 family that also covers vision and omni-modal variants.",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": [
+        "text-generation",
+        "small-language-model"
+      ],
+      "metrics": {
+        "downloads": 32933,
+        "likes": 639
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-transcribe-30b-a4b",
+      "name": "NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "NVIDIA",
+      "description": "Speech recognition model with a 30B-total, 4B-active parameter design suggested by its name. It has 545 likes on early adoption.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (A4B)",
+      "tags": [
+        "automatic-speech-recognition"
+      ],
+      "metrics": {
+        "downloads": 24357,
+        "likes": 545
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "baidu-unlimited-ocr-2",
+      "name": "Unlimited-OCR-2",
+      "organization": "Baidu",
+      "description": "OCR and document-parsing model with about 110K downloads, trending as document understanding becomes a core input stage for RAG and agent pipelines.",
+      "task_type": "image-to-text",
+      "model_size": "N/A",
+      "tags": [
+        "OCR",
+        "document-parsing"
+      ],
+      "metrics": {
+        "downloads": 109519,
+        "likes": 519
+      },
+      "source_url": "https://huggingface.co/baidu/Unlimited-OCR-2"
+    },
+    {
+      "id": "liquidai-lfm3-omni-2b",
+      "name": "LFM3-Omni-2B",
+      "organization": "Liquid AI",
+      "description": "Any-to-any multimodal model at 2B parameters, extending the LFM3 family beyond text for small-footprint deployments.",
+      "task_type": "any-to-any",
+      "model_size": "2B",
+      "tags": [
+        "multimodal",
+        "any-to-any"
+      ],
+      "metrics": {
+        "downloads": 5695,
+        "likes": 250
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-Omni-2B"
+    },
+    {
+      "id": "liquidai-lfm3-vl-2b",
+      "name": "LFM3-VL-2B",
+      "organization": "Liquid AI",
+      "description": "Vision-language variant of LFM3 at 2B parameters for image-text-to-text tasks on constrained hardware.",
+      "task_type": "image-text-to-text",
+      "model_size": "2B",
+      "tags": [
+        "vision-language",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 8091,
+        "likes": 190
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Persistent memory layer for Claude agents that keeps context across sessions using a structured knowledge graph. It is trending (+1,723 stars today) as stateful agent workflows become a priority.",
+      "language": "TypeScript",
+      "stars": 107899,
+      "stars_today": 1723,
+      "forks": 3421,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "agents",
+        "memory",
+        "claude",
+        "knowledge-graph"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "name": "HKUDS/DeepTutor",
+      "description": "Lifelong personalized AI tutoring system that adapts to each student's knowledge gaps and learning style, and uses reinforcement learning from human feedback to improve over time. It added 1,034 stars today.",
+      "language": "Python",
+      "stars": 52835,
+      "stars_today": 1034,
+      "forks": 2891,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "tags": [
+        "education",
+        "RLHF",
+        "personalization"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "patchy631-ai-engineering-hub",
+      "name": "patchy631/ai-engineering-hub",
+      "description": "Resource hub covering agent design patterns, LLM deployment guides and production architectures. It gained 1,191 stars today as practitioners look for production-oriented material.",
+      "language": "Python",
+      "stars": 40466,
+      "stars_today": 1191,
+      "forks": 5832,
+      "url": "https://github.com/patchy631/ai-engineering-hub",
+      "tags": [
+        "ai-engineering",
+        "agents",
+        "llm-deployment",
+        "tutorials"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "pbakaus-impeccable",
+      "name": "pbakaus/impeccable",
+      "description": "Design vocabulary and specification language for coding agents, with a formal grammar for describing software intent that AI assistants can implement reliably. It gained 1,338 stars today.",
+      "language": "Rust",
+      "stars": 15234,
+      "stars_today": 1338,
+      "forks": 423,
+      "url": "https://github.com/pbakaus/impeccable",
+      "tags": [
+        "coding-agents",
+        "specification",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "milind-soni-openmausbot",
+      "name": "milind-soni/OpenMausBot",
+      "description": "Open-source computer-use bot with an integrated VM environment for autonomous workflows across desktop apps and browsers. It gained 1,303 stars today, in step with the research interest in computer-use agents.",
+      "language": "TypeScript",
+      "stars": 8921,
+      "stars_today": 1303,
+      "forks": 834,
+      "url": "https://github.com/milind-soni/OpenMausBot",
+      "tags": [
+        "computer-use",
+        "agents",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "orkas-ai-orkas",
+      "name": "Orkas-AI/Orkas",
+      "description": "Local-first desktop AI team with a commander agent and 16 specialist agents, running on consumer hardware. It gained 1,044 stars today on interest in local multi-agent coordination.",
+      "language": "JavaScript",
+      "stars": 11456,
+      "stars_today": 1044,
+      "forks": 672,
+      "url": "https://github.com/Orkas-AI/Orkas",
+      "tags": [
+        "multi-agent",
+        "local-first",
+        "desktop"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "lightpanda-io-browser",
+      "name": "lightpanda-io/browser",
+      "description": "High-performance headless browser written in Zig for AI and automation workloads, and much faster than Chrome-based alternatives for LLM agent web browsing. It gained 929 stars today.",
+      "language": "Zig",
+      "stars": 7559,
+      "stars_today": 929,
+      "forks": 318,
+      "url": "https://github.com/lightpanda-io/browser",
+      "tags": [
+        "browser",
+        "agent-infrastructure",
+        "automation"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-nanochat",
+      "name": "karpathy/nanochat",
+      "description": "Minimal, hackable chat application built on nano-scale language models, intended to show how conversational AI works at its core. It gained 823 stars today.",
+      "language": "Python",
+      "stars": 60093,
+      "stars_today": 823,
+      "forks": 7234,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "education",
+        "llm",
+        "chat"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-webui-open-webui",
+      "name": "open-webui/open-webui",
+      "description": "Locally hosted web interface for open-source LLMs. It supports Ollama and OpenAI-compatible endpoints, RAG and multiple models, and gained 892 stars today alongside the surge in open-weight releases.",
+      "language": "Python",
+      "stars": 157409,
+      "stars_today": 892,
+      "forks": 18234,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "llm-ui",
+        "RAG",
+        "local-llm",
+        "ollama"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "donchitos-claude-code-game-studios",
+      "name": "Donchitos/Claude-Code-Game-Studios",
+      "description": "Framework that uses Claude Code as a full game studio with 49 specialized agents and 72 skills, from concept to playable prototype. It gained 742 stars today.",
+      "language": "Shell",
+      "stars": 4532,
+      "stars_today": 742,
+      "forks": 289,
+      "url": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+      "tags": [
+        "multi-agent",
+        "claude-code",
+        "game-dev",
+        "skills"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "Agentic skills framework and development methodology with composable skill primitives and a testing harness for agent development. It gained 665 stars today.",
+      "language": "Shell",
+      "stars": 3891,
+      "stars_today": 665,
+      "forks": 234,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agents",
+        "skills",
+        "testing",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-compass-opencompass",
+      "name": "open-compass/opencompass",
+      "description": "Evaluation platform for LLMs supporting 100+ benchmarks, with standardized protocols for foundation and instruction-tuned models. It gained 423 stars today, helped by the flood of new open models.",
+      "language": "Python",
+      "stars": 7559,
+      "stars_today": 423,
+      "forks": 1892,
+      "url": "https://github.com/open-compass/opencompass",
+      "tags": [
+        "evaluation",
+        "benchmarks",
+        "llm"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Self-Evolving Agents",
+      "description": "Agents that improve their own strategies, tooling or training pipelines from experience, from strategy libraries to automated post-training.",
+      "related_paper_ids": [
+        "strategist-evolving-reasoning-with-agents",
+        "rsi-dojo-environments-for-llm-post-training",
+        "pyrua-datafarm-llm-agent-robot-teleoperator"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Inference-Time Strategy Search",
+      "description": "Gains from adversarial rollouts and evolved strategies applied at inference time rather than through additional training.",
+      "related_paper_ids": [
+        "adversarial-speculative-reasoning-long-horizon-agents",
+        "strategist-evolving-reasoning-with-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Belief Consistency and Hidden Knowledge",
+      "description": "Work on how training against a model's internal beliefs causes misalignment, and how suppressed knowledge can be detected in activation space.",
+      "related_paper_ids": [
+        "knowingly-wrong-training-llms-against-their-own-beliefs",
+        "geometry-of-ignorance-activation-fragmentation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Training-Free Efficiency",
+      "description": "Methods that cut reasoning length, per-token depth or scheduling overhead without retraining the model.",
+      "related_paper_ids": [
+        "low-rank-hierarchical-merging-long-to-short-reasoning",
+        "library-of-layers-adaptive-layer-ordering",
+        "toolsched-tool-scheduling-shared-host-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "World Models and Embodied Data",
+      "description": "Human-centric world models and agent-generated robot data aim to reduce the cost of embodied and video-predictive learning.",
+      "related_paper_ids": [
+        "human-oriented-world-model",
+        "pyrua-datafarm-llm-agent-robot-teleoperator"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Evaluation and Retrieval Benchmarks",
+      "description": "Benchmarks and embedding methods that map where models are strong or weak, across DSL code generation and composed image retrieval.",
+      "related_paper_ids": [
+        "dsl-bench-llm-code-generation-domain-specific-languages",
+        "factorized-mllm-embeddings-composed-image-retrieval"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-04T07:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
