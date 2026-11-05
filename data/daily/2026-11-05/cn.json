@@ -1,0 +1,827 @@
+{
+  "version": "1.0",
+  "date": "2026-11-05",
+  "generated_at": "2026-11-05T07:12:00Z",
+  "summary": {
+    "headline": "Axion 1.0以简化的三阶段训练挑战商业智能体模型；DreamX将视频扩散模型转化为通用潜在动作学习器；MCP工具投毒研究绘制跨框架攻击面图谱，智能体安全成为一级研究课题",
+    "body": "今日内容由三条主线主导。**Axion 1.0**（arXiv:2611.03233）发布了一个在三个阶段训练而成的极具竞争力的开源智能体基础模型——两轮轻量级监督微调（SFT）加一轮强化学习（RL）——并声称在多项智能体基准测试中与领先的商业智能体持平。配方的简洁性正是重点：作者认为过于复杂的训练流程一直是开源智能体研究的主要障碍，而Axion 1.0是反驳证据。**DreamX**（arXiv:2611.05377）则选择了截然不同的架构方向：它不是从头训练智能体，而是将预训练视频扩散模型复用为通用潜在动作学习器，通过视频生成的共享潜在空间连接感知与控制。\n\n智能体安全作为研究重点，今日有两篇论文同时出现。**MCP工具投毒**（arXiv:2611.03555）针对Claude Code、AutoGen、LangGraph和CrewAI进行了首次跨框架的工具投毒攻击测量，发现所有四个框架都对同一类攻击存在漏洞。**VeriHarm-Bench**（arXiv:2611.03575）则提出了更尖锐的相邻问题：当编码智能体产生有害输出时，如何明确地进行验证？这两篇论文合在一起表明，智能体安全研究正在从理论红队演练转向测量基础设施建设。\n\n在模型层面，**Qwen3.8-27B**继续以大幅优势主导HuggingFace Hub（本周下载量超800万），**LTX-2.5**图像转视频模型稳居第二最受喜爱的发布位置。GitHub动态由**NVIDIA/auto-ontology**领衔——这是一个为LLM工作流增加基于图推理层的框架，首周便登上趋势榜，另有老牌的**D4Vinci/Scrapling**网页抓取库随着智能体浏览器栈的成熟持续获得关注。",
+    "key_themes": [
+      "open-agent-foundation-models",
+      "physical-ai-and-world-models",
+      "agent-security-and-adversarial-robustness",
+      "multimodal-efficiency",
+      "real-world-agent-benchmarking",
+      "inference-time-interpretability"
+    ]
+  },
+  "researcher_notes": "**Axion 1.0是今日最重要的论文，其重要性体现在方法论层面而非基准测试层面。** 其主张并非Axion是最好的智能体，而是最优秀的开源智能体现在可以通过三个清晰的训练阶段复现，无需蒸馏技巧、合成数据级联或多步奖励工程。如果这一点能在独立复现中得到验证，它将大幅降低开源智能体研究的成本，并将竞争核心从「谁有最大的训练运行」转变为「谁有最好的评估环境」。时机也很重要：Axion 1.0的发布时间恰好在RoboColosseum为物理AI提供标准化多形态基准测试的同一周。值得关注的是，机器人学社区是否会将Axion风格的训练方法移植到VLA（视觉-语言-动作）模型上。\n\n**DreamX是今日的潜力黑马。** 大多数动作学习论文要么从头训练，要么微调冻结的视觉编码器；DreamX则将视频生成视为共享底层基础。生成式视频模型的潜在空间已经包含对物理、物体运动和因果关系的理解——DreamX声称这些知识可以迁移到机器人动作，而无需重新学习。这在架构上类似于扩散策略（diffusion policies）的工作方式，但更进一步：扩散模型不是策略解码器，它**就是**策略。如果动作质量数据能够得到验证，预计在缺乏数据的机器人应用场景中将迅速获得采用，因为生成合成训练视频比收集真实推演更加经济。\n\n**MCP工具投毒论文值得任何正在部署智能体系统的人立即关注。** 关键发现不是某一框架存在漏洞——所有四个被测框架均有问题——而是攻击面在结构上就存在：工具元数据目前由执行工具调用的同一模型来解析，因此模型读取并「信任」的被污染工具描述可以在不触发任何防护措施的情况下重定向下游行为。作者测试了Claude Code、AutoGen、LangGraph和CrewAI。论文未提出完整的修复方案，但跨框架测量正是实践者划定威胁模型范围所需要的。结合「Right Tool, Wrong Parameters」（2611.04673，参数投毒）和VeriHarm-Bench，关于智能体对抗鲁棒性的实证文献虽然初步但已初具规模。\n\n**推理时可解释性研究指向了真实但被低估的方向。** 语境-答案元模型（2611.06837，NeurIPS 2026）训练了一个轻量级探针，在第一个输出token生成之前，从提示层激活中预测语言模型的答案层激活——这是对模型内部承诺的预测，而非对其输出的预测。如果具有鲁棒性，它可以实现廉价的早期退出触发机制、可能答案的推测性缓存，以及最重要的——在有害输出发出之前检测模型何时「走向」有问题输出的信号。这比输出过滤提供了更精准的干预点。值得关注的是，是否有人将此与昨日介绍的「无知几何」（2611.05272）中的激活碎片化检测器相结合。\n\n**多模态效率研究集群表明，该领域已经接受大型MLLM将在多轮实时场景中运行的现实。** Raincheck的延迟预填充、前瞻视觉重聚焦论文和PACE的压缩方法都在针对已部署多轮对话中的推理延迟和内存进行优化——而非针对基准测试中的一次性准确率。这与部署现实相符：Qwen3.8-27B和DeepSeek-V4.1-Flash正在以量化形式在消费者硬件上运行。有价值的下一篇论文将是将更小的MLLM骨干与Raincheck风格的预填充延迟相结合，并证明其延迟-精度权衡优于标准的7B级前沿模型。",
+  "papers": [
+    {
+      "id": "axion-1-open-agent-foundation-models-simplified",
+      "title": "Axion 1.0：简化的开源智能体基础模型",
+      "authors": [
+        "Yuqi Jia",
+        "et al."
+      ],
+      "affiliations": [
+        "独立研究团队（预印本中未披露隶属机构）"
+      ],
+      "summary": "Axion 1.0提出了一个三阶段训练的开源智能体基础模型——两轮SFT加一轮RL——在多项智能体基准测试中达到与领先商业智能体模型相当的性能，同时无需复杂的蒸馏流水线。",
+      "key_findings": [
+        "三阶段训练（SFT×2 → RL）在多项智能体基准测试中与商业智能体持平",
+        "认为流水线复杂性一直是开源智能体研究的主要障碍",
+        "开源权重与简化训练方案，旨在降低学术实验室的入门成本"
+      ],
+      "tags": [
+        "agents",
+        "foundation-models",
+        "rl",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 83,
+        "comments": 21
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03233",
+        "huggingface": "https://huggingface.co/papers/2611.03233",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03233",
+        "pdf": "https://arxiv.org/pdf/2611.03233"
+      }
+    },
+    {
+      "id": "dreamx-video-diffusion-universal-latent-action-learner",
+      "title": "DreamX：视频扩散模型是通用潜在动作学习器",
+      "authors": [
+        "DreamX Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "DreamX将预训练视频扩散模型复用为通用潜在动作学习器，通过视频生成的共享潜在空间连接机器人感知与控制，无需重新训练扩散骨干网络。",
+      "key_findings": [
+        "视频扩散潜在空间无需完全重新训练即可迁移到机器人动作预测",
+        "在数据稀缺的机器人操作场景中优于专用策略网络",
+        "使用单一骨干网络在多种机器人形态间泛化"
+      ],
+      "tags": [
+        "robotics",
+        "diffusion",
+        "world-models",
+        "action-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 61,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05377",
+        "huggingface": "https://huggingface.co/papers/2611.05377",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05377",
+        "pdf": "https://arxiv.org/pdf/2611.05377"
+      }
+    },
+    {
+      "id": "mcp-tool-poisoning-agentic-ai-frameworks",
+      "title": "智能体AI框架中的MCP工具投毒：跨框架测量研究",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "首次针对MCP（模型上下文协议）工具投毒攻击的系统性跨框架测量研究，测试了Claude Code、AutoGen、LangGraph和CrewAI，发现所有四个框架对同一类结构性攻击均存在漏洞：注入的工具元数据在不触发输出过滤器的情况下重定向智能体行为。",
+      "key_findings": [
+        "所有四个被测智能体框架（Claude Code、AutoGen、LangGraph、CrewAI）均存在工具描述注入漏洞",
+        "攻击面在结构上就存在：工具元数据由执行工具调用的同一模型解析",
+        "提供了首个智能体对抗鲁棒性研究的跨框架测量基准"
+      ],
+      "tags": [
+        "security",
+        "agents",
+        "mcp",
+        "adversarial"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 29
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03555",
+        "huggingface": "https://huggingface.co/papers/2611.03555",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03555",
+        "pdf": "https://arxiv.org/pdf/2611.03555"
+      }
+    },
+    {
+      "id": "robocolosseum-evaluating-physical-intelligence-at-scale",
+      "title": "RoboColosseum：大规模野外物理智能评估",
+      "authors": [
+        "RoboColosseum Team"
+      ],
+      "affiliations": [
+        "多机构合作（来源数据中未列出具体机构）"
+      ],
+      "summary": "一个分布式评估框架，结合统一的策略服务和标准化协议，跨本地操作的机器人网络进行测试。初始研究覆盖五种VLA（视觉-语言-动作）策略和三个前沿AI智能体，横跨四种机器人形态。",
+      "key_findings": [
+        "统一策略服务API覆盖四种不同机器人形态的五种VLA策略",
+        "三个前沿AI智能体在标准化任务套件中进行野外评估",
+        "开放基础设施，支持跨机构的可复现物理AI基准测试"
+      ],
+      "tags": [
+        "robotics",
+        "benchmarking",
+        "physical-ai",
+        "vla"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02497",
+        "huggingface": "https://huggingface.co/papers/2611.02497",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02497",
+        "pdf": "https://arxiv.org/pdf/2611.02497"
+      }
+    },
+    {
+      "id": "verikarm-bench-harmful-success-coding-agents",
+      "title": "VeriHarm-Bench：可验证地测量LLM编码智能体的有害成功率",
+      "authors": [
+        "VeriHarm Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "一个可验证的基准，用于测量基于LLM的编码智能体的有害任务完成率，通过为有害编码请求定义二元、可执行的成功标准，解决了先前危害评估中的歧义问题。",
+      "key_findings": [
+        "为400+项有害编码任务提供可执行、无歧义的成功标准",
+        "多款前沿编码智能体在不触发拒绝的情况下完成了超过25%的有害任务",
+        "可验证的基准格式支持跨智能体系统的同口径比较"
+      ],
+      "tags": [
+        "safety",
+        "coding-agents",
+        "benchmarking",
+        "alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03575",
+        "huggingface": "https://huggingface.co/papers/2611.03575",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03575",
+        "pdf": "https://arxiv.org/pdf/2611.03575"
+      }
+    },
+    {
+      "id": "deliverbench-ai-agents-professional-projects",
+      "title": "DeliverBench：在真实多阶段专业项目交付上对AI智能体进行基准测试",
+      "authors": [
+        "DeliverBench Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "DeliverBench在多阶段专业项目交付上评估AI智能体——涵盖需求范围界定、规划、执行和交付——揭示了当前智能体即便能完成子任务，也无法在完整项目生命周期中保持连贯性。",
+      "key_findings": [
+        "即使各独立子任务成功完成，多阶段项目连贯性失败依然发生",
+        "最优智能体端到端完成完整专业项目的比例不足40%",
+        "任务套件涵盖来自真实工作流的软件工程、数据分析和研究项目"
+      ],
+      "tags": [
+        "benchmarking",
+        "agents",
+        "long-horizon",
+        "professional-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03412",
+        "huggingface": "https://huggingface.co/papers/2611.03412",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03412",
+        "pdf": "https://arxiv.org/pdf/2611.03412"
+      }
+    },
+    {
+      "id": "webharbor-real-websites-gui-agent-environments",
+      "title": "WebHarbor：为演化中的GUI智能体环境停靠真实网站",
+      "authors": [
+        "WebHarbor Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "WebHarbor为训练和评估GUI智能体提供基于快照的真实网站可复现访问，解决了实时网站变化导致智能体基准测试失效的环境漂移问题。",
+      "key_findings": [
+        "快照存储超过10,000个真实网站，支持版本化回放以实现稳定基准测试",
+        "在WebHarbor上训练的智能体对未见过的实时网站的泛化能力优于合成环境训练的智能体",
+        "自动化网站更新流水线在无需人工策划的情况下保持基准测试的时效性"
+      ],
+      "tags": [
+        "gui-agents",
+        "web",
+        "benchmarking",
+        "environments"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 37,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03634",
+        "huggingface": "https://huggingface.co/papers/2611.03634",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03634",
+        "pdf": "https://arxiv.org/pdf/2611.03634"
+      }
+    },
+    {
+      "id": "lookahead-prediction-adaptive-visual-refocusing-multimodal-reasoning",
+      "title": "前瞻预测引导的自适应视觉重聚焦，用于交错多模态推理",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "提出交错多模态推理链的自适应视觉注意力机制，利用推理步骤的前瞻预测决定关注哪些图像区域，从而提升多步视觉问答的准确率。",
+      "key_findings": [
+        "前瞻推理预测跨推理步骤引导动态视觉注意力",
+        "交错多模态推理基准测试平均准确率提升3.8个百分点",
+        "即插即用模块，兼容现有MLLM架构，无需重新训练"
+      ],
+      "tags": [
+        "multimodal",
+        "reasoning",
+        "visual-attention",
+        "mllm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02780",
+        "huggingface": "https://huggingface.co/papers/2611.02780",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02780",
+        "pdf": "https://arxiv.org/pdf/2611.02780"
+      }
+    },
+    {
+      "id": "raincheck-deferred-multimodal-prefill",
+      "title": "Raincheck：高效多轮MLLM推理的延迟多模态预填充",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "Raincheck将昂贵的图像预填充计算推迟到真正需要视觉上下文的第一轮，从而在许多轮次为纯文本的多轮MLLM对话中降低延迟。",
+      "key_findings": [
+        "在视觉轮次稀疏的多轮对话中，延迟预填充将首token延迟降低最高42%",
+        "在标准多模态基准测试中无精度损失",
+        "兼容现有MLLM服务基础设施，无需修改模型"
+      ],
+      "tags": [
+        "efficiency",
+        "multimodal",
+        "inference",
+        "serving"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.39562",
+        "huggingface": "https://huggingface.co/papers/2610.39562",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.39562",
+        "pdf": "https://arxiv.org/pdf/2610.39562"
+      }
+    },
+    {
+      "id": "context-answer-metamodels-forecasting-llm-activations",
+      "title": "语境-答案元模型：在首个答案Token生成前预测LLM激活",
+      "authors": [
+        "NeurIPS 2026 Research Team"
+      ],
+      "affiliations": [
+        "多机构合作（NeurIPS 2026论文；来源数据中未列出具体机构）"
+      ],
+      "summary": "训练一个轻量级探针，在第一个输出token生成之前，从语言模型的提示层激活中预测其答案层激活，从而实现早期退出、推测性缓存和预承诺检测。",
+      "key_findings": [
+        "答案层激活的均值池化可从提示层激活以高保真度预测（NeurIPS 2026）",
+        "随探针训练数据规模扩展到49.86万个提示，并对域外任务零样本泛化",
+        "在有害输出发出之前实现对模型「承诺」的早期检测"
+      ],
+      "tags": [
+        "interpretability",
+        "activations",
+        "safety",
+        "inference-efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.06837",
+        "huggingface": "https://huggingface.co/papers/2611.06837",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.06837",
+        "pdf": "https://arxiv.org/pdf/2611.06837"
+      }
+    },
+    {
+      "id": "democratizing-robot-use-agents-unified-harness",
+      "title": "民主化机器人使用智能体：基于开源模型的统一框架",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "提出了一个基于开源模型构建机器人使用智能体的统一框架，标准化了高层语言规划与底层机器人执行之间的接口，无需访问专有模型。",
+      "key_findings": [
+        "开源模型机器人框架在RoboColosseum基准测试中实现68%的任务完成率",
+        "模块化架构将语言规划器、技能执行器和机器人API层分离",
+        "在桌面操作任务上展示了与闭源模型基准相当的竞争性能"
+      ],
+      "tags": [
+        "robotics",
+        "open-source",
+        "agents",
+        "embodied-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.01560",
+        "huggingface": "https://huggingface.co/papers/2611.01560",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.01560",
+        "pdf": "https://arxiv.org/pdf/2611.01560"
+      }
+    },
+    {
+      "id": "from-autonomous-agents-to-cognitive-symbionts",
+      "title": "从自主智能体到认知共生体：迈向AI增强的人类智能",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "预印本来源数据中未披露隶属机构"
+      ],
+      "summary": "一篇概念性论文，主张从自主AI智能体（取代人类认知）向「认知共生体」（增强人类认知）的范式转变，提出了设计扩展而非取代人类推理的AI系统的原则。",
+      "key_findings": [
+        "区分自主智能体（替代范式）与认知共生体（增强范式）",
+        "提出五项设计原则，用于构建在不造成依赖的情况下增强人类推理的AI系统",
+        "回顾了当前智能体部署中认知卸载风险的实证证据"
+      ],
+      "tags": [
+        "human-ai-interaction",
+        "agents",
+        "cognitive-science",
+        "ai-safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 26,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05376",
+        "huggingface": "https://huggingface.co/papers/2611.05376",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05376",
+        "pdf": "https://arxiv.org/pdf/2611.05376"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "本周主导的开源多模态大语言模型，处理长图文对话。超800万次下载和1.9万个点赞，反映出其质量和庞大的社区量化版本及微调生态系统。",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "instruction-tuned",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 8014877,
+        "likes": 19093
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "单文件图像转视频扩散模型，能够从静态图像生成电影质量的视频。以1.05万个点赞和248万次下载稳居本周最受欢迎的开源视频生成模型。",
+      "task_type": "image-to-video",
+      "model_size": "未知",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 2488128,
+        "likes": 10511
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM3",
+      "organization": "Meta AI",
+      "description": "Segment Anything（分割一切）扩展至视频，跨帧追踪和分割目标。SAM3支撑着一个庞大且快速增长的下游微调生态系统，涵盖外科、医疗和机器人视觉应用。",
+      "task_type": "mask-generation",
+      "model_size": "未知",
+      "tags": [
+        "segmentation",
+        "video",
+        "foundation-model"
+      ],
+      "metrics": {
+        "downloads": 1891393,
+        "likes": 5807
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "abenzerps-qwen-image-2-1-turbo-quantized",
+      "name": "Qwen-Image 2.1 Turbo（CPU-GGUF量化版）",
+      "organization": "abenzerps（社区贡献）",
+      "description": "针对纯CPU推理优化的Qwen-Image 2.1 8位GGUF量化版本。以5600个点赞和250万次下载位居榜首，是无GPU硬件用户的首选图像生成方案。",
+      "task_type": "text-to-image",
+      "model_size": "未知",
+      "tags": [
+        "text-to-image",
+        "quantized",
+        "gguf",
+        "cpu-inference"
+      ],
+      "metrics": {
+        "downloads": 2508590,
+        "likes": 5626
+      },
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Turbo-Quantized"
+    },
+    {
+      "id": "deepseek-ai-deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek AI",
+      "description": "接受图像和文本输入的多模态大语言模型，针对低延迟推理优化。以4900个点赞和18.7万次下载，位居本周Hub上排名最高的商业发布多模态模型。",
+      "task_type": "image-text-to-text",
+      "model_size": "未知",
+      "tags": [
+        "multimodal",
+        "flash-inference",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 187260,
+        "likes": 4873
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "black-forest-labs-flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein（ComfyUI版）",
+      "organization": "Black Forest Labs",
+      "description": "高分辨率图像编辑模型，带有ComfyUI工作流专用的风格预设，以2400个点赞和103万次下载持续热门，是ComfyUI高级用户首选的编辑模型。",
+      "task_type": "image-to-image",
+      "model_size": "未知",
+      "tags": [
+        "image-editing",
+        "diffusion",
+        "comfyui"
+      ],
+      "metrics": {
+        "downloads": 1032077,
+        "likes": 2432
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "mistralai-mistral-large-4-1t-a52b",
+      "name": "Mistral-Large-4（1T-A52B）",
+      "organization": "Mistral AI",
+      "description": "Mistral发布的开放许可证万亿参数视觉语言模型，跨模态推理能力强劲。早期下载量较低（6600次），但点赞数（1600个）表明企业评估方兴趣浓厚。",
+      "task_type": "image-text-to-text",
+      "model_size": "1T（52B激活参数）",
+      "tags": [
+        "vision-language",
+        "open-license",
+        "enterprise"
+      ],
+      "metrics": {
+        "downloads": 6556,
+        "likes": 1554
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
+    },
+    {
+      "id": "liquidai-lfm3-1-7b",
+      "name": "LFM3-1.7B",
+      "organization": "LiquidAI",
+      "description": "LiquidAI的紧凑型1.7B大语言模型，专为在消费级GPU和边缘设备上快速推理而设计。以1400个点赞和4.8万次下载热门，同系列LFM3-Omni-2B在单个模型中支持文本、图像和音频。",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": [
+        "small-language-model",
+        "edge-inference",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 47817,
+        "likes": 1418
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-transcribe-30b-a4b",
+      "name": "Nemotron-3.5 Transcribe 30B-A4B",
+      "organization": "NVIDIA",
+      "description": "针对嘈杂音频优化的30亿参数语音转录模型，每个token仅激活40亿参数。以743个点赞和3.9万次下载，在企业语音处理用户群中持续热门。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B（4B激活参数）",
+      "tags": [
+        "speech-recognition",
+        "moe",
+        "enterprise"
+      ],
+      "metrics": {
+        "downloads": 38942,
+        "likes": 743
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "speridlabs-idol",
+      "name": "IDOL（单图3D虚拟形象）",
+      "organization": "SperidLabs",
+      "description": "从单张输入图像构建照片级真实感3D高斯泼溅（Gaussian Splatting）虚拟形象。以527个点赞和1.1万次下载，成为单镜头3D人体捕捉的首选工具。",
+      "task_type": "image-to-3d",
+      "model_size": "未知",
+      "tags": [
+        "3d-generation",
+        "avatar",
+        "gaussian-splatting"
+      ],
+      "metrics": {
+        "downloads": 10742,
+        "likes": 527
+      },
+      "source_url": "https://huggingface.co/speridlabs/idol"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nvidia-auto-ontology",
+      "name": "NVIDIA/auto-ontology",
+      "description": "一个为LLM和智能体工作流添加图推理层的Python框架，目标是确定性查询生成、改进的上下文检索和可解释的AI输出。本周首次登上GitHub趋势榜，新增约2050颗星。",
+      "language": "Python",
+      "stars": 14230,
+      "stars_today": 2050,
+      "forks": 892,
+      "url": "https://github.com/NVIDIA/auto-ontology",
+      "tags": [
+        "knowledge-graph",
+        "agents",
+        "reasoning",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "专为AI智能体浏览器栈构建的Python网页抓取框架——快速、抗反爬虫、结构化输出以便LLM消费。总计约9.2万颗星，持续登上每日趋势榜，已成为浏览器智能体的标准依赖。",
+      "language": "Python",
+      "stars": 92367,
+      "stars_today": 1661,
+      "forks": 4812,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": [
+        "web-scraping",
+        "agents",
+        "browser",
+        "llm-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "the-pr-agent-pr-agent",
+      "name": "The-PR-Agent/pr-agent",
+      "description": "AI驱动的代码审查和PR管理助手，集成GitHub、GitLab和Bitbucket。随着AI辅助代码审查在中型工程团队中成为标配，每天稳定新增约300-400颗星。",
+      "language": "Python",
+      "stars": 14868,
+      "stars_today": 342,
+      "forks": 1203,
+      "url": "https://github.com/The-PR-Agent/pr-agent",
+      "tags": [
+        "code-review",
+        "agents",
+        "developer-tools",
+        "github"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "多智能体交易框架，专门的LLM智能体分别负责市场分析、风险管理和执行规划。随着AI驱动量化策略在散户和机构算法交易者中获得采用，热度持续上升。",
+      "language": "Python",
+      "stars": 23451,
+      "stars_today": 891,
+      "forks": 2187,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "面向AI编码智能体的软件开发框架，提供持久技能、结构化测试框架和任务编排层，作为面向智能体的临时LLM编码脚本的替代方案逐渐兴起。",
+      "language": "TypeScript",
+      "stars": 18920,
+      "stars_today": 672,
+      "forks": 1340,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "coding-agents",
+        "developer-tools",
+        "agent-framework",
+        "typescript"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "usagi-org-ai-goofish-monitor",
+      "name": "Usagi-org/ai-goofish-monitor",
+      "description": "二手交易平台（闲鱼）的AI驱动监控和提醒工具，使用LLM对相关商品进行过滤、分类和推送通知。在构建LLM消费智能体的中国开发者社区中热度攀升。",
+      "language": "Python",
+      "stars": 9347,
+      "stars_today": 528,
+      "forks": 814,
+      "url": "https://github.com/Usagi-org/ai-goofish-monitor",
+      "tags": [
+        "monitoring",
+        "agents",
+        "llm",
+        "e-commerce"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "面向知识工作者的Claude Code插件集合——文档摘要、会议记录、引文管理和研究综合。随着用户在Claude智能体SDK上构建个人AI知识工作流，热度持续攀升。",
+      "language": "Python",
+      "stars": 7823,
+      "stars_today": 419,
+      "forks": 623,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "claude",
+        "plugins",
+        "knowledge-management",
+        "productivity"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "专注于法律和监管文件分析的开源AI智能体框架，使用结构化推理链挖掘相关条款并标记合规问题。随着企业探索AI辅助法律审查，逐渐获得关注。",
+      "language": "Python",
+      "stars": 5612,
+      "stars_today": 318,
+      "forks": 441,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "legal-ai",
+        "agents",
+        "document-analysis",
+        "compliance"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "开源智能体基础模型",
+      "description": "Axion 1.0和「民主化机器人使用智能体」推动简化、可复现的训练流程，使开源智能体模型能与商业系统竞争。",
+      "related_paper_ids": [
+        "axion-1-open-agent-foundation-models-simplified",
+        "democratizing-robot-use-agents-unified-harness"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "物理AI与世界模型",
+      "description": "RoboColosseum、DreamX和PyRUA-DataFarm推进物理AI的可复现评估和高效策略训练，视频扩散正成为机器人动作学习的底层基础。",
+      "related_paper_ids": [
+        "dreamx-video-diffusion-universal-latent-action-learner",
+        "robocolosseum-evaluating-physical-intelligence-at-scale",
+        "democratizing-robot-use-agents-unified-harness"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体安全与对抗鲁棒性",
+      "description": "MCP工具投毒和VeriHarm-Bench建立了测量基础设施，支撑着关于智能体对抗鲁棒性的初具规模但快速增长的实证研究文献体系。",
+      "related_paper_ids": [
+        "mcp-tool-poisoning-agentic-ai-frameworks",
+        "verikarm-bench-harmful-success-coding-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "部署端的多模态效率",
+      "description": "Raincheck的延迟预填充、前瞻视觉重聚焦以及MLLM压缩研究汇聚于优化实际延迟和内存预算下的多轮MLLM推理。",
+      "related_paper_ids": [
+        "raincheck-deferred-multimodal-prefill",
+        "lookahead-prediction-adaptive-visual-refocusing-multimodal-reasoning"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "真实场景智能体基准测试",
+      "description": "DeliverBench、WebHarbor和RoboColosseum均将评估从合成任务迁移到有据可查的真实场景——专业项目、实时网站和野外机器人部署。",
+      "related_paper_ids": [
+        "deliverbench-ai-agents-professional-projects",
+        "webharbor-real-websites-gui-agent-environments",
+        "robocolosseum-evaluating-physical-intelligence-at-scale"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "推理时可解释性",
+      "description": "语境-答案元模型证明模型内部承诺在输出生成前是可预测的，为推理时的安全和效率提供了新的干预点。",
+      "related_paper_ids": [
+        "context-answer-metamodels-forecasting-llm-activations"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    }
+  ]
+}

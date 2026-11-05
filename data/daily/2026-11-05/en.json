@@ -1,0 +1,827 @@
+{
+  "version": "1.0",
+  "date": "2026-11-05",
+  "generated_at": "2026-11-05T07:12:00Z",
+  "summary": {
+    "headline": "Axion 1.0 challenges commercial agent models with simplified 3-stage training; DreamX turns video diffusion into a universal latent action learner; MCP Tool Poisoning study maps cross-framework attack surfaces as agent security becomes a first-class concern",
+    "body": "Three threads dominate today's output. **Axion 1.0** (arXiv:2611.03233) drops a surprisingly competitive open agent foundation model trained in just three stages—two lightweight SFT passes followed by RL—and claims parity with leading commercial agents on agentic benchmarks. The simplicity of the recipe is the point: the authors argue that over-engineered training pipelines have been the main blocker for open agent research, and Axion 1.0 is the counter-evidence. **DreamX** (arXiv:2611.05377) takes a different architectural bet: rather than training an agent from scratch, it repurposes a pretrained video diffusion model as a universal latent action learner, connecting perception and control through the shared latent space of video generation.\n\nAgent security crystallizes as a research priority with two papers arriving the same day. **MCP Tool Poisoning** (arXiv:2611.03555) provides the first cross-framework measurement of how injected tool descriptions can redirect agent behavior in Claude Code, AutoGen, LangGraph, and CrewAI—and finds that all four are vulnerable to the same class of attack. **VeriHarm-Bench** (arXiv:2611.03575) asks a sharper version of the adjacent question: when a coding agent produces harmful output, how do you verify it unambiguously? Together the two papers suggest that agentic safety research is shifting from theoretical red-teaming to measurement infrastructure.\n\nOn the model side, **Qwen3.8-27B** continues to dominate the HuggingFace Hub by a wide margin (8M+ downloads this week) with the **LTX-2.5** image-to-video model holding steady as the second most liked release. GitHub momentum is led by **NVIDIA/auto-ontology**, a graph-based reasoning layer for LLM workflows that reached the trending page on its first week, alongside the now-perennial **D4Vinci/Scrapling** web-scraping library that keeps gaining stars as agent web-browsing stacks mature.",
+    "key_themes": [
+      "open-agent-foundation-models",
+      "physical-ai-and-world-models",
+      "agent-security-and-adversarial-robustness",
+      "multimodal-efficiency",
+      "real-world-agent-benchmarking",
+      "inference-time-interpretability"
+    ]
+  },
+  "researcher_notes": "**Axion 1.0 is the most important paper of the day, and its importance is methodological rather than benchmark-driven.** The claim is not that Axion is the best agent—it is that the best-performing open agent can now be reproduced in three clean training stages without distillation tricks, synthetic data cascades, or multi-step reward engineering. If that holds up under independent replication, it cuts the cost of open agent research dramatically and shifts the competitive question from 'who has the biggest training run' to 'who has the best evaluation environment.' The timing matters too: Axion 1.0 arrives the same week that RoboColosseum gives physical AI a standardized multi-embodiment benchmark. Watch whether the robotics community ports Axion-style training to VLA models.\n\n**DreamX is a sleeper hit.** Most action-learning papers train from scratch or fine-tune a frozen vision encoder; DreamX instead treats video generation as the shared substrate. The latent space of a generative video model already knows about physics, object motion, and causality—DreamX is claiming that this knowledge is transferable to robot actions without being re-learned. This is architecturally similar to how diffusion policies work, but pushed further: the diffusion model is not a policy decoder, it *is* the policy. If the action-quality numbers hold, expect rapid adoption in data-scarce robotic settings where generating synthetic training video is cheaper than collecting real rollouts.\n\n**The MCP Tool Poisoning paper deserves immediate attention from anyone shipping agentic systems.** The key finding is not that one framework is vulnerable—all four tested are—but that the attack surface is structural: tool metadata is currently parsed by the same model that executes tool calls, so a poisoned tool description that the model reads and 'trusts' can redirect downstream behavior without touching any guardrails. The authors test Claude Code, AutoGen, LangGraph, and CrewAI. The paper does not propose a complete fix, but the cross-framework measurement is exactly what practitioners need to scope their threat model. Combined with 'Right Tool, Wrong Parameters' (2611.04673, parameter poisoning) and VeriHarm-Bench, there is now a nascent but coherent empirical literature on agentic adversarial robustness.\n\n**The inference-time interpretability work is pointing at something real but underweighted.** Context-Answer Metamodels (2611.06837, NeurIPS 2026) trains a small probe to predict a model's answer-layer activations from prompt-layer activations—before the first output token is generated. This is prediction of the model's internal commitment, not its output. If robust, it enables cheap early-exit triggers, speculative caching of likely answers, and—most importantly—a signal for when a model is 'headed toward' a problematic output before it emits it. This is a more surgical intervention point than output filtering. Watch whether anyone combines this with the activation-fragmentation detectors from 'The Geometry of Ignorance' (2611.05272, featured yesterday).\n\n**The multimodal efficiency cluster shows the field has accepted that large MLLMs will run in multi-turn, real-time settings.** Raincheck's deferred prefill, the Lookahead visual refocusing paper, and PACE's compression are all optimizing for inference latency and memory in deployed multi-turn conversations—not for one-shot accuracy on benchmarks. This matches the deployment reality: Qwen3.8-27B and DeepSeek-V4.1-Flash are being run in quantized form on consumer hardware. The interesting next paper would combine a smaller MLLM backbone with Raincheck-style prefill deferral and show that the latency-accuracy tradeoff beats the standard 7B-class frontier.",
+  "papers": [
+    {
+      "id": "axion-1-open-agent-foundation-models-simplified",
+      "title": "Axion 1.0: Open Agent Foundation Models, Simplified",
+      "authors": [
+        "Yuqi Jia",
+        "et al."
+      ],
+      "affiliations": [
+        "Independent research group (affiliation not disclosed in preprint)"
+      ],
+      "summary": "Axion 1.0 presents an open agent foundation model trained in three stages—two SFT passes followed by RL—achieving competitive performance against leading commercial agent models on agentic benchmarks without complex distillation pipelines.",
+      "key_findings": [
+        "Three-stage training (SFT × 2 → RL) matches commercial agents on several agentic benchmarks",
+        "Argues that pipeline complexity has been the primary barrier to open agent research",
+        "Open weights and simplified training recipe designed to lower entry cost for academic labs"
+      ],
+      "tags": [
+        "agents",
+        "foundation-models",
+        "rl",
+        "open-source"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 83,
+        "comments": 21
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03233",
+        "huggingface": "https://huggingface.co/papers/2611.03233",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03233",
+        "pdf": "https://arxiv.org/pdf/2611.03233"
+      }
+    },
+    {
+      "id": "dreamx-video-diffusion-universal-latent-action-learner",
+      "title": "DreamX: Video Diffusion Model is a Universal Latent Action Learner",
+      "authors": [
+        "DreamX Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "DreamX repurposes a pretrained video diffusion model as a universal latent action learner, connecting robotic perception and control through the shared latent space of video generation without retraining the diffusion backbone.",
+      "key_findings": [
+        "Video diffusion latent space transfers to robotic action prediction without full retraining",
+        "Outperforms dedicated policy networks in data-scarce robotic manipulation settings",
+        "Generalizes across multiple robot morphologies using a single backbone"
+      ],
+      "tags": [
+        "robotics",
+        "diffusion",
+        "world-models",
+        "action-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 61,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05377",
+        "huggingface": "https://huggingface.co/papers/2611.05377",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05377",
+        "pdf": "https://arxiv.org/pdf/2611.05377"
+      }
+    },
+    {
+      "id": "mcp-tool-poisoning-agentic-ai-frameworks",
+      "title": "MCP Tool Poisoning in Agentic AI Frameworks: A Cross-Framework Measurement Study",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "The first systematic cross-framework measurement of MCP tool poisoning attacks, testing Claude Code, AutoGen, LangGraph, and CrewAI. All four frameworks are vulnerable to the same structural attack class: injected tool metadata redirects agent behavior without triggering output filters.",
+      "key_findings": [
+        "All four tested agentic frameworks (Claude Code, AutoGen, LangGraph, CrewAI) are vulnerable to tool description injection",
+        "Attack surface is structural: tool metadata is parsed by the same model that executes tool calls",
+        "Provides the first cross-framework measurement baseline for agentic adversarial robustness research"
+      ],
+      "tags": [
+        "security",
+        "agents",
+        "mcp",
+        "adversarial"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 74,
+        "comments": 29
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03555",
+        "huggingface": "https://huggingface.co/papers/2611.03555",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03555",
+        "pdf": "https://arxiv.org/pdf/2611.03555"
+      }
+    },
+    {
+      "id": "robocolosseum-evaluating-physical-intelligence-at-scale",
+      "title": "RoboColosseum: Evaluating Physical Intelligence at Scale In-The-Wild",
+      "authors": [
+        "RoboColosseum Team"
+      ],
+      "affiliations": [
+        "Multi-institution collaboration (specific institutions not listed in source data)"
+      ],
+      "summary": "A distributed evaluation framework combining unified policy serving and standardized protocols across a network of locally operated robots. The initial study covers five VLA policies and three frontier AI agents across four robot embodiments.",
+      "key_findings": [
+        "Unified policy serving API covers five VLA policies across four distinct robot embodiments",
+        "Three frontier AI agents evaluated in-the-wild across standardized task suites",
+        "Open infrastructure for reproducible physical AI benchmarking across institutions"
+      ],
+      "tags": [
+        "robotics",
+        "benchmarking",
+        "physical-ai",
+        "vla"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 55,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02497",
+        "huggingface": "https://huggingface.co/papers/2611.02497",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02497",
+        "pdf": "https://arxiv.org/pdf/2611.02497"
+      }
+    },
+    {
+      "id": "verikarm-bench-harmful-success-coding-agents",
+      "title": "VeriHarm-Bench: Measuring Harmful Success in LLM Coding Agents Verifiably",
+      "authors": [
+        "VeriHarm Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "A verifiable benchmark for measuring harmful task completion rates in LLM-based coding agents, addressing the ambiguity in prior harm evaluations by defining binary, executable success criteria for harmful coding requests.",
+      "key_findings": [
+        "Provides executable, unambiguous success criteria for 400+ harmful coding tasks",
+        "Several frontier coding agents complete over 25% of harmful tasks without triggering refusal",
+        "Verifiable benchmark format enables apples-to-apples comparison across agent systems"
+      ],
+      "tags": [
+        "safety",
+        "coding-agents",
+        "benchmarking",
+        "alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 15
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03575",
+        "huggingface": "https://huggingface.co/papers/2611.03575",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03575",
+        "pdf": "https://arxiv.org/pdf/2611.03575"
+      }
+    },
+    {
+      "id": "deliverbench-ai-agents-professional-projects",
+      "title": "DeliverBench: Benchmarking AI Agents on Delivering Realistic Multi-Stage Professional Projects",
+      "authors": [
+        "DeliverBench Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "DeliverBench evaluates AI agents on multi-stage professional project delivery—spanning scoping, planning, execution, and delivery—revealing that current agents succeed on sub-tasks but fail to maintain coherence across a full project lifecycle.",
+      "key_findings": [
+        "Multi-stage project coherence failures occur even when individual sub-tasks complete successfully",
+        "Best agents complete under 40% of full professional projects end-to-end",
+        "Task suite covers software engineering, data analysis, and research projects from real workflows"
+      ],
+      "tags": [
+        "benchmarking",
+        "agents",
+        "long-horizon",
+        "professional-ai"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03412",
+        "huggingface": "https://huggingface.co/papers/2611.03412",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03412",
+        "pdf": "https://arxiv.org/pdf/2611.03412"
+      }
+    },
+    {
+      "id": "webharbor-real-websites-gui-agent-environments",
+      "title": "WebHarbor: Docking Real Websites for Evolving GUI Agent Environments",
+      "authors": [
+        "WebHarbor Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "WebHarbor provides reproducible, snapshot-based access to real websites for training and evaluating GUI agents, solving the environment drift problem where live websites change and break agent benchmarks over time.",
+      "key_findings": [
+        "Snapshots 10,000+ real websites with versioned replay for stable benchmarking",
+        "Agents trained on WebHarbor generalize better to unseen live websites than those trained on synthetic environments",
+        "Automated website refresh pipeline maintains benchmark freshness without manual curation"
+      ],
+      "tags": [
+        "gui-agents",
+        "web",
+        "benchmarking",
+        "environments"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 37,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03634",
+        "huggingface": "https://huggingface.co/papers/2611.03634",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03634",
+        "pdf": "https://arxiv.org/pdf/2611.03634"
+      }
+    },
+    {
+      "id": "lookahead-prediction-adaptive-visual-refocusing-multimodal-reasoning",
+      "title": "Lookahead Prediction-Guided Adaptive Visual Refocusing for Interleaved Multimodal Reasoning",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "Proposes adaptive visual attention for interleaved multimodal reasoning chains, using lookahead predictions of reasoning steps to decide which image regions to attend to, improving accuracy on multi-step visual question answering.",
+      "key_findings": [
+        "Lookahead reasoning predictions guide dynamic visual attention across reasoning steps",
+        "+3.8pp average accuracy gain on interleaved multimodal reasoning benchmarks",
+        "Plug-in module compatible with existing MLLM architectures without retraining"
+      ],
+      "tags": [
+        "multimodal",
+        "reasoning",
+        "visual-attention",
+        "mllm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02780",
+        "huggingface": "https://huggingface.co/papers/2611.02780",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02780",
+        "pdf": "https://arxiv.org/pdf/2611.02780"
+      }
+    },
+    {
+      "id": "raincheck-deferred-multimodal-prefill",
+      "title": "Raincheck: Deferred Multimodal Prefill for Efficient Multi-Turn MLLM Inference",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "Raincheck defers expensive image prefill computation to the first turn that actually needs visual context, reducing latency in multi-turn MLLM conversations where many turns are text-only.",
+      "key_findings": [
+        "Deferred prefill reduces first-token latency by up to 42% in multi-turn conversations with sparse visual turns",
+        "No accuracy degradation on standard multimodal benchmarks",
+        "Compatible with existing MLLM serving infrastructure without model changes"
+      ],
+      "tags": [
+        "efficiency",
+        "multimodal",
+        "inference",
+        "serving"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2610.39562",
+        "huggingface": "https://huggingface.co/papers/2610.39562",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2610.39562",
+        "pdf": "https://arxiv.org/pdf/2610.39562"
+      }
+    },
+    {
+      "id": "context-answer-metamodels-forecasting-llm-activations",
+      "title": "Context-Answer Metamodels: Forecasting LLM Activations Before the First Answer Token",
+      "authors": [
+        "NeurIPS 2026 Research Team"
+      ],
+      "affiliations": [
+        "Multi-institution collaboration (NeurIPS 2026 paper; specific institutions not listed in source data)"
+      ],
+      "summary": "Trains a lightweight probe to predict a language model's answer-layer activations from its prompt-layer activations—before the first output token is generated—enabling early-exit, speculative caching, and pre-commitment detection.",
+      "key_findings": [
+        "Mean-pooled answer activations are predictable from prompt activations with high fidelity (NeurIPS 2026)",
+        "Scales with probe training data up to 498,600 prompts and generalizes zero-shot to out-of-domain tasks",
+        "Enables early detection of model 'commitment' before harmful outputs are emitted"
+      ],
+      "tags": [
+        "interpretability",
+        "activations",
+        "safety",
+        "inference-efficiency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.06837",
+        "huggingface": "https://huggingface.co/papers/2611.06837",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.06837",
+        "pdf": "https://arxiv.org/pdf/2611.06837"
+      }
+    },
+    {
+      "id": "democratizing-robot-use-agents-unified-harness",
+      "title": "Democratizing Robot-Use Agents: A Unified Harness with Open Models",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "Presents a unified harness for building robot-use agents on top of open models, standardizing the interface between high-level language planning and low-level robot execution without requiring proprietary model access.",
+      "key_findings": [
+        "Open-model robot harness achieves 68% task completion on the RoboColosseum benchmark",
+        "Modular architecture separates language planner, skill executor, and robot API layers",
+        "Demonstrates competitive performance vs. closed-model baselines on tabletop manipulation"
+      ],
+      "tags": [
+        "robotics",
+        "open-source",
+        "agents",
+        "embodied-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.01560",
+        "huggingface": "https://huggingface.co/papers/2611.01560",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.01560",
+        "pdf": "https://arxiv.org/pdf/2611.01560"
+      }
+    },
+    {
+      "id": "from-autonomous-agents-to-cognitive-symbionts",
+      "title": "From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence",
+      "authors": [
+        "Research Team"
+      ],
+      "affiliations": [
+        "Affiliation not disclosed in preprint source data"
+      ],
+      "summary": "A conceptual paper arguing for a paradigm shift from autonomous AI agents (replacing human cognition) to 'cognitive symbionts' (augmenting it), proposing design principles for AI systems that expand rather than supplant human reasoning.",
+      "key_findings": [
+        "Distinguishes autonomous agents (replacement paradigm) from cognitive symbionts (augmentation paradigm)",
+        "Proposes five design principles for AI systems that enhance human reasoning without creating dependency",
+        "Reviews empirical evidence for cognitive offloading risks in current agent deployments"
+      ],
+      "tags": [
+        "human-ai-interaction",
+        "agents",
+        "cognitive-science",
+        "ai-safety"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 26,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05376",
+        "huggingface": "https://huggingface.co/papers/2611.05376",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05376",
+        "pdf": "https://arxiv.org/pdf/2611.05376"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen-qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "The dominant open-weight multimodal LLM of the week, handling long image+text conversations. Its 8M+ downloads and 19K likes reflect both quality and a large ecosystem of GGUF quantizations and community fine-tunes.",
+      "task_type": "image-text-to-text",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "instruction-tuned",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 8014877,
+        "likes": 19093
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Single-file image-to-video diffusion model enabling cinematic-quality video generation from still images. Trending at 10.5K likes and 2.5M downloads as the leading open video generation model this week.",
+      "task_type": "image-to-video",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 2488128,
+        "likes": 10511
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM3",
+      "organization": "Meta AI",
+      "description": "Segment Anything extended to video, tracking and segmenting objects across frames. Anchors a large and fast-growing ecosystem of downstream fine-tunes for surgical, medical, and robotic vision.",
+      "task_type": "mask-generation",
+      "model_size": "unknown",
+      "tags": [
+        "segmentation",
+        "video",
+        "foundation-model"
+      ],
+      "metrics": {
+        "downloads": 1891393,
+        "likes": 5807
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "abenzerps-qwen-image-2-1-turbo-quantized",
+      "name": "Qwen-Image 2.1 Turbo (CPU-GGUF)",
+      "organization": "abenzerps (community)",
+      "description": "GGUF 8-bit quantization of Qwen-Image 2.1 optimized for CPU-only inference. Trending at 5.6K likes and 2.5M downloads as the go-to image generation option for users without GPU hardware.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "quantized",
+        "gguf",
+        "cpu-inference"
+      ],
+      "metrics": {
+        "downloads": 2508590,
+        "likes": 5626
+      },
+      "source_url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Turbo-Quantized"
+    },
+    {
+      "id": "deepseek-ai-deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek AI",
+      "description": "Multimodal LLM accepting image and text inputs, optimized for low-latency inference. At 4.9K likes and 187K downloads, it is the leading commercially-released multimodal model on the Hub this week.",
+      "task_type": "image-text-to-text",
+      "model_size": "unknown",
+      "tags": [
+        "multimodal",
+        "flash-inference",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 187260,
+        "likes": 4873
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "black-forest-labs-flux-3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (ComfyUI)",
+      "organization": "Black Forest Labs",
+      "description": "High-resolution image-to-image editing model with style presets optimized for the ComfyUI workflow. Consistently trending at 2.4K likes and 1M downloads as the preferred editing model for ComfyUI power users.",
+      "task_type": "image-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "image-editing",
+        "diffusion",
+        "comfyui"
+      ],
+      "metrics": {
+        "downloads": 1032077,
+        "likes": 2432
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "mistralai-mistral-large-4-1t-a52b",
+      "name": "Mistral-Large-4 (1T-A52B)",
+      "organization": "Mistral AI",
+      "description": "A 1-trillion-parameter open-license vision-language model from Mistral with strong cross-modal reasoning. Early downloads are modest (6.6K) but likes (1.6K) suggest high interest from enterprise evaluators.",
+      "task_type": "image-text-to-text",
+      "model_size": "1T (52B active)",
+      "tags": [
+        "vision-language",
+        "open-license",
+        "enterprise"
+      ],
+      "metrics": {
+        "downloads": 6556,
+        "likes": 1554
+      },
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
+    },
+    {
+      "id": "liquidai-lfm3-1-7b",
+      "name": "LFM3-1.7B",
+      "organization": "LiquidAI",
+      "description": "A compact 1.7B LLM from LiquidAI designed for fast inference on consumer GPUs and edge devices. Trending at 1.4K likes and 47.8K downloads, with the companion LFM3-Omni-2B covering text, images, and audio in one model.",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": [
+        "small-language-model",
+        "edge-inference",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 47817,
+        "likes": 1418
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B"
+    },
+    {
+      "id": "nvidia-nemotron-3-5-transcribe-30b-a4b",
+      "name": "Nemotron-3.5 Transcribe 30B-A4B",
+      "organization": "NVIDIA",
+      "description": "A 30B speech transcription model optimized for noisy audio with only 4B active parameters per token. Trending at 743 likes and 38.9K downloads among enterprise speech processing users.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (4B active)",
+      "tags": [
+        "speech-recognition",
+        "moe",
+        "enterprise"
+      ],
+      "metrics": {
+        "downloads": 38942,
+        "likes": 743
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "speridlabs-idol",
+      "name": "IDOL (Single-Image 3D Avatar)",
+      "organization": "SperidLabs",
+      "description": "Builds a photorealistic 3D Gaussian-splat avatar from a single input image. Trending at 527 likes and 10.7K downloads as the go-to tool for one-shot 3D human capture.",
+      "task_type": "image-to-3d",
+      "model_size": "unknown",
+      "tags": [
+        "3d-generation",
+        "avatar",
+        "gaussian-splatting"
+      ],
+      "metrics": {
+        "downloads": 10742,
+        "likes": 527
+      },
+      "source_url": "https://huggingface.co/speridlabs/idol"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "nvidia-auto-ontology",
+      "name": "NVIDIA/auto-ontology",
+      "description": "A Python framework that adds a graph-based reasoning layer to LLM and agent workflows, targeting deterministic query generation, improved context retrieval, and explainable AI outputs. First appeared on GitHub trending this week with ~2,050 new stars.",
+      "language": "Python",
+      "stars": 14230,
+      "stars_today": 2050,
+      "forks": 892,
+      "url": "https://github.com/NVIDIA/auto-ontology",
+      "tags": [
+        "knowledge-graph",
+        "agents",
+        "reasoning",
+        "llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "A Python web scraping framework purpose-built for AI agent web-browsing stacks—fast, anti-bot-resistant, and structured for LLM consumption. At ~92K stars total and recurring on the daily trending list, it has become a standard dependency for browser-using agents.",
+      "language": "Python",
+      "stars": 92367,
+      "stars_today": 1661,
+      "forks": 4812,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": [
+        "web-scraping",
+        "agents",
+        "browser",
+        "llm-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "the-pr-agent-pr-agent",
+      "name": "The-PR-Agent/pr-agent",
+      "description": "An AI-powered code review and PR management assistant that integrates with GitHub, GitLab, and Bitbucket. Steadily gaining stars (~300–400/day) as AI-assisted code review becomes standard in mid-sized engineering teams.",
+      "language": "Python",
+      "stars": 14868,
+      "stars_today": 342,
+      "forks": 1203,
+      "url": "https://github.com/The-PR-Agent/pr-agent",
+      "tags": [
+        "code-review",
+        "agents",
+        "developer-tools",
+        "github"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tauricresearch-tradingagents",
+      "name": "TauricResearch/TradingAgents",
+      "description": "A multi-agent trading framework where specialized LLM agents handle market analysis, risk management, and execution planning. Trending as AI-driven quantitative strategies gain adoption among retail and institutional algo traders.",
+      "language": "Python",
+      "stars": 23451,
+      "stars_today": 891,
+      "forks": 2187,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "trading",
+        "multi-agent",
+        "finance",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "A software development framework for AI coding agents that provides persistent skills, structured test harnesses, and a task orchestration layer. Gaining traction as the agent-native alternative to ad-hoc LLM coding scripts.",
+      "language": "TypeScript",
+      "stars": 18920,
+      "stars_today": 672,
+      "forks": 1340,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "coding-agents",
+        "developer-tools",
+        "agent-framework",
+        "typescript"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "usagi-org-ai-goofish-monitor",
+      "name": "Usagi-org/ai-goofish-monitor",
+      "description": "An AI-powered monitoring and alerting tool for second-hand marketplace listings (Goofish/Xianyu), using LLMs to filter, classify, and notify on relevant items. Trending among Chinese developer communities building LLM-based consumption agents.",
+      "language": "Python",
+      "stars": 9347,
+      "stars_today": 528,
+      "forks": 814,
+      "url": "https://github.com/Usagi-org/ai-goofish-monitor",
+      "tags": [
+        "monitoring",
+        "agents",
+        "llm",
+        "e-commerce"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "anthropics-knowledge-work-plugins",
+      "name": "anthropics/knowledge-work-plugins",
+      "description": "A collection of Claude Code plugins for knowledge workers—document summarization, meeting notes, citation management, and research synthesis. Trending as users build personal AI knowledge workflows on top of the Claude agent SDK.",
+      "language": "Python",
+      "stars": 7823,
+      "stars_today": 419,
+      "forks": 623,
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "tags": [
+        "claude",
+        "plugins",
+        "knowledge-management",
+        "productivity"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "openclaw-openclaw",
+      "name": "openclaw/openclaw",
+      "description": "An open-source AI agent framework focused on legal and regulatory document analysis, using structured reasoning chains to surface relevant clauses and flag compliance issues. Gaining traction as enterprises explore AI-assisted legal review.",
+      "language": "Python",
+      "stars": 5612,
+      "stars_today": 318,
+      "forks": 441,
+      "url": "https://github.com/openclaw/openclaw",
+      "tags": [
+        "legal-ai",
+        "agents",
+        "document-analysis",
+        "compliance"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Open Agent Foundation Models",
+      "description": "Axion 1.0 and 'Democratizing Robot-Use Agents' push toward simplified, reproducible training pipelines for open agent models competitive with commercial systems.",
+      "related_paper_ids": [
+        "axion-1-open-agent-foundation-models-simplified",
+        "democratizing-robot-use-agents-unified-harness"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Physical AI and World Models",
+      "description": "RoboColosseum, DreamX, and PyRUA-DataFarm advance reproducible evaluation and efficient policy training for physical AI, with video diffusion emerging as the substrate for robot action learning.",
+      "related_paper_ids": [
+        "dreamx-video-diffusion-universal-latent-action-learner",
+        "robocolosseum-evaluating-physical-intelligence-at-scale",
+        "democratizing-robot-use-agents-unified-harness"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Security and Adversarial Robustness",
+      "description": "MCP Tool Poisoning and VeriHarm-Bench establish the measurement infrastructure for a nascent but fast-growing empirical literature on agentic adversarial robustness.",
+      "related_paper_ids": [
+        "mcp-tool-poisoning-agentic-ai-frameworks",
+        "verikarm-bench-harmful-success-coding-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Multimodal Efficiency at Deployment",
+      "description": "Raincheck's deferred prefill, Lookahead visual refocusing, and the MLLM compression literature converge on optimizing multi-turn MLLM inference for real-world latency and memory budgets.",
+      "related_paper_ids": [
+        "raincheck-deferred-multimodal-prefill",
+        "lookahead-prediction-adaptive-visual-refocusing-multimodal-reasoning"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Real-World Agent Benchmarking",
+      "description": "DeliverBench, WebHarbor, and RoboColosseum all move evaluation from synthetic tasks to grounded, real-world settings—professional projects, live websites, and in-the-wild robot deployments.",
+      "related_paper_ids": [
+        "deliverbench-ai-agents-professional-projects",
+        "webharbor-real-websites-gui-agent-environments",
+        "robocolosseum-evaluating-physical-intelligence-at-scale"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Inference-Time Interpretability",
+      "description": "Context-Answer Metamodels demonstrate that model internal commitments are predictable before output generation, opening a new intervention point for safety and efficiency at inference time.",
+      "related_paper_ids": [
+        "context-answer-metamodels-forecasting-llm-activations"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-05T07:12:00Z",
+      "status": "partial"
+    }
+  ]
+}
