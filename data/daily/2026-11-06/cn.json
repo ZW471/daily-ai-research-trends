@@ -1,0 +1,857 @@
+{
+  "version": "1.0",
+  "date": "2026-11-06",
+  "generated_at": "2026-11-06T06:00:00Z",
+  "summary": {
+    "headline": "Strategist 与 Adversarial Speculative Reasoning 推动智能体推理走向更低成本、更智能的测试时策略；Kimi-K3.1-Pro 与 LongCat-2.5 带来万亿规模的开源智能体 MoE 模型；压缩与对齐研究揭示隐藏的安全性退化",
+    "body": "今日论文集中围绕**让智能体在推理时更便宜、更可靠**展开。Strategist 演化出可执行的推理策略（成本降低 48% 的同时准确率提升 8.5 个百分点），Adversarial Speculative Reasoning 将快速起草器与对抗式验证器配对（节省 41% 的 token），驾驶智能体论文则在常规操作中跳过思维链（延迟降低 58%）。它们的共同点是：自适应地分配算力，优于均匀地消耗算力。\n\n在模型方面，两个开放权重的万亿规模 MoE 发布占据主导：**月之暗面的 Kimi-K3.1-Pro**（总参数 2.78T，激活参数 104B，1M 上下文）和**美团的 LongCat-2.5**（1.6T，激活参数约 48B，原生多模态），二者均面向长周期智能体任务。Qwen3.8-27B 与 DeepSeek-V3.2 继续领跑下载量，说明中等规模的稠密模型和中等规模的 MoE 检查点仍是实际落地的主力。\n\n安全与评测方面的工作提供了制衡。上下文压缩会使拒答率下降 15-40%，而对比偏好梯度（Contrastive Preference Gradient）为抑制不对齐行为提供了比 DPO 更强的方案。多个基准测试（FrontierPhysics、VisSearch-Bench、NPCBench）一致表明，前沿智能体的短板在于**直觉、持续性和长周期一致性**，而非知识本身。在 GitHub 上，智能体记忆与工作流工具（claude-mem、spec-kit、worktrunk、skills）与本地推理项目（colibri、nanochat）一同走红。",
+    "key_themes": [
+      "adaptive-inference-compute",
+      "agentic-reasoning-strategies",
+      "open-weight-agentic-moe",
+      "agent-memory-and-tooling",
+      "safety-under-system-changes",
+      "agent-benchmarks-reveal-gaps"
+    ]
+  },
+  "researcher_notes": "**目前最好的智能体提升，来自推理时的结构设计，而非新的权重。** Strategist、Adversarial Speculative Reasoning（ASR）以及自适应推理的驾驶论文，都同时报告了准确率提升和成本降低（分别为 48%、41% 和 58%）。它们各自学习*何时*以及*如何*分配算力：代码拓扑路由、起草器/验证器分工，以及选择性思维链。我预计这些思路会走向融合，例如由 Strategist 风格的元智能体来演化 ASR 风格的验证循环。悬而未决的问题是，当基础模型本身已是 Kimi-K3.1-Pro 这样具备 1M 上下文的智能体 MoE 时，这些收益是否依然成立。\n\n**压缩与拒答对齐的那篇论文是今天的黑马。** 它的 17 个点赞低估了其重要性。在 7 种压缩方法和 6 个模型上，拒答率下降 15-40%，这意味着任何压缩上下文的流水线都在悄悄改变自身的安全画像。这直接适用于目前在 GitHub 上走红的记忆压缩层（claude-mem 会压缩并重新注入会话上下文），也适用于 EvoMemState 的演化式记忆。它同样削弱了推测式推理和自适应推理论文中的降本叙事：在未压缩、全算力系统上做的安全评估，无法迁移到廉价的部署配置上。CPG 的梯度级抑制是一种可能的缓解办法，但目前还没有人在压缩条件下测试过它。\n\n**各基准测试在失败模式上达成一致：智能体缺乏的是持续性和落地能力，而不是知识。** FrontierPhysics 报告了因缺乏物理直觉导致的失败，VisSearch-Bench 发现搜索过早终止，NPCBench 发现超过 50 轮后因果一致性崩溃。这三者都是长周期控制问题，也正是 ASR（对起草的推理链进行对抗式挑战）和 EvoMemState（在多日任务上比 RAG 高 19.3%）试图解决的问题。预计会出现把这些基准用作记忆与验证方法试验场的新工作。\n\n**开放权重的规模已经超出了开放权重的可部署性，因此本地推理工具是天然的补充。** Kimi-K3.1-Pro 和 LongCat-2.5 都是数万亿参数的 MoE。与此同时，JustVugg/colibri（从磁盘流式加载 MoE 权重，声称 8GB 内存即可运行）和 karpathy/nanochat 也在走红。机器人使用框架论文（开放模型达到专有模型 12% 以内，成本仅为十分之一）也指向同一方向。我的预测是，稀疏激活流式加载和标准化的工具框架，将比继续增加参数量更重要。Colibri 的核心宣称值得对吞吐量做独立基准测试，因为从磁盘流式运行万亿参数模型，实际上很可能非常慢。\n\n**数据说明：** AlphaXiv 列出了 LongCat-2.5 技术报告（2611.04001），它不在 HF 每日论文集合中，因此通过模型条目来覆盖。本次运行未提供 arXiv 列表数据。",
+  "papers": [
+    {
+      "id": "strategist-agentic-reasoning",
+      "title": "Strategist: Designing Agentic Reasoning at Scale",
+      "authors": [
+        "Taiming Lu",
+        "Qi Xu",
+        "Zhigang Hua",
+        "Zhuang Liu"
+      ],
+      "affiliations": [
+        "Princeton University",
+        "Meta"
+      ],
+      "summary": "Strategist 是一个元智能体框架，可自动演化推理策略，这些策略以可执行的代码拓扑表示，负责在多次模型调用之间进行规划、验证和路由。在 30 个基准测试上，它在显著降低推理成本的同时提升了准确率。",
+      "key_findings": [
+        "在 30 个基准测试上准确率提升 8.5 个百分点",
+        "推理成本降低 48%",
+        "策略是可执行的代码拓扑，因此可检查、可迁移"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "inference-efficiency",
+        "meta-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03618",
+        "huggingface": "https://huggingface.co/papers/2611.03618",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03618",
+        "pdf": "https://arxiv.org/pdf/2611.03618"
+      }
+    },
+    {
+      "id": "democratizing-robot-use-agents",
+      "title": "Democratizing Robot-Use Agents: A Unified Harness with Open Models",
+      "authors": [
+        "Carlos Murillo-Ramos",
+        "Siyu Tang",
+        "Jathushan Rajasegaran"
+      ],
+      "affiliations": [
+        "ETH Zurich",
+        "UC Berkeley"
+      ],
+      "summary": "一个统一的智能体框架，让开源大模型通过标准化的工具 API 控制 8 种机器人平台上的实体机器人。开放模型的表现与专有模型相差在 12% 以内，而推理成本仅为十分之一。",
+      "key_findings": [
+        "性能与专有模型相差在 12% 以内",
+        "推理成本约为 1/10",
+        "通过标准化工具 API 覆盖 8 种机器人平台"
+      ],
+      "tags": [
+        "robotics",
+        "agents",
+        "open-models",
+        "tool-use"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.04210",
+        "huggingface": "https://huggingface.co/papers/2611.04210",
+        "pdf": "https://arxiv.org/pdf/2611.04210"
+      }
+    },
+    {
+      "id": "adversarial-speculative-reasoning",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": [
+        "Wei Chen",
+        "Yixuan Li",
+        "Michael Chang"
+      ],
+      "affiliations": [
+        "University of Wisconsin-Madison",
+        "Google DeepMind"
+      ],
+      "summary": "ASR 将提出多步推理链的快速起草器与对其进行对抗式挑战的验证器配对。它在降低 token 成本的同时，提高了长周期智能体基准上的成功率。",
+      "key_findings": [
+        "token 成本降低 41%",
+        "长周期基准上任务成功率提升 6.2 个点",
+        "对抗式验证取代了均匀的逐步深思"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "speculative-decoding",
+        "inference-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02971",
+        "huggingface": "https://huggingface.co/papers/2611.02971",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02971",
+        "pdf": "https://arxiv.org/pdf/2611.02971"
+      }
+    },
+    {
+      "id": "vflash-visual-planning",
+      "title": "VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding",
+      "authors": [
+        "Haozhe Du",
+        "Rui Zhao",
+        "Tao Kong"
+      ],
+      "affiliations": [
+        "ByteDance Seed"
+      ],
+      "summary": "VFlash 将视觉场景分解为离散的 flash 基元以实现快速规划。它的运行速度约为标准视觉-语言-动作模型的 3 倍，且精度损失极小。",
+      "key_findings": [
+        "推理速度比标准 VLA 快 3.1 倍",
+        "在 RoboVista-100 和 EgoVid 上精度损失在 1% 以内",
+        "离散基元解码取代了稠密场景处理"
+      ],
+      "tags": [
+        "vla",
+        "robotics",
+        "planning",
+        "inference-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.01547",
+        "huggingface": "https://huggingface.co/papers/2611.01547",
+        "pdf": "https://arxiv.org/pdf/2611.01547"
+      }
+    },
+    {
+      "id": "frontierphysics-benchmark",
+      "title": "FrontierPhysics: A Benchmark for AI Agents on Real Physicists' Projects",
+      "authors": [
+        "David Rolnick",
+        "Megan Stanley",
+        "Bowen Li",
+        "Fabian Pedregosa"
+      ],
+      "affiliations": [
+        "McGill University / Mila",
+        "Microsoft Research",
+        "Google DeepMind"
+      ],
+      "summary": "FrontierPhysics 在涵盖凝聚态物理、粒子物理和天体物理的 180 个开放式物理博士级任务上评估 AI 智能体。智能体的失败主要源于缺乏物理直觉，而非知识缺失。",
+      "key_findings": [
+        "180 个开放式博士级任务",
+        "失败源于物理直觉的缺口，而非知识的缺口",
+        "涵盖凝聚态物理、粒子物理和天体物理"
+      ],
+      "tags": [
+        "benchmark",
+        "agents",
+        "ai-for-science",
+        "physics"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05284",
+        "huggingface": "https://huggingface.co/papers/2611.05284",
+        "pdf": "https://arxiv.org/pdf/2611.05284"
+      }
+    },
+    {
+      "id": "gist-rlvr-data-selection",
+      "title": "GIST: Data Selection for Reasoning LLMs via RLVR-based Importance Scoring",
+      "authors": [
+        "Yihe Deng",
+        "Pan Lu",
+        "Kai-Wei Chang"
+      ],
+      "affiliations": [
+        "UCLA",
+        "Stanford University"
+      ],
+      "summary": "GIST 依据训练样本在 RLVR 下的重要性对其打分，从而挑选出用于推理训练的精简子集。它用少得多的数据达到了全量数据基线的水平。已被 NeurIPS 2026 接收。",
+      "key_findings": [
+        "训练数据减少 70%",
+        "在 MATH 和 GPQA 上与全量数据基线持平",
+        "重要性评分源自 RLVR 信号"
+      ],
+      "tags": [
+        "reasoning",
+        "rlvr",
+        "data-selection",
+        "training-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.06701",
+        "huggingface": "https://huggingface.co/papers/2611.06701",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.06701",
+        "pdf": "https://arxiv.org/pdf/2611.06701"
+      }
+    },
+    {
+      "id": "adaptive-reasoning-autonomous-driving",
+      "title": "Agents, Think Only When It Helps: Adaptive Reasoning for Autonomous Driving",
+      "authors": [
+        "Liang Wang",
+        "Jing Yu",
+        "Yunfei Chu"
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Tsinghua University"
+      ],
+      "summary": "一种面向驾驶智能体的选择性推理方案：在常规操作中跳过思维链，仅在安全攸关的场景下启用。它大幅降低了延迟，同时提升了安全性。",
+      "key_findings": [
+        "延迟降低 58%",
+        "在 DriveArena 上安全得分提升 4.1",
+        "仅在安全攸关的场景下触发推理"
+      ],
+      "tags": [
+        "autonomous-driving",
+        "adaptive-reasoning",
+        "agents",
+        "inference-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03204",
+        "huggingface": "https://huggingface.co/papers/2611.03204",
+        "pdf": "https://arxiv.org/pdf/2611.03204"
+      }
+    },
+    {
+      "id": "evomemstate-evolving-memory",
+      "title": "EvoMemState: Dynamically Evolving Memory for Stateful AI Agents",
+      "authors": [
+        "Peng Xu",
+        "Tianhao Wu",
+        "Liwei Wang"
+      ],
+      "affiliations": [
+        "Peking University",
+        "UC Berkeley"
+      ],
+      "summary": "EvoMemState 是一种分层记忆架构，能根据智能体行动的结果重塑自身的拓扑结构。在多日软件工程任务上，它优于 RAG 基线。",
+      "key_findings": [
+        "任务完成率比 RAG 基线高 19.3%",
+        "记忆拓扑根据行动结果更新",
+        "在多日软件工程基准上进行评估"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "software-engineering",
+        "rag"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.07845",
+        "huggingface": "https://huggingface.co/papers/2611.07845",
+        "pdf": "https://arxiv.org/pdf/2611.07845"
+      }
+    },
+    {
+      "id": "contrastive-preference-gradient",
+      "title": "Suppressing Misaligned LLM Behaviors via Contrastive Preference Gradient",
+      "authors": [
+        "Jiawei Zhao",
+        "Zhen Liu",
+        "Zoubin Ghahramani"
+      ],
+      "affiliations": [
+        "Google DeepMind",
+        "University of Cambridge"
+      ],
+      "summary": "对比偏好梯度（CPG）通过让梯度直接远离不对齐的补全结果，来抑制有害的输出模式。它在保持有用性的同时，安全性优于 DPO。已被 NeurIPS 2026 接收。",
+      "key_findings": [
+        "安全性比 DPO 高 8.1 个点",
+        "有用性保留率为 97.5%",
+        "梯度方向明确地推离不对齐的补全结果"
+      ],
+      "tags": [
+        "alignment",
+        "safety",
+        "preference-optimization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09133",
+        "huggingface": "https://huggingface.co/papers/2611.09133",
+        "pdf": "https://arxiv.org/pdf/2611.09133"
+      }
+    },
+    {
+      "id": "vissearch-bench",
+      "title": "VisSearch-Bench: Evaluating Multimodal Agents on Open-World Visual Search",
+      "authors": [
+        "Ruoxi Wang",
+        "Jianwei Yang",
+        "Furu Wei"
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "VisSearch-Bench 包含 2,400 个任务，要求智能体浏览图像集合以找到答案。前沿模型的解决率不足 38%，主要原因是过早停止搜索。",
+      "key_findings": [
+        "2,400 个视觉搜索任务",
+        "前沿模型解决率不足 38%",
+        "过早终止搜索是主要的失败模式"
+      ],
+      "tags": [
+        "benchmark",
+        "multimodal",
+        "agents",
+        "search"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.08322",
+        "huggingface": "https://huggingface.co/papers/2611.08322",
+        "pdf": "https://arxiv.org/pdf/2611.08322"
+      }
+    },
+    {
+      "id": "context-compression-refusal-alignment",
+      "title": "Context Compression Does Not Preserve Refusal Alignment in LLMs",
+      "authors": [
+        "Ruifei He",
+        "Florian Tramèr",
+        "Percy Liang"
+      ],
+      "affiliations": [
+        "ETH Zurich",
+        "Stanford University"
+      ],
+      "summary": "该研究表明，在多种方法和模型上，上下文压缩都会持续削弱拒答行为。论文提出了压缩感知的安全训练来恢复对齐。",
+      "key_findings": [
+        "压缩后拒答率下降 15-40%",
+        "在 7 种压缩方法和 6 个模型上均成立",
+        "提出压缩感知的安全训练"
+      ],
+      "tags": [
+        "safety",
+        "alignment",
+        "context-compression",
+        "long-context"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.04517",
+        "huggingface": "https://huggingface.co/papers/2611.04517",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.04517",
+        "pdf": "https://arxiv.org/pdf/2611.04517"
+      }
+    },
+    {
+      "id": "npcbench",
+      "title": "NPCBench: Evaluating LLMs as Non-Player Characters in Open-World Games",
+      "authors": [
+        "Chen Sun",
+        "Marcus Rohrbach",
+        "Luke Zettlemoyer"
+      ],
+      "affiliations": [
+        "Brown University / Google",
+        "Meta AI",
+        "University of Washington"
+      ],
+      "summary": "NPCBench 在 2,100 次多会话交互中评估大模型扮演游戏角色的能力。前沿模型在一致性上接近人类水平，但在长会话中的因果一致性上表现崩溃。",
+      "key_findings": [
+        "2,100 次多会话交互",
+        "整体一致性得分接近人类水平",
+        "超过 50 轮后因果一致性失效"
+      ],
+      "tags": [
+        "benchmark",
+        "games",
+        "long-context",
+        "agents"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.10044",
+        "huggingface": "https://huggingface.co/papers/2611.10044",
+        "pdf": "https://arxiv.org/pdf/2611.10044"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3-1-pro",
+      "name": "Kimi-K3.1-Pro",
+      "organization": "Moonshot AI",
+      "description": "开放权重的 2.78T MoE 模型，激活参数 104B，11 月 4 日发布，因其智能体方面的成绩（Terminal-Bench 4.0：65.7%，带工具的 HLE：70%）和 1M 上下文而走红。",
+      "task_type": "text-generation",
+      "model_size": "2.78T total / 104B active",
+      "tags": [
+        "moe",
+        "reasoning",
+        "long-context",
+        "agentic"
+      ],
+      "metrics": {
+        "downloads": 285000,
+        "likes": 4120
+      },
+      "source_url": "https://huggingface.co/moonshot-ai/Kimi-K3.1-Pro"
+    },
+    {
+      "id": "longcat-2-5",
+      "name": "LongCat-2.5",
+      "organization": "Meituan",
+      "description": "原生多模态的 1.6T MoE 模型（激活参数约 48B），具备 1M 上下文和 128K 输出 token，面向长周期智能体任务（Terminal Bench v2.1：88.4%）。其技术报告也在 AlphaXiv 上走红。",
+      "task_type": "text-generation",
+      "model_size": "1.6T total / ~48B active",
+      "tags": [
+        "moe",
+        "multimodal",
+        "agentic",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 142000,
+        "likes": 3480
+      },
+      "source_url": "https://huggingface.co/meituan/LongCat-2.5"
+    },
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "稠密 27B 指令推理模型，今日下载量最高（约 800 万），社区支持强劲，已成为默认的中等规模开源模型。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "instruct",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 8014877,
+        "likes": 19093
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "deepseek-v3-2",
+      "name": "DeepSeek-V3.2",
+      "organization": "DeepSeek",
+      "description": "685B 参数的 MoE 检查点，在 30 天下载量上位居榜首，主要由代码和通用场景的使用推动。",
+      "task_type": "text-generation",
+      "model_size": "685B",
+      "tags": [
+        "moe",
+        "code"
+      ],
+      "metrics": {
+        "downloads": 6900000,
+        "likes": 15200
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "V4.1 系列的低延迟推理变体，因面向追求速度的部署场景而走红。",
+      "task_type": "text-generation",
+      "model_size": "Not specified",
+      "tags": [
+        "flash",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 178000,
+        "likes": 2900
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "llama-4-scout-17b-16e",
+      "name": "Llama-4-Scout-17B-16E-Instruct",
+      "organization": "Meta",
+      "description": "多模态 MoE 模型，16 个专家，激活参数 17B。它在开源多模态模型中保持着庞大而稳定的下载基数。",
+      "task_type": "text-generation",
+      "model_size": "17B active (16 experts)",
+      "tags": [
+        "moe",
+        "multimodal",
+        "instruct"
+      ],
+      "metrics": {
+        "downloads": 1240000,
+        "likes": 7600
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct"
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B IT",
+      "organization": "Google",
+      "description": "经过指令微调的多模态 27B 模型，仍是本地部署场景中广受欢迎的开源基线。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "instruct"
+      ],
+      "metrics": {
+        "downloads": 2100000,
+        "likes": 9400
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    {
+      "id": "lfm3-1-7b-gguf",
+      "name": "LFM3-1.7B-GGUF",
+      "organization": "Liquid AI",
+      "description": "GGUF 格式的 1.7B 小模型，因适用于端侧和本地推理而走红，下载量超过 15 万。",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": [
+        "gguf",
+        "small-model",
+        "on-device"
+      ],
+      "metrics": {
+        "downloads": 150260,
+        "likes": 820
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "记忆层，可捕获 AI 智能体的会话活动，对其进行压缩，并在 Claude Code、Codex、Gemini CLI 等工具之间重新注入相关上下文。它走红是因为持久化的智能体记忆是当下的热门难题。需要注意，压缩可能会削弱安全行为（参见上下文压缩论文）。",
+      "language": "Python",
+      "stars": 3382,
+      "stars_today": 418,
+      "forks": 187,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "agent-memory",
+        "coding-agents",
+        "context"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "github-spec-kit",
+      "name": "github/spec-kit",
+      "description": "规范驱动开发工具包，可根据结构化规范生成实现计划、测试脚手架和智能体指令。随着规范优先的工作流在编码智能体用户中普及，它的星标持续增长。",
+      "language": "TypeScript",
+      "stars": 147000,
+      "stars_today": 1240,
+      "forks": 8900,
+      "url": "https://github.com/github/spec-kit",
+      "tags": [
+        "developer-tools",
+        "coding-agents",
+        "specs"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-nanochat",
+      "name": "karpathy/nanochat",
+      "description": "Andrej Karpathy 开发的极简、本地优先的类 ChatGPT 模型与界面。它作为端到端训练和部署小型对话模型的参考实现，持续走红。",
+      "language": "Python",
+      "stars": 60100,
+      "stars_today": 980,
+      "forks": 3200,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "llm",
+        "education",
+        "local-first"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "justvugg-colibri",
+      "name": "JustVugg/colibri",
+      "description": "纯 C 编写的推理引擎，可从磁盘流式加载 MoE 模型，声称能在 8GB 内存上运行数万亿参数的模型。它与新发布的万亿规模 MoE 模型一同走红。其实际吞吐量的宣称需要独立验证。",
+      "language": "C",
+      "stars": 46800,
+      "stars_today": 760,
+      "forks": 2100,
+      "url": "https://github.com/JustVugg/colibri",
+      "tags": [
+        "inference",
+        "moe",
+        "local-llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-vibevoice",
+      "name": "microsoft/VibeVoice",
+      "description": "开源语音 AI 平台，面向实时对话智能体，支持情感感知的语音合成。它走红源于对开源语音智能体技术栈的需求。",
+      "language": "Python",
+      "stars": 56000,
+      "stars_today": 640,
+      "forks": 3700,
+      "url": "https://github.com/microsoft/VibeVoice",
+      "tags": [
+        "speech",
+        "tts",
+        "voice-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "p-e-w-heretic",
+      "name": "p-e-w/heretic",
+      "description": "无需训练的工具，可修改大模型的行为，减少审查、谄媚和低质套话模式。它因权重编辑方式而广受欢迎，也与安全议题的讨论相关。",
+      "language": "Python",
+      "stars": 38200,
+      "stars_today": 520,
+      "forks": 1400,
+      "url": "https://github.com/p-e-w/heretic",
+      "tags": [
+        "llm",
+        "alignment",
+        "model-editing"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "为编码智能体精心整理的智能体技能和系统提示词，涵盖 TypeScript、测试和文档。随着可复用的智能体技能成为共同实践，它的热度迅速上升。",
+      "language": "TypeScript",
+      "stars": 1767,
+      "stars_today": 310,
+      "forks": 89,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents",
+        "prompts"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "paperclipai-paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "开源平台，用于在团队环境中管理和部署 AI 智能体，并带有审批工作流。项目尚处早期，但因其人在回路的智能体编排而受到关注。",
+      "language": "TypeScript",
+      "stars": 896,
+      "stars_today": 145,
+      "forks": 42,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": [
+        "agent-orchestration",
+        "workflows",
+        "enterprise"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "网页抓取框架，可处理从单次请求到大规模 JavaScript 渲染爬取的各种场景，同时规避检测。它适用于为智能体和 RAG 流水线收集数据。",
+      "language": "Python",
+      "stars": 1565,
+      "stars_today": 128,
+      "forks": 94,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": [
+        "scraping",
+        "data-collection",
+        "agents"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "kornia-kornia",
+      "name": "kornia/kornia",
+      "description": "基于 PyTorch 的可微分几何计算机视觉库，用于空间 AI 和机器人感知。它与本周的机器人和 VLA 论文一同走红。",
+      "language": "Python",
+      "stars": 778,
+      "stars_today": 95,
+      "forks": 410,
+      "url": "https://github.com/kornia/kornia",
+      "tags": [
+        "computer-vision",
+        "pytorch",
+        "robotics"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "max-sixty-worktrunk",
+      "name": "max-sixty/worktrunk",
+      "description": "用 Rust 编写的 Git worktree 管理命令行工具，让多个 AI 编码智能体可以并行运行会话而不产生分支冲突。随着并行智能体工作流日益普遍，它开始走红。",
+      "language": "Rust",
+      "stars": 266,
+      "stars_today": 88,
+      "forks": 18,
+      "url": "https://github.com/max-sixty/worktrunk",
+      "tags": [
+        "developer-tools",
+        "coding-agents",
+        "git"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "自适应推理时算力",
+      "description": "多篇论文只在关键之处投入算力，从而在降低成本的同时提升准确率：选择性思维链、起草器/验证器分工以及路由策略。",
+      "related_paper_ids": [
+        "strategist-agentic-reasoning",
+        "adversarial-speculative-reasoning",
+        "adaptive-reasoning-autonomous-driving",
+        "vflash-visual-planning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体记忆与有状态智能体",
+      "description": "演化式记忆和压缩记忆正成为智能体的核心基础设施，无论在研究还是工具层面皆然。压缩对安全性的影响仍然研究不足。",
+      "related_paper_ids": [
+        "evomemstate-evolving-memory",
+        "context-compression-refusal-alignment"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "系统变更下的安全鲁棒性",
+      "description": "当系统被修改（例如压缩）时，对齐属性可能退化，新的训练目标正针对这一缺口。",
+      "related_paper_ids": [
+        "context-compression-refusal-alignment",
+        "contrastive-preference-gradient"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "揭示长周期缺口的智能体基准",
+      "description": "物理、视觉搜索和游戏领域的新基准表明，前沿智能体的失败在于直觉、持续性和长会话一致性，而非知识。",
+      "related_paper_ids": [
+        "frontierphysics-benchmark",
+        "vissearch-bench",
+        "npcbench"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "面向具身智能体的开放模型",
+      "description": "开放权重的大模型和高效的 VLA 解码器正在以低得多的成本缩小与专有系统在机器人控制上的差距。",
+      "related_paper_ids": [
+        "democratizing-robot-use-agents",
+        "vflash-visual-planning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "数据高效的推理训练",
+      "description": "利用源自 RLVR 的信号挑选小得多的训练子集，同时保持推理性能。",
+      "related_paper_ids": [
+        "gist-rlvr-data-selection"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

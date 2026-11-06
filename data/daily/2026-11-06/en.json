@@ -1,0 +1,857 @@
+{
+  "version": "1.0",
+  "date": "2026-11-06",
+  "generated_at": "2026-11-06T06:00:00Z",
+  "summary": {
+    "headline": "Strategist and Adversarial Speculative Reasoning push agent inference toward cheaper, smarter test-time strategy; Kimi-K3.1-Pro and LongCat-2.5 bring trillion-scale open agentic MoEs; compression and alignment research exposes hidden safety regressions",
+    "body": "Today's papers cluster around **making agents cheaper and more reliable at inference time**. Strategist evolves executable inference strategies (+8.5 points at 48% lower cost), Adversarial Speculative Reasoning pairs a fast drafter with an adversarial verifier (41% token savings), and the driving-agent paper skips chain-of-thought on routine maneuvers (58% lower latency). The common thread is that spending compute adaptively beats spending it uniformly.\n\nOn the model side, two open-weight trillion-scale MoE releases dominate: **Moonshot's Kimi-K3.1-Pro** (2.78T total, 104B active, 1M context) and **Meituan's LongCat-2.5** (1.6T, ~48B active, native multimodal), both targeting long-horizon agentic work. Qwen3.8-27B and DeepSeek-V3.2 continue to lead in raw downloads, which shows that mid-size dense and mid-scale MoE checkpoints remain the practical workhorses.\n\nSafety and evaluation work provides a counterweight. Context compression cuts refusal rates by 15-40%, and contrastive preference gradients offer a stronger alternative to DPO for suppressing misaligned behavior. Benchmarks (FrontierPhysics, VisSearch-Bench, NPCBench) agree that frontier agents fail at **intuition, persistence and long-horizon consistency** rather than at knowledge. On GitHub, agent memory and workflow tooling (claude-mem, spec-kit, worktrunk, skills) trend alongside local inference (colibri, nanochat).",
+    "key_themes": [
+      "adaptive-inference-compute",
+      "agentic-reasoning-strategies",
+      "open-weight-agentic-moe",
+      "agent-memory-and-tooling",
+      "safety-under-system-changes",
+      "agent-benchmarks-reveal-gaps"
+    ]
+  },
+  "researcher_notes": "**The best agent gains are now coming from inference-time structure, not new weights.** Strategist, Adversarial Speculative Reasoning (ASR) and the adaptive-reasoning driving paper all report simultaneous accuracy gains and cost reductions (48%, 41% and 58% respectively). Each one learns *when* and *how* to spend compute: code-topology routing, drafter/verifier splits, and selective chain-of-thought. I expect these ideas to merge, for example a Strategist-style meta-agent that evolves ASR-style verification loops. The open question is whether the gains survive when the base model is already a 1M-context agentic MoE like Kimi-K3.1-Pro.\n\n**The compression-refusal paper is the sleeper hit of the day.** Its 17 upvotes understate its importance. Dropping refusal rates by 15-40% across 7 compression methods and 6 models means any pipeline that compresses context is silently changing its safety profile. This applies directly to the memory-compression layers now trending on GitHub (claude-mem compresses and reinjects session context) and to EvoMemState's evolving memory. It also undercuts the cost-saving story in the speculative and adaptive-reasoning papers. Safety evaluations done on the uncompressed, full-compute system do not transfer to the cheap deployment configuration. CPG's gradient-level suppression is a plausible mitigation, but nobody has tested it under compression yet.\n\n**Benchmarks agree on the failure mode: agents lack persistence and grounding, not knowledge.** FrontierPhysics reports failures from missing physical intuition, VisSearch-Bench finds premature search termination, and NPCBench finds causal inconsistency beyond 50 turns. All three are long-horizon control problems, and they match what ASR (adversarial challenge of drafted chains) and EvoMemState (+19.3% over RAG on multi-day tasks) are trying to fix. Expect new work that uses these benchmarks as testbeds for memory and verification methods.\n\n**Open-weight scale has outrun open-weight deployability, so local-inference tooling is the natural complement.** Kimi-K3.1-Pro and LongCat-2.5 are multi-trillion-parameter MoEs. At the same time, JustVugg/colibri (streaming MoE weights from disk, 8GB RAM claim) and karpathy/nanochat are trending. The robot-use harness paper (open models within 12% of proprietary at 1/10th cost) points the same way. My prediction is that sparse-activation streaming and standardized tool harnesses will matter more than further parameter growth. Colibri's headline claim deserves independent benchmarking of throughput, since disk-streamed trillion-parameter inference is likely to be very slow in practice.\n\n**Data caveat:** AlphaXiv lists the LongCat-2.5 technical report (2611.04001), which was not in the HF daily set, so it is covered via the model entry. No arXiv listing data was supplied in this run.",
+  "papers": [
+    {
+      "id": "strategist-agentic-reasoning",
+      "title": "Strategist: Designing Agentic Reasoning at Scale",
+      "authors": [
+        "Taiming Lu",
+        "Qi Xu",
+        "Zhigang Hua",
+        "Zhuang Liu"
+      ],
+      "affiliations": [
+        "Princeton University",
+        "Meta"
+      ],
+      "summary": "Strategist is a meta-agent framework that automatically evolves inference strategies, represented as executable code topologies that plan, verify and route across model calls. Across 30 benchmarks it raises accuracy while substantially cutting inference cost.",
+      "key_findings": [
+        "+8.5 percentage points accuracy across 30 benchmarks",
+        "48% lower inference cost",
+        "Strategies are executable code topologies, which makes them inspectable and transferable"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "inference-efficiency",
+        "meta-learning"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 52,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03618",
+        "huggingface": "https://huggingface.co/papers/2611.03618",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.03618",
+        "pdf": "https://arxiv.org/pdf/2611.03618"
+      }
+    },
+    {
+      "id": "democratizing-robot-use-agents",
+      "title": "Democratizing Robot-Use Agents: A Unified Harness with Open Models",
+      "authors": [
+        "Carlos Murillo-Ramos",
+        "Siyu Tang",
+        "Jathushan Rajasegaran"
+      ],
+      "affiliations": [
+        "ETH Zurich",
+        "UC Berkeley"
+      ],
+      "summary": "A unified agent harness lets open-source LLMs control physical robots through standardized tool APIs across 8 robot platforms. Open models come within 12% of proprietary ones at a tenth of the inference cost.",
+      "key_findings": [
+        "Performance within 12% of proprietary models",
+        "About 1/10th the inference cost",
+        "Covers 8 robot platforms through standardized tool APIs"
+      ],
+      "tags": [
+        "robotics",
+        "agents",
+        "open-models",
+        "tool-use"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 47,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.04210",
+        "huggingface": "https://huggingface.co/papers/2611.04210",
+        "pdf": "https://arxiv.org/pdf/2611.04210"
+      }
+    },
+    {
+      "id": "adversarial-speculative-reasoning",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": [
+        "Wei Chen",
+        "Yixuan Li",
+        "Michael Chang"
+      ],
+      "affiliations": [
+        "University of Wisconsin-Madison",
+        "Google DeepMind"
+      ],
+      "summary": "ASR pairs a fast drafter that proposes multi-step chains with a verifier that adversarially challenges them. It cuts token cost while improving success on long-horizon agent benchmarks.",
+      "key_findings": [
+        "41% token cost reduction",
+        "+6.2 points task success on long-horizon benchmarks",
+        "Adversarial verification replaces uniform step-by-step deliberation"
+      ],
+      "tags": [
+        "agents",
+        "reasoning",
+        "speculative-decoding",
+        "inference-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.02971",
+        "huggingface": "https://huggingface.co/papers/2611.02971",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.02971",
+        "pdf": "https://arxiv.org/pdf/2611.02971"
+      }
+    },
+    {
+      "id": "vflash-visual-planning",
+      "title": "VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding",
+      "authors": [
+        "Haozhe Du",
+        "Rui Zhao",
+        "Tao Kong"
+      ],
+      "affiliations": [
+        "ByteDance Seed"
+      ],
+      "summary": "VFlash decomposes visual scenes into discrete flash primitives to plan quickly. It runs about 3x faster than standard vision-language-action models with minimal accuracy loss.",
+      "key_findings": [
+        "3.1x faster inference than standard VLA",
+        "Within 1% accuracy on RoboVista-100 and EgoVid",
+        "Discrete primitive decoding replaces dense scene processing"
+      ],
+      "tags": [
+        "vla",
+        "robotics",
+        "planning",
+        "inference-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 31,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.01547",
+        "huggingface": "https://huggingface.co/papers/2611.01547",
+        "pdf": "https://arxiv.org/pdf/2611.01547"
+      }
+    },
+    {
+      "id": "frontierphysics-benchmark",
+      "title": "FrontierPhysics: A Benchmark for AI Agents on Real Physicists' Projects",
+      "authors": [
+        "David Rolnick",
+        "Megan Stanley",
+        "Bowen Li",
+        "Fabian Pedregosa"
+      ],
+      "affiliations": [
+        "McGill University / Mila",
+        "Microsoft Research",
+        "Google DeepMind"
+      ],
+      "summary": "FrontierPhysics evaluates AI agents on 180 open-ended physics PhD tasks spanning condensed matter, particle physics and astrophysics. Agents fail mainly from lack of physical intuition rather than missing knowledge.",
+      "key_findings": [
+        "180 open-ended PhD-level tasks",
+        "Failures stem from physical intuition gaps, not knowledge gaps",
+        "Covers condensed matter, particle physics and astrophysics"
+      ],
+      "tags": [
+        "benchmark",
+        "agents",
+        "ai-for-science",
+        "physics"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05284",
+        "huggingface": "https://huggingface.co/papers/2611.05284",
+        "pdf": "https://arxiv.org/pdf/2611.05284"
+      }
+    },
+    {
+      "id": "gist-rlvr-data-selection",
+      "title": "GIST: Data Selection for Reasoning LLMs via RLVR-based Importance Scoring",
+      "authors": [
+        "Yihe Deng",
+        "Pan Lu",
+        "Kai-Wei Chang"
+      ],
+      "affiliations": [
+        "UCLA",
+        "Stanford University"
+      ],
+      "summary": "GIST scores training examples by their importance under RLVR to select a compact subset for reasoning training. It matches full-data baselines with far less data. Accepted at NeurIPS 2026.",
+      "key_findings": [
+        "70% less training data",
+        "Matches full-data baselines on MATH and GPQA",
+        "Importance scoring is derived from RLVR signals"
+      ],
+      "tags": [
+        "reasoning",
+        "rlvr",
+        "data-selection",
+        "training-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.06701",
+        "huggingface": "https://huggingface.co/papers/2611.06701",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.06701",
+        "pdf": "https://arxiv.org/pdf/2611.06701"
+      }
+    },
+    {
+      "id": "adaptive-reasoning-autonomous-driving",
+      "title": "Agents, Think Only When It Helps: Adaptive Reasoning for Autonomous Driving",
+      "authors": [
+        "Liang Wang",
+        "Jing Yu",
+        "Yunfei Chu"
+      ],
+      "affiliations": [
+        "Alibaba Group",
+        "Tsinghua University"
+      ],
+      "summary": "A selective reasoning scheme for driving agents skips chain-of-thought on routine maneuvers and activates it for safety-critical situations. It cuts latency sharply while improving safety.",
+      "key_findings": [
+        "58% latency reduction",
+        "+4.1 safety score on DriveArena",
+        "Reasoning is triggered only in safety-critical situations"
+      ],
+      "tags": [
+        "autonomous-driving",
+        "adaptive-reasoning",
+        "agents",
+        "inference-efficiency"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 24,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.03204",
+        "huggingface": "https://huggingface.co/papers/2611.03204",
+        "pdf": "https://arxiv.org/pdf/2611.03204"
+      }
+    },
+    {
+      "id": "evomemstate-evolving-memory",
+      "title": "EvoMemState: Dynamically Evolving Memory for Stateful AI Agents",
+      "authors": [
+        "Peng Xu",
+        "Tianhao Wu",
+        "Liwei Wang"
+      ],
+      "affiliations": [
+        "Peking University",
+        "UC Berkeley"
+      ],
+      "summary": "EvoMemState is a hierarchical memory architecture that reshapes its own topology based on the outcomes of agent actions. It beats RAG baselines on multi-day software engineering tasks.",
+      "key_findings": [
+        "+19.3% task completion over RAG baselines",
+        "Memory topology updates from action outcomes",
+        "Evaluated on multi-day software engineering benchmarks"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "software-engineering",
+        "rag"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 22,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.07845",
+        "huggingface": "https://huggingface.co/papers/2611.07845",
+        "pdf": "https://arxiv.org/pdf/2611.07845"
+      }
+    },
+    {
+      "id": "contrastive-preference-gradient",
+      "title": "Suppressing Misaligned LLM Behaviors via Contrastive Preference Gradient",
+      "authors": [
+        "Jiawei Zhao",
+        "Zhen Liu",
+        "Zoubin Ghahramani"
+      ],
+      "affiliations": [
+        "Google DeepMind",
+        "University of Cambridge"
+      ],
+      "summary": "Contrastive Preference Gradient (CPG) suppresses harmful output modes by moving gradients directly away from misaligned completions. It improves safety over DPO while keeping helpfulness. Accepted at NeurIPS 2026.",
+      "key_findings": [
+        "+8.1 points safety vs DPO",
+        "97.5% helpfulness retention",
+        "Gradient directions explicitly push away from misaligned completions"
+      ],
+      "tags": [
+        "alignment",
+        "safety",
+        "preference-optimization"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09133",
+        "huggingface": "https://huggingface.co/papers/2611.09133",
+        "pdf": "https://arxiv.org/pdf/2611.09133"
+      }
+    },
+    {
+      "id": "vissearch-bench",
+      "title": "VisSearch-Bench: Evaluating Multimodal Agents on Open-World Visual Search",
+      "authors": [
+        "Ruoxi Wang",
+        "Jianwei Yang",
+        "Furu Wei"
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "VisSearch-Bench contains 2,400 tasks in which agents must browse image collections to find answers. Frontier models solve under 38%, mostly because they stop searching too early.",
+      "key_findings": [
+        "2,400 visual search tasks",
+        "Frontier models solve under 38%",
+        "Premature search termination is the main failure mode"
+      ],
+      "tags": [
+        "benchmark",
+        "multimodal",
+        "agents",
+        "search"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.08322",
+        "huggingface": "https://huggingface.co/papers/2611.08322",
+        "pdf": "https://arxiv.org/pdf/2611.08322"
+      }
+    },
+    {
+      "id": "context-compression-refusal-alignment",
+      "title": "Context Compression Does Not Preserve Refusal Alignment in LLMs",
+      "authors": [
+        "Ruifei He",
+        "Florian Tramèr",
+        "Percy Liang"
+      ],
+      "affiliations": [
+        "ETH Zurich",
+        "Stanford University"
+      ],
+      "summary": "The study shows that context compression consistently weakens refusal behavior across many methods and models. It proposes compression-aware safety training to restore alignment.",
+      "key_findings": [
+        "Refusal rates fall 15-40% under compression",
+        "Holds across 7 compression methods and 6 models",
+        "Proposes compression-aware safety training"
+      ],
+      "tags": [
+        "safety",
+        "alignment",
+        "context-compression",
+        "long-context"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 17,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.04517",
+        "huggingface": "https://huggingface.co/papers/2611.04517",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.04517",
+        "pdf": "https://arxiv.org/pdf/2611.04517"
+      }
+    },
+    {
+      "id": "npcbench",
+      "title": "NPCBench: Evaluating LLMs as Non-Player Characters in Open-World Games",
+      "authors": [
+        "Chen Sun",
+        "Marcus Rohrbach",
+        "Luke Zettlemoyer"
+      ],
+      "affiliations": [
+        "Brown University / Google",
+        "Meta AI",
+        "University of Washington"
+      ],
+      "summary": "NPCBench evaluates LLMs as game characters over 2,100 multi-session interactions. Frontier models score near human on consistency but break down on causal consistency in long sessions.",
+      "key_findings": [
+        "2,100 multi-session interactions",
+        "Near-human consistency scores overall",
+        "Causal consistency fails beyond 50 turns"
+      ],
+      "tags": [
+        "benchmark",
+        "games",
+        "long-context",
+        "agents"
+      ],
+      "relevance": "low",
+      "engagement": {
+        "upvotes": 15,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.10044",
+        "huggingface": "https://huggingface.co/papers/2611.10044",
+        "pdf": "https://arxiv.org/pdf/2611.10044"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "kimi-k3-1-pro",
+      "name": "Kimi-K3.1-Pro",
+      "organization": "Moonshot AI",
+      "description": "Open-weight 2.78T MoE with 104B active parameters released Nov 4, trending for its agentic scores (Terminal-Bench 4.0: 65.7%, HLE with tools: 70%) and 1M context.",
+      "task_type": "text-generation",
+      "model_size": "2.78T total / 104B active",
+      "tags": [
+        "moe",
+        "reasoning",
+        "long-context",
+        "agentic"
+      ],
+      "metrics": {
+        "downloads": 285000,
+        "likes": 4120
+      },
+      "source_url": "https://huggingface.co/moonshot-ai/Kimi-K3.1-Pro"
+    },
+    {
+      "id": "longcat-2-5",
+      "name": "LongCat-2.5",
+      "organization": "Meituan",
+      "description": "Natively multimodal 1.6T MoE (~48B active) with 1M context and 128K output tokens, aimed at long-horizon agentic tasks (Terminal Bench v2.1: 88.4%). A technical report is also trending on AlphaXiv.",
+      "task_type": "text-generation",
+      "model_size": "1.6T total / ~48B active",
+      "tags": [
+        "moe",
+        "multimodal",
+        "agentic",
+        "long-context"
+      ],
+      "metrics": {
+        "downloads": 142000,
+        "likes": 3480
+      },
+      "source_url": "https://huggingface.co/meituan/LongCat-2.5"
+    },
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Dense 27B instruct reasoning model with the highest download count today (about 8M) and strong community support, making it the default mid-size open model.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "instruct",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 8014877,
+        "likes": 19093
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "deepseek-v3-2",
+      "name": "DeepSeek-V3.2",
+      "organization": "DeepSeek",
+      "description": "685B-parameter MoE checkpoint that leads 30-day downloads, driven by code and general-purpose use.",
+      "task_type": "text-generation",
+      "model_size": "685B",
+      "tags": [
+        "moe",
+        "code"
+      ],
+      "metrics": {
+        "downloads": 6900000,
+        "likes": 15200
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "Low-latency reasoning variant of the V4.1 line, trending for speed-oriented deployments.",
+      "task_type": "text-generation",
+      "model_size": "Not specified",
+      "tags": [
+        "flash",
+        "reasoning"
+      ],
+      "metrics": {
+        "downloads": 178000,
+        "likes": 2900
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "llama-4-scout-17b-16e",
+      "name": "Llama-4-Scout-17B-16E-Instruct",
+      "organization": "Meta",
+      "description": "Multimodal MoE with 17B active parameters across 16 experts. It keeps a large, steady download base among open multimodal models.",
+      "task_type": "text-generation",
+      "model_size": "17B active (16 experts)",
+      "tags": [
+        "moe",
+        "multimodal",
+        "instruct"
+      ],
+      "metrics": {
+        "downloads": 1240000,
+        "likes": 7600
+      },
+      "source_url": "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct"
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B IT",
+      "organization": "Google",
+      "description": "Instruction-tuned multimodal 27B model that remains a popular open baseline for on-prem use.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "multimodal",
+        "instruct"
+      ],
+      "metrics": {
+        "downloads": 2100000,
+        "likes": 9400
+      },
+      "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    {
+      "id": "lfm3-1-7b-gguf",
+      "name": "LFM3-1.7B-GGUF",
+      "organization": "Liquid AI",
+      "description": "Small 1.7B model in GGUF format, trending for on-device and local inference with over 150K downloads.",
+      "task_type": "text-generation",
+      "model_size": "1.7B",
+      "tags": [
+        "gguf",
+        "small-model",
+        "on-device"
+      ],
+      "metrics": {
+        "downloads": 150260,
+        "likes": 820
+      },
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Memory layer that captures AI agent session activity, compresses it and reinjects relevant context across Claude Code, Codex, Gemini CLI and others. It is trending because persistent agent memory is a hot problem. Note that compression may weaken safety behavior (see the context-compression paper).",
+      "language": "Python",
+      "stars": 3382,
+      "stars_today": 418,
+      "forks": 187,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "agent-memory",
+        "coding-agents",
+        "context"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "github-spec-kit",
+      "name": "github/spec-kit",
+      "description": "Spec-driven development toolkit that generates implementation plans, test scaffolds and agent instructions from structured specs. It keeps gaining stars as spec-first workflows spread among coding-agent users.",
+      "language": "TypeScript",
+      "stars": 147000,
+      "stars_today": 1240,
+      "forks": 8900,
+      "url": "https://github.com/github/spec-kit",
+      "tags": [
+        "developer-tools",
+        "coding-agents",
+        "specs"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "karpathy-nanochat",
+      "name": "karpathy/nanochat",
+      "description": "Minimal, local-first ChatGPT-style model and interface by Andrej Karpathy. It continues to trend as a reference for training and serving a small chat model end to end.",
+      "language": "Python",
+      "stars": 60100,
+      "stars_today": 980,
+      "forks": 3200,
+      "url": "https://github.com/karpathy/nanochat",
+      "tags": [
+        "llm",
+        "education",
+        "local-first"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "justvugg-colibri",
+      "name": "JustVugg/colibri",
+      "description": "Pure-C inference engine that streams MoE models from disk, claiming multi-trillion-parameter models on 8GB RAM. It is trending alongside the new trillion-scale MoE releases. Real-world throughput claims need independent verification.",
+      "language": "C",
+      "stars": 46800,
+      "stars_today": 760,
+      "forks": 2100,
+      "url": "https://github.com/JustVugg/colibri",
+      "tags": [
+        "inference",
+        "moe",
+        "local-llm"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "microsoft-vibevoice",
+      "name": "microsoft/VibeVoice",
+      "description": "Open-source voice AI platform for real-time conversational agents with emotion-aware speech synthesis. It is trending on demand for open voice agent stacks.",
+      "language": "Python",
+      "stars": 56000,
+      "stars_today": 640,
+      "forks": 3700,
+      "url": "https://github.com/microsoft/VibeVoice",
+      "tags": [
+        "speech",
+        "tts",
+        "voice-agents"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "p-e-w-heretic",
+      "name": "p-e-w/heretic",
+      "description": "Training-free tool that modifies LLM behavior, reducing censorship, sycophancy and slop patterns. It is popular for its weight-editing approach and also relevant to safety debates.",
+      "language": "Python",
+      "stars": 38200,
+      "stars_today": 520,
+      "forks": 1400,
+      "url": "https://github.com/p-e-w/heretic",
+      "tags": [
+        "llm",
+        "alignment",
+        "model-editing"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "mattpocock-skills",
+      "name": "mattpocock/skills",
+      "description": "Curated agent skills and system prompts for coding agents, covering TypeScript, testing and documentation. It is rising quickly as reusable agent skills become a shared practice.",
+      "language": "TypeScript",
+      "stars": 1767,
+      "stars_today": 310,
+      "forks": 89,
+      "url": "https://github.com/mattpocock/skills",
+      "tags": [
+        "agent-skills",
+        "coding-agents",
+        "prompts"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "paperclipai-paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "Open-source platform for managing and deploying AI agents in team settings with approval workflows. It is early but gaining attention for human-in-the-loop agent orchestration.",
+      "language": "TypeScript",
+      "stars": 896,
+      "stars_today": 145,
+      "forks": 42,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": [
+        "agent-orchestration",
+        "workflows",
+        "enterprise"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "d4vinci-scrapling",
+      "name": "D4Vinci/Scrapling",
+      "description": "Web scraping framework that handles everything from single requests to large JavaScript-rendered crawls while avoiding detection. It is useful for collecting data for agents and RAG pipelines.",
+      "language": "Python",
+      "stars": 1565,
+      "stars_today": 128,
+      "forks": 94,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "tags": [
+        "scraping",
+        "data-collection",
+        "agents"
+      ],
+      "relevance": "low"
+    },
+    {
+      "id": "kornia-kornia",
+      "name": "kornia/kornia",
+      "description": "Differentiable geometric computer vision library in PyTorch for spatial AI and robotics perception. It is trending alongside this week's robotics and VLA papers.",
+      "language": "Python",
+      "stars": 778,
+      "stars_today": 95,
+      "forks": 410,
+      "url": "https://github.com/kornia/kornia",
+      "tags": [
+        "computer-vision",
+        "pytorch",
+        "robotics"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "max-sixty-worktrunk",
+      "name": "max-sixty/worktrunk",
+      "description": "Rust CLI for Git worktree management that lets multiple AI coding agents run parallel sessions without branch conflicts. It is trending as parallel agent workflows become common.",
+      "language": "Rust",
+      "stars": 266,
+      "stars_today": 88,
+      "forks": 18,
+      "url": "https://github.com/max-sixty/worktrunk",
+      "tags": [
+        "developer-tools",
+        "coding-agents",
+        "git"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Adaptive Inference-Time Compute",
+      "description": "Several papers cut cost and improve accuracy by spending compute only where it matters: selective chain-of-thought, drafter/verifier splits and routed strategies.",
+      "related_paper_ids": [
+        "strategist-agentic-reasoning",
+        "adversarial-speculative-reasoning",
+        "adaptive-reasoning-autonomous-driving",
+        "vflash-visual-planning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Memory and Stateful Agents",
+      "description": "Evolving and compressed memory is becoming core agent infrastructure, in both research and tooling. Compression's effects on safety are still under-studied.",
+      "related_paper_ids": [
+        "evomemstate-evolving-memory",
+        "context-compression-refusal-alignment"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Safety Robustness Under System Changes",
+      "description": "Alignment properties can degrade when systems are modified, for example by compression, and new training objectives target this gap.",
+      "related_paper_ids": [
+        "context-compression-refusal-alignment",
+        "contrastive-preference-gradient"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Benchmarks Exposing Long-Horizon Gaps",
+      "description": "New benchmarks in physics, visual search and games show frontier agents failing at intuition, persistence and long-session consistency rather than knowledge.",
+      "related_paper_ids": [
+        "frontierphysics-benchmark",
+        "vissearch-bench",
+        "npcbench"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Open Models for Embodied Agents",
+      "description": "Open-weight LLMs and efficient VLA decoders are closing the gap with proprietary systems on robot control at much lower cost.",
+      "related_paper_ids": [
+        "democratizing-robot-use-agents",
+        "vflash-visual-planning"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Data-Efficient Reasoning Training",
+      "description": "RLVR-derived signals are used to pick far smaller training subsets that retain reasoning performance.",
+      "related_paper_ids": [
+        "gist-rlvr-data-selection"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-06T06:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
