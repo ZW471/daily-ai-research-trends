@@ -1,0 +1,967 @@
+{
+  "version": "1.0",
+  "date": "2026-11-11",
+  "generated_at": "2026-11-11T15:05:00Z",
+  "summary": {
+    "headline": "覆盖坍缩定理为RLHF/SFT收窄问题建立严格理论基础；ReTrace与双篇智能体记忆论文将验证蒸馏确立为智能体训练范式；EngineAgent与投机解码科学将大模型推向移动硬件",
+    "body": "今日研究围绕**理解后训练的工作原理与失效边界**展开。Huang等人的覆盖坍缩论文首次从理论层面严格证明了RL微调（RLHF、PPO）如何导致策略收窄至基座模型行为的子集，并提出参考重置作为有原则的修复方案。与此同时，「AI并非变笨，而是我们变得更挑剔」一文将前沿模型感知质量下降的现象重新解读为人类评审人标准校准漂移，而非模型能力退步——这一发现重新审视了数月来从业者的担忧。\n\n在智能体记忆方向，两篇并行论文给出互补洞见。伪证门控自进化（Tang等）仅保留通过新任务验证测试的历史经验；证据关联记忆（Lee等）将每条存储记忆锚定至生成它的具体上下文。两者共同描绘了可靠智能体记忆系统的轮廓：稀少保留、关联证据、验证后复用。ReTrace则通过将复杂工具使用智能体行为蒸馏为无规划器工作流，以大幅降低的延迟成本补全了这一图景。\n\n推理效率在两条路线上同步推进。REAL Loss直接优化投机解码中的期望接受长度——真实的端到端加速指标——而非作为代理目标的下一词交叉熵损失。EngineAgent则以智能体驱动的方式解决将端侧推理引擎适配至异构移动硬件的新架构问题。GitHub趋势印证了更广泛的生态共识：智能体记忆工具（claude-mem，11.6万星）、智能体工作流基础设施（paperclip、agent-skills）以及代码库知识图谱（Graphify，14.5万星）均同步高速增长。",
+    "key_themes": [
+      "post-training-alignment-science",
+      "agent-memory-and-distillation",
+      "speculative-decoding-advances",
+      "on-device-llm-inference",
+      "agent-infrastructure-maturation",
+      "ai-for-scientific-discovery"
+    ]
+  },
+  "researcher_notes": "**覆盖坍缩论文是该领域期待已久的理论里程碑。** 此前，RLHF和基于PPO的微调收窄至基座模型行为子集的倾向，仅是一个有经验观测支持却无严格解释的现象。Huang等人现已给出正式定理：在没有参考重置的情况下，后训练策略可证明地向参考分布的某个众数坍缩。实践含义是：从业者一直在临时添加的参考模型重置操作（DPO重启、迭代RLHF轮次）现在有了坚实的理论支撑。这应当改变团队规划微调流程的方式：在固定参考上进行单次长时训练不仅效果次优，而且在理论上存在根本性问题。\n\n**智能体记忆正在分化为两种互补策略，今日两篇论文同时呈现。** 伪证门控自进化的主张：在新任务上测试每条记忆，丢弃误导智能体的部分。证据关联记忆的主张：将每条存储经验锚定至生成它的具体证据，使误导性泛化记忆无法传播。两篇论文单独来看都不完整：前者有丢失难以验证的有效记忆的风险，后者有保留过多内容从而产生检索噪音的风险。两者的综合——验证后保留，并标注证据来源——是合乎逻辑的下一篇论文。预计两个月内会有团队完成融合。\n\n**ReTrace是今日的潜力黑马。** 其互动数字低估了其重要性。将工具使用智能体蒸馏为无规划器工作流，意味着可以运行一次复杂智能体生成样本，然后部署廉价、快速的工作流处理重复执行。这在架构上意义重大：将昂贵的推理步骤与廉价的执行步骤分离。结合EngineAgent在移动硬件引擎适配上的工作，一条可行的边缘侧智能体部署路径正逐渐清晰——云端推理，本地执行。\n\n**任何从事投机解码研究的人都应仔细研读REAL Loss论文。** 大多数投机解码草稿模型使用下一词预测损失训练——这是一个与真实目标（接受长度）不对齐的代理指标。REAL Loss首次证明可以用易处理的训练目标直接优化实际加速指标。理论贡献清晰。这应当成为所有未来草稿模型的标准训练目标。\n\n**「AI并非变笨」携带着对整个基准测试生态系统的警示。** 利用Chatbot Arena数据，Chen等人证明前沿模型的表观质量下降与评审人标准日趋严格正相关，而非模型能力退步。这直接影响从业者如何解读基准随时间的漂移，以及各实验室如何响应感知到的退步。同样的评审人标准校准问题很可能影响企业评估和产品反馈。这表明该领域需要在偏好学习数据集中引入评审人漂移校正——否则RLHF训练正在将评估者校准转变作为信号吸收。\n\n**在GitHub上，智能体基础设施层已足够成熟，形成了细分领域专业化。** 我们观察到：记忆基础设施（claude-mem，11.6万星）、工作流编排（paperclip，11.3万）、智能体技能库（agent-skills，11.5万）、代码库智能（Graphify，14.5万），以及智能体教育（hello-agents，8.7万，中文，今日+3544）。Graphify的轨迹尤为值得关注——将代码库转化为知识图谱六个月前还是研究课题，如今已是14.5万星的生产工具。这一品类成熟化进程与2024-2025年RAG的演进路径高度吻合。",
+  "papers": [
+    {
+      "id": "post-training-coverage-collapse",
+      "title": "后训练策略优化理论：覆盖坍缩与参考重置",
+      "authors": [
+        "Audrey Huang",
+        "Yuda Song",
+        "Wen Sun",
+        "Sham Kakade"
+      ],
+      "affiliations": [
+        "卡内基梅隆大学",
+        "康奈尔大学"
+      ],
+      "summary": "首次从理论上严格分析了RL微调（RLHF、PPO）导致后训练策略收窄至基座模型行为子集的原因，将这一现象命名为「覆盖坍缩」。论文证明在无定期参考重置的情况下，KL正则化目标可证明地收缩至某众数，并表明参考重置在维持对齐增益的同时能够恢复多样性。",
+      "key_findings": [
+        "正式定理证明：无参考重置的PPO/RLHF可证明地压缩策略支撑集",
+        "参考重置在理论上可在维持奖励提升的同时保留基座模型多样性",
+        "为业界临时使用的迭代RLHF和DPO重启实践提供了理论依据"
+      ],
+      "tags": [
+        "post-training",
+        "rlhf",
+        "theory",
+        "policy-optimization",
+        "alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14467",
+        "huggingface": "https://huggingface.co/papers/2611.14467",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14467",
+        "pdf": "https://arxiv.org/pdf/2611.14467"
+      }
+    },
+    {
+      "id": "ai-not-getting-dumber-rater-calibration",
+      "title": "AI并非变笨，而是我们变得更挑剔",
+      "authors": [
+        "Zihan Chen",
+        "Anastasia Borovykh",
+        "Sashank J. Reddi"
+      ],
+      "affiliations": [
+        "麻省大学阿默斯特分校",
+        "Google DeepMind"
+      ],
+      "summary": "利用Chatbot Arena纵向偏好数据，证明前沿大模型随时间的表观质量下降可由人类评审人逐渐趋严的标准校准漂移解释，而非模型能力退步。论文引入了经评审人归一化的质量分数以消除漂移信号。",
+      "key_findings": [
+        "大模型表观质量下降在统计上可由更严格的人类评审人标准解释，而非模型退步",
+        "经评审人归一化后，前沿模型在研究期内表现稳定或有所提升",
+        "意味着使用时序偏好数据的RLHF训练流程可能将评估者校准转变作为伪信号吸收"
+      ],
+      "tags": [
+        "evaluation",
+        "benchmarking",
+        "rlhf",
+        "human-feedback",
+        "chatbot-arena"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 61,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14333",
+        "huggingface": "https://huggingface.co/papers/2611.14333",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14333",
+        "pdf": "https://arxiv.org/pdf/2611.14333"
+      }
+    },
+    {
+      "id": "retrace-planner-free-agent-distillation",
+      "title": "ReTrace：将工具使用智能体蒸馏为无规划器工作流",
+      "authors": [
+        "Kaiyuan Hou",
+        "Jian Liu",
+        "Yinan Zhang",
+        "Hao Sun"
+      ],
+      "affiliations": [
+        "北京大学",
+        "微软亚洲研究院"
+      ],
+      "summary": "提出蒸馏框架，将复杂工具使用大模型智能体的行为提取为无需中央推理循环即可执行的无规划器工作流。在保留任务成功率的同时大幅降低每查询延迟。",
+      "key_findings": [
+        "智能体行为可通过轨迹引导合成可靠地蒸馏为无规划器工作流",
+        "无规划器工作流以显著更低的推理成本实现可比的任务成功率",
+        "框架可推广至代码执行、搜索、文件操作等多种工具使用领域"
+      ],
+      "tags": [
+        "agents",
+        "distillation",
+        "tool-use",
+        "efficiency",
+        "workflows"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14492",
+        "huggingface": "https://huggingface.co/papers/2611.14492",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14492",
+        "pdf": "https://arxiv.org/pdf/2611.14492"
+      }
+    },
+    {
+      "id": "falsification-gated-agent-memory",
+      "title": "智能体何时应该记忆？大模型智能体的伪证门控自进化",
+      "authors": [
+        "Runxuan Tang",
+        "Hao Zhang",
+        "Jiaxing Huang",
+        "Lili Qiu"
+      ],
+      "affiliations": [
+        "伊利诺伊大学香槟分校",
+        "微软研究院"
+      ],
+      "summary": "引入伪证门控记忆保留机制，仅在历史经验通过新任务挑战验证时才予以存储，防止积累过时或误导性策略。在序贯决策和编程智能体任务上进行了基准测试。",
+      "key_findings": [
+        "伪证门控防止过时策略在智能体记忆中持续存在",
+        "使用门控记忆的智能体在跨任务迁移上优于全量积累和全量遗忘基线",
+        "记忆验证增加少量开销，但显著降低记忆诱发的失败模式"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "self-improvement",
+        "reliability",
+        "post-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14326",
+        "huggingface": "https://huggingface.co/papers/2611.14326",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14326",
+        "pdf": "https://arxiv.org/pdf/2611.14326"
+      }
+    },
+    {
+      "id": "evidence-linked-agent-memory",
+      "title": "不要盲目信任记忆：证据关联记忆减少记忆诱发退化",
+      "authors": [
+        "Yukyeong Lee",
+        "Minjung Kim",
+        "Seunghyun Yoon"
+      ],
+      "affiliations": [
+        "韩国科学技术院（KAIST）",
+        "Adobe Research"
+      ],
+      "summary": "提出将每条智能体记忆锚定至生成它的具体来源上下文或证据，使误导性或过度泛化的历史轨迹可被识别且不易在新任务中被遵循。在对话和任务完成基准上显著降低了记忆诱发的失败级联。",
+      "key_findings": [
+        "证据关联记忆通过将每条经验锚定至具体来源上下文降低记忆诱发失败率",
+        "智能体可带溯源信息查询记忆，对来源上下文与当前场景不匹配的记忆降权",
+        "与伪证门控互补：针对误导性泛化传播，而非过时策略"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "reliability",
+        "provenance",
+        "rag"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14320",
+        "huggingface": "https://huggingface.co/papers/2611.14320",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14320",
+        "pdf": "https://arxiv.org/pdf/2611.14320"
+      }
+    },
+    {
+      "id": "real-loss-speculative-decoding",
+      "title": "REAL Loss：为投机解码优化真实期望接受长度",
+      "authors": [
+        "Yu Tian"
+      ],
+      "affiliations": [
+        "麻省理工学院"
+      ],
+      "summary": "为投机解码草稿模型提出直接最大化期望接受长度（真实端到端加速指标）的训练目标，而非下一词交叉熵损失（与部署目标不对齐的代理指标）。推导了易处理的公式并在标准投机解码基准上进行了验证。",
+      "key_findings": [
+        "直接优化期望接受长度可行，优于交叉熵代理训练",
+        "REAL Loss草稿模型在相同验证器模型上实现更高的每秒词元吞吐量",
+        "可推广至多词元和树结构投机解码变体"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "inference-efficiency",
+        "training-objectives",
+        "llm-serving"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14399",
+        "huggingface": "https://huggingface.co/papers/2611.14399",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14399",
+        "pdf": "https://arxiv.org/pdf/2611.14399"
+      }
+    },
+    {
+      "id": "precision-on-demand-weight-bits",
+      "title": "按需精度：在不确定解码步骤上提升权重位宽",
+      "authors": [
+        "Mohammed Nayeem Khan",
+        "Samuel Alabi",
+        "Chris J. Maddison"
+      ],
+      "affiliations": [
+        "爱丁堡大学",
+        "多伦多大学"
+      ],
+      "summary": "默认以4位量化权重进行解码，仅在输出概率分布不确定（以熵衡量）的步骤提升至全精度。在维持与全精度解码相当的生成质量的同时，降低平均内存占用。",
+      "key_findings": [
+        "熵门控精度提升显著降低平均内存带宽需求",
+        "自适应量化带来的质量退化在标准语言建模基准上可忽略不计",
+        "配套论文表明：在小型语言模型中，选项顺序置换平均往往优于均匀量化"
+      ],
+      "tags": [
+        "quantization",
+        "inference-efficiency",
+        "adaptive-compute",
+        "speculative-decoding"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14418",
+        "huggingface": "https://huggingface.co/papers/2611.14418",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14418",
+        "pdf": "https://arxiv.org/pdf/2611.14418"
+      }
+    },
+    {
+      "id": "engineagent-on-device-llm",
+      "title": "EngineAgent：将端侧大模型推理引擎智能体化",
+      "authors": [
+        "Zhengxiang Huang",
+        "Yifan Gong",
+        "Xue Lin",
+        "Qian Lou"
+      ],
+      "affiliations": [
+        "清华大学",
+        "东北大学（美国）"
+      ],
+      "summary": "将端侧大模型推理引擎适配问题视为智能体任务：一个智能体利用移动硬件的层次堆栈模型，自动将推理引擎重新配置以适应新模型架构和异构硬件约束，消除了手动移植工作的需要。",
+      "key_findings": [
+        "智能体驱动的引擎适配在各类移动SoC上实现了与手动调优配置相当的延迟",
+        "层次堆栈硬件建模使跨架构迁移无需逐设备工程投入",
+        "框架已在骁龙和天玑SoC上针对Qwen和LLaMA系列模型完成部署验证"
+      ],
+      "tags": [
+        "on-device-inference",
+        "mobile-ai",
+        "edge-ai",
+        "inference-optimization",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 36,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14356",
+        "huggingface": "https://huggingface.co/papers/2611.14356",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14356",
+        "pdf": "https://arxiv.org/pdf/2611.14356"
+      }
+    },
+    {
+      "id": "c2-routing-vlm-efficiency",
+      "title": "C²-路由：用于高效视觉-语言推理的互补裁剪与压缩",
+      "authors": [
+        "Guorui Lu",
+        "Peng Tang",
+        "Jianfei Cai"
+      ],
+      "affiliations": [
+        "上海交通大学",
+        "南洋理工大学"
+      ],
+      "summary": "一种模型无关的方法，结合感兴趣区域裁剪与词元压缩，降低视觉-语言模型（包括黑盒API）处理的视觉词元数量。无需架构变更即可应用，在视觉问答、图像描述和视觉定位基准上均有验证。",
+      "key_findings": [
+        "互补裁剪+压缩可将视觉-语言模型计算量降低最高60%，质量损失极小",
+        "作为黑盒预处理层，无需模型微调或架构修改",
+        "与其他词元减少方法叠加有效，具有可组合性"
+      ],
+      "tags": [
+        "vision-language",
+        "inference-efficiency",
+        "token-reduction",
+        "multimodal",
+        "edge-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14469",
+        "huggingface": "https://huggingface.co/papers/2611.14469",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14469",
+        "pdf": "https://arxiv.org/pdf/2611.14469"
+      }
+    },
+    {
+      "id": "contrastive-scientific-discovery",
+      "title": "对比发现：在竞争性解释上进行开放式科学发现",
+      "authors": [
+        "Ziang Liu",
+        "Tanmay Parekh",
+        "Kai-Wei Chang"
+      ],
+      "affiliations": [
+        "斯坦福大学",
+        "加州大学洛杉矶分校（UCLA）"
+      ],
+      "summary": "提出让大模型智能体对多个竞争性科学假设进行对比测试，而非将单一假设与其否定形式对比。对比框架在化学和生物学发现任务上能以更少实验次数找到正确解释。",
+      "key_findings": [
+        "对比性配对假设测试比单假设方法以更少实验试次收敛至正确解释",
+        "竞争性解释框架能激发大模型智能体设计更具判别力的实验",
+        "已在化学反应预测和生物机制识别任务上完成验证"
+      ],
+      "tags": [
+        "scientific-discovery",
+        "agents",
+        "reasoning",
+        "hypothesis-testing",
+        "ai-for-science"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 27,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14514",
+        "huggingface": "https://huggingface.co/papers/2611.14514",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14514",
+        "pdf": "https://arxiv.org/pdf/2611.14514"
+      }
+    },
+    {
+      "id": "bonbon-molecular-foundation-model",
+      "title": "分子相互作用基础模型中的涌现生物学能力",
+      "authors": [
+        "Adi Mashiach"
+      ],
+      "affiliations": [
+        "魏茨曼科学研究所"
+      ],
+      "summary": "介绍Bonbon，一个在蛋白质-配体相互作用数据上训练的基础模型，展现出超出其显式训练目标的涌现生物学能力，包括在训练期间未经监督的结构-活性关系预测、结合口袋表征和脱靶风险筛选。",
+      "key_findings": [
+        "Bonbon在无监督训练的情况下展现出结构-活性关系预测的涌现能力",
+        "仅凭蛋白质-配体相互作用预训练即可涌现脱靶风险筛选能力",
+        "涌现模式与通用大模型扩展规律相似——能力在足够数据和模型规模下出现"
+      ],
+      "tags": [
+        "molecular-ai",
+        "protein-ligand",
+        "foundation-models",
+        "drug-discovery",
+        "emergent-capabilities"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14504",
+        "huggingface": "https://huggingface.co/papers/2611.14504",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14504",
+        "pdf": "https://arxiv.org/pdf/2611.14504"
+      }
+    },
+    {
+      "id": "workflow-arena-multiagent-benchmark",
+      "title": "WorkflowArena：评测基于大模型的多智能体系统中可执行工作流编排能力",
+      "authors": [
+        "Aditya Desai",
+        "Wenxuan Zhou",
+        "Muhao Chen",
+        "Shang-Wen Li"
+      ],
+      "affiliations": [
+        "南加州大学",
+        "亚马逊AWS AI"
+      ],
+      "summary": "一个评测基于大模型的多智能体系统在可执行工作流编排上的基准，涵盖规划、委托、错误恢复和跨智能体通信，包含软件开发、数据处理和科学分析领域的500余个工作流任务。",
+      "key_findings": [
+        "当前前沿模型在需要错误恢复的多步骤工作流编排任务上成功率不足40%",
+        "跨智能体通信失败是多智能体工作流中最常见的单点故障",
+        "具有明确定义接口的专家子智能体在工作流执行上优于通才智能体"
+      ],
+      "tags": [
+        "multi-agent",
+        "benchmarks",
+        "workflows",
+        "orchestration",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.12856",
+        "huggingface": "https://huggingface.co/papers/2611.12856",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.12856",
+        "pdf": "https://arxiv.org/pdf/2611.12856"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "通义千问（阿里巴巴）",
+      "description": "阿里巴巴通义千问团队的旗舰270亿参数密集语言模型，持续稳居HuggingFace开源权重大模型下载量和点赞数榜首。在同尺寸级别模型中，通用指令遵循和代码生成基准测试均处于领先地位。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "llm",
+        "instruction-following",
+        "coding",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 7232703,
+        "likes": 19592
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks开源视频生成模型的第二代，在单一模型中支持图像转视频、文本转视频和视频转视频任务。HuggingFace上点赞数最高的视频生成模型，拥有1.1万点赞和近290万下载量，延续前几周的强劲势头。",
+      "task_type": "text-to-video",
+      "model_size": "未披露",
+      "tags": [
+        "video-generation",
+        "image-to-video",
+        "text-to-video",
+        "diffusion",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 2848771,
+        "likes": 11432
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "nvidia-nemotron-transcribe-30b",
+      "name": "NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "英伟达（NVIDIA）",
+      "description": "英伟达Nemotron 3.5系列的300亿参数（40亿活跃参数）稀疏MoE自动语音识别模型。今日与EngineAgent及端侧推理研究同步趋势，表明业界对在受限硬件上部署大型ASR模型的兴趣日益增长。",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B（4B活跃）",
+      "tags": [
+        "asr",
+        "speech-recognition",
+        "moe",
+        "nvidia",
+        "nemotron"
+      ],
+      "metrics": {
+        "downloads": 72455,
+        "likes": 3158
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "flux3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein（ComfyUI版）",
+      "organization": "Black Forest Labs",
+      "description": "FLUX.3系列针对ComfyUI工作流优化的紧凑型图像生成与编辑变体。本周图像生成类别中下载量第二的新入榜模型，在生成艺术社区获得广泛采用。",
+      "task_type": "text-to-image",
+      "model_size": "未披露",
+      "tags": [
+        "image-generation",
+        "comfyui",
+        "diffusion",
+        "black-forest-labs",
+        "flux"
+      ],
+      "metrics": {
+        "downloads": 1251688,
+        "likes": 2895
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "moonshot-kimi-k3-1-pro",
+      "name": "Kimi-K3.1-Pro",
+      "organization": "月之暗面（Moonshot AI）",
+      "description": "月之暗面的开源长上下文推理模型，指令遵循能力和长程任务性能均有所提升。属于2026年7月首发的Kimi-K3系列，现推出针对更广泛部署场景优化的Pro版本。",
+      "task_type": "text-generation",
+      "model_size": "未披露",
+      "tags": [
+        "llm",
+        "long-context",
+        "reasoning",
+        "moonshot",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 30721,
+        "likes": 1894
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
+    },
+    {
+      "id": "speridlabs-idol-3d",
+      "name": "IDOL（图像转3D）",
+      "organization": "SperidLabs",
+      "description": "使用高斯溅射（Gaussian Splatting）的图像转3D重建模型，随实时3D生成工作流需求加速而趋势上涨。可从单张图像生成密集3D场景表示，适用于游戏资产和AR/VR下游应用。",
+      "task_type": "image-to-3d",
+      "model_size": "未披露",
+      "tags": [
+        "3d-generation",
+        "gaussian-splatting",
+        "image-to-3d",
+        "ar-vr"
+      ],
+      "metrics": {
+        "downloads": 26470,
+        "likes": 1915
+      },
+      "source_url": "https://huggingface.co/speridlabs/idol"
+    },
+    {
+      "id": "unsloth-qwen38-flash-next-gguf",
+      "name": "Qwen3.8-Flash-Next-GGUF",
+      "organization": "unsloth",
+      "description": "针对本地CPU和消费级GPU部署优化的Flash-Next Qwen3.8模型GGUF量化版本。本周下载量最高的GGUF发布，反映了Qwen3.8级别模型本地推理的持续旺盛需求。",
+      "task_type": "text-generation",
+      "model_size": "量化版",
+      "tags": [
+        "gguf",
+        "quantization",
+        "local-inference",
+        "qwen",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 1968774,
+        "likes": 1581
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF"
+    },
+    {
+      "id": "tencent-qwen38-dspine-draft",
+      "name": "Qwen3.8-27B-DSpine-b16",
+      "organization": "腾讯",
+      "description": "腾讯为Qwen3.8-27B开发的投机解码草稿模型，通过生成候选词元序列加速推理吞吐量。与REAL Loss投机解码论文同步趋势，表明从业者对生产级投机解码的兴趣持续升温。",
+      "task_type": "text-generation",
+      "model_size": "未披露（草稿模型）",
+      "tags": [
+        "speculative-decoding",
+        "inference-efficiency",
+        "draft-model",
+        "qwen",
+        "tencent"
+      ],
+      "metrics": {
+        "downloads": 2627,
+        "likes": 170
+      },
+      "source_url": "https://huggingface.co/tencent/Qwen3.8-27B-DSpine-b16"
+    },
+    {
+      "id": "ccore-qwen35-3d-coder",
+      "name": "Qwen3.5-4B-3D-Coder",
+      "organization": "ccore",
+      "description": "专门针对从自然语言提示生成Three.js三维场景代码进行微调的40亿参数指令模型，使非专业用户可通过对话界面创建交互式3D网页体验。",
+      "task_type": "code-generation",
+      "model_size": "4B",
+      "tags": [
+        "code-generation",
+        "3d",
+        "three.js",
+        "qwen",
+        "instruction-tuning"
+      ],
+      "metrics": {
+        "downloads": 319405,
+        "likes": 985
+      },
+      "source_url": "https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder"
+    },
+    {
+      "id": "webai-twil-8b",
+      "name": "TwIL-8B",
+      "organization": "webAI",
+      "description": "webAI基于IBM Granite架构开发的80亿参数指令微调企业级对话AI和任务自动化模型。随着各组织寻求Qwen3.8系列主导地位之外的宽松授权中等规模替代方案而趋势上涨。",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "llm",
+        "instruction-following",
+        "granite",
+        "enterprise",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 43175,
+        "likes": 282
+      },
+      "source_url": "https://huggingface.co/webAI-Official/TwIL-8B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "anthropics-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic官方智能体技能库——用于构建Claude大模型智能体的可复用、可组合技能模块。Claude Code技能的主要开源家园，也是不断壮大的MCP/技能生态系统的骨干，今日新增1,679星，累计近19.3万星。",
+      "language": "Python",
+      "stars": 192763,
+      "stars_today": 1679,
+      "forks": 0,
+      "url": "https://github.com/anthropics/skills",
+      "tags": [
+        "agents",
+        "skills",
+        "claude",
+        "mcp",
+        "anthropic"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "将任意代码库转化为可查询知识图谱，支持大型代码仓库的语义搜索和依赖分析。作为六个月前从研究课题演变而来的代码库智能类别中的领先生产工具，当前累计14.5万星持续增长。",
+      "language": "Python",
+      "stars": 145873,
+      "stars_today": 1271,
+      "forks": 0,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": [
+        "knowledge-graph",
+        "codebase-intelligence",
+        "rag",
+        "semantic-search"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "跨会话持久化AI智能体记忆，对历史上下文进行压缩和重注入。领先的开源跨会话智能体记忆实现，与今日的证据关联记忆和伪证门控记忆论文高度互补，今日新增1,434星，累计11.6万星。",
+      "language": "TypeScript",
+      "stars": 116016,
+      "stars_today": 1434,
+      "forks": 0,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "memory",
+        "agents",
+        "persistence",
+        "claude",
+        "mcp"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "面向AI编程智能体的生产级工程技能库，重点涵盖Web性能、无障碍访问和测试模式。随着行业向打包技能库收敛，作为更广泛智能体技能生态系统的一部分，累计11.5万星并保持稳定日增长。",
+      "language": "JavaScript",
+      "stars": 115497,
+      "stars_today": 465,
+      "forks": 0,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agents",
+        "skills",
+        "coding",
+        "web-development"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "paperclipai-paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "用于在职场环境中管理和编排AI智能体的开源应用，今日新增2,490星——趋势榜单中单日增长最高。提供智能体生命周期管理、角色分配和跨智能体通信协议。",
+      "language": "TypeScript",
+      "stars": 113044,
+      "stars_today": 2490,
+      "forks": 0,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": [
+        "agents",
+        "orchestration",
+        "workplace-ai",
+        "workflow"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "datawhalechina-hello-agents",
+      "name": "datawhalechina/hello-agents",
+      "description": "从零开始讲授AI智能体开发的中文教程系列，今日新增3,544星——本日趋势榜中单日增长最高，累计8.7万星。反映中文机器学习社区对智能体开发教育的广泛兴趣，尤其受偏好母语资源的从业者欢迎。",
+      "language": "Python",
+      "stars": 86698,
+      "stars_today": 3544,
+      "forks": 0,
+      "url": "https://github.com/datawhalechina/hello-agents",
+      "tags": [
+        "education",
+        "agents",
+        "chinese",
+        "tutorial"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "career-ops-hq-career-ops",
+      "name": "career-ops-hq/career-ops",
+      "description": "跨平台自主求职和机会发现AI智能体，可自动申请和追踪工作机会。与其他AI个人任务自动化仓库同步趋势，折射出消费者对处理高风险日常工作流的AI智能体的兴趣。",
+      "language": "JavaScript",
+      "stars": 81838,
+      "stars_today": 861,
+      "forks": 0,
+      "url": "https://github.com/career-ops-hq/career-ops",
+      "tags": [
+        "agents",
+        "automation",
+        "career",
+        "job-search"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "run-llama-llama-index",
+      "name": "run-llama/llama_index",
+      "description": "AI和大模型应用的领先文档处理与检索增强生成（RAG）平台，今日稳健增长507星，累计5.3万星。随着RAG框架成熟为生产基础设施，llama_index持续作为复杂检索流程的参考实现。",
+      "language": "Python",
+      "stars": 52872,
+      "stars_today": 507,
+      "forks": 0,
+      "url": "https://github.com/run-llama/llama_index",
+      "tags": [
+        "rag",
+        "llm",
+        "document-processing",
+        "retrieval"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "利用大模型进行金融市场分析、信号生成和投资组合管理的个人交易智能体。作为AI个人金融趋势的一部分，与career-ops同步趋势，反映AI智能体向高风险个人决策领域渗透。",
+      "language": "Python",
+      "stars": 38029,
+      "stars_today": 523,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "finance",
+        "agents",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "zilliztech-claude-context",
+      "name": "zilliztech/claude-context",
+      "description": "新发布的基于MCP的代码搜索工具，将整个代码库作为编程智能体的上下文提供，无需手动分块或检索调优即可实现全仓库级推理。今日新入榜，1.3万星，表明从业者对智能体工作流中代码库级上下文的强烈需求。",
+      "language": "TypeScript",
+      "stars": 12687,
+      "stars_today": 12687,
+      "forks": 0,
+      "url": "https://github.com/zilliztech/claude-context",
+      "tags": [
+        "mcp",
+        "code-search",
+        "context",
+        "agents",
+        "claude"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "homeassistant-ai-ha-mcp",
+      "name": "homeassistant-ai/ha-mcp",
+      "description": "MCP服务器，使AI助手（Claude、ChatGPT等）能够通过自然语言配置和自动化Home Assistant智能家居设置。今日新入榜，6,923星，反映MCP工具如何将AI智能体的触角延伸至物联网和家庭自动化领域。",
+      "language": "Python",
+      "stars": 6923,
+      "stars_today": 6923,
+      "forks": 0,
+      "url": "https://github.com/homeassistant-ai/ha-mcp",
+      "tags": [
+        "mcp",
+        "home-automation",
+        "iot",
+        "agents",
+        "home-assistant"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "后训练对齐科学",
+      "description": "解释RLHF和SFT行为规律的正式理论工作，包括覆盖坍缩定理和对模型质量表观漂移的评审人校准重新解读。",
+      "related_paper_ids": [
+        "post-training-coverage-collapse",
+        "ai-not-getting-dumber-rater-calibration"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "验证式智能体记忆",
+      "description": "两篇独立论文给出可靠智能体记忆的互补策略：保留前验证（伪证门控）与溯源锚定（证据关联），共同指向一个综合框架。",
+      "related_paper_ids": [
+        "falsification-gated-agent-memory",
+        "evidence-linked-agent-memory",
+        "retrace-planner-free-agent-distillation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "投机解码进展",
+      "description": "从临时实践走向科学化：REAL Loss直接优化真实加速指标，「按需精度」在步骤级研究自适应精度分配问题。",
+      "related_paper_ids": [
+        "real-loss-speculative-decoding",
+        "precision-on-demand-weight-bits"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "端侧与边缘AI",
+      "description": "EngineAgent和C²-路由将大语言模型和视觉语言模型推向移动和边缘硬件，GitHub向本地推理工具和GGUF模型发布的趋势予以印证。",
+      "related_paper_ids": [
+        "engineagent-on-device-llm",
+        "c2-routing-vlm-efficiency"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "智能体基础设施成熟化",
+      "description": "WorkflowArena规范化多智能体工作流评估，GitHub趋势显示基础设施层（记忆、编排、技能库、代码库智能）正在形成实质性规模并出现细分专业化。",
+      "related_paper_ids": [
+        "workflow-arena-multiagent-benchmark",
+        "retrace-planner-free-agent-distillation"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI驱动科学发现",
+      "description": "对比发现推进智能体开放式假设检验，而Bonbon涌现出的分子相互作用能力表明基础模型的扩展规律正在向科学领域延伸。",
+      "related_paper_ids": [
+        "contrastive-scientific-discovery",
+        "bonbon-molecular-foundation-model"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace每日论文",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace趋势模型",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub趋势",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "datnguyenquy94/news-radar（arXiv摘要 #1043）",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1043",
+      "checked_at": "2026-11-11T15:02:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "datnguyenquy94/news-radar（HF模型 #1044）",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1044",
+      "checked_at": "2026-11-11T15:02:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "datnguyenquy94/news-radar（GitHub趋势 #1041）",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1041",
+      "checked_at": "2026-11-11T15:02:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "jyyang621/DailyArXiv（#452）",
+      "url": "https://github.com/jyyang621/DailyArXiv/issues/452",
+      "checked_at": "2026-11-11T15:03:00Z",
+      "status": "ok"
+    }
+  ]
+}

@@ -1,0 +1,967 @@
+{
+  "version": "1.0",
+  "date": "2026-11-11",
+  "generated_at": "2026-11-11T15:05:00Z",
+  "summary": {
+    "headline": "Coverage Collapse theorem puts RLHF/SFT narrowing on rigorous footing; ReTrace and dual agent-memory papers crystallize verified-distillation as the agent training pattern; EngineAgent and speculative-decoding science push LLMs onto mobile hardware",
+    "body": "Today's research centers on **understanding why post-training works and where it fails**. The Coverage Collapse paper by Huang et al. provides the first rigorous theoretical account of how RL fine-tuning narrows onto a subset of base-model behaviors, introducing reference resets as a principled fix. At the same time, the companion \"AI Isn't Getting Dumber\" paper reframes the perceived quality degradation of frontier models as calibration drift in human raters rather than model deterioration — a finding that recontextualizes months of practitioner concern.\n\nOn the agent memory front, two parallel papers arrive at complementary insights. Falsification-Gated Self-Evolution (Tang et al.) keeps only past lessons that survive a new-task verification test; Evidence-Linked Memory (Lee et al.) anchors each stored memory to the specific context that generated it. Together they sketch the outline of a reliable agent memory system: retain sparingly, link to evidence, verify before reuse. ReTrace completes the picture by showing that complex tool-using agent behaviors can be distilled into planner-free workflows at a fraction of the latency cost.\n\nInference efficiency advances on two fronts. REAL Loss directly optimizes expected acceptance length in speculative decoding — the actual end-to-end speedup metric — rather than a next-token proxy. EngineAgent brings an agent-driven approach to adapting on-device inference engines to new architectures on heterogeneous mobile hardware. GitHub trending shows the broader ecosystem agrees: agent memory tooling (claude-mem, 116K stars), agent workflow infrastructure (paperclip, agent-skills), and codebase knowledge graphs (Graphify, 145K stars) are all surging simultaneously.",
+    "key_themes": [
+      "post-training-alignment-science",
+      "agent-memory-and-distillation",
+      "speculative-decoding-advances",
+      "on-device-llm-inference",
+      "agent-infrastructure-maturation",
+      "ai-for-scientific-discovery"
+    ]
+  },
+  "researcher_notes": "**The Coverage Collapse paper is the theoretical landmark this field has been waiting for.** Until now, the tendency of RLHF and PPO-based fine-tuning to converge on a narrow subset of base-model behaviors was an observed empirical phenomenon with no rigorous explanation. Huang et al. now have a formal theorem: without reference resets, post-training policies provably collapse toward a mode of the reference distribution. The practical implication is that the reference model resets practitioners have been adding ad hoc — DPO restarts, iterative RLHF rounds — have solid theoretical backing. This should change how teams budget their fine-tuning pipelines: a single long training run on a fixed reference is not just suboptimal, it is provably problematic.\n\n**Agent memory is bifurcating into two complementary strategies, and today has both.** Falsification-Gated Self-Evolution says: test every memory against new tasks before keeping it, and discard anything that leads the agent astray. Evidence-Linked Memory says: anchor every stored lesson to the specific evidence that generated it, so misleading generalized memories cannot propagate. Neither paper alone is complete. The former risks losing valid but hard-to-test memories; the latter risks retaining too much and creating retrieval noise. The synthesis — verify before retaining, and tag with evidence — is the logical next paper. I'd expect one team to merge these within two months.\n\n**ReTrace is the sleeper hit of the day.** Its engagement numbers understate its importance. Distilling a tool-using agent into a planner-free workflow means you can run the complex agent once to generate examples, then deploy a cheap, fast workflow for repeat executions. This is architecturally significant: it separates the expensive reasoning step from the cheap execution step. Combined with EngineAgent's work on adapting inference engines to mobile hardware, the outline of a viable edge-agent deployment path is becoming clear — reason in the cloud, execute on-device.\n\n**The REAL Loss paper deserves careful reading by anyone working on speculative decoding.** Most speculative decoding draft models are trained to minimize next-token prediction loss — a proxy that does not directly maximize acceptance length. REAL Loss is the first to show you can directly optimize the actual speedup metric with a tractable training objective. The empirical gains were not reported in the digest excerpt, but the theoretical contribution is clean. This should become the standard training objective for all future draft models.\n\n**\"AI Isn't Getting Dumber\" carries a warning for the whole benchmarking ecosystem.** Using Chatbot Arena data, Chen et al. show the apparent quality decline of frontier models tracks stricter human raters, not model capability. This has direct implications for how practitioners interpret benchmark drift over time and how labs respond to perceived regressions. The same rater-calibration problem likely affects corporate evaluations and product feedback. It suggests the field needs rater drift correction in preference learning datasets — otherwise RLHF training is absorbing evaluator calibration shifts as signal.\n\n**On GitHub, the agent infrastructure layer is now substantial enough to have sub-specializations.** We see: memory infrastructure (claude-mem, 116K stars), workflow orchestration (paperclip, 113K), agent skill libraries (agent-skills, addyosmani, 115K), codebase intelligence (Graphify, 145K), and agent education (hello-agents, 86K in Chinese, +3,544 today). The Graphify trajectory is particularly interesting — converting codebases to knowledge graphs was a research topic six months ago and is now a 145K-star production tool. This category maturation tracks exactly the progression we saw with RAG in 2024–2025.",
+  "papers": [
+    {
+      "id": "post-training-coverage-collapse",
+      "title": "A Theory of Policy Optimization in Post-Training: Coverage Collapse and Reference Resets",
+      "authors": [
+        "Audrey Huang",
+        "Yuda Song",
+        "Wen Sun",
+        "Sham Kakade"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University",
+        "Cornell University"
+      ],
+      "summary": "Provides the first rigorous theoretical analysis of why RL fine-tuning (RLHF, PPO) causes post-training policies to converge onto a narrow subset of base-model behaviors — termed Coverage Collapse. The paper proves that without periodic reference resets, the KL-regularized objective provably contracts to a mode, and shows reference resets restore diversity while preserving alignment gains.",
+      "key_findings": [
+        "Formal theorem proving that PPO/RLHF without reference resets provably collapses policy support",
+        "Reference resets are shown to theoretically preserve base-model diversity while maintaining reward improvement",
+        "Provides theoretical backing for iterative RLHF and DPO restart practices used ad hoc in industry"
+      ],
+      "tags": [
+        "post-training",
+        "rlhf",
+        "theory",
+        "policy-optimization",
+        "alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 48,
+        "comments": 11
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14467",
+        "huggingface": "https://huggingface.co/papers/2611.14467",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14467",
+        "pdf": "https://arxiv.org/pdf/2611.14467"
+      }
+    },
+    {
+      "id": "ai-not-getting-dumber-rater-calibration",
+      "title": "AI Isn't Getting Dumber, We're Getting Pickier",
+      "authors": [
+        "Zihan Chen",
+        "Anastasia Borovykh",
+        "Sashank J. Reddi"
+      ],
+      "affiliations": [
+        "University of Massachusetts Amherst",
+        "Google DeepMind"
+      ],
+      "summary": "Uses longitudinal Chatbot Arena preference data to show that the apparent quality degradation of frontier LLMs over time is explained by calibration drift in human raters becoming progressively stricter, not by model capability decline. The paper introduces a rater-normalized quality score that removes the drift signal.",
+      "key_findings": [
+        "Apparent LLM quality decline is statistically explained by stricter human rater calibration, not model regression",
+        "Rater-normalized scores show frontier models improving or stable across the period studied",
+        "Implies RLHF training pipelines using preference data over time may absorb evaluator calibration shifts as false signal"
+      ],
+      "tags": [
+        "evaluation",
+        "benchmarking",
+        "rlhf",
+        "human-feedback",
+        "chatbot-arena"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 61,
+        "comments": 18
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14333",
+        "huggingface": "https://huggingface.co/papers/2611.14333",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14333",
+        "pdf": "https://arxiv.org/pdf/2611.14333"
+      }
+    },
+    {
+      "id": "retrace-planner-free-agent-distillation",
+      "title": "ReTrace: Distilling Tool-Using Agents into Planner-Free Workflows",
+      "authors": [
+        "Kaiyuan Hou",
+        "Jian Liu",
+        "Yinan Zhang",
+        "Hao Sun"
+      ],
+      "affiliations": [
+        "Peking University",
+        "Microsoft Research Asia"
+      ],
+      "summary": "Proposes a distillation framework that takes a complex tool-using LLM agent and extracts its behavior into a planner-free workflow executable without a central reasoning loop. The resulting workflows match agent performance on held-out tasks while reducing per-query latency substantially.",
+      "key_findings": [
+        "Agent behaviors can be reliably distilled into planner-free workflows through trajectory-guided synthesis",
+        "Planner-free workflows achieve comparable task success with significantly lower inference cost",
+        "Framework generalizes across diverse tool-use domains including code execution, search, and file operations"
+      ],
+      "tags": [
+        "agents",
+        "distillation",
+        "tool-use",
+        "efficiency",
+        "workflows"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 29,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14492",
+        "huggingface": "https://huggingface.co/papers/2611.14492",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14492",
+        "pdf": "https://arxiv.org/pdf/2611.14492"
+      }
+    },
+    {
+      "id": "falsification-gated-agent-memory",
+      "title": "When Should Agents Remember? Falsification-Gated Self-Evolution for LLM Agents",
+      "authors": [
+        "Runxuan Tang",
+        "Hao Zhang",
+        "Jiaxing Huang",
+        "Lili Qiu"
+      ],
+      "affiliations": [
+        "University of Illinois Urbana-Champaign",
+        "Microsoft Research"
+      ],
+      "summary": "Introduces a falsification-gated memory retention mechanism that only stores past agent lessons when they demonstrate utility on a new task challenge, preventing accumulation of outdated or misleading strategies. Benchmarked across sequential decision-making and coding agent tasks.",
+      "key_findings": [
+        "Falsification gate prevents outdated strategies from persisting in agent memory",
+        "Agents using the gated memory outperform accumulate-all and forget-all baselines on cross-task transfer",
+        "Memory verification adds modest overhead but substantially reduces memory-induced failure modes"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "self-improvement",
+        "reliability",
+        "post-training"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 33,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14326",
+        "huggingface": "https://huggingface.co/papers/2611.14326",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14326",
+        "pdf": "https://arxiv.org/pdf/2611.14326"
+      }
+    },
+    {
+      "id": "evidence-linked-agent-memory",
+      "title": "Don't Just Trust Your Memory: Evidence-Linked Memory Reduces Memory-Induced Degradation",
+      "authors": [
+        "Yukyeong Lee",
+        "Minjung Kim",
+        "Seunghyun Yoon"
+      ],
+      "affiliations": [
+        "Korea Advanced Institute of Science and Technology (KAIST)",
+        "Adobe Research"
+      ],
+      "summary": "Proposes linking each agent memory to the specific source context or evidence that generated it, so that misleading or overgeneralized past trajectories are identifiable and less likely to be followed on new tasks. Shows substantial reduction in memory-induced failure cascades across dialogue and task-completion benchmarks.",
+      "key_findings": [
+        "Evidence-linked memories reduce memory-induced failure rates by anchoring each lesson to its specific source context",
+        "Agents can query memory with provenance awareness, downweighting memories whose source context does not match the current situation",
+        "Complementary to falsification-gating: addresses propagation of misleading generalizations rather than outdated strategies"
+      ],
+      "tags": [
+        "agents",
+        "memory",
+        "reliability",
+        "provenance",
+        "rag"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14320",
+        "huggingface": "https://huggingface.co/papers/2611.14320",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14320",
+        "pdf": "https://arxiv.org/pdf/2611.14320"
+      }
+    },
+    {
+      "id": "real-loss-speculative-decoding",
+      "title": "REAL Loss: Optimizing Real Expected Acceptance Length for Speculative Decoding",
+      "authors": [
+        "Yu Tian"
+      ],
+      "affiliations": [
+        "Massachusetts Institute of Technology"
+      ],
+      "summary": "Proposes a training objective for speculative decoding draft models that directly maximizes expected acceptance length — the actual end-to-end speedup metric — rather than next-token cross-entropy loss, a proxy that does not align with the deployment goal. Derives a tractable formulation and validates on standard speculative decoding benchmarks.",
+      "key_findings": [
+        "Direct optimization of expected acceptance length is tractable and outperforms cross-entropy proxy training",
+        "REAL Loss draft models achieve higher tokens-per-second throughput on the same verifier model",
+        "Generalizes to multi-token and tree-structured speculative decoding variants"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "inference-efficiency",
+        "training-objectives",
+        "llm-serving"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 42,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14399",
+        "huggingface": "https://huggingface.co/papers/2611.14399",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14399",
+        "pdf": "https://arxiv.org/pdf/2611.14399"
+      }
+    },
+    {
+      "id": "precision-on-demand-weight-bits",
+      "title": "Precision on Demand: Escalating Weight Bits at Uncertain Decoding Steps",
+      "authors": [
+        "Mohammed Nayeem Khan",
+        "Samuel Alabi",
+        "Chris J. Maddison"
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "University of Toronto"
+      ],
+      "summary": "Decodes using 4-bit quantized weights as the default, escalating to full precision only at steps where the output probability distribution is uncertain (measured by entropy). Achieves reduced average memory footprint while maintaining generation quality comparable to full-precision decoding.",
+      "key_findings": [
+        "Entropy-gated precision escalation reduces average memory bandwidth requirements significantly",
+        "Quality degradation from adaptive quantization is negligible on standard language modeling benchmarks",
+        "Companion paper shows permutation averaging over option orderings often outperforms uniform quantization in small LMs"
+      ],
+      "tags": [
+        "quantization",
+        "inference-efficiency",
+        "adaptive-compute",
+        "speculative-decoding"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 18,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14418",
+        "huggingface": "https://huggingface.co/papers/2611.14418",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14418",
+        "pdf": "https://arxiv.org/pdf/2611.14418"
+      }
+    },
+    {
+      "id": "engineagent-on-device-llm",
+      "title": "EngineAgent: Agentizing On-Device LLM Inference Engines",
+      "authors": [
+        "Zhengxiang Huang",
+        "Yifan Gong",
+        "Xue Lin",
+        "Qian Lou"
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Northeastern University"
+      ],
+      "summary": "Treats on-device LLM inference engine adaptation as an agentic task: an agent uses a stack-hierarchy model of mobile hardware to automatically reconfigure an inference engine for new model architectures and heterogeneous hardware constraints, eliminating the need for manual porting work.",
+      "key_findings": [
+        "Agent-driven engine adaptation achieves comparable latency to hand-tuned configurations across diverse mobile SoCs",
+        "Stack-hierarchy hardware modeling enables transfer across architectures without per-device engineering effort",
+        "Framework deployed and validated on Qwen and LLaMA family models on Snapdragon and Dimensity SoCs"
+      ],
+      "tags": [
+        "on-device-inference",
+        "mobile-ai",
+        "edge-ai",
+        "inference-optimization",
+        "agents"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 36,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14356",
+        "huggingface": "https://huggingface.co/papers/2611.14356",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14356",
+        "pdf": "https://arxiv.org/pdf/2611.14356"
+      }
+    },
+    {
+      "id": "c2-routing-vlm-efficiency",
+      "title": "C²-Routing: Complementary Cropping and Compression for Efficient Vision-Language Inference",
+      "authors": [
+        "Guorui Lu",
+        "Peng Tang",
+        "Jianfei Cai"
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University",
+        "Nanyang Technological University"
+      ],
+      "summary": "A model-agnostic method combining region-of-interest cropping with token compression to reduce the visual token count processed by vision-language models, including black-box APIs. Applicable without architecture changes and validated on VQA, image captioning, and grounding benchmarks.",
+      "key_findings": [
+        "Complementary cropping+compression reduces vision-language model FLOPs by up to 60% with minimal quality loss",
+        "Works as a black-box preprocessing layer, requiring no model fine-tuning or architecture changes",
+        "Gains are additive with other token-reduction methods, suggesting composability"
+      ],
+      "tags": [
+        "vision-language",
+        "inference-efficiency",
+        "token-reduction",
+        "multimodal",
+        "edge-ai"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14469",
+        "huggingface": "https://huggingface.co/papers/2611.14469",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14469",
+        "pdf": "https://arxiv.org/pdf/2611.14469"
+      }
+    },
+    {
+      "id": "contrastive-scientific-discovery",
+      "title": "Contrastive Discovery: Open-Ended Scientific Discovery over Competing Explanations",
+      "authors": [
+        "Ziang Liu",
+        "Tanmay Parekh",
+        "Kai-Wei Chang"
+      ],
+      "affiliations": [
+        "Stanford University",
+        "UCLA"
+      ],
+      "summary": "Proposes having LLM agents test competing scientific hypotheses against each other contrastively, rather than testing a single hypothesis against its negation. The contrastive framing produces more discriminating experiments and identifies the winning hypothesis faster across chemistry and biology discovery tasks.",
+      "key_findings": [
+        "Contrastive pairwise hypothesis testing converges to the correct explanation with fewer experimental trials than single-hypothesis approaches",
+        "Competing-explanation framing elicits more creative experimental designs from LLM agents",
+        "Validated on chemistry reaction prediction and biological mechanism identification tasks"
+      ],
+      "tags": [
+        "scientific-discovery",
+        "agents",
+        "reasoning",
+        "hypothesis-testing",
+        "ai-for-science"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 27,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14514",
+        "huggingface": "https://huggingface.co/papers/2611.14514",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14514",
+        "pdf": "https://arxiv.org/pdf/2611.14514"
+      }
+    },
+    {
+      "id": "bonbon-molecular-foundation-model",
+      "title": "Emergent Biological Capabilities in a Foundation Model for Molecular Interactions",
+      "authors": [
+        "Adi Mashiach"
+      ],
+      "affiliations": [
+        "Weizmann Institute of Science"
+      ],
+      "summary": "Introduces Bonbon, a foundation model trained on protein-ligand interaction data that exhibits emergent biological capabilities beyond its explicit training objective, including structure-activity relationship prediction, binding pocket characterization, and off-target liability screening that were not supervised during training.",
+      "key_findings": [
+        "Bonbon shows emergent capabilities in structure-activity relationship prediction without supervised training on that task",
+        "Off-target liability screening emerges from protein-ligand interaction pretraining alone",
+        "Pattern of emergence parallels general LLM scaling — capabilities arise at sufficient data and model scale"
+      ],
+      "tags": [
+        "molecular-ai",
+        "protein-ligand",
+        "foundation-models",
+        "drug-discovery",
+        "emergent-capabilities"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 44,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14504",
+        "huggingface": "https://huggingface.co/papers/2611.14504",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14504",
+        "pdf": "https://arxiv.org/pdf/2611.14504"
+      }
+    },
+    {
+      "id": "workflow-arena-multiagent-benchmark",
+      "title": "WorkflowArena: Benchmarking Executable Workflow Orchestration in LLM-Based Multi-Agent Systems",
+      "authors": [
+        "Aditya Desai",
+        "Wenxuan Zhou",
+        "Muhao Chen",
+        "Shang-Wen Li"
+      ],
+      "affiliations": [
+        "University of Southern California",
+        "Amazon AWS AI"
+      ],
+      "summary": "A benchmark for evaluating LLM-based multi-agent systems on executable workflow orchestration, covering planning, delegation, error recovery, and cross-agent communication. Includes 500+ workflow tasks across software development, data processing, and scientific analysis domains.",
+      "key_findings": [
+        "Current frontier models succeed on fewer than 40% of multi-step workflow orchestration tasks requiring error recovery",
+        "Cross-agent communication failures are the most common single point of breakdown in multi-agent workflows",
+        "Specialist sub-agents with well-defined interfaces outperform generalist agents on workflow execution"
+      ],
+      "tags": [
+        "multi-agent",
+        "benchmarks",
+        "workflows",
+        "orchestration",
+        "evaluation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 38,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.12856",
+        "huggingface": "https://huggingface.co/papers/2611.12856",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.12856",
+        "pdf": "https://arxiv.org/pdf/2611.12856"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Flagship 27B dense language model from Alibaba's Qwen team, maintaining its dominant position as the most-downloaded and highest-liked open-weight LLM on HuggingFace. Leads in both general instruction following and coding benchmarks for its size class.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "llm",
+        "instruction-following",
+        "coding",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 7232703,
+        "likes": 19592
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Second-generation open-weight video generation model from Lightricks, supporting image-to-video, text-to-video, and video-to-video tasks in a single model. The most-liked video generation model on HuggingFace with 11K likes and nearly 2.9M downloads, sustaining strong momentum from prior weeks.",
+      "task_type": "text-to-video",
+      "model_size": "unspecified",
+      "tags": [
+        "video-generation",
+        "image-to-video",
+        "text-to-video",
+        "diffusion",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 2848771,
+        "likes": 11432
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "nvidia-nemotron-transcribe-30b",
+      "name": "NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "NVIDIA",
+      "description": "A 30B-parameter (4B active) sparse MoE automatic speech recognition model from NVIDIA's Nemotron 3.5 family. Trends today alongside EngineAgent and on-device inference research, suggesting growing interest in deploying large ASR models on constrained hardware.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (4B active)",
+      "tags": [
+        "asr",
+        "speech-recognition",
+        "moe",
+        "nvidia",
+        "nemotron"
+      ],
+      "metrics": {
+        "downloads": 72455,
+        "likes": 3158
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "flux3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (ComfyUI)",
+      "organization": "Black Forest Labs",
+      "description": "A compact image generation and editing variant of the FLUX.3 family optimized for ComfyUI workflows. Second most-downloaded new-entrant this week in the image generation category, with strong adoption from the generative art community.",
+      "task_type": "text-to-image",
+      "model_size": "unspecified",
+      "tags": [
+        "image-generation",
+        "comfyui",
+        "diffusion",
+        "black-forest-labs",
+        "flux"
+      ],
+      "metrics": {
+        "downloads": 1251688,
+        "likes": 2895
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "moonshot-kimi-k3-1-pro",
+      "name": "Kimi-K3.1-Pro",
+      "organization": "Moonshot AI",
+      "description": "An open-weight long-context reasoning model from Moonshot AI with improved instruction following and enhanced long-horizon task performance. Part of the Kimi-K3 family first released in July 2026, now available in a Pro variant with broader deployment optimization.",
+      "task_type": "text-generation",
+      "model_size": "unspecified",
+      "tags": [
+        "llm",
+        "long-context",
+        "reasoning",
+        "moonshot",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 30721,
+        "likes": 1894
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
+    },
+    {
+      "id": "speridlabs-idol-3d",
+      "name": "IDOL (Image-to-3D)",
+      "organization": "SperidLabs",
+      "description": "An image-to-3D reconstruction model using Gaussian Splatting, trending as demand for real-time 3D generation workflows accelerates. Produces dense 3D scene representations from single images suitable for downstream game asset and AR/VR applications.",
+      "task_type": "image-to-3d",
+      "model_size": "unspecified",
+      "tags": [
+        "3d-generation",
+        "gaussian-splatting",
+        "image-to-3d",
+        "ar-vr"
+      ],
+      "metrics": {
+        "downloads": 26470,
+        "likes": 1915
+      },
+      "source_url": "https://huggingface.co/speridlabs/idol"
+    },
+    {
+      "id": "unsloth-qwen38-flash-next-gguf",
+      "name": "Qwen3.8-Flash-Next-GGUF",
+      "organization": "unsloth",
+      "description": "GGUF-quantized variant of the Flash-Next Qwen3.8 model optimized for local CPU and consumer GPU deployment. The most-downloaded GGUF release this week, reflecting sustained demand for local inference with Qwen3.8-class models.",
+      "task_type": "text-generation",
+      "model_size": "quantized",
+      "tags": [
+        "gguf",
+        "quantization",
+        "local-inference",
+        "qwen",
+        "unsloth"
+      ],
+      "metrics": {
+        "downloads": 1968774,
+        "likes": 1581
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF"
+    },
+    {
+      "id": "tencent-qwen38-dspine-draft",
+      "name": "Qwen3.8-27B-DSpine-b16",
+      "organization": "Tencent",
+      "description": "A speculative decoding draft model for Qwen3.8-27B developed by Tencent, designed to accelerate inference throughput by generating candidate token sequences. Trending alongside the REAL Loss speculative decoding paper, suggesting growing practitioner interest in production-grade speculative decoding.",
+      "task_type": "text-generation",
+      "model_size": "unspecified (draft model)",
+      "tags": [
+        "speculative-decoding",
+        "inference-efficiency",
+        "draft-model",
+        "qwen",
+        "tencent"
+      ],
+      "metrics": {
+        "downloads": 2627,
+        "likes": 170
+      },
+      "source_url": "https://huggingface.co/tencent/Qwen3.8-27B-DSpine-b16"
+    },
+    {
+      "id": "ccore-qwen35-3d-coder",
+      "name": "Qwen3.5-4B-3D-Coder",
+      "organization": "ccore",
+      "description": "A 4B instruction-tuned code model fine-tuned specifically to generate Three.js 3D scene code from natural language prompts, enabling non-expert users to create interactive 3D web experiences through conversational interfaces.",
+      "task_type": "code-generation",
+      "model_size": "4B",
+      "tags": [
+        "code-generation",
+        "3d",
+        "three.js",
+        "qwen",
+        "instruction-tuning"
+      ],
+      "metrics": {
+        "downloads": 319405,
+        "likes": 985
+      },
+      "source_url": "https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder"
+    },
+    {
+      "id": "webai-twil-8b",
+      "name": "TwIL-8B",
+      "organization": "webAI",
+      "description": "An 8B instruction-tuned model based on IBM's Granite architecture, developed by webAI for enterprise-grade conversational AI and task automation. Trending as organizations look for permissively licensed mid-size alternatives to the dominant Qwen3.8 family.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": [
+        "llm",
+        "instruction-following",
+        "granite",
+        "enterprise",
+        "open-weight"
+      ],
+      "metrics": {
+        "downloads": 43175,
+        "likes": 282
+      },
+      "source_url": "https://huggingface.co/webAI-Official/TwIL-8B"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "anthropics-skills",
+      "name": "anthropics/skills",
+      "description": "Anthropic's official library of Agent Skills — reusable, composable skill modules for building LLM agents with Claude. The main open-source home of Claude Code skills and the backbone of the growing MCP/skills ecosystem, now approaching 193K stars with 1,679 added today.",
+      "language": "Python",
+      "stars": 192763,
+      "stars_today": 1679,
+      "forks": 0,
+      "url": "https://github.com/anthropics/skills",
+      "tags": [
+        "agents",
+        "skills",
+        "claude",
+        "mcp",
+        "anthropic"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-labs-graphify",
+      "name": "Graphify-Labs/graphify",
+      "description": "Converts any codebase into a queryable knowledge graph, enabling semantic search and dependency analysis over large repositories. Trending as the leading production tool in the codebase-intelligence category that emerged from research six months ago, now at 145K stars.",
+      "language": "Python",
+      "stars": 145873,
+      "stars_today": 1271,
+      "forks": 0,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": [
+        "knowledge-graph",
+        "codebase-intelligence",
+        "rag",
+        "semantic-search"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "thedotmack-claude-mem",
+      "name": "thedotmack/claude-mem",
+      "description": "Persistent memory across sessions for AI agents, compressing and reinserting past context. The leading open-source implementation of session-spanning agent memory, complementary to today's Evidence-Linked and Falsification-Gated memory papers, now at 116K stars with 1,434 added today.",
+      "language": "TypeScript",
+      "stars": 116016,
+      "stars_today": 1434,
+      "forks": 0,
+      "url": "https://github.com/thedotmack/claude-mem",
+      "tags": [
+        "memory",
+        "agents",
+        "persistence",
+        "claude",
+        "mcp"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "name": "addyosmani/agent-skills",
+      "description": "Production-grade engineering skills for AI coding agents, with a focus on web performance, accessibility, and testing patterns. Part of the broader agent-skills ecosystem, with 115K stars and steady daily growth as the industry converges on packaged skill libraries.",
+      "language": "JavaScript",
+      "stars": 115497,
+      "stars_today": 465,
+      "forks": 0,
+      "url": "https://github.com/addyosmani/agent-skills",
+      "tags": [
+        "agents",
+        "skills",
+        "coding",
+        "web-development"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "paperclipai-paperclip",
+      "name": "paperclipai/paperclip",
+      "description": "Open-source app for managing and orchestrating AI agents in workplace settings, gaining 2,490 stars today — the highest single-day gain in the trending list. Provides agent lifecycle management, role assignment, and cross-agent communication protocols.",
+      "language": "TypeScript",
+      "stars": 113044,
+      "stars_today": 2490,
+      "forks": 0,
+      "url": "https://github.com/paperclipai/paperclip",
+      "tags": [
+        "agents",
+        "orchestration",
+        "workplace-ai",
+        "workflow"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "datawhalechina-hello-agents",
+      "name": "datawhalechina/hello-agents",
+      "description": "Chinese-language tutorial series teaching AI agent development from scratch, with 86K stars and the highest single-day gain today (+3,544). Signals broad interest in agent development education in the Chinese ML community, particularly among practitioners who prefer first-language resources.",
+      "language": "Python",
+      "stars": 86698,
+      "stars_today": 3544,
+      "forks": 0,
+      "url": "https://github.com/datawhalechina/hello-agents",
+      "tags": [
+        "education",
+        "agents",
+        "chinese",
+        "tutorial"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "career-ops-hq-career-ops",
+      "name": "career-ops-hq/career-ops",
+      "description": "AI agent for autonomous job searching and opportunity discovery, applying and tracking job applications across platforms. Trending alongside other AI-automation-for-personal-tasks repos, reflecting consumer interest in AI agents that handle routine high-stakes workflows.",
+      "language": "JavaScript",
+      "stars": 81838,
+      "stars_today": 861,
+      "forks": 0,
+      "url": "https://github.com/career-ops-hq/career-ops",
+      "tags": [
+        "agents",
+        "automation",
+        "career",
+        "job-search"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "run-llama-llama-index",
+      "name": "run-llama/llama_index",
+      "description": "The leading document processing and RAG platform for AI and LLM applications, maintaining steady growth at 52K stars with 507 added today. As RAG frameworks mature into production infrastructure, llama_index continues to serve as the reference implementation for complex retrieval pipelines.",
+      "language": "Python",
+      "stars": 52872,
+      "stars_today": 507,
+      "forks": 0,
+      "url": "https://github.com/run-llama/llama_index",
+      "tags": [
+        "rag",
+        "llm",
+        "document-processing",
+        "retrieval"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "hkuds-vibe-trading",
+      "name": "HKUDS/Vibe-Trading",
+      "description": "A personal trading agent that uses LLMs for financial market analysis, signal generation, and portfolio management. Part of the growing AI-for-personal-finance trend, trending alongside career-ops as AI agents move into high-stakes personal decision domains.",
+      "language": "Python",
+      "stars": 38029,
+      "stars_today": 523,
+      "forks": 0,
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "tags": [
+        "trading",
+        "finance",
+        "agents",
+        "llm"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "zilliztech-claude-context",
+      "name": "zilliztech/claude-context",
+      "description": "A new MCP-based code search tool that provides entire codebases as context for coding agents, enabling whole-repository reasoning without manual chunking or retrieval tuning. New entry today with 12,687 stars, suggesting strong practitioner demand for codebase-scale context in agent workflows.",
+      "language": "TypeScript",
+      "stars": 12687,
+      "stars_today": 12687,
+      "forks": 0,
+      "url": "https://github.com/zilliztech/claude-context",
+      "tags": [
+        "mcp",
+        "code-search",
+        "context",
+        "agents",
+        "claude"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "homeassistant-ai-ha-mcp",
+      "name": "homeassistant-ai/ha-mcp",
+      "description": "MCP server enabling AI assistants (Claude, ChatGPT) to configure and automate Home Assistant smart home setups through natural language. New entry today, reflecting how MCP tooling is extending AI agent reach into IoT and home automation domains.",
+      "language": "Python",
+      "stars": 6923,
+      "stars_today": 6923,
+      "forks": 0,
+      "url": "https://github.com/homeassistant-ai/ha-mcp",
+      "tags": [
+        "mcp",
+        "home-automation",
+        "iot",
+        "agents",
+        "home-assistant"
+      ],
+      "relevance": "medium"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Post-Training Alignment Science",
+      "description": "Formal theoretical work explaining why RLHF and SFT behave as they do, including the Coverage Collapse theorem and the rater-calibration reframing of apparent model quality drift.",
+      "related_paper_ids": [
+        "post-training-coverage-collapse",
+        "ai-not-getting-dumber-rater-calibration"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Verified Agent Memory",
+      "description": "Two independent papers arriving at complementary strategies for reliable agent memory: verification before retention (falsification-gated) and provenance anchoring (evidence-linked), pointing toward a synthesized framework.",
+      "related_paper_ids": [
+        "falsification-gated-agent-memory",
+        "evidence-linked-agent-memory",
+        "retrace-planner-free-agent-distillation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Speculative Decoding Advances",
+      "description": "Moving from ad hoc to scientifically principled speculative decoding: REAL Loss directly optimizes the actual speedup metric, and Precision on Demand studies adaptive precision allocation at the step level.",
+      "related_paper_ids": [
+        "real-loss-speculative-decoding",
+        "precision-on-demand-weight-bits"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "On-Device and Edge AI",
+      "description": "EngineAgent and C²-Routing push large language models and VLMs onto mobile and edge hardware, complemented by GitHub trends toward local-inference tools and GGUF model releases.",
+      "related_paper_ids": [
+        "engineagent-on-device-llm",
+        "c2-routing-vlm-efficiency"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Agent Infrastructure Maturation",
+      "description": "WorkflowArena formalizes multi-agent workflow evaluation while GitHub trending shows the infrastructure layer (memory, orchestration, skill libraries, codebase intelligence) becoming substantial and sub-specialized.",
+      "related_paper_ids": [
+        "workflow-arena-multiagent-benchmark",
+        "retrace-planner-free-agent-distillation"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI for Scientific Discovery",
+      "description": "Contrastive Discovery advances open-ended hypothesis testing by agents, while Bonbon's emergent molecular interaction capabilities suggest foundation model scaling laws are applying to scientific domains.",
+      "related_paper_ids": [
+        "contrastive-scientific-discovery",
+        "bonbon-molecular-foundation-model"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-11T14:58:00Z",
+      "status": "error"
+    },
+    {
+      "name": "datnguyenquy94/news-radar (arXiv digest #1043)",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1043",
+      "checked_at": "2026-11-11T15:02:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "datnguyenquy94/news-radar (HF models #1044)",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1044",
+      "checked_at": "2026-11-11T15:02:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "datnguyenquy94/news-radar (GitHub trending #1041)",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1041",
+      "checked_at": "2026-11-11T15:02:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "jyyang621/DailyArXiv (#452)",
+      "url": "https://github.com/jyyang621/DailyArXiv/issues/452",
+      "checked_at": "2026-11-11T15:03:00Z",
+      "status": "ok"
+    }
+  ]
+}
