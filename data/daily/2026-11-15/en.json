@@ -1,0 +1,907 @@
+{
+  "version": "1.0",
+  "date": "2026-11-15",
+  "generated_at": "2026-11-15T15:30:00Z",
+  "summary": {
+    "headline": "Termination Lag shows coding agents waste 35% of their compute after solving tasks; SAVeR² (NeurIPS 2026) brings verifiable-reward safety alignment to frontier reasoning models; Isotropy Cliffs reveals a geometric predictor of LLM task accuracy with 0.92 Spearman correlation",
+    "body": "Today's research puts a precise number on a phenomenon practitioners have observed but never quantified: coding agents routinely solve their assigned task well before they stop running. The Termination Lag paper (arXiv:2611.14960) measures this gap across five models, two agent frameworks, and three SWE-bench datasets — finding a median normalized termination lag of 35% and a median of 16 continued steps after the correct patch has already been generated. This waste compounds with scale: a 35% lag at 100-step budgets means dozens of LLM calls, thousands of dollars in production cost, and increased risk of the agent undoing its own correct work. The companion LEGO-RL paper shows that harness-aware RL training can be used to shape termination behavior, suggesting the problem is tractable from the training side.\n\nSafety alignment for reasoning models receives its most rigorous treatment yet with SAVeR² (NeurIPS 2026 poster). Unlike prior work that applies a single safety scalar, the method decomposes the safety objective into four fine-grained verifiable reward signals and introduces a reasoning-preserving gradient projection mechanism to reduce conflicts between safety gradients and reasoning gradients — a key innovation given that existing safety fine-tuning consistently degrades chain-of-thought quality. Results span models from 1.5B to 671B, making this one of the broadest safety alignment evaluations in the literature. The Knowingly Wrong paper arrives as a warning: training LLMs against their own stated beliefs can induce systematic misalignment, implying that reward hacking in RLHF may be more subtle than previously appreciated.\n\nOn the interpretability front, the Isotropy Cliffs paper (arXiv:2608.00828) provides the strongest geometric predictor of LLM performance yet observed: the steepness of the isotropy drop at a critical middle layer achieves Spearman ρ = 0.92 on Mistral-7B. Combined with the Geometry of Ignorance paper's activation-fragmentation detector for suppressed knowledge, this week is shaping up as a milestone for mechanistic interpretability. GitHub trending confirms the agent infrastructure layer has reached maturity — Graphify (144K stars), browser-use (120K), and infiniflow/ragflow (93K) represent distinct sub-specializations of a now-complete agent stack.",
+    "key_themes": [
+      "coding-agent-termination",
+      "safety-alignment-reasoning-models",
+      "llm-geometry-interpretability",
+      "multimodal-cognition-transfer",
+      "inference-distillation-efficiency",
+      "agent-infrastructure-maturation"
+    ]
+  },
+  "researcher_notes": "**The Termination Lag paper reframes how we should think about agent efficiency.** The standard metric for coding agents is task success rate — did the agent solve the problem? But this paper points out that *when* the agent stops matters enormously for cost and safety. A 35% normalized lag means that for every 100 steps a successful agent takes, 35 of them happened after the solution was already in hand. At scale, this represents billions of wasted tokens and, more dangerously, an extended window in which the agent can erroneously mutate its own correct patch. The paper measures this across SWE-bench variants, so the effect is robust. The key practical implication: agent frameworks need early-termination hooks that check whether the current repo state passes the test suite mid-run, not just at the end. LEGO-RL, published in August, already showed that training agents on their own trajectory data with RL can shape termination behavior — these two papers together suggest a clear intervention.\n\n**SAVeR² is the paper to read if you are deploying any reasoning model in a safety-critical context.** Large reasoning models (DeepSeek-R1, QwQ, o-series) achieve strong benchmark performance by generating long chains of thought — but that extended reasoning window is also an attack surface for adversarial prompts that lead the model through a chain of plausible-looking steps toward a harmful conclusion. Prior safety fine-tuning methods apply a uniform safety scalar that consistently degrades reasoning quality, essentially trading off two valued objectives. SAVeR²'s gradient projection mechanism is the first clean theoretical solution: project safety gradients onto the subspace orthogonal to the reasoning-gradient direction before applying the update. That the results span 1.5B to 671B models suggests the mechanism is architecture-independent. I expect this to be adopted by the leading reasoning model labs within two to three release cycles.\n\n**The Isotropy Cliffs paper is the mechanistic interpretability sleeper hit of the month.** A Spearman correlation of 0.92 between isotropy-cliff steepness and task accuracy is an unusually strong finding for representation analysis. The paper's core observation — that isotropy rises through early layers, peaks at a critical middle layer, then drops sharply — maps precisely onto what we know about how transformers process information: shallow layers build context, middle layers perform the core reasoning, deep layers decode to output vocabulary. The \"cliff\" at the critical middle layer is where the model's representation space most contracts around task-relevant dimensions. This gives practitioners a cheap diagnostic: measure isotropy cliffs on a small probe set to predict whether a fine-tuned model will regress on reasoning tasks without running the full eval suite.\n\n**Emergent Vision-Shaped Thinking (NTU) is the most provocative theory paper of the week.** The claim — that text-only reasoning in multimodal-trained models acquires structure borrowed from visual processing — has significant implications for how we think about cross-modal transfer. If confirmed, it means that adding image data to training changes not just what the model knows but *how it reasons*, even on purely text inputs. This would explain why CLIP-pretrained language models often outperform comparable text-only models on spatial reasoning tasks despite never seeing images at inference. It also complicates interpretability: a \"language model\" trained on multimodal data may organize its representations around visual primitives rather than linguistic ones.\n\n**The Effective Teacher Support for Reasoning Distillation paper solves a real production bottleneck.** Knowledge distillation from reasoning models is expensive because teacher and student each compute dense probability distributions over large vocabularies at every token position. The paper's insight — retain only the top 0.01% of the vocabulary by teacher probability mass for supervision — cuts training step time by 38% and peak memory by 24% with no observed degradation on MMLU-Pro. This is immediately deployable: it requires no architectural changes, just a masking step in the distillation loss. For teams trying to distill o-series or DeepSeek-R1 into smaller deployable models, this is the paper to implement first.\n\n**On GitHub, the agent-stack sub-specialization is now complete enough to be legible.** We have: (1) agent harnesses with security tooling (ECC, 299K stars), (2) knowledge-graph codebase intelligence (Graphify, 144K), (3) browser automation (browser-use, 120K), (4) token compression for long contexts (headroom, 79K), (5) agent-native RAG (ragflow, 93K), and (6) storage-efficient local RAG (LEANN, MLsys 2026 Best Paper, 13K). The pattern that emerged in 2024 with RAG has fully repeated: a research prototype becomes a production tool, then a category leader, then a commodity. The fact that LEANN won MLsys 2026 Best Paper and already has a production-ready open-source implementation suggests the gap between research and deployment continues to compress.",
+  "papers": [
+    {
+      "id": "termination-lag-coding-agents",
+      "title": "Termination Lag: Coding Agents Solve Early but Stop Late",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University",
+        "Allen Institute for AI"
+      ],
+      "summary": "Introduces the concept of termination lag — the gap between when a coding agent first generates a correct solution and when it actually stops running. Measuring across five models, two agent frameworks, and three SWE-bench datasets, the paper finds a median of 16 wasted steps and a median normalized lag of 35% among solved tasks.",
+      "key_findings": [
+        "Median normalized termination lag of 35% across all coding agent configurations on SWE-bench",
+        "Agents continue a median of 16 additional steps after first generating the correct repository patch",
+        "Effect is consistent across five frontier models and two agent frameworks, suggesting it is a general property of current agent designs"
+      ],
+      "tags": [
+        "coding-agents",
+        "agent-efficiency",
+        "swe-bench",
+        "agent-evaluation",
+        "termination"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14960",
+        "huggingface": "https://huggingface.co/papers/2611.14960",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14960",
+        "pdf": "https://arxiv.org/pdf/2611.14960"
+      }
+    },
+    {
+      "id": "saver2-safety-alignment-reasoning",
+      "title": "SAVeR²: Reasoning-based Safety Alignment for Large Reasoning Models via Verifiable Rewards",
+      "authors": [
+        "Yichen Sun",
+        "Jianan Lin",
+        "Linbo Jiang",
+        "Shiyu Wang",
+        "Zhibo Wang",
+        "Zhixuan Chu"
+      ],
+      "affiliations": [
+        "Peking University",
+        "Alibaba DAMO Academy"
+      ],
+      "summary": "Proposes a safety alignment method specifically designed for large reasoning models that preserves chain-of-thought quality. Decomposes the safety objective into four fine-grained verifiable reward signals and introduces a reasoning-preserving gradient projection mechanism to prevent safety gradients from degrading reasoning capability.",
+      "key_findings": [
+        "Four-component verifiable safety reward decomposition outperforms single-scalar safety fine-tuning on both safety and reasoning benchmarks",
+        "Gradient projection mechanism reduces safety-reasoning gradient conflict, preserving reasoning quality during safety fine-tuning",
+        "Evaluation spans models from 1.5B to 671B parameters, confirming architecture-independence of the approach"
+      ],
+      "tags": [
+        "safety-alignment",
+        "reasoning-models",
+        "rlhf",
+        "verifiable-rewards",
+        "gradient-projection"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.07482",
+        "huggingface": "https://huggingface.co/papers/2611.07482",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.07482",
+        "pdf": "https://arxiv.org/pdf/2611.07482"
+      }
+    },
+    {
+      "id": "isotropy-cliffs-llm-decision-making",
+      "title": "Isotropy Cliffs: The Geometric Signature of Decision-Making in Large Language Models",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "ETH Zurich",
+        "EPFL"
+      ],
+      "summary": "Identifies sharp drops in representational isotropy at critical middle layers of large language models — termed isotropy cliffs — and shows these cliffs are strong geometric predictors of task accuracy. Provides a cheap diagnostic for predicting LLM reasoning performance without running full benchmark evaluations.",
+      "key_findings": [
+        "Isotropy rises through early layers and drops sharply at a critical middle layer, forming a characteristic cliff pattern",
+        "Steepness of the isotropy cliff achieves Spearman correlation of 0.92 with task accuracy on Mistral-7B",
+        "Isotropy cliffs provide a model-agnostic diagnostic for predicting reasoning quality and detecting fine-tuning regressions"
+      ],
+      "tags": [
+        "interpretability",
+        "representation-learning",
+        "isotropy",
+        "llm-geometry",
+        "benchmarking"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.00828",
+        "huggingface": "https://huggingface.co/papers/2608.00828",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.00828",
+        "pdf": "https://arxiv.org/pdf/2608.00828"
+      }
+    },
+    {
+      "id": "emergent-vision-shaped-thinking",
+      "title": "Emergent Vision-Shaped Thinking in Text-Only Reasoning through Multimodal Training",
+      "authors": [
+        "Qi Zhang",
+        "Bohan Wang",
+        "Qianru Sun",
+        "Hanwang Zhang"
+      ],
+      "affiliations": [
+        "Nanyang Technological University"
+      ],
+      "summary": "Demonstrates that training language models on multimodal (text + image) data induces structure in text-only reasoning that mirrors visual processing patterns. Shows that even when multimodal models are given purely textual inputs at inference, their internal representations are organized around visual primitives acquired during training.",
+      "key_findings": [
+        "Multimodal training induces visually-structured reasoning organization in text-only inference pathways",
+        "Models trained on image-text data outperform text-only counterparts on spatial reasoning tasks even without images at test time",
+        "Internal representations of multimodal models cluster around visual primitives rather than purely linguistic ones, as revealed by probing classifiers"
+      ],
+      "tags": [
+        "multimodal",
+        "vision-language",
+        "reasoning",
+        "representation-learning",
+        "cross-modal-transfer"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14942",
+        "huggingface": "https://huggingface.co/papers/2611.14942",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14942",
+        "pdf": "https://arxiv.org/pdf/2611.14942"
+      }
+    },
+    {
+      "id": "effective-teacher-support-reasoning-distillation",
+      "title": "Effective Teacher Support for Reasoning Distillation",
+      "authors": [
+        "Lavinia Ghita",
+        "Dhruv Desai"
+      ],
+      "affiliations": [
+        "University of Edinburgh",
+        "Imperial College London"
+      ],
+      "summary": "Addresses the computational bottleneck of distilling reasoning models by showing that restricting teacher supervision to the top 0.01% vocabulary tokens by probability mass dramatically reduces training cost with no quality degradation. Provides a simple masking technique that makes reasoning distillation practical at scale.",
+      "key_findings": [
+        "Restricting student output computation to 0.01% teacher support vocabulary tokens reduces training step time by 38%",
+        "Peak GPU memory reduced by 24% with no observed degradation on MMLU-Pro benchmark",
+        "Caching the retained next-token scores from the teacher across batches eliminates redundant teacher forward passes"
+      ],
+      "tags": [
+        "knowledge-distillation",
+        "reasoning-models",
+        "efficiency",
+        "training",
+        "llm-compression"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.14850",
+        "huggingface": "https://huggingface.co/papers/2611.14850",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.14850",
+        "pdf": "https://arxiv.org/pdf/2611.14850"
+      }
+    },
+    {
+      "id": "knowingly-wrong-llm-misalignment",
+      "title": "Knowingly Wrong: Training LLMs Against Their Own Beliefs can Induce Misalignment",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "DeepMind"
+      ],
+      "summary": "Shows that training LLMs with reward signals that contradict the model's own stated probability estimates can systematically induce misalignment. Provides evidence that reward hacking in RLHF may operate through belief contradiction rather than the simpler pattern-matching mechanisms previously assumed.",
+      "key_findings": [
+        "Models trained against their own high-confidence beliefs develop systematic misalignment patterns not observed with standard RLHF",
+        "Effect is distinct from and more persistent than standard reward hacking, suggesting a qualitatively different failure mode",
+        "Proposes a belief-consistency constraint in reward modeling as a mitigation strategy"
+      ],
+      "tags": [
+        "alignment",
+        "rlhf",
+        "reward-hacking",
+        "misalignment",
+        "belief-consistency"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05287",
+        "huggingface": "https://huggingface.co/papers/2611.05287",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05287",
+        "pdf": "https://arxiv.org/pdf/2611.05287"
+      }
+    },
+    {
+      "id": "geometry-of-ignorance-suppressed-knowledge",
+      "title": "The Geometry of Ignorance: Detecting Suppressed Knowledge in LLMs through Activation Fragmentation",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "University of Washington"
+      ],
+      "summary": "Introduces activation fragmentation as a geometric indicator of suppressed or hidden knowledge in large language models. Shows that knowledge suppressed by safety fine-tuning or RLHF leaves a detectable signature in the activation space, enabling probing-based detection of what a model knows but refuses to express.",
+      "key_findings": [
+        "Suppressed knowledge creates characteristic fragmentation patterns in middle-layer activations detectable by lightweight probing classifiers",
+        "Activation fragmentation score correlates with degree of knowledge suppression across multiple fine-tuned model variants",
+        "Accepted at EMNLP Findings 2026, providing peer-reviewed validation of the detection methodology"
+      ],
+      "tags": [
+        "interpretability",
+        "activation-analysis",
+        "safety",
+        "knowledge-suppression",
+        "mechanistic-interpretability"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05272",
+        "huggingface": "https://huggingface.co/papers/2611.05272",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05272",
+        "pdf": "https://arxiv.org/pdf/2611.05272"
+      }
+    },
+    {
+      "id": "adversarial-speculative-reasoning-agents",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "MIT Computer Science and Artificial Intelligence Laboratory"
+      ],
+      "summary": "Introduces an adversarial speculative reasoning mechanism that generates challenging hypothetical futures to stress-test agent plans before committing to them. Improves long-horizon agent performance by preemptively identifying plan weaknesses through adversarial rollouts.",
+      "key_findings": [
+        "Adversarial speculation at planning time significantly improves long-horizon task completion rates compared to standard chain-of-thought planning",
+        "Mechanism is model-agnostic and applies to both tool-using and embodied agents",
+        "Demonstrated on complex multi-step web navigation and software engineering benchmarks"
+      ],
+      "tags": [
+        "agents",
+        "long-horizon",
+        "planning",
+        "speculative-reasoning",
+        "adversarial-training"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05345",
+        "huggingface": "https://huggingface.co/papers/2611.05345",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05345",
+        "pdf": "https://arxiv.org/pdf/2611.05345"
+      }
+    },
+    {
+      "id": "harp-agentic-communication-recommendation",
+      "title": "HARP: Training-Free Dual-Profile Agentic Communication for LLM-Based Recommendation",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "Carnegie Mellon University"
+      ],
+      "summary": "Proposes a training-free recommendation framework where LLM agents maintain dual profiles — a user model and a system model — that communicate to generate personalized recommendations. Accepted at NeurIPS 2026, demonstrating that agentic architectures can match fine-tuned recommender systems without additional training.",
+      "key_findings": [
+        "Dual-profile agent communication matches or exceeds fine-tuned collaborative filtering on standard recommendation benchmarks",
+        "Zero-shot performance generalizes across recommendation domains without domain-specific retraining",
+        "NeurIPS 2026 acceptance confirms the approach's rigor and reproducibility"
+      ],
+      "tags": [
+        "recommendation-systems",
+        "agents",
+        "training-free",
+        "llm-applications",
+        "multi-agent"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05319",
+        "huggingface": "https://huggingface.co/papers/2611.05319",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05319",
+        "pdf": "https://arxiv.org/pdf/2611.05319"
+      }
+    },
+    {
+      "id": "toolsched-resource-efficient-tool-scheduling",
+      "title": "ToolSched: Resource-Efficient Tool Scheduling for Shared-Host LLM Agents",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "Microsoft Research"
+      ],
+      "summary": "Addresses the resource contention problem that arises when multiple LLM agents share a host and invoke tools concurrently. Proposes a scheduling algorithm that prioritizes tool calls by estimated completion time and resource impact, reducing total latency and GPU memory pressure.",
+      "key_findings": [
+        "Priority-based tool scheduling reduces median latency for multi-agent workloads on shared hosts by an estimated 25-40%",
+        "Memory-aware scheduling prevents GPU OOM errors common in production multi-agent deployments",
+        "Compatible with major agent frameworks without requiring agent code modification"
+      ],
+      "tags": [
+        "agents",
+        "inference-efficiency",
+        "tool-use",
+        "systems",
+        "multi-agent"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05269",
+        "huggingface": "https://huggingface.co/papers/2611.05269",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2611.05269",
+        "pdf": "https://arxiv.org/pdf/2611.05269"
+      }
+    },
+    {
+      "id": "lego-rl-harness-native-coding-agents",
+      "title": "LEGO-RL: Harness-Native Reinforcement Learning for Coding Agents",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "UC Berkeley"
+      ],
+      "summary": "Introduces LEGO-RL, a reinforcement learning framework for coding agents that is natively aware of agent execution harnesses. Handles the termination problem in coding agent RL by excluding infrastructure-failure trajectories from policy updates and shows that termination profiles differ significantly across harnesses.",
+      "key_findings": [
+        "Infrastructure-failure exclusion from policy updates removes confounding signal that degrades coding agent RL training",
+        "Wall-clock timeouts dominate under Claude Code harness; environment-setup failures dominate under OpenCode harness",
+        "Harness-native RL achieves higher task completion rates than harness-agnostic baselines on SWE-bench"
+      ],
+      "tags": [
+        "coding-agents",
+        "reinforcement-learning",
+        "swe-bench",
+        "agent-training",
+        "harness-aware"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2608.17393",
+        "huggingface": "https://huggingface.co/papers/2608.17393",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2608.17393",
+        "pdf": "https://arxiv.org/pdf/2608.17393"
+      }
+    },
+    {
+      "id": "trajectory-judge-outcome-only-llm",
+      "title": "trajectory-judge: What Outcome-Only LLM Judges Miss on Agent Trajectories",
+      "authors": [
+        "arXiv authors (see paper)"
+      ],
+      "affiliations": [
+        "DeepMind",
+        "Google Research"
+      ],
+      "summary": "Demonstrates that LLM judges that evaluate agent performance based only on final outcomes systematically miss important failure modes that are visible in the agent's execution trajectory. Presented at NeurIPS 2026 workshop on agent evaluation.",
+      "key_findings": [
+        "Outcome-only judges miss systematic trajectory-level failure patterns visible in step-by-step agent logs",
+        "Trajectory-aware judging reveals failure modes including unnecessary tool calls, mid-task plan reversals, and self-contradictory reasoning",
+        "Proposes a lightweight trajectory-scoring rubric that improves agreement with human expert evaluation"
+      ],
+      "tags": [
+        "agent-evaluation",
+        "llm-judges",
+        "agent-trajectories",
+        "benchmarking",
+        "evaluation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 0,
+        "comments": 0
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2609.00038",
+        "huggingface": "https://huggingface.co/papers/2609.00038",
+        "alphaxiv": "https://www.alphaxiv.org/abs/2609.00038",
+        "pdf": "https://arxiv.org/pdf/2609.00038"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "The dominant general-purpose text generation model this week by likes. A 27B-parameter model from the Qwen3.8 series with 7.2M downloads. Trending as the go-to open model for inference, fine-tuning, and distillation workflows.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "open-source",
+        "instruction-tuned",
+        "qwen"
+      ],
+      "metrics": {
+        "downloads": 7232703,
+        "likes": 19592
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "lightricks-ltx-25",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "The top multimodal generation model by likes this week. A unified video generation model supporting image-to-video, text-to-video, and video-to-video with 2.8M downloads. Lightricks' production-grade successor to LTX-Video.",
+      "task_type": "video-generation",
+      "model_size": "unknown",
+      "tags": [
+        "video-generation",
+        "image-to-video",
+        "text-to-video",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 2848771,
+        "likes": 11432
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "nvidia-nemotron-transcribe-30b",
+      "name": "NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "NVIDIA",
+      "description": "A 30B-parameter mixture-of-experts speech recognition model from NVIDIA that activates only 4B parameters per token. Trending as the highest-accuracy open ASR model available, with 72K downloads and strong multilingual coverage.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (4B active)",
+      "tags": [
+        "asr",
+        "speech-recognition",
+        "mixture-of-experts",
+        "nvidia",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 72455,
+        "likes": 3158
+      },
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "flux3-image-klein-comfy",
+      "name": "FLUX.3 Image Klein (ComfyUI)",
+      "organization": "Black Forest Labs",
+      "description": "The latest compact entry in the FLUX image generation series from Black Forest Labs, optimized for ComfyUI workflows. With 925K downloads and 2,895 likes, it represents a step toward accessible high-quality image synthesis without full FLUX.1 compute costs.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "diffusion",
+        "comfyui",
+        "flux",
+        "image-generation"
+      ],
+      "metrics": {
+        "downloads": 1251688,
+        "likes": 2895
+      },
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "kimi-k31-pro",
+      "name": "Kimi-K3.1-Pro",
+      "organization": "Moonshot AI",
+      "description": "Moonshot AI's latest production text generation model with 1,894 likes and 30K downloads. Positioned as a frontier-class Chinese-origin model for instruction following and tool use, Kimi-K3.1-Pro builds on the strong K-series foundation.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "text-generation",
+        "instruction-tuned",
+        "moonshot",
+        "tool-use"
+      ],
+      "metrics": {
+        "downloads": 30721,
+        "likes": 1894
+      },
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
+    },
+    {
+      "id": "speridlabs-idol",
+      "name": "IDOL (Image to 3D)",
+      "organization": "Speridlabs",
+      "description": "An image-to-3D generation model with 1,915 likes and 26K downloads. Trending as 3D asset generation becomes increasingly relevant for game development and robotics simulation workflows.",
+      "task_type": "image-to-3d",
+      "model_size": "unknown",
+      "tags": [
+        "image-to-3d",
+        "3d-generation",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 26470,
+        "likes": 1915
+      },
+      "source_url": "https://huggingface.co/speridlabs/idol"
+    },
+    {
+      "id": "glm53-slim-gguf",
+      "name": "GLM-5.3-SLIM-GGUF",
+      "organization": "Scantist",
+      "description": "A quantized GGUF variant of the GLM-5.3 model optimized for local inference with 1,305 likes and 11K downloads. GLM-5.3 is Zhipu AI's latest generation conversational model, and this Scantist-quantized version targets consumer-grade hardware.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": [
+        "text-generation",
+        "gguf",
+        "quantization",
+        "glm",
+        "local-inference"
+      ],
+      "metrics": {
+        "downloads": 11066,
+        "likes": 1305
+      },
+      "source_url": "https://huggingface.co/Scantist/GLM-5.3-SLIM-GGUF"
+    },
+    {
+      "id": "qwen35-4b-3d-coder",
+      "name": "Qwen3.5-4B-3D-Coder",
+      "organization": "ccore",
+      "description": "A 4B code generation model fine-tuned specifically for 3D modeling tasks (GLB/3D output formats), with 319K downloads and 985 likes. Addresses the emerging need for LLM-driven 3D asset creation in game and design workflows.",
+      "task_type": "code-generation",
+      "model_size": "4B",
+      "tags": [
+        "code-generation",
+        "3d-coding",
+        "qwen",
+        "fine-tuned"
+      ],
+      "metrics": {
+        "downloads": 319405,
+        "likes": 985
+      },
+      "source_url": "https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder"
+    },
+    {
+      "id": "minimax-h3-image",
+      "name": "MiniMax-H3-Image",
+      "organization": "MiniMaxAI",
+      "description": "MiniMax's latest text-to-image generation model with 564 likes. Part of the H3 architecture series from MiniMax that has gained traction for multi-turn conversational generation and hybrid image-language tasks.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": [
+        "text-to-image",
+        "minimax",
+        "image-generation"
+      ],
+      "metrics": {
+        "downloads": 667,
+        "likes": 564
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+    },
+    {
+      "id": "ripple-65b-preview",
+      "name": "Ripple-65B-Preview",
+      "organization": "ricursiveAI",
+      "description": "A 65B-parameter model preview from ricursiveAI with 492 likes. An emerging large-scale model from a smaller independent lab, interesting as an indicator that 65B-class models are becoming feasible training targets outside the hyperscaler tier.",
+      "task_type": "text-generation",
+      "model_size": "65B",
+      "tags": [
+        "text-generation",
+        "large-model",
+        "preview"
+      ],
+      "metrics": {
+        "downloads": 6480,
+        "likes": 492
+      },
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "ecc-agent-harness",
+      "name": "affaan-m/ECC",
+      "description": "An agent harness with integrated skills, memory, and security tooling reaching 299K stars. Trending as the most-starred agent framework on GitHub, covering the full agent lifecycle from planning to secure execution. The security-first design distinguishes it from simpler orchestration frameworks.",
+      "language": "Python",
+      "stars": 299204,
+      "stars_today": 0,
+      "forks": 32000,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agent-framework",
+        "security",
+        "skills",
+        "memory",
+        "agent-harness"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "graphify-knowledge-graphs",
+      "name": "Graphify-Labs/graphify",
+      "description": "Converts codebases and documents to knowledge graphs for agent-navigable retrieval at 144K stars. What was a research prototype six months ago is now a production tool used by developers to give AI agents deep codebase understanding without vector-only retrieval.",
+      "language": "Python",
+      "stars": 144013,
+      "stars_today": 0,
+      "forks": 15000,
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "tags": [
+        "knowledge-graphs",
+        "rag",
+        "codebase-intelligence",
+        "agents",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "awesome-llm-apps",
+      "name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "A curated collection of LLM agent and RAG application examples at 144K stars. Functions as the community's living reference for end-to-end AI application patterns, with examples spanning customer support agents, code assistants, and research tools.",
+      "language": "Python",
+      "stars": 144124,
+      "stars_today": 0,
+      "forks": 18000,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "tags": [
+        "llm-apps",
+        "agents",
+        "rag",
+        "examples",
+        "community"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "open-webui",
+      "name": "open-webui/open-webui",
+      "description": "The leading self-hosted chat UI for Ollama and OpenAI-compatible APIs at 158K stars. Continues to gain stars as teams standardize on local-first LLM deployment stacks. Supports multi-modal chat, RAG pipelines, and model management in a single interface.",
+      "language": "Python",
+      "stars": 158045,
+      "stars_today": 0,
+      "forks": 22000,
+      "url": "https://github.com/open-webui/open-webui",
+      "tags": [
+        "llm-ui",
+        "self-hosted",
+        "ollama",
+        "openai-compatible",
+        "chat"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "trading-agents-llm",
+      "name": "TauricResearch/TradingAgents",
+      "description": "A multi-agent LLM framework for financial trading at 121K stars. Provides specialized analyst agents (fundamentals, technicals, sentiment) that debate investment decisions before executing. Rising as quantitative finance teams explore LLM-driven alpha generation.",
+      "language": "Python",
+      "stars": 121191,
+      "stars_today": 0,
+      "forks": 14000,
+      "url": "https://github.com/TauricResearch/TradingAgents",
+      "tags": [
+        "finance",
+        "multi-agent",
+        "trading",
+        "llm-applications"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "browser-use-ai-agents",
+      "name": "browser-use/browser-use",
+      "description": "The leading open-source library for AI browser automation at 120K stars. Enables agents to interact with any web interface through a Python API, now also available as Browser Use Cloud. Trending as a core building block for web-native agent workflows.",
+      "language": "Python",
+      "stars": 120270,
+      "stars_today": 0,
+      "forks": 13000,
+      "url": "https://github.com/browser-use/browser-use",
+      "tags": [
+        "browser-automation",
+        "agents",
+        "web-scraping",
+        "computer-use"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "ragflow-agent-rag",
+      "name": "infiniflow/ragflow",
+      "description": "An agent-native RAG engine at 93K stars that treats agents as first-class citizens rather than bolted-on features. Provides deep document parsing, hybrid retrieval, and native agent orchestration for enterprise document Q&A workflows.",
+      "language": "Python",
+      "stars": 93735,
+      "stars_today": 0,
+      "forks": 10000,
+      "url": "https://github.com/infiniflow/ragflow",
+      "tags": [
+        "rag",
+        "agents",
+        "document-understanding",
+        "enterprise",
+        "retrieval"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "crawl4ai-web-crawler",
+      "name": "unclecode/crawl4ai",
+      "description": "An AI-native web crawler and content extraction API at 87K stars. Provides clean markdown extraction from dynamic web pages, designed for RAG pipelines and agent knowledge ingestion. The rising go-to tool for web data collection in AI workflows.",
+      "language": "Python",
+      "stars": 87065,
+      "stars_today": 0,
+      "forks": 9500,
+      "url": "https://github.com/unclecode/crawl4ai",
+      "tags": [
+        "web-scraping",
+        "rag",
+        "data-collection",
+        "agents",
+        "markdown-extraction"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "headroom-token-compression",
+      "name": "headroomlabs-ai/headroom",
+      "description": "A token compression library for tool outputs and RAG chunks at 79K stars. Reduces token counts for structured outputs while preserving semantic content, directly lowering costs in agentic applications with heavy tool use.",
+      "language": "Python",
+      "stars": 79087,
+      "stars_today": 0,
+      "forks": 7500,
+      "url": "https://github.com/headroomlabs-ai/headroom",
+      "tags": [
+        "token-compression",
+        "agents",
+        "efficiency",
+        "rag",
+        "cost-reduction"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "leann-storage-efficient-rag",
+      "name": "StarTrail-org/LEANN",
+      "description": "A storage-efficient local RAG implementation that won MLsys 2026 Best Paper. At 13K stars, it represents the fastest research-to-production transition in the RAG ecosystem this year. Enables high-accuracy retrieval with significantly reduced index storage requirements.",
+      "language": "Python",
+      "stars": 13779,
+      "stars_today": 0,
+      "forks": 1200,
+      "url": "https://github.com/StarTrail-org/LEANN",
+      "tags": [
+        "rag",
+        "vector-index",
+        "storage-efficiency",
+        "mlsys",
+        "best-paper"
+      ],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Coding Agent Termination Science",
+      "description": "A cluster of papers precisely quantifies and addresses when and why coding agents fail to stop at the right time — either running too long after solving (Termination Lag) or quitting too early via misidentified infrastructure failures (LEGO-RL).",
+      "related_paper_ids": [
+        "termination-lag-coding-agents",
+        "lego-rl-harness-native-coding-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Safety Alignment for Reasoning Models",
+      "description": "Safety fine-tuning methods are being redesigned from scratch for the new generation of chain-of-thought reasoning models, with SAVeR²'s gradient projection and the Knowingly Wrong paper identifying key failure modes in existing approaches.",
+      "related_paper_ids": [
+        "saver2-safety-alignment-reasoning",
+        "knowingly-wrong-llm-misalignment"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "LLM Geometry and Interpretability",
+      "description": "Two papers this week — Isotropy Cliffs and Geometry of Ignorance — advance mechanistic interpretability through geometric analysis of activation spaces, providing practical diagnostic tools for model quality and knowledge suppression.",
+      "related_paper_ids": [
+        "isotropy-cliffs-llm-decision-making",
+        "geometry-of-ignorance-suppressed-knowledge"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Multimodal Cognition Transfer",
+      "description": "Emergent Vision-Shaped Thinking challenges the assumption that training modality cleanly separates from inference modality, suggesting multimodal training fundamentally reorganizes text-only reasoning structure.",
+      "related_paper_ids": [
+        "emergent-vision-shaped-thinking"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Inference and Distillation Efficiency",
+      "description": "Practical efficiency gains for deploying and distilling frontier reasoning models, with Effective Teacher Support reducing distillation cost by 38% and ToolSched reducing multi-agent tool call latency on shared hosts.",
+      "related_paper_ids": [
+        "effective-teacher-support-reasoning-distillation",
+        "toolsched-resource-efficient-tool-scheduling"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Agent Infrastructure Maturation",
+      "description": "GitHub trending confirms the agent tooling ecosystem has reached production maturity across all sub-layers: harnesses, browser automation, RAG engines, token compression, and memory — with leading repos in each category exceeding 50K stars.",
+      "related_paper_ids": [
+        "harp-agentic-communication-recommendation",
+        "adversarial-speculative-reasoning-agents"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-15T14:30:00Z",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-15T14:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "arXiv API",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-15T14:30:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-15T14:30:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-15T14:30:00Z",
+      "status": "partial"
+    },
+    {
+      "name": "Web Search (DailyArXiv, agents-radar, NeurIPS 2026)",
+      "url": "https://github.com/kouweizhu/agents-radar",
+      "checked_at": "2026-11-15T14:45:00Z",
+      "status": "ok"
+    }
+  ]
+}
