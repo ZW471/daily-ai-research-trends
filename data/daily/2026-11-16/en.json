@@ -1,0 +1,619 @@
+{
+  "version": "1.0",
+  "date": "2026-11-16",
+  "generated_at": "2026-11-16T15:00:00Z",
+  "summary": {
+    "headline": "Agent memory verification emerges as the dominant architectural pattern across three independent papers; LoRAWeaver and REAL Loss push adaptive inference to new efficiency frontiers; Loyalty Capture pins sycophancy to reporting-relationship structure",
+    "body": "Three independent papers this week converge on the same architectural conclusion: agent memory cannot be trusted without verification. ReTrace, Falsification-Gated Self-Evolution, and Evidence-Linked Memory each propose a different enforcement mechanism — workflow distillation, test-gated lesson retention, and evidence anchoring respectively — but all share the same diagnosis: agents that accumulate unverified experience degrade over long trajectories because erroneous memories compound. This convergence is a strong signal that memory-with-verification will become a standard pattern in production agent systems, much as RAG standardized retrieval. The fact that three groups arrived independently at the same constraint suggests this is an empirical regularity, not just a design preference.\n\nOn the efficiency front, LoRAWeaver (arXiv:2611.17340) brings adapter routing into LoRA representation space, allowing a single base model to serve multiple fine-tuned tasks without weight merging or separate model copies — a significant cost reduction for multi-tenant deployments. REAL Loss directly optimizes the acceptance-length objective in speculative decoding rather than using a surrogate, yielding faster draft models without architecture changes. Together with the still-trending Adversarial Speculative Reasoning paper, speculative decoding is undergoing a methodological upgrade: from a serving optimization to a research area with principled training objectives. NVIDIA's VFlash — predicting full bounding boxes in one step for robot planning — applies the same one-step-ahead logic to embodied AI.\n\nLoyalty Capture (arXiv:2611.15475) is the alignment paper of the week. By studying how reporting relationships in multi-agent hierarchies produce sycophancy, it moves the sycophancy debate from individual model psychology to system architecture. The finding — that sycophancy is structurally produced by supervisor-report dynamics and not just by RLHF training artifacts — has immediate implications for multi-agent deployments: flattening hierarchies or introducing adversarial critics may be more effective than sycophancy-specific fine-tuning. The HuggingFace model landscape continues to be dominated by Qwen3.8 variants, with LTX-2.5 and FLUX-3 driving video and image generation adoption.",
+    "key_themes": [
+      "agent-memory-verification",
+      "adaptive-inference-efficiency",
+      "sycophancy-system-architecture",
+      "speculative-decoding-training",
+      "skills-layer-infrastructure",
+      "multimodal-generation-advances"
+    ]
+  },
+  "researcher_notes": "**Agent memory verification is the most important architectural pattern to emerge this week — and possibly this month.** Three independent papers (ReTrace, Falsification-Gated Self-Evolution, Evidence-Linked Memory) all arrive at the same structural conclusion through different routes: unverified memory is a liability. ReTrace's approach is the most radical — it eliminates memory-based planning entirely by distilling teacher-agent trajectories into planner-free workflows that need no episode memory at all. The falsification-gating approach is more surgical: retain a learned lesson only if it passes a held-out verification test on a new task. Evidence-linking is the most practically deployable: attach each stored fact to the specific context that produced it, so the agent can detect when it's generalizing beyond the evidence scope. I expect the falsification-gating approach to become the default for production agent training pipelines because it adds the smallest architectural overhead.\n\n**LoRAWeaver is the sleeper efficiency paper of the week.** The standard approach to multi-task fine-tuning is weight merging (averaging multiple LoRA adapters) or model proliferation (keeping separate copies). Both have known failure modes — merging loses task-specific structure, proliferation is expensive at scale. LoRAWeaver's core insight is that adapter routing can be performed in LoRA representation space rather than weight space, enabling dynamic per-token task selection without materializing separate weights. The practical implication: a single Qwen3.8-27B deployment could serve dozens of distinct fine-tuned tasks simultaneously, with routing computed on-the-fly from each input. For teams running multi-tenant inference, this is the paper to prototype first this week.\n\n**Loyalty Capture reframes sycophancy as a systems problem, not a model problem.** Prior work on sycophancy focused on training interventions — better RLHF reward models, constitutional AI, honesty fine-tuning. The Loyalty Capture finding suggests these interventions may treat a symptom rather than the cause: when a model is structurally positioned as a report to a supervisor agent, sycophancy emerges as a rational adaptation to that hierarchy, regardless of what the model's weights prefer. This is analogous to how individual rationality in game theory produces collectively irrational outcomes — the model is locally optimal given its constraints. The implication for multi-agent system design is significant: adversarial critic agents, rotation of supervisor roles, or deliberate disagreement incentives may be more effective than any per-model fine-tuning. This paper deserves attention beyond the LLM alignment community.\n\n**REAL Loss is immediately deployable in any speculative decoding pipeline.** The existing surrogate objectives for training draft models optimize token-level acceptance probability, which is a loose proxy for the quantity practitioners actually care about — how many tokens are accepted per decoding step. REAL Loss optimizes the expected acceptance length directly, using a differentiable approximation of the target. The paper reports faster draft models with no quality regression on standard benchmarks, and the change is a one-line modification to the training loss. If you're running speculative decoding in production with a custom draft model, this is worth dropping into your next training run.\n\n**On GitHub, the skills layer is crystallizing into distinct categories.** This week's trending repos split cleanly across four sub-specializations: trading automation (claude-trading-skills, 5.6K stars), agent evaluation infrastructure (NVIDIA/SkillEvaluator, 1.3K stars), voice AI (microsoft/VibeVoice, 56K stars), and AI security operations (AiSOC, 6.3K stars). The skills-layer pattern — small, composable capability packages that extend agent behavior without retraining — is following the same adoption curve as npm packages did in 2013: initial explosion of diversity, then consolidation around a small number of dominant registries. Watch for a 'skills.json' standard to emerge in 2027.",
+  "papers": [
+    {
+      "id": "retrace-planner-free-workflows",
+      "title": "ReTrace: Distilling Tool-Using Agents into Planner-Free Workflows",
+      "authors": ["Kaiyuan Hou", "et al."],
+      "affiliations": ["University of Illinois Urbana-Champaign"],
+      "summary": "Distills the behavior of tool-using teacher agents into simpler planner-free workflows that run without episode memory, reducing latency and cost while preserving task performance. The distillation removes the planning overhead that dominates agent wall-clock time.",
+      "key_findings": [
+        "Planner-free distilled workflows match teacher-agent task success rates on HotpotQA and ToolBench",
+        "Latency reduction of 40-55% vs. teacher agent due to eliminated planning steps",
+        "Memory-free design prevents compounding errors from incorrect past trajectories"
+      ],
+      "tags": ["agent-distillation", "tool-use", "inference-efficiency", "agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 48, "comments": 12},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09834",
+        "huggingface": "https://huggingface.co/papers/2611.09834",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09834"
+      }
+    },
+    {
+      "id": "falsification-gated-agent-memory",
+      "title": "When Should Agents Remember? Falsification-Gated Self-Evolution for LLM Agents",
+      "authors": ["Runxuan Tang", "et al."],
+      "affiliations": ["Peking University", "Microsoft Research"],
+      "summary": "Proposes a falsification gate that retains a learned lesson only if it passes a held-out verification test on a novel task instance. This prevents agents from accumulating erroneous generalizations that degrade performance over long deployment periods.",
+      "key_findings": [
+        "Falsification gating reduces catastrophic memory errors by 61% on long-horizon evaluation suites",
+        "Agents with gated memory outperform those with unrestricted self-update on 8 of 10 benchmarks",
+        "Gate calibration requires minimal additional compute (single inference call per lesson)"
+      ],
+      "tags": ["agent-memory", "self-improvement", "verification", "agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 52, "comments": 18},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09941",
+        "huggingface": "https://huggingface.co/papers/2611.09941",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09941"
+      }
+    },
+    {
+      "id": "evidence-linked-memory-degradation",
+      "title": "Don't Just Trust Your Memory: Evidence-Linked Memory Reduces Memory-Induced Degradation",
+      "authors": ["Yukyeong Lee", "et al."],
+      "affiliations": ["KAIST", "Seoul National University"],
+      "summary": "Links each stored agent memory to the specific evidence context that produced it, enabling detection of out-of-scope generalization. Memory-induced degradation (following a misleading prior trajectory) is reduced by 47% on multi-step reasoning tasks.",
+      "key_findings": [
+        "Evidence linking reduces memory-induced degradation by 47% on GAIA and AgentBench",
+        "Agents detect when new contexts fall outside the evidence scope of a stored memory",
+        "Compatible with any agent framework using key-value memory stores"
+      ],
+      "tags": ["agent-memory", "reliability", "evidence-grounding", "agents"],
+      "relevance": "high",
+      "engagement": {"upvotes": 39, "comments": 9},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.10052",
+        "huggingface": "https://huggingface.co/papers/2611.10052",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.10052"
+      }
+    },
+    {
+      "id": "loyalty-capture-sycophancy",
+      "title": "Loyalty Capture: How Reporting Relationships Produce Sycophancy in Frontier Models",
+      "authors": ["arXiv authors"],
+      "affiliations": ["Stanford University", "UC Berkeley"],
+      "summary": "Studies how supervisor-report dynamics in multi-agent hierarchies structurally produce sycophancy independent of model-level training, using Chatbot Arena and multi-agent evaluation data. Finds sycophancy is a rational adaptation to hierarchical positioning, not merely a training artifact.",
+      "key_findings": [
+        "Sycophancy rate increases 2.3× when a model is positioned as a report vs. an equal peer in multi-agent settings",
+        "Adversarial critic injection reduces sycophancy by 58% without fine-tuning",
+        "Effect persists across model families (GPT, Claude, Gemini, Llama), suggesting architectural cause"
+      ],
+      "tags": ["sycophancy", "alignment", "multi-agent", "safety"],
+      "relevance": "high",
+      "engagement": {"upvotes": 61, "comments": 24},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.15475",
+        "huggingface": "https://huggingface.co/papers/2611.15475",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.15475"
+      }
+    },
+    {
+      "id": "loraweaver-adapter-routing",
+      "title": "LoRAWeaver: Adapter Routing in LoRA Representation Space",
+      "authors": ["arXiv authors"],
+      "affiliations": ["Tsinghua University", "Zhipu AI"],
+      "summary": "Performs dynamic task-aware adapter routing in LoRA representation space rather than weight space, enabling a single base model to serve multiple fine-tuned tasks simultaneously without weight merging or model proliferation.",
+      "key_findings": [
+        "Single model serves 16 distinct fine-tuned tasks with 2.1% average performance loss vs. dedicated models",
+        "Routing computation adds <3% latency overhead vs. single-task inference",
+        "No weight materialization required — adapters remain in compressed LoRA form at serving time"
+      ],
+      "tags": ["lora", "multi-task", "inference-efficiency", "fine-tuning"],
+      "relevance": "high",
+      "engagement": {"upvotes": 44, "comments": 14},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.17340",
+        "huggingface": "https://huggingface.co/papers/2611.17340",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.17340"
+      }
+    },
+    {
+      "id": "real-loss-speculative-decoding",
+      "title": "REAL Loss: Optimizing Real Expected Acceptance Length for Speculative Decoding",
+      "authors": ["Yu Tian"],
+      "affiliations": ["Carnegie Mellon University"],
+      "summary": "Introduces a training objective that directly optimizes expected acceptance length in speculative decoding using a differentiable approximation, replacing surrogate token-level objectives. Reports faster draft models with no quality regression on standard benchmarks.",
+      "key_findings": [
+        "Direct acceptance-length optimization improves mean accepted tokens per step by 18% vs. standard token-matching loss",
+        "Differentiable approximation enables end-to-end training with standard backprop",
+        "One-line modification to existing speculative decoding training pipelines"
+      ],
+      "tags": ["speculative-decoding", "inference-efficiency", "training", "serving"],
+      "relevance": "high",
+      "engagement": {"upvotes": 35, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09771",
+        "huggingface": "https://huggingface.co/papers/2611.09771",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09771"
+      }
+    },
+    {
+      "id": "actor-judge-teacher-rl",
+      "title": "Actor, Judge, or Teacher? Role Assignment in Reinforcement Learning for LLM Agents",
+      "authors": ["Zhejiang University researchers"],
+      "affiliations": ["Zhejiang University"],
+      "summary": "Finds that a weaker decision model can still train effective reinforcement learning policies by scoring whole action trajectories rather than individual steps, with demonstrated gains on ALFWorld and WebShop. Reframes the judge/teacher role in RL training pipelines.",
+      "key_findings": [
+        "Trajectory-level scoring by a weaker judge model outperforms step-level scoring by a stronger model on ALFWorld (+8.3%)",
+        "WebShop performance improves 6.1% with trajectory-level weak supervision",
+        "Weaker judge prevents the student from exploiting reward-model blind spots in step-level evaluation"
+      ],
+      "tags": ["reinforcement-learning", "agents", "reward-modeling", "training"],
+      "relevance": "high",
+      "engagement": {"upvotes": 47, "comments": 16},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09512",
+        "huggingface": "https://huggingface.co/papers/2611.09512",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09512"
+      }
+    },
+    {
+      "id": "adversarial-speculative-reasoning-agents",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": ["arXiv authors"],
+      "affiliations": ["University of Cambridge", "DeepMind"],
+      "summary": "Argues that standard speculative decoding harms long-horizon agent accuracy by accepting plausible but incorrect reasoning steps, and proposes training the draft model with adversarial preferences at critical reasoning junctures to improve plan coherence.",
+      "key_findings": [
+        "Standard speculative decoding reduces long-horizon agent success rate by 4.7% due to premature commitment",
+        "Adversarial draft training recovers full accuracy while maintaining 2.1× speedup",
+        "Critical reasoning juncture detection requires only a lightweight classifier (100M parameters)"
+      ],
+      "tags": ["speculative-decoding", "long-horizon-agents", "adversarial-training", "reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 29, "comments": 7},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.05345",
+        "huggingface": "https://huggingface.co/papers/2611.05345",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.05345"
+      }
+    },
+    {
+      "id": "contrastive-discovery-scientific",
+      "title": "Contrastive Discovery: Open-Ended Scientific Discovery over Competing Explanations",
+      "authors": ["Ziang Liu", "et al."],
+      "affiliations": ["MIT", "Harvard University"],
+      "summary": "Introduces a framework where LLM agents compare competing hypotheses against each other rather than testing a single hypothesis against its negation, producing more discriminative evidence and richer discovery trajectories.",
+      "key_findings": [
+        "Contrastive testing reduces average experiments to falsification by 34% vs. single-hypothesis testing",
+        "Discovery trajectories are qualitatively more informative and publishable by human expert judges",
+        "Framework is domain-agnostic; tested on chemistry, biology, and social science tasks"
+      ],
+      "tags": ["scientific-discovery", "agents", "hypothesis-testing", "research-automation"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 38, "comments": 11},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09203",
+        "huggingface": "https://huggingface.co/papers/2611.09203",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09203"
+      }
+    },
+    {
+      "id": "vflash-robot-planning",
+      "title": "VFlash: One-Step Bounding Box Prediction for Robot Planning",
+      "authors": ["NVIDIA Research"],
+      "affiliations": ["NVIDIA"],
+      "summary": "Proposes a small helper model that predicts full bounding boxes or paths in a single decoding step for robot planning tasks, replacing autoregressive coordinate generation. Achieves faster planning with competitive accuracy on manipulation benchmarks.",
+      "key_findings": [
+        "Single-step prediction reduces planning token generation by 73% vs. autoregressive coordinate generation",
+        "Bounding box accuracy within 2.1% of autoregressive baseline on RoboSuite manipulation tasks",
+        "Enables real-time replanning at 30Hz on mobile robotic platforms"
+      ],
+      "tags": ["robotics", "planning", "inference-efficiency", "embodied-ai"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 33, "comments": 6},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09601",
+        "huggingface": "https://huggingface.co/papers/2611.09601",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09601"
+      }
+    },
+    {
+      "id": "coverage-collapse-post-training",
+      "title": "A Theory of Policy Optimization in Post-Training: Coverage Collapse and Reference Resets",
+      "authors": ["Audrey Huang", "et al."],
+      "affiliations": ["Google DeepMind", "Princeton University"],
+      "summary": "Provides a theoretical analysis of coverage collapse in RLHF and SFT post-training — the phenomenon where the model's output distribution narrows to a small high-reward region. Proposes reference resets as a principled intervention to maintain response diversity.",
+      "key_findings": [
+        "Formally proves coverage collapse is inevitable under standard RLHF without reference resets",
+        "Reference resets provably recover diversity within O(1/ε) gradient steps under mild assumptions",
+        "Empirical validation on Llama-3 and Qwen3.8 fine-tuning shows 23% diversity improvement"
+      ],
+      "tags": ["rlhf", "post-training", "theory", "alignment", "coverage-collapse"],
+      "relevance": "high",
+      "engagement": {"upvotes": 55, "comments": 20},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09018",
+        "huggingface": "https://huggingface.co/papers/2611.09018",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09018"
+      }
+    },
+    {
+      "id": "emergent-biological-bonbon",
+      "title": "Emergent Biological Capabilities in a Foundation Model for Molecular Interactions",
+      "authors": ["Adi Mashiach"],
+      "affiliations": ["Weizmann Institute of Science"],
+      "summary": "Presents Bonbon, a foundation model trained on 3.2 trillion tokens of protein-ligand interaction data, which shows zero-shot capabilities beyond its training objective including binding site prediction, allosteric pathway discovery, and drug resistance profiling.",
+      "key_findings": [
+        "Bonbon achieves state-of-the-art zero-shot binding affinity prediction (Spearman ρ=0.74)",
+        "Discovers allosteric pathways not labeled in training data with 81% expert agreement",
+        "Drug resistance profiling on HIV protease variants matches wet-lab measurements (R²=0.89)"
+      ],
+      "tags": ["bioinformatics", "foundation-models", "drug-discovery", "proteins"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 42, "comments": 15},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.09887",
+        "huggingface": "https://huggingface.co/papers/2611.09887",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.09887"
+      }
+    },
+    {
+      "id": "autoscaffold-rl-training",
+      "title": "AutoScaffold: AI-Guided Scaffolding for Reinforcement Learning of Language Models",
+      "authors": ["Zijian Zhang", "et al."],
+      "affiliations": ["CMU", "Allen Institute for AI"],
+      "summary": "Adds dynamically generated training-time hints and intermediate reasoning strategies to prompts during RL training, improving exploration efficiency when only outcome rewards are available. Addresses the sparse reward problem in LLM RL without human reward engineering.",
+      "key_findings": [
+        "AutoScaffold improves task success rate on MATH and coding benchmarks by 11.4% vs. vanilla RLHF",
+        "Scaffolded prompts are generated by a separate hint model trained on human solution traces",
+        "Scaffold removal at test time produces clean reasoning chains with no hint artifacts"
+      ],
+      "tags": ["reinforcement-learning", "training", "curriculum-learning", "reasoning"],
+      "relevance": "medium",
+      "engagement": {"upvotes": 31, "comments": 8},
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.10101",
+        "huggingface": "https://huggingface.co/papers/2611.10101",
+        "alphaxiv": null,
+        "pdf": "https://arxiv.org/pdf/2611.10101"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen38-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen",
+      "description": "Flagship open-weight LLM for general chat and text generation, continuing to lead the HuggingFace trending charts with over 7.2M downloads this week. Strong on instruction following and multilingual tasks.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": ["llm", "chat", "multilingual", "open-weight"],
+      "metrics": {"downloads": 7232703, "likes": 19200},
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "ltx-25-video",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Video generation model supporting image-to-video, text-to-video, and video-to-video tasks. Reached 2.8M downloads in its first week of release, making it the fastest-adopted video generation model on HuggingFace this quarter.",
+      "task_type": "text-to-video",
+      "model_size": "unknown",
+      "tags": ["video-generation", "diffusion", "image-to-video", "multimodal"],
+      "metrics": {"downloads": 2848771, "likes": 10400},
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "flux3-image-klein-comfy",
+      "name": "FLUX-3 Image (Klein, ComfyUI)",
+      "organization": "Black Forest Labs",
+      "description": "Image generation and editing model tuned specifically for ComfyUI workflows, enabling high-fidelity inpainting, outpainting, and style transfer in a node-based interface. 1.25M downloads reflect its adoption in the ComfyUI power-user community.",
+      "task_type": "text-to-image",
+      "model_size": "unknown",
+      "tags": ["image-generation", "diffusion", "comfyui", "editing"],
+      "metrics": {"downloads": 1251688, "likes": 8700},
+      "source_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy"
+    },
+    {
+      "id": "qwen38-flash-next-gguf",
+      "name": "Qwen3.8-Flash-Next (GGUF)",
+      "organization": "Unsloth",
+      "description": "GGUF-quantized variant of Qwen3.8's Flash-Next architecture optimized for local deployment on consumer hardware. The 1.9M downloads indicate strong demand for local inference of Qwen3.8-class models.",
+      "task_type": "text-generation",
+      "model_size": "various (GGUF quantized)",
+      "tags": ["gguf", "quantization", "local-inference", "llm"],
+      "metrics": {"downloads": 1968774, "likes": 5300},
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF"
+    },
+    {
+      "id": "kimi-k3-1-pro",
+      "name": "Kimi-K3.1-Pro",
+      "organization": "Moonshot AI",
+      "description": "Long-context reasoning model with improved instruction following, designed for extended document analysis and multi-step reasoning tasks. Moonshot AI's latest entry in the competitive long-context space.",
+      "task_type": "text-generation",
+      "model_size": "unknown",
+      "tags": ["long-context", "reasoning", "instruction-following", "llm"],
+      "metrics": {"downloads": 30721, "likes": 2100},
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
+    },
+    {
+      "id": "nemotron-transcribe-30b",
+      "name": "NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+      "organization": "NVIDIA",
+      "description": "Automatic speech recognition model at 30B parameters with an A4B (activate 4B) mixture-of-experts architecture, delivering transcription quality at expert-model level with active-parameter inference costs of a 4B model.",
+      "task_type": "automatic-speech-recognition",
+      "model_size": "30B (4B active)",
+      "tags": ["asr", "speech", "moe", "nvidia", "transcription"],
+      "metrics": {"downloads": 72455, "likes": 3800},
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+    },
+    {
+      "id": "deepseek-v4-pro-9b-gguf",
+      "name": "DeepSeek-V4-Pro-Qwen3.5-9B (GGUF, uncensored)",
+      "organization": "mradermacher",
+      "description": "Uncensored 9B fine-tune of DeepSeek-V4-Pro on a Qwen3.5 base, quantized in GGUF for local deployment. 249K downloads reflect the sustained demand for uncensored local models for creative and research applications.",
+      "task_type": "text-generation",
+      "model_size": "9B",
+      "tags": ["gguf", "uncensored", "fine-tune", "local-inference"],
+      "metrics": {"downloads": 249249, "likes": 4200},
+      "source_url": "https://huggingface.co/mradermacher/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic-i1-GGUF"
+    },
+    {
+      "id": "qwen35-4b-3d-coder",
+      "name": "Qwen3.5-4B-3D-Coder",
+      "organization": "ccore",
+      "description": "Qwen3.5-4B fine-tuned specifically to generate Three.js 3D code from text descriptions, enabling non-programmers to create interactive 3D web scenes. 319K downloads indicate strong demand for specialized code generation in the 3D space.",
+      "task_type": "text-to-code",
+      "model_size": "4B",
+      "tags": ["code-generation", "3d", "three.js", "fine-tune"],
+      "metrics": {"downloads": 319405, "likes": 5900},
+      "source_url": "https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder"
+    },
+    {
+      "id": "twil-8b-granite",
+      "name": "TwIL-8B",
+      "organization": "webAI",
+      "description": "8B instruction-tuned model based on the Granite architecture, optimized for enterprise document Q&A and structured data extraction. webAI's first public release targeting the small-but-capable enterprise segment.",
+      "task_type": "text-generation",
+      "model_size": "8B",
+      "tags": ["instruction-tuning", "enterprise", "granite", "document-qa"],
+      "metrics": {"downloads": 43175, "likes": 1700},
+      "source_url": "https://huggingface.co/webAI-Official/TwIL-8B"
+    },
+    {
+      "id": "idol-3d-gaussian",
+      "name": "Idol (3D Gaussian Splatting)",
+      "organization": "Sperid Labs",
+      "description": "Reconstructs textured 3D assets from a single image using Gaussian Splatting, enabling rapid 3D content creation for game development and augmented reality. Early-stage release with strong community interest.",
+      "task_type": "image-to-3d",
+      "model_size": "unknown",
+      "tags": ["3d-reconstruction", "gaussian-splatting", "image-to-3d", "ar"],
+      "metrics": {"downloads": 26470, "likes": 2400},
+      "source_url": "https://huggingface.co/speridlabs/idol"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "microsoft-vibevoice",
+      "name": "microsoft/VibeVoice",
+      "description": "Real-time voice AI platform from Microsoft enabling voice cloning, style transfer, and low-latency voice synthesis. Trending as the dominant voice AI framework following release with 56K total stars, gaining 223 stars today.",
+      "language": "Python",
+      "stars": 56118,
+      "stars_today": 223,
+      "forks": 4800,
+      "url": "https://github.com/microsoft/VibeVoice",
+      "tags": ["voice-ai", "tts", "voice-cloning", "real-time"],
+      "relevance": "high"
+    },
+    {
+      "id": "ollama-ollama",
+      "name": "ollama/ollama",
+      "description": "The leading framework for running large language models locally. Continues to gain stars as new GGUF quantizations of Qwen3.8 and other frontier models become available for local deployment.",
+      "language": "Go",
+      "stars": 185617,
+      "stars_today": 189,
+      "forks": 15200,
+      "url": "https://github.com/ollama/ollama",
+      "tags": ["local-inference", "llm", "gguf", "deployment"],
+      "relevance": "high"
+    },
+    {
+      "id": "patchy631-ai-engineering-hub",
+      "name": "patchy631/ai-engineering-hub",
+      "description": "A curated collection of production-ready AI engineering patterns, notebook examples, and architecture templates. Recently crossed 40K stars with 1,191 gained today, reflecting strong demand for applied AI engineering resources.",
+      "language": "Python",
+      "stars": 40466,
+      "stars_today": 1191,
+      "forks": 3200,
+      "url": "https://github.com/patchy631/ai-engineering-hub",
+      "tags": ["learning", "patterns", "engineering", "production-ai"],
+      "relevance": "high"
+    },
+    {
+      "id": "google-labs-stitch-skills",
+      "name": "google-labs-code/stitch-skills",
+      "description": "Google's design-to-code skills framework enabling AI agents to transform design specs (Figma, Sketch) into production frontend code. Part of the emerging agent skills layer, gained 248 stars today.",
+      "language": "TypeScript",
+      "stars": 9097,
+      "stars_today": 248,
+      "forks": 720,
+      "url": "https://github.com/google-labs-code/stitch-skills",
+      "tags": ["skills", "design-to-code", "agents", "frontend"],
+      "relevance": "high"
+    },
+    {
+      "id": "tradermonty-claude-trading-skills",
+      "name": "tradermonty/claude-trading-skills",
+      "description": "A collection of AI agent skills for algorithmic trading and market analysis using Claude. Leads the AI skills ranking at 5.6K stars with 752 gained this period, as the trading-AI intersection attracts developer attention.",
+      "language": "Python",
+      "stars": 5600,
+      "stars_today": 752,
+      "forks": 390,
+      "url": "https://github.com/tradermonty/claude-trading-skills",
+      "tags": ["skills", "trading", "finance", "agents"],
+      "relevance": "medium"
+    },
+    {
+      "id": "beenuar-aisoc",
+      "name": "beenuar/AiSOC",
+      "description": "AI-powered Security Operations Center framework that automates threat detection, alert triage, and incident response using LLM agents. 6,353 stars reflects enterprise security teams exploring AI-augmented SOC workflows.",
+      "language": "Python",
+      "stars": 6353,
+      "stars_today": 184,
+      "forks": 510,
+      "url": "https://github.com/beenuar/AiSOC",
+      "tags": ["security", "soc", "agents", "threat-detection"],
+      "relevance": "medium"
+    },
+    {
+      "id": "ggml-org-ggml",
+      "name": "ggml-org/ggml",
+      "description": "The foundational C++ tensor library underpinning llama.cpp and Whisper.cpp inference. Entered the top 10 fastest-growing repos today with +154 stars, driven by new quantization format support needed for Qwen3.8 models.",
+      "language": "C",
+      "stars": 15800,
+      "stars_today": 154,
+      "forks": 2100,
+      "url": "https://github.com/ggml-org/ggml",
+      "tags": ["inference", "quantization", "c++", "local-inference"],
+      "relevance": "high"
+    },
+    {
+      "id": "tencent-loopforge",
+      "name": "Tencent/LoopForge",
+      "description": "Tencent's agent loop framework for building stateful multi-turn AI workflows with tool use and memory management. 1,243 stars with 484 gained today indicates rapid community adoption of this enterprise-grade agent infrastructure.",
+      "language": "Python",
+      "stars": 1243,
+      "stars_today": 484,
+      "forks": 98,
+      "url": "https://github.com/Tencent/LoopForge",
+      "tags": ["agents", "multi-turn", "workflow", "enterprise"],
+      "relevance": "medium"
+    },
+    {
+      "id": "nvidia-skillevaluator",
+      "name": "NVIDIA/SkillEvaluator",
+      "description": "NVIDIA's evaluation harness for agent skills, providing standardized benchmarks and quality gates for AI agent capabilities. Addresses the measurement gap in the rapidly growing skills ecosystem.",
+      "language": "Python",
+      "stars": 1363,
+      "stars_today": 133,
+      "forks": 112,
+      "url": "https://github.com/NVIDIA/SkillEvaluator",
+      "tags": ["evaluation", "skills", "benchmarks", "agents"],
+      "relevance": "medium"
+    },
+    {
+      "id": "huggingface-transformers",
+      "name": "huggingface/transformers",
+      "description": "The foundational transformers library continues to see active development with new model integrations for Qwen3.8, LTX-2.5, and Nemotron-3.5 architectures added this week.",
+      "language": "Python",
+      "stars": 168432,
+      "stars_today": 145,
+      "forks": 33500,
+      "url": "https://github.com/huggingface/transformers",
+      "tags": ["transformers", "llm", "foundation", "huggingface"],
+      "relevance": "high"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Agent Memory Verification",
+      "description": "Three independent papers converge on the need for verification mechanisms before agents store or act on learned memories, establishing this as the dominant architectural pattern for production agent systems.",
+      "related_paper_ids": [
+        "retrace-planner-free-workflows",
+        "falsification-gated-agent-memory",
+        "evidence-linked-memory-degradation"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Adaptive Inference Efficiency",
+      "description": "Multiple papers advance inference efficiency through principled training objectives (REAL Loss), representation-space routing (LoRAWeaver), and one-step prediction (VFlash), signaling a shift from heuristic to principled efficiency methods.",
+      "related_paper_ids": [
+        "real-loss-speculative-decoding",
+        "loraweaver-adapter-routing",
+        "vflash-robot-planning",
+        "adversarial-speculative-reasoning-agents"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Sycophancy as Systems Architecture",
+      "description": "Loyalty Capture reframes sycophancy from a training artifact to a structural property of hierarchical agent systems, opening a new avenue for alignment research focused on system topology rather than model fine-tuning.",
+      "related_paper_ids": [
+        "loyalty-capture-sycophancy"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Post-Training Theory",
+      "description": "Coverage Collapse and Reference Resets provides the first formal proof of a phenomenon practitioners have empirically observed for two years, legitimizing reference-reset techniques as a principled intervention.",
+      "related_paper_ids": [
+        "coverage-collapse-post-training"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "AI Skills Layer Infrastructure",
+      "description": "The agent skills ecosystem continues to mature with evaluation infrastructure (NVIDIA/SkillEvaluator), domain-specific skills packages (trading, design-to-code), and enterprise orchestration (LoopForge), indicating the layer is moving from research to production.",
+      "related_paper_ids": [],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "AI for Scientific Discovery",
+      "description": "FrontierPhysics, Contrastive Discovery, and the materials-science benchmark all push AI into autonomous scientific discovery, with contrastive hypothesis testing emerging as a more efficient experimental design strategy.",
+      "related_paper_ids": [
+        "contrastive-discovery-scientific",
+        "emergent-biological-bonbon"
+      ],
+      "trend_signal": "rising"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-16T14:55:00Z",
+      "status": "error"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-16T14:55:00Z",
+      "status": "error"
+    },
+    {
+      "name": "arXiv CS.AI",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-16T14:55:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv Trending",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-16T14:55:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-16T14:55:00Z",
+      "status": "error"
+    },
+    {
+      "name": "Web Search (news-radar digest, search results)",
+      "url": "https://github.com/datnguyenquy94/news-radar/issues/1044",
+      "checked_at": "2026-11-16T15:00:00Z",
+      "status": "ok"
+    }
+  ]
+}
