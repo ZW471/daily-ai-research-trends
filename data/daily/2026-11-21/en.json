@@ -1,0 +1,1071 @@
+{
+  "version": "1.0",
+  "date": "2026-11-21",
+  "generated_at": "2026-11-21T06:30:00Z",
+  "summary": {
+    "headline": "Embodied AI gets a diagnostic reckoning as Mind2Act World separates reasoning from physical action in robot manipulation; Anthropic-affiliated researchers probe whether VLMs implement a Global Workspace; self-modifying and self-improving models (weight self-repair, AutoMaster, CompoundingKernel) emerge as a cross-cutting trend while Qwen3.8-27B dominates the open-weight ecosystem",
+    "body": "Today's HuggingFace Daily Papers are led by **embodied and spatial intelligence**. **Mind2Act World** (46 upvotes) breaks robotic manipulation into three parts: embodied reasoning, physical execution, and how the two compose. **ZeroVLN**, **EgoCaptioner** and **TuringSpace** fill out a cluster of work asking whether VLM 'brains' can actually ground their reasoning in physical space. Close behind is an interpretability result: **Probing the \"Conscious\" Mind** (41 upvotes, 12 comments, the most-discussed paper of the day) tests whether vision-language models show the selective access and global broadcast that Global Workspace Theory describes.\n\nThe second big story is **models that improve or repair themselves**. *Language Models Can Rewrite Their Own Weights* shows a 27B model diagnosing and fixing corrupted weight matrices through reasoning alone, with no gradients. *AutoMaster* has the model act as its own post-training teacher, and *CompoundingKernel* builds a self-improving agent that writes top-ranked B200 GPU kernels starting from PyTorch specs. On the generative side, *RL Post-Training in Diffusion Transformers Is Activation Steering* argues that most reward gains from RL fine-tuning can be recovered with fixed steering vectors. *Posterior Matching Distillation* and *HiUni* push forward on faster and more unified visual generation.\n\nOn the model and tooling side, **Qwen3.8-27B** is everywhere. The base model has 20.8K likes, the Unsloth GGUF has 7.4M downloads, and abliterated, merged and GRPO-adapted derivatives are all trending. Thinking Machines' **Inkling-2** multimodal family, **LTX-2.5** video generation and **SAM 3** also stand out. GitHub trending is dominated by **agent skill frameworks and coding-agent harnesses**: superpowers, ECC, Tencent's LoopForge, CLI-Anything and a wave of single-purpose Claude skills. Agent infrastructure is consolidating around composable, skill-based workflows.",
+    "key_themes": [
+      "embodied-spatial-reasoning",
+      "self-improving-models",
+      "unified-visual-generation",
+      "vlm-interpretability",
+      "evaluation-methodology",
+      "agent-skill-ecosystems"
+    ]
+  },
+  "researcher_notes": "**The field is starting to separate 'knowing' from 'doing' in embodied AI, and the gap is the main finding.** Mind2Act World's split into mind, action and mind-action composition is the right diagnostic move. It also lines up with ZeroVLN's architecture, which keeps the VLM 'brain' frozen and puts navigation competence into a separate action expert. Read together, the two papers suggest that VLM reasoning about physical tasks is good enough, and that the bottleneck sits in the interface between reasoning and motor control. TuringSpace's spatial CAPTCHAs probe the same interface from the computer-use side. Expect more slow-fast, frozen-brain-plus-action-head designs in the coming weeks, and expect fewer teams to try end-to-end fine-tuning of the VLM backbone for embodiment.\n\n**Two papers say the same thing about post-training from opposite directions, and one of them is today's sleeper hit.** *RL Post-Training in Diffusion Transformers Is Activation Steering* (only 14 upvotes) finds that the reward gains from expensive RL fine-tuning are mostly captured by fixed vectors in activation space. If that holds beyond diffusion transformers, RL post-training is doing something much lower-rank and more interpretable than its compute cost suggests. Pair it with *Probing the \"Conscious\" Mind*, which looks for global-workspace-style broadcast in VLMs. Both papers treat representation geometry as the place where behavior is actually controlled. The practical upshot is that steering-based alignment could become a cheap substitute for RL in image and video generation, much as LoRA became the default substitute for full fine-tuning.\n\n**Self-modification has moved from speculation to running experiments, and that should make people uneasy as well as excited.** *Language Models Can Rewrite Their Own Weights* (12 upvotes but 9 comments, the highest discussion-to-upvote ratio today) shows a 27B model repairing its own corrupted weights by reasoning. It is almost certainly built on the Qwen3.8-27B class of model now dominating the Hub. AutoMaster (the model as its own post-training teacher) and CompoundingKernel (a self-improving kernel-writing agent that tops B200 leaderboards) complete a trio of 'the model improves the model' papers. On GitHub, NousResearch's hermes-agent, which fine-tunes on its own experience, shows the same idea at the product layer. **The contradiction to watch:** AutoMaster is motivated by RL reinforcing flaws already present after SFT, while the steering-vector paper implies RL changes very little. If both are right, self-teaching loops may be amplifying shallow directions in activation space, not building new capability.\n\n**Evaluation is quietly maturing. AltRA-Test is the paper practitioners should actually read.** LLM-as-judge pipelines are everywhere, but deciding whether a judge can replace human annotators has usually required expensive shared-annotator designs. AltRA-Test's claim that three human labels per item are enough is a large cost reduction, and it is immediately usable by anyone running preference or quality evals. TwinLab-Bench (AI scientists in agentic twins of real labs) and Mind2Act World belong to the same 'diagnostic over leaderboard' trend: benchmarks built to explain why systems fail, not just to rank them.\n\n**Agent infrastructure is converging on skills as the unit of composition.** obra/superpowers (322K stars), affaan-m/ECC, Tencent/LoopForge, HKUDS/CLI-Anything and single-purpose packages like last30days-skill (1,263 stars, all gained today) and Claude-BugHunter (82 security-testing skills, +1,622 today) all package agent capability as reusable, composable modules that sit around a coding agent. Tencent stands out across layers: WeMM-Video (omni-modal video), WeVisForensics (AI-generated video detection), Hy4-flash and LoopForge appearing on the same day shows a coordinated push across models, safety tooling and agent orchestration. **Prediction:** within weeks, the generation side (LTX-2.5, Coda-DaVinci's code-to-3D-proxy video pipeline, FastFrames) and the detection side (WeVisForensics) will both move to agentic designs, setting up an arms race between agent-built video and agent-based forensics.",
+  "papers": [
+    {
+      "id": "mind2act-world",
+      "title": "Mind2Act World: A Diagnostic Benchmark for Embodied Mind, Physical Action, and Mind-Action Composition in Robotic Manipulation",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "Embodied AI / robotics research group (affiliation not listed in source data)"
+      ],
+      "summary": "Introduces a diagnostic benchmark for robotic manipulation that evaluates embodied reasoning ('mind'), physical execution ('action'), and their composition separately. It lets researchers locate whether a failure comes from reasoning about the task, from carrying it out, or from integrating the two.",
+      "key_findings": [
+        "Splits manipulation competence into three separately measurable axes: reasoning, execution, and mind-action composition",
+        "Tests whether models can reason correctly about physical actions independently of executing them",
+        "Top-trending paper of the day with 46 upvotes, signaling strong community interest in diagnostic embodied benchmarks"
+      ],
+      "tags": [
+        "embodied-ai",
+        "robotics",
+        "benchmark",
+        "vla",
+        "manipulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 46,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26444",
+        "huggingface": "https://huggingface.co/papers/2611.26444",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26444"
+      }
+    },
+    {
+      "id": "probing-conscious-mind-vlm-global-workspace",
+      "title": "Probing the \"Conscious\" Mind: Selective Access and Global Workspace in Vision-Language Models",
+      "authors": [
+        "Wes Gurnee",
+        "et al."
+      ],
+      "affiliations": [
+        "Anthropic"
+      ],
+      "summary": "Tests whether vision-language models implement the information broadcasting described by Global Workspace Theory, looking for selective access and global availability of information inside the model. It brings a framework from consciousness science to mechanistic interpretability of multimodal models.",
+      "key_findings": [
+        "Operationalizes GWT criteria (selective access, global broadcast) as testable properties of VLM internals",
+        "Probes whether visual information becomes globally available across the model's processing once it is selected",
+        "Most-discussed paper of the day (12 comments), reflecting high interest in interpretability with researchers from Anthropic among the authors"
+      ],
+      "tags": [
+        "interpretability",
+        "vlm",
+        "global-workspace-theory",
+        "mechanistic-interpretability"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26590",
+        "huggingface": "https://huggingface.co/papers/2611.26590",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26590"
+      }
+    },
+    {
+      "id": "wemm-video",
+      "title": "WeMM-Video: Pushing the Frontiers of Open-Source Omni-Modal Video Understanding",
+      "authors": [
+        "WeMM Team"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "Technical report for Tencent's family of open-source omni-modal video understanding models, which jointly process audio, visual and text streams. It aims to close the gap between open and proprietary systems on full audio-visual video comprehension.",
+      "key_findings": [
+        "Releases an open-source model family covering audio, visual and text modalities for video understanding",
+        "Targets omni-modal reasoning, beyond vision-only video QA",
+        "Part of a broader Tencent push visible today across WeVisForensics, Hy4-flash and LoopForge"
+      ],
+      "tags": [
+        "video-understanding",
+        "omni-modal",
+        "open-source",
+        "multimodal",
+        "technical-report"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 40,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26409",
+        "huggingface": "https://huggingface.co/papers/2611.26409",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26409"
+      }
+    },
+    {
+      "id": "posterior-matching-distillation",
+      "title": "Posterior Matching Distillation",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "Generative modeling research group (affiliation not listed in source data)"
+      ],
+      "summary": "Proposes distilling diffusion models by matching posterior distributions, not just output distributions. The result is a few-step student that keeps more of the teacher's quality.",
+      "key_findings": [
+        "Moves the distillation target from output distributions to posterior distributions",
+        "Enables faster inference with higher sample quality than output-matching baselines",
+        "Adds to the fast-sampling line of work important for deploying video and image diffusion models"
+      ],
+      "tags": [
+        "diffusion",
+        "distillation",
+        "efficient-inference",
+        "generative-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 32,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26629",
+        "huggingface": "https://huggingface.co/papers/2611.26629",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26629"
+      }
+    },
+    {
+      "id": "coda-davinci-code2video",
+      "title": "Coda-DaVinci: Reimagining Video Generation with Code2Video",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "Video generation research group (affiliation not listed in source data)"
+      ],
+      "summary": "Uses coding agents to write explicit 3D scene proxies, then uses those proxies to condition high-fidelity video generation. Geometric control and consistency are handled through programmatic scene construction, not left to the diffusion model alone.",
+      "key_findings": [
+        "Coding agents build geometric 3D proxies that act as an intermediate representation for video synthesis",
+        "Proxy conditioning gives explicit control over layout, camera and object geometry",
+        "Connects agentic code generation with generative video, a pattern likely to spread"
+      ],
+      "tags": [
+        "video-generation",
+        "coding-agents",
+        "3d-proxy",
+        "controllable-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 32,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26595",
+        "huggingface": "https://huggingface.co/papers/2611.26595",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26595"
+      }
+    },
+    {
+      "id": "depth-pro-2",
+      "title": "Depth Pro 2: Sharp and Temporally Consistent Metric Monocular Depth",
+      "authors": [
+        "Aleksei Bochkovskii",
+        "Vladlen Koltun",
+        "Apple Research Team"
+      ],
+      "affiliations": [
+        "Apple"
+      ],
+      "summary": "Successor to Apple's Depth Pro that extends sharp metric monocular depth estimation from single images to video streams and live feeds. It enforces temporal consistency so that edges stay sharp and depth does not flicker between frames.",
+      "key_findings": [
+        "Supports single images, video streams and live feeds in one metric depth model",
+        "Removes frame-to-frame depth flicker while keeping sharp boundaries",
+        "Strong institutional backing; likely to become a default depth backbone for AR, robotics and video editing"
+      ],
+      "tags": [
+        "depth-estimation",
+        "computer-vision",
+        "video",
+        "temporal-consistency",
+        "3d-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 28,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26603",
+        "huggingface": "https://huggingface.co/papers/2611.26603",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26603"
+      }
+    },
+    {
+      "id": "hiuni",
+      "title": "HiUni: Harmonizing Understanding and Generation in Shared Visual Space",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "Multimodal research group (affiliation not listed in source data)"
+      ],
+      "summary": "A unified architecture in which a single shared encoder and backbone handles visual understanding, generation and editing. Generation goes through a pixel diffusion head, and the model keeps strong discriminative capability.",
+      "key_findings": [
+        "One shared visual space serves both understanding and generation, with no separate encoders",
+        "A pixel diffusion head handles generation and editing on top of a discriminative backbone",
+        "Adds evidence that unified models no longer have to trade understanding for generation quality"
+      ],
+      "tags": [
+        "unified-models",
+        "multimodal",
+        "image-generation",
+        "diffusion",
+        "image-editing"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26107",
+        "huggingface": "https://huggingface.co/papers/2611.26107",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26107"
+      }
+    },
+    {
+      "id": "zerovln",
+      "title": "ZeroVLN: Learning to Navigate without Supervised Fine-Tuning of the VLM Brain",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "Embodied navigation research group (affiliation not listed in source data)"
+      ],
+      "summary": "A slow-fast vision-language navigation framework that leaves the VLM backbone without navigation-specific fine-tuning and optimizes it jointly with a dedicated action expert. The VLM's general reasoning is preserved, and navigation skill lives in the action module.",
+      "key_findings": [
+        "Removes supervised fine-tuning of the VLM backbone for navigation",
+        "A slow-fast design pairs deliberate VLM reasoning with a fast action expert",
+        "Supports the frozen-brain plus action-head pattern also implied by Mind2Act World"
+      ],
+      "tags": [
+        "vision-language-navigation",
+        "embodied-ai",
+        "vla",
+        "slow-fast"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26414",
+        "huggingface": "https://huggingface.co/papers/2611.26414",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26414"
+      }
+    },
+    {
+      "id": "altra-test",
+      "title": "AltRA-Test: An Alternative Annotator Test for LLM Judges Without Shared Annotators",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "NLP evaluation research group (affiliation not listed in source data)"
+      ],
+      "summary": "A statistical test for whether an LLM judge can validly replace human annotators. It needs only three human labels per evaluation item and no shared-annotator design.",
+      "key_findings": [
+        "Validates LLM judges with only three human labels per item",
+        "Drops the requirement for the same annotators to label every item",
+        "Directly usable by teams running LLM-as-judge pipelines; high practical impact relative to its engagement"
+      ],
+      "tags": [
+        "llm-as-judge",
+        "evaluation",
+        "statistics",
+        "annotation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 20,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26073",
+        "huggingface": "https://huggingface.co/papers/2611.26073",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26073"
+      }
+    },
+    {
+      "id": "accelerating-mixture-of-block-attention",
+      "title": "Accelerating Mixture of Block Attention via Dynamic Routing, KV-Centric Execution and Runtime Pipelining",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "ML systems research group (affiliation not listed in source data)"
+      ],
+      "summary": "Systems-level GPU optimizations for mixture-of-block sparse attention: dynamic routing, KV-centric execution scheduling and runtime pipelining. Together they substantially cut inference latency for long-context models.",
+      "key_findings": [
+        "Dynamic routing selects attention blocks efficiently at runtime",
+        "KV-centric execution reorganizes computation around KV-cache access patterns",
+        "Runtime pipelining overlaps routing and attention compute to reduce end-to-end latency"
+      ],
+      "tags": [
+        "sparse-attention",
+        "ml-systems",
+        "gpu-kernels",
+        "long-context",
+        "efficient-inference"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26268",
+        "huggingface": "https://huggingface.co/papers/2611.26268",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26268"
+      }
+    },
+    {
+      "id": "rl-post-training-dit-activation-steering",
+      "title": "RL Post-Training in Diffusion Transformers Is Activation Steering",
+      "authors": [
+        "Duen Horng Chau",
+        "Atakan Kara",
+        "Alec Helbling"
+      ],
+      "affiliations": [
+        "Georgia Institute of Technology"
+      ],
+      "summary": "Finds that RL post-training in diffusion transformers effectively reduces to learning fixed steering vectors in activation space. Applying these fixed vectors recovers most of the reward gains of full RL training, which points to a much cheaper alignment path for diffusion models.",
+      "key_findings": [
+        "RL post-training effects in DiTs are well approximated by fixed activation-space steering vectors",
+        "The fixed vectors recover most of the reward improvement from full RL fine-tuning",
+        "Suggests RL alignment of generative models is low-rank and interpretable; a sleeper hit with broad implications"
+      ],
+      "tags": [
+        "diffusion",
+        "reinforcement-learning",
+        "activation-steering",
+        "interpretability",
+        "alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 14,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26627",
+        "huggingface": "https://huggingface.co/papers/2611.26627",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26627"
+      }
+    },
+    {
+      "id": "lms-rewrite-own-weights",
+      "title": "Language Models Can Rewrite Their Own Weights",
+      "authors": [
+        "Jiajun Fan",
+        "Neil He",
+        "Changyi Yang",
+        "Andy Mao",
+        "Xi Zhu"
+      ],
+      "affiliations": [
+        "Academic research collaboration (institutions not listed in source data)"
+      ],
+      "summary": "Shows that a 27B language model can identify which of its own weight matrices are corrupted and rewrite them through reasoning, with no gradient-based training. The repairs generalize to benchmarks not used during diagnosis.",
+      "key_findings": [
+        "A 27B LLM locates damaged weight matrices in itself by reasoning",
+        "Weight repair runs entirely through the model's own computation, with no gradient updates",
+        "Improvements transfer to unseen benchmarks; the highest comment-to-upvote ratio of the day (9 comments on 12 upvotes)"
+      ],
+      "tags": [
+        "self-improvement",
+        "self-modification",
+        "llm",
+        "model-repair"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.21885",
+        "huggingface": "https://huggingface.co/papers/2611.21885",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.21885"
+      }
+    },
+    {
+      "id": "wevisforensics",
+      "title": "WeVisForensics: Self-Evolving Agent for Omni AI-Generated Video Detection",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "Tencent (inferred from WeMM/We-series naming; not confirmed in source data)"
+      ],
+      "summary": "An agentic framework for detecting AI-generated video across visual, audio and temporal modalities. An investigator agent coordinates self-evolving sub-agents, each specialized in one dimension of authenticity.",
+      "key_findings": [
+        "An investigator agent orchestrates specialized forensic sub-agents",
+        "Sub-agents evolve themselves to keep up with new generators",
+        "Covers visual, audio and temporal artifacts in one detection pipeline"
+      ],
+      "tags": [
+        "deepfake-detection",
+        "video-forensics",
+        "agents",
+        "ai-safety",
+        "omni-modal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.21373",
+        "huggingface": "https://huggingface.co/papers/2611.21373",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.21373"
+      }
+    },
+    {
+      "id": "autamaster-autonomous-post-training",
+      "title": "AutoMaster: Autonomous Post-Training",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "LLM post-training research group (affiliation not listed in source data)"
+      ],
+      "summary": "A post-training framework in which the model acts as its own teacher and improves itself autonomously. It is designed to avoid the RL failure mode where flawed behaviors learned during SFT get reinforced.",
+      "key_findings": [
+        "The model serves as its own teacher for post-training",
+        "Explicitly targets RL shortcuts that amplify flaws inherited from SFT",
+        "Belongs to today's cluster of self-improving model papers alongside weight self-repair and CompoundingKernel"
+      ],
+      "tags": [
+        "post-training",
+        "self-improvement",
+        "reinforcement-learning",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26510",
+        "huggingface": "https://huggingface.co/papers/2611.26510",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26510"
+      }
+    },
+    {
+      "id": "compoundingkernel",
+      "title": "CompoundingKernel: Self-Improving from Zero to First",
+      "authors": [
+        "Author list not provided in source data"
+      ],
+      "affiliations": [
+        "ML systems / agents research group (affiliation not listed in source data)"
+      ],
+      "summary": "An agent that writes GPU kernels from PyTorch specifications through iterative search and self-improvement. It reaches top leaderboard results on B200 GPU benchmarks without human-engineered kernels.",
+      "key_findings": [
+        "Generates GPU kernels directly from PyTorch specs",
+        "Iterative search plus self-improvement compounds kernel quality over time",
+        "Reaches first place on B200 kernel leaderboards from a zero-human-kernel start"
+      ],
+      "tags": [
+        "gpu-kernels",
+        "coding-agents",
+        "self-improvement",
+        "ml-systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.19230",
+        "huggingface": "https://huggingface.co/papers/2611.19230",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.19230"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "Alibaba's latest mid-size multilingual chat model and the most-liked model on the Hub this week (20.8K likes). It has a large derivative ecosystem of quantizations, abliterations, merges and adapters, which shows it is becoming the default open-weight base at the 27B scale.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "chat",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 6454419,
+        "likes": 20823
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "unsloth-qwen3-8-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth's GGUF quantizations of Qwen3.8-27B. With 7.4M downloads they have overtaken the original weights, which shows how much local and llama.cpp-style deployment drives adoption.",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "gguf",
+        "quantized",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 7383193,
+        "likes": 6301
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks' newest open image-to-video diffusion model, with 12.9K likes and nearly 3M downloads. It is one of the most widely adopted open video generators right now.",
+      "task_type": "image-to-video",
+      "model_size": "Undisclosed",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 2964523,
+        "likes": 12925
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3",
+      "organization": "Meta",
+      "description": "Meta's third-generation Segment Anything model, extended to video and zero-shot settings. Steady 1.9M downloads show it remains the reference model for promptable segmentation in perception pipelines.",
+      "task_type": "video-classification",
+      "model_size": "Undisclosed",
+      "tags": [
+        "segmentation",
+        "video",
+        "zero-shot"
+      ],
+      "metrics": {
+        "downloads": 1895035,
+        "likes": 7150
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "A fast multimodal variant of DeepSeek's V4.1 line that accepts image and text inputs, with 505K downloads and 6K likes. It is a low-latency option in DeepSeek's lineup.",
+      "task_type": "image-text-to-text",
+      "model_size": "Undisclosed",
+      "tags": [
+        "multimodal",
+        "fast",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 505387,
+        "likes": 6045
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "higurashi-haru-4b",
+      "name": "Haru-4B",
+      "organization": "Higurashi AI",
+      "description": "A compact full-duplex speech-to-speech model with 5.7K likes on only 7.3K downloads. The like-to-download ratio points to strong enthusiasm for small, real-time conversational voice models.",
+      "task_type": "audio-to-audio",
+      "model_size": "4B",
+      "tags": [
+        "speech",
+        "full-duplex",
+        "audio"
+      ],
+      "metrics": {
+        "downloads": 7323,
+        "likes": 5705
+      },
+      "source_url": "https://huggingface.co/higurashi-ai/Haru-4B"
+    },
+    {
+      "id": "thinkingmachines-inkling-2-mini",
+      "name": "Inkling-2-Mini",
+      "organization": "Thinking Machines Lab",
+      "description": "The smallest model in Thinking Machines' Inkling-2 vision-language family. It drew 921 likes almost immediately after release (136 downloads so far), and an Unsloth GGUF port is already trending.",
+      "task_type": "image-text-to-text",
+      "model_size": "Undisclosed",
+      "tags": [
+        "vision",
+        "multimodal",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 136,
+        "likes": 921
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling-2-Mini"
+    },
+    {
+      "id": "thinkingmachines-inkling-2-small",
+      "name": "Inkling-2-Small",
+      "organization": "Thinking Machines Lab",
+      "description": "The larger sibling of Inkling-2-Mini, already at 40K downloads. It is the more established entry point to the Inkling-2 multimodal family.",
+      "task_type": "image-text-to-text",
+      "model_size": "Undisclosed",
+      "tags": [
+        "vision",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 40574,
+        "likes": 666
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling-2-Small"
+    },
+    {
+      "id": "minimax-h3-image",
+      "name": "MiniMax-H3-Image",
+      "organization": "MiniMax",
+      "description": "MiniMax's text-to-image model built on its H3 architecture, with 877K downloads. It is a strong new entrant among open image generators from Chinese labs.",
+      "task_type": "text-to-image",
+      "model_size": "Undisclosed",
+      "tags": [
+        "text-to-image",
+        "h3-architecture"
+      ],
+      "metrics": {
+        "downloads": 876986,
+        "likes": 1688
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+    },
+    {
+      "id": "zyphra-zonos3-mini",
+      "name": "ZONOS3-Mini",
+      "organization": "Zyphra",
+      "description": "A compact text-to-speech model from Zyphra, distributed in GGUF for local inference. With 143K downloads it adds to a strong week for small, on-device speech models.",
+      "task_type": "text-to-speech",
+      "model_size": "Undisclosed",
+      "tags": [
+        "tts",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 142778,
+        "likes": 621
+      },
+      "source_url": "https://huggingface.co/Zyphra/ZONOS3-Mini"
+    },
+    {
+      "id": "sensenova-loop-9b",
+      "name": "SenseNova-Loop-9B",
+      "organization": "SenseTime",
+      "description": "A 9B multimodal model built on a looped (recurrent-depth) architecture. It is getting attention as an architectural experiment in reusing layers for extra reasoning depth.",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": [
+        "multimodal",
+        "loop-architecture"
+      ],
+      "metrics": {
+        "downloads": 1631,
+        "likes": 453
+      },
+      "source_url": "https://huggingface.co/sensenova/SenseNova-Loop-9B"
+    },
+    {
+      "id": "harness-hub-qwen3-8-27b-pi-adapted",
+      "name": "Qwen3.8-27B-pi-adapted",
+      "organization": "harness-hub",
+      "description": "A GRPO-trained PEFT adapter for Qwen3.8-27B, tuned for agent-harness use. It shows the community building RL-tuned agent specializations on top of this week's dominant base model.",
+      "task_type": "text-generation",
+      "model_size": "27B (adapter)",
+      "tags": [
+        "peft",
+        "adapter",
+        "grpo"
+      ],
+      "metrics": {
+        "downloads": 1874,
+        "likes": 872
+      },
+      "source_url": "https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "An agent skill framework that packages workflows into reusable, composable modules, and the most-starred agentic skills framework. It keeps gaining stars as skills become the standard unit for extending coding agents.",
+      "language": "JavaScript",
+      "stars": 322843,
+      "stars_today": 890,
+      "forks": 15420,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agents",
+        "agent-skills",
+        "coding-agents",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "A framework from HKU's Data Intelligence Lab that wraps any command-line tool as an agent-accessible interface. It is trending because it lets coding agents operate existing CLI tooling without bespoke integrations.",
+      "language": "Python",
+      "stars": 61385,
+      "stars_today": 773,
+      "forks": 2341,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": [
+        "agents",
+        "cli",
+        "tool-use",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tencent-loopforge",
+      "name": "Tencent/LoopForge",
+      "description": "A self-hosted orchestrator for coding agents (CodeBuddy, Codex, Claude Code) with human approval gates and task management. Its fast climb (+1,216 today) reflects enterprise demand for governed, multi-agent coding workflows.",
+      "language": "TypeScript",
+      "stars": 5276,
+      "stars_today": 1216,
+      "forks": 312,
+      "url": "https://github.com/Tencent/LoopForge",
+      "tags": [
+        "agents",
+        "orchestration",
+        "coding-agents",
+        "human-in-the-loop"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "A web scraping and knowledge-base API that turns websites into LLM-ready structured data for agents. It remains a core piece of agentic RAG and research pipelines and gained 1,241 stars today.",
+      "language": "TypeScript",
+      "stars": 205275,
+      "stars_today": 1241,
+      "forks": 14523,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": [
+        "web-scraping",
+        "rag",
+        "agents",
+        "data-pipeline"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-bughunter",
+      "name": "elementalsouls/Claude-BugHunter",
+      "description": "A bundle of 82 Claude skills for bug hunting, red-team testing and vulnerability discovery. It is the top gainer today (+1,622), driven by interest in using agent skills for authorized security testing.",
+      "language": "Python",
+      "stars": 14277,
+      "stars_today": 1622,
+      "forks": 892,
+      "url": "https://github.com/elementalsouls/Claude-BugHunter",
+      "tags": [
+        "agent-skills",
+        "security",
+        "red-teaming",
+        "claude"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "An agent skill that pulls together Reddit, X, YouTube, HN and the web into a 30-day research view of any topic. A brand-new repo whose entire star count (1,263) arrived today.",
+      "language": "JavaScript",
+      "stars": 1263,
+      "stars_today": 1263,
+      "forks": 87,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": [
+        "agent-skills",
+        "research-agents",
+        "web-search"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "minimind",
+      "name": "jingyaogong/minimind",
+      "description": "A lightweight framework for training a 64M-parameter LLM from scratch in about two hours on a single GPU. It stays popular as an educational, end-to-end look at the LLM training stack.",
+      "language": "Python",
+      "stars": 67691,
+      "stars_today": 847,
+      "forks": 5234,
+      "url": "https://github.com/jingyaogong/minimind",
+      "tags": [
+        "llm-training",
+        "education",
+        "small-models",
+        "pytorch"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "autoclip",
+      "name": "zhouxiaoka/AutoClip",
+      "description": "An AI tool that cuts long videos into short social-media clips with auto-generated subtitles. Its traction (+979 today) shows creator-tool demand for practical multimodal AI.",
+      "language": "Python",
+      "stars": 12188,
+      "stars_today": 979,
+      "forks": 743,
+      "url": "https://github.com/zhouxiaoka/AutoClip",
+      "tags": [
+        "video",
+        "multimodal",
+        "content-creation",
+        "subtitles"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ponytail",
+      "name": "DietrichGebert/ponytail",
+      "description": "An LLM-driven code generator aimed at production-ready output in a deliberately minimal, composable style. It is still trending as developers look for higher-quality agent-generated code.",
+      "language": "Python",
+      "stars": 195635,
+      "stars_today": 743,
+      "forks": 8921,
+      "url": "https://github.com/DietrichGebert/ponytail",
+      "tags": [
+        "code-generation",
+        "llm",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "A performance harness for tuning agent behavior, memory and workflows across Claude Code, Codex and similar coding agents. A heavily starred reference for harness engineering (no daily star delta was reported today).",
+      "language": "Python",
+      "stars": 307860,
+      "stars_today": 0,
+      "forks": 12345,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agents",
+        "agent-harness",
+        "coding-agents",
+        "memory"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nous-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "An adaptive agent from Nous Research that improves by fine-tuning on its own interaction experience. It is the product-layer counterpart to today's self-improving model papers (no daily star delta was reported today).",
+      "language": "Python",
+      "stars": 264995,
+      "stars_today": 0,
+      "forks": 9872,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "self-improvement",
+        "fine-tuning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n-io/n8n",
+      "description": "A visual workflow automation engine with native AI nodes that mixes no-code and custom code. It remains a standard platform for deploying LLM-powered automations (no daily star delta was reported today).",
+      "language": "TypeScript",
+      "stars": 211554,
+      "stars_today": 0,
+      "forks": 23456,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "agents",
+        "no-code"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "A reverse-engineering toolkit that lets agents probe binaries, applications and OS behavior for security analysis. It fits the agent-driven security tooling trend alongside Claude-BugHunter (no daily star delta was reported today).",
+      "language": "Python",
+      "stars": 471506,
+      "stars_today": 0,
+      "forks": 18234,
+      "url": "https://github.com/morluto/rea",
+      "tags": [
+        "agents",
+        "security",
+        "reverse-engineering"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tensorflow",
+      "name": "tensorflow/tensorflow",
+      "description": "Google's open-source ML framework for research and production on CPUs, GPUs and TPUs. It shows up in trending lists as long-standing infrastructure, without new momentum.",
+      "language": "Python",
+      "stars": 201663,
+      "stars_today": 0,
+      "forks": 82341,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "tags": [
+        "ml-framework",
+        "deep-learning",
+        "infrastructure"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "Embodied & Spatial Reasoning Diagnostics",
+      "description": "Benchmarks and architectures that separate reasoning from physical execution in robotics, navigation and spatial tasks. The common finding is that the gap sits between VLM 'minds' and motor control.",
+      "related_paper_ids": [
+        "mind2act-world",
+        "zerovln",
+        "depth-pro-2"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Self-Improving and Self-Modifying Models",
+      "description": "Models that repair their own weights, teach themselves during post-training, or iteratively improve the systems they produce, such as GPU kernels. The field is moving from human-supervised to model-driven improvement loops.",
+      "related_paper_ids": [
+        "lms-rewrite-own-weights",
+        "autamaster-autonomous-post-training",
+        "compoundingkernel"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Unified, Controllable, and Efficient Visual Generation",
+      "description": "Work on fast distillation, unified understanding-generation backbones, agent-built 3D proxies for video control, and cheap steering-based alignment of diffusion transformers.",
+      "related_paper_ids": [
+        "posterior-matching-distillation",
+        "hiuni",
+        "coda-davinci-code2video",
+        "rl-post-training-dit-activation-steering"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Representation-Level Interpretability",
+      "description": "Studies that locate model behavior in activation-space structure, from global-workspace broadcast in VLMs to RL effects reducing to steering vectors.",
+      "related_paper_ids": [
+        "probing-conscious-mind-vlm-global-workspace",
+        "rl-post-training-dit-activation-steering"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "Omni-Modal Video Understanding and Forensics",
+      "description": "Open omni-modal video understanding models and agentic AI-generated video detectors, led by a coordinated set of releases from Tencent.",
+      "related_paper_ids": [
+        "wemm-video",
+        "wevisforensics"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "Evaluation Methodology and Efficient Inference Systems",
+      "description": "Statistically grounded validation of LLM judges alongside systems work that makes sparse block attention practical at inference time.",
+      "related_paper_ids": [
+        "altra-test",
+        "accelerating-mixture-of-block-attention"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "partial"
+    }
+  ]
+}

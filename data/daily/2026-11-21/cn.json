@@ -1,0 +1,1071 @@
+{
+  "version": "1.0",
+  "date": "2026-11-21",
+  "generated_at": "2026-11-21T06:30:00Z",
+  "summary": {
+    "headline": "具身智能迎来诊断式反思：Mind2Act World 在机器人操作中将推理与物理动作拆分评估；Anthropic 相关研究者探究 VLM 是否实现了全局工作空间；自我修改与自我改进模型（权重自修复、AutoMaster、CompoundingKernel）成为贯穿性趋势，Qwen3.8-27B 主导开源权重生态",
+    "body": "今天的 HuggingFace Daily Papers 由**具身与空间智能**领衔。**Mind2Act World**（46 票）将机器人操作拆解为三个部分：具身推理、物理执行，以及二者如何组合。**ZeroVLN**、**EgoCaptioner** 和 **TuringSpace** 共同构成一组研究，追问 VLM「大脑」能否真正将推理落地到物理空间。紧随其后的是一项可解释性成果：**Probing the「Conscious」Mind**（41 票、12 条评论，当日讨论最热烈的论文）检验视觉-语言模型是否表现出全局工作空间理论（Global Workspace Theory）所描述的选择性访问与全局广播。\n\n第二条主线是**能够自我改进或自我修复的模型**。*Language Models Can Rewrite Their Own Weights* 展示了一个 27B 模型仅凭推理、无需梯度即可诊断并修复受损的权重矩阵。*AutoMaster* 让模型充当自己的后训练教师，*CompoundingKernel* 则构建了一个自我改进的智能体，从 PyTorch 规格出发编写出排名第一的 B200 GPU 内核。生成方向上，*RL Post-Training in Diffusion Transformers Is Activation Steering* 指出，RL 微调带来的大部分奖励提升可以用固定的引导向量复现。*Posterior Matching Distillation* 与 *HiUni* 则在更快、更统一的视觉生成上继续推进。\n\n模型与工具方面，**Qwen3.8-27B** 无处不在：基础模型获得 2.08 万点赞，Unsloth 的 GGUF 版本下载量达 740 万，去审查（abliterated）、合并及 GRPO 适配等衍生版本全面走热。Thinking Machines 的 **Inkling-2** 多模态系列、**LTX-2.5** 视频生成和 **SAM 3** 同样表现突出。GitHub 趋势榜被**智能体技能框架与编程智能体运行框架（harness）**占据：superpowers、ECC、腾讯的 LoopForge、CLI-Anything，以及一大批单一用途的 Claude 技能。智能体基础设施正向可组合、基于技能的工作流收敛。",
+    "key_themes": [
+      "embodied-spatial-reasoning",
+      "self-improving-models",
+      "unified-visual-generation",
+      "vlm-interpretability",
+      "evaluation-methodology",
+      "agent-skill-ecosystems"
+    ]
+  },
+  "researcher_notes": "**具身 AI 领域开始将「知道」与「做到」分开考察，而二者之间的鸿沟正是核心发现。** Mind2Act World 将能力拆分为心智、动作和心智-动作组合，这是正确的诊断思路。它也与 ZeroVLN 的架构相呼应：ZeroVLN 保持 VLM「大脑」冻结，把导航能力交给独立的动作专家。两篇论文合读可以看出，VLM 对物理任务的推理已经足够好，瓶颈在于推理与运动控制之间的接口。TuringSpace 的空间验证码则从计算机使用（computer-use）一侧探测同一接口。预计未来几周会出现更多快慢双系统、冻结大脑加动作头的设计，尝试端到端微调 VLM 主干来实现具身能力的团队会越来越少。\n\n**两篇论文从相反方向得出了关于后训练的同一结论，其中一篇是今天的潜力黑马。** *RL Post-Training in Diffusion Transformers Is Activation Steering*（仅 14 票）发现，昂贵的 RL 微调带来的奖励提升，大部分可以由激活空间中的固定向量捕获。如果这一结论在扩散 Transformer 之外同样成立，那么 RL 后训练所做的事情，远比其算力开销所暗示的更低秩、更可解释。可以将它与 *Probing the「Conscious」Mind* 对照阅读，后者在 VLM 中寻找全局工作空间式的广播。两篇论文都把表征几何视为真正控制行为的地方。实际意义在于：基于引导（steering）的对齐有望成为图像和视频生成中 RL 的廉价替代方案，正如 LoRA 已成为全量微调的默认替代。\n\n**自我修改已从设想走向实际运行的实验，这既令人兴奋，也应让人警惕。** *Language Models Can Rewrite Their Own Weights*（12 票但有 9 条评论，今日讨论/点赞比最高）展示了一个 27B 模型通过推理修复自身受损的权重。它几乎可以肯定是基于目前主导 Hub 的 Qwen3.8-27B 这一级别的模型。AutoMaster（模型充当自己的后训练教师）和 CompoundingKernel（在 B200 排行榜登顶的自我改进内核编写智能体）共同组成了「模型改进模型」的三部曲。在 GitHub 上，NousResearch 的 hermes-agent 基于自身经验进行微调，在产品层面体现了同样的思路。**值得关注的矛盾：** AutoMaster 的出发点是 RL 会强化 SFT 之后已存在的缺陷，而引导向量论文则暗示 RL 实际改变甚微。如果两者都对，自我教学循环放大的可能只是激活空间中的浅层方向，而非构建新的能力。\n\n**评估方法正在悄然成熟，AltRA-Test 是实践者真正应该读的论文。** LLM-as-judge 流程已随处可见，但判断评审模型能否替代人工标注员，通常需要代价高昂的共享标注员设计。AltRA-Test 声称每个样本只需三个人工标签，这是大幅的成本削减，任何在做偏好或质量评估的团队都可以立即采用。TwinLab-Bench（在真实实验室的智能体孪生环境中运行的 AI 科学家）和 Mind2Act World 同属「诊断优先于排行榜」的趋势：基准的设计目的是解释系统为何失败，而不只是给它们排名。\n\n**智能体基础设施正在向以技能为组合单元的方向收敛。** obra/superpowers（32.2 万星）、affaan-m/ECC、Tencent/LoopForge、HKUDS/CLI-Anything，以及 last30days-skill（1,263 星，全部为今日新增）和 Claude-BugHunter（82 个安全测试技能，今日 +1,622）等单一用途包，都把智能体能力封装为围绕编程智能体的可复用、可组合模块。腾讯在多个层面都很突出：WeMM-Video（全模态视频）、WeVisForensics（AI 生成视频检测）、Hy4-flash 和 LoopForge 在同一天出现，显示出其在模型、安全工具和智能体编排上的协同布局。**预测：** 数周之内，生成侧（LTX-2.5、Coda-DaVinci 的代码到 3D 代理视频管线、FastFrames）和检测侧（WeVisForensics）都将转向智能体化设计，形成智能体生成视频与智能体取证之间的军备竞赛。",
+  "papers": [
+    {
+      "id": "mind2act-world",
+      "title": "Mind2Act World: A Diagnostic Benchmark for Embodied Mind, Physical Action, and Mind-Action Composition in Robotic Manipulation",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "具身 AI / 机器人研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "提出一个面向机器人操作的诊断性基准，分别评估具身推理（「心智」）、物理执行（「动作」）及二者的组合。研究者可借此定位失败究竟源于对任务的推理、对任务的执行，还是二者的整合。",
+      "key_findings": [
+        "将操作能力拆分为三个可分别度量的维度：推理、执行和心智-动作组合",
+        "检验模型能否在不执行动作的情况下正确推理物理动作",
+        "以 46 票成为当日最热论文，表明社区对诊断性具身基准兴趣浓厚"
+      ],
+      "tags": [
+        "embodied-ai",
+        "robotics",
+        "benchmark",
+        "vla",
+        "manipulation"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 46,
+        "comments": 8
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26444",
+        "huggingface": "https://huggingface.co/papers/2611.26444",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26444"
+      }
+    },
+    {
+      "id": "probing-conscious-mind-vlm-global-workspace",
+      "title": "Probing the \"Conscious\" Mind: Selective Access and Global Workspace in Vision-Language Models",
+      "authors": [
+        "Wes Gurnee",
+        "et al."
+      ],
+      "affiliations": [
+        "Anthropic"
+      ],
+      "summary": "检验视觉-语言模型是否实现了全局工作空间理论所描述的信息广播机制，在模型内部寻找信息的选择性访问与全局可用性。该研究将意识科学的框架引入多模态模型的机制可解释性研究。",
+      "key_findings": [
+        "将 GWT 的判据（选择性访问、全局广播）操作化为 VLM 内部可检验的属性",
+        "探究视觉信息一旦被选中，是否会在模型的整个处理过程中变得全局可用",
+        "当日讨论最多的论文（12 条评论），作者中包括 Anthropic 研究者，反映出社区对可解释性的高度关注"
+      ],
+      "tags": [
+        "interpretability",
+        "vlm",
+        "global-workspace-theory",
+        "mechanistic-interpretability"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 41,
+        "comments": 12
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26590",
+        "huggingface": "https://huggingface.co/papers/2611.26590",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26590"
+      }
+    },
+    {
+      "id": "wemm-video",
+      "title": "WeMM-Video: Pushing the Frontiers of Open-Source Omni-Modal Video Understanding",
+      "authors": [
+        "WeMM Team"
+      ],
+      "affiliations": [
+        "Tencent"
+      ],
+      "summary": "腾讯开源全模态视频理解模型系列的技术报告，可联合处理音频、视觉和文本流。其目标是在完整的音视频理解上缩小开源与闭源系统之间的差距。",
+      "key_findings": [
+        "发布覆盖音频、视觉和文本模态的开源视频理解模型系列",
+        "面向全模态推理，超越仅基于视觉的视频问答",
+        "是腾讯今日更大范围布局的一部分，同期还有 WeVisForensics、Hy4-flash 和 LoopForge"
+      ],
+      "tags": [
+        "video-understanding",
+        "omni-modal",
+        "open-source",
+        "multimodal",
+        "technical-report"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 40,
+        "comments": 6
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26409",
+        "huggingface": "https://huggingface.co/papers/2611.26409",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26409"
+      }
+    },
+    {
+      "id": "posterior-matching-distillation",
+      "title": "Posterior Matching Distillation",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "生成式建模研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "提出通过匹配后验分布而非仅匹配输出分布来蒸馏扩散模型。由此得到的少步学生模型能更好地保留教师模型的质量。",
+      "key_findings": [
+        "将蒸馏目标从输出分布转向后验分布",
+        "相比输出匹配基线，实现更快推理且样本质量更高",
+        "丰富了对视频和图像扩散模型部署至关重要的快速采样研究方向"
+      ],
+      "tags": [
+        "diffusion",
+        "distillation",
+        "efficient-inference",
+        "generative-models"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 32,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26629",
+        "huggingface": "https://huggingface.co/papers/2611.26629",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26629"
+      }
+    },
+    {
+      "id": "coda-davinci-code2video",
+      "title": "Coda-DaVinci: Reimagining Video Generation with Code2Video",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "视频生成研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "利用编程智能体编写显式的 3D 场景代理（proxy），再以这些代理为条件生成高保真视频。几何控制与一致性通过程序化的场景构建来保证，而不是完全交给扩散模型。",
+      "key_findings": [
+        "编程智能体构建几何 3D 代理，作为视频合成的中间表征",
+        "代理条件化提供对布局、相机和物体几何的显式控制",
+        "将智能体代码生成与生成式视频结合，这一模式很可能会推广开来"
+      ],
+      "tags": [
+        "video-generation",
+        "coding-agents",
+        "3d-proxy",
+        "controllable-generation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 32,
+        "comments": 5
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26595",
+        "huggingface": "https://huggingface.co/papers/2611.26595",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26595"
+      }
+    },
+    {
+      "id": "depth-pro-2",
+      "title": "Depth Pro 2: Sharp and Temporally Consistent Metric Monocular Depth",
+      "authors": [
+        "Aleksei Bochkovskii",
+        "Vladlen Koltun",
+        "Apple Research Team"
+      ],
+      "affiliations": [
+        "Apple"
+      ],
+      "summary": "苹果 Depth Pro 的后继模型，将清晰的度量单目深度估计从单张图像扩展到视频流和实时画面。它强制时间一致性，使边缘保持清晰、深度在帧间不闪烁。",
+      "key_findings": [
+        "单一度量深度模型同时支持单张图像、视频流和实时画面",
+        "消除帧间深度闪烁，同时保持清晰边界",
+        "机构背书强劲，有望成为 AR、机器人和视频编辑的默认深度骨干"
+      ],
+      "tags": [
+        "depth-estimation",
+        "computer-vision",
+        "video",
+        "temporal-consistency",
+        "3d-vision"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 28,
+        "comments": 7
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26603",
+        "huggingface": "https://huggingface.co/papers/2611.26603",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26603"
+      }
+    },
+    {
+      "id": "hiuni",
+      "title": "HiUni: Harmonizing Understanding and Generation in Shared Visual Space",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "多模态研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "一种统一架构，由单一共享编码器和骨干网络同时处理视觉理解、生成和编辑。生成通过像素扩散头完成，同时模型保持了强大的判别能力。",
+      "key_findings": [
+        "同一个共享视觉空间同时服务于理解和生成，无需独立编码器",
+        "像素扩散头在判别式骨干之上负责生成与编辑",
+        "进一步证明统一模型不必再以牺牲理解能力换取生成质量"
+      ],
+      "tags": [
+        "unified-models",
+        "multimodal",
+        "image-generation",
+        "diffusion",
+        "image-editing"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 25,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26107",
+        "huggingface": "https://huggingface.co/papers/2611.26107",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26107"
+      }
+    },
+    {
+      "id": "zerovln",
+      "title": "ZeroVLN: Learning to Navigate without Supervised Fine-Tuning of the VLM Brain",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "具身导航研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "一种快慢双系统的视觉-语言导航框架，不对 VLM 骨干进行导航专项微调，而是将其与专用动作专家联合优化。VLM 的通用推理能力得以保留，导航技能则由动作模块承载。",
+      "key_findings": [
+        "取消针对导航的 VLM 骨干监督微调",
+        "快慢设计将审慎的 VLM 推理与快速的动作专家结合",
+        "印证了 Mind2Act World 同样暗示的「冻结大脑加动作头」范式"
+      ],
+      "tags": [
+        "vision-language-navigation",
+        "embodied-ai",
+        "vla",
+        "slow-fast"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 21,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26414",
+        "huggingface": "https://huggingface.co/papers/2611.26414",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26414"
+      }
+    },
+    {
+      "id": "altra-test",
+      "title": "AltRA-Test: An Alternative Annotator Test for LLM Judges Without Shared Annotators",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "NLP 评估研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "一种统计检验方法，用于判断 LLM 评审能否有效替代人工标注员。每个评估样本只需三个人工标签，且无需共享标注员设计。",
+      "key_findings": [
+        "每个样本仅需三个人工标签即可验证 LLM 评审",
+        "取消了同一批标注员必须标注所有样本的要求",
+        "可直接用于运行 LLM-as-judge 流程的团队；相对于其关注度，实际影响很大"
+      ],
+      "tags": [
+        "llm-as-judge",
+        "evaluation",
+        "statistics",
+        "annotation"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 20,
+        "comments": 4
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26073",
+        "huggingface": "https://huggingface.co/papers/2611.26073",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26073"
+      }
+    },
+    {
+      "id": "accelerating-mixture-of-block-attention",
+      "title": "Accelerating Mixture of Block Attention via Dynamic Routing, KV-Centric Execution and Runtime Pipelining",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "机器学习系统研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "针对混合块稀疏注意力的系统级 GPU 优化：动态路由、以 KV 为中心的执行调度以及运行时流水线。三者结合大幅降低了长上下文模型的推理延迟。",
+      "key_findings": [
+        "动态路由在运行时高效选择注意力块",
+        "以 KV 为中心的执行围绕 KV 缓存访问模式重组计算",
+        "运行时流水线让路由与注意力计算重叠，降低端到端延迟"
+      ],
+      "tags": [
+        "sparse-attention",
+        "ml-systems",
+        "gpu-kernels",
+        "long-context",
+        "efficient-inference"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 16,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26268",
+        "huggingface": "https://huggingface.co/papers/2611.26268",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26268"
+      }
+    },
+    {
+      "id": "rl-post-training-dit-activation-steering",
+      "title": "RL Post-Training in Diffusion Transformers Is Activation Steering",
+      "authors": [
+        "Duen Horng Chau",
+        "Atakan Kara",
+        "Alec Helbling"
+      ],
+      "affiliations": [
+        "Georgia Institute of Technology"
+      ],
+      "summary": "发现扩散 Transformer 中的 RL 后训练实际上可归结为在激活空间中学习固定的引导向量。应用这些固定向量即可复现完整 RL 训练的大部分奖励提升，为扩散模型指出了一条成本低得多的对齐路径。",
+      "key_findings": [
+        "DiT 中 RL 后训练的效果可由激活空间中的固定引导向量很好地近似",
+        "固定向量复现了完整 RL 微调的大部分奖励提升",
+        "表明生成模型的 RL 对齐是低秩且可解释的；一匹影响深远的潜力黑马"
+      ],
+      "tags": [
+        "diffusion",
+        "reinforcement-learning",
+        "activation-steering",
+        "interpretability",
+        "alignment"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 14,
+        "comments": 3
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26627",
+        "huggingface": "https://huggingface.co/papers/2611.26627",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26627"
+      }
+    },
+    {
+      "id": "lms-rewrite-own-weights",
+      "title": "Language Models Can Rewrite Their Own Weights",
+      "authors": [
+        "Jiajun Fan",
+        "Neil He",
+        "Changyi Yang",
+        "Andy Mao",
+        "Xi Zhu"
+      ],
+      "affiliations": [
+        "学术研究合作（源数据未列出具体机构）"
+      ],
+      "summary": "展示了一个 27B 语言模型能够识别自身哪些权重矩阵已受损，并通过推理重写它们，全程无需基于梯度的训练。修复效果可泛化到诊断过程中未使用的基准。",
+      "key_findings": [
+        "27B LLM 通过推理定位自身受损的权重矩阵",
+        "权重修复完全依靠模型自身的计算完成，无任何梯度更新",
+        "改进可迁移到未见过的基准；当日评论/点赞比最高（12 票、9 条评论）"
+      ],
+      "tags": [
+        "self-improvement",
+        "self-modification",
+        "llm",
+        "model-repair"
+      ],
+      "relevance": "high",
+      "engagement": {
+        "upvotes": 12,
+        "comments": 9
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.21885",
+        "huggingface": "https://huggingface.co/papers/2611.21885",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.21885"
+      }
+    },
+    {
+      "id": "wevisforensics",
+      "title": "WeVisForensics: Self-Evolving Agent for Omni AI-Generated Video Detection",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "Tencent（根据 WeMM/We 系列命名推断，源数据未确认）"
+      ],
+      "summary": "一个跨视觉、音频和时间模态检测 AI 生成视频的智能体框架。由一个调查员智能体协调多个自我进化的子智能体，每个子智能体专注于真实性的一个维度。",
+      "key_findings": [
+        "调查员智能体编排多个专门的取证子智能体",
+        "子智能体自我进化，以跟上新出现的生成器",
+        "在同一检测管线中覆盖视觉、音频和时间维度的伪影"
+      ],
+      "tags": [
+        "deepfake-detection",
+        "video-forensics",
+        "agents",
+        "ai-safety",
+        "omni-modal"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 10,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.21373",
+        "huggingface": "https://huggingface.co/papers/2611.21373",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.21373"
+      }
+    },
+    {
+      "id": "autamaster-autonomous-post-training",
+      "title": "AutoMaster: Autonomous Post-Training",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "LLM 后训练研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "一个让模型充当自己的教师、自主完成自我改进的后训练框架。其设计目标是规避 RL 强化 SFT 阶段习得的缺陷行为这一失效模式。",
+      "key_findings": [
+        "模型在后训练中充当自己的教师",
+        "明确针对会放大 SFT 遗留缺陷的 RL 捷径",
+        "与权重自修复和 CompoundingKernel 同属今日的自我改进模型论文群"
+      ],
+      "tags": [
+        "post-training",
+        "self-improvement",
+        "reinforcement-learning",
+        "llm"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 7,
+        "comments": 2
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.26510",
+        "huggingface": "https://huggingface.co/papers/2611.26510",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.26510"
+      }
+    },
+    {
+      "id": "compoundingkernel",
+      "title": "CompoundingKernel: Self-Improving from Zero to First",
+      "authors": [
+        "源数据未提供作者列表"
+      ],
+      "affiliations": [
+        "机器学习系统 / 智能体研究团队（源数据未列出所属机构）"
+      ],
+      "summary": "一个通过迭代搜索与自我改进、从 PyTorch 规格编写 GPU 内核的智能体。无需人工设计的内核，即在 B200 GPU 基准排行榜上取得顶尖成绩。",
+      "key_findings": [
+        "直接从 PyTorch 规格生成 GPU 内核",
+        "迭代搜索加自我改进，使内核质量随时间复利式提升",
+        "从零人工内核起步，登顶 B200 内核排行榜"
+      ],
+      "tags": [
+        "gpu-kernels",
+        "coding-agents",
+        "self-improvement",
+        "ml-systems"
+      ],
+      "relevance": "medium",
+      "engagement": {
+        "upvotes": 6,
+        "comments": 1
+      },
+      "sources": {
+        "arxiv": "https://arxiv.org/abs/2611.19230",
+        "huggingface": "https://huggingface.co/papers/2611.19230",
+        "alphaxiv": "",
+        "pdf": "https://arxiv.org/pdf/2611.19230"
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen3-8-27b",
+      "name": "Qwen3.8-27B",
+      "organization": "Qwen (Alibaba)",
+      "description": "阿里巴巴最新的中等规模多语言对话模型，也是本周 Hub 上点赞最多的模型（2.08 万）。它拥有由量化、去审查、合并和适配器构成的庞大衍生生态，表明其正成为 27B 规模的默认开源权重基座。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "text-generation",
+        "chat",
+        "multilingual"
+      ],
+      "metrics": {
+        "downloads": 6454419,
+        "likes": 20823
+      },
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+    },
+    {
+      "id": "unsloth-qwen3-8-27b-gguf",
+      "name": "Qwen3.8-27B-GGUF",
+      "organization": "Unsloth",
+      "description": "Unsloth 发布的 Qwen3.8-27B GGUF 量化版本。740 万次下载已超过原始权重，可见本地部署和 llama.cpp 类部署对模型普及的推动作用之大。",
+      "task_type": "text-generation",
+      "model_size": "27B",
+      "tags": [
+        "gguf",
+        "quantized",
+        "text-generation"
+      ],
+      "metrics": {
+        "downloads": 7383193,
+        "likes": 6301
+      },
+      "source_url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "id": "lightricks-ltx-2-5",
+      "name": "LTX-2.5",
+      "organization": "Lightricks",
+      "description": "Lightricks 最新的开源图生视频扩散模型，获得 1.29 万点赞、近 300 万次下载，是当前采用最广泛的开源视频生成模型之一。",
+      "task_type": "image-to-video",
+      "model_size": "Undisclosed",
+      "tags": [
+        "video-generation",
+        "diffusion",
+        "image-to-video"
+      ],
+      "metrics": {
+        "downloads": 2964523,
+        "likes": 12925
+      },
+      "source_url": "https://huggingface.co/Lightricks/LTX-2.5"
+    },
+    {
+      "id": "facebook-sam3",
+      "name": "SAM 3",
+      "organization": "Meta",
+      "description": "Meta 第三代 Segment Anything（分割一切）模型，扩展到视频与零样本场景。190 万次的稳定下载量表明，它仍是感知管线中可提示分割的参考模型。",
+      "task_type": "video-classification",
+      "model_size": "Undisclosed",
+      "tags": [
+        "segmentation",
+        "video",
+        "zero-shot"
+      ],
+      "metrics": {
+        "downloads": 1895035,
+        "likes": 7150
+      },
+      "source_url": "https://huggingface.co/facebook/sam3"
+    },
+    {
+      "id": "deepseek-v4-1-flash-1017",
+      "name": "DeepSeek-V4.1-Flash-1017",
+      "organization": "DeepSeek",
+      "description": "DeepSeek V4.1 系列的快速多模态变体，支持图像和文本输入，下载量 50.5 万、点赞 6 千，是 DeepSeek 产品线中的低延迟选项。",
+      "task_type": "image-text-to-text",
+      "model_size": "Undisclosed",
+      "tags": [
+        "multimodal",
+        "fast",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 505387,
+        "likes": 6045
+      },
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    {
+      "id": "higurashi-haru-4b",
+      "name": "Haru-4B",
+      "organization": "Higurashi AI",
+      "description": "一款紧凑的全双工语音到语音模型，仅 7.3 千次下载就获得 5.7 千点赞。如此高的点赞/下载比，表明社区对小型实时语音对话模型热情高涨。",
+      "task_type": "audio-to-audio",
+      "model_size": "4B",
+      "tags": [
+        "speech",
+        "full-duplex",
+        "audio"
+      ],
+      "metrics": {
+        "downloads": 7323,
+        "likes": 5705
+      },
+      "source_url": "https://huggingface.co/higurashi-ai/Haru-4B"
+    },
+    {
+      "id": "thinkingmachines-inkling-2-mini",
+      "name": "Inkling-2-Mini",
+      "organization": "Thinking Machines Lab",
+      "description": "Thinking Machines 的 Inkling-2 视觉-语言系列中最小的模型。发布后几乎立刻获得 921 个点赞（目前下载 136 次），Unsloth 的 GGUF 移植版也已登上趋势榜。",
+      "task_type": "image-text-to-text",
+      "model_size": "Undisclosed",
+      "tags": [
+        "vision",
+        "multimodal",
+        "image-text-to-text"
+      ],
+      "metrics": {
+        "downloads": 136,
+        "likes": 921
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling-2-Mini"
+    },
+    {
+      "id": "thinkingmachines-inkling-2-small",
+      "name": "Inkling-2-Small",
+      "organization": "Thinking Machines Lab",
+      "description": "Inkling-2-Mini 的大号版本，下载量已达 4 万，是 Inkling-2 多模态系列中更成熟的入门选择。",
+      "task_type": "image-text-to-text",
+      "model_size": "Undisclosed",
+      "tags": [
+        "vision",
+        "multimodal"
+      ],
+      "metrics": {
+        "downloads": 40574,
+        "likes": 666
+      },
+      "source_url": "https://huggingface.co/thinkingmachines/Inkling-2-Small"
+    },
+    {
+      "id": "minimax-h3-image",
+      "name": "MiniMax-H3-Image",
+      "organization": "MiniMax",
+      "description": "MiniMax 基于其 H3 架构构建的文生图模型，下载量 87.7 万，是中国实验室开源图像生成模型中的有力新秀。",
+      "task_type": "text-to-image",
+      "model_size": "Undisclosed",
+      "tags": [
+        "text-to-image",
+        "h3-architecture"
+      ],
+      "metrics": {
+        "downloads": 876986,
+        "likes": 1688
+      },
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+    },
+    {
+      "id": "zyphra-zonos3-mini",
+      "name": "ZONOS3-Mini",
+      "organization": "Zyphra",
+      "description": "Zyphra 推出的紧凑型文本转语音模型，以 GGUF 格式分发以便本地推理。14.3 万次下载，为本周小型端侧语音模型的强劲表现再添一笔。",
+      "task_type": "text-to-speech",
+      "model_size": "Undisclosed",
+      "tags": [
+        "tts",
+        "gguf"
+      ],
+      "metrics": {
+        "downloads": 142778,
+        "likes": 621
+      },
+      "source_url": "https://huggingface.co/Zyphra/ZONOS3-Mini"
+    },
+    {
+      "id": "sensenova-loop-9b",
+      "name": "SenseNova-Loop-9B",
+      "organization": "SenseTime",
+      "description": "基于循环（递归深度）架构的 9B 多模态模型。作为复用层以获得额外推理深度的架构实验，它正受到关注。",
+      "task_type": "image-text-to-text",
+      "model_size": "9B",
+      "tags": [
+        "multimodal",
+        "loop-architecture"
+      ],
+      "metrics": {
+        "downloads": 1631,
+        "likes": 453
+      },
+      "source_url": "https://huggingface.co/sensenova/SenseNova-Loop-9B"
+    },
+    {
+      "id": "harness-hub-qwen3-8-27b-pi-adapted",
+      "name": "Qwen3.8-27B-pi-adapted",
+      "organization": "harness-hub",
+      "description": "面向 Qwen3.8-27B、经 GRPO 训练的 PEFT 适配器，针对智能体运行框架场景调优。它显示出社区正在本周主导的基座模型之上构建经 RL 调优的智能体专用版本。",
+      "task_type": "text-generation",
+      "model_size": "27B (adapter)",
+      "tags": [
+        "peft",
+        "adapter",
+        "grpo"
+      ],
+      "metrics": {
+        "downloads": 1874,
+        "likes": 872
+      },
+      "source_url": "https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted"
+    }
+  ],
+  "trending_repos": [
+    {
+      "id": "obra-superpowers",
+      "name": "obra/superpowers",
+      "description": "一个将工作流封装为可复用、可组合模块的智能体技能框架，也是星标最多的智能体技能框架。随着技能成为扩展编程智能体的标准单元，它的星标仍在持续增长。",
+      "language": "JavaScript",
+      "stars": 322843,
+      "stars_today": 890,
+      "forks": 15420,
+      "url": "https://github.com/obra/superpowers",
+      "tags": [
+        "agents",
+        "agent-skills",
+        "coding-agents",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "hkuds-cli-anything",
+      "name": "HKUDS/CLI-Anything",
+      "description": "香港大学数据智能实验室推出的框架，可将任意命令行工具封装为智能体可访问的接口。它之所以走热，是因为编程智能体无需定制集成即可操作现有 CLI 工具。",
+      "language": "Python",
+      "stars": 61385,
+      "stars_today": 773,
+      "forks": 2341,
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "tags": [
+        "agents",
+        "cli",
+        "tool-use",
+        "developer-tools"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "tencent-loopforge",
+      "name": "Tencent/LoopForge",
+      "description": "面向编程智能体（CodeBuddy、Codex、Claude Code）的自托管编排器，带有人工审批关卡和任务管理。其快速攀升（今日 +1,216）反映出企业对受管控的多智能体编程工作流的需求。",
+      "language": "TypeScript",
+      "stars": 5276,
+      "stars_today": 1216,
+      "forks": 312,
+      "url": "https://github.com/Tencent/LoopForge",
+      "tags": [
+        "agents",
+        "orchestration",
+        "coding-agents",
+        "human-in-the-loop"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "firecrawl",
+      "name": "firecrawl/firecrawl",
+      "description": "一个网页抓取与知识库 API，可将网站转换为可供智能体使用、适配 LLM 的结构化数据。它仍是智能体 RAG 与研究管线的核心组件，今日新增 1,241 星。",
+      "language": "TypeScript",
+      "stars": 205275,
+      "stars_today": 1241,
+      "forks": 14523,
+      "url": "https://github.com/firecrawl/firecrawl",
+      "tags": [
+        "web-scraping",
+        "rag",
+        "agents",
+        "data-pipeline"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "claude-bughunter",
+      "name": "elementalsouls/Claude-BugHunter",
+      "description": "包含 82 个 Claude 技能的合集，用于漏洞挖掘、红队测试和漏洞发现。它是今日涨星最多的仓库（+1,622），反映出用智能体技能开展授权安全测试的热度。",
+      "language": "Python",
+      "stars": 14277,
+      "stars_today": 1622,
+      "forks": 892,
+      "url": "https://github.com/elementalsouls/Claude-BugHunter",
+      "tags": [
+        "agent-skills",
+        "security",
+        "red-teaming",
+        "claude"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "last30days-skill",
+      "name": "mvanhorn/last30days-skill",
+      "description": "一个智能体技能，汇总 Reddit、X、YouTube、HN 和网页内容，为任意话题生成最近 30 天的研究视图。这是一个全新仓库，全部 1,263 颗星都在今天获得。",
+      "language": "JavaScript",
+      "stars": 1263,
+      "stars_today": 1263,
+      "forks": 87,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "tags": [
+        "agent-skills",
+        "research-agents",
+        "web-search"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "minimind",
+      "name": "jingyaogong/minimind",
+      "description": "一个轻量级框架，可在单张 GPU 上约两小时从零训练一个 6400 万参数的 LLM。作为端到端了解 LLM 训练栈的教学项目，它持续受到欢迎。",
+      "language": "Python",
+      "stars": 67691,
+      "stars_today": 847,
+      "forks": 5234,
+      "url": "https://github.com/jingyaogong/minimind",
+      "tags": [
+        "llm-training",
+        "education",
+        "small-models",
+        "pytorch"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "autoclip",
+      "name": "zhouxiaoka/AutoClip",
+      "description": "一款 AI 工具，可将长视频剪辑为社交媒体短片并自动生成字幕。其热度（今日 +979）体现了创作者工具对实用多模态 AI 的需求。",
+      "language": "Python",
+      "stars": 12188,
+      "stars_today": 979,
+      "forks": 743,
+      "url": "https://github.com/zhouxiaoka/AutoClip",
+      "tags": [
+        "video",
+        "multimodal",
+        "content-creation",
+        "subtitles"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "ponytail",
+      "name": "DietrichGebert/ponytail",
+      "description": "一个 LLM 驱动的代码生成器，以刻意精简、可组合的风格产出可用于生产的代码。随着开发者追求更高质量的智能体生成代码，它仍在趋势榜上。",
+      "language": "Python",
+      "stars": 195635,
+      "stars_today": 743,
+      "forks": 8921,
+      "url": "https://github.com/DietrichGebert/ponytail",
+      "tags": [
+        "code-generation",
+        "llm",
+        "developer-tools"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "affaan-m-ecc",
+      "name": "affaan-m/ECC",
+      "description": "一个性能调优框架，用于在 Claude Code、Codex 等编程智能体上调优智能体行为、记忆和工作流。它是运行框架工程领域星标众多的参考项目（今日未报告星标增量）。",
+      "language": "Python",
+      "stars": 307860,
+      "stars_today": 0,
+      "forks": 12345,
+      "url": "https://github.com/affaan-m/ECC",
+      "tags": [
+        "agents",
+        "agent-harness",
+        "coding-agents",
+        "memory"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "nous-hermes-agent",
+      "name": "NousResearch/hermes-agent",
+      "description": "Nous Research 推出的自适应智能体，通过在自身交互经验上微调来不断改进。它是今日自我改进模型论文在产品层的对应物（今日未报告星标增量）。",
+      "language": "Python",
+      "stars": 264995,
+      "stars_today": 0,
+      "forks": 9872,
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "tags": [
+        "agents",
+        "self-improvement",
+        "fine-tuning"
+      ],
+      "relevance": "high"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n-io/n8n",
+      "description": "一个带有原生 AI 节点的可视化工作流自动化引擎，兼顾无代码与自定义代码。它仍是部署 LLM 驱动自动化的标准平台（今日未报告星标增量）。",
+      "language": "TypeScript",
+      "stars": 211554,
+      "stars_today": 0,
+      "forks": 23456,
+      "url": "https://github.com/n8n-io/n8n",
+      "tags": [
+        "workflow-automation",
+        "agents",
+        "no-code"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "morluto-rea",
+      "name": "morluto/rea",
+      "description": "一个逆向工程工具包，让智能体能够探查二进制文件、应用程序和操作系统行为以进行安全分析。它与 Claude-BugHunter 一同契合智能体驱动安全工具的趋势（今日未报告星标增量）。",
+      "language": "Python",
+      "stars": 471506,
+      "stars_today": 0,
+      "forks": 18234,
+      "url": "https://github.com/morluto/rea",
+      "tags": [
+        "agents",
+        "security",
+        "reverse-engineering"
+      ],
+      "relevance": "medium"
+    },
+    {
+      "id": "tensorflow",
+      "name": "tensorflow/tensorflow",
+      "description": "Google 的开源机器学习框架，支持在 CPU、GPU 和 TPU 上进行研究与生产。它作为长期基础设施出现在趋势列表中，但没有新的增长势头。",
+      "language": "Python",
+      "stars": 201663,
+      "stars_today": 0,
+      "forks": 82341,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "tags": [
+        "ml-framework",
+        "deep-learning",
+        "infrastructure"
+      ],
+      "relevance": "low"
+    }
+  ],
+  "themes": [
+    {
+      "name": "具身与空间推理诊断",
+      "description": "在机器人、导航和空间任务中将推理与物理执行分离评估的基准与架构。共同发现是：差距存在于 VLM「心智」与运动控制之间。",
+      "related_paper_ids": [
+        "mind2act-world",
+        "zerovln",
+        "depth-pro-2"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "自我改进与自我修改模型",
+      "description": "能够修复自身权重、在后训练中自我教学，或迭代改进其产出系统（如 GPU 内核）的模型。该领域正从人工监督的改进循环转向模型驱动的改进循环。",
+      "related_paper_ids": [
+        "lms-rewrite-own-weights",
+        "autamaster-autonomous-post-training",
+        "compoundingkernel"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "统一、可控且高效的视觉生成",
+      "description": "涵盖快速蒸馏、统一理解与生成的骨干网络、由智能体构建 3D 代理以控制视频，以及基于引导的低成本扩散 Transformer 对齐等研究。",
+      "related_paper_ids": [
+        "posterior-matching-distillation",
+        "hiuni",
+        "coda-davinci-code2video",
+        "rl-post-training-dit-activation-steering"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "表征层面的可解释性",
+      "description": "在激活空间结构中定位模型行为的研究，从 VLM 中的全局工作空间广播，到 RL 效果可归结为引导向量。",
+      "related_paper_ids": [
+        "probing-conscious-mind-vlm-global-workspace",
+        "rl-post-training-dit-activation-steering"
+      ],
+      "trend_signal": "rising"
+    },
+    {
+      "name": "全模态视频理解与取证",
+      "description": "开源全模态视频理解模型与智能体化 AI 生成视频检测器，以腾讯的一组协同发布为代表。",
+      "related_paper_ids": [
+        "wemm-video",
+        "wevisforensics"
+      ],
+      "trend_signal": "stable"
+    },
+    {
+      "name": "评估方法与高效推理系统",
+      "description": "具有统计学依据的 LLM 评审验证方法，以及让稀疏块注意力在推理阶段切实可用的系统工作。",
+      "related_paper_ids": [
+        "altra-test",
+        "accelerating-mixture-of-block-attention"
+      ],
+      "trend_signal": "stable"
+    }
+  ],
+  "sources_checked": [
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/api/daily_papers",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "HuggingFace Trending Models",
+      "url": "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=20",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "arXiv",
+      "url": "https://export.arxiv.org/api/query",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "AlphaXiv",
+      "url": "https://api.alphaxiv.org/v1/papers/trending",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "error"
+    },
+    {
+      "name": "GitHub Trending",
+      "url": "https://github.com/trending",
+      "checked_at": "2026-11-21T06:00:00Z",
+      "status": "partial"
+    }
+  ]
+}
